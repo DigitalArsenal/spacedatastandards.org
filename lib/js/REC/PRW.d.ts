@@ -19,6 +19,8 @@ import { PRWResidentRequest, PRWResidentRequestT } from './PRWResidentRequest.js
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWSpaceWeatherTable, PRWSpaceWeatherTableT } from './PRWSpaceWeatherTable.js';
 import { PRWVersionResult, PRWVersionResultT } from './PRWVersionResult.js';
+import { PRWWindowReport, PRWWindowReportT } from './PRWWindowReport.js';
+import { PRWWindowRequest, PRWWindowRequestT } from './PRWWindowRequest.js';
 /**
  * Exactly one arm per envelope. Existing three arms keep their ordinals.
  */
@@ -53,6 +55,11 @@ export declare class PRW implements flatbuffers.IUnpackableObject<PRWT> {
     EARTH_ORIENTATION(obj?: PRWEarthOrientation): PRWEarthOrientation | null;
     SPACE_WEATHER(obj?: PRWSpaceWeatherTable): PRWSpaceWeatherTable | null;
     JB2008_INDICES(obj?: PRWJB2008IndicesTable): PRWJB2008IndicesTable | null;
+    /**
+     * Propagation over windows: one $OEM block per query answers it.
+     */
+    WINDOW_REQUEST(obj?: PRWWindowRequest): PRWWindowRequest | null;
+    WINDOW_REPORT(obj?: PRWWindowReport): PRWWindowReport | null;
     static startPRW(builder: flatbuffers.Builder): void;
     static addInit(builder: flatbuffers.Builder, INITOffset: flatbuffers.Offset): void;
     static addBatchRequest(builder: flatbuffers.Builder, BATCH_REQUESTOffset: flatbuffers.Offset): void;
@@ -75,6 +82,8 @@ export declare class PRW implements flatbuffers.IUnpackableObject<PRWT> {
     static addEarthOrientation(builder: flatbuffers.Builder, EARTH_ORIENTATIONOffset: flatbuffers.Offset): void;
     static addSpaceWeather(builder: flatbuffers.Builder, SPACE_WEATHEROffset: flatbuffers.Offset): void;
     static addJb2008Indices(builder: flatbuffers.Builder, JB2008_INDICESOffset: flatbuffers.Offset): void;
+    static addWindowRequest(builder: flatbuffers.Builder, WINDOW_REQUESTOffset: flatbuffers.Offset): void;
+    static addWindowReport(builder: flatbuffers.Builder, WINDOW_REPORTOffset: flatbuffers.Offset): void;
     static endPRW(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPRWBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPRWBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -103,7 +112,9 @@ export declare class PRWT implements flatbuffers.IGeneratedObject {
     EARTH_ORIENTATION: PRWEarthOrientationT | null;
     SPACE_WEATHER: PRWSpaceWeatherTableT | null;
     JB2008_INDICES: PRWJB2008IndicesTableT | null;
-    constructor(INIT?: PRWInitT | null, BATCH_REQUEST?: PRWBatchRequestT | null, BATCH_RESPONSE?: PRWBatchResponseT | null, EXECUTION_REQUEST?: PRWExecutionRequestT | null, EXECUTION_RESULT?: PRWExecutionResultT | null, RESIDENT_STATE?: PRWResidentStateT | null, RESIDENT_REQUEST?: PRWResidentRequestT | null, PREPARE_REQUEST?: PRWPrepareRequestT | null, PREPARE_RESULT?: PRWPrepareResultT | null, DESCRIBE_REQUEST?: PRWDescribeRequestT | null, DESCRIBE_RESULT?: PRWDescribeResultT | null, NATIVE_INPUT?: PRWNativeInputT | null, EPHEMERIS_REQUEST?: PRWEphemerisRequestT | null, EPHEMERIS_RESULT?: PRWEphemerisResultT | null, ATMOSPHERE_REQUEST?: PRWAtmosphereRequestT | null, ATMOSPHERE_RESULT?: PRWAtmosphereResultT | null, VERSION_QUERY?: boolean, VERSION_RESULT?: PRWVersionResultT | null, EARTH_ORIENTATION?: PRWEarthOrientationT | null, SPACE_WEATHER?: PRWSpaceWeatherTableT | null, JB2008_INDICES?: PRWJB2008IndicesTableT | null);
+    WINDOW_REQUEST: PRWWindowRequestT | null;
+    WINDOW_REPORT: PRWWindowReportT | null;
+    constructor(INIT?: PRWInitT | null, BATCH_REQUEST?: PRWBatchRequestT | null, BATCH_RESPONSE?: PRWBatchResponseT | null, EXECUTION_REQUEST?: PRWExecutionRequestT | null, EXECUTION_RESULT?: PRWExecutionResultT | null, RESIDENT_STATE?: PRWResidentStateT | null, RESIDENT_REQUEST?: PRWResidentRequestT | null, PREPARE_REQUEST?: PRWPrepareRequestT | null, PREPARE_RESULT?: PRWPrepareResultT | null, DESCRIBE_REQUEST?: PRWDescribeRequestT | null, DESCRIBE_RESULT?: PRWDescribeResultT | null, NATIVE_INPUT?: PRWNativeInputT | null, EPHEMERIS_REQUEST?: PRWEphemerisRequestT | null, EPHEMERIS_RESULT?: PRWEphemerisResultT | null, ATMOSPHERE_REQUEST?: PRWAtmosphereRequestT | null, ATMOSPHERE_RESULT?: PRWAtmosphereResultT | null, VERSION_QUERY?: boolean, VERSION_RESULT?: PRWVersionResultT | null, EARTH_ORIENTATION?: PRWEarthOrientationT | null, SPACE_WEATHER?: PRWSpaceWeatherTableT | null, JB2008_INDICES?: PRWJB2008IndicesTableT | null, WINDOW_REQUEST?: PRWWindowRequestT | null, WINDOW_REPORT?: PRWWindowReportT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRW.d.ts.map

@@ -1,0 +1,111 @@
+// Hash: 9aa6b49c1e1ffbca8b29b62f57a2c7963e1de759d7b3c8889c4c684ceb215f41
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// API Request (APR)
+/// Description
+/// One request received by a service endpoint, in normalized form, together
+/// with the decision of how to serve it. A gateway (an HTTP server, a message
+/// broker bridge, a command interface) parses whatever arrived on the wire
+/// into an APR once; every later stage reads the APR instead of re-parsing the
+/// transport. The same record carries the gateway's routing decision (ROUTE),
+/// the request's selection parameters, its conditional-request validator, the
+/// representation the client accepts, and, when the gateway or a later stage
+/// refuses the request, the status and reason the client must be answered
+/// with.
+///
+/// An APR is transport-neutral: METHOD and STATUS follow HTTP semantics
+/// because they are the common vocabulary, but nothing in the record requires
+/// HTTP. A stage that serves the request passes the APR on unchanged beside
+/// its answer, or with STATUS and ERROR set when it cannot serve it, so the
+/// stage that writes the response always has both the request and the outcome.
+/// Request method, HTTP semantics. Append new values only; never reorder or
+/// reuse existing values.
+enum aprMethod : ubyte {
+  /// Not stated.
+  Unspecified,
+  GET,
+  HEAD,
+  POST,
+  PUT,
+  PATCH,
+  DELETE,
+  OPTIONS
+}
+/// Representation the client accepts for the answer. Append new values only;
+/// never reorder or reuse existing values.
+enum aprRepresentation : ubyte {
+  /// The service's default (normally FlatBuffers).
+  Default,
+  /// Size-prefixed FlatBuffer records of the standard served.
+  FlatBuffer,
+  /// JSON rendering of the same records.
+  Json,
+  /// Comma-separated values.
+  Csv,
+  /// Plain text.
+  Text
+}
+/// One named request parameter (a query-string pair, a path segment bound to
+/// a name, a form field or a header the service reads).
+table APRParameter {
+  /// Parameter name as the service defines it, e.g. "limit", "epoch",
+  /// "peerId".
+  NAME: string;
+  /// Parameter value as received, as text.
+  VALUE: string;
+}
+/// API Request - one normalized request and its serving decision.
+table APR {
+  /// Identifier of the request, unique within the gateway (for correlating
+  /// logs and answers); empty when the gateway does not assign one.
+  REQUEST_ID: string;
+  /// Unix milliseconds when the gateway received the request; 0 = unknown.
+  RECEIVED_AT_MS: int64;
+  METHOD: aprMethod = Unspecified;
+  /// Path of the request as received, without the query string, e.g.
+  /// "/api/v1/data/omm/bulk".
+  PATH: string;
+  /// The gateway's routing decision: the stable name of the operation that
+  /// serves the request, e.g. "bulk", "query", "status", "activity",
+  /// "peer_get". Empty when no route matched (STATUS then says why).
+  ROUTE: string;
+  /// Standard the request selects, as its schema file name, e.g. "OMM.fbs";
+  /// empty when the route is not about one standard.
+  SCHEMA_NAME: string;
+  /// Request parameters, in the order received. A parameter the service
+  /// defaults is absent rather than empty.
+  PARAMETERS: [APRParameter];
+  /// Selection text the request carries in its body, when the route takes
+  /// one: an SQL statement, a search expression or a command line.
+  SELECTION: string;
+  /// Entity tag the client already holds (HTTP If-None-Match), verbatim; the
+  /// service answers "not modified" when its current tag equals it.
+  IF_NONE_MATCH: string;
+  /// Unix milliseconds of the client's copy (HTTP If-Modified-Since); 0 =
+  /// none.
+  IF_MODIFIED_SINCE_MS: int64;
+  /// Representation the client accepts.
+  ACCEPT: aprRepresentation = Default;
+  /// Media type of BODY as the client declared it, e.g. "application/sql".
+  CONTENT_TYPE: string;
+  /// Request body verbatim, when the route uses it and it is not already
+  /// expressed as SELECTION.
+  BODY: [ubyte];
+  /// Outcome to answer with when the request is refused or failed, as an HTTP
+  /// status (400 bad request, 404 no route, 405 method not allowed, 503
+  /// unavailable, ...); 0 while the request is being served normally.
+  STATUS: uint16;
+  /// Stable machine-readable reason for STATUS, e.g. "missing-sql",
+  /// "method-not-allowed"; empty when STATUS is 0.
+  ERROR_CODE: string;
+  /// Human-readable detail for STATUS.
+  ERROR_MESSAGE: string;
+  /// Identity of the authenticated caller (a peer identifier or account),
+  /// when the gateway authenticated one.
+  CALLER_ID: string;
+  /// Headers a serving stage asks the answer to carry, e.g. "cache-control",
+  /// "last-modified", "content-disposition" (name lower-case).
+  RESPONSE_HEADERS: [APRParameter];
+}
+root_type APR;
+file_identifier "$APR";

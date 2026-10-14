@@ -213,7 +213,7 @@ def EGPCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    EGPCreateTAGSVector(builder, data)
+    return EGPCreateTAGSVector(builder, data)
 
 def EGPAddMEMBERSHIP_MODE(builder, MEMBERSHIP_MODE):
     builder.PrependInt8Slot(4, MEMBERSHIP_MODE, 0)
@@ -237,7 +237,7 @@ def EGPCreateMEMBERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEMBERSVector(builder, data):
-    EGPCreateMEMBERSVector(builder, data)
+    return EGPCreateMEMBERSVector(builder, data)
 
 def EGPAddQUERY(builder, QUERY):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(QUERY), 0)
@@ -273,7 +273,7 @@ def EGPCreatePROVENANCEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROVENANCEVector(builder, data):
-    EGPCreatePROVENANCEVector(builder, data)
+    return EGPCreatePROVENANCEVector(builder, data)
 
 def EGPAddDATASET_CID(builder, DATASET_CID):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DATASET_CID), 0)

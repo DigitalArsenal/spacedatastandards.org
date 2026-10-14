@@ -370,7 +370,7 @@ def FSOCreateSCHEMA_IDLVector(builder, data):
     return builder.EndVector()
 
 def CreateSCHEMA_IDLVector(builder, data):
-    FSOCreateSCHEMA_IDLVector(builder, data)
+    return FSOCreateSCHEMA_IDLVector(builder, data)
 
 def FSOAddTABLE_BINDINGS(builder, TABLE_BINDINGS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TABLE_BINDINGS), 0)
@@ -388,7 +388,7 @@ def FSOCreateTABLE_BINDINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTABLE_BINDINGSVector(builder, data):
-    FSOCreateTABLE_BINDINGSVector(builder, data)
+    return FSOCreateTABLE_BINDINGSVector(builder, data)
 
 def FSOAddTABLE_NAME(builder, TABLE_NAME):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TABLE_NAME), 0)
@@ -422,7 +422,7 @@ def FSOCreateINDEX_EXPRESSIONVector(builder, data):
     return builder.EndVector()
 
 def CreateINDEX_EXPRESSIONVector(builder, data):
-    FSOCreateINDEX_EXPRESSIONVector(builder, data)
+    return FSOCreateINDEX_EXPRESSIONVector(builder, data)
 
 def FSOAddVIEW_NAME(builder, VIEW_NAME):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(VIEW_NAME), 0)
@@ -450,7 +450,7 @@ def FSOCreateQUERYVector(builder, data):
     return builder.EndVector()
 
 def CreateQUERYVector(builder, data):
-    FSOCreateQUERYVector(builder, data)
+    return FSOCreateQUERYVector(builder, data)
 
 def FSOAddPARAMETERS(builder, PARAMETERS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETERS), 0)
@@ -472,7 +472,7 @@ def FSOCreatePARAMETERSVector(builder, data):
     return builder.EndVector()
 
 def CreatePARAMETERSVector(builder, data):
-    FSOCreatePARAMETERSVector(builder, data)
+    return FSOCreatePARAMETERSVector(builder, data)
 
 def FSOAddPARAMETER_COUNT(builder, PARAMETER_COUNT):
     builder.PrependUint32Slot(11, PARAMETER_COUNT, 0)
@@ -500,7 +500,7 @@ def FSOCreateUPSERT_KEY_EXPRESSIONVector(builder, data):
     return builder.EndVector()
 
 def CreateUPSERT_KEY_EXPRESSIONVector(builder, data):
-    FSOCreateUPSERT_KEY_EXPRESSIONVector(builder, data)
+    return FSOCreateUPSERT_KEY_EXPRESSIONVector(builder, data)
 
 def FSOAddRETENTION_MAX_RECORDS(builder, RETENTION_MAX_RECORDS):
     builder.PrependUint64Slot(13, RETENTION_MAX_RECORDS, 0)
@@ -564,7 +564,7 @@ def FSOCreateMESSAGEVector(builder, data):
     return builder.EndVector()
 
 def CreateMESSAGEVector(builder, data):
-    FSOCreateMESSAGEVector(builder, data)
+    return FSOCreateMESSAGEVector(builder, data)
 
 def FSOEnd(builder):
     return builder.EndObject()

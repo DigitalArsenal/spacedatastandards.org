@@ -231,7 +231,7 @@ def KMLModelCreateRESOURCE_MAPVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRESOURCE_MAPVector(builder, data):
-    KMLModelCreateRESOURCE_MAPVector(builder, data)
+    return KMLModelCreateRESOURCE_MAPVector(builder, data)
 
 def KMLModelEnd(builder):
     return builder.EndObject()

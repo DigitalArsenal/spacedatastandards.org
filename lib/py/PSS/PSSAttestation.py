@@ -139,7 +139,7 @@ def PSSAttestationCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PSSAttestationCreateSIGNATUREVector(builder, data)
+    return PSSAttestationCreateSIGNATUREVector(builder, data)
 
 def PSSAttestationAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -161,7 +161,7 @@ def PSSAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    PSSAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return PSSAttestationCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def PSSAttestationEnd(builder):
     return builder.EndObject()

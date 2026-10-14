@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Burn Out Vector Message
-public struct BOV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BOV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -432,7 +432,7 @@ def OPPCreateRADAR_CROSS_SECTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRADAR_CROSS_SECTIONSVector(builder, data):
-    OPPCreateRADAR_CROSS_SECTIONSVector(builder, data)
+    return OPPCreateRADAR_CROSS_SECTIONSVector(builder, data)
 
 def OPPAddVISUAL_MAGNITUDE(builder, VISUAL_MAGNITUDE):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(VISUAL_MAGNITUDE), 0)
@@ -456,7 +456,7 @@ def OPPCreateSURFACESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSURFACESVector(builder, data):
-    OPPCreateSURFACESVector(builder, data)
+    return OPPCreateSURFACESVector(builder, data)
 
 def OPPAddASSET(builder, ASSET):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ASSET), 0)
@@ -480,7 +480,7 @@ def OPPCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    OPPCreateSOURCESVector(builder, data)
+    return OPPCreateSOURCESVector(builder, data)
 
 def OPPAddCREATED_AT(builder, CREATED_AT):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(CREATED_AT), 0)

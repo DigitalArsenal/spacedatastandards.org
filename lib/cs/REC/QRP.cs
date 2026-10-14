@@ -188,6 +188,39 @@ public struct QRP : IFlatbufferObject
   public byte[] GetARCHIVE_IDArray() { return __p.__vector_as_array<byte>(74); }
   public QRPColumn? COLUMNS(int j) { int o = __p.__offset(76); return o != 0 ? (QRPColumn?)(new QRPColumn()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int COLUMNSLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// How the request selects records in time.
+  public qrpTimeProfile TIME_PROFILE { get { int o = __p.__offset(78); return o != 0 ? (qrpTimeProfile)__p.bb.GetSbyte(o + __p.bb_pos) : qrpTimeProfile.Unspecified; } }
+  /// Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+  public long PROFILE_EPOCH_MS { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// Representation the client asks the page in.
+  public qrpRepresentation REPRESENTATION { get { int o = __p.__offset(82); return o != 0 ? (qrpRepresentation)__p.bb.GetSbyte(o + __p.bb_pos) : qrpRepresentation.Default; } }
+  /// Values bound to the placeholders of SQL, in order.
+  public QRPValue? PARAMETERS(int j) { int o = __p.__offset(84); return o != 0 ? (QRPValue?)(new QRPValue()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PARAMETERSLength { get { int o = __p.__offset(84); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Rows of a projection (a query that selects columns rather than whole
+  /// records), in COLUMNS order. Whole-record pages carry their records as
+  /// frames after the header instead, and leave ROWS empty.
+  public QRPRow? ROWS(int j) { int o = __p.__offset(86); return o != 0 ? (QRPRow?)(new QRPRow()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ROWSLength { get { int o = __p.__offset(86); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The serving node's queryable tables, answered to a request for the query
+  /// surface.
+  public QRPTable? TABLES(int j) { int o = __p.__offset(88); return o != 0 ? (QRPTable?)(new QRPTable()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TABLESLength { get { int o = __p.__offset(88); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+  /// none stated.
+  public uint MAX_ELAPSED_MS { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Most rows a page returns; 0 = none stated.
+  public ulong MAX_ROWS { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Most bytes a page returns; 0 = none stated.
+  public ulong MAX_BYTES { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Transport status the answer carries, HTTP semantics (200, 304, 400,
+  /// 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+  public ushort HTTP_STATUS { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// When the page's record frames are not inline but held by the serving
+  /// node for delivery out of band: the reference token the node resolves
+  /// (single use), and the byte size of what it refers to. 0 = inline.
+  public ulong BODY_REF_TOKEN { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  public ulong BODY_REF_SIZE { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<QRP> CreateQRP(FlatBufferBuilder builder,
       qrpKind KIND = qrpKind.Request,
@@ -226,8 +259,25 @@ public struct QRP : IFlatbufferObject
       StringOffset ETAGOffset = default(StringOffset),
       StringOffset CIDOffset = default(StringOffset),
       StringOffset ARCHIVE_IDOffset = default(StringOffset),
-      VectorOffset COLUMNSOffset = default(VectorOffset)) {
-    builder.StartTable(37);
+      VectorOffset COLUMNSOffset = default(VectorOffset),
+      qrpTimeProfile TIME_PROFILE = qrpTimeProfile.Unspecified,
+      long PROFILE_EPOCH_MS = 0,
+      qrpRepresentation REPRESENTATION = qrpRepresentation.Default,
+      VectorOffset PARAMETERSOffset = default(VectorOffset),
+      VectorOffset ROWSOffset = default(VectorOffset),
+      VectorOffset TABLESOffset = default(VectorOffset),
+      uint MAX_ELAPSED_MS = 0,
+      ulong MAX_ROWS = 0,
+      ulong MAX_BYTES = 0,
+      ushort HTTP_STATUS = 0,
+      ulong BODY_REF_TOKEN = 0,
+      ulong BODY_REF_SIZE = 0) {
+    builder.StartTable(49);
+    QRP.AddBODY_REF_SIZE(builder, BODY_REF_SIZE);
+    QRP.AddBODY_REF_TOKEN(builder, BODY_REF_TOKEN);
+    QRP.AddMAX_BYTES(builder, MAX_BYTES);
+    QRP.AddMAX_ROWS(builder, MAX_ROWS);
+    QRP.AddPROFILE_EPOCH_MS(builder, PROFILE_EPOCH_MS);
     QRP.AddGENERATED_AT_MS(builder, GENERATED_AT_MS);
     QRP.AddAS_OF_MS(builder, AS_OF_MS);
     QRP.AddSTORED(builder, STORED);
@@ -235,6 +285,10 @@ public struct QRP : IFlatbufferObject
     QRP.AddTOTAL_COUNT(builder, TOTAL_COUNT);
     QRP.AddTO_EPOCH_MS(builder, TO_EPOCH_MS);
     QRP.AddFROM_EPOCH_MS(builder, FROM_EPOCH_MS);
+    QRP.AddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS);
+    QRP.AddTABLES(builder, TABLESOffset);
+    QRP.AddROWS(builder, ROWSOffset);
+    QRP.AddPARAMETERS(builder, PARAMETERSOffset);
     QRP.AddCOLUMNS(builder, COLUMNSOffset);
     QRP.AddARCHIVE_ID(builder, ARCHIVE_IDOffset);
     QRP.AddCID(builder, CIDOffset);
@@ -259,6 +313,9 @@ public struct QRP : IFlatbufferObject
     QRP.AddRETRY_AFTER_MS(builder, RETRY_AFTER_MS);
     QRP.AddMESSAGE(builder, MESSAGEOffset);
     QRP.AddERROR_CODE(builder, ERROR_CODEOffset);
+    QRP.AddHTTP_STATUS(builder, HTTP_STATUS);
+    QRP.AddREPRESENTATION(builder, REPRESENTATION);
+    QRP.AddTIME_PROFILE(builder, TIME_PROFILE);
     QRP.AddSTALE(builder, STALE);
     QRP.AddTRUNCATED(builder, TRUNCATED);
     QRP.AddPARTIAL(builder, PARTIAL);
@@ -268,7 +325,7 @@ public struct QRP : IFlatbufferObject
     return QRP.EndQRP(builder);
   }
 
-  public static void StartQRP(FlatBufferBuilder builder) { builder.StartTable(37); }
+  public static void StartQRP(FlatBufferBuilder builder) { builder.StartTable(49); }
   public static void AddKIND(FlatBufferBuilder builder, qrpKind KIND) { builder.AddSbyte(0, (sbyte)KIND, 0); }
   public static void AddSTATUS(FlatBufferBuilder builder, qrpStatus STATUS) { builder.AddSbyte(1, (sbyte)STATUS, 0); }
   public static void AddERROR_CODE(FlatBufferBuilder builder, StringOffset ERROR_CODEOffset) { builder.AddOffset(2, ERROR_CODEOffset.Value, 0); }
@@ -316,6 +373,33 @@ public struct QRP : IFlatbufferObject
   public static VectorOffset CreateCOLUMNSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<QRPColumn>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOLUMNSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<QRPColumn>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOLUMNSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTIME_PROFILE(FlatBufferBuilder builder, qrpTimeProfile TIME_PROFILE) { builder.AddSbyte(37, (sbyte)TIME_PROFILE, 0); }
+  public static void AddPROFILE_EPOCH_MS(FlatBufferBuilder builder, long PROFILE_EPOCH_MS) { builder.AddLong(38, PROFILE_EPOCH_MS, 0); }
+  public static void AddREPRESENTATION(FlatBufferBuilder builder, qrpRepresentation REPRESENTATION) { builder.AddSbyte(39, (sbyte)REPRESENTATION, 0); }
+  public static void AddPARAMETERS(FlatBufferBuilder builder, VectorOffset PARAMETERSOffset) { builder.AddOffset(40, PARAMETERSOffset.Value, 0); }
+  public static VectorOffset CreatePARAMETERSVector(FlatBufferBuilder builder, Offset<QRPValue>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePARAMETERSVectorBlock(FlatBufferBuilder builder, Offset<QRPValue>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<QRPValue>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<QRPValue>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddROWS(FlatBufferBuilder builder, VectorOffset ROWSOffset) { builder.AddOffset(41, ROWSOffset.Value, 0); }
+  public static VectorOffset CreateROWSVector(FlatBufferBuilder builder, Offset<QRPRow>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateROWSVectorBlock(FlatBufferBuilder builder, Offset<QRPRow>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateROWSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<QRPRow>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateROWSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<QRPRow>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartROWSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTABLES(FlatBufferBuilder builder, VectorOffset TABLESOffset) { builder.AddOffset(42, TABLESOffset.Value, 0); }
+  public static VectorOffset CreateTABLESVector(FlatBufferBuilder builder, Offset<QRPTable>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTABLESVectorBlock(FlatBufferBuilder builder, Offset<QRPTable>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTABLESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<QRPTable>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTABLESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<QRPTable>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTABLESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMAX_ELAPSED_MS(FlatBufferBuilder builder, uint MAX_ELAPSED_MS) { builder.AddUint(43, MAX_ELAPSED_MS, 0); }
+  public static void AddMAX_ROWS(FlatBufferBuilder builder, ulong MAX_ROWS) { builder.AddUlong(44, MAX_ROWS, 0); }
+  public static void AddMAX_BYTES(FlatBufferBuilder builder, ulong MAX_BYTES) { builder.AddUlong(45, MAX_BYTES, 0); }
+  public static void AddHTTP_STATUS(FlatBufferBuilder builder, ushort HTTP_STATUS) { builder.AddUshort(46, HTTP_STATUS, 0); }
+  public static void AddBODY_REF_TOKEN(FlatBufferBuilder builder, ulong BODY_REF_TOKEN) { builder.AddUlong(47, BODY_REF_TOKEN, 0); }
+  public static void AddBODY_REF_SIZE(FlatBufferBuilder builder, ulong BODY_REF_SIZE) { builder.AddUlong(48, BODY_REF_SIZE, 0); }
   public static Offset<QRP> EndQRP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<QRP>(o);
@@ -367,6 +451,21 @@ public struct QRP : IFlatbufferObject
     _o.ARCHIVE_ID = this.ARCHIVE_ID;
     _o.COLUMNS = new List<QRPColumnT>();
     for (var _j = 0; _j < this.COLUMNSLength; ++_j) {_o.COLUMNS.Add(this.COLUMNS(_j).HasValue ? this.COLUMNS(_j).Value.UnPack() : null);}
+    _o.TIME_PROFILE = this.TIME_PROFILE;
+    _o.PROFILE_EPOCH_MS = this.PROFILE_EPOCH_MS;
+    _o.REPRESENTATION = this.REPRESENTATION;
+    _o.PARAMETERS = new List<QRPValueT>();
+    for (var _j = 0; _j < this.PARAMETERSLength; ++_j) {_o.PARAMETERS.Add(this.PARAMETERS(_j).HasValue ? this.PARAMETERS(_j).Value.UnPack() : null);}
+    _o.ROWS = new List<QRPRowT>();
+    for (var _j = 0; _j < this.ROWSLength; ++_j) {_o.ROWS.Add(this.ROWS(_j).HasValue ? this.ROWS(_j).Value.UnPack() : null);}
+    _o.TABLES = new List<QRPTableT>();
+    for (var _j = 0; _j < this.TABLESLength; ++_j) {_o.TABLES.Add(this.TABLES(_j).HasValue ? this.TABLES(_j).Value.UnPack() : null);}
+    _o.MAX_ELAPSED_MS = this.MAX_ELAPSED_MS;
+    _o.MAX_ROWS = this.MAX_ROWS;
+    _o.MAX_BYTES = this.MAX_BYTES;
+    _o.HTTP_STATUS = this.HTTP_STATUS;
+    _o.BODY_REF_TOKEN = this.BODY_REF_TOKEN;
+    _o.BODY_REF_SIZE = this.BODY_REF_SIZE;
   }
   public static Offset<QRP> Pack(FlatBufferBuilder builder, QRPT _o) {
     if (_o == null) return default(Offset<QRP>);
@@ -398,6 +497,24 @@ public struct QRP : IFlatbufferObject
       var __COLUMNS = new Offset<QRPColumn>[_o.COLUMNS.Count];
       for (var _j = 0; _j < __COLUMNS.Length; ++_j) { __COLUMNS[_j] = QRPColumn.Pack(builder, _o.COLUMNS[_j]); }
       _COLUMNS = CreateCOLUMNSVector(builder, __COLUMNS);
+    }
+    var _PARAMETERS = default(VectorOffset);
+    if (_o.PARAMETERS != null) {
+      var __PARAMETERS = new Offset<QRPValue>[_o.PARAMETERS.Count];
+      for (var _j = 0; _j < __PARAMETERS.Length; ++_j) { __PARAMETERS[_j] = QRPValue.Pack(builder, _o.PARAMETERS[_j]); }
+      _PARAMETERS = CreatePARAMETERSVector(builder, __PARAMETERS);
+    }
+    var _ROWS = default(VectorOffset);
+    if (_o.ROWS != null) {
+      var __ROWS = new Offset<QRPRow>[_o.ROWS.Count];
+      for (var _j = 0; _j < __ROWS.Length; ++_j) { __ROWS[_j] = QRPRow.Pack(builder, _o.ROWS[_j]); }
+      _ROWS = CreateROWSVector(builder, __ROWS);
+    }
+    var _TABLES = default(VectorOffset);
+    if (_o.TABLES != null) {
+      var __TABLES = new Offset<QRPTable>[_o.TABLES.Count];
+      for (var _j = 0; _j < __TABLES.Length; ++_j) { __TABLES[_j] = QRPTable.Pack(builder, _o.TABLES[_j]); }
+      _TABLES = CreateTABLESVector(builder, __TABLES);
     }
     return CreateQRP(
       builder,
@@ -437,7 +554,19 @@ public struct QRP : IFlatbufferObject
       _ETAG,
       _CID,
       _ARCHIVE_ID,
-      _COLUMNS);
+      _COLUMNS,
+      _o.TIME_PROFILE,
+      _o.PROFILE_EPOCH_MS,
+      _o.REPRESENTATION,
+      _PARAMETERS,
+      _ROWS,
+      _TABLES,
+      _o.MAX_ELAPSED_MS,
+      _o.MAX_ROWS,
+      _o.MAX_BYTES,
+      _o.HTTP_STATUS,
+      _o.BODY_REF_TOKEN,
+      _o.BODY_REF_SIZE);
   }
 }
 
@@ -480,6 +609,18 @@ public class QRPT
   public string CID { get; set; }
   public string ARCHIVE_ID { get; set; }
   public List<QRPColumnT> COLUMNS { get; set; }
+  public qrpTimeProfile TIME_PROFILE { get; set; }
+  public long PROFILE_EPOCH_MS { get; set; }
+  public qrpRepresentation REPRESENTATION { get; set; }
+  public List<QRPValueT> PARAMETERS { get; set; }
+  public List<QRPRowT> ROWS { get; set; }
+  public List<QRPTableT> TABLES { get; set; }
+  public uint MAX_ELAPSED_MS { get; set; }
+  public ulong MAX_ROWS { get; set; }
+  public ulong MAX_BYTES { get; set; }
+  public ushort HTTP_STATUS { get; set; }
+  public ulong BODY_REF_TOKEN { get; set; }
+  public ulong BODY_REF_SIZE { get; set; }
 
   public QRPT() {
     this.KIND = qrpKind.Request;
@@ -519,6 +660,18 @@ public class QRPT
     this.CID = null;
     this.ARCHIVE_ID = null;
     this.COLUMNS = null;
+    this.TIME_PROFILE = qrpTimeProfile.Unspecified;
+    this.PROFILE_EPOCH_MS = 0;
+    this.REPRESENTATION = qrpRepresentation.Default;
+    this.PARAMETERS = null;
+    this.ROWS = null;
+    this.TABLES = null;
+    this.MAX_ELAPSED_MS = 0;
+    this.MAX_ROWS = 0;
+    this.MAX_BYTES = 0;
+    this.HTTP_STATUS = 0;
+    this.BODY_REF_TOKEN = 0;
+    this.BODY_REF_SIZE = 0;
   }
   public static QRPT DeserializeFromBinary(byte[] fbBuffer) {
     return QRP.GetRootAsQRP(new ByteBuffer(fbBuffer)).UnPack();
@@ -573,6 +726,18 @@ static public class QRPVerify
       && verifier.VerifyString(tablePos, 72 /*CID*/, false)
       && verifier.VerifyString(tablePos, 74 /*ARCHIVE_ID*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 76 /*COLUMNS*/, QRPColumnVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 78 /*TIME_PROFILE*/, 1 /*qrpTimeProfile*/, 1, false)
+      && verifier.VerifyField(tablePos, 80 /*PROFILE_EPOCH_MS*/, 8 /*long*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*REPRESENTATION*/, 1 /*qrpRepresentation*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 84 /*PARAMETERS*/, QRPValueVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 86 /*ROWS*/, QRPRowVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 88 /*TABLES*/, QRPTableVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 90 /*MAX_ELAPSED_MS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 92 /*MAX_ROWS*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*MAX_BYTES*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*HTTP_STATUS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 98 /*BODY_REF_TOKEN*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*BODY_REF_SIZE*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -1,0 +1,435 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "oilLinkStatus": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Candidate",
+        "Proposed",
+        "Duplicate",
+        "Conflicting",
+        "Invalid",
+        "Bound",
+        "Rejected"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "Candidate": {
+          "value": 1,
+          "description": "Declared by a source and not yet tested."
+        },
+        "Proposed": {
+          "value": 2,
+          "description": "Proposed for testing (for example paired with trajectories to compare)."
+        },
+        "Duplicate": {
+          "value": 3,
+          "description": "Repeats an earlier declaration of the same pair (DUPLICATE_OF names it)."
+        },
+        "Conflicting": {
+          "value": 4,
+          "description": "One side is declared against more than one identifier on the other."
+        },
+        "Invalid": {
+          "value": 5,
+          "description": "The declaration could not be read as a valid pairing (an impossible date, a malformed identifier); kept with its text as evidence."
+        },
+        "Bound": {
+          "value": 6,
+          "description": "Tested and bound: the identities are joined."
+        },
+        "Rejected": {
+          "value": 7,
+          "description": "Tested and refused."
+        }
+      }
+    },
+    "oilConflictShape": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "OneLeftManyRight",
+        "ManyLeftOneRight",
+        "ManyLeftManyRight"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "OneLeftManyRight": {
+          "value": 1,
+          "description": "One left identifier is declared against several right identifiers."
+        },
+        "ManyLeftOneRight": {
+          "value": 2,
+          "description": "One right identifier is declared against several left identifiers."
+        },
+        "ManyLeftManyRight": {
+          "value": 3,
+          "description": "Several on each side are declared against each other."
+        }
+      }
+    },
+    "OILIdentifier": {
+      "type": "object",
+      "description": "One object identifier in one namespace.",
+      "properties": {
+        "NAMESPACE": {
+          "type": "string",
+          "description": "Namespace (catalog or provider) the identifier belongs to, e.g. \"vimpel\",\n\"NORAD\", \"COSPAR\", \"space-track\", \"esa-discos\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ID": {
+          "type": "string",
+          "description": "The identifier in canonical form (leading zeros removed for a number),\ne.g. \"12\" for Vimpel \"00012\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_AS_PRINTED": {
+          "type": "string",
+          "description": "The identifier exactly as the source printed it; empty when the same as\nID.",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalog number when the namespace is NORAD or the identifier\nresolves to one; 0 = none.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "INTERNATIONAL_DESIGNATOR": {
+          "type": "string",
+          "description": "International (COSPAR) designator when known, YYYY-NNNP; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRST_DETECTED": {
+          "type": "string",
+          "description": "Date the source says the object was first detected under this\nidentifier, ISO 8601 calendar date (YYYY-MM-DD); empty when not stated\nor not a valid date.",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRST_DETECTED_AS_PRINTED": {
+          "type": "string",
+          "description": "The first-detection date as printed, when it is not a valid date (e.g.\n\"20239591\"); empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRAJECTORY_ID": {
+          "type": "string",
+          "description": "Identifier of a trajectory or state product of this identity that a test\nof the link compares (an $XMT trajectory ID); empty = none.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OILEvidence": {
+      "type": "object",
+      "description": "Where a declaration comes from.",
+      "properties": {
+        "SOURCE": {
+          "type": "string",
+          "description": "Kind of source of the declaration, e.g. \"datefirst\", \"satcat\",\n\"operator\", \"analyst\".",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORD_ID": {
+          "type": "string",
+          "description": "Immutable identifier of the source edition: a SHA-256 hex digest or CID\nof the file or record.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "1-based line of the declaration in the source edition; 0 = not stated.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DECLARATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of times the edition declares this pair (1 = once).",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "DATES_DIFFER": {
+          "type": "boolean",
+          "description": "True when repeated declarations of the pair give different dates.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ORIGINAL": {
+          "type": "string",
+          "description": "The declaration's text as printed, when kept (for an Invalid link).",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OILLink": {
+      "type": "object",
+      "description": "One candidate link between two identifiers.",
+      "properties": {
+        "LEFT": {
+          "$ref": "#/definitions/OILIdentifier",
+          "description": "The identifier being linked (typically the provider-native one).",
+          "x-flatbuffer-type": "OILIdentifier"
+        },
+        "RIGHT": {
+          "$ref": "#/definitions/OILIdentifier",
+          "description": "The identifier it is linked to (typically the reference catalog's).",
+          "x-flatbuffer-type": "OILIdentifier"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/oilLinkStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "Candidate": {
+              "value": 1,
+              "description": "Declared by a source and not yet tested."
+            },
+            "Proposed": {
+              "value": 2,
+              "description": "Proposed for testing (for example paired with trajectories to compare)."
+            },
+            "Duplicate": {
+              "value": 3,
+              "description": "Repeats an earlier declaration of the same pair (DUPLICATE_OF names it)."
+            },
+            "Conflicting": {
+              "value": 4,
+              "description": "One side is declared against more than one identifier on the other."
+            },
+            "Invalid": {
+              "value": 5,
+              "description": "The declaration could not be read as a valid pairing (an impossible date, a malformed identifier); kept with its text as evidence."
+            },
+            "Bound": {
+              "value": 6,
+              "description": "Tested and bound: the identities are joined."
+            },
+            "Rejected": {
+              "value": 7,
+              "description": "Tested and refused."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "AMBIGUOUS": {
+          "type": "boolean",
+          "description": "True when either side belongs to a group that is not one-to-one; such a\nlink never binds without review.",
+          "x-flatbuffer-type": "bool"
+        },
+        "EVIDENCE": {
+          "$ref": "#/definitions/OILEvidence",
+          "x-flatbuffer-type": "OILEvidence"
+        },
+        "DUPLICATE_OF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "For a Duplicate, the LINE of the declaration it repeats; 0 = none.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REASON": {
+          "type": "string",
+          "description": "Why the link has its status (human-readable); empty when Candidate.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OILConflict": {
+      "type": "object",
+      "description": "A group of identifiers declared against each other that is not\none-to-one.",
+      "properties": {
+        "LEFT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Left identifiers in the group, as \"<namespace>:<id>\".",
+          "x-flatbuffer-type": "[string]"
+        },
+        "RIGHT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Right identifiers in the group, as \"<namespace>:<id>\".",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SHAPE": {
+          "$ref": "#/definitions/oilConflictShape",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "OneLeftManyRight": {
+              "value": 1,
+              "description": "One left identifier is declared against several right identifiers."
+            },
+            "ManyLeftOneRight": {
+              "value": 2,
+              "description": "One right identifier is declared against several left identifiers."
+            },
+            "ManyLeftManyRight": {
+              "value": 3,
+              "description": "Several on each side are declared against each other."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "REASON": {
+          "type": "string",
+          "description": "Human-readable description.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OIL": {
+      "type": "object",
+      "description": "Object Identity Link - one crosswalk of candidate links.",
+      "properties": {
+        "PROVIDER": {
+          "type": "string",
+          "description": "Provider of the crosswalk, e.g. \"vimpel\".",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "type": "string",
+          "description": "Kind of crosswalk, e.g. \"datefirst\".",
+          "x-flatbuffer-type": "string"
+        },
+        "LEFT_NAMESPACE": {
+          "type": "string",
+          "description": "Namespace of every LEFT identifier, when uniform.",
+          "x-flatbuffer-type": "string"
+        },
+        "RIGHT_NAMESPACE": {
+          "type": "string",
+          "description": "Namespace of every RIGHT identifier, when uniform.",
+          "x-flatbuffer-type": "string"
+        },
+        "HEADER": {
+          "type": "string",
+          "description": "Header line of the source file as printed, e.g.\n\"Nvym t_det_v Nnor t_det_n\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SHA256": {
+          "type": "string",
+          "description": "SHA-256 hex digest of the source edition (the RECORD_ID of its links).",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size of the source edition, bytes.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Data rows read (header excluded).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DUPLICATE_LINES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Rows that repeated an earlier pair.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LINK_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Distinct links (LINKS length).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CLEAN_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Links in one-to-one groups.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AMBIGUOUS_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Links in groups that are not one-to-one.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LEFT_ID_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Distinct left identifiers.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RIGHT_ID_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Distinct right identifiers.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DATES_DIFFER_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Links whose repeated declarations give different dates.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNREADABLE_DATE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Links with a first-detection date that is not a valid date.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LINKS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OILLink"
+          },
+          "x-flatbuffer-type": "[OILLink]"
+        },
+        "CONFLICTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OILConflict"
+          },
+          "x-flatbuffer-type": "[OILConflict]"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when the crosswalk was generated; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OIL",
+  "x-flatbuffer-root-type": "OIL",
+  "x-flatbuffer-file-identifier": "$OIL"
+}

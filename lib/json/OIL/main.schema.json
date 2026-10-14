@@ -1,0 +1,220 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "oilLinkStatus" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Candidate", "Proposed", "Duplicate", "Conflicting", "Invalid", "Bound", "Rejected"]
+    },
+    "oilConflictShape" : {
+      "type" : "string",
+      "enum": ["Unspecified", "OneLeftManyRight", "ManyLeftOneRight", "ManyLeftManyRight"]
+    },
+    "OILIdentifier" : {
+      "type" : "object",
+      "description" : "One object identifier in one namespace.",
+      "properties" : {
+        "NAMESPACE" : {
+                "type" : "string",
+                "description" : "Namespace (catalog or provider) the identifier belongs to, e.g. \"vimpel\",\n\"NORAD\", \"COSPAR\", \"space-track\", \"esa-discos\"."
+              },
+        "ID" : {
+                "type" : "string",
+                "description" : "The identifier in canonical form (leading zeros removed for a number),\ne.g. \"12\" for Vimpel \"00012\"."
+              },
+        "ID_AS_PRINTED" : {
+                "type" : "string",
+                "description" : "The identifier exactly as the source printed it; empty when the same as\nID."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number when the namespace is NORAD or the identifier\nresolves to one; 0 = none."
+              },
+        "INTERNATIONAL_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "International (COSPAR) designator when known, YYYY-NNNP; empty = none."
+              },
+        "FIRST_DETECTED" : {
+                "type" : "string",
+                "description" : "Date the source says the object was first detected under this\nidentifier, ISO 8601 calendar date (YYYY-MM-DD); empty when not stated\nor not a valid date."
+              },
+        "FIRST_DETECTED_AS_PRINTED" : {
+                "type" : "string",
+                "description" : "The first-detection date as printed, when it is not a valid date (e.g.\n\"20239591\"); empty otherwise."
+              },
+        "TRAJECTORY_ID" : {
+                "type" : "string",
+                "description" : "Identifier of a trajectory or state product of this identity that a test\nof the link compares (an $XMT trajectory ID); empty = none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OILEvidence" : {
+      "type" : "object",
+      "description" : "Where a declaration comes from.",
+      "properties" : {
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Kind of source of the declaration, e.g. \"datefirst\", \"satcat\",\n\"operator\", \"analyst\"."
+              },
+        "RECORD_ID" : {
+                "type" : "string",
+                "description" : "Immutable identifier of the source edition: a SHA-256 hex digest or CID\nof the file or record."
+              },
+        "LINE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "1-based line of the declaration in the source edition; 0 = not stated."
+              },
+        "DECLARATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of times the edition declares this pair (1 = once)."
+              },
+        "DATES_DIFFER" : {
+                "type" : "boolean",
+                "description" : "True when repeated declarations of the pair give different dates."
+              },
+        "ORIGINAL" : {
+                "type" : "string",
+                "description" : "The declaration's text as printed, when kept (for an Invalid link)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OILLink" : {
+      "type" : "object",
+      "description" : "One candidate link between two identifiers.",
+      "properties" : {
+        "LEFT" : {
+                "$ref" : "#/definitions/OILIdentifier",
+                "description" : "The identifier being linked (typically the provider-native one)."
+              },
+        "RIGHT" : {
+                "$ref" : "#/definitions/OILIdentifier",
+                "description" : "The identifier it is linked to (typically the reference catalog's)."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/oilLinkStatus"
+              },
+        "AMBIGUOUS" : {
+                "type" : "boolean",
+                "description" : "True when either side belongs to a group that is not one-to-one; such a\nlink never binds without review."
+              },
+        "EVIDENCE" : {
+                "$ref" : "#/definitions/OILEvidence"
+              },
+        "DUPLICATE_OF" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "For a Duplicate, the LINE of the declaration it repeats; 0 = none."
+              },
+        "REASON" : {
+                "type" : "string",
+                "description" : "Why the link has its status (human-readable); empty when Candidate."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OILConflict" : {
+      "type" : "object",
+      "description" : "A group of identifiers declared against each other that is not\none-to-one.",
+      "properties" : {
+        "LEFT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Left identifiers in the group, as \"<namespace>:<id>\"."
+              },
+        "RIGHT_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Right identifiers in the group, as \"<namespace>:<id>\"."
+              },
+        "SHAPE" : {
+                "$ref" : "#/definitions/oilConflictShape"
+              },
+        "REASON" : {
+                "type" : "string",
+                "description" : "Human-readable description."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OIL" : {
+      "type" : "object",
+      "description" : "Object Identity Link - one crosswalk of candidate links.",
+      "properties" : {
+        "PROVIDER" : {
+                "type" : "string",
+                "description" : "Provider of the crosswalk, e.g. \"vimpel\"."
+              },
+        "KIND" : {
+                "type" : "string",
+                "description" : "Kind of crosswalk, e.g. \"datefirst\"."
+              },
+        "LEFT_NAMESPACE" : {
+                "type" : "string",
+                "description" : "Namespace of every LEFT identifier, when uniform."
+              },
+        "RIGHT_NAMESPACE" : {
+                "type" : "string",
+                "description" : "Namespace of every RIGHT identifier, when uniform."
+              },
+        "HEADER" : {
+                "type" : "string",
+                "description" : "Header line of the source file as printed, e.g.\n\"Nvym t_det_v Nnor t_det_n\"."
+              },
+        "SHA256" : {
+                "type" : "string",
+                "description" : "SHA-256 hex digest of the source edition (the RECORD_ID of its links)."
+              },
+        "BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of the source edition, bytes."
+              },
+        "ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Data rows read (header excluded)."
+              },
+        "DUPLICATE_LINES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Rows that repeated an earlier pair."
+              },
+        "LINK_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Distinct links (LINKS length)."
+              },
+        "CLEAN_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Links in one-to-one groups."
+              },
+        "AMBIGUOUS_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Links in groups that are not one-to-one."
+              },
+        "LEFT_ID_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Distinct left identifiers."
+              },
+        "RIGHT_ID_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Distinct right identifiers."
+              },
+        "DATES_DIFFER_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Links whose repeated declarations give different dates."
+              },
+        "UNREADABLE_DATE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Links with a first-detection date that is not a valid date."
+              },
+        "LINKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OILLink"}
+              },
+        "CONFLICTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OILConflict"}
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the crosswalk was generated; 0 = unknown."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OIL"
+}

@@ -426,7 +426,7 @@ def CSOCreateDESIGNATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDESIGNATIONSVector(builder, data):
-    CSOCreateDESIGNATIONSVector(builder, data)
+    return CSOCreateDESIGNATIONSVector(builder, data)
 
 def CSOAddSOURCE_CLASS(builder, SOURCE_CLASS):
     builder.PrependUint8Slot(3, SOURCE_CLASS, 0)
@@ -576,7 +576,7 @@ def CSOCreatePHOTOMETRYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePHOTOMETRYVector(builder, data):
-    CSOCreatePHOTOMETRYVector(builder, data)
+    return CSOCreatePHOTOMETRYVector(builder, data)
 
 def CSOAddIS_TRANSIENT(builder, IS_TRANSIENT):
     builder.PrependBoolSlot(26, IS_TRANSIENT, 0)

@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Collection Request Message
-public struct CRM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CRM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

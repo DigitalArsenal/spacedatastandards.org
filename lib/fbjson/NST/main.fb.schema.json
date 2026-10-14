@@ -144,6 +144,14 @@
           "type": "string",
           "description": "Onion-service address when the peer is reachable over an anonymity\nnetwork.",
           "x-flatbuffer-type": "string"
+        },
+        "STANDARDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standards the peer publishes or serves, as their codes, e.g. \"OMM\".",
+          "x-flatbuffer-type": "[string]"
         }
       },
       "additionalProperties": false
@@ -169,6 +177,11 @@
         "SOURCE_PEER_ID": {
           "type": "string",
           "description": "Peer identifier of the emitting node.",
+          "x-flatbuffer-type": "string"
+        },
+        "ETAG": {
+          "type": "string",
+          "description": "Entity tag of this set, for conditional requests.",
           "x-flatbuffer-type": "string"
         }
       },

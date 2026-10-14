@@ -111,7 +111,7 @@ def CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
-    CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+    return CZMPolygonHoleCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
 
 def CZMPolygonHoleAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
@@ -133,7 +133,7 @@ def CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTESIANVector(builder, data):
-    CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(builder, data)
+    return CZMPolygonHoleCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMPolygonHoleEnd(builder):
     return builder.EndObject()

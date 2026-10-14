@@ -1,0 +1,2978 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "AtmosphericModelFamily" : {
+      "type" : "string",
+      "enum": ["CIRA_XX", "DTM_XX", "GITM", "GOST", "GRAM_XX", "HP", "JAC_HASDM", "JAC_GILL", "JB08", "JR71", "JXX", "MET_XX", "MSIS_86", "MSISE_90", "NRLMSIS00E", "TIECGM", "USSA_XX"]
+    },
+    "covarianceCalibration" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Uncalibrated", "Calibrated"]
+    },
+    "covarianceRule" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Operator", "ScaledFit", "SourceModel", "PooledModel"]
+    },
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
+    "timingStandard" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS", "A1"]
+    },
+    "timEpochRepresentation" : {
+      "type" : "string",
+      "enum": ["JULIAN_DATE", "MODIFIED_JULIAN_DATE", "UNIX_SECONDS", "ISO8601", "GPS_SECONDS", "GNSS_WEEK_SECONDS", "CCSDS_TIME_CODE", "MISSION_ELAPSED_SECONDS"]
+    },
+    "timCcsdsTimeCodeKind" : {
+      "type" : "string",
+      "enum": ["NONE", "UNSEGMENTED", "DAY_SEGMENTED", "CALENDAR_SEGMENTED"]
+    },
+    "timConversionStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_TIME_SYSTEM", "LEAP_SECOND_DATA_REQUIRED", "EOP_DATA_REQUIRED", "OUT_OF_RANGE"]
+    },
+    "PolarizationType" : {
+      "type" : "string",
+      "enum": ["linear", "circular", "elliptical", "unpolarized"]
+    },
+    "SimplePolarization" : {
+      "type" : "string",
+      "enum": ["vertical", "horizontal", "leftHandCircular", "rightHandCircular"]
+    },
+    "DataMode" : {
+      "type" : "string",
+      "enum": ["EXERCISE", "REAL", "SIMULATED", "TEST"]
+    },
+    "DeviceType" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "OPTICAL", "INFRARED_SENSOR", "ULTRAVIOLET_SENSOR", "X_RAY_SENSOR", "GAMMA_RAY_SENSOR", "RADAR", "PHASED_ARRAY_RADAR", "SYNTHETIC_APERTURE_RADAR", "BISTATIC_RADIO_TELESCOPE", "RADIO_TELESCOPE", "ATMOSPHERIC_SENSOR", "SPACE_WEATHER_SENSOR", "ENVIRONMENTAL_SENSOR", "SEISMIC_SENSOR", "GRAVIMETRIC_SENSOR", "MAGNETIC_SENSOR", "ELECTROMAGNETIC_SENSOR", "THERMAL_SENSOR", "CHEMICAL_SENSOR", "BIOLOGICAL_SENSOR", "RADIATION_SENSOR", "PARTICLE_DETECTOR", "LIDAR", "SONAR", "TELESCOPE", "SPECTROSCOPIC_SENSOR", "PHOTOMETRIC_SENSOR", "POLARIMETRIC_SENSOR", "INTERFEROMETRIC_SENSOR", "MULTISPECTRAL_SENSOR", "HYPERSPECTRAL_SENSOR", "GPS_RECEIVER", "RADIO_COMMUNICATIONS", "LASER_COMMUNICATIONS", "SATELLITE_COMMUNICATIONS", "LASER_INSTRUMENT", "RF_ANALYZER", "IONOSPHERIC_SENSOR", "LASER_IMAGING", "OPTICAL_TELESCOPE", "HIGH_RESOLUTION_OPTICAL", "RADIO", "MICROWAVE_TRANSMITTER", "RF_MONITOR", "HF_RADIO_COMMUNICATIONS"]
+    },
+    "legacyCountryCode" : {
+      "type" : "string",
+      "enum": ["AB", "ABS", "AC", "ALG", "ANG", "ARGN", "ARM", "ASRA", "AUS", "AZER", "BEL", "BELA", "BERM", "BGD", "BHUT", "BOL", "BRAZ", "BUL", "CA", "CHBZ", "CHTU", "CHLE", "CIS", "COL", "CRI", "CZCH", "DEN", "DJI", "ECU", "EGYP", "ESA", "ESRO", "EST", "ETH", "EUME", "EUTE", "FGER", "FIN", "FR", "FRIT", "GER", "GHA", "GLOB", "GREC", "GRSA", "GUAT", "HUN", "IM", "IND", "INDO", "IRAN", "IRAQ", "IRID", "IRL", "ISRA", "ISRO", "ISS", "IT", "ITSO", "JPN", "KAZ", "KEN", "LAOS", "LKA", "LTU", "LUXE", "MA", "MALA", "MCO", "MDA", "MEX", "MMR", "MNG", "MUS", "NATO", "NETH", "NICO", "NIG", "NKOR", "NOR", "NPL", "NZ", "O3B", "ORB", "PAKI", "PERU", "POL", "POR", "PRC", "PRY", "PRES", "QAT", "RASC", "ROC", "ROM", "RP", "RWA", "SAFR", "SAUD", "SDN", "SEAL", "SES", "SGJP", "SING", "SKOR", "SPN", "STCT", "SVN", "SWED", "SWTZ", "TBD", "THAI", "TMMC", "TUN", "TURK", "UAE", "UK", "UKR", "UNK", "URY", "US", "USBZ", "VAT", "VENZ", "VTNM", "ZWE", "AGO", "BGR", "BHR", "BWA", "CAN", "CZE", "HRV", "JOR", "KWT", "PER", "PRI", "SLB", "SVK", "TWN", "UGA"]
+    },
+    "spaceObjectClass" : {
+      "type" : "string",
+      "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "UNKNOWN"]
+    },
+    "operationalState" : {
+      "type" : "string",
+      "enum": ["OPERATIONAL", "NONOPERATIONAL", "PARTIALLY_OPERATIONAL", "BACKUP_STANDBY", "SPARE", "EXTENDED_MISSION", "DECAYED", "UNKNOWN"]
+    },
+    "dataAvailability" : {
+      "type" : "string",
+      "enum": ["NO_CURRENT_ELEMENTS", "NO_INITIAL_ELEMENTS", "NO_ELEMENTS_AVAILABLE", "OK"]
+    },
+    "orbitRegime" : {
+      "type" : "string",
+      "enum": ["ORBIT", "LANDING", "IMPACT", "DOCKED", "ROUNDTRIP"]
+    },
+    "massCategory" : {
+      "type" : "string",
+      "enum": ["DRY", "WET"]
+    },
+    "catalogProductKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Sgp4Elements", "Sgp4XpElements", "StateCovariance"]
+    },
+    "polynomialBasisType" : {
+      "type" : "string",
+      "enum": ["CHEBYSHEV", "LEGENDRE", "HERMITE", "LAGRANGE", "POWER_SERIES"]
+    },
+    "ppeAnomalyType" : {
+      "type" : "string",
+      "enum": ["TRUE_ANOMALY", "MEAN_ANOMALY", "ECCENTRIC_ANOMALY"]
+    },
+    "sizeShapeProfile" : {
+      "type" : "string",
+      "enum": ["SMA", "R_PERIAPSIS"]
+    },
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "trajectoryType" : {
+      "type" : "string",
+      "enum": ["CARTESIAN_PV", "CARTESIAN_PVA", "POLYNOMIAL_POS", "POLYNOMIAL_OE", "HERMITE", "LAGRANGE", "KEPLERIAN", "KEPLERIAN_MEAN", "EQUINOCTIAL", "EQUINOCTIAL_MOD"]
+    },
+    "estimatorCategory" : {
+      "type" : "string",
+      "enum": ["Unknown", "BatchLeastSquares", "ExtendedKalman", "UnscentedKalman", "Smoother"]
+    },
+    "covarianceOrdering" : {
+      "type" : "string",
+      "enum": ["LTM", "UTM", "FULL", "LTMWCC", "UTMWCC"]
+    },
+    "meanElementSource" : {
+      "type" : "string",
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "ephemerisFormat" : {
+      "type" : "string",
+      "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
+    },
+    "sbcBiasBasis" : {
+      "type" : "string",
+      "enum": ["Unspecified", "OrbitRtn", "Measurement", "MeasurementAsRtn"]
+    },
+    "sbcBiasNature" : {
+      "type" : "string",
+      "enum": ["Sigma", "Offset"]
+    },
+    "sbcContributorKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "DirectCovariance", "ElementSetSeries", "SensorBias", "ModelTerm"]
+    },
+    "ATM" : {
+      "type" : "object",
+      "description" : "Atmospheric Model Message",
+      "properties" : {
+        "MODEL" : {
+                "$ref" : "#/definitions/AtmosphericModelFamily",
+                "description" : "Canonical model family"
+              },
+        "YEAR" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Four-digit year identifying the model version (e.g., 1970, 2008, 2020)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CVR" : {
+      "type" : "object",
+      "description" : "Covariance Realism",
+      "properties" : {
+        "RULE" : {
+                "$ref" : "#/definitions/covarianceRule",
+                "description" : "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+              },
+        "REGIME" : {
+                "type" : "string",
+                "description" : "Orbit regime of the cell, as the model names it."
+              },
+        "AGE_DAYS" : {
+                "type" : "number",
+                "description" : "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+              },
+        "HORIZON_DAYS" : {
+                "type" : "number",
+                "description" : "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+              },
+        "MEASURED_LINEAGE" : {
+                "type" : "string",
+                "description" : "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+              },
+        "TEST_WINDOW" : {
+                "type" : "string",
+                "description" : "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+              },
+        "MEAN_D2_OVER_3" : {
+                "type" : "number",
+                "description" : "Mean of d2/3 over the held-out samples. NaN when not measured."
+              },
+        "COVERAGE_95" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+              },
+        "SAMPLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of held-out samples the test used."
+              },
+        "OBJECTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of distinct objects the samples came from."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+              },
+        "CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+              },
+        "EVIDENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the report or record that holds the test."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCcsdsTimeCode" : {
+      "type" : "object",
+      "description" : "CCSDS time-code payload and preamble metadata.",
+      "properties" : {
+        "CODE_KIND" : {
+                "$ref" : "#/definitions/timCcsdsTimeCodeKind",
+                "description" : "CCSDS time-code family."
+              },
+        "PREAMBLE_FIELD1" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "First CCSDS preamble field octet."
+              },
+        "PREAMBLE_FIELD2" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+              },
+        "TIME_FIELD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Raw CCSDS time field octets."
+              },
+        "AGENCY_DEFINED_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional agency-defined epoch timestamp for agency epoch time codes."
+              },
+        "CCSDS_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMInstant" : {
+      "type" : "object",
+      "description" : "Numeric or textual instant tagged with its time system and representation.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system for this instant."
+              },
+        "EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+              },
+        "JULIAN_DATE" : {
+                "type" : "number",
+                "description" : "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+              },
+        "SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+              },
+        "ISO8601" : {
+                "type" : "string",
+                "description" : "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+              },
+        "SUBSECOND_NANOS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Additional nanoseconds beyond the fractional scalar/text value."
+              },
+        "EPOCH_LABEL" : {
+                "type" : "string",
+                "description" : "Optional application-defined epoch label for MET, MRT, or SCLK values."
+              },
+        "GNSS_WEEK" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+              },
+        "HAS_GNSS_ROLLOVER_REFERENCE" : {
+                "type" : "boolean",
+                "description" : "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+              },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional Orekit-style GNSS week rollover reference timestamp."
+              },
+        "CCSDS_TIME_CODE" : {
+                "$ref" : "#/definitions/TIMCcsdsTimeCode",
+                "description" : "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionRequest" : {
+      "type" : "object",
+      "description" : "Request to convert one instant into another time system/representation.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Source instant to convert."
+              },
+        "TARGET_TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Target time system."
+              },
+        "TARGET_EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Preferred target representation."
+              },
+        "TAI_MINUS_UTC_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional TAI-UTC override in seconds for the source instant."
+              },
+        "HAS_TAI_MINUS_UTC" : {
+                "type" : "boolean",
+                "description" : "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+              },
+        "DUT1_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional UT1-UTC override in seconds for UT1 conversions."
+              },
+        "HAS_DUT1" : {
+                "type" : "boolean",
+                "description" : "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional caller trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionResult" : {
+      "type" : "object",
+      "description" : "Result of a time conversion request.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Original source instant."
+              },
+        "TARGET" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Converted target instant."
+              },
+        "DELTA_SECONDS" : {
+                "type" : "number",
+                "description" : "Target minus source offset in SI seconds for the requested conversion."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/timConversionStatus",
+                "description" : "Conversion status."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional error detail when STATUS is not OK."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "description" : "Time System and time-conversion envelope.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Legacy time-system selector retained for existing TIM consumers."
+              },
+        "INSTANT" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "A single tagged instant."
+              },
+        "CONVERSION_REQUEST" : {
+                "$ref" : "#/definitions/TIMConversionRequest",
+                "description" : "Time conversion request."
+              },
+        "CONVERSION_RESULT" : {
+                "$ref" : "#/definitions/TIMConversionResult",
+                "description" : "Time conversion result."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FrequencyRange" : {
+      "type" : "object",
+      "description" : "Frequency range with lower and upper limits",
+      "properties" : {
+        "LOWER" : {
+                "type" : "number",
+                "description" : "Lower frequency in MHz"
+              },
+        "UPPER" : {
+                "type" : "number",
+                "description" : "Upper frequency in MHz"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StokesParameters" : {
+      "type" : "object",
+      "description" : "Stokes parameters, representing different aspects of polarization",
+      "properties" : {
+        "I" : {
+                "type" : "number",
+                "description" : "Intensity"
+              },
+        "Q" : {
+                "type" : "number",
+                "description" : "Linear polarization"
+              },
+        "U" : {
+                "type" : "number",
+                "description" : "Another linear polarization, orthogonal to Q"
+              },
+        "V" : {
+                "type" : "number",
+                "description" : "Circular polarization"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Band" : {
+      "type" : "object",
+      "description" : "Table representing a frequency band with a name and frequency range",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the band"
+              },
+        "FREQUENCY_RANGE" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Frequency range of the band"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "IDM" : {
+      "type" : "object",
+      "description" : "Integrated Device Message",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the EMT"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Name of the EMT"
+              },
+        "DATA_MODE" : {
+                "$ref" : "#/definitions/DataMode",
+                "description" : "Mode of the data (real, simulated, synthetic)"
+              },
+        "UPLINK" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Uplink frequency range"
+              },
+        "DOWNLINK" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Downlink frequency range"
+              },
+        "BEACON" : {
+                "$ref" : "#/definitions/FrequencyRange",
+                "description" : "Beacon frequency range"
+              },
+        "BAND" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Band"},
+                "description" : "Bands associated with the EMT"
+              },
+        "POLARIZATION_TYPE" : {
+                "$ref" : "#/definitions/PolarizationType",
+                "description" : "Type of polarization used"
+              },
+        "SIMPLE_POLARIZATION" : {
+                "$ref" : "#/definitions/SimplePolarization",
+                "description" : "Simple polarization configuration"
+              },
+        "STOKES_PARAMETERS" : {
+                "$ref" : "#/definitions/StokesParameters",
+                "description" : "Stokes parameters for polarization characterization"
+              },
+        "POWER_REQUIRED" : {
+                "type" : "number",
+                "description" : "Power required in Watts"
+              },
+        "POWER_TYPE" : {
+                "type" : "string",
+                "description" : "Type of power (eg. AC or DC)"
+              },
+        "TRANSMIT" : {
+                "type" : "boolean",
+                "description" : "Indicates if the EMT can transmit"
+              },
+        "RECEIVE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the EMT can receive"
+              },
+        "SENSOR_TYPE" : {
+                "$ref" : "#/definitions/DeviceType",
+                "description" : "Type of the sensor"
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of the data"
+              },
+        "LAST_OB_TIME" : {
+                "type" : "string",
+                "description" : "Timestamp of the last observation"
+              },
+        "LOWER_LEFT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower left elevation limit"
+              },
+        "UPPER_LEFT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper left azimuth limit"
+              },
+        "LOWER_RIGHT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower right elevation limit"
+              },
+        "LOWER_LEFT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower left azimuth limit"
+              },
+        "UPPER_RIGHT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper right elevation limit"
+              },
+        "UPPER_RIGHT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper right azimuth limit"
+              },
+        "LOWER_RIGHT_AZIMUTH_LIMIT" : {
+                "type" : "number",
+                "description" : "Lower right azimuth limit"
+              },
+        "UPPER_LEFT_ELEVATION_LIMIT" : {
+                "type" : "number",
+                "description" : "Upper left elevation limit"
+              },
+        "RIGHT_GEO_BELT_LIMIT" : {
+                "type" : "number",
+                "description" : "Right geostationary belt limit"
+              },
+        "LEFT_GEO_BELT_LIMIT" : {
+                "type" : "number",
+                "description" : "Left geostationary belt limit"
+              },
+        "MAGNITUDE_LIMIT" : {
+                "type" : "number",
+                "description" : "Magnitude limit of the sensor"
+              },
+        "TASKABLE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the site is taskable"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PLD" : {
+      "type" : "object",
+      "description" : "Payload Information",
+      "properties" : {
+        "PAYLOAD_DURATION" : {
+                "type" : "string"
+              },
+        "MASS_AT_LAUNCH" : {
+                "type" : "number"
+              },
+        "DIMENSIONS" : {
+                "type" : "string"
+              },
+        "SOLAR_ARRAY_AREA" : {
+                "type" : "number"
+              },
+        "SOLAR_ARRAY_DIMENSIONS" : {
+                "type" : "string"
+              },
+        "NOMINAL_OPERATIONAL_LIFETIME" : {
+                "type" : "string"
+              },
+        "INSTRUMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/IDM"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LCC" : {
+      "type" : "object",
+      "description" : "Legacy Country Code",
+      "properties" : {
+        "OWNER" : {
+                "$ref" : "#/definitions/legacyCountryCode"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Display name of the owner or source the code stands for."
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Longer description of the owner or source."
+              },
+        "ACTIVE" : {
+                "type" : "boolean",
+                "description" : "True while the code is in current use by the publishing catalogue."
+              },
+        "SOURCE_URL" : {
+                "type" : "string",
+                "description" : "URL of the reference table the row was retrieved from."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC time the reference table was retrieved."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CATProduct" : {
+      "type" : "object",
+      "description" : "One product the catalog selected for the object, by content identifier.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/catalogProductKind",
+                "description" : "What the product is."
+              },
+        "RECORD_CID" : {
+                "type" : "string",
+                "description" : "CIDv1 of the product record: a multihash (SHA-256) of its exact bytes as\npublished, a size-prefixed FlatBuffer."
+              },
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "The product's source: its PROVENANCE SOURCE_ID."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the product, ISO 8601 UTC: an $OMM's EPOCH, an $OCM's first state\nepoch."
+              },
+        "SELECTION_REASON" : {
+                "type" : "string",
+                "description" : "Why the catalog selected this product over the other candidates of its\nKIND, as the selecting integrator states it (for example, the lowest\nmeasured median error for the object's orbit regime and prediction\nhorizon)."
+              },
+        "STALE" : {
+                "type" : "boolean",
+                "description" : "True when a maneuver after EPOCH retired the product and no product of its\nKIND from after the maneuver has been selected yet."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CAT" : {
+      "type" : "object",
+      "description" : "Catalog Entity Message",
+      "properties" : {
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Satellite Name(s)"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International Designator (YYYY-NNNAAA)"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD Catalog Number"
+              },
+        "OBJECT_TYPE" : {
+                "$ref" : "#/definitions/spaceObjectClass",
+                "description" : "Object type (Payload, Rocket body, Debris, Unknown)"
+              },
+        "OPS_STATUS_CODE" : {
+                "$ref" : "#/definitions/operationalState",
+                "description" : "Operational Status Code"
+              },
+        "OWNER" : {
+                "$ref" : "#/definitions/legacyCountryCode",
+                "description" : "Ownership, typically country or company"
+              },
+        "LAUNCH_DATE" : {
+                "type" : "string",
+                "description" : "Launch Date [year-month-day] (ISO 8601)"
+              },
+        "LAUNCH_SITE" : {
+                "type" : "string",
+                "description" : "Launch Site"
+              },
+        "DECAY_DATE" : {
+                "type" : "string",
+                "description" : "Decay Date, if applicable [year-month-day] (ISO 8601)"
+              },
+        "PERIOD" : {
+                "type" : "number",
+                "description" : "Orbital period [minutes]"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination [degrees]"
+              },
+        "APOGEE" : {
+                "type" : "number",
+                "description" : "Apogee Altitude [kilometers]"
+              },
+        "PERIGEE" : {
+                "type" : "number",
+                "description" : "Perigee Altitude [kilometers]"
+              },
+        "RCS" : {
+                "type" : "number",
+                "description" : "Radar Cross Section [meters2]; blank if no data available"
+              },
+        "DATA_STATUS_CODE" : {
+                "$ref" : "#/definitions/dataAvailability",
+                "description" : "Data status code; blank otherwise"
+              },
+        "ORBIT_CENTER" : {
+                "type" : "string",
+                "description" : "Orbit center"
+              },
+        "ORBIT_TYPE" : {
+                "$ref" : "#/definitions/orbitRegime",
+                "description" : "Orbit type (Orbit, Landing, Impact, Docked to RSO, roundtrip)"
+              },
+        "DEPLOYMENT_DATE" : {
+                "type" : "string",
+                "description" : "Deployment Date [year-month-day] (ISO 8601)"
+              },
+        "MANEUVERABLE" : {
+                "type" : "boolean",
+                "description" : "Indicates if the object is maneuverable"
+              },
+        "SIZE" : {
+                "type" : "number",
+                "description" : "Size [meters]; blank if no data available"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Mass [kilograms]; blank if no data available"
+              },
+        "MASS_TYPE" : {
+                "$ref" : "#/definitions/massCategory",
+                "description" : "Mass type (Dry, Wet)"
+              },
+        "PAYLOADS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PLD"},
+                "description" : "Vector of PAYLOADS"
+              },
+        "BUS_ID" : {
+                "type" : "string",
+                "description" : "Join key to the BUS record describing this object's satellite bus; holds\nthat record's BUS.ID verbatim. MANUFACTURER, DIM_X/DIM_Y/DIM_Z, DRY_MASS\nand WET_MASS are properties of the bus design and live on BUS — they are\nNOT duplicated here. Empty when the bus is unknown."
+              },
+        "CATALOG_URI" : {
+                "type" : "string",
+                "description" : "Absolute URI identifying the original catalog's object-ID namespace.\nThis is an identifier, not an instruction to fetch a resource. Use with\nCATALOG_OBJECT_ID only when both fields are present. Preserve the pair\nthrough replicas and derived catalogs; it does not assert a NORAD or\nCOSPAR association. If the authority can reassign an object ID, this URI\nmust identify its immutable edition or assignment interval, rather than\nthe unversioned catalog. Stable IDs may use a persistent catalog URI."
+              },
+        "CATALOG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Exact, opaque object identifier assigned by CATALOG_URI's authority.\nPreserve case, Unicode and leading zeros. Numeric-looking native IDs\nare not NORAD_CAT_ID values. Neither a matching name nor a native ID\nin a different namespace establishes that two records describe the same\nphysical object. Publication provenance retains source and edition data."
+              },
+        "PRODUCTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CATProduct"},
+                "description" : "The products an integrating catalog selected for the object as of\nPRODUCTS_AS_OF: one $OMM per mean-element theory, each with the $OCM of\nthe same source and epoch where there is one. The object's maneuvers are\nits $MNV stream, not references here."
+              },
+        "PRODUCTS_AS_OF" : {
+                "type" : "string",
+                "description" : "ISO 8601 UTC instant the selection in PRODUCTS holds at."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PPEPositionRecord" : {
+      "type" : "object",
+      "description" : "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
+      "properties" : {
+        "EPOCH_MID" : {
+                "type" : "string",
+                "description" : "Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB).\nTogether with EPOCH_HALF_SPAN, defines the time interval:\n[EPOCH_MID - EPOCH_HALF_SPAN, EPOCH_MID + EPOCH_HALF_SPAN]"
+              },
+        "EPOCH_HALF_SPAN" : {
+                "type" : "number",
+                "description" : "Half-span of the validity window in seconds.\nThe full span is 2 * EPOCH_HALF_SPAN seconds centered on EPOCH_MID."
+              },
+        "NUM_COEFFICIENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of polynomial coefficients per axis.\nThe polynomial degree is (NUM_COEFFICIENTS - 1).\nTypical values: 8-32 for high-fidelity ephemeris fits."
+              },
+        "BASIS_TYPE" : {
+                "$ref" : "#/definitions/polynomialBasisType",
+                "description" : "Polynomial basis type for interpreting the coefficient arrays."
+              },
+        "POS_COEFF_X" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position coefficients for X-axis (km).\nLength must equal NUM_COEFFICIENTS. Ordered c0, c1, ..., c_{N-1}."
+              },
+        "POS_COEFF_Y" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position coefficients for Y-axis (km).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "POS_COEFF_Z" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position coefficients for Z-axis (km).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "HAS_VELOCITY_COEFFICIENTS" : {
+                "type" : "boolean",
+                "description" : "Whether explicit velocity coefficients are provided.\nIf false, velocity should be derived by differentiating the position polynomial."
+              },
+        "VEL_COEFF_X" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Velocity coefficients for X-axis (km/s). Optional.\nLength must equal NUM_COEFFICIENTS if present."
+              },
+        "VEL_COEFF_Y" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Velocity coefficients for Y-axis (km/s). Optional."
+              },
+        "VEL_COEFF_Z" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Velocity coefficients for Z-axis (km/s). Optional."
+              },
+        "MAX_POSITION_RESIDUAL" : {
+                "type" : "number",
+                "description" : "Maximum position fit residual over this segment (km). Optional quality metric."
+              },
+        "RMS_POSITION_RESIDUAL" : {
+                "type" : "number",
+                "description" : "RMS position fit residual over this segment (km). Optional quality metric."
+              }
+      },
+      "required" : ["EPOCH_MID", "POS_COEFF_X", "POS_COEFF_Y", "POS_COEFF_Z"],
+      "additionalProperties" : false
+    },
+    "PPEOrbitalElementRecord" : {
+      "type" : "object",
+      "description" : "A single time-segment record of polynomial coefficients for classical orbital elements.\n\nThe six classical elements are:\n1. SMA or R_PERIAPSIS (size/shape) — see SIZE_SHAPE_TYPE\n2. Eccentricity (dimensionless)\n3. Inclination (degrees)\n4. Right Ascension of Ascending Node / RAAN (degrees)\n5. Argument of Periapsis (degrees)\n6. Anomaly (degrees) — see ANOMALY_TYPE\n\nEvaluation follows the same normalized-time procedure as PPEPositionRecord.",
+      "properties" : {
+        "EPOCH_MID" : {
+                "type" : "string",
+                "description" : "Midpoint epoch of this record's validity window (ISO 8601 UTC or TDB)."
+              },
+        "EPOCH_HALF_SPAN" : {
+                "type" : "number",
+                "description" : "Half-span of the validity window in seconds."
+              },
+        "NUM_COEFFICIENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of polynomial coefficients per element."
+              },
+        "BASIS_TYPE" : {
+                "$ref" : "#/definitions/polynomialBasisType",
+                "description" : "Polynomial basis type for interpreting the coefficient arrays."
+              },
+        "SIZE_SHAPE_TYPE" : {
+                "$ref" : "#/definitions/sizeShapeProfile",
+                "description" : "Parameterization of the first orbital element (SMA vs R_PERIAPSIS)."
+              },
+        "ANOMALY_TYPE" : {
+                "$ref" : "#/definitions/ppeAnomalyType",
+                "description" : "Anomaly type for the sixth orbital element."
+              },
+        "COEFF_SIZE_SHAPE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for SMA or radius of periapsis (km).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "COEFF_ECCENTRICITY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for eccentricity (dimensionless).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "COEFF_INCLINATION" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for inclination (degrees).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "COEFF_RAAN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for RAAN (degrees).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "COEFF_ARG_PERIAPSIS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for argument of periapsis (degrees).\nLength must equal NUM_COEFFICIENTS."
+              },
+        "COEFF_ANOMALY" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Coefficients for anomaly (degrees). See ANOMALY_TYPE for interpretation.\nLength must equal NUM_COEFFICIENTS."
+              },
+        "MAX_ELEMENT_RESIDUAL" : {
+                "type" : "number",
+                "description" : "Maximum element fit residual over this segment. Optional quality metric.\nUnits depend on the element (km for SMA, degrees for angles, dimensionless for ecc)."
+              },
+        "RMS_ELEMENT_RESIDUAL" : {
+                "type" : "number",
+                "description" : "RMS element fit residual over this segment. Optional quality metric."
+              }
+      },
+      "required" : ["EPOCH_MID", "COEFF_SIZE_SHAPE", "COEFF_ECCENTRICITY", "COEFF_INCLINATION", "COEFF_RAAN", "COEFF_ARG_PERIAPSIS", "COEFF_ANOMALY"],
+      "additionalProperties" : false
+    },
+    "PPE" : {
+      "type" : "object",
+      "description" : "Polynomial Ephemeris — top-level message containing metadata and\none or more polynomial coefficient records for a single space object.\n\nA PPE message may contain position records, orbital element records, or both.\nRecords should be ordered chronologically by EPOCH_MID and should collectively\ncover the time span [START_TIME, STOP_TIME] without gaps.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Plain-text comments."
+              },
+        "OBJECT" : {
+                "$ref" : "#/definitions/CAT",
+                "description" : "Space object identification."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of the reference frame (e.g., EARTH, MOON, MARS)."
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference frame for position/velocity coefficients."
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system used for all epochs in this message."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Start of the total time span covered by this ephemeris (ISO 8601)."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "End of the total time span covered by this ephemeris (ISO 8601)."
+              },
+        "DEFAULT_BASIS_TYPE" : {
+                "$ref" : "#/definitions/polynomialBasisType",
+                "description" : "Default polynomial basis type for all records in this message.\nIndividual records may override this with their own BASIS_TYPE field."
+              },
+        "POSITION_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEPositionRecord"},
+                "description" : "Array of position polynomial records.\nEach record covers a time segment; together they span [START_TIME, STOP_TIME]."
+              },
+        "ORBITAL_ELEMENT_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEOrbitalElementRecord"},
+                "description" : "Array of orbital element polynomial records.\nEach record covers a time segment; together they span [START_TIME, STOP_TIME]."
+              },
+        "EPHEMERIS_SOURCE" : {
+                "type" : "string",
+                "description" : "Generating ephemeris source, verbatim as the generator names itself\n(e.g., a planetary ephemeris series designation, a numerical propagator\nname and version, or an in-house tool identifier)."
+              },
+        "NOMINAL_SEGMENT_SPAN" : {
+                "type" : "number",
+                "description" : "Fit span in seconds used to generate each polynomial segment.\nInformational; actual spans are in individual records."
+              },
+        "NOMINAL_NUM_COEFFICIENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Header" : {
+      "type" : "object",
+      "properties" : {
+        "CCSDS_OCM_VERS" : {
+                "type" : "string",
+                "description" : "Format version in the form of 'x.y', where 'y' is incremented for minor changes, and 'x' for major changes."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Comments (a contiguous set of one or more comment lines may be provided immediately after the version number)."
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "User-defined free-text message classification/caveats of this OCM."
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "File creation date/time in UTC."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Creating agency or operator."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "Free-text field containing an ID that uniquely identifies a message from this originator."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Metadata" : {
+      "type" : "object",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Comments in the Metadata section."
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Free-text field containing the name of the object."
+              },
+        "INTERNATIONAL_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "International designator for the object as assigned by COSPAR."
+              },
+        "CATALOG_NAME" : {
+                "type" : "string",
+                "description" : "Satellite catalog source from which 'OBJECT_DESIGNATOR' was obtained."
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Unique satellite identification designator from the catalog."
+              },
+        "ALTERNATE_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Alternate names of this space object."
+              },
+        "ORIGINATOR_POC" : {
+                "type" : "string",
+                "description" : "Originator or programmatic Point-of-Contact (PoC) for OCM."
+              },
+        "ORIGINATOR_POSITION" : {
+                "type" : "string",
+                "description" : "Contact position of the originator PoC."
+              },
+        "ORIGINATOR_PHONE" : {
+                "type" : "string",
+                "description" : "Originator PoC phone number."
+              },
+        "ORIGINATOR_EMAIL" : {
+                "type" : "string",
+                "description" : "Originator PoC email address."
+              },
+        "ORIGINATOR_ADDRESS" : {
+                "type" : "string",
+                "description" : "Originator's physical address information."
+              },
+        "TECH_ORG" : {
+                "type" : "string",
+                "description" : "Creating agency or operator for technical contact."
+              },
+        "TECH_POC" : {
+                "type" : "string",
+                "description" : "Technical Point-of-Contact (PoC) for OCM."
+              },
+        "TECH_POSITION" : {
+                "type" : "string",
+                "description" : "Contact position of the technical PoC."
+              },
+        "TECH_PHONE" : {
+                "type" : "string",
+                "description" : "Technical PoC phone number."
+              },
+        "TECH_EMAIL" : {
+                "type" : "string",
+                "description" : "Technical PoC email address."
+              },
+        "TECH_ADDRESS" : {
+                "type" : "string",
+                "description" : "Technical PoC physical address information."
+              },
+        "PREVIOUS_MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "ID that uniquely identifies the previous message from this originator."
+              },
+        "NEXT_MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "ID that uniquely identifies the next message from this originator."
+              },
+        "ADM_MSG_LINK" : {
+                "type" : "string",
+                "description" : "Unique identifier of Attitude Data Messages linked to this OCM."
+              },
+        "CDM_MSG_LINK" : {
+                "type" : "string",
+                "description" : "Unique identifier of Conjunction Data Messages linked to this OCM."
+              },
+        "PRM_MSG_LINK" : {
+                "type" : "string",
+                "description" : "Unique identifier of Pointing Request Messages linked to this OCM."
+              },
+        "RDM_MSG_LINK" : {
+                "type" : "string",
+                "description" : "Unique identifier of Reentry Data Messages linked to this OCM."
+              },
+        "TDM_MSG_LINK" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of Tracking Data Messages upon which this orbit determination is based."
+              },
+        "OPERATOR" : {
+                "type" : "string",
+                "description" : "Operator of the space object."
+              },
+        "OWNER" : {
+                "type" : "string",
+                "description" : "Owner of the space object."
+              },
+        "COUNTRY" : {
+                "type" : "string",
+                "description" : "Country where the space object owner is based."
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Name of the constellation to which this space object belongs."
+              },
+        "OBJECT_TYPE" : {
+                "type" : "string",
+                "description" : "Specification of the type of object (e.g., PAYLOAD, ROCKET BODY, DEBRIS)."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system for all absolute time stamps in this OCM, including EPOCH_TZERO."
+              },
+        "EPOCH_TZERO" : {
+                "type" : "string",
+                "description" : "Default epoch to which all relative times are referenced in data blocks."
+              },
+        "OPS_STATUS" : {
+                "type" : "string",
+                "description" : "Specification of the operational status of the space object."
+              },
+        "ORBIT_CATEGORY" : {
+                "type" : "string",
+                "description" : "Specification of the type of orbit (e.g., GEO, LEO)."
+              },
+        "OCM_DATA_ELEMENTS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of elements of information data blocks included in this message."
+              },
+        "SCLK_OFFSET_AT_EPOCH" : {
+                "type" : "number",
+                "description" : "Number of spacecraft clock counts at EPOCH_TZERO (used if TIME_SYSTEM is SCLK)."
+              },
+        "SCLK_SEC_PER_SI_SEC" : {
+                "type" : "number",
+                "description" : "Number of clock seconds occurring during one SI second (used if TIME_SYSTEM is SCLK)."
+              },
+        "PREVIOUS_MESSAGE_EPOCH" : {
+                "type" : "string",
+                "description" : "Creation epoch of the previous message from this originator."
+              },
+        "NEXT_MESSAGE_EPOCH" : {
+                "type" : "string",
+                "description" : "Anticipated (or actual) epoch of the next message from this originator."
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Time of the earliest data contained in the OCM."
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "Time of the latest data contained in the OCM."
+              },
+        "TIME_SPAN" : {
+                "type" : "number",
+                "description" : "Span of time that the OCM covers, measured in days."
+              },
+        "TAIMUTC_AT_TZERO" : {
+                "type" : "number",
+                "description" : "Difference (TAI - UTC) in seconds at EPOCH_TZERO."
+              },
+        "NEXT_LEAP_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of next leap second."
+              },
+        "NEXT_LEAP_TAIMUTC" : {
+                "type" : "number",
+                "description" : "Difference (TAI - UTC) in seconds at NEXT_LEAP_EPOCH."
+              },
+        "UT1MUTC_AT_TZERO" : {
+                "type" : "number",
+                "description" : "Difference (UT1 - UTC) in seconds at EPOCH_TZERO."
+              },
+        "EOP_SOURCE" : {
+                "type" : "string",
+                "description" : "Source and version of Earth Orientation Parameters used."
+              },
+        "INTERP_METHOD_EOP" : {
+                "type" : "string",
+                "description" : "Method used to select or interpolate sequential EOP data."
+              },
+        "CELESTIAL_SOURCE" : {
+                "type" : "string",
+                "description" : "Source and version of celestial body ephemeris data used."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "StateVector" : {
+      "type" : "object",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the state vector."
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "X component of position in the specified reference frame."
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Y component of position."
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Z component of position."
+              },
+        "X_DOT" : {
+                "type" : "number",
+                "description" : "X component of velocity."
+              },
+        "Y_DOT" : {
+                "type" : "number",
+                "description" : "Y component of velocity."
+              },
+        "Z_DOT" : {
+                "type" : "number",
+                "description" : "Z component of velocity."
+              },
+        "X_DDOT" : {
+                "type" : "number",
+                "description" : "X component of acceleration."
+              },
+        "Y_DDOT" : {
+                "type" : "number",
+                "description" : "Y component of acceleration."
+              },
+        "Z_DDOT" : {
+                "type" : "number",
+                "description" : "Z component of acceleration."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PhysicalProperties" : {
+      "type" : "object",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Comments in the Physical Properties section."
+              },
+        "WET_MASS" : {
+                "type" : "number",
+                "description" : "Wet mass of the space object."
+              },
+        "DRY_MASS" : {
+                "type" : "number",
+                "description" : "Dry mass of the space object."
+              },
+        "MASS_UNITS" : {
+                "type" : "string",
+                "description" : "Units for mass values."
+              },
+        "OEB_Q1" : {
+                "type" : "number",
+                "description" : "Quaternion component q1 of orientation from OEB to EME2000."
+              },
+        "OEB_Q2" : {
+                "type" : "number",
+                "description" : "Quaternion component q2."
+              },
+        "OEB_Q3" : {
+                "type" : "number",
+                "description" : "Quaternion component q3."
+              },
+        "OEB_QC" : {
+                "type" : "number",
+                "description" : "Quaternion scalar component qc."
+              },
+        "OEB_MAX" : {
+                "type" : "number",
+                "description" : "Maximum dimension of the object along OEB frame axes."
+              },
+        "OEB_INT" : {
+                "type" : "number",
+                "description" : "Intermediate dimension along OEB frame axes."
+              },
+        "OEB_MIN" : {
+                "type" : "number",
+                "description" : "Minimum dimension of the object along OEB frame axes."
+              },
+        "AREA_ALONG_OEB_MAX" : {
+                "type" : "number",
+                "description" : "Area along OEB_MAX axis."
+              },
+        "AREA_ALONG_OEB_INT" : {
+                "type" : "number",
+                "description" : "Area along OEB_INT axis."
+              },
+        "AREA_ALONG_OEB_MIN" : {
+                "type" : "number",
+                "description" : "Area along OEB_MIN axis."
+              },
+        "AREA_UNITS" : {
+                "type" : "string",
+                "description" : "Units for area values."
+              },
+        "DRAG_CONST_AREA" : {
+                "type" : "number",
+                "description" : "Constant area for drag computations."
+              },
+        "DRAG_COEFF_NOM" : {
+                "type" : "number",
+                "description" : "Nominal drag coefficient."
+              },
+        "DRAG_UNCERTAINTY" : {
+                "type" : "number",
+                "description" : "Uncertainty in the drag coefficient."
+              },
+        "SRP_CONST_AREA" : {
+                "type" : "number",
+                "description" : "Constant area for solar radiation pressure computations."
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number",
+                "description" : "Nominal solar radiation pressure coefficient."
+              },
+        "SRP_UNCERTAINTY" : {
+                "type" : "number",
+                "description" : "Uncertainty in the solar radiation pressure coefficient."
+              },
+        "MANUFACTURER" : {
+                "type" : "string",
+                "description" : "MANUFACTURER (CCSDS 502.0-B-3): the object's manufacturer."
+              },
+        "BUS_MODEL" : {
+                "type" : "string",
+                "description" : "BUS_MODEL: the object's bus model."
+              },
+        "DOCKED_WITH" : {
+                "type" : "string",
+                "description" : "DOCKED_WITH: comma-separated names of the objects it is docked with."
+              },
+        "INITIAL_WET_MASS" : {
+                "type" : "number",
+                "description" : "INITIAL_WET_MASS in kg, NaN when not stated."
+              },
+        "OEB_PARENT_FRAME" : {
+                "type" : "string",
+                "description" : "OEB_PARENT_FRAME: the frame the optimally enclosing box is defined in."
+              },
+        "OEB_PARENT_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "OEB_PARENT_FRAME_EPOCH."
+              },
+        "AREA_MIN_FOR_PC" : {
+                "type" : "number",
+                "description" : "AREA_MIN_FOR_PC in m**2, NaN when not stated."
+              },
+        "AREA_MAX_FOR_PC" : {
+                "type" : "number",
+                "description" : "AREA_MAX_FOR_PC in m**2, NaN when not stated."
+              },
+        "AREA_TYP_FOR_PC" : {
+                "type" : "number",
+                "description" : "AREA_TYP_FOR_PC in m**2, NaN when not stated."
+              },
+        "RCS" : {
+                "type" : "number",
+                "description" : "RCS in m**2, NaN when not stated."
+              },
+        "RCS_MIN" : {
+                "type" : "number",
+                "description" : "RCS_MIN in m**2, NaN when not stated."
+              },
+        "RCS_MAX" : {
+                "type" : "number",
+                "description" : "RCS_MAX in m**2, NaN when not stated."
+              },
+        "VM_ABSOLUTE" : {
+                "type" : "number",
+                "description" : "VM_ABSOLUTE: absolute visual magnitude, NaN when not stated."
+              },
+        "VM_APPARENT_MIN" : {
+                "type" : "number",
+                "description" : "VM_APPARENT_MIN: minimum apparent visual magnitude, NaN when not stated."
+              },
+        "VM_APPARENT" : {
+                "type" : "number",
+                "description" : "VM_APPARENT: apparent visual magnitude, NaN when not stated."
+              },
+        "VM_APPARENT_MAX" : {
+                "type" : "number",
+                "description" : "VM_APPARENT_MAX: maximum apparent visual magnitude, NaN when not stated."
+              },
+        "REFLECTANCE" : {
+                "type" : "number",
+                "description" : "REFLECTANCE: typical reflectivity, NaN when not stated."
+              },
+        "ATT_CONTROL_MODE" : {
+                "type" : "string",
+                "description" : "ATT_CONTROL_MODE."
+              },
+        "ATT_ACTUATOR_TYPE" : {
+                "type" : "string",
+                "description" : "ATT_ACTUATOR_TYPE."
+              },
+        "ATT_KNOWLEDGE" : {
+                "type" : "number",
+                "description" : "ATT_KNOWLEDGE in degrees, NaN when not stated."
+              },
+        "ATT_CONTROL" : {
+                "type" : "number",
+                "description" : "ATT_CONTROL in degrees, NaN when not stated."
+              },
+        "ATT_POINTING" : {
+                "type" : "number",
+                "description" : "ATT_POINTING in degrees, NaN when not stated."
+              },
+        "AVG_MANEUVER_FREQ" : {
+                "type" : "number",
+                "description" : "AVG_MANEUVER_FREQ in maneuvers per year, NaN when not stated."
+              },
+        "MAX_THRUST" : {
+                "type" : "number",
+                "description" : "MAX_THRUST in N, NaN when not stated."
+              },
+        "DV_BOL" : {
+                "type" : "number",
+                "description" : "DV_BOL: delta-v at beginning of life in km/s, NaN when not stated."
+              },
+        "DV_REMAINING" : {
+                "type" : "number",
+                "description" : "DV_REMAINING in km/s, NaN when not stated."
+              },
+        "IXX" : {
+                "type" : "number",
+                "description" : "IXX in kg*m**2, NaN when not stated."
+              },
+        "IYY" : {
+                "type" : "number",
+                "description" : "IYY in kg*m**2, NaN when not stated."
+              },
+        "IZZ" : {
+                "type" : "number",
+                "description" : "IZZ in kg*m**2, NaN when not stated."
+              },
+        "IXY" : {
+                "type" : "number",
+                "description" : "IXY in kg*m**2, NaN when not stated."
+              },
+        "IXZ" : {
+                "type" : "number",
+                "description" : "IXZ in kg*m**2, NaN when not stated."
+              },
+        "IYZ" : {
+                "type" : "number",
+                "description" : "IYZ in kg*m**2, NaN when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Perturbations" : {
+      "type" : "object",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Comments in the Perturbations section."
+              },
+        "ATMOSPHERIC_MODEL" : {
+                "$ref" : "#/definitions/ATM",
+                "description" : "Atmospheric model used."
+              },
+        "GRAVITY_MODEL" : {
+                "type" : "string",
+                "description" : "Gravity model used."
+              },
+        "GRAVITY_DEGREE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Degree of the gravity model."
+              },
+        "GRAVITY_ORDER" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Order of the gravity model."
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "Gravitational constant times the mass of the central body."
+              },
+        "N_BODY_PERTURBATIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "List of celestial bodies included in n-body perturbations."
+              },
+        "OCEAN_TIDES_MODEL" : {
+                "type" : "string",
+                "description" : "Ocean tides model used."
+              },
+        "SOLID_TIDES_MODEL" : {
+                "type" : "string",
+                "description" : "Solid tides model used."
+              },
+        "ATMOSPHERIC_TIDES_MODEL" : {
+                "type" : "string",
+                "description" : "Atmospheric tides model used."
+              },
+        "GEOPOTENTIAL_MODEL" : {
+                "type" : "string",
+                "description" : "Geopotential model used."
+              },
+        "SOLAR_RAD_PRESSURE" : {
+                "type" : "string",
+                "description" : "Solar radiation pressure model used."
+              },
+        "ALBEDO" : {
+                "type" : "string",
+                "description" : "Albedo model used."
+              },
+        "THERMAL" : {
+                "type" : "string",
+                "description" : "Thermal model used."
+              },
+        "RELATIVITY" : {
+                "type" : "string",
+                "description" : "Relativity model used."
+              },
+        "ATMOSPHERIC_DRAG" : {
+                "type" : "string",
+                "description" : "Atmospheric drag model used."
+              },
+        "FIXED_GEOMAG_KP" : {
+                "type" : "number",
+                "description" : "Fixed geomagnetic Kp index used."
+              },
+        "FIXED_F10P7" : {
+                "type" : "number",
+                "description" : "Fixed F10.7 solar flux value used."
+              },
+        "FIXED_F10P7_MEAN" : {
+                "type" : "number",
+                "description" : "Fixed mean F10.7 solar flux value used."
+              },
+        "FIXED_GEOMAG_AP" : {
+                "type" : "number",
+                "description" : "Fixed (time-invariant) geomagnetic index ap used in place of the normal\ntime-varying values (CCSDS 502.0-B-3 FIXED_GEOMAG_AP)."
+              },
+        "ATMOSPHERIC_MODEL_NAME" : {
+                "type" : "string",
+                "description" : "ATMOSPHERIC_MODEL as the message wrote it (CCSDS 502.0-B-3); ATMOSPHERIC_MODEL\nabove is the model family when the text names one."
+              },
+        "EQUATORIAL_RADIUS" : {
+                "type" : "number",
+                "description" : "EQUATORIAL_RADIUS in km, NaN when not stated."
+              },
+        "CENTRAL_BODY_ROTATION" : {
+                "type" : "number",
+                "description" : "CENTRAL_BODY_ROTATION in deg/s, NaN when not stated."
+              },
+        "OBLATE_FLATTENING" : {
+                "type" : "number",
+                "description" : "OBLATE_FLATTENING, NaN when not stated."
+              },
+        "REDUCTION_THEORY" : {
+                "type" : "string",
+                "description" : "REDUCTION_THEORY."
+              },
+        "ALBEDO_GRID_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ALBEDO_GRID_SIZE."
+              },
+        "SHADOW_MODEL" : {
+                "type" : "string",
+                "description" : "SHADOW_MODEL."
+              },
+        "SHADOW_BODIES" : {
+                "type" : "string",
+                "description" : "SHADOW_BODIES."
+              },
+        "SW_DATA_SOURCE" : {
+                "type" : "string",
+                "description" : "SW_DATA_SOURCE: the space weather data source."
+              },
+        "SW_DATA_EPOCH" : {
+                "type" : "string",
+                "description" : "SW_DATA_EPOCH."
+              },
+        "SW_INTERP_METHOD" : {
+                "type" : "string",
+                "description" : "SW_INTERP_METHOD."
+              },
+        "FIXED_GEOMAG_DST" : {
+                "type" : "number",
+                "description" : "FIXED_GEOMAG_DST in nT, NaN when not stated."
+              },
+        "FIXED_M10P7" : {
+                "type" : "number",
+                "description" : "FIXED_M10P7, NaN when not stated."
+              },
+        "FIXED_M10P7_MEAN" : {
+                "type" : "number",
+                "description" : "FIXED_M10P7_MEAN, NaN when not stated."
+              },
+        "FIXED_S10P7" : {
+                "type" : "number",
+                "description" : "FIXED_S10P7, NaN when not stated."
+              },
+        "FIXED_S10P7_MEAN" : {
+                "type" : "number",
+                "description" : "FIXED_S10P7_MEAN, NaN when not stated."
+              },
+        "FIXED_Y10P7" : {
+                "type" : "number",
+                "description" : "FIXED_Y10P7, NaN when not stated."
+              },
+        "FIXED_Y10P7_MEAN" : {
+                "type" : "number",
+                "description" : "FIXED_Y10P7_MEAN, NaN when not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "Maneuver" : {
+      "type" : "object",
+      "properties" : {
+        "MAN_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the maneuver."
+              },
+        "MAN_BASIS" : {
+                "type" : "string",
+                "description" : "Basis of the maneuver plan (e.g., planned, predicted, estimated)."
+              },
+        "MAN_DEVICE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the maneuver device."
+              },
+        "MAN_PREV_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the previous maneuver."
+              },
+        "MAN_PURPOSE" : {
+                "type" : "string",
+                "description" : "Purpose of the maneuver."
+              },
+        "MAN_REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame for the maneuver data."
+              },
+        "MAN_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the maneuver reference frame."
+              },
+        "MAN_TYPE" : {
+                "type" : "string",
+                "description" : "Type of maneuver (e.g., IMPULSIVE, FINITE)."
+              },
+        "MAN_EPOCH_START" : {
+                "type" : "string",
+                "description" : "Start epoch of the maneuver."
+              },
+        "MAN_DURATION" : {
+                "type" : "number",
+                "description" : "Duration of the maneuver."
+              },
+        "MAN_UNITS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Units for the maneuver data values."
+              },
+        "DATA" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Data associated with the maneuver."
+              },
+        "MAN_COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Comments related to the maneuver."
+              },
+        "MAN_COMPOSITION" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Ordered DATA columns, including TIME_ABSOLUTE or TIME_RELATIVE first.\nCCSDS 502.0-B-3 Tables 6-7 to 6-9; absent means composition unspecified.\nDATA entries are complete time-history lines; MAN_UNITS excludes time tags.\nRelative time tags are seconds from METADATA.EPOCH_TZERO."
+              },
+        "MAN_NEXT_ID" : {
+                "type" : "string",
+                "description" : "Next maneuver identifier (CCSDS 502.0-B-3 Table 6-7)."
+              },
+        "MAN_BASIS_ID" : {
+                "type" : "string",
+                "description" : "OD, navigation solution or simulation identifier (Table 6-7)."
+              },
+        "MAN_PREV_EPOCH" : {
+                "type" : "string",
+                "description" : "Previous maneuver completion: absolute epoch or seconds from EPOCH_TZERO.\nCCSDS 502.0-B-3 Table 6-7; absolute times use METADATA.TIME_SYSTEM."
+              },
+        "MAN_NEXT_EPOCH" : {
+                "type" : "string",
+                "description" : "Next maneuver start; same time convention as MAN_PREV_EPOCH (Table 6-7)."
+              },
+        "MAN_PRED_SOURCE" : {
+                "type" : "string",
+                "description" : "Source of predicted orbit or attitude states (Table 6-7)."
+              },
+        "GRAV_ASSIST_NAME" : {
+                "type" : "string",
+                "description" : "Gravitational assist body name (Table 6-7)."
+              },
+        "DC_TYPE" : {
+                "type" : "string",
+                "description" : "CONTINUOUS, TIME or TIME_AND_ANGLE; absent means CONTINUOUS (Table 6-7)."
+              },
+        "DC_WIN_OPEN" : {
+                "type" : "string",
+                "description" : "Duty-cycle window start; MAN_PREV_EPOCH time convention (Table 6-7)."
+              },
+        "DC_WIN_CLOSE" : {
+                "type" : "string",
+                "description" : "Duty-cycle window end; MAN_PREV_EPOCH time convention (Table 6-7)."
+              },
+        "DC_MIN_CYCLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Minimum and maximum ON cycles; HAS_DC_*_CYCLES marks presence (Table 6-7)."
+              },
+        "DC_MAX_CYCLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "HAS_DC_MIN_CYCLES" : {
+                "type" : "boolean",
+                "description" : "Presence of the corresponding cycle bound; zero remains representable."
+              },
+        "HAS_DC_MAX_CYCLES" : {
+                "type" : "boolean"
+              },
+        "DC_EXEC_START" : {
+                "type" : "string",
+                "description" : "First and final duty-cycle sequence times; MAN_PREV_EPOCH convention.\nRequired with DC_WIN_OPEN/CLOSE when DC_TYPE is not CONTINUOUS (Table 6-7)."
+              },
+        "DC_EXEC_STOP" : {
+                "type" : "string"
+              },
+        "DC_REF_TIME" : {
+                "type" : "string",
+                "description" : "Duty-cycle reference time; MAN_PREV_EPOCH time convention (Table 6-7)."
+              },
+        "DC_TIME_PULSE_DURATION" : {
+                "type" : "number",
+                "description" : "Pulse ON duration and start-to-start period, seconds; NaN means absent (Table 6-7).\nRequired with DC_REF_TIME for non-continuous cycles; period >= duration."
+              },
+        "DC_TIME_PULSE_PERIOD" : {
+                "type" : "number"
+              },
+        "DC_REF_DIR" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Three-component reference unit direction in MAN_REF_FRAME (Table 6-7).\nRequired with DC_BODY_FRAME/TRIGGER and both angles for TIME_AND_ANGLE."
+              },
+        "DC_BODY_FRAME" : {
+                "type" : "string",
+                "description" : "Body frame of DC_BODY_TRIGGER (Table 6-7)."
+              },
+        "DC_BODY_TRIGGER" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Three-component body-frame trigger unit direction (Table 6-7)."
+              },
+        "DC_PA_START_ANGLE" : {
+                "type" : "number",
+                "description" : "Pulse start and stop phase angles, degrees; NaN means unspecified.\nCCSDS 502.0-B-3 Table 6-7."
+              },
+        "DC_PA_STOP_ANGLE" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OCMDynamicParameter" : {
+      "type" : "object",
+      "description" : "A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution\nepoch and whether the orbit determination solved for it (a held value is a catalog value).",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Parameter name. A VCM's B, BDOT, AGOM and T are DRAG_AREA_OVER_MASS (Cd*A/m), DRAG_AREA_OVER_MASS_RATE,\nSRP_AREA_OVER_MASS (Cr*A/m) and IN_TRACK_ACCELERATION, the names of PRW's prwDynamicParameter. Other names\nare the producer's, as in USER_DEFINED_PARAMETERS."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Value at the solution epoch, in UNITS."
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units of VALUE: m**2/kg for DRAG_AREA_OVER_MASS and SRP_AREA_OVER_MASS, m**2/kg/s for DRAG_AREA_OVER_MASS_RATE,\nm/s**2 for IN_TRACK_ACCELERATION."
+              },
+        "SOLVED_FOR" : {
+                "type" : "boolean",
+                "description" : "True when the orbit determination solved for the parameter, false when VALUE was held."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitDetermination" : {
+      "type" : "object",
+      "properties" : {
+        "OD_ID" : {
+                "type" : "string",
+                "description" : "Unique identifier for the orbit determination."
+              },
+        "OD_PREV_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the previous orbit determination."
+              },
+        "OD_ALGORITHM" : {
+                "type" : "string",
+                "description" : "Algorithm used for orbit determination."
+              },
+        "OD_METHOD" : {
+                "type" : "string",
+                "description" : "Method used for orbit determination."
+              },
+        "OD_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the orbit determination."
+              },
+        "OD_TIME_TAG" : {
+                "type" : "string",
+                "description" : "Time tag of the orbit determination."
+              },
+        "OD_PROCESS_NOISE" : {
+                "type" : "string",
+                "description" : "Process noise model used."
+              },
+        "OD_COV_REDUCTION" : {
+                "type" : "string",
+                "description" : "Covariance reduction techniques used."
+              },
+        "OD_NOISE_MODELS" : {
+                "type" : "string",
+                "description" : "Noise models used."
+              },
+        "OD_OBSERVATIONS_TYPE" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Types of observations used (e.g., RANGE, DOPPLER)."
+              },
+        "OD_OBSERVATIONS_USED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of observations used."
+              },
+        "OD_TRACKS_USED" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Number of tracks used."
+              },
+        "OD_DATA_WEIGHTING" : {
+                "type" : "string",
+                "description" : "Data weighting scheme used."
+              },
+        "OD_CONVERGENCE_CRITERIA" : {
+                "type" : "string",
+                "description" : "Convergence criteria used."
+              },
+        "OD_EST_PARAMETERS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Parameters estimated during orbit determination."
+              },
+        "OD_APRIORI_DATA" : {
+                "type" : "string",
+                "description" : "A priori data used for orbit determination."
+              },
+        "OD_RESIDUALS" : {
+                "type" : "string",
+                "description" : "Residuals from the orbit determination."
+              },
+        "OD_ESTIMATOR" : {
+                "$ref" : "#/definitions/estimatorCategory",
+                "description" : "Estimator class provenance: batch fit vs sequential filter (EKF/UKF)."
+              },
+        "OD_RESIDUAL_RMS" : {
+                "type" : "number",
+                "description" : "RMS of post-fit residuals for this solution."
+              },
+        "OD_RESIDUALS_SERIES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Post-fit residual series, one entry per accepted observation."
+              },
+        "OD_RESIDUAL_EPOCHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Epochs aligned with OD_RESIDUALS_SERIES (UNIX timestamp) [numeric seconds\nsince 1970-01-01T00:00:00 UTC]."
+              },
+        "OD_BATCH_BASELINE_ID" : {
+                "type" : "string",
+                "description" : "OD_ID of the batch baseline solution a filtered solution derives from and\nis compared against (empty for batch solutions)."
+              },
+        "OD_BATCH_BASELINE_RMS" : {
+                "type" : "number",
+                "description" : "Post-fit residual RMS of the batch baseline, for direct batch-vs-filter\ncomparison."
+              },
+        "SEDR" : {
+                "type" : "number",
+                "description" : "Specific energy dissipation rate in W/kg: energy removed from the orbit\nby non-conservative forces, averaged during the OD (CCSDS 502.0-B-3 SEDR)."
+              },
+        "WEIGHTED_RMS" : {
+                "type" : "number",
+                "description" : "Weighted RMS residual ratio of a batch OD (CCSDS 502.0-B-3 WEIGHTED_RMS)."
+              },
+        "OD_DYNAMIC_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OCMDynamicParameter"},
+                "description" : "Dynamical-model parameters of the solution with their values, solved for or held. An\nIN_TRACK_ACCELERATION entry means the empirical in-track thrust is part of the force model. The rows\nCOV_PARAMETERS names in the covariance are entries of this list."
+              },
+        "DAYS_SINCE_FIRST_OBS" : {
+                "type" : "number",
+                "description" : "DAYS_SINCE_FIRST_OBS (CCSDS 502.0-B-3), NaN when not stated."
+              },
+        "DAYS_SINCE_LAST_OBS" : {
+                "type" : "number",
+                "description" : "DAYS_SINCE_LAST_OBS, NaN when not stated."
+              },
+        "RECOMMENDED_OD_SPAN" : {
+                "type" : "number",
+                "description" : "RECOMMENDED_OD_SPAN in days, NaN when not stated."
+              },
+        "ACTUAL_OD_SPAN" : {
+                "type" : "number",
+                "description" : "ACTUAL_OD_SPAN in days, NaN when not stated."
+              },
+        "OBS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "OBS_AVAILABLE; OD_OBSERVATIONS_USED is OBS_USED."
+              },
+        "TRACKS_AVAILABLE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "TRACKS_AVAILABLE; OD_TRACKS_USED is TRACKS_USED."
+              },
+        "MAXIMUM_OBS_GAP" : {
+                "type" : "number",
+                "description" : "MAXIMUM_OBS_GAP in days, NaN when not stated."
+              },
+        "OD_EPOCH_EIGMAJ" : {
+                "type" : "number",
+                "description" : "OD_EPOCH_EIGMAJ in m, NaN when not stated."
+              },
+        "OD_EPOCH_EIGINT" : {
+                "type" : "number",
+                "description" : "OD_EPOCH_EIGINT in m, NaN when not stated."
+              },
+        "OD_EPOCH_EIGMIN" : {
+                "type" : "number",
+                "description" : "OD_EPOCH_EIGMIN in m, NaN when not stated."
+              },
+        "OD_MAX_PRED_EIGMAJ" : {
+                "type" : "number",
+                "description" : "OD_MAX_PRED_EIGMAJ in m, NaN when not stated."
+              },
+        "OD_MIN_PRED_EIGMIN" : {
+                "type" : "number",
+                "description" : "OD_MIN_PRED_EIGMIN in m, NaN when not stated."
+              },
+        "OD_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "OD_CONFIDENCE in percent, NaN when not stated."
+              },
+        "GDOP" : {
+                "type" : "number",
+                "description" : "GDOP, NaN when not stated."
+              },
+        "SOLVE_N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SOLVE_N: the number of solved-for states."
+              },
+        "SOLVE_STATES" : {
+                "type" : "string",
+                "description" : "SOLVE_STATES: the solved-for states, as written."
+              },
+        "CONSIDER_N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "CONSIDER_N: the number of consider parameters."
+              },
+        "CONSIDER_PARAMS" : {
+                "type" : "string",
+                "description" : "CONSIDER_PARAMS: the consider parameters, as written."
+              },
+        "SENSORS_N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "SENSORS_N: the number of sensors."
+              },
+        "SENSORS" : {
+                "type" : "string",
+                "description" : "SENSORS: the sensors, as written."
+              },
+        "COMMENT" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "COMMENT lines of the orbit determination block (CCSDS 502.0-B-3), one entry per line."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OCMTrajectoryBlock" : {
+      "type" : "object",
+      "description" : "One trajectory state time history of an OCM (CCSDS 502.0-B-3 Table 6-3 .. 6-4):\nthe block's keywords, and its data lines as written (a time tag, then the\nnumbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state\nthe first block's CARTPV or CARTPVA states for the modules that read those.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "TRAJ_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_ID."
+              },
+        "TRAJ_PREV_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_PREV_ID."
+              },
+        "TRAJ_NEXT_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_NEXT_ID."
+              },
+        "TRAJ_BASIS" : {
+                "type" : "string",
+                "description" : "TRAJ_BASIS: PREDICTED, DETERMINED, TELEMETRY, SIMULATED or OTHER."
+              },
+        "TRAJ_BASIS_ID" : {
+                "type" : "string",
+                "description" : "TRAJ_BASIS_ID."
+              },
+        "INTERPOLATION" : {
+                "type" : "string",
+                "description" : "INTERPOLATION: the recommended interpolation method."
+              },
+        "INTERPOLATION_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "INTERPOLATION_DEGREE."
+              },
+        "PROPAGATOR" : {
+                "type" : "string",
+                "description" : "PROPAGATOR."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "CENTER_NAME."
+              },
+        "TRAJ_REF_FRAME" : {
+                "type" : "string",
+                "description" : "TRAJ_REF_FRAME."
+              },
+        "TRAJ_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "TRAJ_FRAME_EPOCH."
+              },
+        "USEABLE_START_TIME" : {
+                "type" : "string",
+                "description" : "USEABLE_START_TIME."
+              },
+        "USEABLE_STOP_TIME" : {
+                "type" : "string",
+                "description" : "USEABLE_STOP_TIME."
+              },
+        "ORB_REVNUM" : {
+                "type" : "number",
+                "description" : "ORB_REVNUM, NaN when not stated."
+              },
+        "ORB_REVNUM_BASIS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "ORB_REVNUM_BASIS: 0 or 1, -1 when not stated."
+              },
+        "TRAJ_TYPE" : {
+                "type" : "string",
+                "description" : "TRAJ_TYPE as written, for example CARTPV."
+              },
+        "ORB_AVERAGING" : {
+                "type" : "string",
+                "description" : "ORB_AVERAGING."
+              },
+        "TRAJ_UNITS" : {
+                "type" : "string",
+                "description" : "TRAJ_UNITS."
+              },
+        "LINES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The data lines, as written."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OCMCovarianceBlock" : {
+      "type" : "object",
+      "description" : "One covariance time history of an OCM (Table 6-6): the block's keywords and its\ndata lines as written (a time tag, then the covariance in COV_ORDERING). The\nsingle-covariance fields of the OCM above state the first block when it is one\nline.",
+      "properties" : {
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT lines of this block, joined by a line feed."
+              },
+        "COV_ID" : {
+                "type" : "string",
+                "description" : "COV_ID."
+              },
+        "COV_PREV_ID" : {
+                "type" : "string",
+                "description" : "COV_PREV_ID."
+              },
+        "COV_NEXT_ID" : {
+                "type" : "string",
+                "description" : "COV_NEXT_ID."
+              },
+        "COV_BASIS" : {
+                "type" : "string",
+                "description" : "COV_BASIS: PREDICTED, DETERMINED, EMPIRICAL, SIMULATED or OTHER."
+              },
+        "COV_BASIS_ID" : {
+                "type" : "string",
+                "description" : "COV_BASIS_ID."
+              },
+        "COV_REF_FRAME" : {
+                "type" : "string",
+                "description" : "COV_REF_FRAME."
+              },
+        "COV_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "COV_FRAME_EPOCH."
+              },
+        "COV_SCALE_MIN" : {
+                "type" : "number",
+                "description" : "COV_SCALE_MIN, NaN when not stated."
+              },
+        "COV_SCALE_MAX" : {
+                "type" : "number",
+                "description" : "COV_SCALE_MAX, NaN when not stated."
+              },
+        "COV_CONFIDENCE" : {
+                "type" : "number",
+                "description" : "COV_CONFIDENCE in percent, NaN when not stated."
+              },
+        "COV_TYPE" : {
+                "type" : "string",
+                "description" : "COV_TYPE as written, for example CARTPV."
+              },
+        "COV_ORDERING" : {
+                "$ref" : "#/definitions/covarianceOrdering",
+                "description" : "COV_ORDERING."
+              },
+        "COV_UNITS" : {
+                "type" : "string",
+                "description" : "COV_UNITS."
+              },
+        "LINES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "The data lines, as written."
+              },
+        "COV_REALISM" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CVR"},
+                "description" : "Realism of the block's covariance: one entry per line of LINES, in order,\nor one entry for every line."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "UserDefinedParameters" : {
+      "type" : "object",
+      "properties" : {
+        "PARAM_NAME" : {
+                "type" : "string",
+                "description" : "Name of the user-defined parameter."
+              },
+        "PARAM_VALUE" : {
+                "type" : "string",
+                "description" : "Value of the user-defined parameter."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OCM" : {
+      "type" : "object",
+      "description" : "Orbit Comprehensive Message",
+      "properties" : {
+        "HEADER" : {
+                "$ref" : "#/definitions/Header",
+                "description" : "Header section of the OCM."
+              },
+        "METADATA" : {
+                "$ref" : "#/definitions/Metadata",
+                "description" : "Metadata section of the OCM."
+              },
+        "TRAJ_TYPE" : {
+                "$ref" : "#/definitions/trajectoryType",
+                "description" : "Trajectory state representation type.\nDetermines how orbit state data is parameterized in this message.\nFor CARTESIAN_PV/CARTESIAN_PVA, use STATE_DATA array.\nFor POLYNOMIAL_POS/POLYNOMIAL_OE, use the corresponding polynomial record arrays."
+              },
+        "TRAJ_TYPE_DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Legacy trajectory type string for backward compatibility and extended types\n(e.g., \"PROPAGATED\", \"ESTIMATED\", \"FILTERED\")."
+              },
+        "STATE_STEP_SIZE" : {
+                "type" : "number",
+                "description" : "Time interval between state vectors in seconds; required without STATE_EPOCHS."
+              },
+        "STATE_VECTOR_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of components per state vector.\n6 = position + velocity (X, Y, Z, X_DOT, Y_DOT, Z_DOT)\n9 = position + velocity + acceleration (adds X_DDOT, Y_DDOT, Z_DDOT)\n6 or 7 for the element sets named by TRAJ_TYPE."
+              },
+        "STATE_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "State data as row-major array of doubles.\nLayout: [X0, Y0, Z0, X_DOT0, Y_DOT0, Z_DOT0, X1, Y1, Z1, ...]\nTime reconstruction uses STATE_EPOCHS when present, otherwise START_TIME + i * STATE_STEP_SIZE.\nLength must be divisible by STATE_VECTOR_SIZE.\nUnits: km, km/s and km/s**2, in TRAJ_REF_FRAME about CENTER_NAME."
+              },
+        "COVARIANCE_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Covariance data as a flat array, one N x N matrix per epoch, N = COV_SIZE, aligned with the STATE_DATA epochs.\nCOV_ORDERING gives the values per epoch: N(N+1)/2 for LTM and UTM, N*N for FULL, LTMWCC and UTMWCC. Entry [i,j]\nhas the product of the units of state elements i and j (km**2, km**2/s, km**2/s**2 for a position-velocity\nstate), and of COV_UNITS for the parameter rows. Without COV_TYPE, COV_ORDERING and COV_SIZE: 21 elements per\nepoch, the lower triangle of the 6x6 position and velocity covariance."
+              },
+        "POLYNOMIAL_POSITION_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEPositionRecord"},
+                "description" : "Polynomial position records.\nUsed when TRAJ_TYPE is POLYNOMIAL_POS. Each record covers a time segment\nwith polynomial coefficients for X, Y, Z position (and optionally velocity).\nSee PPE schema for record structure and evaluation procedure."
+              },
+        "POLYNOMIAL_OE_RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PPEOrbitalElementRecord"},
+                "description" : "Polynomial orbital element records.\nUsed when TRAJ_TYPE is POLYNOMIAL_OE. Each record covers a time segment\nwith polynomial coefficients for classical orbital elements.\nSee PPE schema for record structure and evaluation procedure."
+              },
+        "PHYSICAL_PROPERTIES" : {
+                "$ref" : "#/definitions/PhysicalProperties",
+                "description" : "Physical properties of the space object."
+              },
+        "MANEUVER_DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/Maneuver"},
+                "description" : "Maneuver data."
+              },
+        "PERTURBATIONS" : {
+                "$ref" : "#/definitions/Perturbations",
+                "description" : "Perturbations parameters used."
+              },
+        "ORBIT_DETERMINATION" : {
+                "$ref" : "#/definitions/OrbitDetermination",
+                "description" : "Orbit determination data."
+              },
+        "USER_DEFINED_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/UserDefinedParameters"},
+                "description" : "User-defined parameters and supplemental comments."
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Origin of TRAJ_REF_FRAME (EARTH, MOON, ...) (CCSDS 502.0-B-3 CENTER_NAME)."
+              },
+        "TRAJ_REF_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference frame of STATE_DATA and the polynomial records\n(CCSDS 502.0-B-3 TRAJ_REF_FRAME)."
+              },
+        "TRAJ_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of TRAJ_REF_FRAME when it is not intrinsic to the frame\n(CCSDS 502.0-B-3 TRAJ_FRAME_EPOCH)."
+              },
+        "COV_REF_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference frame of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_REF_FRAME)."
+              },
+        "ORB_REVNUM" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Orbit revolution number at the first state (CCSDS 502.0-B-3 ORB_REVNUM)."
+              },
+        "ORB_AVERAGING" : {
+                "type" : "string",
+                "description" : "For element sets: OSCULATING, or the mean-element theory used (BROUWER,\nKOZAI, ...) (CCSDS 502.0-B-3 ORB_AVERAGING). Absent means OSCULATING."
+              },
+        "COV_CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "Whether COVARIANCE_DATA's coverage was measured against independent\nreference states: Calibrated only when every COV_REALISM entry is."
+              },
+        "COV_CALIBRATION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Identifier of that calibration evidence (a report or record)."
+              },
+        "STATE_EPOCHS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Absolute epoch per STATE_DATA row in METADATA.TIME_SYSTEM (CCSDS 502.0-B-3\nsection 6.2.4). When nonempty, length equals STATE_DATA.length /\nSTATE_VECTOR_SIZE and these epochs override START_TIME + i * STATE_STEP_SIZE.\nAbsent or empty retains the uniform grid; COVARIANCE_DATA shares these epochs."
+              },
+        "COV_TYPE" : {
+                "type" : "string",
+                "description" : "Element set of the state block of COVARIANCE_DATA (CCSDS 502.0-B-3 COV_TYPE): a SANA orbital element set\n(CARTP, CARTPV, CARTPVA, ADBARV, KEPLERIAN, EQUINOCTIAL ...) or a covariance representation (SIG3EIGVEC3 and\nTSIG3EIGVEC3 give 13 and 14 values per epoch whatever COV_SIZE says). Absent means CARTPV."
+              },
+        "COV_ORDERING" : {
+                "$ref" : "#/definitions/covarianceOrdering",
+                "description" : "Order of the covariance values at each epoch (CCSDS 502.0-B-3 COV_ORDERING)."
+              },
+        "COV_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Dimension N of the covariance matrix at each epoch: the rows of the state block (6 for CARTPV) plus the rows\nCOV_PARAMETERS names."
+              },
+        "COV_PARAMETERS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Names of the covariance rows after the state block, in order: dynamical-model parameters carried with the state,\nby their names in ORBIT_DETERMINATION.OD_DYNAMIC_PARAMETERS (a VCM's B, BDOT, AGOM, T in that order, as far as its\nmatrix reaches). A row the orbit determination did not solve for is zero."
+              },
+        "COV_UNITS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Units of the standard deviation of each diagonal element, N entries (CCSDS 502.0-B-3 COV_UNITS), \"n/a\" for a\ndimensionless one."
+              },
+        "TRAJECTORY_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OCMTrajectoryBlock"},
+                "description" : "Every trajectory state time history of the message (CCSDS 502.0-B-3 TRAJ_START\nblocks), in message order. TRAJ_TYPE, STATE_DATA and the fields that go with\nthem above state the first block's CARTPV or CARTPVA states."
+              },
+        "COVARIANCE_BLOCKS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OCMCovarianceBlock"},
+                "description" : "Every covariance time history of the message (COV_START blocks), in message\norder. COVARIANCE_DATA and the fields that go with it above state the first\nblock when it is one line."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the message's data comes from and the terms it travels under."
+              },
+        "COV_REALISM" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/CVR"},
+                "description" : "Realism of COVARIANCE_DATA: one entry per epoch, in the order of the\nSTATE_DATA epochs, or one entry for every epoch."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MET" : {
+      "type" : "object",
+      "description" : "Mean Element Theory",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMM" : {
+      "type" : "object",
+      "description" : "Orbit Mean Elements Message",
+      "properties" : {
+        "CCSDS_OMM_VERS" : {
+                "type" : "number",
+                "description" : "CCSDS OMM Version"
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation Date (ISO 8601 UTC format)"
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Satellite Name(s)"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International Designator (YYYY-NNNAAA)"
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Center Name (e.g. EARTH, MARS)"
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference Frame\nTypically TEMEOFDATE"
+              },
+        "REFERENCE_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Reference Frame Epoch (ISO 8601 UTC format)"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time System [M, UTC]"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource",
+                "description" : "Mean Element Theory"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "EPOCH of Mean Keplerian elements (ISO 8601 UTC format)"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis in km or Mean Motion in rev/day"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity (unitless)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "RA_OF_ASC_NODE in degrees"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "ARG_OF_PERICENTER in degrees"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "MEAN_ANOMALY in degrees"
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "GM in km**3/s**2"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "MASS in kg"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_AREA in m**2"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_COEFF (unitless)"
+              },
+        "DRAG_AREA" : {
+                "type" : "number",
+                "description" : "DRAG_AREA in m**2"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number",
+                "description" : "DRAG_COEFF (unitless)"
+              },
+        "EPHEMERIS_TYPE" : {
+                "$ref" : "#/definitions/ephemerisFormat",
+                "description" : "TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)\nEPHEMERIS_TYPE Default=0"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION_TYPE Default=U"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD_CAT_ID (integer) [O if SGP/SGP4]"
+              },
+        "ELEMENT_SET_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ELEMENT_SET_NO [O if SGP/SGP4]"
+              },
+        "REV_AT_EPOCH" : {
+                "type" : "number",
+                "description" : "REV_AT_EPOCH [O if SGP/SGP4]"
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW"
+              },
+        "COVARIANCE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
+              },
+        "USER_DEFINED_BIP_0044_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "USER_DEFINED_BIP_0044_TYPE [O, units per ICD]"
+              },
+        "USER_DEFINED_OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]"
+              },
+        "USER_DEFINED_EARTH_MODEL" : {
+                "type" : "string",
+                "description" : "USER_DEFINED_EARTH_MODEL [O, units per ICD]"
+              },
+        "USER_DEFINED_EPOCH_TIMESTAMP" : {
+                "type" : "number",
+                "description" : "USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]"
+              },
+        "USER_DEFINED_MICROSECONDS" : {
+                "type" : "number",
+                "description" : "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+              },
+        "USER_DEFINED_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMMUserDefinedParameter"},
+                "description" : "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the element set comes from and the terms it travels under."
+              },
+        "COV_REALISM" : {
+                "$ref" : "#/definitions/CVR",
+                "description" : "Realism of COVARIANCE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMMUserDefinedParameter" : {
+      "type" : "object",
+      "description" : "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties" : {
+        "PARAM_NAME" : {
+                "type" : "string",
+                "description" : "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+              },
+        "PARAM_VALUE" : {
+                "type" : "string",
+                "description" : "The value as written, unit-less text"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBCBiasTerm" : {
+      "type" : "object",
+      "description" : "One sensor's bias.",
+      "properties" : {
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Sensor identifier."
+              },
+        "BASIS" : {
+                "$ref" : "#/definitions/sbcBiasBasis"
+              },
+        "NATURE" : {
+                "$ref" : "#/definitions/sbcBiasNature"
+              },
+        "RADIAL_M" : {
+                "type" : "number",
+                "description" : "Radial bias (or its one-sigma), m; 0 = none."
+              },
+        "IN_TRACK_M" : {
+                "type" : "number",
+                "description" : "In-track bias, m; 0 = none."
+              },
+        "CROSS_TRACK_M" : {
+                "type" : "number",
+                "description" : "Cross-track bias, m; 0 = none."
+              },
+        "RANGE_M" : {
+                "type" : "number",
+                "description" : "Range bias, m; 0 = none (BASIS Measurement)."
+              },
+        "AZIMUTH_DEG" : {
+                "type" : "number",
+                "description" : "Azimuth bias, degrees; 0 = none."
+              },
+        "ELEVATION_DEG" : {
+                "type" : "number",
+                "description" : "Elevation bias, degrees; 0 = none."
+              },
+        "RANGE_RATE_M_S" : {
+                "type" : "number",
+                "description" : "Range-rate bias, m/s; 0 = none."
+              },
+        "TIME_S" : {
+                "type" : "number",
+                "description" : "Time-tag bias, s; 0 = none."
+              },
+        "OBSERVATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of the sensor's observations in the orbit; 0 = not stated."
+              },
+        "CALIBRATION_REFERENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the calibration the bias comes from; empty = none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBCCovarianceRequest" : {
+      "type" : "object",
+      "description" : "The contributors to combine into one object's covariance.",
+      "properties" : {
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Object identifier."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of the covariance, ISO 8601 UTC."
+              },
+        "DIRECT_COVARIANCE" : {
+                "$ref" : "#/definitions/OCM",
+                "description" : "A covariance supplied directly, as an $OCM with COVARIANCE_DATA (21\nvalues, km**2 family) and COV_REF_FRAME (RTN or RSW for orbit axes). A\ncovariance known only as per-axis one-sigma values is a diagonal one:\nwrite sigma**2 on the diagonal and zeros elsewhere. Absent = none."
+              },
+        "ELEMENT_SET_SERIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMM"},
+                "description" : "A series of element sets of the object whose scatter about their mean\nis a covariance contributor (at least two sets); empty = none."
+              },
+        "SENSOR_BIASES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SBCBiasTerm"},
+                "description" : "Sensor biases; empty = none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBCContribution" : {
+      "type" : "object",
+      "description" : "Variance one contributor added, per axis.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/sbcContributorKind"
+              },
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Sensor the contribution is for (KIND SensorBias, one per sensor);\nempty for the total of a kind."
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Element sets, sensors or matrices behind the contribution."
+              },
+        "RADIAL_VARIANCE_M2" : {
+                "type" : "number",
+                "description" : "Radial position variance added, m**2."
+              },
+        "IN_TRACK_VARIANCE_M2" : {
+                "type" : "number",
+                "description" : "In-track position variance added, m**2."
+              },
+        "CROSS_TRACK_VARIANCE_M2" : {
+                "type" : "number",
+                "description" : "Cross-track position variance added, m**2."
+              },
+        "VELOCITY_VARIANCE_M2_S2" : {
+                "type" : "number",
+                "description" : "Variance added to each velocity component, (m/s)**2; 0 = none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBCDiagnostics" : {
+      "type" : "object",
+      "description" : "Diagnostics of a combined covariance.",
+      "properties" : {
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Object identifier."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch, ISO 8601 UTC."
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Axes of the covariance, e.g. \"RTN\"."
+              },
+        "PROVIDER" : {
+                "type" : "string",
+                "description" : "Producer of the combination, e.g. \"covariance-analysis\"."
+              },
+        "STATUS" : {
+                "type" : "string",
+                "description" : "Status, e.g. \"nominal\"."
+              },
+        "CONTRIBUTORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sbcContributorKind"},
+                "description" : "The contributor kinds combined, in order."
+              },
+        "CONTRIBUTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SBCContribution"},
+                "description" : "Each contributor's added variances, totals first and then per sensor."
+              },
+        "POSITION_SIGMA_RTN_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Resulting one-sigma, radial, in-track, cross-track position, m."
+              },
+        "VELOCITY_SIGMA_RTN_M_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Resulting one-sigma, radial, in-track, cross-track velocity, m/s."
+              },
+        "COVARIANCE_LOWER_TRIANGLE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "The combined covariance, 6x6 lower triangle row-major (21 values), km**2,\nkm**2/s, km**2/s**2. The same values the companion $OCM carries."
+              },
+        "POSITION_COVARIANCE_KM2" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Position covariance, 3x3 row-major (9 values), km**2."
+              },
+        "ELLIPSOID_SIGMA_LEVEL" : {
+                "type" : "number",
+                "description" : "One-sigma level of ELLIPSOID_SEMI_AXES_M (1 = one sigma)."
+              },
+        "ELLIPSOID_SEMI_AXES_M" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Semi-axes of the position error ellipsoid, largest first, m (3 values)."
+              },
+        "ASSUMPTIONS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Assumptions the combination made (human-readable)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SBC" : {
+      "type" : "object",
+      "description" : "Sensor Bias Contribution - exactly one arm is set.",
+      "properties" : {
+        "REQUEST" : {
+                "$ref" : "#/definitions/SBCCovarianceRequest"
+              },
+        "DIAGNOSTICS" : {
+                "$ref" : "#/definitions/SBCDiagnostics"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SBC"
+}

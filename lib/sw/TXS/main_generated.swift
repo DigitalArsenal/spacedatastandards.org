@@ -264,7 +264,7 @@ public enum txsMergeMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 ///  nothing, so a consumer can tell "not looked for" from "looked for and
 ///  returned nothing". Source identity is DATA: PROVIDER_ID and AUTHORITY carry
 ///  verbatim what that source states about itself.
-public struct TXSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TXSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -425,7 +425,7 @@ public struct TXSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  Agreement is CORROBORATION and is never authority: five compilations that
 ///  copied one another agree perfectly and establish nothing. Read this table
 ///  beside POSITION_AUTHORITY, never instead of it.
-public struct TXSConsensus: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TXSConsensus: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -523,7 +523,7 @@ public struct TXSConsensus: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 
 ///  A position the facility is asserted to have occupied and vacated, retained
 ///  so a relocation never silently rewrites history.
-public struct TXSPriorPosition: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TXSPriorPosition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -611,7 +611,7 @@ public struct TXSPriorPosition: FlatBufferTable, FlatbuffersVectorInitializable,
 ///  A facility radiating many carriers carries many entries; a facility whose
 ///  frequency changes by season or hour carries the documented set here and the
 ///  time-bounded usage in `$STX`. Unknown terms are ABSENT.
-public struct TXSEmission: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TXSEmission: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -797,7 +797,7 @@ public struct TXSEmission: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Terrestrial Transmitter Site.
-public struct TXS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TXS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

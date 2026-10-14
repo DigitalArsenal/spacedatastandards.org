@@ -100,13 +100,18 @@ class NSTNode : flatbuffers.handle
     /// network.
     def ONION_ADDRESS() -> string:
         return flatbuffers.field_string(buf_, pos_, 58)
+    /// Standards the peer publishes or serves, as their codes, e.g. "OMM".
+    def STANDARDS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 4)
+    def STANDARDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 60)
 
 def GetRootAsNSTNode(buf:string): return NSTNode { buf, flatbuffers.indirect(buf, 0) }
 
 struct NSTNodeBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(28)
+        b_.StartObject(29)
         return this
     def add_PEER_ID(PEER_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, PEER_ID)
@@ -192,6 +197,9 @@ struct NSTNodeBuilder:
     def add_ONION_ADDRESS(ONION_ADDRESS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(27, ONION_ADDRESS)
         return this
+    def add_STANDARDS(STANDARDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, STANDARDS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -209,6 +217,13 @@ def NSTNodeCreateCONNECTEDPEERIDSVector(b_:flatbuffers.builder, v_:[flatbuffers.
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+def NSTNodeStartSTANDARDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def NSTNodeCreateSTANDARDSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// Node Status Record - the set of peers a node reports.
 class NST : flatbuffers.handle
     def NODES(i:int) -> NSTNode:
@@ -221,13 +236,16 @@ class NST : flatbuffers.handle
     /// Peer identifier of the emitting node.
     def SOURCE_PEER_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
+    /// Entity tag of this set, for conditional requests.
+    def ETAG() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
 
 def GetRootAsNST(buf:string): return NST { buf, flatbuffers.indirect(buf, 0) }
 
 struct NSTBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(4)
         return this
     def add_NODES(NODES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NODES)
@@ -237,6 +255,9 @@ struct NSTBuilder:
         return this
     def add_SOURCE_PEER_ID(SOURCE_PEER_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(2, SOURCE_PEER_ID)
+        return this
+    def add_ETAG(ETAG:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, ETAG)
         return this
     def end():
         return b_.EndObject()

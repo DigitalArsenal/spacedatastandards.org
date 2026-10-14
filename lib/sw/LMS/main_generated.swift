@@ -22,7 +22,7 @@ public enum lambertTransferPath: Int8, FlatbuffersVectorInitializable, Enum, Ver
 
 
 ///  Lambert boundary-value solve request.
-public struct LMS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LMS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

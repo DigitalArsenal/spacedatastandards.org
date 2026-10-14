@@ -212,7 +212,7 @@ def FCSCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    FCSCreateRESERVEDVector(builder, data)
+    return FCSCreateRESERVEDVector(builder, data)
 
 def FCSEnd(builder):
     return builder.EndObject()

@@ -386,7 +386,7 @@ def GNOCreateSAT_OBSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSAT_OBSVector(builder, data):
-    GNOCreateSAT_OBSVector(builder, data)
+    return GNOCreateSAT_OBSVector(builder, data)
 
 def GNOAddOBS_CODE_SET(builder, OBS_CODE_SET):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OBS_CODE_SET), 0)
@@ -404,7 +404,7 @@ def GNOCreateOBS_CODE_SETVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBS_CODE_SETVector(builder, data):
-    GNOCreateOBS_CODE_SETVector(builder, data)
+    return GNOCreateOBS_CODE_SETVector(builder, data)
 
 def GNOAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)

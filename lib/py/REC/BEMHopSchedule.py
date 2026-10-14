@@ -140,7 +140,7 @@ def BEMHopScheduleCreateSLOTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSLOTSVector(builder, data):
-    BEMHopScheduleCreateSLOTSVector(builder, data)
+    return BEMHopScheduleCreateSLOTSVector(builder, data)
 
 def BEMHopScheduleAddPROVENANCE(builder, PROVENANCE):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)

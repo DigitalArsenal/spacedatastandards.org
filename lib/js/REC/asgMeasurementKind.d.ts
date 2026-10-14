@@ -1,0 +1,35 @@
+/**
+ * Quantity a measurement measures. Append new values only; never reorder or
+ * reuse existing values.
+ */
+export declare enum asgMeasurementKind {
+    /**
+     * Not stated.
+     */
+    Unspecified = 0,
+    /**
+     * Range, km.
+     */
+    Range = 1,
+    /**
+     * Range rate, km/s (also from a Doppler shift).
+     */
+    RangeRate = 2,
+    /**
+     * Topocentric right ascension, degrees.
+     */
+    RightAscension = 3,
+    /**
+     * Topocentric declination, degrees.
+     */
+    Declination = 4,
+    /**
+     * Azimuth, degrees clockwise from north.
+     */
+    Azimuth = 5,
+    /**
+     * Elevation above the local horizontal, degrees.
+     */
+    Elevation = 6
+}
+//# sourceMappingURL=asgMeasurementKind.d.ts.map

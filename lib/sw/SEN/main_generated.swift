@@ -43,7 +43,7 @@ public enum maintenanceType: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Sensor Maintenance Event
-public struct sensorMaintenanceEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct sensorMaintenanceEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -111,7 +111,7 @@ public struct sensorMaintenanceEvent: FlatBufferTable, FlatbuffersVectorInitiali
 }
 
 ///  Sensor Tasking Plan
-public struct sensorPlan: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct sensorPlan: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -194,7 +194,7 @@ public struct sensorPlan: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Sensor Operational Statistics
-public struct sensorStats: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct sensorStats: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -289,7 +289,7 @@ public struct sensorStats: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Sensor Management
-public struct SEN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SEN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

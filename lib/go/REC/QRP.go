@@ -736,8 +736,317 @@ func (rcv *QRP) ColumnsLength() int {
 	return rcv.COLUMNSLength()
 }
 
+/// How the request selects records in time.
+func (rcv *QRP) TIME_PROFILE() qrpTimeProfile {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		return qrpTimeProfile(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *QRP) TimeProfile() qrpTimeProfile {
+	return rcv.TIME_PROFILE()
+}
+
+/// How the request selects records in time.
+func (rcv *QRP) MutateTIME_PROFILE(n qrpTimeProfile) bool {
+	return rcv._tab.MutateInt8Slot(78, int8(n))
+}
+
+func (rcv *QRP) MutateTimeProfile(n qrpTimeProfile) bool {
+	return rcv.MutateTIME_PROFILE(n)
+}
+
+/// Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+func (rcv *QRP) PROFILE_EPOCH_MS() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) ProfileEpochMs() int64 {
+	return rcv.PROFILE_EPOCH_MS()
+}
+
+/// Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+func (rcv *QRP) MutatePROFILE_EPOCH_MS(n int64) bool {
+	return rcv._tab.MutateInt64Slot(80, n)
+}
+
+func (rcv *QRP) MutateProfileEpochMs(n int64) bool {
+	return rcv.MutatePROFILE_EPOCH_MS(n)
+}
+
+/// Representation the client asks the page in.
+func (rcv *QRP) REPRESENTATION() qrpRepresentation {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return qrpRepresentation(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *QRP) Representation() qrpRepresentation {
+	return rcv.REPRESENTATION()
+}
+
+/// Representation the client asks the page in.
+func (rcv *QRP) MutateREPRESENTATION(n qrpRepresentation) bool {
+	return rcv._tab.MutateInt8Slot(82, int8(n))
+}
+
+func (rcv *QRP) MutateRepresentation(n qrpRepresentation) bool {
+	return rcv.MutateREPRESENTATION(n)
+}
+
+/// Values bound to the placeholders of SQL, in order.
+func (rcv *QRP) PARAMETERS(obj *QRPValue, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(QRPValue)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *QRP) Parameters(obj *QRPValue, j int) bool {
+	return rcv.PARAMETERS(obj, j)
+}
+
+func (rcv *QRP) PARAMETERSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *QRP) ParametersLength() int {
+	return rcv.PARAMETERSLength()
+}
+
+/// Values bound to the placeholders of SQL, in order.
+/// Rows of a projection (a query that selects columns rather than whole
+/// records), in COLUMNS order. Whole-record pages carry their records as
+/// frames after the header instead, and leave ROWS empty.
+func (rcv *QRP) ROWS(obj *QRPRow, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(QRPRow)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *QRP) Rows(obj *QRPRow, j int) bool {
+	return rcv.ROWS(obj, j)
+}
+
+func (rcv *QRP) ROWSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *QRP) RowsLength() int {
+	return rcv.ROWSLength()
+}
+
+/// Rows of a projection (a query that selects columns rather than whole
+/// records), in COLUMNS order. Whole-record pages carry their records as
+/// frames after the header instead, and leave ROWS empty.
+/// The serving node's queryable tables, answered to a request for the query
+/// surface.
+func (rcv *QRP) TABLES(obj *QRPTable, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(QRPTable)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *QRP) Tables(obj *QRPTable, j int) bool {
+	return rcv.TABLES(obj, j)
+}
+
+func (rcv *QRP) TABLESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *QRP) TablesLength() int {
+	return rcv.TABLESLength()
+}
+
+/// The serving node's queryable tables, answered to a request for the query
+/// surface.
+/// Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+/// none stated.
+func (rcv *QRP) MAX_ELAPSED_MS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) MaxElapsedMs() uint32 {
+	return rcv.MAX_ELAPSED_MS()
+}
+
+/// Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+/// none stated.
+func (rcv *QRP) MutateMAX_ELAPSED_MS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(90, n)
+}
+
+func (rcv *QRP) MutateMaxElapsedMs(n uint32) bool {
+	return rcv.MutateMAX_ELAPSED_MS(n)
+}
+
+/// Most rows a page returns; 0 = none stated.
+func (rcv *QRP) MAX_ROWS() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) MaxRows() uint64 {
+	return rcv.MAX_ROWS()
+}
+
+/// Most rows a page returns; 0 = none stated.
+func (rcv *QRP) MutateMAX_ROWS(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(92, n)
+}
+
+func (rcv *QRP) MutateMaxRows(n uint64) bool {
+	return rcv.MutateMAX_ROWS(n)
+}
+
+/// Most bytes a page returns; 0 = none stated.
+func (rcv *QRP) MAX_BYTES() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) MaxBytes() uint64 {
+	return rcv.MAX_BYTES()
+}
+
+/// Most bytes a page returns; 0 = none stated.
+func (rcv *QRP) MutateMAX_BYTES(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(94, n)
+}
+
+func (rcv *QRP) MutateMaxBytes(n uint64) bool {
+	return rcv.MutateMAX_BYTES(n)
+}
+
+/// Transport status the answer carries, HTTP semantics (200, 304, 400,
+/// 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+func (rcv *QRP) HTTP_STATUS() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) HttpStatus() uint16 {
+	return rcv.HTTP_STATUS()
+}
+
+/// Transport status the answer carries, HTTP semantics (200, 304, 400,
+/// 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+func (rcv *QRP) MutateHTTP_STATUS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(96, n)
+}
+
+func (rcv *QRP) MutateHttpStatus(n uint16) bool {
+	return rcv.MutateHTTP_STATUS(n)
+}
+
+/// When the page's record frames are not inline but held by the serving
+/// node for delivery out of band: the reference token the node resolves
+/// (single use), and the byte size of what it refers to. 0 = inline.
+func (rcv *QRP) BODY_REF_TOKEN() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) BodyRefToken() uint64 {
+	return rcv.BODY_REF_TOKEN()
+}
+
+/// When the page's record frames are not inline but held by the serving
+/// node for delivery out of band: the reference token the node resolves
+/// (single use), and the byte size of what it refers to. 0 = inline.
+func (rcv *QRP) MutateBODY_REF_TOKEN(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(98, n)
+}
+
+func (rcv *QRP) MutateBodyRefToken(n uint64) bool {
+	return rcv.MutateBODY_REF_TOKEN(n)
+}
+
+func (rcv *QRP) BODY_REF_SIZE() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *QRP) BodyRefSize() uint64 {
+	return rcv.BODY_REF_SIZE()
+}
+
+func (rcv *QRP) MutateBODY_REF_SIZE(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(100, n)
+}
+
+func (rcv *QRP) MutateBodyRefSize(n uint64) bool {
+	return rcv.MutateBODY_REF_SIZE(n)
+}
+
 func QRPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(37)
+	builder.StartObject(49)
 }
 func QRPAddKIND(builder *flatbuffers.Builder, KIND qrpKind) {
 	builder.PrependInt8Slot(0, int8(KIND), 0)
@@ -972,6 +1281,96 @@ func QRPStartCOLUMNSVector(builder *flatbuffers.Builder, numElems int) flatbuffe
 }
 func QRPStartColumnsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return QRPStartCOLUMNSVector(builder, numElems)
+}
+func QRPAddTIME_PROFILE(builder *flatbuffers.Builder, TIME_PROFILE qrpTimeProfile) {
+	builder.PrependInt8Slot(37, int8(TIME_PROFILE), 0)
+}
+func QRPAddTimeProfile(builder *flatbuffers.Builder, TIME_PROFILE qrpTimeProfile) {
+	QRPAddTIME_PROFILE(builder, TIME_PROFILE)
+}
+func QRPAddPROFILE_EPOCH_MS(builder *flatbuffers.Builder, PROFILE_EPOCH_MS int64) {
+	builder.PrependInt64Slot(38, PROFILE_EPOCH_MS, 0)
+}
+func QRPAddProfileEpochMs(builder *flatbuffers.Builder, PROFILE_EPOCH_MS int64) {
+	QRPAddPROFILE_EPOCH_MS(builder, PROFILE_EPOCH_MS)
+}
+func QRPAddREPRESENTATION(builder *flatbuffers.Builder, REPRESENTATION qrpRepresentation) {
+	builder.PrependInt8Slot(39, int8(REPRESENTATION), 0)
+}
+func QRPAddRepresentation(builder *flatbuffers.Builder, REPRESENTATION qrpRepresentation) {
+	QRPAddREPRESENTATION(builder, REPRESENTATION)
+}
+func QRPAddPARAMETERS(builder *flatbuffers.Builder, PARAMETERS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(40, flatbuffers.UOffsetT(PARAMETERS), 0)
+}
+func QRPAddParameters(builder *flatbuffers.Builder, PARAMETERS flatbuffers.UOffsetT) {
+	QRPAddPARAMETERS(builder, PARAMETERS)
+}
+func QRPStartPARAMETERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func QRPStartParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return QRPStartPARAMETERSVector(builder, numElems)
+}
+func QRPAddROWS(builder *flatbuffers.Builder, ROWS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(ROWS), 0)
+}
+func QRPAddRows(builder *flatbuffers.Builder, ROWS flatbuffers.UOffsetT) {
+	QRPAddROWS(builder, ROWS)
+}
+func QRPStartROWSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func QRPStartRowsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return QRPStartROWSVector(builder, numElems)
+}
+func QRPAddTABLES(builder *flatbuffers.Builder, TABLES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(TABLES), 0)
+}
+func QRPAddTables(builder *flatbuffers.Builder, TABLES flatbuffers.UOffsetT) {
+	QRPAddTABLES(builder, TABLES)
+}
+func QRPStartTABLESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func QRPStartTablesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return QRPStartTABLESVector(builder, numElems)
+}
+func QRPAddMAX_ELAPSED_MS(builder *flatbuffers.Builder, MAX_ELAPSED_MS uint32) {
+	builder.PrependUint32Slot(43, MAX_ELAPSED_MS, 0)
+}
+func QRPAddMaxElapsedMs(builder *flatbuffers.Builder, MAX_ELAPSED_MS uint32) {
+	QRPAddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS)
+}
+func QRPAddMAX_ROWS(builder *flatbuffers.Builder, MAX_ROWS uint64) {
+	builder.PrependUint64Slot(44, MAX_ROWS, 0)
+}
+func QRPAddMaxRows(builder *flatbuffers.Builder, MAX_ROWS uint64) {
+	QRPAddMAX_ROWS(builder, MAX_ROWS)
+}
+func QRPAddMAX_BYTES(builder *flatbuffers.Builder, MAX_BYTES uint64) {
+	builder.PrependUint64Slot(45, MAX_BYTES, 0)
+}
+func QRPAddMaxBytes(builder *flatbuffers.Builder, MAX_BYTES uint64) {
+	QRPAddMAX_BYTES(builder, MAX_BYTES)
+}
+func QRPAddHTTP_STATUS(builder *flatbuffers.Builder, HTTP_STATUS uint16) {
+	builder.PrependUint16Slot(46, HTTP_STATUS, 0)
+}
+func QRPAddHttpStatus(builder *flatbuffers.Builder, HTTP_STATUS uint16) {
+	QRPAddHTTP_STATUS(builder, HTTP_STATUS)
+}
+func QRPAddBODY_REF_TOKEN(builder *flatbuffers.Builder, BODY_REF_TOKEN uint64) {
+	builder.PrependUint64Slot(47, BODY_REF_TOKEN, 0)
+}
+func QRPAddBodyRefToken(builder *flatbuffers.Builder, BODY_REF_TOKEN uint64) {
+	QRPAddBODY_REF_TOKEN(builder, BODY_REF_TOKEN)
+}
+func QRPAddBODY_REF_SIZE(builder *flatbuffers.Builder, BODY_REF_SIZE uint64) {
+	builder.PrependUint64Slot(48, BODY_REF_SIZE, 0)
+}
+func QRPAddBodyRefSize(builder *flatbuffers.Builder, BODY_REF_SIZE uint64) {
+	QRPAddBODY_REF_SIZE(builder, BODY_REF_SIZE)
 }
 func QRPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

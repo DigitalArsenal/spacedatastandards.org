@@ -231,7 +231,7 @@ def CMSCreateTRANSPONDERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRANSPONDERSVector(builder, data):
-    CMSCreateTRANSPONDERSVector(builder, data)
+    return CMSCreateTRANSPONDERSVector(builder, data)
 
 def CMSAddTOTAL_POWER(builder, TOTAL_POWER):
     builder.PrependFloat64Slot(8, TOTAL_POWER, 0.0)

@@ -225,7 +225,7 @@ def NUMGaussMarkovRequestCreatePROPAGATION_MATRIXVector(builder, data):
     return builder.EndVector()
 
 def CreatePROPAGATION_MATRIXVector(builder, data):
-    NUMGaussMarkovRequestCreatePROPAGATION_MATRIXVector(builder, data)
+    return NUMGaussMarkovRequestCreatePROPAGATION_MATRIXVector(builder, data)
 
 def NUMGaussMarkovRequestAddNOISE_MATRIX(builder, NOISE_MATRIX):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_MATRIX), 0)
@@ -247,7 +247,7 @@ def NUMGaussMarkovRequestCreateNOISE_MATRIXVector(builder, data):
     return builder.EndVector()
 
 def CreateNOISE_MATRIXVector(builder, data):
-    NUMGaussMarkovRequestCreateNOISE_MATRIXVector(builder, data)
+    return NUMGaussMarkovRequestCreateNOISE_MATRIXVector(builder, data)
 
 def NUMGaussMarkovRequestAddSTATE_BOUNDS(builder, STATE_BOUNDS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_BOUNDS), 0)
@@ -269,7 +269,7 @@ def NUMGaussMarkovRequestCreateSTATE_BOUNDSVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATE_BOUNDSVector(builder, data):
-    NUMGaussMarkovRequestCreateSTATE_BOUNDSVector(builder, data)
+    return NUMGaussMarkovRequestCreateSTATE_BOUNDSVector(builder, data)
 
 def NUMGaussMarkovRequestAddEMIT_SAMPLES(builder, EMIT_SAMPLES):
     builder.PrependBoolSlot(8, EMIT_SAMPLES, 0)

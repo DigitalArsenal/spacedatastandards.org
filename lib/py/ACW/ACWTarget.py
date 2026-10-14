@@ -129,7 +129,7 @@ def ACWTargetCreateSTATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATESVector(builder, data):
-    ACWTargetCreateSTATESVector(builder, data)
+    return ACWTargetCreateSTATESVector(builder, data)
 
 def ACWTargetAddSIGNATURE(builder, SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE), 0)

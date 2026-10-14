@@ -95,6 +95,102 @@
         }
       }
     },
+    "qrpTimeProfile": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "All",
+        "Nearest",
+        "AsOf",
+        "Forward",
+        "Latest"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated: the serving node applies its configured default."
+        },
+        "All": {
+          "value": 1,
+          "description": "Every record in the epoch window."
+        },
+        "Nearest": {
+          "value": 2,
+          "description": "For each object, the record whose epoch is nearest PROFILE_EPOCH_MS."
+        },
+        "AsOf": {
+          "value": 3,
+          "description": "For each object, the latest record at or before PROFILE_EPOCH_MS (the state as it was known then)."
+        },
+        "Forward": {
+          "value": 4,
+          "description": "For each object, the earliest record at or after PROFILE_EPOCH_MS."
+        },
+        "Latest": {
+          "value": 5,
+          "description": "For each object, its latest record."
+        }
+      }
+    },
+    "qrpRepresentation": {
+      "type": "string",
+      "enum": [
+        "Default",
+        "FlatBuffer",
+        "Json"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Default": {
+          "value": 0,
+          "description": "The serving node's default (FlatBuffer records)."
+        },
+        "FlatBuffer": {
+          "value": 1,
+          "description": "Size-prefixed FlatBuffer records of the standard, or ROWS for a projection."
+        },
+        "Json": {
+          "value": 2,
+          "description": "JSON rendering of the same records or rows."
+        }
+      }
+    },
+    "qrpValueKind": {
+      "type": "string",
+      "enum": [
+        "Null",
+        "Bool",
+        "Int",
+        "Float",
+        "Text",
+        "Bytes"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Null": {
+          "value": 0
+        },
+        "Bool": {
+          "value": 1
+        },
+        "Int": {
+          "value": 2
+        },
+        "Float": {
+          "value": 3
+        },
+        "Text": {
+          "value": 4
+        },
+        "Bytes": {
+          "value": 5
+        }
+      }
+    },
     "QRPFilter": {
       "type": "object",
       "description": "One field filter of a request.",
@@ -170,6 +266,117 @@
           "type": "boolean",
           "description": "True when the serving node holds an index on this column.",
           "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QRPValue": {
+      "type": "object",
+      "description": "One typed value: a bound parameter of a request, or one cell of a row.\nExactly the field named by KIND is meaningful.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/qrpValueKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Null": {
+              "value": 0
+            },
+            "Bool": {
+              "value": 1
+            },
+            "Int": {
+              "value": 2
+            },
+            "Float": {
+              "value": 3
+            },
+            "Text": {
+              "value": 4
+            },
+            "Bytes": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "Null"
+        },
+        "BOOL_VALUE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "INT_VALUE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "FLOAT_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TEXT_VALUE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTES_VALUE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QRPRow": {
+      "type": "object",
+      "description": "One row of a projection, its cells in COLUMNS order.",
+      "properties": {
+        "CELLS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPValue"
+          },
+          "x-flatbuffer-type": "[QRPValue]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "QRPTable": {
+      "type": "object",
+      "description": "One queryable table of the serving node (the query surface).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Table name as a query names it, e.g. \"OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "type": "string",
+          "description": "What the table is, e.g. \"standard\" (records of one standard), \"view\",\n\"lane\" (an ingest lane), \"system\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "description": "Where the table's rows come from: a standard code, provider or source.",
+          "x-flatbuffer-type": "string"
+        },
+        "RECORDS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Rows the table holds; -1 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "COLUMNS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPColumn"
+          },
+          "description": "Columns of the table.",
+          "x-flatbuffer-type": "[QRPColumn]"
         }
       },
       "additionalProperties": false
@@ -417,6 +624,132 @@
             "$ref": "#/definitions/QRPColumn"
           },
           "x-flatbuffer-type": "[QRPColumn]"
+        },
+        "TIME_PROFILE": {
+          "$ref": "#/definitions/qrpTimeProfile",
+          "description": "How the request selects records in time.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated: the serving node applies its configured default."
+            },
+            "All": {
+              "value": 1,
+              "description": "Every record in the epoch window."
+            },
+            "Nearest": {
+              "value": 2,
+              "description": "For each object, the record whose epoch is nearest PROFILE_EPOCH_MS."
+            },
+            "AsOf": {
+              "value": 3,
+              "description": "For each object, the latest record at or before PROFILE_EPOCH_MS (the state as it was known then)."
+            },
+            "Forward": {
+              "value": 4,
+              "description": "For each object, the earliest record at or after PROFILE_EPOCH_MS."
+            },
+            "Latest": {
+              "value": 5,
+              "description": "For each object, its latest record."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "PROFILE_EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.",
+          "x-flatbuffer-type": "int64"
+        },
+        "REPRESENTATION": {
+          "$ref": "#/definitions/qrpRepresentation",
+          "description": "Representation the client asks the page in.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Default": {
+              "value": 0,
+              "description": "The serving node's default (FlatBuffer records)."
+            },
+            "FlatBuffer": {
+              "value": 1,
+              "description": "Size-prefixed FlatBuffer records of the standard, or ROWS for a projection."
+            },
+            "Json": {
+              "value": 2,
+              "description": "JSON rendering of the same records or rows."
+            }
+          },
+          "x-flatbuffer-default": "Default"
+        },
+        "PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPValue"
+          },
+          "description": "Values bound to the placeholders of SQL, in order.",
+          "x-flatbuffer-type": "[QRPValue]"
+        },
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPRow"
+          },
+          "description": "Rows of a projection (a query that selects columns rather than whole\nrecords), in COLUMNS order. Whole-record pages carry their records as\nframes after the header instead, and leave ROWS empty.",
+          "x-flatbuffer-type": "[QRPRow]"
+        },
+        "TABLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QRPTable"
+          },
+          "description": "The serving node's queryable tables, answered to a request for the query\nsurface.",
+          "x-flatbuffer-type": "[QRPTable]"
+        },
+        "MAX_ELAPSED_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Wall-clock budget the serving node applies to a query, milliseconds; 0 =\nnone stated.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MAX_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Most rows a page returns; 0 = none stated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MAX_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Most bytes a page returns; 0 = none stated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HTTP_STATUS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Transport status the answer carries, HTTP semantics (200, 304, 400,\n406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "BODY_REF_TOKEN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "When the page's record frames are not inline but held by the serving\nnode for delivery out of band: the reference token the node resolves\n(single use), and the byte size of what it refers to. 0 = inline.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "BODY_REF_SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
         }
       },
       "additionalProperties": false

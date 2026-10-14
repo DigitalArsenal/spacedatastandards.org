@@ -51,8 +51,28 @@ public final class hostCapabilityKind {
    * storage.ingest_with_source on this capability specifically.
    */
   public static final int STORAGE_INGEST = 36;
+  /**
+   * Read the node's view of its peer-to-peer network: known peers, the
+   * publication notices it has received and verified, and the latest
+   * dataset of a lane (p2p.* host operations).
+   */
+  public static final int P2P_READ = 37;
+  /**
+   * Read the node's own health: uptime, service state, storage and network
+   * figures (node_status_read.status).
+   */
+  public static final int NODE_STATUS_READ = 38;
+  /**
+   * Read the node's event log (node_activity_read.activity).
+   */
+  public static final int NODE_ACTIVITY_READ = 39;
+  /**
+   * Read and write operator-held secrets by identifier (credentials for
+   * upstream sources); the secret value is never persisted in a record.
+   */
+  public static final int SECRETS = 40;
 
-  public static final String[] names = { "CLOCK", "RANDOM", "LOGGING", "TIMERS", "PUBSUB", "PROTOCOL_DIAL", "PROTOCOL_HANDLE", "STORAGE_QUERY", "SCENE_ACCESS", "ENTITY_ACCESS", "RENDER_HOOKS", "HTTP", "FILESYSTEM", "PIPE", "NETWORK", "DATABASE", "STORAGE_ADAPTER", "STORAGE_WRITE", "WALLET_SIGN", "IPFS", "TLS", "MQTT", "WEBSOCKET", "TCP", "UDP", "PROCESS_EXEC", "CONTEXT_READ", "CONTEXT_WRITE", "CRYPTO_HASH", "CRYPTO_SIGN", "CRYPTO_VERIFY", "CRYPTO_ENCRYPT", "CRYPTO_DECRYPT", "CRYPTO_KEY_AGREEMENT", "CRYPTO_KDF", "SCHEDULE_CRON", "STORAGE_INGEST", };
+  public static final String[] names = { "CLOCK", "RANDOM", "LOGGING", "TIMERS", "PUBSUB", "PROTOCOL_DIAL", "PROTOCOL_HANDLE", "STORAGE_QUERY", "SCENE_ACCESS", "ENTITY_ACCESS", "RENDER_HOOKS", "HTTP", "FILESYSTEM", "PIPE", "NETWORK", "DATABASE", "STORAGE_ADAPTER", "STORAGE_WRITE", "WALLET_SIGN", "IPFS", "TLS", "MQTT", "WEBSOCKET", "TCP", "UDP", "PROCESS_EXEC", "CONTEXT_READ", "CONTEXT_WRITE", "CRYPTO_HASH", "CRYPTO_SIGN", "CRYPTO_VERIFY", "CRYPTO_ENCRYPT", "CRYPTO_DECRYPT", "CRYPTO_KEY_AGREEMENT", "CRYPTO_KDF", "SCHEDULE_CRON", "STORAGE_INGEST", "P2P_READ", "NODE_STATUS_READ", "NODE_ACTIVITY_READ", "SECRETS", };
 
   public static String name(int e) { return names[e]; }
 }

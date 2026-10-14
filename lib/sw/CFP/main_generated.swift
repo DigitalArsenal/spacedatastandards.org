@@ -33,7 +33,7 @@ public enum transmissionClass: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  CCSDS File Delivery Protocol PDU (CCSDS 727.0-B-5)
-public struct CFP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CFP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

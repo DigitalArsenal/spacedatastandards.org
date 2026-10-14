@@ -1,0 +1,248 @@
+// Hash: d859314bd4bb0c29f540ea973d58502228e016182cec99ea339c07185d9d5c5b
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+include "../ICN/main.fbs";
+include "../STF/main.fbs";
+
+/// Data Source Registry (SRG)
+/// Description
+/// Who publishes data upstream of a network and what can be retrieved from
+/// them. A registry lists data providers (a satellite operator's ephemeris
+/// site, a national archive, a public API), each with the origins it may be
+/// fetched from, the format it publishes in, how often it refreshes and
+/// whether it needs credentials. Discovery against a provider yields resource
+/// descriptors: one retrievable file or endpoint each, with its URL, format
+/// and, when known, what it covers. Storing a retrieved resource in a
+/// content-addressed store yields a receipt naming its content identifier.
+/// A retriever's progress through a provider's resources is reported as a
+/// retrieval status, and the limits it runs under as retrieval settings.
+///
+/// One record type serves every step, so each step can be passed alone: a
+/// registry listing carries PROVIDERS; a discovery queue carries RESOURCES; a
+/// single job (one resource to fetch, small enough to travel as the context of
+/// one HTTP request) carries one RESOURCES entry; a storage receipt carries
+/// RECEIPTS; a retriever reports STATUS and is configured with SETTINGS.
+///
+/// Neighbouring standards: a provider configured as a running ingest source on
+/// a node is an $ICN (ingest connector), which SRG nests rather than repeats.
+/// SRG describes where data comes from; $DAV says whether a node holds the
+/// latest published dataset of a lane, and $PNM announces a publication.
+/// Neither fits a storage receipt: a $PNM is a signed network announcement and
+/// a $DAV describes a whole lane, while a receipt only states that given bytes
+/// were stored under a content identifier. A receipt's CID is what a later
+/// $NCD (SOURCE_CID), $DPM asset or $PNM refers to. Coverage reuses the
+/// $STF DataCoverage table.
+
+/// What a retriever is doing or why it stopped. Append new values only; never
+/// reorder or reuse existing values.
+enum srgRetrievalState : ubyte {
+  /// Not reported.
+  Unknown,
+  /// Settings were accepted; retrieval has not run yet.
+  Configured,
+  /// Retrieval is turned off.
+  Disabled,
+  /// The provider needs credentials and none are available to the retriever.
+  CredentialUnavailable,
+  /// All resources of the last discovery were retrieved; the next discovery
+  /// waits for the provider's refresh interval.
+  WaitingRefresh,
+  /// Resources remain in the current discovery queue.
+  InProgress,
+  /// Every resource of the current discovery queue (or page) was processed.
+  Complete,
+  /// The retriever's storage budget is used up; nothing more is stored until
+  /// it is raised.
+  ArchiveBudgetReached,
+  /// The provider answered with a page, not a data file, so nothing was
+  /// stored (NOTE says why).
+  ProviderPageOnly,
+  /// Retrieval failed (NOTE says why).
+  Failed
+}
+
+/// One data provider: a publisher a retriever may fetch from.
+table SRGProvider {
+  /// Stable identifier of the provider within the registry, lower-case, e.g.
+  /// "spacex-starlink", "iss", "gps-precise".
+  SOURCE_ID: string;
+  /// Display name, e.g. "NASA ISS".
+  NAME: string;
+  /// Organization that operates the provider, e.g. "NASA", "SES S.A.".
+  OPERATOR: string;
+  /// Default format of the provider's resources, as a format token the
+  /// retriever and its parsers agree on, e.g. "ccsds-oem-kvn", "sp3-gzip",
+  /// "tle". A resource may state its own FORMAT. Containers with an SDS
+  /// format class are named by $NCD's container format.
+  FORMAT: string;
+  /// Origins (scheme, host and optional port, no path, e.g.
+  /// "https://api.starlink.com") every resource URL of this provider must
+  /// start with. A URL outside these is refused. Empty = none allowed.
+  ORIGINS: [string];
+  /// Interval at which the provider publishes new data, and so the shortest
+  /// useful interval between discoveries, seconds; 0 = not stated.
+  REFRESH_INTERVAL_S: uint32;
+  /// True when retrieval needs credentials (an account, a token or a key).
+  /// The registry never carries the credentials themselves.
+  CREDENTIALED: bool;
+  /// Short description of what the provider publishes.
+  DESCRIPTION: string;
+  /// Home page or documentation of the provider's data.
+  INFO_URL: string;
+  /// Licence under which the provider offers the data, and its URL.
+  LICENSE: string;
+  LICENSE_URL: string;
+  /// The provider as configured as an ingest source on a node, when it is:
+  /// lifecycle, credential reference, polling and last-fetch figures.
+  CONNECTOR: ICN;
+}
+
+/// One retrievable resource of a provider: a file or an endpoint that
+/// returns one document.
+table SRGResource {
+  /// SOURCE_ID of the provider the resource belongs to.
+  SOURCE_ID: string;
+  /// Identifier of the resource within its provider, stable across
+  /// discoveries (normally the file name), e.g. "ISS.OEM_J2K_EPH.txt".
+  RESOURCE_ID: string;
+  /// Absolute URL the resource is fetched from; it lies inside one of the
+  /// provider's ORIGINS. Never carries credentials.
+  URL: string;
+  /// Format token of the resource; empty = the provider's FORMAT.
+  FORMAT: string;
+  /// What the resource covers (objects, regions, time span), when the
+  /// provider states it or discovery can tell; absent = not known.
+  COVERAGE: DataCoverage;
+  /// Size of the resource in bytes when the listing states it; 0 = unknown.
+  BYTE_LENGTH: uint64;
+  /// Unix milliseconds the provider last modified the resource, when the
+  /// listing states it; 0 = unknown.
+  MODIFIED_AT_MS: int64;
+  /// Unix milliseconds the resource was discovered; 0 = unknown.
+  DISCOVERED_AT_MS: int64;
+}
+
+/// Receipt from a content-addressed store (IPFS or similar) for bytes it
+/// stored.
+table SRGContentReceipt {
+  /// Content identifier the store assigned (a CID), e.g. "bafy...".
+  CID: string;
+  /// Name the store recorded with the content, if any.
+  NAME: string;
+  /// Address of the content, e.g. "/ipfs/<CID>"; empty = derive from CID.
+  MULTIFORMAT_ADDRESS: string;
+  /// Bytes stored; 0 = not reported.
+  BYTE_LENGTH: uint64;
+  /// SHA-256 of the stored bytes, lower-case hex; empty = not computed.
+  SHA256: string;
+  /// True when the store pinned the content (keeps it from eviction).
+  PINNED: bool;
+  /// Unix milliseconds the content was stored; 0 = not reported.
+  STORED_AT_MS: int64;
+  /// Store that issued the receipt, e.g. "ipfs", or a node identifier.
+  STORE_ID: string;
+  /// RESOURCE_ID of the resource the bytes came from, when they came from
+  /// one; empty for other content (e.g. a pinned discovery queue).
+  RESOURCE_ID: string;
+}
+
+/// Limits and choices a retriever runs under. A field left 0 or empty takes
+/// the retriever's default.
+table SRGRetrievalSettings {
+  /// True to retrieve on schedule; false leaves the retriever idle.
+  ENABLED: bool;
+  /// SOURCE_ID of the provider to retrieve from.
+  SOURCE_ID: string;
+  /// Resources fetched per run at most.
+  MAX_RESOURCES: uint32;
+  /// Largest single resource accepted, bytes; a larger one is refused, never
+  /// truncated.
+  MAX_BYTES: uint64;
+  /// Time allowed for one request, milliseconds.
+  TIMEOUT_MS: uint32;
+  /// Time allowed for one run, milliseconds.
+  MAX_RUNTIME_MS: uint32;
+  /// Interval between discoveries, seconds (overrides the provider's
+  /// REFRESH_INTERVAL_S).
+  REFRESH_INTERVAL_S: uint32;
+  /// Total bytes the retriever may store over its lifetime.
+  ARCHIVE_MAX_BYTES: uint64;
+  /// Key of the credential in the host's credential store, resolved only at
+  /// retrieval time (as $ICN CREDENTIAL_REFERENCE). Never the secret itself.
+  CREDENTIAL_REFERENCE: string;
+  /// Provider API paths to read, for providers that expose several (absolute
+  /// paths without query strings, e.g. "/v2/ephemeris").
+  PATHS: [string];
+  /// Unix milliseconds of the retrieval epoch (selects dated products, e.g.
+  /// the GPS week); 0 = now.
+  EPOCH_MS: int64;
+}
+
+/// Progress of a retriever through a provider's resources.
+table SRGRetrievalStatus {
+  /// SOURCE_ID of the provider.
+  SOURCE_ID: string;
+  STATE: srgRetrievalState = Unknown;
+  /// True when retrieval is turned on.
+  ENABLED: bool;
+  /// Unix milliseconds of this status; 0 = not stated.
+  GENERATED_AT_MS: int64;
+  /// Resources fetched in the run that produced this status.
+  RETRIEVED_COUNT: uint32;
+  /// Resources of the current discovery queue processed so far.
+  COMPLETED_COUNT: uint32;
+  /// Resources in the current discovery queue; 0 = no queue or unknown.
+  TOTAL_COUNT: uint32;
+  /// Resources still to process (TOTAL_COUNT - COMPLETED_COUNT).
+  REMAINING_COUNT: uint32;
+  /// CID of the stored discovery queue (an SRG with RESOURCES) the retriever
+  /// works through; empty = none.
+  QUEUE_CID: string;
+  /// Bytes stored (or reserved) against ARCHIVE_MAX_BYTES so far.
+  ARCHIVE_RESERVED_BYTES: uint64;
+  /// The storage budget, bytes; 0 = unlimited or not stated.
+  ARCHIVE_MAX_BYTES: uint64;
+  /// Normalized SDS records produced from the retrieved resources (raw
+  /// preservation produces none).
+  NORMALIZED_RECORDS: uint64;
+  /// The resource the status concerns, when it concerns one (e.g. a
+  /// ProviderPageOnly answer): its URL, size and SHA-256 (lower-case hex).
+  RESOURCE_URL: string;
+  BYTE_LENGTH: uint64;
+  SHA256: string;
+  /// For a paged pass over stored resources (rebuilding coverage from
+  /// archived descriptors): items scanned in this page, items of a supported
+  /// format among them, and the offset the next page starts at. STATE is
+  /// Complete on the last page.
+  SCANNED_COUNT: uint32;
+  SUPPORTED_COUNT: uint32;
+  NEXT_OFFSET: uint32;
+  /// Human-readable detail.
+  NOTE: string;
+}
+
+/// Data Source Registry - providers, their resources, storage receipts and
+/// retrieval progress.
+table SRG {
+  /// Identifier of the registry, e.g. a repository name or a node's registry
+  /// name; empty = not named.
+  REGISTRY_ID: string;
+  /// Where the registry's provider list comes from, when it mirrors an
+  /// upstream list: the repository URL, the revision mirrored and the path of
+  /// the list inside it.
+  UPSTREAM_REPOSITORY: string;
+  UPSTREAM_REVISION: string;
+  REGISTRY_PATH: string;
+  /// Unix milliseconds this record was generated (for a discovery queue, the
+  /// time of discovery); 0 = not stated.
+  GENERATED_AT_MS: int64;
+  PROVIDERS: [SRGProvider];
+  /// Resources, in retrieval order. A single job carries one.
+  RESOURCES: [SRGResource];
+  RECEIPTS: [SRGContentReceipt];
+  STATUS: SRGRetrievalStatus;
+  SETTINGS: SRGRetrievalSettings;
+}
+
+root_type SRG;
+file_identifier "$SRG";

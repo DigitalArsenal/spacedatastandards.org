@@ -524,7 +524,7 @@ def VCMCreateCOVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVARIANCEVector(builder, data):
-    VCMCreateCOVARIANCEVector(builder, data)
+    return VCMCreateCOVARIANCEVector(builder, data)
 
 def VCMAddUSER_DEFINED_BIP_0044_TYPE(builder, USER_DEFINED_BIP_0044_TYPE):
     builder.PrependUint32Slot(30, USER_DEFINED_BIP_0044_TYPE, 0)

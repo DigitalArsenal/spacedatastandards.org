@@ -225,7 +225,7 @@ def CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
-    CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+    return CZMPolylineVolumeCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
 
 def CZMPolylineVolumeAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
@@ -247,7 +247,7 @@ def CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTESIANVector(builder, data):
-    CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(builder, data)
+    return CZMPolylineVolumeCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMPolylineVolumeAddSHAPE(builder, SHAPE):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SHAPE), 0)
@@ -269,7 +269,7 @@ def CZMPolylineVolumeCreateSHAPEVector(builder, data):
     return builder.EndVector()
 
 def CreateSHAPEVector(builder, data):
-    CZMPolylineVolumeCreateSHAPEVector(builder, data)
+    return CZMPolylineVolumeCreateSHAPEVector(builder, data)
 
 def CZMPolylineVolumeAddCORNER_TYPE(builder, CORNER_TYPE):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CORNER_TYPE), 0)

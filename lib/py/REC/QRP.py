@@ -352,8 +352,164 @@ class QRP(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
+    # How the request selects records in time.
+    # QRP
+    def TIME_PROFILE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+    # QRP
+    def PROFILE_EPOCH_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # Representation the client asks the page in.
+    # QRP
+    def REPRESENTATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Values bound to the placeholders of SQL, in order.
+    # QRP
+    def PARAMETERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from QRPValue import QRPValue
+            obj = QRPValue()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # QRP
+    def PARAMETERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # QRP
+    def PARAMETERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        return o == 0
+
+    # Rows of a projection (a query that selects columns rather than whole
+    # records), in COLUMNS order. Whole-record pages carry their records as
+    # frames after the header instead, and leave ROWS empty.
+    # QRP
+    def ROWS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from QRPRow import QRPRow
+            obj = QRPRow()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # QRP
+    def ROWSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # QRP
+    def ROWSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
+        return o == 0
+
+    # The serving node's queryable tables, answered to a request for the query
+    # surface.
+    # QRP
+    def TABLES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from QRPTable import QRPTable
+            obj = QRPTable()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # QRP
+    def TABLESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # QRP
+    def TABLESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        return o == 0
+
+    # Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+    # none stated.
+    # QRP
+    def MAX_ELAPSED_MS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Most rows a page returns; 0 = none stated.
+    # QRP
+    def MAX_ROWS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Most bytes a page returns; 0 = none stated.
+    # QRP
+    def MAX_BYTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Transport status the answer carries, HTTP semantics (200, 304, 400,
+    # 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+    # QRP
+    def HTTP_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # When the page's record frames are not inline but held by the serving
+    # node for delivery out of band: the reference token the node resolves
+    # (single use), and the byte size of what it refers to. 0 = inline.
+    # QRP
+    def BODY_REF_TOKEN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # QRP
+    def BODY_REF_SIZE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
 def QRPStart(builder):
-    builder.StartObject(37)
+    builder.StartObject(49)
 
 def Start(builder):
     QRPStart(builder)
@@ -428,7 +584,7 @@ def QRPCreateFILTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFILTERSVector(builder, data):
-    QRPCreateFILTERSVector(builder, data)
+    return QRPCreateFILTERSVector(builder, data)
 
 def QRPAddSORT_FIELD(builder, SORT_FIELD):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SORT_FIELD), 0)
@@ -602,7 +758,115 @@ def QRPCreateCOLUMNSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOLUMNSVector(builder, data):
-    QRPCreateCOLUMNSVector(builder, data)
+    return QRPCreateCOLUMNSVector(builder, data)
+
+def QRPAddTIME_PROFILE(builder, TIME_PROFILE):
+    builder.PrependInt8Slot(37, TIME_PROFILE, 0)
+
+def AddTIME_PROFILE(builder, TIME_PROFILE):
+    QRPAddTIME_PROFILE(builder, TIME_PROFILE)
+
+def QRPAddPROFILE_EPOCH_MS(builder, PROFILE_EPOCH_MS):
+    builder.PrependInt64Slot(38, PROFILE_EPOCH_MS, 0)
+
+def AddPROFILE_EPOCH_MS(builder, PROFILE_EPOCH_MS):
+    QRPAddPROFILE_EPOCH_MS(builder, PROFILE_EPOCH_MS)
+
+def QRPAddREPRESENTATION(builder, REPRESENTATION):
+    builder.PrependInt8Slot(39, REPRESENTATION, 0)
+
+def AddREPRESENTATION(builder, REPRESENTATION):
+    QRPAddREPRESENTATION(builder, REPRESENTATION)
+
+def QRPAddPARAMETERS(builder, PARAMETERS):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(PARAMETERS), 0)
+
+def AddPARAMETERS(builder, PARAMETERS):
+    QRPAddPARAMETERS(builder, PARAMETERS)
+
+def QRPStartPARAMETERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPARAMETERSVector(builder, numElems):
+    return QRPStartPARAMETERSVector(builder, numElems)
+
+def QRPCreatePARAMETERSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePARAMETERSVector(builder, data):
+    return QRPCreatePARAMETERSVector(builder, data)
+
+def QRPAddROWS(builder, ROWS):
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(ROWS), 0)
+
+def AddROWS(builder, ROWS):
+    QRPAddROWS(builder, ROWS)
+
+def QRPStartROWSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartROWSVector(builder, numElems):
+    return QRPStartROWSVector(builder, numElems)
+
+def QRPCreateROWSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateROWSVector(builder, data):
+    return QRPCreateROWSVector(builder, data)
+
+def QRPAddTABLES(builder, TABLES):
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(TABLES), 0)
+
+def AddTABLES(builder, TABLES):
+    QRPAddTABLES(builder, TABLES)
+
+def QRPStartTABLESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartTABLESVector(builder, numElems):
+    return QRPStartTABLESVector(builder, numElems)
+
+def QRPCreateTABLESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateTABLESVector(builder, data):
+    return QRPCreateTABLESVector(builder, data)
+
+def QRPAddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS):
+    builder.PrependUint32Slot(43, MAX_ELAPSED_MS, 0)
+
+def AddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS):
+    QRPAddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS)
+
+def QRPAddMAX_ROWS(builder, MAX_ROWS):
+    builder.PrependUint64Slot(44, MAX_ROWS, 0)
+
+def AddMAX_ROWS(builder, MAX_ROWS):
+    QRPAddMAX_ROWS(builder, MAX_ROWS)
+
+def QRPAddMAX_BYTES(builder, MAX_BYTES):
+    builder.PrependUint64Slot(45, MAX_BYTES, 0)
+
+def AddMAX_BYTES(builder, MAX_BYTES):
+    QRPAddMAX_BYTES(builder, MAX_BYTES)
+
+def QRPAddHTTP_STATUS(builder, HTTP_STATUS):
+    builder.PrependUint16Slot(46, HTTP_STATUS, 0)
+
+def AddHTTP_STATUS(builder, HTTP_STATUS):
+    QRPAddHTTP_STATUS(builder, HTTP_STATUS)
+
+def QRPAddBODY_REF_TOKEN(builder, BODY_REF_TOKEN):
+    builder.PrependUint64Slot(47, BODY_REF_TOKEN, 0)
+
+def AddBODY_REF_TOKEN(builder, BODY_REF_TOKEN):
+    QRPAddBODY_REF_TOKEN(builder, BODY_REF_TOKEN)
+
+def QRPAddBODY_REF_SIZE(builder, BODY_REF_SIZE):
+    builder.PrependUint64Slot(48, BODY_REF_SIZE, 0)
+
+def AddBODY_REF_SIZE(builder, BODY_REF_SIZE):
+    QRPAddBODY_REF_SIZE(builder, BODY_REF_SIZE)
 
 def QRPEnd(builder):
     return builder.EndObject()
@@ -612,6 +876,9 @@ def End(builder):
 
 import QRPColumn
 import QRPFilter
+import QRPRow
+import QRPTable
+import QRPValue
 try:
     from typing import List
 except:
@@ -659,6 +926,18 @@ class QRPT(object):
         CID = None,
         ARCHIVE_ID = None,
         COLUMNS = None,
+        TIME_PROFILE = 0,
+        PROFILE_EPOCH_MS = 0,
+        REPRESENTATION = 0,
+        PARAMETERS = None,
+        ROWS = None,
+        TABLES = None,
+        MAX_ELAPSED_MS = 0,
+        MAX_ROWS = 0,
+        MAX_BYTES = 0,
+        HTTP_STATUS = 0,
+        BODY_REF_TOKEN = 0,
+        BODY_REF_SIZE = 0,
     ):
         self.KIND = KIND  # type: int
         self.STATUS = STATUS  # type: int
@@ -697,6 +976,18 @@ class QRPT(object):
         self.CID = CID  # type: Optional[str]
         self.ARCHIVE_ID = ARCHIVE_ID  # type: Optional[str]
         self.COLUMNS = COLUMNS  # type: Optional[List[QRPColumn.QRPColumnT]]
+        self.TIME_PROFILE = TIME_PROFILE  # type: int
+        self.PROFILE_EPOCH_MS = PROFILE_EPOCH_MS  # type: int
+        self.REPRESENTATION = REPRESENTATION  # type: int
+        self.PARAMETERS = PARAMETERS  # type: Optional[List[QRPValue.QRPValueT]]
+        self.ROWS = ROWS  # type: Optional[List[QRPRow.QRPRowT]]
+        self.TABLES = TABLES  # type: Optional[List[QRPTable.QRPTableT]]
+        self.MAX_ELAPSED_MS = MAX_ELAPSED_MS  # type: int
+        self.MAX_ROWS = MAX_ROWS  # type: int
+        self.MAX_BYTES = MAX_BYTES  # type: int
+        self.HTTP_STATUS = HTTP_STATUS  # type: int
+        self.BODY_REF_TOKEN = BODY_REF_TOKEN  # type: int
+        self.BODY_REF_SIZE = BODY_REF_SIZE  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -770,6 +1061,39 @@ class QRPT(object):
                 else:
                     qRPColumn_ = QRPColumn.QRPColumnT.InitFromObj(QRP.COLUMNS(i))
                     self.COLUMNS.append(qRPColumn_)
+        self.TIME_PROFILE = QRP.TIME_PROFILE()
+        self.PROFILE_EPOCH_MS = QRP.PROFILE_EPOCH_MS()
+        self.REPRESENTATION = QRP.REPRESENTATION()
+        if not QRP.PARAMETERSIsNone():
+            self.PARAMETERS = []
+            for i in range(QRP.PARAMETERSLength()):
+                if QRP.PARAMETERS(i) is None:
+                    self.PARAMETERS.append(None)
+                else:
+                    qRPValue_ = QRPValue.QRPValueT.InitFromObj(QRP.PARAMETERS(i))
+                    self.PARAMETERS.append(qRPValue_)
+        if not QRP.ROWSIsNone():
+            self.ROWS = []
+            for i in range(QRP.ROWSLength()):
+                if QRP.ROWS(i) is None:
+                    self.ROWS.append(None)
+                else:
+                    qRPRow_ = QRPRow.QRPRowT.InitFromObj(QRP.ROWS(i))
+                    self.ROWS.append(qRPRow_)
+        if not QRP.TABLESIsNone():
+            self.TABLES = []
+            for i in range(QRP.TABLESLength()):
+                if QRP.TABLES(i) is None:
+                    self.TABLES.append(None)
+                else:
+                    qRPTable_ = QRPTable.QRPTableT.InitFromObj(QRP.TABLES(i))
+                    self.TABLES.append(qRPTable_)
+        self.MAX_ELAPSED_MS = QRP.MAX_ELAPSED_MS()
+        self.MAX_ROWS = QRP.MAX_ROWS()
+        self.MAX_BYTES = QRP.MAX_BYTES()
+        self.HTTP_STATUS = QRP.HTTP_STATUS()
+        self.BODY_REF_TOKEN = QRP.BODY_REF_TOKEN()
+        self.BODY_REF_SIZE = QRP.BODY_REF_SIZE()
 
     # QRPT
     def Pack(self, builder):
@@ -823,6 +1147,30 @@ class QRPT(object):
             for i in reversed(range(len(self.COLUMNS))):
                 builder.PrependUOffsetTRelative(COLUMNSlist[i])
             COLUMNS = builder.EndVector()
+        if self.PARAMETERS is not None:
+            PARAMETERSlist = []
+            for i in range(len(self.PARAMETERS)):
+                PARAMETERSlist.append(self.PARAMETERS[i].Pack(builder))
+            QRPStartPARAMETERSVector(builder, len(self.PARAMETERS))
+            for i in reversed(range(len(self.PARAMETERS))):
+                builder.PrependUOffsetTRelative(PARAMETERSlist[i])
+            PARAMETERS = builder.EndVector()
+        if self.ROWS is not None:
+            ROWSlist = []
+            for i in range(len(self.ROWS)):
+                ROWSlist.append(self.ROWS[i].Pack(builder))
+            QRPStartROWSVector(builder, len(self.ROWS))
+            for i in reversed(range(len(self.ROWS))):
+                builder.PrependUOffsetTRelative(ROWSlist[i])
+            ROWS = builder.EndVector()
+        if self.TABLES is not None:
+            TABLESlist = []
+            for i in range(len(self.TABLES)):
+                TABLESlist.append(self.TABLES[i].Pack(builder))
+            QRPStartTABLESVector(builder, len(self.TABLES))
+            for i in reversed(range(len(self.TABLES))):
+                builder.PrependUOffsetTRelative(TABLESlist[i])
+            TABLES = builder.EndVector()
         QRPStart(builder)
         QRPAddKIND(builder, self.KIND)
         QRPAddSTATUS(builder, self.STATUS)
@@ -880,5 +1228,20 @@ class QRPT(object):
             QRPAddARCHIVE_ID(builder, ARCHIVE_ID)
         if self.COLUMNS is not None:
             QRPAddCOLUMNS(builder, COLUMNS)
+        QRPAddTIME_PROFILE(builder, self.TIME_PROFILE)
+        QRPAddPROFILE_EPOCH_MS(builder, self.PROFILE_EPOCH_MS)
+        QRPAddREPRESENTATION(builder, self.REPRESENTATION)
+        if self.PARAMETERS is not None:
+            QRPAddPARAMETERS(builder, PARAMETERS)
+        if self.ROWS is not None:
+            QRPAddROWS(builder, ROWS)
+        if self.TABLES is not None:
+            QRPAddTABLES(builder, TABLES)
+        QRPAddMAX_ELAPSED_MS(builder, self.MAX_ELAPSED_MS)
+        QRPAddMAX_ROWS(builder, self.MAX_ROWS)
+        QRPAddMAX_BYTES(builder, self.MAX_BYTES)
+        QRPAddHTTP_STATUS(builder, self.HTTP_STATUS)
+        QRPAddBODY_REF_TOKEN(builder, self.BODY_REF_TOKEN)
+        QRPAddBODY_REF_SIZE(builder, self.BODY_REF_SIZE)
         QRP = QRPEnd(builder)
         return QRP

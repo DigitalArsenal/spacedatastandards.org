@@ -121,7 +121,7 @@ public enum stxContentClass: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Scheduled Transmission.
-public struct STX: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct STX: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

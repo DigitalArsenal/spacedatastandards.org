@@ -1,0 +1,5344 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "covarianceCalibration": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Uncalibrated",
+        "Calibrated"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Calibration not stated"
+        },
+        "Uncalibrated": {
+          "value": 1,
+          "description": "Not measured against independent reference states, or measured and failed"
+        },
+        "Calibrated": {
+          "value": 2,
+          "description": "Measured against independent reference states and passed"
+        }
+      }
+    },
+    "covarianceRule": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Operator",
+        "ScaledFit",
+        "SourceModel",
+        "PooledModel"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "Operator": {
+          "value": 1,
+          "description": "The operator's covariance, as supplied"
+        },
+        "ScaledFit": {
+          "value": 2,
+          "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+        },
+        "SourceModel": {
+          "value": 3,
+          "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+        },
+        "PooledModel": {
+          "value": 4,
+          "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+        }
+      }
+    },
+    "pvnSourceKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ElementSet",
+        "Ephemeris",
+        "Observation"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "ElementSet": {
+          "value": 1,
+          "description": "Element sets of a catalog"
+        },
+        "Ephemeris": {
+          "value": 2,
+          "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+        },
+        "Observation": {
+          "value": 3,
+          "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        }
+      }
+    },
+    "pvnLicenseClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Reproducible",
+        "CiteOnly",
+        "ShareAlike",
+        "NonCommercial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated. Never a grant: treated as CiteOnly."
+        },
+        "Reproducible": {
+          "value": 1,
+          "description": "The records may be republished, with the credit the terms ask."
+        },
+        "CiteOnly": {
+          "value": 2,
+          "description": "The records are computed on and cited, never republished."
+        },
+        "ShareAlike": {
+          "value": 3,
+          "description": "The records may be republished under the same terms, which every derived record carries."
+        },
+        "NonCommercial": {
+          "value": 4,
+          "description": "The records may be republished for non-commercial use only."
+        }
+      }
+    },
+    "ermErrorBasis": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "SetDifferences",
+        "ReferenceStates"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "SetDifferences": {
+          "value": 1,
+          "description": "Later element sets of the same object (consecutive-set differences; not truth)."
+        },
+        "ReferenceStates": {
+          "value": 2,
+          "description": "Independent reference states."
+        }
+      }
+    },
+    "ermModelForm": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "StratifiedStatistics",
+        "ElementSetModel",
+        "HorizonFactors",
+        "PropagatorCovariance"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "StratifiedStatistics": {
+          "value": 1,
+          "description": "Stratified moments, quantiles and covariance by regime and age (the output of finalize)."
+        },
+        "ElementSetModel": {
+          "value": 2,
+          "description": "Frozen element-set covariance model by regime and age, with realism cells."
+        },
+        "HorizonFactors": {
+          "value": 3,
+          "description": "Covariance scale factors by regime and prediction horizon."
+        },
+        "PropagatorCovariance": {
+          "value": 4,
+          "description": "Initial covariance and process noise of a numerical propagator by regime."
+        }
+      }
+    },
+    "ermCoverageVerdict": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Calibrated",
+        "Failed",
+        "Insufficient",
+        "NoModel"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not tested."
+        },
+        "Calibrated": {
+          "value": 1,
+          "description": "Coverage within tolerance on enough samples and objects."
+        },
+        "Failed": {
+          "value": 2,
+          "description": "Coverage outside tolerance."
+        },
+        "Insufficient": {
+          "value": 3,
+          "description": "Too few samples or objects."
+        },
+        "NoModel": {
+          "value": 4,
+          "description": "No model covariance to test."
+        }
+      }
+    },
+    "ermCoverageMode": {
+      "type": "string",
+      "enum": [
+        "EpochCovariance",
+        "ProcessNoise",
+        "CoverageTest"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "EpochCovariance": {
+          "value": 0,
+          "description": "Fit the initial covariance at the element-set epoch."
+        },
+        "ProcessNoise": {
+          "value": 1,
+          "description": "Fit the process noise."
+        },
+        "CoverageTest": {
+          "value": 2,
+          "description": "Test coverage."
+        }
+      }
+    },
+    "ermDifferenceOrigin": {
+      "type": "string",
+      "enum": [
+        "ReferenceState",
+        "SetMean",
+        "OneSet"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "ReferenceState": {
+          "value": 0,
+          "description": "An independent reference state."
+        },
+        "SetMean": {
+          "value": 1,
+          "description": "The mean of the propagated element sets."
+        },
+        "OneSet": {
+          "value": 2,
+          "description": "One named element set."
+        }
+      }
+    },
+    "ermMapMethod": {
+      "type": "string",
+      "enum": [
+        "Sgp4",
+        "TwoBody",
+        "Lambert"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Sgp4": {
+          "value": 0,
+          "description": "SGP4 (central differences in nonsingular mean elements)."
+        },
+        "TwoBody": {
+          "value": 1,
+          "description": "Two-body (complex-step Kepler)."
+        },
+        "Lambert": {
+          "value": 2,
+          "description": "The Lambert arc between the two epochs."
+        }
+      }
+    },
+    "ermCovarianceAxes": {
+      "type": "string",
+      "enum": [
+        "Rtn",
+        "Uvw",
+        "Inertial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Rtn": {
+          "value": 0,
+          "description": "Radial, transverse, normal of the state."
+        },
+        "Uvw": {
+          "value": 1,
+          "description": "UVW of the state (radial, in-track, cross-track)."
+        },
+        "Inertial": {
+          "value": 2,
+          "description": "The inertial frame of the state."
+        }
+      }
+    },
+    "ermAxesSource": {
+      "type": "string",
+      "enum": [
+        "Predicted",
+        "Truth"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Predicted": {
+          "value": 0
+        },
+        "Truth": {
+          "value": 1
+        }
+      }
+    },
+    "ermCalibrationFit": {
+      "type": "string",
+      "enum": [
+        "ScalarMle",
+        "AxesMle",
+        "CoverageTarget"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "ScalarMle": {
+          "value": 0,
+          "description": "One variance factor by maximum likelihood."
+        },
+        "AxesMle": {
+          "value": 1,
+          "description": "One factor per axis by maximum likelihood."
+        },
+        "CoverageTarget": {
+          "value": 2,
+          "description": "The factor that puts the coverage at the target."
+        }
+      }
+    },
+    "ermFitStatus": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Fitted",
+        "Insufficient"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "Fitted": {
+          "value": 1
+        },
+        "Insufficient": {
+          "value": 2
+        }
+      }
+    },
+    "ermFitEpochChoice": {
+      "type": "string",
+      "enum": [
+        "First",
+        "Last",
+        "Middle",
+        "GivenEpoch"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "First": {
+          "value": 0
+        },
+        "Last": {
+          "value": 1
+        },
+        "Middle": {
+          "value": 2
+        },
+        "GivenEpoch": {
+          "value": 3,
+          "description": "The epoch given in EPOCH."
+        }
+      }
+    },
+    "ermFitWeighting": {
+      "type": "string",
+      "enum": [
+        "Uniform",
+        "RtnSigmas",
+        "EphemerisCovariance"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Uniform": {
+          "value": 0
+        },
+        "RtnSigmas": {
+          "value": 1,
+          "description": "Per-axis RTN sigmas."
+        },
+        "EphemerisCovariance": {
+          "value": 2,
+          "description": "The ephemeris covariance."
+        }
+      }
+    },
+    "ermFitStart": {
+      "type": "string",
+      "enum": [
+        "FromEphemeris",
+        "FromApriori"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "FromEphemeris": {
+          "value": 0,
+          "description": "From the ephemeris (osculating to mean)."
+        },
+        "FromApriori": {
+          "value": 1,
+          "description": "From the a priori element set."
+        }
+      }
+    },
+    "ermFitFavour": {
+      "type": "string",
+      "enum": [
+        "SpanEnd",
+        "SpanStart"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "SpanEnd": {
+          "value": 0
+        },
+        "SpanStart": {
+          "value": 1
+        }
+      }
+    },
+    "CVR": {
+      "type": "object",
+      "description": "Covariance Realism",
+      "properties": {
+        "RULE": {
+          "$ref": "#/definitions/covarianceRule",
+          "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "Operator": {
+              "value": 1,
+              "description": "The operator's covariance, as supplied"
+            },
+            "ScaledFit": {
+              "value": 2,
+              "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            "SourceModel": {
+              "value": 3,
+              "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            "PooledModel": {
+              "value": 4,
+              "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME": {
+          "type": "string",
+          "description": "Orbit regime of the cell, as the model names it.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "description": "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HORIZON_DAYS": {
+          "type": "number",
+          "description": "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MEASURED_LINEAGE": {
+          "type": "string",
+          "description": "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+          "x-flatbuffer-type": "string"
+        },
+        "TEST_WINDOW": {
+          "type": "string",
+          "description": "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN_D2_OVER_3": {
+          "type": "number",
+          "description": "Mean of d2/3 over the held-out samples. NaN when not measured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COVERAGE_95": {
+          "type": "number",
+          "description": "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of held-out samples the test used.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of distinct objects the samples came from.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "EVIDENCE": {
+          "type": "string",
+          "description": "Identifier of the report or record that holds the test.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PVN": {
+      "type": "object",
+      "description": "Product Provenance",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_KIND": {
+          "$ref": "#/definitions/pvnSourceKind",
+          "description": "What kind of data the source supplies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "ElementSet": {
+              "value": 1,
+              "description": "Element sets of a catalog"
+            },
+            "Ephemeris": {
+              "value": 2,
+              "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            "Observation": {
+              "value": 3,
+              "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/pvnLicenseClass",
+          "description": "What the source's terms permit for the product.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated. Never a grant: treated as CiteOnly."
+            },
+            "Reproducible": {
+              "value": 1,
+              "description": "The records may be republished, with the credit the terms ask."
+            },
+            "CiteOnly": {
+              "value": 2,
+              "description": "The records are computed on and cited, never republished."
+            },
+            "ShareAlike": {
+              "value": 3,
+              "description": "The records may be republished under the same terms, which every derived record carries."
+            },
+            "NonCommercial": {
+              "value": 4,
+              "description": "The records may be republished for non-commercial use only."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINEAGE": {
+          "type": "string",
+          "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMRegime": {
+      "type": "object",
+      "description": "One orbit regime: a set falls in the first regime whose half-open ranges\nhold its mean altitude (from un-Kozai'd SGP4 mean motion, WGS-72) and\neccentricity.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALTITUDE_MIN_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE_MAX_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY_MIN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY_MAX": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMAgeBin": {
+      "type": "object",
+      "description": "A prediction-age bin, days, half-open (the last bin includes its upper\nedge).",
+      "properties": {
+        "MIN_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMClipCentre": {
+      "type": "object",
+      "description": "Robust clipping centre and scale of one stratum.",
+      "properties": {
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CENTRE_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Centre of the R, T, N position errors, km (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SCALE_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Robust scale of the R, T, N position errors, km (3 values).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMClipSettings": {
+      "type": "object",
+      "description": "Clipping of outlying errors.",
+      "properties": {
+        "K": {
+          "type": "number",
+          "description": "Errors further than K robust scales from the centre are clipped; 0 = no\nclipping.",
+          "x-flatbuffer-type": "double"
+        },
+        "STRATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMClipCentre"
+          },
+          "x-flatbuffer-type": "[ERMClipCentre]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMStrataSettings": {
+      "type": "object",
+      "description": "The strata of a model and how samples are taken. Empty REGIMES and\nAGE_BINS mean the producer's defaults.",
+      "properties": {
+        "REGIMES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRegime"
+          },
+          "x-flatbuffer-type": "[ERMRegime]"
+        },
+        "AGE_BINS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMAgeBin"
+          },
+          "x-flatbuffer-type": "[ERMAgeBin]"
+        },
+        "REFERENCE_STEP_S": {
+          "type": "number",
+          "description": "Reference states are thinned to this step, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "300"
+        },
+        "CLIP": {
+          "$ref": "#/definitions/ERMClipSettings",
+          "x-flatbuffer-type": "ERMClipSettings"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMGate": {
+      "type": "object",
+      "description": "Coverage gate of a realism test.",
+      "properties": {
+        "TOLERANCE": {
+          "type": "number",
+          "description": "Allowed departure of each coverage fraction from nominal.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.05"
+        },
+        "TAIL_LIMIT": {
+          "type": "number",
+          "description": "Allowed excess in the 3-sigma tail.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.01"
+        },
+        "MINIMUM_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "30"
+        },
+        "MINIMUM_OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "3"
+        },
+        "RULE": {
+          "type": "string",
+          "description": "The rule, human-readable.",
+          "x-flatbuffer-type": "string"
+        },
+        "NOMINAL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Nominal 1, 2, 3 sigma coverage of chi-square with 3 degrees of freedom\n(3 values).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCounts": {
+      "type": "object",
+      "description": "Counters of a run. A counter a run does not keep is 0.",
+      "properties": {
+        "ELEMENT_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFUSED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DUPLICATE_EPOCHS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNCLASSIFIED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "PROPAGATION_FAILURES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFERENCE_EPOCHS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFERENCE_OBJECTS_WITHOUT_ELEMENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ARCS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TARGETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SETS_WITHOUT_REFERENCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SETS_WITHOUT_TARGETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ARCS_WITHOUT_MODEL_REGIME": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TARGETS_OUTSIDE_WINDOW": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "TARGETS_WITHOUT_PREDICTION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OUTSIDE_AGE_BINS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "WITHOUT_COVARIANCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "NOT_POSITIVE_DEFINITE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MISSING_TARGETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MISSING_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DIFFERENCES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MAPPED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FAILED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "PAIRS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "WITHOUT_TRUTH_COVARIANCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OUTSIDE_REGIMES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STREAMS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "BLOCKS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "COVARIANCES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "APRIORI_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FITTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FRAME_COUNTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMNamedCount"
+          },
+          "description": "States by frame name, e.g. \"TEME\", \"GCRF\", \"unsupported\".",
+          "x-flatbuffer-type": "[ERMNamedCount]"
+        },
+        "RULE_COUNTS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Products whose covariance came from each rule, 1 to 4 (4 values).",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "CALIBRATED_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNCALIBRATED_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATES_OF_OLDER_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MANEUVERS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMNamedCount": {
+      "type": "object",
+      "description": "A count under a name.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMMoments": {
+      "type": "object",
+      "description": "First and second moments of error vectors.",
+      "properties": {
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sum of the 6 components.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SQUARES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sum of products, Lower21.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMHistogramBin": {
+      "type": "object",
+      "description": "One histogram bin: |x| in 20 bins per decade from 1e-9 to 1e5, signed bin\nnumber (0 = |x| < 1e-9, +-k for k = 1..280).",
+      "properties": {
+        "BIN": {
+          "type": "integer",
+          "minimum": -32768,
+          "maximum": 32767
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMHistogram": {
+      "type": "object",
+      "description": "Histogram of one error component.",
+      "properties": {
+        "BINS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMHistogramBin"
+          },
+          "x-flatbuffer-type": "[ERMHistogramBin]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCoverageTally": {
+      "type": "object",
+      "description": "Running realism test of one stratum.",
+      "properties": {
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "MISSING": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Samples without a model covariance.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SUM_D2": {
+          "type": "number",
+          "description": "Sum of d2.",
+          "x-flatbuffer-type": "double"
+        },
+        "INSIDE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709551615
+          },
+          "description": "Samples inside the 1, 2, 3 sigma regions (3 values).",
+          "x-flatbuffer-type": "[uint64]"
+        },
+        "PIT": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 18446744073709551615
+          },
+          "description": "Probability-integral-transform histogram (20 values).",
+          "x-flatbuffer-type": "[uint64]"
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "NORAD numbers of the objects sampled.",
+          "x-flatbuffer-type": "[uint32]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMAccumulatorStratum": {
+      "type": "object",
+      "description": "Accumulated errors of one stratum.",
+      "properties": {
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MOMENTS": {
+          "$ref": "#/definitions/ERMMoments",
+          "x-flatbuffer-type": "ERMMoments"
+        },
+        "HISTOGRAMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMHistogram"
+          },
+          "description": "One per component (6).",
+          "x-flatbuffer-type": "[ERMHistogram]"
+        },
+        "CLIPPED": {
+          "$ref": "#/definitions/ERMMoments",
+          "description": "Moments after clipping (when clipping).",
+          "x-flatbuffer-type": "ERMMoments"
+        },
+        "COVERAGE": {
+          "$ref": "#/definitions/ERMCoverageTally",
+          "description": "Realism tally (when a model is tested).",
+          "x-flatbuffer-type": "ERMCoverageTally"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMAccumulator": {
+      "type": "object",
+      "description": "Errors accumulated over batches; a later batch adds to it as its prior.",
+      "properties": {
+        "STRATA_SETTINGS": {
+          "$ref": "#/definitions/ERMStrataSettings",
+          "x-flatbuffer-type": "ERMStrataSettings"
+        },
+        "BASIS": {
+          "$ref": "#/definitions/ermErrorBasis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SetDifferences": {
+              "value": 1,
+              "description": "Later element sets of the same object (consecutive-set differences; not truth)."
+            },
+            "ReferenceStates": {
+              "value": 2,
+              "description": "Independent reference states."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "CLIP_K": {
+          "type": "number",
+          "description": "Clip multiple used, 0 = none.",
+          "x-flatbuffer-type": "double"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "COVERAGE_MODEL": {
+          "type": "string",
+          "description": "The model tested against, e.g. \"reference\", \"reference+scaled\"; empty =\nnone.",
+          "x-flatbuffer-type": "string"
+        },
+        "STRATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMAccumulatorStratum"
+          },
+          "x-flatbuffer-type": "[ERMAccumulatorStratum]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMClippedStatistics": {
+      "type": "object",
+      "description": "Statistics after clipping.",
+      "properties": {
+        "K": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "FRACTION_REMOVED": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Mean, 6 values; empty when N is 0.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance, Lower21; empty when N < 2.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCoverage": {
+      "type": "object",
+      "description": "Result of a realism test of one stratum.",
+      "properties": {
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "VERDICT": {
+          "$ref": "#/definitions/ermCoverageVerdict",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not tested."
+            },
+            "Calibrated": {
+              "value": 1,
+              "description": "Coverage within tolerance on enough samples and objects."
+            },
+            "Failed": {
+              "value": 2,
+              "description": "Coverage outside tolerance."
+            },
+            "Insufficient": {
+              "value": 3,
+              "description": "Too few samples or objects."
+            },
+            "NoModel": {
+              "value": 4,
+              "description": "No model covariance to test."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MEAN_D2": {
+          "type": "number",
+          "description": "Mean d2 (3 for a realistic covariance); NaN when N is 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "INSIDE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Fractions inside the 1, 2, 3 sigma regions (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PIT": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "PIT histogram fractions (20 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PIT_MAX_CDF_GAP": {
+          "type": "number",
+          "description": "Largest gap of the PIT cumulative distribution from uniform.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MISSING_MODEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Samples without a model covariance.",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMStratumScale": {
+      "type": "object",
+      "description": "Per-axis scale applied to a stratum's position covariance.",
+      "properties": {
+        "FACTORS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "s_R, s_T, s_N (covariance scaled by s_a s_b), 3 values.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRUTH_N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Reference samples behind them.",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMModelStratum": {
+      "type": "object",
+      "description": "One stratum of a model.",
+      "properties": {
+        "REGIME": {
+          "type": "string",
+          "description": "Regime ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_MIN_DAYS": {
+          "type": "number",
+          "description": "Age bin, days.",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_MAX_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Samples.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MEAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Mean error, 6 values.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Sample covariance, Lower21; empty when N < 2.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "QUANTILES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Quantiles, per component at the model's QUANTILE_PROBABILITIES,\ncomponent-major (6 x 7 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MEDIAN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "ROBUST_SIGMA": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "(q84 - q16) / 2 per component.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CLIPPED": {
+          "$ref": "#/definitions/ERMClippedStatistics",
+          "x-flatbuffer-type": "ERMClippedStatistics"
+        },
+        "COVERAGE": {
+          "$ref": "#/definitions/ERMCoverage",
+          "x-flatbuffer-type": "ERMCoverage"
+        },
+        "SCALE": {
+          "$ref": "#/definitions/ERMStratumScale",
+          "description": "Absent when unscaled.",
+          "x-flatbuffer-type": "ERMStratumScale"
+        },
+        "CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "Whether the stratum's covariance passed its realism test.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "CALIBRATION_REFERENCE": {
+          "type": "string",
+          "description": "Identifier of the realism evidence; empty unless calibrated.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMRealismCell": {
+      "type": "object",
+      "description": "A realism cell: a regime and age tested at a horizon.",
+      "properties": {
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DECISION": {
+          "type": "string",
+          "description": "The test's decision as worded, e.g. \"REALISTIC\",\n\"NOT REALISTIC (overconfident)\".",
+          "x-flatbuffer-type": "string"
+        },
+        "REALISM": {
+          "$ref": "#/definitions/CVR",
+          "description": "REGIME, HORIZON_DAYS, MEAN_D2_OVER_3, COVERAGE_95, SAMPLES, OBJECTS,\nCALIBRATION of the cell.",
+          "x-flatbuffer-type": "CVR"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMStratumFactor": {
+      "type": "object",
+      "description": "A factor applied to one stratum (or a status for it).",
+      "properties": {
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FACTOR": {
+          "type": "number",
+          "description": "Variance factor, > 0; NaN = none.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "Status string of the stratum, e.g. \"CALIBRATED\"; empty = none.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMHorizonFactor": {
+      "type": "object",
+      "description": "A factor by regime and horizon.",
+      "properties": {
+        "REGIME": {
+          "type": "string",
+          "description": "Regime ID; empty = any regime.",
+          "x-flatbuffer-type": "string"
+        },
+        "HORIZON_MIN_DAYS": {
+          "type": "number",
+          "description": "Horizon range, days, half-open.",
+          "x-flatbuffer-type": "double"
+        },
+        "HORIZON_MAX_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "FACTOR": {
+          "type": "number",
+          "description": "Variance factor; NaN when AXES_FACTORS is given.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AXES_FACTORS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-axis factors R, T, N (3 values); empty when FACTOR is given.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STATUS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMProcessNoise": {
+      "type": "object",
+      "description": "Process noise of a numerical propagation: white acceleration.",
+      "properties": {
+        "MODEL": {
+          "type": "string",
+          "description": "Model, e.g. \"WHITE_ACCELERATION\".",
+          "x-flatbuffer-type": "string"
+        },
+        "AXES": {
+          "type": "string",
+          "description": "Axes of the densities, e.g. \"RADIAL_TRANSVERSE_NORMAL\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SPECTRAL_DENSITY_M2_S3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Spectral densities, m**2/s**3 (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DISCRETIZATION_S": {
+          "type": "number",
+          "description": "Discretization interval, s.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMNoiseFit": {
+      "type": "object",
+      "description": "How a process noise was fitted.",
+      "properties": {
+        "SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "Window of the samples, ISO 8601 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "NEGATIVE_LOG_LIKELIHOOD_Q0": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "NEGATIVE_LOG_LIKELIHOOD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_LIKELIHOOD_M2_S3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Maximum-likelihood densities, m**2/s**3 (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CALIBRATED_STRATA_MAXIMUM_LIKELIHOOD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Strata calibrated with the ML densities and with P0 alone.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CALIBRATED_STRATA_P0_ALONE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SELECTED": {
+          "type": "string",
+          "description": "Which was selected: \"P0 alone\" or \"maximum likelihood\".",
+          "x-flatbuffer-type": "string"
+        },
+        "RULE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPropagatorRegime": {
+      "type": "object",
+      "description": "Initial covariance and process noise of one regime.",
+      "properties": {
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REGIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Samples and those kept after clipping.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "KEPT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CLIP_K": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "P0": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance at the element-set epoch, Lower21 RTN (km, km/s); empty =\nnone.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PROCESS_NOISE": {
+          "$ref": "#/definitions/ERMProcessNoise",
+          "x-flatbuffer-type": "ERMProcessNoise"
+        },
+        "FIT": {
+          "$ref": "#/definitions/ERMNoiseFit",
+          "x-flatbuffer-type": "ERMNoiseFit"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMMeasuredOn": {
+      "type": "object",
+      "description": "Where a model was measured.",
+      "properties": {
+        "LINEAGES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Lineages of the reference data.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "WINDOW": {
+          "type": "string",
+          "description": "ISO 8601 interval start/end.",
+          "x-flatbuffer-type": "string"
+        },
+        "RULE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EVIDENCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMProvenanceFile": {
+      "type": "object",
+      "description": "A file a model was derived from.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMModelScale": {
+      "type": "object",
+      "description": "Model-level scaling record.",
+      "properties": {
+        "BASIS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUTH_COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "description": "Counts of the truth model.",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "TRUTH_WINDOW": {
+          "type": "string",
+          "description": "Window of the truth model, ISO 8601 interval; empty = not stated.",
+          "x-flatbuffer-type": "string"
+        },
+        "MINIMUM_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMModel": {
+      "type": "object",
+      "description": "An orbit error model.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Model identifier (e.g. a calibration version); empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "CALIBRATION_VERSION": {
+          "type": "string",
+          "description": "Version of the calibration the model freezes; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "CANDIDATE": {
+          "type": "string",
+          "description": "Name of the candidate or variant, e.g. \"S3-KC\".",
+          "x-flatbuffer-type": "string"
+        },
+        "FORM": {
+          "$ref": "#/definitions/ermModelForm",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "StratifiedStatistics": {
+              "value": 1,
+              "description": "Stratified moments, quantiles and covariance by regime and age (the output of finalize)."
+            },
+            "ElementSetModel": {
+              "value": 2,
+              "description": "Frozen element-set covariance model by regime and age, with realism cells."
+            },
+            "HorizonFactors": {
+              "value": 3,
+              "description": "Covariance scale factors by regime and prediction horizon."
+            },
+            "PropagatorCovariance": {
+              "value": 4,
+              "description": "Initial covariance and process noise of a numerical propagator by regime."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "BASIS": {
+          "$ref": "#/definitions/ermErrorBasis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "SetDifferences": {
+              "value": 1,
+              "description": "Later element sets of the same object (consecutive-set differences; not truth)."
+            },
+            "ReferenceStates": {
+              "value": 2,
+              "description": "Independent reference states."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "BASIS_TEXT": {
+          "type": "string",
+          "description": "How the statistics were formed, human-readable.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPAGATOR": {
+          "type": "string",
+          "description": "Propagator the predictions came from, e.g. \"SGP4 (Vallado 2020,\nWGS-72, opsmode i)\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STRATA_SETTINGS": {
+          "$ref": "#/definitions/ERMStrataSettings",
+          "x-flatbuffer-type": "ERMStrataSettings"
+        },
+        "HORIZONS_DAYS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Horizons of the realism cells, days.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "QUANTILE_PROBABILITIES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Probabilities of the stratum quantiles (7 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVERAGE_MODEL": {
+          "type": "string",
+          "description": "Model the realism was tested against; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "GATE": {
+          "$ref": "#/definitions/ERMGate",
+          "x-flatbuffer-type": "ERMGate"
+        },
+        "STRATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMModelStratum"
+          },
+          "x-flatbuffer-type": "[ERMModelStratum]"
+        },
+        "SCALE": {
+          "$ref": "#/definitions/ERMModelScale",
+          "x-flatbuffer-type": "ERMModelScale"
+        },
+        "CELLS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRealismCell"
+          },
+          "x-flatbuffer-type": "[ERMRealismCell]"
+        },
+        "STRATUM_FACTORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMStratumFactor"
+          },
+          "description": "ElementSetModel: factors and statuses by stratum.",
+          "x-flatbuffer-type": "[ERMStratumFactor]"
+        },
+        "MINIMUM_BIN_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "ElementSetModel: strata with fewer samples are not used.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HORIZON_FACTORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMHorizonFactor"
+          },
+          "description": "HorizonFactors: the factors.",
+          "x-flatbuffer-type": "[ERMHorizonFactor]"
+        },
+        "PROPAGATOR_REGIMES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMPropagatorRegime"
+          },
+          "description": "PropagatorCovariance: per regime.",
+          "x-flatbuffer-type": "[ERMPropagatorRegime]"
+        },
+        "EPOCH_WINDOW_START": {
+          "type": "string",
+          "description": "PropagatorCovariance: window of the epoch fit, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_WINDOW_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MEASURED_ON": {
+          "$ref": "#/definitions/ERMMeasuredOn",
+          "x-flatbuffer-type": "ERMMeasuredOn"
+        },
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sources (lineages) the model applies to; empty = any.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "POOLED": {
+          "type": "boolean",
+          "description": "True for a model pooled over all sources.",
+          "x-flatbuffer-type": "bool"
+        },
+        "PROVENANCE_REPOSITORY": {
+          "type": "string",
+          "description": "Repository, commit and files the model was derived from.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE_COMMIT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE_FILES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMProvenanceFile"
+          },
+          "x-flatbuffer-type": "[ERMProvenanceFile]"
+        },
+        "LABEL": {
+          "type": "string",
+          "description": "Free label, e.g. the model and calibration paths.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScaleOptions": {
+      "type": "object",
+      "description": "Options of a model scaling.",
+      "properties": {
+        "MINIMUM_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Strata with fewer clipped reference samples stay unscaled.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "30"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningSettings": {
+      "type": "object",
+      "description": "Settings of a screening-rule evaluation.",
+      "properties": {
+        "STRATA_SETTINGS": {
+          "$ref": "#/definitions/ERMStrataSettings",
+          "x-flatbuffer-type": "ERMStrataSettings"
+        },
+        "HARD_BODY_RADIUS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "20"
+        },
+        "PC_THRESHOLD": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.0001"
+        },
+        "NECESSITY_LEVEL": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.9973"
+        },
+        "BOUND_COVERAGE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.9973"
+        },
+        "DIRECTIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "4"
+        },
+        "MISS_DISTANCES_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Miss distances evaluated, m; empty = 0, 10, 50, 100, 500, 1000, 2000,\n5000.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PAIRS_PER_STRATUM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "500"
+        },
+        "SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64",
+          "x-flatbuffer-default": "1"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningCase": {
+      "type": "object",
+      "description": "A screening case: two objects' position errors and covariances.",
+      "properties": {
+        "ERROR1_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "RTN position errors, km (3 values each).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ERROR2_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE1_KM2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position covariances, Lower6, km**2.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE2_KM2": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningCases": {
+      "type": "object",
+      "description": "Caller-supplied screening cases.",
+      "properties": {
+        "CASES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMScreeningCase"
+          },
+          "x-flatbuffer-type": "[ERMScreeningCase]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningRow": {
+      "type": "object",
+      "description": "Rule scores at one miss distance.",
+      "properties": {
+        "MISS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COLLISION": {
+          "type": "boolean",
+          "description": "True when the miss is within the hard-body radius.",
+          "x-flatbuffer-type": "bool"
+        },
+        "CASES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "PC_ALERT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_PC": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BRIER": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BOUNDED_SET_ALERT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "POSSIBILITY_ALERT_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_POSSIBILITY_OF_COLLISION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningGeometry": {
+      "type": "object",
+      "description": "Scores for one encounter geometry.",
+      "properties": {
+        "GEOMETRY": {
+          "type": "string",
+          "description": "\"head-on\" or \"crossing-90\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMScreeningRow"
+          },
+          "x-flatbuffer-type": "[ERMScreeningRow]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningStratum": {
+      "type": "object",
+      "description": "Screening scores of one stratum.",
+      "properties": {
+        "REGIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_MIN_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_MAX_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "PAIRS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SIGMA_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "RTN position sigmas, km (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "GEOMETRIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMScreeningGeometry"
+          },
+          "x-flatbuffer-type": "[ERMScreeningGeometry]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningDefinitions": {
+      "type": "object",
+      "description": "Definitions of the terms of a screening report (human-readable).",
+      "properties": {
+        "CASES": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLISION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PROBABILISTIC": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BOUNDED_SET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSSIBILITY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSED_COLLISION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FALSE_ALERT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMScreeningReport": {
+      "type": "object",
+      "description": "Scores of probabilistic, bounded-set and possibility screening rules.",
+      "properties": {
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "DEFINITIONS": {
+          "$ref": "#/definitions/ERMScreeningDefinitions",
+          "x-flatbuffer-type": "ERMScreeningDefinitions"
+        },
+        "SETTINGS": {
+          "$ref": "#/definitions/ERMScreeningSettings",
+          "x-flatbuffer-type": "ERMScreeningSettings"
+        },
+        "SUMMARY": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMScreeningGeometry"
+          },
+          "description": "Over all strata, by geometry.",
+          "x-flatbuffer-type": "[ERMScreeningGeometry]"
+        },
+        "STRATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMScreeningStratum"
+          },
+          "description": "Per stratum (empty for caller-supplied cases).",
+          "x-flatbuffer-type": "[ERMScreeningStratum]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMArcOptions": {
+      "type": "object",
+      "description": "Settings of an arc plan.",
+      "properties": {
+        "STRATA_SETTINGS": {
+          "$ref": "#/definitions/ERMStrataSettings",
+          "x-flatbuffer-type": "ERMStrataSettings"
+        },
+        "TARGET_AGES_DAYS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Target prediction ages, days; empty = 0, 0.25, 0.75, 1.5, 2.5, 4, 6.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "EPOCH_TOLERANCE_S": {
+          "type": "number",
+          "description": "Age 0 uses the first reference epoch at or after the set epoch within\nthis, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1800"
+        },
+        "TARGET_TOLERANCE_S": {
+          "type": "number",
+          "description": "Other ages use the nearest reference epoch within this, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "900"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMArcTarget": {
+      "type": "object",
+      "description": "One target of an arc.",
+      "properties": {
+        "NOMINAL_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Reference epoch, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUTH": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Reference state, GCRF, km and km/s (6 values).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMArc": {
+      "type": "object",
+      "description": "One propagation arc from an element set.",
+      "properties": {
+        "ARC": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Element-set epoch, as the record gives it.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REGIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMArcTarget"
+          },
+          "x-flatbuffer-type": "[ERMArcTarget]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Initial covariance, 6x6 row-major GCRF, SI (36 values); empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PROCESS_NOISE": {
+          "$ref": "#/definitions/ERMProcessNoise",
+          "x-flatbuffer-type": "ERMProcessNoise"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMArcPlan": {
+      "type": "object",
+      "description": "Propagation arcs to run.",
+      "properties": {
+        "TARGET_AGES_DAYS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "EPOCH_TOLERANCE_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_TOLERANCE_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "COVARIANCE_NOTE": {
+          "type": "string",
+          "description": "How the covariance and the truth were formed, human-readable.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRUTH_NOTE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "ARCS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMArc"
+          },
+          "x-flatbuffer-type": "[ERMArc]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPredictionSample": {
+      "type": "object",
+      "description": "A propagated state at one arc target.",
+      "properties": {
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "State, GCRF, m and m/s (6 values); empty = no prediction.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "P0_POSITION": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position covariance from P0 alone, m**2, xx, xy, xz, yy, yz, zz (6\nvalues); empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "NOISE_RESPONSES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Unit-density process-noise responses for R, T, N, each in the order of\nP0_POSITION (3 x 6 values); empty = none.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMArcPrediction": {
+      "type": "object",
+      "description": "Predictions of one arc, aligned with its targets.",
+      "properties": {
+        "ARC": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMPredictionSample"
+          },
+          "x-flatbuffer-type": "[ERMPredictionSample]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMArcPredictions": {
+      "type": "object",
+      "description": "Predictions for an arc plan.",
+      "properties": {
+        "ARCS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMArcPrediction"
+          },
+          "x-flatbuffer-type": "[ERMArcPrediction]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCoverageOptions": {
+      "type": "object",
+      "description": "Settings of a propagator covariance coverage run.",
+      "properties": {
+        "MODE": {
+          "$ref": "#/definitions/ermCoverageMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "EpochCovariance": {
+              "value": 0,
+              "description": "Fit the initial covariance at the element-set epoch."
+            },
+            "ProcessNoise": {
+              "value": 1,
+              "description": "Fit the process noise."
+            },
+            "CoverageTest": {
+              "value": 2,
+              "description": "Test coverage."
+            }
+          },
+          "x-flatbuffer-default": "CoverageTest"
+        },
+        "WINDOW_START": {
+          "type": "string",
+          "description": "Targets whose epoch is in [start, stop), ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STRATA_SETTINGS": {
+          "$ref": "#/definitions/ERMStrataSettings",
+          "x-flatbuffer-type": "ERMStrataSettings"
+        },
+        "GATE": {
+          "$ref": "#/definitions/ERMGate",
+          "x-flatbuffer-type": "ERMGate"
+        },
+        "CLIP_K": {
+          "type": "number",
+          "description": "Robust clip multiple of the epoch fit.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "5"
+        },
+        "DISCRETIZATION_S": {
+          "type": "number",
+          "description": "Discretization of the noise fit, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "600"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPropagatorCoverageStratum": {
+      "type": "object",
+      "description": "Coverage of one stratum of a propagator covariance.",
+      "properties": {
+        "REGIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "AGE_MIN_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AGE_MAX_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "RMS_ERROR_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "RMS errors and sigmas, km (3 values each).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RMS_SIGMA_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "RMS_SIGMA_P0_ONLY_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "SPECTRAL_DENSITY_M2_S3": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVERAGE": {
+          "$ref": "#/definitions/ERMCoverage",
+          "x-flatbuffer-type": "ERMCoverage"
+        },
+        "COVERAGE_P0_ONLY": {
+          "$ref": "#/definitions/ERMCoverage",
+          "x-flatbuffer-type": "ERMCoverage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPropagatorCoverageReport": {
+      "type": "object",
+      "description": "Coverage test of a propagator covariance.",
+      "properties": {
+        "WINDOW_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GATE": {
+          "$ref": "#/definitions/ERMGate",
+          "x-flatbuffer-type": "ERMGate"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "STRATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMPropagatorCoverageStratum"
+          },
+          "x-flatbuffer-type": "[ERMPropagatorCoverageStratum]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCommonEpochTarget": {
+      "type": "object",
+      "description": "A request for differences at a common epoch.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Requested epoch, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "SETS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Element-set epochs to propagate there (matched within 1 s).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ORIGIN": {
+          "$ref": "#/definitions/ermDifferenceOrigin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ReferenceState": {
+              "value": 0,
+              "description": "An independent reference state."
+            },
+            "SetMean": {
+              "value": 1,
+              "description": "The mean of the propagated element sets."
+            },
+            "OneSet": {
+              "value": 2,
+              "description": "One named element set."
+            }
+          },
+          "x-flatbuffer-default": "ReferenceState"
+        },
+        "AFTER_S": {
+          "type": "number",
+          "description": "Use the first reference epoch within this after EPOCH, s; 0 = exact.",
+          "x-flatbuffer-type": "double"
+        },
+        "ORIGIN_SET": {
+          "type": "string",
+          "description": "The origin set's epoch (ORIGIN OneSet).",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMSetDifference": {
+      "type": "object",
+      "description": "One element set's difference from the origin.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Set epoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "description": "Target minus set epoch, days.",
+          "x-flatbuffer-type": "double"
+        },
+        "RTN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Prediction minus origin in the origin's RTN axes (6 values).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCommonEpochResult": {
+      "type": "object",
+      "description": "Differences at one common epoch.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIGIN": {
+          "$ref": "#/definitions/ermDifferenceOrigin",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ReferenceState": {
+              "value": 0,
+              "description": "An independent reference state."
+            },
+            "SetMean": {
+              "value": 1,
+              "description": "The mean of the propagated element sets."
+            },
+            "OneSet": {
+              "value": 2,
+              "description": "One named element set."
+            }
+          },
+          "x-flatbuffer-default": "ReferenceState"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch used.",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSING": {
+          "type": "string",
+          "description": "Why there are no differences; empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN_SET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Origin state, GCRF, km and km/s (6 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMSetDifference"
+          },
+          "x-flatbuffer-type": "[ERMSetDifference]"
+        },
+        "MISSING_SETS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Requested sets not found.",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCommonEpoch": {
+      "type": "object",
+      "description": "Common-epoch requests or results.",
+      "properties": {
+        "UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "REQUESTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMCommonEpochTarget"
+          },
+          "x-flatbuffer-type": "[ERMCommonEpochTarget]"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMCommonEpochResult"
+          },
+          "x-flatbuffer-type": "[ERMCommonEpochResult]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMMapRequest": {
+      "type": "object",
+      "description": "A covariance to map through a state transition.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SET_EPOCH": {
+          "type": "string",
+          "description": "Anchor set epoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance, Lower21 RTN (km, km/s).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TO_EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Target epochs.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "FROM_EPOCH": {
+          "type": "string",
+          "description": "Covariance epoch; empty = the set epoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/ermMapMethod",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Sgp4": {
+              "value": 0,
+              "description": "SGP4 (central differences in nonsingular mean elements)."
+            },
+            "TwoBody": {
+              "value": 1,
+              "description": "Two-body (complex-step Kepler)."
+            },
+            "Lambert": {
+              "value": 2,
+              "description": "The Lambert arc between the two epochs."
+            }
+          },
+          "x-flatbuffer-default": "Sgp4"
+        },
+        "INCLUDE_STM": {
+          "type": "boolean",
+          "description": "Report the STM.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "AXES_SET": {
+          "type": "string",
+          "description": "Set whose state at FROM_EPOCH defines the input axes; empty = the anchor.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMLambertArc": {
+      "type": "object",
+      "description": "The Lambert arc of a mapping.",
+      "properties": {
+        "REVOLUTIONS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int32"
+        },
+        "BRANCH": {
+          "type": "string",
+          "description": "\"single\", \"long-period\", \"short-period\" or \"short-arc\".",
+          "x-flatbuffer-type": "string"
+        },
+        "V1_KM_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Departure velocity, km/s (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "ENERGY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SGP4_ENERGY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE_RADIUS_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMMappedCovariance": {
+      "type": "object",
+      "description": "A mapped covariance at one target.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Lower21 RTN at the target.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "STM, 6x6 row-major (TEME, km, km/s); empty unless requested.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "LAMBERT": {
+          "$ref": "#/definitions/ERMLambertArc",
+          "x-flatbuffer-type": "ERMLambertArc"
+        },
+        "ERROR": {
+          "type": "string",
+          "description": "Failure text; empty on success.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMMapResult": {
+      "type": "object",
+      "description": "Mapping of one request.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SET_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/ermMapMethod",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Sgp4": {
+              "value": 0,
+              "description": "SGP4 (central differences in nonsingular mean elements)."
+            },
+            "TwoBody": {
+              "value": 1,
+              "description": "Two-body (complex-step Kepler)."
+            },
+            "Lambert": {
+              "value": 2,
+              "description": "The Lambert arc between the two epochs."
+            }
+          },
+          "x-flatbuffer-default": "Sgp4"
+        },
+        "FROM_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AXES_SET": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMMappedCovariance"
+          },
+          "x-flatbuffer-type": "[ERMMappedCovariance]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCovarianceMap": {
+      "type": "object",
+      "description": "Covariance mapping requests or results.",
+      "properties": {
+        "UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "REQUESTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMMapRequest"
+          },
+          "x-flatbuffer-type": "[ERMMapRequest]"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMMapResult"
+          },
+          "x-flatbuffer-type": "[ERMMapResult]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMWeightedCovariance": {
+      "type": "object",
+      "description": "A weighted covariance term.",
+      "properties": {
+        "WEIGHT": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "6, 9, 21 or 36 values, SI.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMStateSample": {
+      "type": "object",
+      "description": "A sampled state with a covariance.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "VELOCITY_M_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPairSide": {
+      "type": "object",
+      "description": "One side of a predicted-versus-truth pair.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch (sampled form).",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position, m, and velocity, m/s, inertial (3 values each).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "VELOCITY_M_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance: Lower6, 3x3 (9), Lower21 or 6x6 (36), SI; empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE_TERMS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMWeightedCovariance"
+          },
+          "description": "Summed covariance terms, instead of COVARIANCE.",
+          "x-flatbuffer-type": "[ERMWeightedCovariance]"
+        },
+        "COVARIANCE_AXES": {
+          "$ref": "#/definitions/ermCovarianceAxes",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Rtn": {
+              "value": 0,
+              "description": "Radial, transverse, normal of the state."
+            },
+            "Uvw": {
+              "value": 1,
+              "description": "UVW of the state (radial, in-track, cross-track)."
+            },
+            "Inertial": {
+              "value": 2,
+              "description": "The inertial frame of the state."
+            }
+          },
+          "x-flatbuffer-default": "Rtn"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMStateSample"
+          },
+          "description": "Samples to interpolate at EPOCH (sampled form).",
+          "x-flatbuffer-type": "[ERMStateSample]"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "x-flatbuffer-type": "uint8",
+          "x-flatbuffer-default": "5"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMStatePair": {
+      "type": "object",
+      "description": "A predicted state and a truth state.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PREDICTED": {
+          "$ref": "#/definitions/ERMPairSide",
+          "x-flatbuffer-type": "ERMPairSide"
+        },
+        "TRUTH": {
+          "$ref": "#/definitions/ERMPairSide",
+          "x-flatbuffer-type": "ERMPairSide"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPairStatistic": {
+      "type": "object",
+      "description": "Statistics of one pair.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSING": {
+          "type": "string",
+          "description": "Why the pair could not be evaluated; empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_RTN_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Error (predicted minus truth), RTN, m and m/s (3 values each).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "VELOCITY_ERROR_RTN_M_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "INTERPOLATION_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Interpolation of the predicted side: degree, first sample index,\nsamples; 0 = not interpolated.",
+          "x-flatbuffer-type": "uint8"
+        },
+        "INTERPOLATION_FROM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "INTERPOLATION_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "PREDICTED_RTN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position covariances, Lower6, RTN, m**2; TRUTH_RTN empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TRUTH_RTN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "D2_COMBINED": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LOG_DET_COMBINED": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "D2_PREDICTED": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "Z_COMBINED": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Whitened errors (3 values each).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "Z_PREDICTED": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMPairStatistics": {
+      "type": "object",
+      "description": "Pair statistics request or result.",
+      "properties": {
+        "AXES_FROM": {
+          "$ref": "#/definitions/ermAxesSource",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Predicted": {
+              "value": 0
+            },
+            "Truth": {
+              "value": 1
+            }
+          },
+          "x-flatbuffer-default": "Predicted"
+        },
+        "UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "PAIRS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMStatePair"
+          },
+          "x-flatbuffer-type": "[ERMStatePair]"
+        },
+        "STATISTICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMPairStatistic"
+          },
+          "x-flatbuffer-type": "[ERMPairStatistic]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCalibrationSample": {
+      "type": "object",
+      "description": "An error with its predicted covariance, for fitting calibration factors.",
+      "properties": {
+        "STRATUM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT": {
+          "type": "string",
+          "description": "Object identifier; empty = unknown.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Position error (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance: 6, 9, 21 or 36 values (position block used).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCalibrationStratum": {
+      "type": "object",
+      "description": "Fitted calibration of one stratum.",
+      "properties": {
+        "STRATUM": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "NOT_POSITIVE_DEFINITE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/ermFitStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "Fitted": {
+              "value": 1
+            },
+            "Insufficient": {
+              "value": 2
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "BEFORE_MEAN_D2_OVER_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BEFORE_COVERAGE_95": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "FACTOR": {
+          "type": "number",
+          "description": "Variance factor; NaN when per axis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AXES_FACTORS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Per-axis variance factors (3 values); empty when scalar.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "AFTER_MEAN_D2_OVER_3": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AFTER_COVERAGE_95": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCalibration": {
+      "type": "object",
+      "description": "Calibration factor fit: samples, settings and result.",
+      "properties": {
+        "METHOD": {
+          "$ref": "#/definitions/ermCalibrationFit",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "ScalarMle": {
+              "value": 0,
+              "description": "One variance factor by maximum likelihood."
+            },
+            "AxesMle": {
+              "value": 1,
+              "description": "One factor per axis by maximum likelihood."
+            },
+            "CoverageTarget": {
+              "value": 2,
+              "description": "The factor that puts the coverage at the target."
+            }
+          },
+          "x-flatbuffer-default": "ScalarMle"
+        },
+        "COVERAGE": {
+          "type": "number",
+          "description": "Target coverage, (0, 1).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.95"
+        },
+        "MINIMUM_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "MINIMUM_OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "1"
+        },
+        "RULE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMCalibrationSample"
+          },
+          "x-flatbuffer-type": "[ERMCalibrationSample]"
+        },
+        "STRATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMCalibrationStratum"
+          },
+          "x-flatbuffer-type": "[ERMCalibrationStratum]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCalibrationObject": {
+      "type": "object",
+      "description": "An object to give a calibrated covariance.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME": {
+          "type": "string",
+          "description": "Regime ID, when known.",
+          "x-flatbuffer-type": "string"
+        },
+        "SET_NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Element set placing it in a regime: NORAD number and epoch.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SET_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Inertial state, m and m/s (3 values each); empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "VELOCITY_M_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "OBJECT_FACTOR": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "description": "Element-set age, days (set models); NaN = none.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HORIZON_DAYS": {
+          "type": "number",
+          "description": "Prediction horizon, days (factor models); NaN = none.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance to scale: 6, 9, 21 or 36 values, SI.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE_AXES": {
+          "$ref": "#/definitions/ermCovarianceAxes",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Rtn": {
+              "value": 0,
+              "description": "Radial, transverse, normal of the state."
+            },
+            "Uvw": {
+              "value": 1,
+              "description": "UVW of the state (radial, in-track, cross-track)."
+            },
+            "Inertial": {
+              "value": 2,
+              "description": "The inertial frame of the state."
+            }
+          },
+          "x-flatbuffer-default": "Rtn"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCalibratedCovariance": {
+      "type": "object",
+      "description": "A calibrated covariance.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "\"OUTSIDE\", \"NO_MODEL\", the cell's status, or \"UNSTATED\".",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Cell: age index (-1 outside) or horizon range.",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HORIZON_MIN_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HORIZON_MAX_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "FACTOR": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AXES_FACTORS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE_RTN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Lower21 RTN, SI.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE_INERTIAL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "6x6 row-major inertial, SI; empty unless a state was given.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMCalibratedCovariances": {
+      "type": "object",
+      "description": "Calibrated covariances: the objects and the result.",
+      "properties": {
+        "CALIBRATION_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODEL_FORM": {
+          "$ref": "#/definitions/ermModelForm",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "StratifiedStatistics": {
+              "value": 1,
+              "description": "Stratified moments, quantiles and covariance by regime and age (the output of finalize)."
+            },
+            "ElementSetModel": {
+              "value": 2,
+              "description": "Frozen element-set covariance model by regime and age, with realism cells."
+            },
+            "HorizonFactors": {
+              "value": 3,
+              "description": "Covariance scale factors by regime and prediction horizon."
+            },
+            "PropagatorCovariance": {
+              "value": 4,
+              "description": "Initial covariance and process noise of a numerical propagator by regime."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RULE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMCalibrationObject"
+          },
+          "x-flatbuffer-type": "[ERMCalibrationObject]"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMCalibratedCovariance"
+          },
+          "x-flatbuffer-type": "[ERMCalibratedCovariance]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMDensitySegment": {
+      "type": "object",
+      "description": "A segment of the density forecast at one lead day.",
+      "properties": {
+        "FROM_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TO_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LEAD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Lead day, 1 to K.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMConsiderEpoch": {
+      "type": "object",
+      "description": "Sensitivity of one epoch to the density error.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSITIVITY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "dx/d ln B from the start, SI (6 values); empty when STM and S are given.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "STM from the start (36 values) and dx/dB (6 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "BASE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Base covariance, 21 or 36 values, SI; empty = none.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMConsiderCovariance": {
+      "type": "object",
+      "description": "A density-forecast consider covariance at one epoch.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SECONDS_FROM_START": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_EFFECTIVE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "WEIGHTS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Weight of each lead day (K values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "WEIGHT_COVERED": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSITIVITY": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Consider covariance, 6x6 row-major, SI.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TOTAL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "BASE plus COVARIANCE; empty when no base.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMConsiderCovariances": {
+      "type": "object",
+      "description": "Density-forecast consider covariance: request and result.",
+      "properties": {
+        "LEAD_DAYS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of lead days K.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LEAD_COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance of the daily ln-density error by lead day, K x K row-major.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "START": {
+          "type": "string",
+          "description": "Forecast start.",
+          "x-flatbuffer-type": "string"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMDensitySegment"
+          },
+          "x-flatbuffer-type": "[ERMDensitySegment]"
+        },
+        "BALLISTIC_COEFFICIENT": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "START_STM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "STM (36) and dx/dB (6) at the start; empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "START_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "EPOCHS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMConsiderEpoch"
+          },
+          "x-flatbuffer-type": "[ERMConsiderEpoch]"
+        },
+        "RULE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMConsiderCovariance"
+          },
+          "x-flatbuffer-type": "[ERMConsiderCovariance]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMStmSample": {
+      "type": "object",
+      "description": "An STM sample of a propagation.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "SI (6 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "STM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Row-major n x n, 6 <= n <= 36 (top-left 6x6 used).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMNoiseResponse": {
+      "type": "object",
+      "description": "Unit process-noise responses at one target.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STEPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STEP_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RESPONSES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "6x6 row-major per unit density on R, T, N (3 x 36 values).",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMNoiseResponses": {
+      "type": "object",
+      "description": "Process-noise responses: request and result.",
+      "properties": {
+        "START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISCRETIZATION_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "600"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMStmSample"
+          },
+          "x-flatbuffer-type": "[ERMStmSample]"
+        },
+        "TARGET_EPOCHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Target epochs.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMNoiseResponse"
+          },
+          "x-flatbuffer-type": "[ERMNoiseResponse]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMFitSettings": {
+      "type": "object",
+      "description": "Settings of a fit of element sets to an ephemeris (shared, or for one\nobject when NORAD_CAT_ID is set).",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Object; 0 = the shared settings.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FROM_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TO_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_CHOICE": {
+          "$ref": "#/definitions/ermFitEpochChoice",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "First": {
+              "value": 0
+            },
+            "Last": {
+              "value": 1
+            },
+            "Middle": {
+              "value": 2
+            },
+            "GivenEpoch": {
+              "value": 3,
+              "description": "The epoch given in EPOCH."
+            }
+          },
+          "x-flatbuffer-default": "First"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "STEP_S": {
+          "type": "number",
+          "description": "Thin the ephemeris to this step, s; 0 = every state.",
+          "x-flatbuffer-type": "double"
+        },
+        "FIT_BSTAR": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "BSTAR": {
+          "type": "number",
+          "description": "Fixed B*, 1/earth radii; NaN = the a priori set's, else 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BSTAR_FROM_APRIORI": {
+          "type": "boolean",
+          "description": "Take B* from the a priori set.",
+          "x-flatbuffer-type": "bool"
+        },
+        "WEIGHTING": {
+          "$ref": "#/definitions/ermFitWeighting",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Uniform": {
+              "value": 0
+            },
+            "RtnSigmas": {
+              "value": 1,
+              "description": "Per-axis RTN sigmas."
+            },
+            "EphemerisCovariance": {
+              "value": 2,
+              "description": "The ephemeris covariance."
+            }
+          },
+          "x-flatbuffer-default": "Uniform"
+        },
+        "SIGMA_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "VELOCITY": {
+          "type": "boolean",
+          "description": "Fit velocities too.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "SIGMA_VELOCITY_KM_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.001"
+        },
+        "HALF_LIFE_HOURS": {
+          "type": "number",
+          "description": "Exponential weighting half-life, hours; 0 = none.",
+          "x-flatbuffer-type": "double"
+        },
+        "TOWARDS": {
+          "$ref": "#/definitions/ermFitFavour",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SpanEnd": {
+              "value": 0
+            },
+            "SpanStart": {
+              "value": 1
+            }
+          },
+          "x-flatbuffer-default": "SpanEnd"
+        },
+        "MAX_ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "100"
+        },
+        "TOLERANCE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-10"
+        },
+        "FLOOR_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-6"
+        },
+        "INITIAL": {
+          "$ref": "#/definitions/ermFitStart",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FromEphemeris": {
+              "value": 0,
+              "description": "From the ephemeris (osculating to mean)."
+            },
+            "FromApriori": {
+              "value": 1,
+              "description": "From the a priori element set."
+            }
+          },
+          "x-flatbuffer-default": "FromEphemeris"
+        },
+        "REJECT_SIGMA": {
+          "type": "number",
+          "description": "Reject residuals beyond this many sigma; 0 = none.",
+          "x-flatbuffer-type": "double"
+        },
+        "SCALE_COVARIANCE": {
+          "type": "boolean",
+          "description": "Scale the fit covariance by the residual variance (default true unless\nWEIGHTING is EphemerisCovariance).",
+          "x-flatbuffer-type": "bool"
+        },
+        "HAS_SCALE_COVARIANCE": {
+          "type": "boolean",
+          "description": "True when SCALE_COVARIANCE carries a value; false means the default.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "RESIDUALS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "CLOSURE": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "EPHEMERIS_STREAM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris stream to use; -1 = all.",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Metadata of the fitted OMM.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMMENT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ELEMENT_SET_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMFitOptions": {
+      "type": "object",
+      "description": "Fit settings: shared by every object, and per object.",
+      "properties": {
+        "SHARED": {
+          "$ref": "#/definitions/ERMFitSettings",
+          "description": "Settings for every object without its own entry in FITS.",
+          "x-flatbuffer-type": "ERMFitSettings"
+        },
+        "FITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMFitSettings"
+          },
+          "description": "Per-object overrides (NORAD_CAT_ID set); empty = fit every object of\nthe ephemeris with SHARED.",
+          "x-flatbuffer-type": "[ERMFitSettings]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMResidualSample": {
+      "type": "object",
+      "description": "A residual sample, km.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "R_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "T_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "N_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMResidualStatistics": {
+      "type": "object",
+      "description": "Residual statistics over a span.",
+      "properties": {
+        "LABEL": {
+          "type": "string",
+          "description": "Window label and bounds (when for a window).",
+          "x-flatbuffer-type": "string"
+        },
+        "FROM_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TO_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FAILURES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SPAN_START": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SPAN_STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RMS_3D_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RMS_PER_COORDINATE_KM": {
+          "type": "number",
+          "description": "RMS_3D_KM / sqrt(3).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RMS_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "MEAN_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "MAX_3D_KM": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAX_AT": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MAX_RTN_KM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "RMS_VELOCITY_KM_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMResidualSample"
+          },
+          "x-flatbuffer-type": "[ERMResidualSample]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMFitStage": {
+      "type": "object",
+      "description": "One stage of a fit.",
+      "properties": {
+        "START": {
+          "type": "string",
+          "description": "How the stage started, e.g. \"osculating-to-mean\", \"apriori\".",
+          "x-flatbuffer-type": "string"
+        },
+        "HALF_WIDTH_S": {
+          "type": "number",
+          "description": "Half-width of the stage's span, s; NaN = whole span.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STATES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REJECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMFitCovariance": {
+      "type": "object",
+      "description": "Covariance of a fit.",
+      "properties": {
+        "PARAMETERS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Parameters, of \"n\", \"af\", \"ag\", \"chi\", \"psi\", \"lambda\", \"bstar\".",
+          "x-flatbuffer-type": "[string]"
+        },
+        "EQUINOCTIAL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Equinoctial covariance, lower triangle.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SCALE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CLASSICAL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Classical-element covariance, lower 6x6 or 7x7; empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CLASSICAL_UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CARTESIAN_RSW": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Cartesian RSW covariance, Lower21 (km, km/s); empty = none.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CARTESIAN_UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMClosureTest": {
+      "type": "object",
+      "description": "The half-split closure test of a fit.",
+      "properties": {
+        "DEFINITION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SPLIT_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIT_STATES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "RMS": {
+          "$ref": "#/definitions/ERMResidualStatistics",
+          "x-flatbuffer-type": "ERMResidualStatistics"
+        },
+        "ERROR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMElementFit": {
+      "type": "object",
+      "description": "The fit of one object. The fitted element set is the companion $OMM.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR": {
+          "type": "string",
+          "description": "Why the fit failed; empty on success.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATES_IN_SPAN": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATES_FITTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATES_WITHOUT_WEIGHTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATES_REJECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STAGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMFitStage"
+          },
+          "x-flatbuffer-type": "[ERMFitStage]"
+        },
+        "ITERATIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CONVERGED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "STOP": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CRITERION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RMS": {
+          "$ref": "#/definitions/ERMResidualStatistics",
+          "x-flatbuffer-type": "ERMResidualStatistics"
+        },
+        "RESIDUALS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMResidualSample"
+          },
+          "x-flatbuffer-type": "[ERMResidualSample]"
+        },
+        "CLOSURE": {
+          "$ref": "#/definitions/ERMClosureTest",
+          "x-flatbuffer-type": "ERMClosureTest"
+        },
+        "WEIGHTED_RMS": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CONDITION_NUMBER": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COVARIANCE": {
+          "$ref": "#/definitions/ERMFitCovariance",
+          "x-flatbuffer-type": "ERMFitCovariance"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Fit epoch, ISO 8601 (microseconds).",
+          "x-flatbuffer-type": "string"
+        },
+        "EQUINOCTIAL": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "n (rad/min), af, ag, chi, psi, lambda, B* (7 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "BSTAR_FITTED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "BSTAR_INITIAL": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMResidualRequest": {
+      "type": "object",
+      "description": "A residual request.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SET_EPOCH": {
+          "type": "string",
+          "description": "Element-set epoch.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMResidualStatistics"
+          },
+          "x-flatbuffer-type": "[ERMResidualStatistics]"
+        },
+        "STEP_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "EPHEMERIS_STREAM": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "LABEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMResidualResult": {
+      "type": "object",
+      "description": "Residuals of one request.",
+      "properties": {
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SET_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LABEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMResidualStatistics"
+          },
+          "x-flatbuffer-type": "[ERMResidualStatistics]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMElementFits": {
+      "type": "object",
+      "description": "Element-set fits or residuals against an ephemeris.",
+      "properties": {
+        "MODEL": {
+          "type": "string",
+          "description": "Model, e.g. \"SGP4 (Vallado 2020), WGS-72, opsmode i; TEME\".",
+          "x-flatbuffer-type": "string"
+        },
+        "RESIDUAL_SIGN": {
+          "type": "string",
+          "description": "e.g. \"model minus ephemeris\".",
+          "x-flatbuffer-type": "string"
+        },
+        "UNITS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "OPTIONS": {
+          "$ref": "#/definitions/ERMFitOptions",
+          "x-flatbuffer-type": "ERMFitOptions"
+        },
+        "FITS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMElementFit"
+          },
+          "x-flatbuffer-type": "[ERMElementFit]"
+        },
+        "INCLUDE_SAMPLES": {
+          "type": "boolean",
+          "description": "Residual requests; include per-window samples.",
+          "x-flatbuffer-type": "bool"
+        },
+        "RESIDUAL_REQUESTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMResidualRequest"
+          },
+          "x-flatbuffer-type": "[ERMResidualRequest]"
+        },
+        "RESIDUAL_RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMResidualResult"
+          },
+          "x-flatbuffer-type": "[ERMResidualResult]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMRealismFactor": {
+      "type": "object",
+      "description": "A measured realism factor for a source's fit class.",
+      "properties": {
+        "SOURCES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sources it applies to; \"*\" = any.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "FIT_CLASS": {
+          "type": "string",
+          "description": "Fit class.",
+          "x-flatbuffer-type": "string"
+        },
+        "REALISM": {
+          "$ref": "#/definitions/CVR",
+          "description": "SCALE_FACTOR, MEAN_D2_OVER_3, COVERAGE_95, SAMPLES, OBJECTS, EVIDENCE,\nTEST_WINDOW.",
+          "x-flatbuffer-type": "CVR"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMAttachRecipe": {
+      "type": "object",
+      "description": "Recipe for attaching covariances to one source's products.",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "The source (SOURCE_ID, SOURCE_KIND, LINEAGE, ORIGINATOR, PROVIDER_ID,\nLICENSE_CLASS, LICENSE_ID) and the producer.",
+          "x-flatbuffer-type": "PVN"
+        },
+        "FIT_CLASS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED": {
+          "type": "string",
+          "description": "Creation date written to the products, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "LATEST_ONLY": {
+          "type": "boolean",
+          "description": "Only the newest set of each object.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "MAX_OPERATOR_ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "8"
+        },
+        "REALISM": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRealismFactor"
+          },
+          "x-flatbuffer-type": "[ERMRealismFactor]"
+        },
+        "MODELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMModel"
+          },
+          "x-flatbuffer-type": "[ERMModel]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMRuleNote": {
+      "type": "object",
+      "description": "Why an earlier rule did not apply.",
+      "properties": {
+        "RULE": {
+          "$ref": "#/definitions/covarianceRule",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "Operator": {
+              "value": 1,
+              "description": "The operator's covariance, as supplied"
+            },
+            "ScaledFit": {
+              "value": 2,
+              "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            "SourceModel": {
+              "value": 3,
+              "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            "PooledModel": {
+              "value": 4,
+              "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "REASON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ROW": {
+          "type": "string",
+          "description": "Row epoch; empty = whole product.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMRowLabel": {
+      "type": "object",
+      "description": "The covariance of one row of a product.",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REALISM": {
+          "$ref": "#/definitions/CVR",
+          "description": "The label (rule, model, regime, age, horizon, verdict numbers).",
+          "x-flatbuffer-type": "CVR"
+        },
+        "METHOD": {
+          "type": "string",
+          "description": "Method, e.g. \"operator-supplied\", \"fit-formal-scaled\", \"e14-s3-kc\".",
+          "x-flatbuffer-type": "string"
+        },
+        "BASIS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "VERDICT": {
+          "type": "string",
+          "description": "The cell's decision or \"formal covariance, before scaling\".",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMAttachedObject": {
+      "type": "object",
+      "description": "One object's product and the covariance it got.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "THEORY": {
+          "type": "string",
+          "description": "Mean element theory, e.g. \"SGP4\".",
+          "x-flatbuffer-type": "string"
+        },
+        "OMM_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OCM_SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RULE": {
+          "$ref": "#/definitions/covarianceRule",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "Operator": {
+              "value": 1,
+              "description": "The operator's covariance, as supplied"
+            },
+            "ScaledFit": {
+              "value": 2,
+              "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            "SourceModel": {
+              "value": 3,
+              "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            "PooledModel": {
+              "value": 4,
+              "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "METHOD": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCT": {
+          "type": "string",
+          "description": "e.g. \"operator-ephemeris\", \"fit-state\", \"sgp4-epoch-state\".",
+          "x-flatbuffer-type": "string"
+        },
+        "CALIBRATED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "OMM_COVARIANCE": {
+          "type": "string",
+          "description": "\"rtn\" or \"unavailable\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRowLabel"
+          },
+          "x-flatbuffer-type": "[ERMRowLabel]"
+        },
+        "NOTES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRuleNote"
+          },
+          "x-flatbuffer-type": "[ERMRuleNote]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMRefusedRecord": {
+      "type": "object",
+      "description": "A record that could not be used.",
+      "properties": {
+        "RECORD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "0-based input record.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REASON": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRST": {
+          "type": "string",
+          "description": "First epoch, when relevant.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERMAttachReport": {
+      "type": "object",
+      "description": "Report of attaching covariances (or attributing maneuvers).",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/PVN",
+          "x-flatbuffer-type": "PVN"
+        },
+        "COUNTS": {
+          "$ref": "#/definitions/ERMCounts",
+          "x-flatbuffer-type": "ERMCounts"
+        },
+        "REFUSED_ELEMENT_SETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRefusedRecord"
+          },
+          "x-flatbuffer-type": "[ERMRefusedRecord]"
+        },
+        "UNMATCHED_STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRefusedRecord"
+          },
+          "x-flatbuffer-type": "[ERMRefusedRecord]"
+        },
+        "UNMATCHED_OPERATOR": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMRefusedRecord"
+          },
+          "x-flatbuffer-type": "[ERMRefusedRecord]"
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ERMAttachedObject"
+          },
+          "x-flatbuffer-type": "[ERMAttachedObject]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ERM": {
+      "type": "object",
+      "description": "Orbit Error Model - exactly one arm is set.",
+      "properties": {
+        "STRATA_SETTINGS": {
+          "$ref": "#/definitions/ERMStrataSettings",
+          "x-flatbuffer-type": "ERMStrataSettings"
+        },
+        "ACCUMULATOR": {
+          "$ref": "#/definitions/ERMAccumulator",
+          "x-flatbuffer-type": "ERMAccumulator"
+        },
+        "GATE": {
+          "$ref": "#/definitions/ERMGate",
+          "x-flatbuffer-type": "ERMGate"
+        },
+        "MODEL": {
+          "$ref": "#/definitions/ERMModel",
+          "x-flatbuffer-type": "ERMModel"
+        },
+        "SCALE_OPTIONS": {
+          "$ref": "#/definitions/ERMScaleOptions",
+          "x-flatbuffer-type": "ERMScaleOptions"
+        },
+        "SCREENING_SETTINGS": {
+          "$ref": "#/definitions/ERMScreeningSettings",
+          "x-flatbuffer-type": "ERMScreeningSettings"
+        },
+        "SCREENING_CASES": {
+          "$ref": "#/definitions/ERMScreeningCases",
+          "x-flatbuffer-type": "ERMScreeningCases"
+        },
+        "SCREENING_REPORT": {
+          "$ref": "#/definitions/ERMScreeningReport",
+          "x-flatbuffer-type": "ERMScreeningReport"
+        },
+        "ARC_OPTIONS": {
+          "$ref": "#/definitions/ERMArcOptions",
+          "x-flatbuffer-type": "ERMArcOptions"
+        },
+        "ARC_PLAN": {
+          "$ref": "#/definitions/ERMArcPlan",
+          "x-flatbuffer-type": "ERMArcPlan"
+        },
+        "ARC_PREDICTIONS": {
+          "$ref": "#/definitions/ERMArcPredictions",
+          "x-flatbuffer-type": "ERMArcPredictions"
+        },
+        "COVERAGE_OPTIONS": {
+          "$ref": "#/definitions/ERMCoverageOptions",
+          "x-flatbuffer-type": "ERMCoverageOptions"
+        },
+        "PROPAGATOR_COVERAGE": {
+          "$ref": "#/definitions/ERMPropagatorCoverageReport",
+          "x-flatbuffer-type": "ERMPropagatorCoverageReport"
+        },
+        "COMMON_EPOCH": {
+          "$ref": "#/definitions/ERMCommonEpoch",
+          "x-flatbuffer-type": "ERMCommonEpoch"
+        },
+        "COVARIANCE_MAP": {
+          "$ref": "#/definitions/ERMCovarianceMap",
+          "x-flatbuffer-type": "ERMCovarianceMap"
+        },
+        "PAIR_STATISTICS": {
+          "$ref": "#/definitions/ERMPairStatistics",
+          "x-flatbuffer-type": "ERMPairStatistics"
+        },
+        "CALIBRATION": {
+          "$ref": "#/definitions/ERMCalibration",
+          "x-flatbuffer-type": "ERMCalibration"
+        },
+        "CALIBRATED_COVARIANCES": {
+          "$ref": "#/definitions/ERMCalibratedCovariances",
+          "x-flatbuffer-type": "ERMCalibratedCovariances"
+        },
+        "CONSIDER_COVARIANCES": {
+          "$ref": "#/definitions/ERMConsiderCovariances",
+          "x-flatbuffer-type": "ERMConsiderCovariances"
+        },
+        "NOISE_RESPONSES": {
+          "$ref": "#/definitions/ERMNoiseResponses",
+          "x-flatbuffer-type": "ERMNoiseResponses"
+        },
+        "ELEMENT_FITS": {
+          "$ref": "#/definitions/ERMElementFits",
+          "x-flatbuffer-type": "ERMElementFits"
+        },
+        "ATTACH_RECIPE": {
+          "$ref": "#/definitions/ERMAttachRecipe",
+          "x-flatbuffer-type": "ERMAttachRecipe"
+        },
+        "ATTACH_REPORT": {
+          "$ref": "#/definitions/ERMAttachReport",
+          "x-flatbuffer-type": "ERMAttachReport"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ERM",
+  "x-flatbuffer-root-type": "ERM",
+  "x-flatbuffer-file-identifier": "$ERM"
+}

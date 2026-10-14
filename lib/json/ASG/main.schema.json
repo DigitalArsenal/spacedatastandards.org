@@ -1,0 +1,407 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "asgObjective" : {
+      "type" : "string",
+      "enum": ["Minimize", "Maximize"]
+    },
+    "asgMeasurementKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Range", "RangeRate", "RightAscension", "Declination", "Azimuth", "Elevation"]
+    },
+    "asgAssociationOutcome" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Associated", "Uncorrelated"]
+    },
+    "asgUncorrelatedReason" : {
+      "type" : "string",
+      "enum": ["Unspecified", "NoPrediction", "OutsideGate", "LostAssignment"]
+    },
+    "asgScanGrouping" : {
+      "type" : "string",
+      "enum": ["SensorTime", "Track", "Observation"]
+    },
+    "ASGCostEntry" : {
+      "type" : "object",
+      "description" : "One sparse cost: assigning ROW to COLUMN costs COST.",
+      "properties" : {
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Row index, 0-based."
+              },
+        "COLUMN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Column index, 0-based."
+              },
+        "COST" : {
+                "type" : "number",
+                "description" : "Cost of the pair, finite."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGProblem" : {
+      "type" : "object",
+      "description" : "A rectangular linear assignment problem.",
+      "properties" : {
+        "ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of rows."
+              },
+        "COLUMNS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns."
+              },
+        "DENSE_COST" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Dense cost matrix, row-major, ROWS * COLUMNS values. NaN or +Infinity\nmarks a forbidden pair. Empty when ENTRIES gives the problem."
+              },
+        "ENTRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ASGCostEntry"},
+                "description" : "Sparse costs; a pair not listed is forbidden. When a pair repeats, the\nlowest cost stands. Empty when DENSE_COST gives the problem."
+              },
+        "UNASSIGNED_COST" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Cost of leaving a row unassigned: empty means every row must be assigned\n(then ROWS <= COLUMNS); one value applies to every row; ROWS values give\none per row. In gated association this is the gate."
+              },
+        "OBJECTIVE" : {
+                "$ref" : "#/definitions/asgObjective"
+              },
+        "ROW_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Optional labels of the rows (e.g. observation identifiers), ROWS entries\nor empty."
+              },
+        "COLUMN_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Optional labels of the columns (e.g. object keys), COLUMNS entries or\nempty."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGSolution" : {
+      "type" : "object",
+      "description" : "The optimal assignment of a problem.",
+      "properties" : {
+        "ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of rows of the problem."
+              },
+        "COLUMNS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of columns of the problem."
+              },
+        "ASSIGNMENT" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647},
+                "description" : "Column assigned to each row, ROWS entries; -1 = unassigned."
+              },
+        "TOTAL_COST" : {
+                "type" : "number",
+                "description" : "Sum of the assigned costs plus the unassigned costs paid."
+              },
+        "ASSIGNED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of rows assigned to a real column."
+              },
+        "METHOD" : {
+                "type" : "string",
+                "description" : "Algorithm, e.g. \"Hungarian (shortest augmenting path with potentials)\",\n\"auction\", \"JVC\"."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGObjectRef" : {
+      "type" : "object",
+      "description" : "Identity of a predicted object.",
+      "properties" : {
+        "KEY" : {
+                "type" : "string",
+                "description" : "The key the solver used for the object: its OBJECT_ID, else\n\"NORAD:<n>\", else its name."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number; 0 = none."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator or provider object identifier; empty = none."
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Object name; empty = none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGMeasurement" : {
+      "type" : "object",
+      "description" : "One measured quantity of an observation.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/asgMeasurementKind"
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Measured value: km, km/s or degrees by KIND."
+              },
+        "SIGMA" : {
+                "type" : "number",
+                "description" : "One-sigma uncertainty, same unit as VALUE; positive."
+              },
+        "SOURCE_FIELD" : {
+                "type" : "string",
+                "description" : "The field of the source record the value came from, e.g. \"RANGE\",\n\"RANGE_RATE\", \"DOPPLER\", \"RA\", \"DECLINATION\", \"AZIMUTH\", \"ELEVATION\"."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGCandidate" : {
+      "type" : "object",
+      "description" : "One predicted object tested against an observation.",
+      "properties" : {
+        "OBJECT" : {
+                "$ref" : "#/definitions/ASGObjectRef"
+              },
+        "D2" : {
+                "type" : "number",
+                "description" : "Mahalanobis distance squared of the residual on S = H P H' + R\n(dimensionless, chi-square distributed with the observation's degrees\nof freedom)."
+              },
+        "P_VALUE" : {
+                "type" : "number",
+                "description" : "Chi-square upper-tail probability of D2."
+              },
+        "POSTERIOR" : {
+                "type" : "number",
+                "description" : "Posterior association probability among the observation's candidates and\nclutter, 0 to 1."
+              },
+        "IN_GATE" : {
+                "type" : "boolean",
+                "description" : "True when D2 is within the observation's gate."
+              },
+        "LOG_DET_S" : {
+                "type" : "number",
+                "description" : "Natural logarithm of det(S), in the measurement units' product."
+              },
+        "RESIDUAL" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Residuals, measured minus predicted, one per observation MEASUREMENTS\nentry in the same order and unit (angles wrapped to +-180 degrees)."
+              },
+        "PREDICTED" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Predicted values, one per observation MEASUREMENTS entry."
+              },
+        "LIGHT_TIME_S" : {
+                "type" : "number",
+                "description" : "One-way light time applied, s; 0 = none."
+              },
+        "POSITION_GCRF_KM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Predicted position at the observation time, GCRF, km (3 values); empty\nwhen geometry was not requested."
+              },
+        "VELOCITY_GCRF_KM_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Predicted velocity, GCRF, km/s (3 values); empty when not requested."
+              },
+        "POSITION_COVARIANCE_KM2" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Predicted position covariance, GCRF, km**2, 3x3 row-major (9 values);\nempty when not requested."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGObservation" : {
+      "type" : "object",
+      "description" : "One observation and its association.",
+      "properties" : {
+        "INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Position of the observation in the input, 0-based."
+              },
+        "RECORD_TYPE" : {
+                "type" : "string",
+                "description" : "Standard of the observation record, as its code, e.g. \"RDO\", \"EOO\",\n\"RFO\"."
+              },
+        "ID" : {
+                "type" : "string",
+                "description" : "The record's identifier."
+              },
+        "TIME" : {
+                "type" : "string",
+                "description" : "Observation time, UTC, ISO 8601 as the record states it."
+              },
+        "SENSOR" : {
+                "type" : "string",
+                "description" : "Sensor identifier (the record's sensor or original sensor id)."
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Track identifier from the record; empty = none."
+              },
+        "MEASUREMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ASGMeasurement"},
+                "description" : "The measured quantities, in the order every candidate's RESIDUAL and\nPREDICTED follow."
+              },
+        "DEGREES_OF_FREEDOM" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Degrees of freedom of the test (the number of MEASUREMENTS)."
+              },
+        "GATE" : {
+                "type" : "number",
+                "description" : "Gate threshold on D2 for this observation."
+              },
+        "OUTCOME" : {
+                "$ref" : "#/definitions/asgAssociationOutcome"
+              },
+        "REASON" : {
+                "$ref" : "#/definitions/asgUncorrelatedReason"
+              },
+        "AMBIGUOUS" : {
+                "type" : "boolean",
+                "description" : "True when the judged candidate's posterior is under the minimum\nposterior, or the assignment gave the observation other than its best\ncandidate."
+              },
+        "ASSIGNMENT_CONFLICT" : {
+                "type" : "boolean",
+                "description" : "True when the assignment gave the observation other than its best\nin-gate candidate."
+              },
+        "CANDIDATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ASGCandidate"},
+                "description" : "Candidates by increasing D2: the best few plus every in-gate one. The\nfirst is the nearest (the one a UCT report names)."
+              },
+        "ASSIGNED_CANDIDATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index into CANDIDATES of the assigned object; -1 = uncorrelated."
+              },
+        "SENSOR_POSITION_GCRF_KM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sensor position at the observation time, GCRF, km (3 values)."
+              },
+        "SENSOR_VELOCITY_GCRF_KM_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sensor velocity, GCRF, km/s (3 values) for an Earth-fixed sensor; empty\nfor an inertial sensor position, which carries no velocity."
+              },
+        "LINE_OF_SIGHT_GCRF" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Unit line of sight from the sensor, GCRF (3 values); empty when the\nobservation has no direction."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGAssociationOptions" : {
+      "type" : "object",
+      "description" : "Settings of a gated association. Every field has its default.",
+      "properties" : {
+        "GATE_PROBABILITY" : {
+                "type" : "number",
+                "description" : "Probability mass inside the chi-square gate, (0, 1)."
+              },
+        "LIGHT_TIME" : {
+                "type" : "boolean",
+                "description" : "Correct predictions for light time."
+              },
+        "MIN_POSTERIOR" : {
+                "type" : "number",
+                "description" : "Minimum posterior for an unambiguous association, (0, 1]."
+              },
+        "CLUTTER_DENSITY" : {
+                "type" : "number",
+                "description" : "Spatial density of clutter (false or new-object detections) in the\nposterior, per unit measurement volume; 0 = none."
+              },
+        "SCAN" : {
+                "$ref" : "#/definitions/asgScanGrouping"
+              },
+        "MAX_CANDIDATES" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Out-of-gate candidates reported per observation, 1 to 50."
+              },
+        "GEOMETRY" : {
+                "type" : "boolean",
+                "description" : "Report each candidate's predicted position, velocity and covariance."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGGateThreshold" : {
+      "type" : "object",
+      "description" : "Chi-square gate threshold for one number of degrees of freedom.",
+      "properties" : {
+        "DEGREES_OF_FREEDOM" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255
+              },
+        "THRESHOLD" : {
+                "type" : "number",
+                "description" : "D2 threshold at the gate probability."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASGAssociationReport" : {
+      "type" : "object",
+      "description" : "The evidence of one association run. The association list and the\nuncorrelated list are OBSERVATIONS filtered by OUTCOME.",
+      "properties" : {
+        "METHOD" : {
+                "type" : "string",
+                "description" : "Method, e.g. \"chi-square gate on S = H P H^T + R, global nearest\nneighbour per scan (Hungarian), gate as the non-assignment cost\"."
+              },
+        "OPTIONS" : {
+                "$ref" : "#/definitions/ASGAssociationOptions",
+                "description" : "The options the run used, defaults filled in."
+              },
+        "GATE_THRESHOLDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ASGGateThreshold"},
+                "description" : "Gate thresholds by degrees of freedom."
+              },
+        "EARTH_ORIENTATION_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Earth orientation rows supplied."
+              },
+        "OBSERVATION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations read."
+              },
+        "PREDICTION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Predicted objects (prediction blocks) read."
+              },
+        "SCAN_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Scans solved."
+              },
+        "ASSOCIATED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations associated."
+              },
+        "UNCORRELATED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations left uncorrelated."
+              },
+        "AMBIGUOUS_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Observations marked ambiguous."
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ASGObservation"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ASG" : {
+      "type" : "object",
+      "description" : "Assignment - exactly one of the arms is set.",
+      "properties" : {
+        "PROBLEM" : {
+                "$ref" : "#/definitions/ASGProblem"
+              },
+        "SOLUTION" : {
+                "$ref" : "#/definitions/ASGSolution"
+              },
+        "ASSOCIATION_OPTIONS" : {
+                "$ref" : "#/definitions/ASGAssociationOptions"
+              },
+        "ASSOCIATION_REPORT" : {
+                "$ref" : "#/definitions/ASGAssociationReport"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ASG"
+}

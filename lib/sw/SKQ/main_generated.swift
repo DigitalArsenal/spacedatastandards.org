@@ -232,7 +232,7 @@ public struct SKQPointing_Mutable: FlatBufferStruct, FlatbuffersVectorInitializa
 }
 
 ///  Sky Query: one question to a star and compact-source catalogue for an observer and epoch.
-public struct SKQ: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SKQ: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

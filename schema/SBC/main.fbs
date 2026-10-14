@@ -1,0 +1,175 @@
+// Hash: 125020380110eb10392dcf8074acd56e296a1e568f44db8cb8ca75d8c7269838
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Sensor Bias Contribution (SBC)
+/// Description
+/// The systematic errors (biases) of the sensors whose observations went into
+/// an orbit, and what each adds to the orbit's covariance, together with the
+/// diagnostics of a covariance built from several contributors: which
+/// contributors were combined, the variance each added on each axis, the
+/// resulting one-sigma values and the semi-axes of the position error
+/// ellipsoid.
+///
+/// A bias is not noise: it does not average down with more observations, so
+/// a covariance from an orbit fit (or a series of element sets) understates
+/// the error unless the bias is added as its own term. A bias may be stated in
+/// the sensor's measurement space (range, azimuth, elevation, range rate, time)
+/// or already mapped to the orbit's radial, in-track and cross-track axes. An
+/// SBC is the input and the evidence; the combined covariance itself is an
+/// $OCM (COVARIANCE_DATA with COV_REF_FRAME and its $CVR), and the element
+/// sets of a series are $OMM records.
+///
+/// One SBC carries one arm: a covariance request (the contributors to
+/// combine) or the diagnostics of a combination.
+include "../OCM/main.fbs";
+include "../OMM/main.fbs";
+
+/// How a bias term is stated. Append new values only; never reorder or reuse
+/// existing values.
+enum sbcBiasBasis : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Already mapped to orbit position axes: RADIAL_M, IN_TRACK_M,
+  /// CROSS_TRACK_M are metres in RTN.
+  OrbitRtn,
+  /// Measurement-space biases (RANGE_M, AZIMUTH_DEG, ELEVATION_DEG,
+  /// RANGE_RATE_M_S, TIME_S) together with their mapped RTN equivalents in
+  /// RADIAL_M, IN_TRACK_M, CROSS_TRACK_M.
+  Measurement,
+  /// Measurement-space biases taken one-to-one onto RTN as an approximation:
+  /// range onto radial, azimuth onto in-track, elevation onto cross-track,
+  /// each already in metres in RADIAL_M, IN_TRACK_M, CROSS_TRACK_M.
+  MeasurementAsRtn
+}
+
+/// Whether a bias value is a known offset or the one-sigma of an unknown one.
+/// Append new values only; never reorder or reuse existing values.
+enum sbcBiasNature : ubyte {
+  /// One-sigma of an unknown, zero-mean bias: contributes its square as a
+  /// variance (the usual consider treatment).
+  Sigma,
+  /// A known (estimated) offset: contributes its square as a variance when
+  /// it is left uncorrected.
+  Offset
+}
+
+/// A contributor to a combined covariance. Append new values only; never
+/// reorder or reuse existing values.
+enum sbcContributorKind : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// A covariance supplied directly (operator, orbit determination).
+  DirectCovariance,
+  /// The scatter of a series of element sets about their mean.
+  ElementSetSeries,
+  /// Sensor biases.
+  SensorBias,
+  /// Process noise or another model term.
+  ModelTerm
+}
+
+/// One sensor's bias.
+table SBCBiasTerm {
+  /// Sensor identifier.
+  SENSOR_ID: string;
+  BASIS: sbcBiasBasis = Unspecified;
+  NATURE: sbcBiasNature = Sigma;
+  /// Radial bias (or its one-sigma), m; 0 = none.
+  RADIAL_M: double;
+  /// In-track bias, m; 0 = none.
+  IN_TRACK_M: double;
+  /// Cross-track bias, m; 0 = none.
+  CROSS_TRACK_M: double;
+  /// Range bias, m; 0 = none (BASIS Measurement).
+  RANGE_M: double;
+  /// Azimuth bias, degrees; 0 = none.
+  AZIMUTH_DEG: double;
+  /// Elevation bias, degrees; 0 = none.
+  ELEVATION_DEG: double;
+  /// Range-rate bias, m/s; 0 = none.
+  RANGE_RATE_M_S: double;
+  /// Time-tag bias, s; 0 = none.
+  TIME_S: double;
+  /// Number of the sensor's observations in the orbit; 0 = not stated.
+  OBSERVATIONS: uint32;
+  /// Identifier of the calibration the bias comes from; empty = none.
+  CALIBRATION_REFERENCE: string;
+}
+
+/// The contributors to combine into one object's covariance.
+table SBCCovarianceRequest {
+  /// Object identifier.
+  OBJECT_ID: string;
+  /// Epoch of the covariance, ISO 8601 UTC.
+  EPOCH: string;
+  /// A covariance supplied directly, as an $OCM with COVARIANCE_DATA (21
+  /// values, km**2 family) and COV_REF_FRAME (RTN or RSW for orbit axes). A
+  /// covariance known only as per-axis one-sigma values is a diagonal one:
+  /// write sigma**2 on the diagonal and zeros elsewhere. Absent = none.
+  DIRECT_COVARIANCE: OCM;
+  /// A series of element sets of the object whose scatter about their mean
+  /// is a covariance contributor (at least two sets); empty = none.
+  ELEMENT_SET_SERIES: [OMM];
+  /// Sensor biases; empty = none.
+  SENSOR_BIASES: [SBCBiasTerm];
+}
+
+/// Variance one contributor added, per axis.
+table SBCContribution {
+  KIND: sbcContributorKind = Unspecified;
+  /// Sensor the contribution is for (KIND SensorBias, one per sensor);
+  /// empty for the total of a kind.
+  SENSOR_ID: string;
+  /// Element sets, sensors or matrices behind the contribution.
+  COUNT: uint32;
+  /// Radial position variance added, m**2.
+  RADIAL_VARIANCE_M2: double;
+  /// In-track position variance added, m**2.
+  IN_TRACK_VARIANCE_M2: double;
+  /// Cross-track position variance added, m**2.
+  CROSS_TRACK_VARIANCE_M2: double;
+  /// Variance added to each velocity component, (m/s)**2; 0 = none.
+  VELOCITY_VARIANCE_M2_S2: double;
+}
+
+/// Diagnostics of a combined covariance.
+table SBCDiagnostics {
+  /// Object identifier.
+  OBJECT_ID: string;
+  /// Epoch, ISO 8601 UTC.
+  EPOCH: string;
+  /// Axes of the covariance, e.g. "RTN".
+  REFERENCE_FRAME: string;
+  /// Producer of the combination, e.g. "covariance-analysis".
+  PROVIDER: string;
+  /// Status, e.g. "nominal".
+  STATUS: string;
+  /// The contributor kinds combined, in order.
+  CONTRIBUTORS: [sbcContributorKind];
+  /// Each contributor's added variances, totals first and then per sensor.
+  CONTRIBUTIONS: [SBCContribution];
+  /// Resulting one-sigma, radial, in-track, cross-track position, m.
+  POSITION_SIGMA_RTN_M: [double];
+  /// Resulting one-sigma, radial, in-track, cross-track velocity, m/s.
+  VELOCITY_SIGMA_RTN_M_S: [double];
+  /// The combined covariance, 6x6 lower triangle row-major (21 values), km**2,
+  /// km**2/s, km**2/s**2. The same values the companion $OCM carries.
+  COVARIANCE_LOWER_TRIANGLE: [double];
+  /// Position covariance, 3x3 row-major (9 values), km**2.
+  POSITION_COVARIANCE_KM2: [double];
+  /// One-sigma level of ELLIPSOID_SEMI_AXES_M (1 = one sigma).
+  ELLIPSOID_SIGMA_LEVEL: double = 1;
+  /// Semi-axes of the position error ellipsoid, largest first, m (3 values).
+  ELLIPSOID_SEMI_AXES_M: [double];
+  /// Assumptions the combination made (human-readable).
+  ASSUMPTIONS: [string];
+}
+
+/// Sensor Bias Contribution - exactly one arm is set.
+table SBC {
+  REQUEST: SBCCovarianceRequest;
+  DIAGNOSTICS: SBCDiagnostics;
+}
+
+root_type SBC;
+file_identifier "$SBC";

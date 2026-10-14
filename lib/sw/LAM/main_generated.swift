@@ -98,7 +98,7 @@ public enum lamSpeedReference: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  Launch-ascent event.
-public struct lamAscentEvent: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct lamAscentEvent: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -195,7 +195,7 @@ public struct lamAscentEvent: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Launch-ascent constraint violation.
-public struct lamConstraintViolation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct lamConstraintViolation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -293,7 +293,7 @@ public struct lamConstraintViolation: FlatBufferTable, FlatbuffersVectorInitiali
 }
 
 ///  Orbit a launch is steered to.
-public struct lamTargetOrbit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct lamTargetOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -365,7 +365,7 @@ public struct lamTargetOrbit: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Orbit at insertion, measured or projected.
-public struct lamInsertionOrbit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -502,7 +502,7 @@ public struct lamInsertionOrbit: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Launch Ascent Message
-public struct LAM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LAM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -413,8 +413,44 @@ func (rcv *PRW) Jb2008Indices(obj *PRWJB2008IndicesTable) *PRWJB2008IndicesTable
 	return rcv.JB2008_INDICES(obj)
 }
 
+/// Propagation over windows: one $OEM block per query answers it.
+func (rcv *PRW) WINDOW_REQUEST(obj *PRWWindowRequest) *PRWWindowRequest {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWWindowRequest)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) WindowRequest(obj *PRWWindowRequest) *PRWWindowRequest {
+	return rcv.WINDOW_REQUEST(obj)
+}
+
+/// Propagation over windows: one $OEM block per query answers it.
+func (rcv *PRW) WINDOW_REPORT(obj *PRWWindowReport) *PRWWindowReport {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PRWWindowReport)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PRW) WindowReport(obj *PRWWindowReport) *PRWWindowReport {
+	return rcv.WINDOW_REPORT(obj)
+}
+
 func PRWStart(builder *flatbuffers.Builder) {
-	builder.StartObject(21)
+	builder.StartObject(23)
 }
 func PRWAddINIT(builder *flatbuffers.Builder, INIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INIT), 0)
@@ -541,6 +577,18 @@ func PRWAddJB2008_INDICES(builder *flatbuffers.Builder, JB2008_INDICES flatbuffe
 }
 func PRWAddJb2008Indices(builder *flatbuffers.Builder, JB2008_INDICES flatbuffers.UOffsetT) {
 	PRWAddJB2008_INDICES(builder, JB2008_INDICES)
+}
+func PRWAddWINDOW_REQUEST(builder *flatbuffers.Builder, WINDOW_REQUEST flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(WINDOW_REQUEST), 0)
+}
+func PRWAddWindowRequest(builder *flatbuffers.Builder, WINDOW_REQUEST flatbuffers.UOffsetT) {
+	PRWAddWINDOW_REQUEST(builder, WINDOW_REQUEST)
+}
+func PRWAddWINDOW_REPORT(builder *flatbuffers.Builder, WINDOW_REPORT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(WINDOW_REPORT), 0)
+}
+func PRWAddWindowReport(builder *flatbuffers.Builder, WINDOW_REPORT flatbuffers.UOffsetT) {
+	PRWAddWINDOW_REPORT(builder, WINDOW_REPORT)
 }
 func PRWEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

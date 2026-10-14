@@ -188,6 +188,9 @@ public struct NSTNode : IFlatbufferObject
   public ArraySegment<byte>? GetONION_ADDRESSBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
   public byte[] GetONION_ADDRESSArray() { return __p.__vector_as_array<byte>(58); }
+  /// Standards the peer publishes or serves, as their codes, e.g. "OMM".
+  public string STANDARDS(int j) { int o = __p.__offset(60); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int STANDARDSLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<NSTNode> CreateNSTNode(FlatBufferBuilder builder,
       StringOffset PEER_IDOffset = default(StringOffset),
@@ -217,10 +220,12 @@ public struct NSTNode : IFlatbufferObject
       StringOffset ENCRYPTION_PUBLIC_KEYOffset = default(StringOffset),
       StringOffset EPM_CIDOffset = default(StringOffset),
       StringOffset STORAGE_DAEMON_VERSIONOffset = default(StringOffset),
-      StringOffset ONION_ADDRESSOffset = default(StringOffset)) {
-    builder.StartTable(28);
+      StringOffset ONION_ADDRESSOffset = default(StringOffset),
+      VectorOffset STANDARDSOffset = default(VectorOffset)) {
+    builder.StartTable(29);
     NSTNode.AddUPTIME_S(builder, UPTIME_S);
     NSTNode.AddLAST_SEEN(builder, LAST_SEEN);
+    NSTNode.AddSTANDARDS(builder, STANDARDSOffset);
     NSTNode.AddONION_ADDRESS(builder, ONION_ADDRESSOffset);
     NSTNode.AddSTORAGE_DAEMON_VERSION(builder, STORAGE_DAEMON_VERSIONOffset);
     NSTNode.AddEPM_CID(builder, EPM_CIDOffset);
@@ -250,7 +255,7 @@ public struct NSTNode : IFlatbufferObject
     return NSTNode.EndNSTNode(builder);
   }
 
-  public static void StartNSTNode(FlatBufferBuilder builder) { builder.StartTable(28); }
+  public static void StartNSTNode(FlatBufferBuilder builder) { builder.StartTable(29); }
   public static void AddPEER_ID(FlatBufferBuilder builder, StringOffset PEER_IDOffset) { builder.AddOffset(0, PEER_IDOffset.Value, 0); }
   public static void AddDN(FlatBufferBuilder builder, StringOffset DNOffset) { builder.AddOffset(1, DNOffset.Value, 0); }
   public static void AddORGANIZATION(FlatBufferBuilder builder, StringOffset ORGANIZATIONOffset) { builder.AddOffset(2, ORGANIZATIONOffset.Value, 0); }
@@ -289,6 +294,12 @@ public struct NSTNode : IFlatbufferObject
   public static void AddEPM_CID(FlatBufferBuilder builder, StringOffset EPM_CIDOffset) { builder.AddOffset(25, EPM_CIDOffset.Value, 0); }
   public static void AddSTORAGE_DAEMON_VERSION(FlatBufferBuilder builder, StringOffset STORAGE_DAEMON_VERSIONOffset) { builder.AddOffset(26, STORAGE_DAEMON_VERSIONOffset.Value, 0); }
   public static void AddONION_ADDRESS(FlatBufferBuilder builder, StringOffset ONION_ADDRESSOffset) { builder.AddOffset(27, ONION_ADDRESSOffset.Value, 0); }
+  public static void AddSTANDARDS(FlatBufferBuilder builder, VectorOffset STANDARDSOffset) { builder.AddOffset(28, STANDARDSOffset.Value, 0); }
+  public static VectorOffset CreateSTANDARDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTANDARDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTANDARDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTANDARDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTANDARDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<NSTNode> EndNSTNode(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<NSTNode>(o);
@@ -329,6 +340,8 @@ public struct NSTNode : IFlatbufferObject
     _o.EPM_CID = this.EPM_CID;
     _o.STORAGE_DAEMON_VERSION = this.STORAGE_DAEMON_VERSION;
     _o.ONION_ADDRESS = this.ONION_ADDRESS;
+    _o.STANDARDS = new List<string>();
+    for (var _j = 0; _j < this.STANDARDSLength; ++_j) {_o.STANDARDS.Add(this.STANDARDS(_j));}
   }
   public static Offset<NSTNode> Pack(FlatBufferBuilder builder, NSTNodeT _o) {
     if (_o == null) return default(Offset<NSTNode>);
@@ -362,6 +375,12 @@ public struct NSTNode : IFlatbufferObject
     var _EPM_CID = _o.EPM_CID == null ? default(StringOffset) : builder.CreateString(_o.EPM_CID);
     var _STORAGE_DAEMON_VERSION = _o.STORAGE_DAEMON_VERSION == null ? default(StringOffset) : builder.CreateString(_o.STORAGE_DAEMON_VERSION);
     var _ONION_ADDRESS = _o.ONION_ADDRESS == null ? default(StringOffset) : builder.CreateString(_o.ONION_ADDRESS);
+    var _STANDARDS = default(VectorOffset);
+    if (_o.STANDARDS != null) {
+      var __STANDARDS = new StringOffset[_o.STANDARDS.Count];
+      for (var _j = 0; _j < __STANDARDS.Length; ++_j) { __STANDARDS[_j] = builder.CreateString(_o.STANDARDS[_j]); }
+      _STANDARDS = CreateSTANDARDSVector(builder, __STANDARDS);
+    }
     return CreateNSTNode(
       builder,
       _PEER_ID,
@@ -391,7 +410,8 @@ public struct NSTNode : IFlatbufferObject
       _ENCRYPTION_PUBLIC_KEY,
       _EPM_CID,
       _STORAGE_DAEMON_VERSION,
-      _ONION_ADDRESS);
+      _ONION_ADDRESS,
+      _STANDARDS);
   }
 }
 
@@ -425,6 +445,7 @@ public class NSTNodeT
   public string EPM_CID { get; set; }
   public string STORAGE_DAEMON_VERSION { get; set; }
   public string ONION_ADDRESS { get; set; }
+  public List<string> STANDARDS { get; set; }
 
   public NSTNodeT() {
     this.PEER_ID = null;
@@ -455,6 +476,7 @@ public class NSTNodeT
     this.EPM_CID = null;
     this.STORAGE_DAEMON_VERSION = null;
     this.ONION_ADDRESS = null;
+    this.STANDARDS = null;
   }
 }
 
@@ -492,6 +514,7 @@ static public class NSTNodeVerify
       && verifier.VerifyString(tablePos, 54 /*EPM_CID*/, false)
       && verifier.VerifyString(tablePos, 56 /*STORAGE_DAEMON_VERSION*/, false)
       && verifier.VerifyString(tablePos, 58 /*ONION_ADDRESS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 60 /*STANDARDS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

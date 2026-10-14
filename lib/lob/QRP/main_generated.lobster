@@ -13,6 +13,12 @@ import flatbuffers
 /// reader never waits and never mistakes a bounded page for the whole set. An
 /// error is exactly one frame with KIND Error; the HTTP status stays honest
 /// beside it. Cursors are opaque strings issued by the serving node.
+///
+/// A request may also select by time profile (the state of each object nearest
+/// to, as of, or after an instant), bind typed parameters to its SQL, and ask
+/// for a projection: a page then carries ROWS of typed cells described by
+/// COLUMNS instead of record frames. A request for the query surface is
+/// answered with TABLES and the serving limits.
 /// Role of a frame. Append new values only; never reorder or reuse existing
 /// values.
 enum qrpKind:
@@ -44,9 +50,54 @@ enum qrpFilterOp:
     qrpFilterOp_Contains = 6
     qrpFilterOp_In = 7
 
+/// How a request selects records in time when the lane holds several
+/// versions of the same object. Append new values only; never reorder or
+/// reuse existing values.
+enum qrpTimeProfile:
+    /// Not stated: the serving node applies its configured default.
+    qrpTimeProfile_Unspecified = 0
+    /// Every record in the epoch window.
+    qrpTimeProfile_All = 1
+    /// For each object, the record whose epoch is nearest PROFILE_EPOCH_MS.
+    qrpTimeProfile_Nearest = 2
+    /// For each object, the latest record at or before PROFILE_EPOCH_MS (the
+    /// state as it was known then).
+    qrpTimeProfile_AsOf = 3
+    /// For each object, the earliest record at or after PROFILE_EPOCH_MS.
+    qrpTimeProfile_Forward = 4
+    /// For each object, its latest record.
+    qrpTimeProfile_Latest = 5
+
+/// Representation the client asks the page in. Append new values only; never
+/// reorder or reuse existing values.
+enum qrpRepresentation:
+    /// The serving node's default (FlatBuffer records).
+    qrpRepresentation_Default = 0
+    /// Size-prefixed FlatBuffer records of the standard, or ROWS for a
+    /// projection.
+    qrpRepresentation_FlatBuffer = 1
+    /// JSON rendering of the same records or rows.
+    qrpRepresentation_Json = 2
+
+/// Type of a QRPValue. Append new values only; never reorder or reuse
+/// existing values.
+enum qrpValueKind:
+    qrpValueKind_Null = 0
+    qrpValueKind_Bool = 1
+    qrpValueKind_Int = 2
+    qrpValueKind_Float = 3
+    qrpValueKind_Text = 4
+    qrpValueKind_Bytes = 5
+
 class QRPFilter
 
 class QRPColumn
+
+class QRPValue
+
+class QRPRow
+
+class QRPTable
 
 class QRP
 
@@ -121,6 +172,139 @@ struct QRPColumnBuilder:
         return this
     def end():
         return b_.EndObject()
+
+/// One typed value: a bound parameter of a request, or one cell of a row.
+/// Exactly the field named by KIND is meaningful.
+class QRPValue : flatbuffers.handle
+    def KIND() -> qrpValueKind:
+        return qrpValueKind(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    def BOOL_VALUE() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 6, 0))
+    def INT_VALUE() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 8, 0)
+    def FLOAT_VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    def TEXT_VALUE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    def BYTES_VALUE(i:int) -> int:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
+    def BYTES_VALUE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+
+def GetRootAsQRPValue(buf:string): return QRPValue { buf, flatbuffers.indirect(buf, 0) }
+
+struct QRPValueBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_KIND(KIND:qrpValueKind):
+        b_.PrependInt8Slot(0, KIND, 0)
+        return this
+    def add_BOOL_VALUE(BOOL_VALUE:bool):
+        b_.PrependBoolSlot(1, BOOL_VALUE, 0)
+        return this
+    def add_INT_VALUE(INT_VALUE:int):
+        b_.PrependInt64Slot(2, INT_VALUE, 0)
+        return this
+    def add_FLOAT_VALUE(FLOAT_VALUE:float):
+        b_.PrependFloat64Slot(3, FLOAT_VALUE, 0.0)
+        return this
+    def add_TEXT_VALUE(TEXT_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TEXT_VALUE)
+        return this
+    def add_BYTES_VALUE(BYTES_VALUE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, BYTES_VALUE)
+        return this
+    def end():
+        return b_.EndObject()
+
+def QRPValueStartBYTESVALUEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def QRPValueCreateBYTESVALUEVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+/// One row of a projection, its cells in COLUMNS order.
+class QRPRow : flatbuffers.handle
+    def CELLS(i:int) -> QRPValue:
+        return QRPValue { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
+    def CELLS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+
+def GetRootAsQRPRow(buf:string): return QRPRow { buf, flatbuffers.indirect(buf, 0) }
+
+struct QRPRowBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_CELLS(CELLS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, CELLS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def QRPRowStartCELLSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def QRPRowCreateCELLSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One queryable table of the serving node (the query surface).
+class QRPTable : flatbuffers.handle
+    /// Table name as a query names it, e.g. "OMM".
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 4)
+    /// What the table is, e.g. "standard" (records of one standard), "view",
+    /// "lane" (an ingest lane), "system".
+    def KIND() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Where the table's rows come from: a standard code, provider or source.
+    def SOURCE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Rows the table holds; -1 = unknown.
+    def RECORDS() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 10, 0)
+    /// Columns of the table.
+    def COLUMNS(i:int) -> QRPColumn:
+        return QRPColumn { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
+    def COLUMNS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+
+def GetRootAsQRPTable(buf:string): return QRPTable { buf, flatbuffers.indirect(buf, 0) }
+
+struct QRPTableBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, NAME)
+        return this
+    def add_KIND(KIND:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, KIND)
+        return this
+    def add_SOURCE(SOURCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, SOURCE)
+        return this
+    def add_RECORDS(RECORDS:int):
+        b_.PrependInt64Slot(3, RECORDS, 0)
+        return this
+    def add_COLUMNS(COLUMNS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, COLUMNS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def QRPTableStartCOLUMNSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def QRPTableCreateCOLUMNSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Query Page - request, page header or error frame.
 class QRP : flatbuffers.handle
@@ -230,13 +414,61 @@ class QRP : flatbuffers.handle
         return QRPColumn { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 76) + i * 4) }
     def COLUMNS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 76)
+    /// How the request selects records in time.
+    def TIME_PROFILE() -> qrpTimeProfile:
+        return qrpTimeProfile(flatbuffers.field_int8(buf_, pos_, 78, 0))
+    /// Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+    def PROFILE_EPOCH_MS() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 80, 0)
+    /// Representation the client asks the page in.
+    def REPRESENTATION() -> qrpRepresentation:
+        return qrpRepresentation(flatbuffers.field_int8(buf_, pos_, 82, 0))
+    /// Values bound to the placeholders of SQL, in order.
+    def PARAMETERS(i:int) -> QRPValue:
+        return QRPValue { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 84) + i * 4) }
+    def PARAMETERS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 84)
+    /// Rows of a projection (a query that selects columns rather than whole
+    /// records), in COLUMNS order. Whole-record pages carry their records as
+    /// frames after the header instead, and leave ROWS empty.
+    def ROWS(i:int) -> QRPRow:
+        return QRPRow { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 86) + i * 4) }
+    def ROWS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 86)
+    /// The serving node's queryable tables, answered to a request for the query
+    /// surface.
+    def TABLES(i:int) -> QRPTable:
+        return QRPTable { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 88) + i * 4) }
+    def TABLES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 88)
+    /// Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+    /// none stated.
+    def MAX_ELAPSED_MS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 90, 0)
+    /// Most rows a page returns; 0 = none stated.
+    def MAX_ROWS() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 92, 0)
+    /// Most bytes a page returns; 0 = none stated.
+    def MAX_BYTES() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 94, 0)
+    /// Transport status the answer carries, HTTP semantics (200, 304, 400,
+    /// 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+    def HTTP_STATUS() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 96, 0)
+    /// When the page's record frames are not inline but held by the serving
+    /// node for delivery out of band: the reference token the node resolves
+    /// (single use), and the byte size of what it refers to. 0 = inline.
+    def BODY_REF_TOKEN() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 98, 0)
+    def BODY_REF_SIZE() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 100, 0)
 
 def GetRootAsQRP(buf:string): return QRP { buf, flatbuffers.indirect(buf, 0) }
 
 struct QRPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(37)
+        b_.StartObject(49)
         return this
     def add_KIND(KIND:qrpKind):
         b_.PrependInt8Slot(0, KIND, 0)
@@ -349,6 +581,42 @@ struct QRPBuilder:
     def add_COLUMNS(COLUMNS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(36, COLUMNS)
         return this
+    def add_TIME_PROFILE(TIME_PROFILE:qrpTimeProfile):
+        b_.PrependInt8Slot(37, TIME_PROFILE, 0)
+        return this
+    def add_PROFILE_EPOCH_MS(PROFILE_EPOCH_MS:int):
+        b_.PrependInt64Slot(38, PROFILE_EPOCH_MS, 0)
+        return this
+    def add_REPRESENTATION(REPRESENTATION:qrpRepresentation):
+        b_.PrependInt8Slot(39, REPRESENTATION, 0)
+        return this
+    def add_PARAMETERS(PARAMETERS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(40, PARAMETERS)
+        return this
+    def add_ROWS(ROWS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(41, ROWS)
+        return this
+    def add_TABLES(TABLES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(42, TABLES)
+        return this
+    def add_MAX_ELAPSED_MS(MAX_ELAPSED_MS:int):
+        b_.PrependUint32Slot(43, MAX_ELAPSED_MS, 0)
+        return this
+    def add_MAX_ROWS(MAX_ROWS:int):
+        b_.PrependUint64Slot(44, MAX_ROWS, 0)
+        return this
+    def add_MAX_BYTES(MAX_BYTES:int):
+        b_.PrependUint64Slot(45, MAX_BYTES, 0)
+        return this
+    def add_HTTP_STATUS(HTTP_STATUS:int):
+        b_.PrependUint16Slot(46, HTTP_STATUS, 0)
+        return this
+    def add_BODY_REF_TOKEN(BODY_REF_TOKEN:int):
+        b_.PrependUint64Slot(47, BODY_REF_TOKEN, 0)
+        return this
+    def add_BODY_REF_SIZE(BODY_REF_SIZE:int):
+        b_.PrependUint64Slot(48, BODY_REF_SIZE, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -362,6 +630,27 @@ def QRPCreateFILTERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def QRPStartCOLUMNSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def QRPCreateCOLUMNSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def QRPStartPARAMETERSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def QRPCreatePARAMETERSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def QRPStartROWSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def QRPCreateROWSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def QRPStartTABLESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def QRPCreateTABLESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

@@ -33,6 +33,10 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "PPE", desc: "Polynomial Ephemeris" },
       { abbr: "CVR", desc: "Covariance Realism" },
       { abbr: "SBD", desc: "Small Body" },
+      { abbr: "ERM", desc: "Orbit Error Model" },
+      { abbr: "MDE", desc: "Maneuver Detection Evidence" },
+      { abbr: "MPL", desc: "Maneuver Plan" },
+      { abbr: "TBP", desc: "Three-Body Problem" },
     ],
   },
   {
@@ -52,6 +56,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "CDM", desc: "Conjunction Data Message" },
       { abbr: "CSM", desc: "Conjunction Summary Message" },
       { abbr: "HYP", desc: "Hypothesis Message" },
+      { abbr: "SCR", desc: "Conjunction Screening" },
     ],
   },
   {
@@ -61,6 +66,8 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "TDM", desc: "Tracking Data Message" },
       { abbr: "TRK", desc: "Track" },
       { abbr: "TKG", desc: "Tracking and Data Fusion" },
+      { abbr: "ASG", desc: "Assignment" },
+      { abbr: "SBC", desc: "Sensor Bias Contribution" },
     ],
   },
   {
@@ -80,6 +87,8 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "OOT", desc: "On-Orbit Thruster" },
       { abbr: "SOI", desc: "Space Object Identification" },
       { abbr: "IDM", desc: "Frequency Range Definition" },
+      { abbr: "XMT", desc: "Catalog Cross-Match" },
+      { abbr: "OIL", desc: "Object Identity Link" },
     ],
   },
   {
@@ -135,6 +144,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "PHY", desc: "Physics & Rigid Body Dynamics" },
       { abbr: "TRN", desc: "Terrain Models" },
       { abbr: "STR", desc: "Star Catalog Entry" },
+      { abbr: "DCL", desc: "Density Calibration" },
     ],
   },
   {
@@ -165,6 +175,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "MSL", desc: "Guided Missiles" },
       { abbr: "MST", desc: "Missile Track" },
       { abbr: "NAV", desc: "Naval Vessels" },
+      { abbr: "PPS", desc: "Pointing and Power Scenario" },
     ],
   },
   {
@@ -204,6 +215,8 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "ENC", desc: "Encryption Header" },
       { abbr: "EPM", desc: "Cryptographic Key Info" },
       { abbr: "PLK", desc: "Plugin Key Exchange" },
+      { abbr: "RND", desc: "Random Data" },
+      { abbr: "WHA", desc: "Wallet Holdings Attestation" },
     ],
   },
   {
@@ -219,6 +232,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "CTR", desc: "Country Identity" },
       { abbr: "SIT", desc: "Geometric Properties" },
       { abbr: "SCM", desc: "Schema Standard Definition" },
+      { abbr: "SRG", desc: "Data Source Registry" },
     ],
   },
   {
@@ -234,6 +248,13 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "STF", desc: "Spatial Coverage Definition" },
       { abbr: "PLG", desc: "Plugin Declaration" },
       { abbr: "PVN", desc: "Product Provenance" },
+      { abbr: "APR", desc: "API Request" },
+      { abbr: "NHS", desc: "Node Health Status" },
+      { abbr: "NEV", desc: "Node Event" },
+      { abbr: "FIL", desc: "File" },
+      { abbr: "DAV", desc: "Dataset Availability" },
+      { abbr: "PNV", desc: "Publication Verification" },
+      { abbr: "LFV", desc: "Labelled Feature Vectors" },
     ],
   },
   {

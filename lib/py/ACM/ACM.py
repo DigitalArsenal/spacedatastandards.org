@@ -519,7 +519,7 @@ def ACMCreateATT_STATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateATT_STATESVector(builder, data):
-    ACMCreateATT_STATESVector(builder, data)
+    return ACMCreateATT_STATESVector(builder, data)
 
 def ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PHYS_PROPERTIES), 0)
@@ -543,7 +543,7 @@ def ACMCreateCOV_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOV_DATAVector(builder, data):
-    ACMCreateCOV_DATAVector(builder, data)
+    return ACMCreateCOV_DATAVector(builder, data)
 
 def ACMAddMANEUVERS(builder, MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
@@ -561,7 +561,7 @@ def ACMCreateMANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANEUVERSVector(builder, data):
-    ACMCreateMANEUVERSVector(builder, data)
+    return ACMCreateMANEUVERSVector(builder, data)
 
 def ACMAddMANEUVERABLE(builder, MANEUVERABLE):
     builder.PrependInt8Slot(12, MANEUVERABLE, 0)
@@ -687,7 +687,7 @@ def ACMCreateATT_BLOCKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateATT_BLOCKSVector(builder, data):
-    ACMCreateATT_BLOCKSVector(builder, data)
+    return ACMCreateATT_BLOCKSVector(builder, data)
 
 def ACMAddCOV_BLOCKS(builder, COV_BLOCKS):
     builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(COV_BLOCKS), 0)
@@ -705,7 +705,7 @@ def ACMCreateCOV_BLOCKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOV_BLOCKSVector(builder, data):
-    ACMCreateCOV_BLOCKSVector(builder, data)
+    return ACMCreateCOV_BLOCKSVector(builder, data)
 
 def ACMAddMAN_BLOCKS(builder, MAN_BLOCKS):
     builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(MAN_BLOCKS), 0)
@@ -723,7 +723,7 @@ def ACMCreateMAN_BLOCKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAN_BLOCKSVector(builder, data):
-    ACMCreateMAN_BLOCKSVector(builder, data)
+    return ACMCreateMAN_BLOCKSVector(builder, data)
 
 def ACMAddDETERMINATION(builder, DETERMINATION):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(DETERMINATION), 0)
@@ -747,7 +747,7 @@ def ACMCreateUSER_DEFINED_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUSER_DEFINED_PARAMETERSVector(builder, data):
-    ACMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
+    return ACMCreateUSER_DEFINED_PARAMETERSVector(builder, data)
 
 def ACMEnd(builder):
     return builder.EndObject()

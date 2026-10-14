@@ -89,7 +89,7 @@ public enum ForceType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Physics and Rigid Body Dynamics
-public struct PHY: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PHY: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

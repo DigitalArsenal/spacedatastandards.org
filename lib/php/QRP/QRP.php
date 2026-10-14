@@ -371,22 +371,178 @@ class QRP extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// How the request selects records in time.
+    /**
+     * @return sbyte
+     */
+    public function getTIME_PROFILE()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \qrpTimeProfile::Unspecified;
+    }
+
+    /// Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+    /**
+     * @return long
+     */
+    public function getPROFILE_EPOCH_MS()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
+    /// Representation the client asks the page in.
+    /**
+     * @return sbyte
+     */
+    public function getREPRESENTATION()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \qrpRepresentation::Default;
+    }
+
+    /// Values bound to the placeholders of SQL, in order.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPARAMETERS($j)
+    {
+        $o = $this->__offset(84);
+        $obj = new QRPValue();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPARAMETERSLength()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Rows of a projection (a query that selects columns rather than whole
+    /// records), in COLUMNS order. Whole-record pages carry their records as
+    /// frames after the header instead, and leave ROWS empty.
+    /**
+     * @returnVectorOffset
+     */
+    public function getROWS($j)
+    {
+        $o = $this->__offset(86);
+        $obj = new QRPRow();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getROWSLength()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// The serving node's queryable tables, answered to a request for the query
+    /// surface.
+    /**
+     * @returnVectorOffset
+     */
+    public function getTABLES($j)
+    {
+        $o = $this->__offset(88);
+        $obj = new QRPTable();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTABLESLength()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+    /// none stated.
+    /**
+     * @return uint
+     */
+    public function getMAX_ELAPSED_MS()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Most rows a page returns; 0 = none stated.
+    /**
+     * @return ulong
+     */
+    public function getMAX_ROWS()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Most bytes a page returns; 0 = none stated.
+    /**
+     * @return ulong
+     */
+    public function getMAX_BYTES()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Transport status the answer carries, HTTP semantics (200, 304, 400,
+    /// 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+    /**
+     * @return ushort
+     */
+    public function getHTTP_STATUS()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// When the page's record frames are not inline but held by the serving
+    /// node for delivery out of band: the reference token the node resolves
+    /// (single use), and the byte size of what it refers to. 0 = inline.
+    /**
+     * @return ulong
+     */
+    public function getBODY_REF_TOKEN()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return ulong
+     */
+    public function getBODY_REF_SIZE()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startQRP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(37);
+        $builder->StartObject(49);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return QRP
      */
-    public static function createQRP(FlatBufferBuilder $builder, $KIND, $STATUS, $ERROR_CODE, $MESSAGE, $RETRY_AFTER_MS, $SCHEMA_NAME, $FILE_IDENTIFIER, $SQL, $SEARCH, $FILTERS, $SORT_FIELD, $SORT_DESC, $PROVIDER_ID, $SOURCE_NAME, $BATCH_ID, $PRODUCER_PEER_ID, $ORIGIN_ID, $FROM_EPOCH_MS, $TO_EPOCH_MS, $PAGE, $LIMIT, $CURSOR, $NEXT_CURSOR, $RECORD_COUNT, $TOTAL_COUNT, $SCANNED, $STORED, $PARTIAL, $TRUNCATED, $AS_OF_MS, $STALE, $ELAPSED_MS, $GENERATED_AT_MS, $ETAG, $CID, $ARCHIVE_ID, $COLUMNS)
+    public static function createQRP(FlatBufferBuilder $builder, $KIND, $STATUS, $ERROR_CODE, $MESSAGE, $RETRY_AFTER_MS, $SCHEMA_NAME, $FILE_IDENTIFIER, $SQL, $SEARCH, $FILTERS, $SORT_FIELD, $SORT_DESC, $PROVIDER_ID, $SOURCE_NAME, $BATCH_ID, $PRODUCER_PEER_ID, $ORIGIN_ID, $FROM_EPOCH_MS, $TO_EPOCH_MS, $PAGE, $LIMIT, $CURSOR, $NEXT_CURSOR, $RECORD_COUNT, $TOTAL_COUNT, $SCANNED, $STORED, $PARTIAL, $TRUNCATED, $AS_OF_MS, $STALE, $ELAPSED_MS, $GENERATED_AT_MS, $ETAG, $CID, $ARCHIVE_ID, $COLUMNS, $TIME_PROFILE, $PROFILE_EPOCH_MS, $REPRESENTATION, $PARAMETERS, $ROWS, $TABLES, $MAX_ELAPSED_MS, $MAX_ROWS, $MAX_BYTES, $HTTP_STATUS, $BODY_REF_TOKEN, $BODY_REF_SIZE)
     {
-        $builder->startObject(37);
+        $builder->startObject(49);
         self::addKIND($builder, $KIND);
         self::addSTATUS($builder, $STATUS);
         self::addERROR_CODE($builder, $ERROR_CODE);
@@ -424,6 +580,18 @@ class QRP extends Table
         self::addCID($builder, $CID);
         self::addARCHIVE_ID($builder, $ARCHIVE_ID);
         self::addCOLUMNS($builder, $COLUMNS);
+        self::addTIME_PROFILE($builder, $TIME_PROFILE);
+        self::addPROFILE_EPOCH_MS($builder, $PROFILE_EPOCH_MS);
+        self::addREPRESENTATION($builder, $REPRESENTATION);
+        self::addPARAMETERS($builder, $PARAMETERS);
+        self::addROWS($builder, $ROWS);
+        self::addTABLES($builder, $TABLES);
+        self::addMAX_ELAPSED_MS($builder, $MAX_ELAPSED_MS);
+        self::addMAX_ROWS($builder, $MAX_ROWS);
+        self::addMAX_BYTES($builder, $MAX_BYTES);
+        self::addHTTP_STATUS($builder, $HTTP_STATUS);
+        self::addBODY_REF_TOKEN($builder, $BODY_REF_TOKEN);
+        self::addBODY_REF_SIZE($builder, $BODY_REF_SIZE);
         $o = $builder->endObject();
         return $o;
     }
@@ -844,6 +1012,198 @@ class QRP extends Table
     public static function startCOLUMNSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addTIME_PROFILE(FlatBufferBuilder $builder, $TIME_PROFILE)
+    {
+        $builder->addSbyteX(37, $TIME_PROFILE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addPROFILE_EPOCH_MS(FlatBufferBuilder $builder, $PROFILE_EPOCH_MS)
+    {
+        $builder->addLongX(38, $PROFILE_EPOCH_MS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addREPRESENTATION(FlatBufferBuilder $builder, $REPRESENTATION)
+    {
+        $builder->addSbyteX(39, $REPRESENTATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPARAMETERS(FlatBufferBuilder $builder, $PARAMETERS)
+    {
+        $builder->addOffsetX(40, $PARAMETERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPARAMETERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPARAMETERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addROWS(FlatBufferBuilder $builder, $ROWS)
+    {
+        $builder->addOffsetX(41, $ROWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createROWSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startROWSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addTABLES(FlatBufferBuilder $builder, $TABLES)
+    {
+        $builder->addOffsetX(42, $TABLES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createTABLESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startTABLESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addMAX_ELAPSED_MS(FlatBufferBuilder $builder, $MAX_ELAPSED_MS)
+    {
+        $builder->addUintX(43, $MAX_ELAPSED_MS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addMAX_ROWS(FlatBufferBuilder $builder, $MAX_ROWS)
+    {
+        $builder->addUlongX(44, $MAX_ROWS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addMAX_BYTES(FlatBufferBuilder $builder, $MAX_BYTES)
+    {
+        $builder->addUlongX(45, $MAX_BYTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addHTTP_STATUS(FlatBufferBuilder $builder, $HTTP_STATUS)
+    {
+        $builder->addUshortX(46, $HTTP_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addBODY_REF_TOKEN(FlatBufferBuilder $builder, $BODY_REF_TOKEN)
+    {
+        $builder->addUlongX(47, $BODY_REF_TOKEN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addBODY_REF_SIZE(FlatBufferBuilder $builder, $BODY_REF_SIZE)
+    {
+        $builder->addUlongX(48, $BODY_REF_SIZE, 0);
     }
 
     /**

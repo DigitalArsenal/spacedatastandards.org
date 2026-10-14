@@ -69,7 +69,7 @@ public enum TrackQuality: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Sensor Systems
-public struct SNR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SNR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

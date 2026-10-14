@@ -284,8 +284,29 @@ class NSTNode(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Standards the peer publishes or serves, as their codes, e.g. "OMM".
+    # NSTNode
+    def STANDARDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # NSTNode
+    def STANDARDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # NSTNode
+    def STANDARDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
 def NSTNodeStart(builder):
-    builder.StartObject(28)
+    builder.StartObject(29)
 
 def Start(builder):
     NSTNodeStart(builder)
@@ -342,7 +363,7 @@ def NSTNodeCreateMULTIFORMAT_ADDRESSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTIFORMAT_ADDRESSVector(builder, data):
-    NSTNodeCreateMULTIFORMAT_ADDRESSVector(builder, data)
+    return NSTNodeCreateMULTIFORMAT_ADDRESSVector(builder, data)
 
 def NSTNodeAddLAST_SEEN(builder, LAST_SEEN):
     builder.PrependInt64Slot(7, LAST_SEEN, 0)
@@ -450,7 +471,7 @@ def NSTNodeCreateCONNECTED_PEER_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONNECTED_PEER_IDSVector(builder, data):
-    NSTNodeCreateCONNECTED_PEER_IDSVector(builder, data)
+    return NSTNodeCreateCONNECTED_PEER_IDSVector(builder, data)
 
 def NSTNodeAddSIGNING_PUBLIC_KEY(builder, SIGNING_PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNING_PUBLIC_KEY), 0)
@@ -481,6 +502,24 @@ def NSTNodeAddONION_ADDRESS(builder, ONION_ADDRESS):
 
 def AddONION_ADDRESS(builder, ONION_ADDRESS):
     NSTNodeAddONION_ADDRESS(builder, ONION_ADDRESS)
+
+def NSTNodeAddSTANDARDS(builder, STANDARDS):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(STANDARDS), 0)
+
+def AddSTANDARDS(builder, STANDARDS):
+    NSTNodeAddSTANDARDS(builder, STANDARDS)
+
+def NSTNodeStartSTANDARDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSTANDARDSVector(builder, numElems):
+    return NSTNodeStartSTANDARDSVector(builder, numElems)
+
+def NSTNodeCreateSTANDARDSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTANDARDSVector(builder, data):
+    return NSTNodeCreateSTANDARDSVector(builder, data)
 
 def NSTNodeEnd(builder):
     return builder.EndObject()
@@ -526,6 +565,7 @@ class NSTNodeT(object):
         EPM_CID = None,
         STORAGE_DAEMON_VERSION = None,
         ONION_ADDRESS = None,
+        STANDARDS = None,
     ):
         self.PEER_ID = PEER_ID  # type: Optional[str]
         self.DN = DN  # type: Optional[str]
@@ -555,6 +595,7 @@ class NSTNodeT(object):
         self.EPM_CID = EPM_CID  # type: Optional[str]
         self.STORAGE_DAEMON_VERSION = STORAGE_DAEMON_VERSION  # type: Optional[str]
         self.ONION_ADDRESS = ONION_ADDRESS  # type: Optional[str]
+        self.STANDARDS = STANDARDS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -611,6 +652,10 @@ class NSTNodeT(object):
         self.EPM_CID = NSTNode.EPM_CID()
         self.STORAGE_DAEMON_VERSION = NSTNode.STORAGE_DAEMON_VERSION()
         self.ONION_ADDRESS = NSTNode.ONION_ADDRESS()
+        if not NSTNode.STANDARDSIsNone():
+            self.STANDARDS = []
+            for i in range(NSTNode.STANDARDSLength()):
+                self.STANDARDS.append(NSTNode.STANDARDS(i))
 
     # NSTNodeT
     def Pack(self, builder):
@@ -666,6 +711,14 @@ class NSTNodeT(object):
             STORAGE_DAEMON_VERSION = builder.CreateString(self.STORAGE_DAEMON_VERSION)
         if self.ONION_ADDRESS is not None:
             ONION_ADDRESS = builder.CreateString(self.ONION_ADDRESS)
+        if self.STANDARDS is not None:
+            STANDARDSlist = []
+            for i in range(len(self.STANDARDS)):
+                STANDARDSlist.append(builder.CreateString(self.STANDARDS[i]))
+            NSTNodeStartSTANDARDSVector(builder, len(self.STANDARDS))
+            for i in reversed(range(len(self.STANDARDS))):
+                builder.PrependUOffsetTRelative(STANDARDSlist[i])
+            STANDARDS = builder.EndVector()
         NSTNodeStart(builder)
         if self.PEER_ID is not None:
             NSTNodeAddPEER_ID(builder, PEER_ID)
@@ -715,5 +768,7 @@ class NSTNodeT(object):
             NSTNodeAddSTORAGE_DAEMON_VERSION(builder, STORAGE_DAEMON_VERSION)
         if self.ONION_ADDRESS is not None:
             NSTNodeAddONION_ADDRESS(builder, ONION_ADDRESS)
+        if self.STANDARDS is not None:
+            NSTNodeAddSTANDARDS(builder, STANDARDS)
         NSTNode = NSTNodeEnd(builder)
         return NSTNode

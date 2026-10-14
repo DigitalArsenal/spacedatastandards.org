@@ -19,6 +19,27 @@ const (
 	RecordTypeExtendedCVR  RecordTypeExtended = 257
 	RecordTypeExtendedPVN  RecordTypeExtended = 258
 	RecordTypeExtendedSBD  RecordTypeExtended = 259
+	RecordTypeExtendedAPR  RecordTypeExtended = 260
+	RecordTypeExtendedASG  RecordTypeExtended = 261
+	RecordTypeExtendedDAV  RecordTypeExtended = 262
+	RecordTypeExtendedDCL  RecordTypeExtended = 263
+	RecordTypeExtendedERM  RecordTypeExtended = 264
+	RecordTypeExtendedFIL  RecordTypeExtended = 265
+	RecordTypeExtendedLFV  RecordTypeExtended = 266
+	RecordTypeExtendedMDE  RecordTypeExtended = 267
+	RecordTypeExtendedMPL  RecordTypeExtended = 268
+	RecordTypeExtendedNEV  RecordTypeExtended = 269
+	RecordTypeExtendedNHS  RecordTypeExtended = 270
+	RecordTypeExtendedOIL  RecordTypeExtended = 271
+	RecordTypeExtendedPNV  RecordTypeExtended = 272
+	RecordTypeExtendedPPS  RecordTypeExtended = 273
+	RecordTypeExtendedRND  RecordTypeExtended = 274
+	RecordTypeExtendedSBC  RecordTypeExtended = 275
+	RecordTypeExtendedSCR  RecordTypeExtended = 276
+	RecordTypeExtendedSRG  RecordTypeExtended = 277
+	RecordTypeExtendedTBP  RecordTypeExtended = 278
+	RecordTypeExtendedWHA  RecordTypeExtended = 279
+	RecordTypeExtendedXMT  RecordTypeExtended = 280
 )
 
 var EnumNamesRecordTypeExtended = map[RecordTypeExtended]string{
@@ -27,6 +48,27 @@ var EnumNamesRecordTypeExtended = map[RecordTypeExtended]string{
 	RecordTypeExtendedCVR:  "CVR",
 	RecordTypeExtendedPVN:  "PVN",
 	RecordTypeExtendedSBD:  "SBD",
+	RecordTypeExtendedAPR:  "APR",
+	RecordTypeExtendedASG:  "ASG",
+	RecordTypeExtendedDAV:  "DAV",
+	RecordTypeExtendedDCL:  "DCL",
+	RecordTypeExtendedERM:  "ERM",
+	RecordTypeExtendedFIL:  "FIL",
+	RecordTypeExtendedLFV:  "LFV",
+	RecordTypeExtendedMDE:  "MDE",
+	RecordTypeExtendedMPL:  "MPL",
+	RecordTypeExtendedNEV:  "NEV",
+	RecordTypeExtendedNHS:  "NHS",
+	RecordTypeExtendedOIL:  "OIL",
+	RecordTypeExtendedPNV:  "PNV",
+	RecordTypeExtendedPPS:  "PPS",
+	RecordTypeExtendedRND:  "RND",
+	RecordTypeExtendedSBC:  "SBC",
+	RecordTypeExtendedSCR:  "SCR",
+	RecordTypeExtendedSRG:  "SRG",
+	RecordTypeExtendedTBP:  "TBP",
+	RecordTypeExtendedWHA:  "WHA",
+	RecordTypeExtendedXMT:  "XMT",
 }
 
 var EnumValuesRecordTypeExtended = map[string]RecordTypeExtended{
@@ -35,6 +77,27 @@ var EnumValuesRecordTypeExtended = map[string]RecordTypeExtended{
 	"CVR":  RecordTypeExtendedCVR,
 	"PVN":  RecordTypeExtendedPVN,
 	"SBD":  RecordTypeExtendedSBD,
+	"APR":  RecordTypeExtendedAPR,
+	"ASG":  RecordTypeExtendedASG,
+	"DAV":  RecordTypeExtendedDAV,
+	"DCL":  RecordTypeExtendedDCL,
+	"ERM":  RecordTypeExtendedERM,
+	"FIL":  RecordTypeExtendedFIL,
+	"LFV":  RecordTypeExtendedLFV,
+	"MDE":  RecordTypeExtendedMDE,
+	"MPL":  RecordTypeExtendedMPL,
+	"NEV":  RecordTypeExtendedNEV,
+	"NHS":  RecordTypeExtendedNHS,
+	"OIL":  RecordTypeExtendedOIL,
+	"PNV":  RecordTypeExtendedPNV,
+	"PPS":  RecordTypeExtendedPPS,
+	"RND":  RecordTypeExtendedRND,
+	"SBC":  RecordTypeExtendedSBC,
+	"SCR":  RecordTypeExtendedSCR,
+	"SRG":  RecordTypeExtendedSRG,
+	"TBP":  RecordTypeExtendedTBP,
+	"WHA":  RecordTypeExtendedWHA,
+	"XMT":  RecordTypeExtendedXMT,
 }
 
 func (v RecordTypeExtended) String() string {

@@ -209,7 +209,7 @@ def IntegerParameterTypeCreateUNITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNITSVector(builder, data):
-    IntegerParameterTypeCreateUNITSVector(builder, data)
+    return IntegerParameterTypeCreateUNITSVector(builder, data)
 
 def IntegerParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
@@ -239,7 +239,7 @@ def IntegerParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_ALARMSVector(builder, data):
-    IntegerParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+    return IntegerParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def IntegerParameterTypeAddVALID_MIN(builder, VALID_MIN):
     builder.PrependInt64Slot(7, VALID_MIN, 0)

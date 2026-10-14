@@ -52,7 +52,7 @@ public enum encryptionType: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Transponder Channel
-public struct commsChannel: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct commsChannel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -154,7 +154,7 @@ public struct commsChannel: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Transponder
-public struct commsTransponder: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct commsTransponder: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -287,7 +287,7 @@ public struct commsTransponder: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Communications Payload
-public struct CMS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

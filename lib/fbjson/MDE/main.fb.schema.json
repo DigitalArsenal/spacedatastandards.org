@@ -1,0 +1,2462 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ElementSet",
+        "Ephemeris",
+        "Observation"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "ElementSet": {
+          "value": 1,
+          "description": "Element sets of a catalog"
+        },
+        "Ephemeris": {
+          "value": 2,
+          "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+        },
+        "Observation": {
+          "value": 3,
+          "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        }
+      }
+    },
+    "pvnLicenseClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Reproducible",
+        "CiteOnly",
+        "ShareAlike",
+        "NonCommercial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated. Never a grant: treated as CiteOnly."
+        },
+        "Reproducible": {
+          "value": 1,
+          "description": "The records may be republished, with the credit the terms ask."
+        },
+        "CiteOnly": {
+          "value": 2,
+          "description": "The records are computed on and cited, never republished."
+        },
+        "ShareAlike": {
+          "value": 3,
+          "description": "The records may be republished under the same terms, which every derived record carries."
+        },
+        "NonCommercial": {
+          "value": 4,
+          "description": "The records may be republished for non-commercial use only."
+        }
+      }
+    },
+    "maneuverStatus": {
+      "type": "string",
+      "enum": [
+        "DETECTED",
+        "CONFIRMED",
+        "PREDICTED",
+        "PLANNED",
+        "EXECUTED",
+        "CANCELLED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DETECTED": {
+          "value": 0
+        },
+        "CONFIRMED": {
+          "value": 1
+        },
+        "PREDICTED": {
+          "value": 2
+        },
+        "PLANNED": {
+          "value": 3
+        },
+        "EXECUTED": {
+          "value": 4
+        },
+        "CANCELLED": {
+          "value": 5
+        },
+        "UNKNOWN": {
+          "value": 6
+        }
+      }
+    },
+    "maneuverCharacterization": {
+      "type": "string",
+      "enum": [
+        "IN_PLANE",
+        "OUT_OF_PLANE",
+        "COMBINED",
+        "STATION_KEEPING",
+        "ORBIT_RAISING",
+        "ORBIT_LOWERING",
+        "PHASING",
+        "DEORBIT",
+        "COLLISION_AVOIDANCE",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "IN_PLANE": {
+          "value": 0
+        },
+        "OUT_OF_PLANE": {
+          "value": 1
+        },
+        "COMBINED": {
+          "value": 2
+        },
+        "STATION_KEEPING": {
+          "value": 3
+        },
+        "ORBIT_RAISING": {
+          "value": 4
+        },
+        "ORBIT_LOWERING": {
+          "value": 5
+        },
+        "PHASING": {
+          "value": 6
+        },
+        "DEORBIT": {
+          "value": 7
+        },
+        "COLLISION_AVOIDANCE": {
+          "value": 8
+        },
+        "UNKNOWN": {
+          "value": 9
+        }
+      }
+    },
+    "mdeDetector": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Crossing",
+        "LevelShift",
+        "RateChange",
+        "Combined"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "Crossing": {
+          "value": 1,
+          "description": "D1: in-track and cross-track velocity step at the crossing of the predictions of consecutive element sets, against a robust threshold."
+        },
+        "LevelShift": {
+          "value": 2,
+          "description": "D2: GLR test for a step in the mean-motion level (in-track) or the orbit plane (cross-track)."
+        },
+        "RateChange": {
+          "value": 3,
+          "description": "D3: GLR test for a change in the long-term rate of the mean-motion level (decay or thrusting)."
+        },
+        "Combined": {
+          "value": 4,
+          "description": "C: the combination of tests, merged within a time tolerance."
+        }
+      }
+    },
+    "mdeRunStatus": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "NeedsPropagation",
+        "Detected"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "NeedsPropagation": {
+          "value": 1,
+          "description": "Propagations are needed first (PRW window requests were emitted)."
+        },
+        "Detected": {
+          "value": 2,
+          "description": "Detection ran."
+        }
+      }
+    },
+    "mdeObjectStatus": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Screened",
+        "InsufficientHistory"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "Screened": {
+          "value": 1,
+          "description": "Screened by the enabled detectors."
+        },
+        "InsufficientHistory": {
+          "value": 2,
+          "description": "Too short a history to screen (DETAIL says why)."
+        }
+      }
+    },
+    "mdeTimeBasis": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Crossing",
+        "Gap"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "Crossing": {
+          "value": 1,
+          "description": "The crossing of the predictions around the change."
+        },
+        "Gap": {
+          "value": 2,
+          "description": "The middle of the gap between the element sets around the change."
+        }
+      }
+    },
+    "mdeComparisonMode": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "NoComparison",
+        "Overlap",
+        "Adjacent",
+        "WithinVersion"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0
+        },
+        "NoComparison": {
+          "value": 1,
+          "description": "No comparable revolution (DETAIL says why)."
+        },
+        "Overlap": {
+          "value": 2,
+          "description": "The versions overlap in time."
+        },
+        "Adjacent": {
+          "value": 3,
+          "description": "The versions are adjacent; the comparison spans the gap."
+        },
+        "WithinVersion": {
+          "value": 4,
+          "description": "A change inside one version."
+        }
+      }
+    },
+    "PVN": {
+      "type": "object",
+      "description": "Product Provenance",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_KIND": {
+          "$ref": "#/definitions/pvnSourceKind",
+          "description": "What kind of data the source supplies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "ElementSet": {
+              "value": 1,
+              "description": "Element sets of a catalog"
+            },
+            "Ephemeris": {
+              "value": 2,
+              "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            "Observation": {
+              "value": 3,
+              "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/pvnLicenseClass",
+          "description": "What the source's terms permit for the product.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated. Never a grant: treated as CiteOnly."
+            },
+            "Reproducible": {
+              "value": 1,
+              "description": "The records may be republished, with the credit the terms ask."
+            },
+            "CiteOnly": {
+              "value": 2,
+              "description": "The records are computed on and cited, never republished."
+            },
+            "ShareAlike": {
+              "value": 3,
+              "description": "The records may be republished under the same terms, which every derived record carries."
+            },
+            "NonCommercial": {
+              "value": 4,
+              "description": "The records may be republished for non-commercial use only."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINEAGE": {
+          "type": "string",
+          "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "mnvOrbitalState": {
+      "type": "object",
+      "description": "Pre/post-maneuver orbital state",
+      "properties": {
+        "ID_ELSET": {
+          "type": "string",
+          "description": "Element set identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ELSET": {
+          "type": "string",
+          "description": "Element set data reference",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_STATE_VECTOR": {
+          "type": "string",
+          "description": "State vector identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE_VECTOR": {
+          "type": "string",
+          "description": "State vector data reference",
+          "x-flatbuffer-type": "string"
+        },
+        "POS_X": {
+          "type": "number",
+          "description": "Position X (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Y": {
+          "type": "number",
+          "description": "Position Y (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Z": {
+          "type": "number",
+          "description": "Position Z (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_X": {
+          "type": "number",
+          "description": "Velocity X (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Y": {
+          "type": "number",
+          "description": "Velocity Y (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Z": {
+          "type": "number",
+          "description": "Velocity Z (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "RADIATION_PRESS_COEFF": {
+          "type": "number",
+          "description": "Radiation pressure coefficient (Cr)",
+          "x-flatbuffer-type": "double"
+        },
+        "BALLISTIC_COEFF": {
+          "type": "number",
+          "description": "Ballistic coefficient (m^2/kg)",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "description": "Apogee altitude (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "description": "Perigee altitude (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD": {
+          "type": "number",
+          "description": "Orbital period (minutes)",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN": {
+          "type": "number",
+          "description": "Right ascension of ascending node (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "SMA": {
+          "type": "number",
+          "description": "Semi-major axis (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "GEO_LONGITUDE": {
+          "type": "number",
+          "description": "GEO longitude (degrees east)",
+          "x-flatbuffer-type": "double"
+        },
+        "DRIFT_RATE": {
+          "type": "number",
+          "description": "Longitude drift rate (degrees/day)",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_U": {
+          "type": "number",
+          "description": "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_V": {
+          "type": "number",
+          "description": "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_W": {
+          "type": "number",
+          "description": "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MNV": {
+      "type": "object",
+      "description": "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/maneuverStatus",
+          "description": "Maneuver status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DETECTED": {
+              "value": 0
+            },
+            "CONFIRMED": {
+              "value": 1
+            },
+            "PREDICTED": {
+              "value": 2
+            },
+            "PLANNED": {
+              "value": 3
+            },
+            "EXECUTED": {
+              "value": 4
+            },
+            "CANCELLED": {
+              "value": 5
+            },
+            "UNKNOWN": {
+              "value": 6
+            }
+          }
+        },
+        "CHARACTERIZATION": {
+          "$ref": "#/definitions/maneuverCharacterization",
+          "description": "Maneuver characterization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IN_PLANE": {
+              "value": 0
+            },
+            "OUT_OF_PLANE": {
+              "value": 1
+            },
+            "COMBINED": {
+              "value": 2
+            },
+            "STATION_KEEPING": {
+              "value": 3
+            },
+            "ORBIT_RAISING": {
+              "value": 4
+            },
+            "ORBIT_LOWERING": {
+              "value": 5
+            },
+            "PHASING": {
+              "value": 6
+            },
+            "DEORBIT": {
+              "value": 7
+            },
+            "COLLISION_AVOIDANCE": {
+              "value": 8
+            },
+            "UNKNOWN": {
+              "value": 9
+            }
+          }
+        },
+        "CHARACTERIZATION_UNC": {
+          "type": "number",
+          "description": "Characterization uncertainty (0-1)",
+          "x-flatbuffer-type": "double"
+        },
+        "REPORT_TIME": {
+          "type": "string",
+          "description": "Detection report time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_START_TIME": {
+          "type": "string",
+          "description": "Maneuver start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_END_TIME": {
+          "type": "string",
+          "description": "Maneuver end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TOTAL_BURN_TIME": {
+          "type": "number",
+          "description": "Total burn time (seconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "OD_FIT_END_TIME": {
+          "type": "string",
+          "description": "OD fit end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "description": "Detecting sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "description": "Original sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "description": "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines.",
+          "x-flatbuffer-type": "string"
+        },
+        "UCT": {
+          "type": "boolean",
+          "description": "True if object is uncorrelated",
+          "x-flatbuffer-type": "bool"
+        },
+        "MANEUVER_UNC": {
+          "type": "number",
+          "description": "Maneuver detection uncertainty (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL": {
+          "type": "number",
+          "description": "Total delta-V magnitude (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL_U": {
+          "type": "number",
+          "description": "Delta-V along U, radial (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL_V": {
+          "type": "number",
+          "description": "Delta-V along V, in-track (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_VEL_W": {
+          "type": "number",
+          "description": "Delta-V along W, cross-track (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS": {
+          "type": "number",
+          "description": "Total delta position (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_U": {
+          "type": "number",
+          "description": "Delta position along U, radial (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_V": {
+          "type": "number",
+          "description": "Delta position along V, in-track (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_W": {
+          "type": "number",
+          "description": "Delta position along W, cross-track (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_MASS": {
+          "type": "number",
+          "description": "Propellant mass consumed (kg)",
+          "x-flatbuffer-type": "double"
+        },
+        "PRE_EVENT": {
+          "$ref": "#/definitions/mnvOrbitalState",
+          "description": "Pre-maneuver orbital state",
+          "x-flatbuffer-type": "mnvOrbitalState"
+        },
+        "POST_EVENT": {
+          "$ref": "#/definitions/mnvOrbitalState",
+          "description": "Post-maneuver orbital state",
+          "x-flatbuffer-type": "mnvOrbitalState"
+        },
+        "POST_MASS": {
+          "type": "number",
+          "description": "Post-maneuver mass (kg)",
+          "x-flatbuffer-type": "double"
+        },
+        "POST_AREA": {
+          "type": "number",
+          "description": "Post-maneuver cross-sectional area (m^2)",
+          "x-flatbuffer-type": "double"
+        },
+        "COV": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "6x6 covariance matrix (upper triangle, row-major)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "NUM_OBS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of observations used",
+          "x-flatbuffer-type": "uint32"
+        },
+        "STATE_MODEL": {
+          "type": "string",
+          "description": "State model used",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE_MODEL_VERSION": {
+          "type": "number",
+          "description": "State model version",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_ACCEL_POINTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of acceleration profile points",
+          "x-flatbuffer-type": "uint16"
+        },
+        "MNVR_ACCEL_TIMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Acceleration profile times (ISO 8601)",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MNVR_ACCELS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry",
+          "x-flatbuffer-type": "[double]"
+        },
+        "MNVR_ACCEL_UNCS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Acceleration uncertainties (km/s^2)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "description": "Event descriptor",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "description": "Algorithm used for detection",
+          "x-flatbuffer-type": "string"
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Associated tags",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SOURCED_DATA": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SOURCED_DATA_TYPES": {
+          "type": "string",
+          "description": "Sourced data types",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "description": "Transaction identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Where the maneuver's data comes from and the terms it travels under.",
+          "x-flatbuffer-type": "PVN"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEDetectOptions": {
+      "type": "object",
+      "description": "Detection settings. Every field has its default.",
+      "properties": {
+        "DETECTORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/mdeDetector"
+          },
+          "description": "Detectors enabled; empty = Crossing and LevelShift, combined.",
+          "x-flatbuffer-type": "[mdeDetector]"
+        },
+        "REPORT_TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Report time of the emitted maneuvers, Unix ms; 0 = the ephemeris\ncreation date.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PROPAGATOR_PORT_ID": {
+          "type": "string",
+          "description": "Port of the propagator that answers window requests; empty = default.",
+          "x-flatbuffer-type": "string"
+        },
+        "REPORT_PAIRS": {
+          "type": "boolean",
+          "description": "Report every crossing pair.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REPORT_LEVELS": {
+          "type": "boolean",
+          "description": "Report the level series.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "K": {
+          "type": "number",
+          "description": "D1 threshold multiple of the robust scale.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "8"
+        },
+        "FLOOR_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "D1 in-track threshold floor, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.08"
+        },
+        "FLOOR_CROSS_TRACK_M_S": {
+          "type": "number",
+          "description": "D1 cross-track threshold floor, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "MEDIAN_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Element sets in the running median.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "3"
+        },
+        "SCALE_WINDOW_PAIRS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Pairs in the robust scale window.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "100"
+        },
+        "GRID_STEP_S": {
+          "type": "number",
+          "description": "Sampling step of the crossing search, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "60"
+        },
+        "NEIGHBOUR_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Neighbouring element sets each set is propagated across.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "2"
+        },
+        "GLR_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "D2 element sets per GLR window.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "8"
+        },
+        "GLR_SPAN_DAYS": {
+          "type": "number",
+          "description": "D2 GLR window span, days.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "3"
+        },
+        "GLR_H": {
+          "type": "number",
+          "description": "D2 GLR threshold.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "10"
+        },
+        "GLR_FLOOR_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "D2 in-track sigma floor, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.04"
+        },
+        "GLR_FLOOR_PLANE_RAD": {
+          "type": "number",
+          "description": "D2 plane sigma floor, rad.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.0004"
+        },
+        "LT_H": {
+          "type": "number",
+          "description": "D3 GLR threshold.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "6"
+        },
+        "LT_FLOOR_M_S_PER_DAY": {
+          "type": "number",
+          "description": "D3 rate sigma floor, m/s per day.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.05"
+        },
+        "LT_SPAN_DAYS": {
+          "type": "number",
+          "description": "D3 window span, days.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "5"
+        },
+        "LT_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "D3 element sets per window.",
+          "x-flatbuffer-type": "uint32",
+          "x-flatbuffer-default": "20"
+        },
+        "MERGE_HOURS": {
+          "type": "number",
+          "description": "Events of different detectors within this time merge, hours.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "12"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDECrossingPair": {
+      "type": "object",
+      "description": "One pair of consecutive element sets, compared at the crossing of their\npredictions.",
+      "properties": {
+        "SPAN_START_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Epoch of the earlier set, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SPAN_STOP_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Epoch of the later set, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "CROSSING_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Time of closest approach of the two predictions, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "CROSSING_AT_EDGE": {
+          "type": "boolean",
+          "description": "True when the crossing is at an end of the span (no interior minimum).",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEPARATION_KM": {
+          "type": "number",
+          "description": "Separation at the crossing, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_SMA_KM": {
+          "type": "number",
+          "description": "Semi-major axis change, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "IN_TRACK_M_S": {
+          "type": "number",
+          "description": "In-track velocity change at the crossing, m/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "PLANE_M_S": {
+          "type": "number",
+          "description": "Plane (cross-track) velocity change, m/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "STEP_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "D1 in-track step after the running median, m/s; NaN = not screened.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STEP_PLANE_M_S": {
+          "type": "number",
+          "description": "D1 plane step, m/s; NaN = not screened.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "THRESHOLD_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "D1 in-track threshold, m/s; NaN = not screened.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "THRESHOLD_PLANE_M_S": {
+          "type": "number",
+          "description": "D1 plane threshold, m/s; NaN = not screened.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CANDIDATE": {
+          "type": "boolean",
+          "description": "True when D1 found a candidate here.",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDELevel": {
+      "type": "object",
+      "description": "The level of one element set in the GLR series.",
+      "properties": {
+        "SET_EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Epoch of the set, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SMA_KM": {
+          "type": "number",
+          "description": "Semi-major axis, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "LEVEL_M_S": {
+          "type": "number",
+          "description": "Mean-motion level as an in-track speed, m/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_M_S": {
+          "type": "number",
+          "description": "Its sigma, m/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "PLANE_M_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Orbit-plane vector scaled to speed, m/s (3 values).",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PLANE_SIGMA_M_S": {
+          "type": "number",
+          "description": "Its sigma, m/s.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEEvidence": {
+      "type": "object",
+      "description": "The statistic behind one event. A combined event lists the evidence of\neach detector in COMPONENTS.",
+      "properties": {
+        "DETECTOR": {
+          "$ref": "#/definitions/mdeDetector",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "Crossing": {
+              "value": 1,
+              "description": "D1: in-track and cross-track velocity step at the crossing of the predictions of consecutive element sets, against a robust threshold."
+            },
+            "LevelShift": {
+              "value": 2,
+              "description": "D2: GLR test for a step in the mean-motion level (in-track) or the orbit plane (cross-track)."
+            },
+            "RateChange": {
+              "value": 3,
+              "description": "D3: GLR test for a change in the long-term rate of the mean-motion level (decay or thrusting)."
+            },
+            "Combined": {
+              "value": 4,
+              "description": "C: the combination of tests, merged within a time tolerance."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Time the component detector gave, Unix ms (for a combined event's\ncomponents); 0 = the event's.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PAIR_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "D1: index of the crossing pair; -1 = none.",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "STEP_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "D1: step and threshold values, m/s; NaN = not computed.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STEP_PLANE_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "THRESHOLD_IN_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "THRESHOLD_PLANE_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CROSSING_AT_EDGE": {
+          "type": "boolean",
+          "description": "D1: crossing at an end of the span.",
+          "x-flatbuffer-type": "bool"
+        },
+        "SPAN_START_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Span (D1) or gap (D2, D3) start and stop, Unix ms; 0 = none.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SPAN_STOP_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "GLR_STATISTIC": {
+          "type": "number",
+          "description": "D2/D3: GLR statistic of the in-track (or rate) test; NaN = not computed.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STEP_M_S": {
+          "type": "number",
+          "description": "D2: level step, m/s, and its standard deviation.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STEP_SD_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SIGMA_M_S": {
+          "type": "number",
+          "description": "D2: sigma of the levels, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TREND_M_S_PER_DAY": {
+          "type": "number",
+          "description": "D2: level trend removed, m/s per day.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "OLD_LEVEL_SET_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "D2: epochs of the last old-level and first new-level sets, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "NEW_LEVEL_SET_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "TIME_BASIS": {
+          "$ref": "#/definitions/mdeTimeBasis",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "Crossing": {
+              "value": 1,
+              "description": "The crossing of the predictions around the change."
+            },
+            "Gap": {
+              "value": 2,
+              "description": "The middle of the gap between the element sets around the change."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "PLANE_GLR_STATISTIC": {
+          "type": "number",
+          "description": "D2: GLR statistic of the plane test; NaN = not computed.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PLANE_STEP_M_S": {
+          "type": "number",
+          "description": "D2: plane step, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RATE_CHANGE_M_S_PER_DAY": {
+          "type": "number",
+          "description": "D3: change of the level rate, m/s per day, and its standard deviation.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RATE_CHANGE_SD": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "TREND_BEFORE_M_S_PER_DAY": {
+          "type": "number",
+          "description": "D3: rate before the change, m/s per day.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEEvidence"
+          },
+          "description": "C: the evidence of each component detector.",
+          "x-flatbuffer-type": "[MDEEvidence]"
+        },
+        "KEPT": {
+          "$ref": "#/definitions/mdeDetector",
+          "description": "C: the component whose time and size were kept.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "Crossing": {
+              "value": 1,
+              "description": "D1: in-track and cross-track velocity step at the crossing of the predictions of consecutive element sets, against a robust threshold."
+            },
+            "LevelShift": {
+              "value": 2,
+              "description": "D2: GLR test for a step in the mean-motion level (in-track) or the orbit plane (cross-track)."
+            },
+            "RateChange": {
+              "value": 3,
+              "description": "D3: GLR test for a change in the long-term rate of the mean-motion level (decay or thrusting)."
+            },
+            "Combined": {
+              "value": 4,
+              "description": "C: the combination of tests, merged within a time tolerance."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEEvent": {
+      "type": "object",
+      "description": "One event a detector raised.",
+      "properties": {
+        "DETECTOR": {
+          "$ref": "#/definitions/mdeDetector",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "Crossing": {
+              "value": 1,
+              "description": "D1: in-track and cross-track velocity step at the crossing of the predictions of consecutive element sets, against a robust threshold."
+            },
+            "LevelShift": {
+              "value": 2,
+              "description": "D2: GLR test for a step in the mean-motion level (in-track) or the orbit plane (cross-track)."
+            },
+            "RateChange": {
+              "value": 3,
+              "description": "D3: GLR test for a change in the long-term rate of the mean-motion level (decay or thrusting)."
+            },
+            "Combined": {
+              "value": 4,
+              "description": "C: the combination of tests, merged within a time tolerance."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Event time, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "CHARACTERIZATION": {
+          "$ref": "#/definitions/maneuverCharacterization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IN_PLANE": {
+              "value": 0
+            },
+            "OUT_OF_PLANE": {
+              "value": 1
+            },
+            "COMBINED": {
+              "value": 2
+            },
+            "STATION_KEEPING": {
+              "value": 3
+            },
+            "ORBIT_RAISING": {
+              "value": 4
+            },
+            "ORBIT_LOWERING": {
+              "value": 5
+            },
+            "PHASING": {
+              "value": 6
+            },
+            "DEORBIT": {
+              "value": 7
+            },
+            "COLLISION_AVOIDANCE": {
+              "value": 8
+            },
+            "UNKNOWN": {
+              "value": 9
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "IN_TRACK_M_S": {
+          "type": "number",
+          "description": "In-track delta-v, m/s; 0 unless its test fired.",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_TRACK_M_S": {
+          "type": "number",
+          "description": "Cross-track delta-v, m/s; 0 unless its test fired.",
+          "x-flatbuffer-type": "double"
+        },
+        "IN_TRACK_FIRED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "CROSS_TRACK_FIRED": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool"
+        },
+        "RAW_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "In-track and cross-track estimates before the firing rule, m/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "RAW_CROSS_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_SMA_KM": {
+          "type": "number",
+          "description": "Semi-major axis change, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "SEPARATION_KM": {
+          "type": "number",
+          "description": "Separation at the crossing, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_FROM_CROSSING": {
+          "type": "boolean",
+          "description": "True when TIME_MS is a crossing time (else a gap middle).",
+          "x-flatbuffer-type": "bool"
+        },
+        "BLOCK_BEFORE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Indices of the history blocks (element sets or versions) before and\nafter the event.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "BLOCK_AFTER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "EVIDENCE": {
+          "$ref": "#/definitions/MDEEvidence",
+          "x-flatbuffer-type": "MDEEvidence"
+        },
+        "ACCEL_CHANGE_M_S2": {
+          "type": "number",
+          "description": "D3: change of along-track acceleration, m/s**2; NaN = not computed.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MNV_ID": {
+          "type": "string",
+          "description": "ID of the $MNV record emitted for the event; empty when not emitted.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEDuplicateEpoch": {
+      "type": "object",
+      "description": "An element set dropped as a republication of another.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Epoch, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "KEPT_RECORD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "0-based input record kept and dropped.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DROPPED_RECORD": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDERefusedSet": {
+      "type": "object",
+      "description": "An element set that could not be used.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "SET_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "0-based input record; -1 = not applicable.",
+          "x-flatbuffer-type": "int32",
+          "x-flatbuffer-default": "-1"
+        },
+        "REASON": {
+          "type": "string",
+          "description": "Reason, e.g. \"a single element set\" or the propagator's refusal text.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEObjectDetection": {
+      "type": "object",
+      "description": "One object screened.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "description": "Object key: \"NORAD:<n>\", else OBJECT_ID, else OBJECT_NAME.",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "ELEMENT_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Element sets in its history.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FRAME": {
+          "type": "string",
+          "description": "Frame the history was screened in, e.g. \"TEMEOFDATE\", \"EME2000\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/mdeObjectStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "Screened": {
+              "value": 1,
+              "description": "Screened by the enabled detectors."
+            },
+            "InsufficientHistory": {
+              "value": 2,
+              "description": "Too short a history to screen (DETAIL says why)."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "DETAIL": {
+          "type": "string",
+          "description": "Why the history was insufficient; empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "PAIRS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDECrossingPair"
+          },
+          "description": "Crossing pairs (when REPORT_PAIRS).",
+          "x-flatbuffer-type": "[MDECrossingPair]"
+        },
+        "LEVELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDELevel"
+          },
+          "description": "Level series (when REPORT_LEVELS).",
+          "x-flatbuffer-type": "[MDELevel]"
+        },
+        "DETECTOR_EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEEvent"
+          },
+          "description": "Every event each enabled detector raised, before combining.",
+          "x-flatbuffer-type": "[MDEEvent]"
+        },
+        "EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEEvent"
+          },
+          "description": "The events emitted (one $MNV each).",
+          "x-flatbuffer-type": "[MDEEvent]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEDetectReport": {
+      "type": "object",
+      "description": "Result of a detection run.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/mdeRunStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "NeedsPropagation": {
+              "value": 1,
+              "description": "Propagations are needed first (PRW window requests were emitted)."
+            },
+            "Detected": {
+              "value": 2,
+              "description": "Detection ran."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "QUERIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Window requests emitted (NeedsPropagation).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DUPLICATE_EPOCHS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEDuplicateEpoch"
+          },
+          "x-flatbuffer-type": "[MDEDuplicateEpoch]"
+        },
+        "OPTIONS": {
+          "$ref": "#/definitions/MDEDetectOptions",
+          "description": "The options used, defaults filled in.",
+          "x-flatbuffer-type": "MDEDetectOptions"
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEObjectDetection"
+          },
+          "x-flatbuffer-type": "[MDEObjectDetection]"
+        },
+        "OBJECTS_SCREENED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFUSED_SETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDERefusedSet"
+          },
+          "x-flatbuffer-type": "[MDERefusedSet]"
+        },
+        "DETECTIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Events emitted over all objects.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDECompareOptions": {
+      "type": "object",
+      "description": "Settings of a comparison of ephemeris versions.",
+      "properties": {
+        "REPORT_TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Report time, Unix ms; 0 = from the versions.",
+          "x-flatbuffer-type": "int64"
+        },
+        "WITHIN_VERSION": {
+          "type": "boolean",
+          "description": "Also look for changes inside one version.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MARGIN_S": {
+          "type": "number",
+          "description": "Margin around a planned ignition, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "600"
+        },
+        "POST_START_AFTER_S": {
+          "type": "number",
+          "description": "The post-burn version must start this long after ignition, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "3600"
+        },
+        "EXECUTED_FRACTION": {
+          "type": "number",
+          "description": "Fraction of the planned change that marks EXECUTED.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.5"
+        },
+        "CANCELLED_FRACTION": {
+          "type": "number",
+          "description": "Fraction below which the plan is CANCELLED (<= EXECUTED_FRACTION).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.25"
+        },
+        "UNPLANNED_THRESHOLD_KM": {
+          "type": "number",
+          "description": "Semi-major axis change that flags an unplanned change, km; NaN = off.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEVersionChange": {
+      "type": "object",
+      "description": "One comparison of two versions (or one version with itself).",
+      "properties": {
+        "OLDER": {
+          "type": "string",
+          "description": "Older and newer version descriptions; WITHIN names the version for a\nWithinVersion change.",
+          "x-flatbuffer-type": "string"
+        },
+        "NEWER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WITHIN": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODE": {
+          "$ref": "#/definitions/mdeComparisonMode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0
+            },
+            "NoComparison": {
+              "value": 1,
+              "description": "No comparable revolution (DETAIL says why)."
+            },
+            "Overlap": {
+              "value": 2,
+              "description": "The versions overlap in time."
+            },
+            "Adjacent": {
+              "value": 3,
+              "description": "The versions are adjacent; the comparison spans the gap."
+            },
+            "WithinVersion": {
+              "value": 4,
+              "description": "A change inside one version."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "DETAIL": {
+          "type": "string",
+          "description": "Why there was no comparison; empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_START_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Window compared, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "WINDOW_STOP_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "DELTA_SMA_KM": {
+          "type": "number",
+          "description": "Semi-major axis change, km.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "IN_TRACK_M_S": {
+          "type": "number",
+          "description": "In-track and cross-track equivalent delta-v, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CROSS_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GAP_S": {
+          "type": "number",
+          "description": "Gap between adjacent versions, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEPlannedCheck": {
+      "type": "object",
+      "description": "One planned maneuver checked against the versions.",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "The plan's maneuver ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIG_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Planned ignition, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PLANNED_M_S": {
+          "type": "number",
+          "description": "Planned delta-v, m/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/maneuverStatus",
+          "description": "EXECUTED, CANCELLED or UNKNOWN.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DETECTED": {
+              "value": 0
+            },
+            "CONFIRMED": {
+              "value": 1
+            },
+            "PREDICTED": {
+              "value": 2
+            },
+            "PLANNED": {
+              "value": 3
+            },
+            "EXECUTED": {
+              "value": 4
+            },
+            "CANCELLED": {
+              "value": 5
+            },
+            "UNKNOWN": {
+              "value": 6
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "GROUP_START_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Group of plans checked together, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "GROUP_STOP_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "DETAIL": {
+          "type": "string",
+          "description": "Why it could not be decided; empty otherwise.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRE": {
+          "type": "string",
+          "description": "Pre-burn and post-burn version descriptions; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "POST": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "WINDOW_START_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Window compared, Unix ms.",
+          "x-flatbuffer-type": "int64"
+        },
+        "WINDOW_STOP_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "MODELED_DELTA_SMA_KM": {
+          "type": "number",
+          "description": "Semi-major axis change the plan models, km.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "POST_MINUS_PRE_SMA_KM": {
+          "type": "number",
+          "description": "Post-burn minus pre-burn semi-major axis, km.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EXECUTED_DELTA_SMA_KM": {
+          "type": "number",
+          "description": "Executed semi-major axis change, km.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EXECUTED_IN_TRACK_M_S": {
+          "type": "number",
+          "description": "Executed in-track and cross-track delta-v, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EXECUTED_CROSS_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MODELED_CROSS_TRACK_M_S": {
+          "type": "number",
+          "description": "Cross-track delta-v the plan models, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "POST_MINUS_PRE_CROSS_TRACK_M_S": {
+          "type": "number",
+          "description": "Post minus pre cross-track, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEObjectComparison": {
+      "type": "object",
+      "description": "Comparison results for one object.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "VERSIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Versions read.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CHANGES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEVersionChange"
+          },
+          "x-flatbuffer-type": "[MDEVersionChange]"
+        },
+        "PLANNED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEPlannedCheck"
+          },
+          "x-flatbuffer-type": "[MDEPlannedCheck]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDECompareReport": {
+      "type": "object",
+      "description": "Result of comparing ephemeris versions.",
+      "properties": {
+        "OPTIONS": {
+          "$ref": "#/definitions/MDECompareOptions",
+          "x-flatbuffer-type": "MDECompareOptions"
+        },
+        "OBJECTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEObjectComparison"
+          },
+          "x-flatbuffer-type": "[MDEObjectComparison]"
+        },
+        "EXECUTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CANCELLED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNDECIDED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "UNPLANNED_CHANGE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEObjectSpan": {
+      "type": "object",
+      "description": "A time span of one object.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FROM_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "TO_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEScoreOptions": {
+      "type": "object",
+      "description": "Settings of scoring detections against known maneuvers.",
+      "properties": {
+        "BEFORE_S": {
+          "type": "number",
+          "description": "A detection up to this long before a known maneuver matches, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "21600"
+        },
+        "AFTER_S": {
+          "type": "number",
+          "description": "A detection up to this long after a known maneuver matches, s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "129600"
+        },
+        "BINS_M_S": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Delta-v bin edges for recall, increasing, m/s; empty = 0.05, 0.2, 1.0.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "EXPLAINED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEObjectSpan"
+          },
+          "description": "Spans where an unmatched detection is explained (not a false alarm).",
+          "x-flatbuffer-type": "[MDEObjectSpan]"
+        },
+        "ASSESSED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEObjectSpan"
+          },
+          "description": "Spans where truth is complete (false alarms count only here).",
+          "x-flatbuffer-type": "[MDEObjectSpan]"
+        },
+        "SPANS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEObjectSpan"
+          },
+          "description": "Spans of observation of each object (object-years).",
+          "x-flatbuffer-type": "[MDEObjectSpan]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEDistribution": {
+      "type": "object",
+      "description": "Summary of a distribution.",
+      "properties": {
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "MEDIAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "P10": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "P90": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDERecallBin": {
+      "type": "object",
+      "description": "Recall in one delta-v bin.",
+      "properties": {
+        "FROM_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TO_M_S": {
+          "type": "number",
+          "description": "Upper edge, m/s; +Infinity = open.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "inf"
+        },
+        "TRUTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DETECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "RECALL": {
+          "type": "number",
+          "description": "Recall, 0 to 1; NaN when TRUTH is 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WILSON95_LOW": {
+          "type": "number",
+          "description": "Wilson 95 % interval; NaN when TRUTH is 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WILSON95_HIGH": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEScoreSummary": {
+      "type": "object",
+      "description": "Scoring summary.",
+      "properties": {
+        "TRUTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Known maneuvers.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EVENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Detections scored.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DETECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Known maneuvers detected.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RECALL": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WILSON95_LOW": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "WILSON95_HIGH": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "BY_DELTA_V": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDERecallBin"
+          },
+          "x-flatbuffer-type": "[MDERecallBin]"
+        },
+        "TIME_ERROR_ABS_S": {
+          "$ref": "#/definitions/MDEDistribution",
+          "description": "Absolute time error of matches, s; absent when none.",
+          "x-flatbuffer-type": "MDEDistribution"
+        },
+        "DV_RATIO": {
+          "$ref": "#/definitions/MDEDistribution",
+          "description": "Detected over known delta-v; absent when none.",
+          "x-flatbuffer-type": "MDEDistribution"
+        },
+        "IN_TRACK_RATIO": {
+          "$ref": "#/definitions/MDEDistribution",
+          "description": "Detected over known in-track delta-v; absent when none.",
+          "x-flatbuffer-type": "MDEDistribution"
+        },
+        "UNMATCHED_EVENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXPLAINED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Unmatched detections inside explained spans.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FALSE_ALARMS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_YEARS": {
+          "type": "number",
+          "description": "Object-years assessed.",
+          "x-flatbuffer-type": "double"
+        },
+        "FALSE_ALARMS_PER_OBJECT_YEAR": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDETruthMatch": {
+      "type": "object",
+      "description": "A known maneuver and the detection matched to it (if any).",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID": {
+          "type": "string",
+          "description": "The known maneuver's ID and time, Unix ms.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "DV_M_S": {
+          "type": "number",
+          "description": "Known delta-v and its in-track part, m/s.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "IN_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "description": "The matched detection's ID and time; empty and 0 for a miss.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "TIME_ERROR_S": {
+          "type": "number",
+          "description": "Detection minus truth time, s; NaN for a miss.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EVENT_DV_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EVENT_IN_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DV_RATIO": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "IN_TRACK_RATIO": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEUnmatchedEvent": {
+      "type": "object",
+      "description": "A detection matched to no known maneuver.",
+      "properties": {
+        "OBJECT_KEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "DV_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "IN_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CROSS_TRACK_M_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EXPLAINED": {
+          "type": "boolean",
+          "description": "Inside an explained span.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ASSESSED": {
+          "type": "boolean",
+          "description": "Inside an assessed span (a false alarm when not explained).",
+          "x-flatbuffer-type": "bool"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDEScoreReport": {
+      "type": "object",
+      "description": "Result of scoring detections.",
+      "properties": {
+        "OPTIONS": {
+          "$ref": "#/definitions/MDEScoreOptions",
+          "x-flatbuffer-type": "MDEScoreOptions"
+        },
+        "SUMMARY": {
+          "$ref": "#/definitions/MDEScoreSummary",
+          "x-flatbuffer-type": "MDEScoreSummary"
+        },
+        "MATCHES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDETruthMatch"
+          },
+          "x-flatbuffer-type": "[MDETruthMatch]"
+        },
+        "MISSED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDETruthMatch"
+          },
+          "description": "Known maneuvers not detected (EVENT fields empty).",
+          "x-flatbuffer-type": "[MDETruthMatch]"
+        },
+        "UNMATCHED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MDEUnmatchedEvent"
+          },
+          "x-flatbuffer-type": "[MDEUnmatchedEvent]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MDE": {
+      "type": "object",
+      "description": "Maneuver Detection Evidence - exactly one arm is set.",
+      "properties": {
+        "DETECT_OPTIONS": {
+          "$ref": "#/definitions/MDEDetectOptions",
+          "x-flatbuffer-type": "MDEDetectOptions"
+        },
+        "DETECT_REPORT": {
+          "$ref": "#/definitions/MDEDetectReport",
+          "x-flatbuffer-type": "MDEDetectReport"
+        },
+        "COMPARE_OPTIONS": {
+          "$ref": "#/definitions/MDECompareOptions",
+          "x-flatbuffer-type": "MDECompareOptions"
+        },
+        "COMPARE_REPORT": {
+          "$ref": "#/definitions/MDECompareReport",
+          "x-flatbuffer-type": "MDECompareReport"
+        },
+        "SCORE_OPTIONS": {
+          "$ref": "#/definitions/MDEScoreOptions",
+          "x-flatbuffer-type": "MDEScoreOptions"
+        },
+        "SCORE_REPORT": {
+          "$ref": "#/definitions/MDEScoreReport",
+          "x-flatbuffer-type": "MDEScoreReport"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/MDE",
+  "x-flatbuffer-root-type": "MDE",
+  "x-flatbuffer-file-identifier": "$MDE"
+}

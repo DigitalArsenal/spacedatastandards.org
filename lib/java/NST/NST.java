@@ -43,24 +43,33 @@ public final class NST extends com.google.flatbuffers.Table {
   public String SOURCE_PEER_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCE_PEER_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer SOURCE_PEER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Entity tag of this set, for conditional requests.
+   */
+  public String ETAG() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ETAGAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ETAGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
 
   public static int createNST(FlatBufferBuilder builder,
       int NODESOffset,
       long GENERATED_AT,
-      int SOURCE_PEER_IDOffset) {
-    builder.startTable(3);
+      int SOURCE_PEER_IDOffset,
+      int ETAGOffset) {
+    builder.startTable(4);
     NST.addGeneratedAt(builder, GENERATED_AT);
+    NST.addEtag(builder, ETAGOffset);
     NST.addSourcePeerId(builder, SOURCE_PEER_IDOffset);
     NST.addNodes(builder, NODESOffset);
     return NST.endNST(builder);
   }
 
-  public static void startNST(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startNST(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addNodes(FlatBufferBuilder builder, int NODESOffset) { builder.addOffset(0, NODESOffset, 0); }
   public static int createNodesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startNodesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addGeneratedAt(FlatBufferBuilder builder, long GENERATED_AT) { builder.addLong(1, GENERATED_AT, 0L); }
   public static void addSourcePeerId(FlatBufferBuilder builder, int SOURCE_PEER_IDOffset) { builder.addOffset(2, SOURCE_PEER_IDOffset, 0); }
+  public static void addEtag(FlatBufferBuilder builder, int ETAGOffset) { builder.addOffset(3, ETAGOffset, 0); }
   public static int endNST(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -137,7 +137,7 @@ def PLGPortManifestCreateACCEPTED_TYPE_SETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateACCEPTED_TYPE_SETSVector(builder, data):
-    PLGPortManifestCreateACCEPTED_TYPE_SETSVector(builder, data)
+    return PLGPortManifestCreateACCEPTED_TYPE_SETSVector(builder, data)
 
 def PLGPortManifestAddMIN_STREAMS(builder, MIN_STREAMS):
     builder.PrependUint16Slot(3, MIN_STREAMS, 1)

@@ -84,7 +84,7 @@ public enum shaderUniformType: UInt8, FlatbuffersVectorInitializable, Enum, Veri
 
 
 ///  Uniform descriptor — name + type + optional default value.
-public struct SHWUniform: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SHWUniform: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -144,7 +144,7 @@ public struct SHWUniform: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 
 ///  Compile request — one shader source (typically a fragment of a
 ///  larger stage) plus metadata for the host splice.
-public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SHWCompileRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -219,7 +219,7 @@ public struct SHWCompileRequest: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Compile response — whether the shader compiled, with diagnostics.
-public struct SHWCompileResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SHWCompileResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -288,7 +288,7 @@ public struct SHWCompileResponse: FlatBufferTable, FlatbuffersVectorInitializabl
 
 ///  Shader Wire envelope — carries either a compile request or a compile
 ///  response across the runtime boundary.
-public struct SHW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SHW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

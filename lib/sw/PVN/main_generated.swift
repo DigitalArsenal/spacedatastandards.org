@@ -51,7 +51,7 @@ public enum pvnLicenseClass: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Product Provenance
-public struct PVN: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PVN: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

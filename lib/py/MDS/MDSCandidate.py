@@ -175,7 +175,7 @@ def MDSCandidateCreateENCOUNTERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENCOUNTERSVector(builder, data):
-    MDSCandidateCreateENCOUNTERSVector(builder, data)
+    return MDSCandidateCreateENCOUNTERSVector(builder, data)
 
 def MDSCandidateAddDEEP_SPACE_MANEUVERS(builder, DEEP_SPACE_MANEUVERS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DEEP_SPACE_MANEUVERS), 0)
@@ -193,7 +193,7 @@ def MDSCandidateCreateDEEP_SPACE_MANEUVERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDEEP_SPACE_MANEUVERSVector(builder, data):
-    MDSCandidateCreateDEEP_SPACE_MANEUVERSVector(builder, data)
+    return MDSCandidateCreateDEEP_SPACE_MANEUVERSVector(builder, data)
 
 def MDSCandidateAddTOTAL_DELTA_V_KM_S(builder, TOTAL_DELTA_V_KM_S):
     builder.PrependFloat64Slot(3, TOTAL_DELTA_V_KM_S, 0.0)

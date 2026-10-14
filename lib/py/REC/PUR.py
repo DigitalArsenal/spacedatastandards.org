@@ -395,7 +395,7 @@ def PURCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateBUYER_ENCRYPTION_PUBKEYVector(builder, data):
-    PURCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data)
+    return PURCreateBUYER_ENCRYPTION_PUBKEYVector(builder, data)
 
 def PURAddPAYMENT_METHOD(builder, PAYMENT_METHOD):
     builder.PrependInt8Slot(5, PAYMENT_METHOD, 0)
@@ -453,7 +453,7 @@ def PURCreateBUYER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateBUYER_SIGNATUREVector(builder, data):
-    PURCreateBUYER_SIGNATUREVector(builder, data)
+    return PURCreateBUYER_SIGNATUREVector(builder, data)
 
 def PURAddTIMESTAMP(builder, TIMESTAMP):
     builder.PrependUint64Slot(12, TIMESTAMP, 0)
@@ -589,7 +589,7 @@ def PURCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    PURCreatePROVIDER_SIGNATUREVector(builder, data)
+    return PURCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def PUREnd(builder):
     return builder.EndObject()

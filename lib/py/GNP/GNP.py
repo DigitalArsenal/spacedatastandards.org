@@ -376,7 +376,7 @@ def GNPCreateALTERNATE_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALTERNATE_NAMESVector(builder, data):
-    GNPCreateALTERNATE_NAMESVector(builder, data)
+    return GNPCreateALTERNATE_NAMESVector(builder, data)
 
 def GNPAddLATITUDE(builder, LATITUDE):
     builder.PrependFloat64Slot(4, LATITUDE, 0.0)
@@ -466,7 +466,7 @@ def GNPCreateALTERNATE_COUNTRY_CODESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALTERNATE_COUNTRY_CODESVector(builder, data):
-    GNPCreateALTERNATE_COUNTRY_CODESVector(builder, data)
+    return GNPCreateALTERNATE_COUNTRY_CODESVector(builder, data)
 
 def GNPAddADMIN1_CODE(builder, ADMIN1_CODE):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(ADMIN1_CODE), 0)

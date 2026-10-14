@@ -401,7 +401,7 @@ def TBSCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    TBSCreateSOURCESVector(builder, data)
+    return TBSCreateSOURCESVector(builder, data)
 
 def TBSAddCONSENSUS(builder, CONSENSUS):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(CONSENSUS), 0)

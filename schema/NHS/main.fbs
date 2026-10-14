@@ -1,0 +1,113 @@
+// Hash: eb64d8ea4297d1b0733bbce82aa9235a4f5766197ea3e599b228e4bf34bda618
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Node Health Status (NHS)
+/// Description
+/// One snapshot of the health of a running node: a data-network peer, a
+/// ground-station computer, a flight computer or any service host. It reports
+/// how long the service has been running and in what state, how much storage
+/// it holds and has left, how busy its network interfaces are, and (when the
+/// host measures them) its processor and memory load, with a recent history of
+/// network throughput for trend displays.
+///
+/// NHS is the node's view of itself. The peers a node knows about are $NST;
+/// the records and ingest lanes a node holds are $NDS. A value the node did
+/// not measure is reported as not measured (HAS_* false, or 0 where the field
+/// says so), never as a confident zero.
+/// Service lifecycle state. Append new values only; never reorder or reuse
+/// existing values.
+enum nhsServiceState : ubyte {
+  /// Not reported.
+  Unknown,
+  /// Starting up; not yet serving.
+  Starting,
+  /// Serving normally.
+  Running,
+  /// Serving with reduced capability (a dependency is down, storage is
+  /// nearly full, a backlog is building).
+  Degraded,
+  /// Finishing work and refusing new work before stopping.
+  Draining,
+  /// Not serving.
+  Stopped,
+  /// Failed; operator action is required.
+  Failed
+}
+/// One sample of network throughput.
+table NHSThroughputSample {
+  /// Unix milliseconds of the sample.
+  TIME_MS: int64;
+  /// Total bytes received since the service started, at this sample.
+  TOTAL_IN_BYTES: uint64;
+  /// Total bytes sent since the service started, at this sample.
+  TOTAL_OUT_BYTES: uint64;
+  /// Receive rate at this sample, bytes per second.
+  RATE_IN_BPS: double;
+  /// Send rate at this sample, bytes per second.
+  RATE_OUT_BPS: double;
+}
+/// Node Health Status - one snapshot of a node's own health.
+table NHS {
+  /// Identifier of the node reporting (a peer identifier, host name or asset
+  /// identifier).
+  NODE_ID: string;
+  /// Unix milliseconds when the snapshot was taken.
+  GENERATED_AT_MS: int64;
+  /// Unix milliseconds when the service started; 0 = unknown.
+  STARTED_AT_MS: int64;
+  /// Seconds the service has been running.
+  UPTIME_S: uint64;
+  SERVICE_STATE: nhsServiceState = Unknown;
+  /// Operating mode the service runs in, as the service names it, e.g.
+  /// "full", "edge", "relay", "maintenance".
+  SERVICE_MODE: string;
+  /// Software name and version of the service, e.g. "sdn-server 1.4.2".
+  SOFTWARE_VERSION: string;
+
+  /// Location of the node's data store (a path or URI).
+  STORAGE_PATH: string;
+  /// Records the node's data store holds.
+  STORE_TOTAL_RECORDS: uint64;
+  /// Bytes the node's data store occupies.
+  STORE_TOTAL_BYTES: uint64;
+  /// True when the disk figures below were measured.
+  HAS_DISK: bool;
+  /// Capacity of the volume holding the store, bytes.
+  DISK_CAPACITY_BYTES: uint64;
+  /// Free bytes on that volume.
+  DISK_FREE_BYTES: uint64;
+  /// Bytes on that volume available to the service (free bytes less any
+  /// reserve the service may not use).
+  DISK_AVAILABLE_BYTES: uint64;
+
+  /// True when the network figures below were measured.
+  HAS_NETWORK: bool;
+  /// Total bytes received since the service started.
+  TOTAL_IN_BYTES: uint64;
+  /// Total bytes sent since the service started.
+  TOTAL_OUT_BYTES: uint64;
+  /// Current receive rate, bytes per second.
+  RATE_IN_BPS: double;
+  /// Current send rate, bytes per second.
+  RATE_OUT_BPS: double;
+  /// Recent throughput, oldest first.
+  THROUGHPUT_HISTORY: [NHSThroughputSample];
+
+  /// True when the processor and memory figures below were measured.
+  HAS_COMPUTE: bool;
+  /// Processor load, 0..1 of all cores.
+  CPU_LOAD: float;
+  /// Processor cores available to the service.
+  CPU_CORES: uint16;
+  /// Memory the service uses, bytes.
+  MEMORY_USED_BYTES: uint64;
+  /// Memory available to the service, bytes.
+  MEMORY_TOTAL_BYTES: uint64;
+
+  /// Peers or clients currently connected; 0 = none or not measured.
+  CONNECTION_COUNT: uint32;
+  /// Short human-readable notes on anything degraded, e.g. "disk 92% full".
+  NOTES: [string];
+}
+root_type NHS;
+file_identifier "$NHS";

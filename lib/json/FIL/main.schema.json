@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "filEntryKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "File", "Directory", "Link"]
+    },
+    "filDigestAlgorithm" : {
+      "type" : "string",
+      "enum": ["None", "SHA256", "SHA512", "BLAKE3"]
+    },
+    "FILEntry" : {
+      "type" : "object",
+      "description" : "One entry of a directory listing.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Entry name within the directory."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/filEntryKind"
+              },
+        "SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size in bytes; 0 for a directory."
+              },
+        "MODIFIED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of the last modification; 0 = unknown."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FIL" : {
+      "type" : "object",
+      "description" : "File - a file, its description and, when being moved, its content.",
+      "properties" : {
+        "PATH" : {
+                "type" : "string",
+                "description" : "Path of the file as the system holding it names it (relative paths are\nrelative to that system's root for the caller)."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "File name (the last element of PATH), for display."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/filEntryKind"
+              },
+        "MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type, e.g. \"text/csv\", \"application/octet-stream\"."
+              },
+        "SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of the file in bytes."
+              },
+        "CREATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of creation; 0 = unknown."
+              },
+        "MODIFIED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of the last modification; 0 = unknown."
+              },
+        "DIGEST_ALGORITHM" : {
+                "$ref" : "#/definitions/filDigestAlgorithm",
+                "description" : "Digest of the content."
+              },
+        "DIGEST" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              },
+        "CONTENT" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The content verbatim; empty when only the description travels."
+              },
+        "APPEND" : {
+                "type" : "boolean",
+                "description" : "Content was appended to the existing file rather than replacing it."
+              },
+        "WRITTEN_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the content was written; set in the answer to a\nwrite."
+              },
+        "ENTRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FILEntry"},
+                "description" : "Entries of a directory listing, sorted by NAME."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FIL"
+}

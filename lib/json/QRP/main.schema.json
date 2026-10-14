@@ -13,6 +13,18 @@
       "type" : "string",
       "enum": ["Eq", "Ne", "Lt", "Lte", "Gt", "Gte", "Contains", "In"]
     },
+    "qrpTimeProfile" : {
+      "type" : "string",
+      "enum": ["Unspecified", "All", "Nearest", "AsOf", "Forward", "Latest"]
+    },
+    "qrpRepresentation" : {
+      "type" : "string",
+      "enum": ["Default", "FlatBuffer", "Json"]
+    },
+    "qrpValueKind" : {
+      "type" : "string",
+      "enum": ["Null", "Bool", "Int", "Float", "Text", "Bytes"]
+    },
     "QRPFilter" : {
       "type" : "object",
       "description" : "One field filter of a request.",
@@ -52,6 +64,68 @@
         "INDEXED" : {
                 "type" : "boolean",
                 "description" : "True when the serving node holds an index on this column."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "QRPValue" : {
+      "type" : "object",
+      "description" : "One typed value: a bound parameter of a request, or one cell of a row.\nExactly the field named by KIND is meaningful.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/qrpValueKind"
+              },
+        "BOOL_VALUE" : {
+                "type" : "boolean"
+              },
+        "INT_VALUE" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "FLOAT_VALUE" : {
+                "type" : "number"
+              },
+        "TEXT_VALUE" : {
+                "type" : "string"
+              },
+        "BYTES_VALUE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "QRPRow" : {
+      "type" : "object",
+      "description" : "One row of a projection, its cells in COLUMNS order.",
+      "properties" : {
+        "CELLS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPValue"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "QRPTable" : {
+      "type" : "object",
+      "description" : "One queryable table of the serving node (the query surface).",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Table name as a query names it, e.g. \"OMM\"."
+              },
+        "KIND" : {
+                "type" : "string",
+                "description" : "What the table is, e.g. \"standard\" (records of one standard), \"view\",\n\"lane\" (an ingest lane), \"system\"."
+              },
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Where the table's rows come from: a standard code, provider or source."
+              },
+        "RECORDS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Rows the table holds; -1 = unknown."
+              },
+        "COLUMNS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPColumn"},
+                "description" : "Columns of the table."
               }
       },
       "additionalProperties" : false
@@ -197,6 +271,53 @@
               },
         "COLUMNS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/QRPColumn"}
+              },
+        "TIME_PROFILE" : {
+                "$ref" : "#/definitions/qrpTimeProfile",
+                "description" : "How the request selects records in time."
+              },
+        "PROFILE_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now."
+              },
+        "REPRESENTATION" : {
+                "$ref" : "#/definitions/qrpRepresentation",
+                "description" : "Representation the client asks the page in."
+              },
+        "PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPValue"},
+                "description" : "Values bound to the placeholders of SQL, in order."
+              },
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPRow"},
+                "description" : "Rows of a projection (a query that selects columns rather than whole\nrecords), in COLUMNS order. Whole-record pages carry their records as\nframes after the header instead, and leave ROWS empty."
+              },
+        "TABLES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/QRPTable"},
+                "description" : "The serving node's queryable tables, answered to a request for the query\nsurface."
+              },
+        "MAX_ELAPSED_MS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Wall-clock budget the serving node applies to a query, milliseconds; 0 =\nnone stated."
+              },
+        "MAX_ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Most rows a page returns; 0 = none stated."
+              },
+        "MAX_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Most bytes a page returns; 0 = none stated."
+              },
+        "HTTP_STATUS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Transport status the answer carries, HTTP semantics (200, 304, 400,\n406, 503 ...); 0 = derive it from STATUS and ERROR_CODE."
+              },
+        "BODY_REF_TOKEN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "When the page's record frames are not inline but held by the serving\nnode for delivery out of band: the reference token the node resolves\n(single use), and the byte size of what it refers to. 0 = inline."
+              },
+        "BODY_REF_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
               }
       },
       "additionalProperties" : false

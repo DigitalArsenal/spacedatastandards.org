@@ -17,4 +17,25 @@ public final class RecordTypeExtended {
   public static final int CVR = 257;
   public static final int PVN = 258;
   public static final int SBD = 259;
+  public static final int APR = 260;
+  public static final int ASG = 261;
+  public static final int DAV = 262;
+  public static final int DCL = 263;
+  public static final int ERM = 264;
+  public static final int FIL = 265;
+  public static final int LFV = 266;
+  public static final int MDE = 267;
+  public static final int MPL = 268;
+  public static final int NEV = 269;
+  public static final int NHS = 270;
+  public static final int OIL = 271;
+  public static final int PNV = 272;
+  public static final int PPS = 273;
+  public static final int RND = 274;
+  public static final int SBC = 275;
+  public static final int SCR = 276;
+  public static final int SRG = 277;
+  public static final int TBP = 278;
+  public static final int WHA = 279;
+  public static final int XMT = 280;
 }

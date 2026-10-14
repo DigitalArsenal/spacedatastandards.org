@@ -245,7 +245,7 @@ def CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data):
-    CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
+    return CZMWallCreatePOSITIONS_CARTOGRAPHIC_DEGREESVector(builder, data)
 
 def CZMWallAddPOSITIONS_CARTESIAN(builder, POSITIONS_CARTESIAN):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIONS_CARTESIAN), 0)
@@ -267,7 +267,7 @@ def CZMWallCreatePOSITIONS_CARTESIANVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIONS_CARTESIANVector(builder, data):
-    CZMWallCreatePOSITIONS_CARTESIANVector(builder, data)
+    return CZMWallCreatePOSITIONS_CARTESIANVector(builder, data)
 
 def CZMWallAddMINIMUM_HEIGHTS(builder, MINIMUM_HEIGHTS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MINIMUM_HEIGHTS), 0)
@@ -289,7 +289,7 @@ def CZMWallCreateMINIMUM_HEIGHTSVector(builder, data):
     return builder.EndVector()
 
 def CreateMINIMUM_HEIGHTSVector(builder, data):
-    CZMWallCreateMINIMUM_HEIGHTSVector(builder, data)
+    return CZMWallCreateMINIMUM_HEIGHTSVector(builder, data)
 
 def CZMWallAddMAXIMUM_HEIGHTS(builder, MAXIMUM_HEIGHTS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(MAXIMUM_HEIGHTS), 0)
@@ -311,7 +311,7 @@ def CZMWallCreateMAXIMUM_HEIGHTSVector(builder, data):
     return builder.EndVector()
 
 def CreateMAXIMUM_HEIGHTSVector(builder, data):
-    CZMWallCreateMAXIMUM_HEIGHTSVector(builder, data)
+    return CZMWallCreateMAXIMUM_HEIGHTSVector(builder, data)
 
 def CZMWallAddGRANULARITY(builder, GRANULARITY):
     builder.PrependFloat64Slot(5, GRANULARITY, 0.0)

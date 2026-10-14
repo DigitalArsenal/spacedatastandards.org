@@ -20,6 +20,12 @@ import FlatBuffers
 ///  reader never waits and never mistakes a bounded page for the whole set. An
 ///  error is exactly one frame with KIND Error; the HTTP status stays honest
 ///  beside it. Cursors are opaque strings issued by the serving node.
+///
+///  A request may also select by time profile (the state of each object nearest
+///  to, as of, or after an instant), bind typed parameters to its SQL, and ask
+///  for a projection: a page then carries ROWS of typed cells described by
+///  COLUMNS instead of record frames. A request for the query surface is
+///  answered with TABLES and the serving limits.
 ///  Role of a frame. Append new values only; never reorder or reuse existing
 ///  values.
 public enum qrpKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
@@ -75,8 +81,71 @@ public enum qrpFilterOp: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 }
 
 
+///  How a request selects records in time when the lane holds several
+///  versions of the same object. Append new values only; never reorder or
+///  reuse existing values.
+public enum qrpTimeProfile: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Not stated: the serving node applies its configured default.
+  case unspecified = 0
+  ///  Every record in the epoch window.
+  case all = 1
+  ///  For each object, the record whose epoch is nearest PROFILE_EPOCH_MS.
+  case nearest = 2
+  ///  For each object, the latest record at or before PROFILE_EPOCH_MS (the
+  ///  state as it was known then).
+  case asof = 3
+  ///  For each object, the earliest record at or after PROFILE_EPOCH_MS.
+  case forward = 4
+  ///  For each object, its latest record.
+  case latest = 5
+
+  public static var max: qrpTimeProfile { return .latest }
+  public static var min: qrpTimeProfile { return .unspecified }
+}
+
+
+///  Representation the client asks the page in. Append new values only; never
+///  reorder or reuse existing values.
+public enum qrpRepresentation: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  The serving node's default (FlatBuffer records).
+  case default_ = 0
+  ///  Size-prefixed FlatBuffer records of the standard, or ROWS for a
+  ///  projection.
+  case flatbuffer = 1
+  ///  JSON rendering of the same records or rows.
+  case json = 2
+
+  public static var max: qrpRepresentation { return .json }
+  public static var min: qrpRepresentation { return .default_ }
+}
+
+
+///  Type of a QRPValue. Append new values only; never reorder or reuse
+///  existing values.
+public enum qrpValueKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case null = 0
+  case bool = 1
+  case int = 2
+  case float = 3
+  case text = 4
+  case bytes = 5
+
+  public static var max: qrpValueKind { return .bytes }
+  public static var min: qrpValueKind { return .null }
+}
+
+
 ///  One field filter of a request.
-public struct QRPFilter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPFilter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -127,7 +196,7 @@ public struct QRPFilter: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
 }
 
 ///  One column descriptor of a page, in record field order.
-public struct QRPColumn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRPColumn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -196,8 +265,183 @@ public struct QRPColumn: FlatBufferTable, FlatbuffersVectorInitializable, Verifi
   }
 }
 
+///  One typed value: a bound parameter of a request, or one cell of a row.
+///  Exactly the field named by KIND is meaningful.
+public struct QRPValue: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$QRP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: QRPValue.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let KIND: VOffset = 4
+    static let BOOL_VALUE: VOffset = 6
+    static let INT_VALUE: VOffset = 8
+    static let FLOAT_VALUE: VOffset = 10
+    static let TEXT_VALUE: VOffset = 12
+    static let BYTES_VALUE: VOffset = 14
+  }
+
+  public var KIND: qrpValueKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .null : qrpValueKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .null }
+  public var BOOL_VALUE: Bool { let o = _accessor.offset(VT.BOOL_VALUE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var INT_VALUE: Int64 { let o = _accessor.offset(VT.INT_VALUE); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var FLOAT_VALUE: Double { let o = _accessor.offset(VT.FLOAT_VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var TEXT_VALUE: String? { let o = _accessor.offset(VT.TEXT_VALUE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TEXT_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TEXT_VALUE) }
+  public var BYTES_VALUE: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.BYTES_VALUE, byteSize: 1) }
+  public func withUnsafePointerToBytesValue<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.BYTES_VALUE, body: body) }
+  public static func startQRPValue(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(KIND: qrpValueKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(BOOL_VALUE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BOOL_VALUE, def: false,
+   at: VT.BOOL_VALUE) }
+  public static func add(INT_VALUE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INT_VALUE, def: 0, at: VT.INT_VALUE) }
+  public static func add(FLOAT_VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FLOAT_VALUE, def: 0.0, at: VT.FLOAT_VALUE) }
+  public static func add(TEXT_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TEXT_VALUE, at: VT.TEXT_VALUE) }
+  public static func addVectorOf(BYTES_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BYTES_VALUE, at: VT.BYTES_VALUE) }
+  public static func endQRPValue(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createQRPValue(
+    _ fbb: inout FlatBufferBuilder,
+    KIND: qrpValueKind = .null,
+    BOOL_VALUE: Bool = false,
+    INT_VALUE: Int64 = 0,
+    FLOAT_VALUE: Double = 0.0,
+    TEXT_VALUEOffset TEXT_VALUE: Offset = Offset(),
+    BYTES_VALUEVectorOffset BYTES_VALUE: Offset = Offset()
+  ) -> Offset {
+    let __start = QRPValue.startQRPValue(&fbb)
+    QRPValue.add(KIND: KIND, &fbb)
+    QRPValue.add(BOOL_VALUE: BOOL_VALUE, &fbb)
+    QRPValue.add(INT_VALUE: INT_VALUE, &fbb)
+    QRPValue.add(FLOAT_VALUE: FLOAT_VALUE, &fbb)
+    QRPValue.add(TEXT_VALUE: TEXT_VALUE, &fbb)
+    QRPValue.addVectorOf(BYTES_VALUE: BYTES_VALUE, &fbb)
+    return QRPValue.endQRPValue(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: qrpValueKind.self)
+    try _v.visit(field: VT.BOOL_VALUE, fieldName: "BOOL_VALUE", required: false, type: Bool.self)
+    try _v.visit(field: VT.INT_VALUE, fieldName: "INT_VALUE", required: false, type: Int64.self)
+    try _v.visit(field: VT.FLOAT_VALUE, fieldName: "FLOAT_VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.TEXT_VALUE, fieldName: "TEXT_VALUE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.BYTES_VALUE, fieldName: "BYTES_VALUE", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    _v.finish()
+  }
+}
+
+///  One row of a projection, its cells in COLUMNS order.
+public struct QRPRow: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$QRP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: QRPRow.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CELLS: VOffset = 4
+  }
+
+  public var CELLS: FlatbufferVector<QRPValue> { return _accessor.vector(at: VT.CELLS, byteSize: 4) }
+  public static func startQRPRow(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(CELLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CELLS, at: VT.CELLS) }
+  public static func endQRPRow(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createQRPRow(
+    _ fbb: inout FlatBufferBuilder,
+    CELLSVectorOffset CELLS: Offset = Offset()
+  ) -> Offset {
+    let __start = QRPRow.startQRPRow(&fbb)
+    QRPRow.addVectorOf(CELLS: CELLS, &fbb)
+    return QRPRow.endQRPRow(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CELLS, fieldName: "CELLS", required: false, type: ForwardOffset<Vector<ForwardOffset<QRPValue>, QRPValue>>.self)
+    _v.finish()
+  }
+}
+
+///  One queryable table of the serving node (the query surface).
+public struct QRPTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$QRP" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: QRPTable.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let KIND: VOffset = 6
+    static let SOURCE: VOffset = 8
+    static let RECORDS: VOffset = 10
+    static let COLUMNS: VOffset = 12
+  }
+
+  ///  Table name as a query names it, e.g. "OMM".
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  What the table is, e.g. "standard" (records of one standard), "view",
+  ///  "lane" (an ingest lane), "system".
+  public var KIND: String? { let o = _accessor.offset(VT.KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KIND) }
+  ///  Where the table's rows come from: a standard code, provider or source.
+  public var SOURCE: String? { let o = _accessor.offset(VT.SOURCE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE) }
+  ///  Rows the table holds; -1 = unknown.
+  public var RECORDS: Int64 { let o = _accessor.offset(VT.RECORDS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Columns of the table.
+  public var COLUMNS: FlatbufferVector<QRPColumn> { return _accessor.vector(at: VT.COLUMNS, byteSize: 4) }
+  public static func startQRPTable(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KIND, at: VT.KIND) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VT.SOURCE) }
+  public static func add(RECORDS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORDS, def: 0, at: VT.RECORDS) }
+  public static func addVectorOf(COLUMNS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLUMNS, at: VT.COLUMNS) }
+  public static func endQRPTable(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createQRPTable(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    KINDOffset KIND: Offset = Offset(),
+    SOURCEOffset SOURCE: Offset = Offset(),
+    RECORDS: Int64 = 0,
+    COLUMNSVectorOffset COLUMNS: Offset = Offset()
+  ) -> Offset {
+    let __start = QRPTable.startQRPTable(&fbb)
+    QRPTable.add(NAME: NAME, &fbb)
+    QRPTable.add(KIND: KIND, &fbb)
+    QRPTable.add(SOURCE: SOURCE, &fbb)
+    QRPTable.add(RECORDS: RECORDS, &fbb)
+    QRPTable.addVectorOf(COLUMNS: COLUMNS, &fbb)
+    return QRPTable.endQRPTable(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECORDS, fieldName: "RECORDS", required: false, type: Int64.self)
+    try _v.visit(field: VT.COLUMNS, fieldName: "COLUMNS", required: false, type: ForwardOffset<Vector<ForwardOffset<QRPColumn>, QRPColumn>>.self)
+    _v.finish()
+  }
+}
+
 ///  Query Page - request, page header or error frame.
-public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -246,6 +490,18 @@ public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let CID: VOffset = 72
     static let ARCHIVE_ID: VOffset = 74
     static let COLUMNS: VOffset = 76
+    static let TIME_PROFILE: VOffset = 78
+    static let PROFILE_EPOCH_MS: VOffset = 80
+    static let REPRESENTATION: VOffset = 82
+    static let PARAMETERS: VOffset = 84
+    static let ROWS: VOffset = 86
+    static let TABLES: VOffset = 88
+    static let MAX_ELAPSED_MS: VOffset = 90
+    static let MAX_ROWS: VOffset = 92
+    static let MAX_BYTES: VOffset = 94
+    static let HTTP_STATUS: VOffset = 96
+    static let BODY_REF_TOKEN: VOffset = 98
+    static let BODY_REF_SIZE: VOffset = 100
   }
 
   public var KIND: qrpKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .request : qrpKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .request }
@@ -330,7 +586,37 @@ public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var ARCHIVE_ID: String? { let o = _accessor.offset(VT.ARCHIVE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var ARCHIVE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ARCHIVE_ID) }
   public var COLUMNS: FlatbufferVector<QRPColumn> { return _accessor.vector(at: VT.COLUMNS, byteSize: 4) }
-  public static func startQRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 37) }
+  ///  How the request selects records in time.
+  public var TIME_PROFILE: qrpTimeProfile { let o = _accessor.offset(VT.TIME_PROFILE); return o == 0 ? .unspecified : qrpTimeProfile(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+  public var PROFILE_EPOCH_MS: Int64 { let o = _accessor.offset(VT.PROFILE_EPOCH_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Representation the client asks the page in.
+  public var REPRESENTATION: qrpRepresentation { let o = _accessor.offset(VT.REPRESENTATION); return o == 0 ? .default_ : qrpRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .default_ }
+  ///  Values bound to the placeholders of SQL, in order.
+  public var PARAMETERS: FlatbufferVector<QRPValue> { return _accessor.vector(at: VT.PARAMETERS, byteSize: 4) }
+  ///  Rows of a projection (a query that selects columns rather than whole
+  ///  records), in COLUMNS order. Whole-record pages carry their records as
+  ///  frames after the header instead, and leave ROWS empty.
+  public var ROWS: FlatbufferVector<QRPRow> { return _accessor.vector(at: VT.ROWS, byteSize: 4) }
+  ///  The serving node's queryable tables, answered to a request for the query
+  ///  surface.
+  public var TABLES: FlatbufferVector<QRPTable> { return _accessor.vector(at: VT.TABLES, byteSize: 4) }
+  ///  Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+  ///  none stated.
+  public var MAX_ELAPSED_MS: UInt32 { let o = _accessor.offset(VT.MAX_ELAPSED_MS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Most rows a page returns; 0 = none stated.
+  public var MAX_ROWS: UInt64 { let o = _accessor.offset(VT.MAX_ROWS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Most bytes a page returns; 0 = none stated.
+  public var MAX_BYTES: UInt64 { let o = _accessor.offset(VT.MAX_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Transport status the answer carries, HTTP semantics (200, 304, 400,
+  ///  406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+  public var HTTP_STATUS: UInt16 { let o = _accessor.offset(VT.HTTP_STATUS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  When the page's record frames are not inline but held by the serving
+  ///  node for delivery out of band: the reference token the node resolves
+  ///  (single use), and the byte size of what it refers to. 0 = inline.
+  public var BODY_REF_TOKEN: UInt64 { let o = _accessor.offset(VT.BODY_REF_TOKEN); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public var BODY_REF_SIZE: UInt64 { let o = _accessor.offset(VT.BODY_REF_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startQRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 49) }
   public static func add(KIND: qrpKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(STATUS: qrpStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VT.ERROR_CODE) }
@@ -372,6 +658,18 @@ public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
   public static func add(ARCHIVE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ARCHIVE_ID, at: VT.ARCHIVE_ID) }
   public static func addVectorOf(COLUMNS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLUMNS, at: VT.COLUMNS) }
+  public static func add(TIME_PROFILE: qrpTimeProfile, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_PROFILE.rawValue, def: 0, at: VT.TIME_PROFILE) }
+  public static func add(PROFILE_EPOCH_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PROFILE_EPOCH_MS, def: 0, at: VT.PROFILE_EPOCH_MS) }
+  public static func add(REPRESENTATION: qrpRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPRESENTATION.rawValue, def: 0, at: VT.REPRESENTATION) }
+  public static func addVectorOf(PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETERS, at: VT.PARAMETERS) }
+  public static func addVectorOf(ROWS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ROWS, at: VT.ROWS) }
+  public static func addVectorOf(TABLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TABLES, at: VT.TABLES) }
+  public static func add(MAX_ELAPSED_MS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ELAPSED_MS, def: 0, at: VT.MAX_ELAPSED_MS) }
+  public static func add(MAX_ROWS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ROWS, def: 0, at: VT.MAX_ROWS) }
+  public static func add(MAX_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_BYTES, def: 0, at: VT.MAX_BYTES) }
+  public static func add(HTTP_STATUS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HTTP_STATUS, def: 0, at: VT.HTTP_STATUS) }
+  public static func add(BODY_REF_TOKEN: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_REF_TOKEN, def: 0, at: VT.BODY_REF_TOKEN) }
+  public static func add(BODY_REF_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_REF_SIZE, def: 0, at: VT.BODY_REF_SIZE) }
   public static func endQRP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createQRP(
     _ fbb: inout FlatBufferBuilder,
@@ -411,7 +709,19 @@ public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     ETAGOffset ETAG: Offset = Offset(),
     CIDOffset CID: Offset = Offset(),
     ARCHIVE_IDOffset ARCHIVE_ID: Offset = Offset(),
-    COLUMNSVectorOffset COLUMNS: Offset = Offset()
+    COLUMNSVectorOffset COLUMNS: Offset = Offset(),
+    TIME_PROFILE: qrpTimeProfile = .unspecified,
+    PROFILE_EPOCH_MS: Int64 = 0,
+    REPRESENTATION: qrpRepresentation = .default_,
+    PARAMETERSVectorOffset PARAMETERS: Offset = Offset(),
+    ROWSVectorOffset ROWS: Offset = Offset(),
+    TABLESVectorOffset TABLES: Offset = Offset(),
+    MAX_ELAPSED_MS: UInt32 = 0,
+    MAX_ROWS: UInt64 = 0,
+    MAX_BYTES: UInt64 = 0,
+    HTTP_STATUS: UInt16 = 0,
+    BODY_REF_TOKEN: UInt64 = 0,
+    BODY_REF_SIZE: UInt64 = 0
   ) -> Offset {
     let __start = QRP.startQRP(&fbb)
     QRP.add(KIND: KIND, &fbb)
@@ -451,6 +761,18 @@ public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     QRP.add(CID: CID, &fbb)
     QRP.add(ARCHIVE_ID: ARCHIVE_ID, &fbb)
     QRP.addVectorOf(COLUMNS: COLUMNS, &fbb)
+    QRP.add(TIME_PROFILE: TIME_PROFILE, &fbb)
+    QRP.add(PROFILE_EPOCH_MS: PROFILE_EPOCH_MS, &fbb)
+    QRP.add(REPRESENTATION: REPRESENTATION, &fbb)
+    QRP.addVectorOf(PARAMETERS: PARAMETERS, &fbb)
+    QRP.addVectorOf(ROWS: ROWS, &fbb)
+    QRP.addVectorOf(TABLES: TABLES, &fbb)
+    QRP.add(MAX_ELAPSED_MS: MAX_ELAPSED_MS, &fbb)
+    QRP.add(MAX_ROWS: MAX_ROWS, &fbb)
+    QRP.add(MAX_BYTES: MAX_BYTES, &fbb)
+    QRP.add(HTTP_STATUS: HTTP_STATUS, &fbb)
+    QRP.add(BODY_REF_TOKEN: BODY_REF_TOKEN, &fbb)
+    QRP.add(BODY_REF_SIZE: BODY_REF_SIZE, &fbb)
     return QRP.endQRP(&fbb, start: __start)
   }
 
@@ -493,6 +815,18 @@ public struct QRP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.CID, fieldName: "CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ARCHIVE_ID, fieldName: "ARCHIVE_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.COLUMNS, fieldName: "COLUMNS", required: false, type: ForwardOffset<Vector<ForwardOffset<QRPColumn>, QRPColumn>>.self)
+    try _v.visit(field: VT.TIME_PROFILE, fieldName: "TIME_PROFILE", required: false, type: qrpTimeProfile.self)
+    try _v.visit(field: VT.PROFILE_EPOCH_MS, fieldName: "PROFILE_EPOCH_MS", required: false, type: Int64.self)
+    try _v.visit(field: VT.REPRESENTATION, fieldName: "REPRESENTATION", required: false, type: qrpRepresentation.self)
+    try _v.visit(field: VT.PARAMETERS, fieldName: "PARAMETERS", required: false, type: ForwardOffset<Vector<ForwardOffset<QRPValue>, QRPValue>>.self)
+    try _v.visit(field: VT.ROWS, fieldName: "ROWS", required: false, type: ForwardOffset<Vector<ForwardOffset<QRPRow>, QRPRow>>.self)
+    try _v.visit(field: VT.TABLES, fieldName: "TABLES", required: false, type: ForwardOffset<Vector<ForwardOffset<QRPTable>, QRPTable>>.self)
+    try _v.visit(field: VT.MAX_ELAPSED_MS, fieldName: "MAX_ELAPSED_MS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.MAX_ROWS, fieldName: "MAX_ROWS", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MAX_BYTES, fieldName: "MAX_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.HTTP_STATUS, fieldName: "HTTP_STATUS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.BODY_REF_TOKEN, fieldName: "BODY_REF_TOKEN", required: false, type: UInt64.self)
+    try _v.visit(field: VT.BODY_REF_SIZE, fieldName: "BODY_REF_SIZE", required: false, type: UInt64.self)
     _v.finish()
   }
 }

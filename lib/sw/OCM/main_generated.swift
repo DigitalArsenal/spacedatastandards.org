@@ -99,7 +99,7 @@ public enum covarianceOrdering: Int8, FlatbuffersVectorInitializable, Enum, Veri
 }
 
 
-public struct Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct Header: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -175,7 +175,7 @@ public struct Header: FlatBufferTable, FlatbuffersVectorInitializable, Verifiabl
   }
 }
 
-public struct Metadata: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct Metadata: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -578,7 +578,7 @@ public struct Metadata: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
   }
 }
 
-public struct StateVector: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct StateVector: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -678,7 +678,7 @@ public struct StateVector: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   }
 }
 
-public struct PhysicalProperties: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PhysicalProperties: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1087,7 +1087,7 @@ public struct PhysicalProperties: FlatBufferTable, FlatbuffersVectorInitializabl
   }
 }
 
-public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct Perturbations: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1401,7 +1401,7 @@ public struct Perturbations: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   }
 }
 
-public struct Maneuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct Maneuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1720,7 +1720,7 @@ public struct Maneuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 
 ///  A parameter of the dynamical model that an orbit solution carries with the state: its value at the solution
 ///  epoch and whether the orbit determination solved for it (a held value is a catalog value).
-public struct OCMDynamicParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OCMDynamicParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1783,7 +1783,7 @@ public struct OCMDynamicParameter: FlatBufferTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OrbitDetermination: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2170,7 +2170,7 @@ public struct OrbitDetermination: FlatBufferTable, FlatbuffersVectorInitializabl
 ///  the block's keywords, and its data lines as written (a time tag, then the
 ///  numbers TRAJ_TYPE says). The single-trajectory fields of the OCM above state
 ///  the first block's CARTPV or CARTPVA states for the modules that read those.
-public struct OCMTrajectoryBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OCMTrajectoryBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2359,7 +2359,7 @@ public struct OCMTrajectoryBlock: FlatBufferTable, FlatbuffersVectorInitializabl
 ///  data lines as written (a time tag, then the covariance in COV_ORDERING). The
 ///  single-covariance fields of the OCM above state the first block when it is one
 ///  line.
-public struct OCMCovarianceBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OCMCovarianceBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2511,7 +2511,7 @@ public struct OCMCovarianceBlock: FlatBufferTable, FlatbuffersVectorInitializabl
   }
 }
 
-public struct UserDefinedParameters: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct UserDefinedParameters: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2557,7 +2557,7 @@ public struct UserDefinedParameters: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Orbit Comprehensive Message
-public struct OCM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OCM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

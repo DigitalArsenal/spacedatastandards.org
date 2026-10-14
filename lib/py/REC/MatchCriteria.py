@@ -115,7 +115,7 @@ def MatchCriteriaCreateCOMPARISON_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMPARISON_LISTVector(builder, data):
-    MatchCriteriaCreateCOMPARISON_LISTVector(builder, data)
+    return MatchCriteriaCreateCOMPARISON_LISTVector(builder, data)
 
 def MatchCriteriaAddBOOLEAN_EXPRESSION(builder, BOOLEAN_EXPRESSION):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BOOLEAN_EXPRESSION), 0)

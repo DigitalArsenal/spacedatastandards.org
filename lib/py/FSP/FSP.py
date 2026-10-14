@@ -312,7 +312,7 @@ def FSPCreateSCHEMA_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateSCHEMA_HASHVector(builder, data):
-    FSPCreateSCHEMA_HASHVector(builder, data)
+    return FSPCreateSCHEMA_HASHVector(builder, data)
 
 def FSPAddAUDIENCES(builder, AUDIENCES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(AUDIENCES), 0)
@@ -330,7 +330,7 @@ def FSPCreateAUDIENCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAUDIENCESVector(builder, data):
-    FSPCreateAUDIENCESVector(builder, data)
+    return FSPCreateAUDIENCESVector(builder, data)
 
 def FSPAddRULES(builder, RULES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(RULES), 0)
@@ -348,7 +348,7 @@ def FSPCreateRULESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRULESVector(builder, data):
-    FSPCreateRULESVector(builder, data)
+    return FSPCreateRULESVector(builder, data)
 
 def FSPAddALLOWED_OPERATIONS(builder, ALLOWED_OPERATIONS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_OPERATIONS), 0)
@@ -370,7 +370,7 @@ def FSPCreateALLOWED_OPERATIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateALLOWED_OPERATIONSVector(builder, data):
-    FSPCreateALLOWED_OPERATIONSVector(builder, data)
+    return FSPCreateALLOWED_OPERATIONSVector(builder, data)
 
 def FSPAddKEY_SCOPE(builder, KEY_SCOPE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_SCOPE), 0)
@@ -434,7 +434,7 @@ def FSPCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    FSPCreatePROVIDER_SIGNATUREVector(builder, data)
+    return FSPCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def FSPEnd(builder):
     return builder.EndObject()

@@ -41,6 +41,9 @@ public struct PRW : IFlatbufferObject
   public PRWEarthOrientation? EARTH_ORIENTATION { get { int o = __p.__offset(40); return o != 0 ? (PRWEarthOrientation?)(new PRWEarthOrientation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public PRWSpaceWeatherTable? SPACE_WEATHER { get { int o = __p.__offset(42); return o != 0 ? (PRWSpaceWeatherTable?)(new PRWSpaceWeatherTable()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public PRWJB2008IndicesTable? JB2008_INDICES { get { int o = __p.__offset(44); return o != 0 ? (PRWJB2008IndicesTable?)(new PRWJB2008IndicesTable()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Propagation over windows: one $OEM block per query answers it.
+  public PRWWindowRequest? WINDOW_REQUEST { get { int o = __p.__offset(46); return o != 0 ? (PRWWindowRequest?)(new PRWWindowRequest()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PRWWindowReport? WINDOW_REPORT { get { int o = __p.__offset(48); return o != 0 ? (PRWWindowReport?)(new PRWWindowReport()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PRW> CreatePRW(FlatBufferBuilder builder,
       Offset<PRWInit> INITOffset = default(Offset<PRWInit>),
@@ -63,8 +66,12 @@ public struct PRW : IFlatbufferObject
       Offset<PRWVersionResult> VERSION_RESULTOffset = default(Offset<PRWVersionResult>),
       Offset<PRWEarthOrientation> EARTH_ORIENTATIONOffset = default(Offset<PRWEarthOrientation>),
       Offset<PRWSpaceWeatherTable> SPACE_WEATHEROffset = default(Offset<PRWSpaceWeatherTable>),
-      Offset<PRWJB2008IndicesTable> JB2008_INDICESOffset = default(Offset<PRWJB2008IndicesTable>)) {
-    builder.StartTable(21);
+      Offset<PRWJB2008IndicesTable> JB2008_INDICESOffset = default(Offset<PRWJB2008IndicesTable>),
+      Offset<PRWWindowRequest> WINDOW_REQUESTOffset = default(Offset<PRWWindowRequest>),
+      Offset<PRWWindowReport> WINDOW_REPORTOffset = default(Offset<PRWWindowReport>)) {
+    builder.StartTable(23);
+    PRW.AddWINDOW_REPORT(builder, WINDOW_REPORTOffset);
+    PRW.AddWINDOW_REQUEST(builder, WINDOW_REQUESTOffset);
     PRW.AddJB2008_INDICES(builder, JB2008_INDICESOffset);
     PRW.AddSPACE_WEATHER(builder, SPACE_WEATHEROffset);
     PRW.AddEARTH_ORIENTATION(builder, EARTH_ORIENTATIONOffset);
@@ -89,7 +96,7 @@ public struct PRW : IFlatbufferObject
     return PRW.EndPRW(builder);
   }
 
-  public static void StartPRW(FlatBufferBuilder builder) { builder.StartTable(21); }
+  public static void StartPRW(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddINIT(FlatBufferBuilder builder, Offset<PRWInit> INITOffset) { builder.AddOffset(0, INITOffset.Value, 0); }
   public static void AddBATCH_REQUEST(FlatBufferBuilder builder, Offset<PRWBatchRequest> BATCH_REQUESTOffset) { builder.AddOffset(1, BATCH_REQUESTOffset.Value, 0); }
   public static void AddBATCH_RESPONSE(FlatBufferBuilder builder, Offset<PRWBatchResponse> BATCH_RESPONSEOffset) { builder.AddOffset(2, BATCH_RESPONSEOffset.Value, 0); }
@@ -111,6 +118,8 @@ public struct PRW : IFlatbufferObject
   public static void AddEARTH_ORIENTATION(FlatBufferBuilder builder, Offset<PRWEarthOrientation> EARTH_ORIENTATIONOffset) { builder.AddOffset(18, EARTH_ORIENTATIONOffset.Value, 0); }
   public static void AddSPACE_WEATHER(FlatBufferBuilder builder, Offset<PRWSpaceWeatherTable> SPACE_WEATHEROffset) { builder.AddOffset(19, SPACE_WEATHEROffset.Value, 0); }
   public static void AddJB2008_INDICES(FlatBufferBuilder builder, Offset<PRWJB2008IndicesTable> JB2008_INDICESOffset) { builder.AddOffset(20, JB2008_INDICESOffset.Value, 0); }
+  public static void AddWINDOW_REQUEST(FlatBufferBuilder builder, Offset<PRWWindowRequest> WINDOW_REQUESTOffset) { builder.AddOffset(21, WINDOW_REQUESTOffset.Value, 0); }
+  public static void AddWINDOW_REPORT(FlatBufferBuilder builder, Offset<PRWWindowReport> WINDOW_REPORTOffset) { builder.AddOffset(22, WINDOW_REPORTOffset.Value, 0); }
   public static Offset<PRW> EndPRW(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PRW>(o);
@@ -144,6 +153,8 @@ public struct PRW : IFlatbufferObject
     _o.EARTH_ORIENTATION = this.EARTH_ORIENTATION.HasValue ? this.EARTH_ORIENTATION.Value.UnPack() : null;
     _o.SPACE_WEATHER = this.SPACE_WEATHER.HasValue ? this.SPACE_WEATHER.Value.UnPack() : null;
     _o.JB2008_INDICES = this.JB2008_INDICES.HasValue ? this.JB2008_INDICES.Value.UnPack() : null;
+    _o.WINDOW_REQUEST = this.WINDOW_REQUEST.HasValue ? this.WINDOW_REQUEST.Value.UnPack() : null;
+    _o.WINDOW_REPORT = this.WINDOW_REPORT.HasValue ? this.WINDOW_REPORT.Value.UnPack() : null;
   }
   public static Offset<PRW> Pack(FlatBufferBuilder builder, PRWT _o) {
     if (_o == null) return default(Offset<PRW>);
@@ -167,6 +178,8 @@ public struct PRW : IFlatbufferObject
     var _EARTH_ORIENTATION = _o.EARTH_ORIENTATION == null ? default(Offset<PRWEarthOrientation>) : PRWEarthOrientation.Pack(builder, _o.EARTH_ORIENTATION);
     var _SPACE_WEATHER = _o.SPACE_WEATHER == null ? default(Offset<PRWSpaceWeatherTable>) : PRWSpaceWeatherTable.Pack(builder, _o.SPACE_WEATHER);
     var _JB2008_INDICES = _o.JB2008_INDICES == null ? default(Offset<PRWJB2008IndicesTable>) : PRWJB2008IndicesTable.Pack(builder, _o.JB2008_INDICES);
+    var _WINDOW_REQUEST = _o.WINDOW_REQUEST == null ? default(Offset<PRWWindowRequest>) : PRWWindowRequest.Pack(builder, _o.WINDOW_REQUEST);
+    var _WINDOW_REPORT = _o.WINDOW_REPORT == null ? default(Offset<PRWWindowReport>) : PRWWindowReport.Pack(builder, _o.WINDOW_REPORT);
     return CreatePRW(
       builder,
       _INIT,
@@ -189,7 +202,9 @@ public struct PRW : IFlatbufferObject
       _VERSION_RESULT,
       _EARTH_ORIENTATION,
       _SPACE_WEATHER,
-      _JB2008_INDICES);
+      _JB2008_INDICES,
+      _WINDOW_REQUEST,
+      _WINDOW_REPORT);
   }
 }
 
@@ -216,6 +231,8 @@ public class PRWT
   public PRWEarthOrientationT EARTH_ORIENTATION { get; set; }
   public PRWSpaceWeatherTableT SPACE_WEATHER { get; set; }
   public PRWJB2008IndicesTableT JB2008_INDICES { get; set; }
+  public PRWWindowRequestT WINDOW_REQUEST { get; set; }
+  public PRWWindowReportT WINDOW_REPORT { get; set; }
 
   public PRWT() {
     this.INIT = null;
@@ -239,6 +256,8 @@ public class PRWT
     this.EARTH_ORIENTATION = null;
     this.SPACE_WEATHER = null;
     this.JB2008_INDICES = null;
+    this.WINDOW_REQUEST = null;
+    this.WINDOW_REPORT = null;
   }
   public static PRWT DeserializeFromBinary(byte[] fbBuffer) {
     return PRW.GetRootAsPRW(new ByteBuffer(fbBuffer)).UnPack();
@@ -277,6 +296,8 @@ static public class PRWVerify
       && verifier.VerifyTable(tablePos, 40 /*EARTH_ORIENTATION*/, PRWEarthOrientationVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 42 /*SPACE_WEATHER*/, PRWSpaceWeatherTableVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 44 /*JB2008_INDICES*/, PRWJB2008IndicesTableVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 46 /*WINDOW_REQUEST*/, PRWWindowRequestVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 48 /*WINDOW_REPORT*/, PRWWindowReportVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

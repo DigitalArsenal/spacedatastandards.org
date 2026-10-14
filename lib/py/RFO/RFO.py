@@ -1149,7 +1149,7 @@ def RFOCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    RFOCreateTAGSVector(builder, data)
+    return RFOCreateTAGSVector(builder, data)
 
 def RFOAddCORR_MAHALANOBIS_SQ(builder, CORR_MAHALANOBIS_SQ):
     builder.PrependFloat64Slot(74, CORR_MAHALANOBIS_SQ, 0.0)

@@ -63,7 +63,7 @@ public enum iauPrecessionNutationModel: UInt8, FlatbuffersVectorInitializable, E
 
 
 ///  Earth Orientation Parameters
-public struct EOP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

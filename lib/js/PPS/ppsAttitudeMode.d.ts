@@ -1,0 +1,72 @@
+/**
+ * Pointing and Power Scenario (PPS)
+ * Description
+ * A spacecraft pointing and power simulation scenario and the telemetry it
+ * produces. The scenario states the time span, the attitude (pointing)
+ * modes and when each applies, the attitude control state at the start
+ * (pointing error, body rate, reaction-wheel momentum), the solar array,
+ * the battery, the electrical loads and the attitude sensor noise; it may
+ * carry the spacecraft's trajectory and its bus description. The telemetry
+ * is the simulated time series: attitude (pointing error, body rate,
+ * optionally the attitude quaternion), reaction-wheel momentum, relative
+ * position to a target, solar illumination, power generated and consumed,
+ * battery state of charge and energy, sensor noise, and the active pointing
+ * mode, sample by sample.
+ *
+ * Mission and systems engineers use it for power-positive and pointing
+ * budget checks, and viewers to replay a scenario beside the orbit. The same
+ * record is the request (SCENARIO only) and the answer (SCENARIO echoed,
+ * with STATUS and TELEMETRY). Telemetry is column-major: every series is an
+ * array with one entry per sample (three or four for vectors, as stated),
+ * parallel to ELAPSED_S, so a chart or a time-dynamic property reads each
+ * series directly. An absolute time of a sample is START_EPOCH_MS +
+ * 1000 * ELAPSED_S.
+ *
+ * The initial attitude can be an $ACM attitudeState, the bus an $BUS
+ * record, and the trajectory an $OEM ephemeris block. PPS carries
+ * engineering values; a $TMF transfer frame carries raw downlinked
+ * telemetry, and an $SCN scene can reference a PPS run for display.
+ *
+ * Units: SI (s, m, W, Wh, N m s), angles in degrees.
+ * Attitude (pointing) mode. Append new values only; never reorder or reuse
+ * existing values.
+ */
+export declare enum ppsAttitudeMode {
+    /**
+     * Not stated.
+     */
+    Unspecified = 0,
+    /**
+     * Solar-array normal toward the Sun.
+     */
+    SunPointing = 1,
+    /**
+     * A body axis toward the nadir.
+     */
+    NadirPointing = 2,
+    /**
+     * Fixed inertial attitude.
+     */
+    InertialHold = 3,
+    /**
+     * A body axis toward a moving target (ground site or space object).
+     */
+    TargetTracking = 4,
+    /**
+     * Large-angle slew between attitudes.
+     */
+    Slew = 5,
+    /**
+     * Fine tracking (error below the fine-pointing threshold).
+     */
+    FineTrack = 6,
+    /**
+     * Safe mode.
+     */
+    Safe = 7,
+    /**
+     * Rate damping (detumble).
+     */
+    RateDamping = 8
+}
+//# sourceMappingURL=ppsAttitudeMode.d.ts.map

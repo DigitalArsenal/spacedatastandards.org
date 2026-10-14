@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pnvAttribution": {
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "Direct",
+        "Relayed",
+        "OwnNode",
+        "Unattributed"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0,
+          "description": "Not determined."
+        },
+        "Direct": {
+          "value": 1,
+          "description": "Published by the peer the notice arrived from."
+        },
+        "Relayed": {
+          "value": 2,
+          "description": "Relayed: the publisher is a different peer from the one it arrived from."
+        },
+        "OwnNode": {
+          "value": 3,
+          "description": "Published by the receiving node itself."
+        },
+        "Unattributed": {
+          "value": 4,
+          "description": "The publisher could not be established."
+        }
+      }
+    },
+    "pnvKeySource": {
+      "type": "string",
+      "enum": [
+        "None",
+        "IdentityRecord",
+        "PeerIdentifier",
+        "OperatorTrust",
+        "SelfAsserted"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0,
+          "description": "No key was available."
+        },
+        "IdentityRecord": {
+          "value": 1,
+          "description": "The publisher's signed identity record ($EPM)."
+        },
+        "PeerIdentifier": {
+          "value": 2,
+          "description": "The key embedded in the publisher's peer identifier."
+        },
+        "OperatorTrust": {
+          "value": 3,
+          "description": "A key the operator configured as trusted."
+        },
+        "SelfAsserted": {
+          "value": 4,
+          "description": "A key carried in the notice itself (proves integrity, not identity)."
+        }
+      }
+    },
+    "PNVEntry": {
+      "type": "object",
+      "description": "One received notice and the verdict on it.",
+      "properties": {
+        "PNM_CID": {
+          "type": "string",
+          "description": "Content identifier of the $PNM the verdict is about.",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLISHER_PEER_ID": {
+          "type": "string",
+          "description": "Peer that signed and published the notice.",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVED_FROM_PEER_ID": {
+          "type": "string",
+          "description": "Peer the notice arrived from (gossip or direct).",
+          "x-flatbuffer-type": "string"
+        },
+        "STANDARD": {
+          "type": "string",
+          "description": "Standard the publication is in, as its code, e.g. \"OMM\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "Schema file name of the published records, e.g. \"OMM.fbs\".",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_ID": {
+          "type": "string",
+          "description": "The notice's FILE_ID (publication or update identity).",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_NAME": {
+          "type": "string",
+          "description": "The notice's FILE_NAME.",
+          "x-flatbuffer-type": "string"
+        },
+        "CID": {
+          "type": "string",
+          "description": "The notice's CID (the published content or its manifest).",
+          "x-flatbuffer-type": "string"
+        },
+        "PUBLISHED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of publication, from the notice.",
+          "x-flatbuffer-type": "int64"
+        },
+        "RECEIVED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the receiving node received the notice.",
+          "x-flatbuffer-type": "int64"
+        },
+        "SIGNATURE_TYPE": {
+          "type": "string",
+          "description": "Signature scheme of the notice, e.g. \"ed25519\", \"secp256k1\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The notice's signature, verbatim.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "SIGNATURE_VERIFIED": {
+          "type": "boolean",
+          "description": "True when the signature verified against PUBLISHER_KEY.",
+          "x-flatbuffer-type": "bool"
+        },
+        "ATTRIBUTION": {
+          "$ref": "#/definitions/pnvAttribution",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0,
+              "description": "Not determined."
+            },
+            "Direct": {
+              "value": 1,
+              "description": "Published by the peer the notice arrived from."
+            },
+            "Relayed": {
+              "value": 2,
+              "description": "Relayed: the publisher is a different peer from the one it arrived from."
+            },
+            "OwnNode": {
+              "value": 3,
+              "description": "Published by the receiving node itself."
+            },
+            "Unattributed": {
+              "value": 4,
+              "description": "The publisher could not be established."
+            }
+          },
+          "x-flatbuffer-default": "Unknown"
+        },
+        "PUBLISHER_KEY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The public key the signature was checked against.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "KEY_SOURCE": {
+          "$ref": "#/definitions/pnvKeySource",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0,
+              "description": "No key was available."
+            },
+            "IdentityRecord": {
+              "value": 1,
+              "description": "The publisher's signed identity record ($EPM)."
+            },
+            "PeerIdentifier": {
+              "value": 2,
+              "description": "The key embedded in the publisher's peer identifier."
+            },
+            "OperatorTrust": {
+              "value": 3,
+              "description": "A key the operator configured as trusted."
+            },
+            "SelfAsserted": {
+              "value": 4,
+              "description": "A key carried in the notice itself (proves integrity, not identity)."
+            }
+          },
+          "x-flatbuffer-default": "None"
+        },
+        "REASON": {
+          "type": "string",
+          "description": "Why verification failed or was not attempted; empty when it verified.",
+          "x-flatbuffer-type": "string"
+        },
+        "PNM_BYTES": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The notice itself as received, a size-prefixed $PNM, so a reader can\nverify the signature on its own instead of trusting this verdict.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PNV": {
+      "type": "object",
+      "description": "Publication Verification - one node's verdicts on received notices.",
+      "properties": {
+        "VERIFIER_PEER_ID": {
+          "type": "string",
+          "description": "Identifier of the node that verified.",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when this set was generated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "ENTRIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PNVEntry"
+          },
+          "x-flatbuffer-type": "[PNVEntry]"
+        },
+        "ETAG": {
+          "type": "string",
+          "description": "Entity tag of this set, for conditional requests.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/PNV",
+  "x-flatbuffer-root-type": "PNV",
+  "x-flatbuffer-file-identifier": "$PNV"
+}

@@ -1,0 +1,37 @@
+/**
+ * Overall outcome of a plan. Append new values only; never reorder or reuse
+ * existing values.
+ */
+export declare enum mplStatus {
+    /**
+     * A request, not yet answered.
+     */
+    Pending = 0,
+    /**
+     * Solved; the result fields carry the plan.
+     */
+    Solved = 1,
+    /**
+     * The geometry has no solution (e.g. no Lambert arc of the requested
+     * revolution count).
+     */
+    NoSolution = 2,
+    /**
+     * A solution exists in principle but not within the stated limits (e.g.
+     * the miss distance is not reachable with the available delta-v).
+     */
+    Infeasible = 3,
+    /**
+     * The geometry is singular (e.g. a radial state has no orbit normal).
+     */
+    SingularGeometry = 4,
+    /**
+     * The request is malformed or a parameter is out of range.
+     */
+    InvalidRequest = 5,
+    /**
+     * The planner failed for another reason; see ERROR_MESSAGE.
+     */
+    Failed = 6
+}
+//# sourceMappingURL=mplStatus.d.ts.map

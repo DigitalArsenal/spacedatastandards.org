@@ -158,7 +158,7 @@ def CNPMetricCreateSTATISTICSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATISTICSVector(builder, data):
-    CNPMetricCreateSTATISTICSVector(builder, data)
+    return CNPMetricCreateSTATISTICSVector(builder, data)
 
 def CNPMetricAddSAMPLE_COUNT(builder, SAMPLE_COUNT):
     builder.PrependUint64Slot(4, SAMPLE_COUNT, 0)

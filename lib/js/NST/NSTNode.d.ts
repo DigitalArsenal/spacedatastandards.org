@@ -127,6 +127,12 @@ export declare class NSTNode implements flatbuffers.IUnpackableObject<NSTNodeT> 
      */
     ONION_ADDRESS(): string | null;
     ONION_ADDRESS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Standards the peer publishes or serves, as their codes, e.g. "OMM".
+     */
+    STANDARDS(index: number): string;
+    STANDARDS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    standardsLength(): number;
     static startNSTNode(builder: flatbuffers.Builder): void;
     static addPeerId(builder: flatbuffers.Builder, PEER_IDOffset: flatbuffers.Offset): void;
     static addDn(builder: flatbuffers.Builder, DNOffset: flatbuffers.Offset): void;
@@ -160,8 +166,11 @@ export declare class NSTNode implements flatbuffers.IUnpackableObject<NSTNodeT> 
     static addEpmCid(builder: flatbuffers.Builder, EPM_CIDOffset: flatbuffers.Offset): void;
     static addStorageDaemonVersion(builder: flatbuffers.Builder, STORAGE_DAEMON_VERSIONOffset: flatbuffers.Offset): void;
     static addOnionAddress(builder: flatbuffers.Builder, ONION_ADDRESSOffset: flatbuffers.Offset): void;
+    static addStandards(builder: flatbuffers.Builder, STANDARDSOffset: flatbuffers.Offset): void;
+    static createStandardsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startStandardsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endNSTNode(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createNSTNode(builder: flatbuffers.Builder, PEER_IDOffset: flatbuffers.Offset, DNOffset: flatbuffers.Offset, ORGANIZATIONOffset: flatbuffers.Offset, TRUST_LEVELOffset: flatbuffers.Offset, ROLEOffset: flatbuffers.Offset, AGENT_VERSIONOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, LAST_SEEN: bigint, IS_ONLINE: boolean, LATENCY_MS: number, VCARDOffset: flatbuffers.Offset, LAT: number, LON: number, GEO_COUNTRYOffset: flatbuffers.Offset, GEO_CITYOffset: flatbuffers.Offset, IS_SELF: boolean, UPTIME_S: bigint, SUITE_VERSIONOffset: flatbuffers.Offset, STANDARDS_VERSIONOffset: flatbuffers.Offset, SOURCEOffset: flatbuffers.Offset, PINNED: boolean, PIN_NOTEOffset: flatbuffers.Offset, CONNECTED_PEER_IDSOffset: flatbuffers.Offset, SIGNING_PUBLIC_KEYOffset: flatbuffers.Offset, ENCRYPTION_PUBLIC_KEYOffset: flatbuffers.Offset, EPM_CIDOffset: flatbuffers.Offset, STORAGE_DAEMON_VERSIONOffset: flatbuffers.Offset, ONION_ADDRESSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createNSTNode(builder: flatbuffers.Builder, PEER_IDOffset: flatbuffers.Offset, DNOffset: flatbuffers.Offset, ORGANIZATIONOffset: flatbuffers.Offset, TRUST_LEVELOffset: flatbuffers.Offset, ROLEOffset: flatbuffers.Offset, AGENT_VERSIONOffset: flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset: flatbuffers.Offset, LAST_SEEN: bigint, IS_ONLINE: boolean, LATENCY_MS: number, VCARDOffset: flatbuffers.Offset, LAT: number, LON: number, GEO_COUNTRYOffset: flatbuffers.Offset, GEO_CITYOffset: flatbuffers.Offset, IS_SELF: boolean, UPTIME_S: bigint, SUITE_VERSIONOffset: flatbuffers.Offset, STANDARDS_VERSIONOffset: flatbuffers.Offset, SOURCEOffset: flatbuffers.Offset, PINNED: boolean, PIN_NOTEOffset: flatbuffers.Offset, CONNECTED_PEER_IDSOffset: flatbuffers.Offset, SIGNING_PUBLIC_KEYOffset: flatbuffers.Offset, ENCRYPTION_PUBLIC_KEYOffset: flatbuffers.Offset, EPM_CIDOffset: flatbuffers.Offset, STORAGE_DAEMON_VERSIONOffset: flatbuffers.Offset, ONION_ADDRESSOffset: flatbuffers.Offset, STANDARDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): NSTNodeT;
     unpackTo(_o: NSTNodeT): void;
 }
@@ -194,7 +203,8 @@ export declare class NSTNodeT implements flatbuffers.IGeneratedObject {
     EPM_CID: string | Uint8Array | null;
     STORAGE_DAEMON_VERSION: string | Uint8Array | null;
     ONION_ADDRESS: string | Uint8Array | null;
-    constructor(PEER_ID?: string | Uint8Array | null, DN?: string | Uint8Array | null, ORGANIZATION?: string | Uint8Array | null, TRUST_LEVEL?: string | Uint8Array | null, ROLE?: string | Uint8Array | null, AGENT_VERSION?: string | Uint8Array | null, MULTIFORMAT_ADDRESS?: (string)[], LAST_SEEN?: bigint, IS_ONLINE?: boolean, LATENCY_MS?: number, VCARD?: string | Uint8Array | null, LAT?: number, LON?: number, GEO_COUNTRY?: string | Uint8Array | null, GEO_CITY?: string | Uint8Array | null, IS_SELF?: boolean, UPTIME_S?: bigint, SUITE_VERSION?: string | Uint8Array | null, STANDARDS_VERSION?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, PINNED?: boolean, PIN_NOTE?: string | Uint8Array | null, CONNECTED_PEER_IDS?: (string)[], SIGNING_PUBLIC_KEY?: string | Uint8Array | null, ENCRYPTION_PUBLIC_KEY?: string | Uint8Array | null, EPM_CID?: string | Uint8Array | null, STORAGE_DAEMON_VERSION?: string | Uint8Array | null, ONION_ADDRESS?: string | Uint8Array | null);
+    STANDARDS: (string)[];
+    constructor(PEER_ID?: string | Uint8Array | null, DN?: string | Uint8Array | null, ORGANIZATION?: string | Uint8Array | null, TRUST_LEVEL?: string | Uint8Array | null, ROLE?: string | Uint8Array | null, AGENT_VERSION?: string | Uint8Array | null, MULTIFORMAT_ADDRESS?: (string)[], LAST_SEEN?: bigint, IS_ONLINE?: boolean, LATENCY_MS?: number, VCARD?: string | Uint8Array | null, LAT?: number, LON?: number, GEO_COUNTRY?: string | Uint8Array | null, GEO_CITY?: string | Uint8Array | null, IS_SELF?: boolean, UPTIME_S?: bigint, SUITE_VERSION?: string | Uint8Array | null, STANDARDS_VERSION?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, PINNED?: boolean, PIN_NOTE?: string | Uint8Array | null, CONNECTED_PEER_IDS?: (string)[], SIGNING_PUBLIC_KEY?: string | Uint8Array | null, ENCRYPTION_PUBLIC_KEY?: string | Uint8Array | null, EPM_CID?: string | Uint8Array | null, STORAGE_DAEMON_VERSION?: string | Uint8Array | null, ONION_ADDRESS?: string | Uint8Array | null, STANDARDS?: (string)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=NSTNode.d.ts.map

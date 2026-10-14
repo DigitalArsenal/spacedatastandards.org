@@ -380,7 +380,7 @@ def VAMVariantCreateQUALITYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateQUALITYVector(builder, data):
-    VAMVariantCreateQUALITYVector(builder, data)
+    return VAMVariantCreateQUALITYVector(builder, data)
 
 def VAMVariantAddREVIEW_STATE(builder, REVIEW_STATE):
     builder.PrependInt8Slot(21, REVIEW_STATE, 0)

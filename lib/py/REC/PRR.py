@@ -316,7 +316,7 @@ def PRRCreateMULTIFORMAT_ADDRESSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMULTIFORMAT_ADDRESSVector(builder, data):
-    PRRCreateMULTIFORMAT_ADDRESSVector(builder, data)
+    return PRRCreateMULTIFORMAT_ADDRESSVector(builder, data)
 
 def PRRAddTRUST_LEVEL(builder, TRUST_LEVEL):
     builder.PrependInt8Slot(2, TRUST_LEVEL, 2)
@@ -352,7 +352,7 @@ def PRRCreateGROUPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUPSVector(builder, data):
-    PRRCreateGROUPSVector(builder, data)
+    return PRRCreateGROUPSVector(builder, data)
 
 def PRRAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
@@ -428,7 +428,7 @@ def PRRCreateEPM_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateEPM_DATAVector(builder, data):
-    PRRCreateEPM_DATAVector(builder, data)
+    return PRRCreateEPM_DATAVector(builder, data)
 
 def PRRAddVCARD_DATA(builder, VCARD_DATA):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(VCARD_DATA), 0)
@@ -452,7 +452,7 @@ def PRRCreateMETADATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMETADATAVector(builder, data):
-    PRRCreateMETADATAVector(builder, data)
+    return PRRCreateMETADATAVector(builder, data)
 
 def PRRAddUPDATED_AT(builder, UPDATED_AT):
     builder.PrependUint64Slot(18, UPDATED_AT, 0)
@@ -492,7 +492,7 @@ def PRRCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    PRRCreatePROVIDER_SIGNATUREVector(builder, data)
+    return PRRCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def PRREnd(builder):
     return builder.EndObject()

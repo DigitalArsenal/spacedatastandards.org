@@ -1,0 +1,543 @@
+// Hash: 2cb9c9a5b9c6f7904493c10c005c331846a63764cdc910ed199d09b956ed70fb
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Maneuver Detection Evidence (MDE)
+/// Description
+/// The evidence behind detected, checked and scored maneuvers: what a
+/// detector tested on an object's orbit history (consecutive element sets or
+/// ephemeris versions), the statistic and threshold of each test, the events
+/// each detector raised and the events it emitted, the comparison of planned
+/// maneuvers with successive ephemeris versions, and the scoring of detected
+/// maneuvers against known ones (recall, false alarms, timing and size
+/// errors).
+///
+/// The maneuvers themselves are $MNV records: an MDE event is the evidence
+/// for one, and links to it by MNV_ID. Detectors are general: a step test at
+/// the crossing of consecutive predictions (D1), a generalized likelihood
+/// ratio (GLR) test for a level shift in the mean-motion level or the orbit
+/// plane (D2), a GLR test for a change in the decay rate (D3), and the
+/// combination of tests (C). A detector fills the fields of its tests and
+/// leaves the others at their defaults (NaN = not computed).
+///
+/// One MDE carries one arm: detection options or report, ephemeris
+/// comparison options or report, or scoring options or report. Times are Unix
+/// milliseconds (int64, *_MS); speeds m/s; distances km.
+include "../MNV/main.fbs";
+
+/// A detection test. Append new values only; never reorder or reuse existing
+/// values.
+enum mdeDetector : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// D1: in-track and cross-track velocity step at the crossing of the
+  /// predictions of consecutive element sets, against a robust threshold.
+  Crossing,
+  /// D2: GLR test for a step in the mean-motion level (in-track) or the
+  /// orbit plane (cross-track).
+  LevelShift,
+  /// D3: GLR test for a change in the long-term rate of the mean-motion
+  /// level (decay or thrusting).
+  RateChange,
+  /// C: the combination of tests, merged within a time tolerance.
+  Combined
+}
+
+/// Status of a detection run. Append new values only; never reorder or reuse
+/// existing values.
+enum mdeRunStatus : ubyte {
+  Unspecified,
+  /// Propagations are needed first (PRW window requests were emitted).
+  NeedsPropagation,
+  /// Detection ran.
+  Detected
+}
+
+/// Status of one object in a detection run. Append new values only; never
+/// reorder or reuse existing values.
+enum mdeObjectStatus : ubyte {
+  Unspecified,
+  /// Screened by the enabled detectors.
+  Screened,
+  /// Too short a history to screen (DETAIL says why).
+  InsufficientHistory
+}
+
+/// What a level-shift event's time is taken from. Append new values only;
+/// never reorder or reuse existing values.
+enum mdeTimeBasis : ubyte {
+  Unspecified,
+  /// The crossing of the predictions around the change.
+  Crossing,
+  /// The middle of the gap between the element sets around the change.
+  Gap
+}
+
+/// How two ephemeris versions were compared. Append new values only; never
+/// reorder or reuse existing values.
+enum mdeComparisonMode : ubyte {
+  Unspecified,
+  /// No comparable revolution (DETAIL says why).
+  NoComparison,
+  /// The versions overlap in time.
+  Overlap,
+  /// The versions are adjacent; the comparison spans the gap.
+  Adjacent,
+  /// A change inside one version.
+  WithinVersion
+}
+
+/// Detection settings. Every field has its default.
+table MDEDetectOptions {
+  /// Detectors enabled; empty = Crossing and LevelShift, combined.
+  DETECTORS: [mdeDetector];
+  /// Report time of the emitted maneuvers, Unix ms; 0 = the ephemeris
+  /// creation date.
+  REPORT_TIME_MS: int64;
+  /// Port of the propagator that answers window requests; empty = default.
+  PROPAGATOR_PORT_ID: string;
+  /// Report every crossing pair.
+  REPORT_PAIRS: bool = true;
+  /// Report the level series.
+  REPORT_LEVELS: bool = false;
+  /// D1 threshold multiple of the robust scale.
+  K: double = 8;
+  /// D1 in-track threshold floor, m/s.
+  FLOOR_IN_TRACK_M_S: double = 0.08;
+  /// D1 cross-track threshold floor, m/s.
+  FLOOR_CROSS_TRACK_M_S: double = 1.0;
+  /// Element sets in the running median.
+  MEDIAN_SETS: uint32 = 3;
+  /// Pairs in the robust scale window.
+  SCALE_WINDOW_PAIRS: uint32 = 100;
+  /// Sampling step of the crossing search, s.
+  GRID_STEP_S: double = 60;
+  /// Neighbouring element sets each set is propagated across.
+  NEIGHBOUR_SETS: uint32 = 2;
+  /// D2 element sets per GLR window.
+  GLR_SETS: uint32 = 8;
+  /// D2 GLR window span, days.
+  GLR_SPAN_DAYS: double = 3;
+  /// D2 GLR threshold.
+  GLR_H: double = 10;
+  /// D2 in-track sigma floor, m/s.
+  GLR_FLOOR_IN_TRACK_M_S: double = 0.04;
+  /// D2 plane sigma floor, rad.
+  GLR_FLOOR_PLANE_RAD: double = 0.0004;
+  /// D3 GLR threshold.
+  LT_H: double = 6;
+  /// D3 rate sigma floor, m/s per day.
+  LT_FLOOR_M_S_PER_DAY: double = 0.05;
+  /// D3 window span, days.
+  LT_SPAN_DAYS: double = 5;
+  /// D3 element sets per window.
+  LT_SETS: uint32 = 20;
+  /// Events of different detectors within this time merge, hours.
+  MERGE_HOURS: double = 12;
+}
+
+/// One pair of consecutive element sets, compared at the crossing of their
+/// predictions.
+table MDECrossingPair {
+  /// Epoch of the earlier set, Unix ms.
+  SPAN_START_MS: int64;
+  /// Epoch of the later set, Unix ms.
+  SPAN_STOP_MS: int64;
+  /// Time of closest approach of the two predictions, Unix ms.
+  CROSSING_MS: int64;
+  /// True when the crossing is at an end of the span (no interior minimum).
+  CROSSING_AT_EDGE: bool;
+  /// Separation at the crossing, km.
+  SEPARATION_KM: double;
+  /// Semi-major axis change, km.
+  DELTA_SMA_KM: double;
+  /// In-track velocity change at the crossing, m/s.
+  IN_TRACK_M_S: double;
+  /// Plane (cross-track) velocity change, m/s.
+  PLANE_M_S: double;
+  /// D1 in-track step after the running median, m/s; NaN = not screened.
+  STEP_IN_TRACK_M_S: double = nan;
+  /// D1 plane step, m/s; NaN = not screened.
+  STEP_PLANE_M_S: double = nan;
+  /// D1 in-track threshold, m/s; NaN = not screened.
+  THRESHOLD_IN_TRACK_M_S: double = nan;
+  /// D1 plane threshold, m/s; NaN = not screened.
+  THRESHOLD_PLANE_M_S: double = nan;
+  /// True when D1 found a candidate here.
+  CANDIDATE: bool;
+}
+
+/// The level of one element set in the GLR series.
+table MDELevel {
+  /// Epoch of the set, Unix ms.
+  SET_EPOCH_MS: int64;
+  /// Semi-major axis, km.
+  SMA_KM: double;
+  /// Mean-motion level as an in-track speed, m/s.
+  LEVEL_M_S: double;
+  /// Its sigma, m/s.
+  SIGMA_M_S: double;
+  /// Orbit-plane vector scaled to speed, m/s (3 values).
+  PLANE_M_S: [double];
+  /// Its sigma, m/s.
+  PLANE_SIGMA_M_S: double;
+}
+
+/// The statistic behind one event. A combined event lists the evidence of
+/// each detector in COMPONENTS.
+table MDEEvidence {
+  DETECTOR: mdeDetector = Unspecified;
+  /// Time the component detector gave, Unix ms (for a combined event's
+  /// components); 0 = the event's.
+  TIME_MS: int64;
+  /// D1: index of the crossing pair; -1 = none.
+  PAIR_INDEX: int32 = -1;
+  /// D1: step and threshold values, m/s; NaN = not computed.
+  STEP_IN_TRACK_M_S: double = nan;
+  STEP_PLANE_M_S: double = nan;
+  THRESHOLD_IN_TRACK_M_S: double = nan;
+  THRESHOLD_PLANE_M_S: double = nan;
+  /// D1: crossing at an end of the span.
+  CROSSING_AT_EDGE: bool;
+  /// Span (D1) or gap (D2, D3) start and stop, Unix ms; 0 = none.
+  SPAN_START_MS: int64;
+  SPAN_STOP_MS: int64;
+  /// D2/D3: GLR statistic of the in-track (or rate) test; NaN = not computed.
+  GLR_STATISTIC: double = nan;
+  /// D2: level step, m/s, and its standard deviation.
+  STEP_M_S: double = nan;
+  STEP_SD_M_S: double = nan;
+  /// D2: sigma of the levels, m/s.
+  SIGMA_M_S: double = nan;
+  /// D2: level trend removed, m/s per day.
+  TREND_M_S_PER_DAY: double = nan;
+  /// D2: epochs of the last old-level and first new-level sets, Unix ms.
+  OLD_LEVEL_SET_MS: int64;
+  NEW_LEVEL_SET_MS: int64;
+  TIME_BASIS: mdeTimeBasis = Unspecified;
+  /// D2: GLR statistic of the plane test; NaN = not computed.
+  PLANE_GLR_STATISTIC: double = nan;
+  /// D2: plane step, m/s.
+  PLANE_STEP_M_S: double = nan;
+  /// D3: change of the level rate, m/s per day, and its standard deviation.
+  RATE_CHANGE_M_S_PER_DAY: double = nan;
+  RATE_CHANGE_SD: double = nan;
+  /// D3: rate before the change, m/s per day.
+  TREND_BEFORE_M_S_PER_DAY: double = nan;
+  /// C: the evidence of each component detector.
+  COMPONENTS: [MDEEvidence];
+  /// C: the component whose time and size were kept.
+  KEPT: mdeDetector = Unspecified;
+}
+
+/// One event a detector raised.
+table MDEEvent {
+  DETECTOR: mdeDetector = Unspecified;
+  /// Event time, Unix ms.
+  TIME_MS: int64;
+  CHARACTERIZATION: maneuverCharacterization = UNKNOWN;
+  /// In-track delta-v, m/s; 0 unless its test fired.
+  IN_TRACK_M_S: double;
+  /// Cross-track delta-v, m/s; 0 unless its test fired.
+  CROSS_TRACK_M_S: double;
+  IN_TRACK_FIRED: bool;
+  CROSS_TRACK_FIRED: bool;
+  /// In-track and cross-track estimates before the firing rule, m/s.
+  RAW_IN_TRACK_M_S: double;
+  RAW_CROSS_TRACK_M_S: double;
+  /// Semi-major axis change, km.
+  DELTA_SMA_KM: double;
+  /// Separation at the crossing, km.
+  SEPARATION_KM: double;
+  /// True when TIME_MS is a crossing time (else a gap middle).
+  TIME_FROM_CROSSING: bool;
+  /// Indices of the history blocks (element sets or versions) before and
+  /// after the event.
+  BLOCK_BEFORE: uint32;
+  BLOCK_AFTER: uint32;
+  EVIDENCE: MDEEvidence;
+  /// D3: change of along-track acceleration, m/s**2; NaN = not computed.
+  ACCEL_CHANGE_M_S2: double = nan;
+  /// ID of the $MNV record emitted for the event; empty when not emitted.
+  MNV_ID: string;
+}
+
+/// An element set dropped as a republication of another.
+table MDEDuplicateEpoch {
+  OBJECT_KEY: string;
+  /// Epoch, Unix ms.
+  EPOCH_MS: int64;
+  /// 0-based input record kept and dropped.
+  KEPT_RECORD: uint32;
+  DROPPED_RECORD: uint32;
+}
+
+/// An element set that could not be used.
+table MDERefusedSet {
+  OBJECT_KEY: string;
+  EPOCH_MS: int64;
+  /// 0-based input record; -1 = not applicable.
+  SET_INDEX: int32 = -1;
+  /// Reason, e.g. "a single element set" or the propagator's refusal text.
+  REASON: string;
+}
+
+/// One object screened.
+table MDEObjectDetection {
+  /// Object key: "NORAD:<n>", else OBJECT_ID, else OBJECT_NAME.
+  OBJECT_KEY: string;
+  NORAD_CAT_ID: uint32;
+  /// Element sets in its history.
+  ELEMENT_SETS: uint32;
+  /// Frame the history was screened in, e.g. "TEMEOFDATE", "EME2000".
+  FRAME: string;
+  STATUS: mdeObjectStatus = Unspecified;
+  /// Why the history was insufficient; empty otherwise.
+  DETAIL: string;
+  /// Crossing pairs (when REPORT_PAIRS).
+  PAIRS: [MDECrossingPair];
+  /// Level series (when REPORT_LEVELS).
+  LEVELS: [MDELevel];
+  /// Every event each enabled detector raised, before combining.
+  DETECTOR_EVENTS: [MDEEvent];
+  /// The events emitted (one $MNV each).
+  EVENTS: [MDEEvent];
+}
+
+/// Result of a detection run.
+table MDEDetectReport {
+  STATUS: mdeRunStatus = Unspecified;
+  /// Window requests emitted (NeedsPropagation).
+  QUERIES: uint32;
+  DUPLICATE_EPOCHS: [MDEDuplicateEpoch];
+  /// The options used, defaults filled in.
+  OPTIONS: MDEDetectOptions;
+  OBJECTS: [MDEObjectDetection];
+  OBJECTS_SCREENED: uint32;
+  REFUSED_SETS: [MDERefusedSet];
+  /// Events emitted over all objects.
+  DETECTIONS: uint32;
+}
+
+/// Settings of a comparison of ephemeris versions.
+table MDECompareOptions {
+  /// Report time, Unix ms; 0 = from the versions.
+  REPORT_TIME_MS: int64;
+  /// Also look for changes inside one version.
+  WITHIN_VERSION: bool = false;
+  /// Margin around a planned ignition, s.
+  MARGIN_S: double = 600;
+  /// The post-burn version must start this long after ignition, s.
+  POST_START_AFTER_S: double = 3600;
+  /// Fraction of the planned change that marks EXECUTED.
+  EXECUTED_FRACTION: double = 0.5;
+  /// Fraction below which the plan is CANCELLED (<= EXECUTED_FRACTION).
+  CANCELLED_FRACTION: double = 0.25;
+  /// Semi-major axis change that flags an unplanned change, km; NaN = off.
+  UNPLANNED_THRESHOLD_KM: double = nan;
+}
+
+/// One comparison of two versions (or one version with itself).
+table MDEVersionChange {
+  /// Older and newer version descriptions; WITHIN names the version for a
+  /// WithinVersion change.
+  OLDER: string;
+  NEWER: string;
+  WITHIN: string;
+  MODE: mdeComparisonMode = Unspecified;
+  /// Why there was no comparison; empty otherwise.
+  DETAIL: string;
+  /// Window compared, Unix ms.
+  WINDOW_START_MS: int64;
+  WINDOW_STOP_MS: int64;
+  /// Semi-major axis change, km.
+  DELTA_SMA_KM: double = nan;
+  /// In-track and cross-track equivalent delta-v, m/s.
+  IN_TRACK_M_S: double = nan;
+  CROSS_TRACK_M_S: double = nan;
+  /// Gap between adjacent versions, s.
+  GAP_S: double = nan;
+}
+
+/// One planned maneuver checked against the versions.
+table MDEPlannedCheck {
+  /// The plan's maneuver ID.
+  ID: string;
+  /// Planned ignition, Unix ms.
+  TIG_MS: int64;
+  /// Planned delta-v, m/s.
+  PLANNED_M_S: double;
+  /// EXECUTED, CANCELLED or UNKNOWN.
+  STATUS: maneuverStatus = UNKNOWN;
+  /// Group of plans checked together, Unix ms.
+  GROUP_START_MS: int64;
+  GROUP_STOP_MS: int64;
+  /// Why it could not be decided; empty otherwise.
+  DETAIL: string;
+  /// Pre-burn and post-burn version descriptions; empty = none.
+  PRE: string;
+  POST: string;
+  /// Window compared, Unix ms.
+  WINDOW_START_MS: int64;
+  WINDOW_STOP_MS: int64;
+  /// Semi-major axis change the plan models, km.
+  MODELED_DELTA_SMA_KM: double = nan;
+  /// Post-burn minus pre-burn semi-major axis, km.
+  POST_MINUS_PRE_SMA_KM: double = nan;
+  /// Executed semi-major axis change, km.
+  EXECUTED_DELTA_SMA_KM: double = nan;
+  /// Executed in-track and cross-track delta-v, m/s.
+  EXECUTED_IN_TRACK_M_S: double = nan;
+  EXECUTED_CROSS_TRACK_M_S: double = nan;
+  /// Cross-track delta-v the plan models, m/s.
+  MODELED_CROSS_TRACK_M_S: double = nan;
+  /// Post minus pre cross-track, m/s.
+  POST_MINUS_PRE_CROSS_TRACK_M_S: double = nan;
+}
+
+/// Comparison results for one object.
+table MDEObjectComparison {
+  OBJECT_KEY: string;
+  /// Versions read.
+  VERSIONS: uint32;
+  CHANGES: [MDEVersionChange];
+  PLANNED: [MDEPlannedCheck];
+}
+
+/// Result of comparing ephemeris versions.
+table MDECompareReport {
+  OPTIONS: MDECompareOptions;
+  OBJECTS: [MDEObjectComparison];
+  EXECUTED_COUNT: uint32;
+  CANCELLED_COUNT: uint32;
+  UNDECIDED_COUNT: uint32;
+  UNPLANNED_CHANGE_COUNT: uint32;
+}
+
+/// A time span of one object.
+table MDEObjectSpan {
+  OBJECT_KEY: string;
+  FROM_MS: int64;
+  TO_MS: int64;
+}
+
+/// Settings of scoring detections against known maneuvers.
+table MDEScoreOptions {
+  /// A detection up to this long before a known maneuver matches, s.
+  BEFORE_S: double = 21600;
+  /// A detection up to this long after a known maneuver matches, s.
+  AFTER_S: double = 129600;
+  /// Delta-v bin edges for recall, increasing, m/s; empty = 0.05, 0.2, 1.0.
+  BINS_M_S: [double];
+  /// Spans where an unmatched detection is explained (not a false alarm).
+  EXPLAINED: [MDEObjectSpan];
+  /// Spans where truth is complete (false alarms count only here).
+  ASSESSED: [MDEObjectSpan];
+  /// Spans of observation of each object (object-years).
+  SPANS: [MDEObjectSpan];
+}
+
+/// Summary of a distribution.
+table MDEDistribution {
+  COUNT: uint32;
+  MEDIAN: double = nan;
+  P10: double = nan;
+  P90: double = nan;
+}
+
+/// Recall in one delta-v bin.
+table MDERecallBin {
+  FROM_M_S: double;
+  /// Upper edge, m/s; +Infinity = open.
+  TO_M_S: double = inf;
+  TRUTH: uint32;
+  DETECTED: uint32;
+  /// Recall, 0 to 1; NaN when TRUTH is 0.
+  RECALL: double = nan;
+  /// Wilson 95 % interval; NaN when TRUTH is 0.
+  WILSON95_LOW: double = nan;
+  WILSON95_HIGH: double = nan;
+}
+
+/// Scoring summary.
+table MDEScoreSummary {
+  /// Known maneuvers.
+  TRUTH: uint32;
+  /// Detections scored.
+  EVENTS: uint32;
+  /// Known maneuvers detected.
+  DETECTED: uint32;
+  RECALL: double = nan;
+  WILSON95_LOW: double = nan;
+  WILSON95_HIGH: double = nan;
+  BY_DELTA_V: [MDERecallBin];
+  /// Absolute time error of matches, s; absent when none.
+  TIME_ERROR_ABS_S: MDEDistribution;
+  /// Detected over known delta-v; absent when none.
+  DV_RATIO: MDEDistribution;
+  /// Detected over known in-track delta-v; absent when none.
+  IN_TRACK_RATIO: MDEDistribution;
+  UNMATCHED_EVENTS: uint32;
+  /// Unmatched detections inside explained spans.
+  EXPLAINED: uint32;
+  FALSE_ALARMS: uint32;
+  /// Object-years assessed.
+  OBJECT_YEARS: double;
+  FALSE_ALARMS_PER_OBJECT_YEAR: double = nan;
+}
+
+/// A known maneuver and the detection matched to it (if any).
+table MDETruthMatch {
+  OBJECT_KEY: string;
+  /// The known maneuver's ID and time, Unix ms.
+  ID: string;
+  TIME_MS: int64;
+  /// Known delta-v and its in-track part, m/s.
+  DV_M_S: double = nan;
+  IN_TRACK_M_S: double = nan;
+  /// The matched detection's ID and time; empty and 0 for a miss.
+  EVENT_ID: string;
+  EVENT_TIME_MS: int64;
+  /// Detection minus truth time, s; NaN for a miss.
+  TIME_ERROR_S: double = nan;
+  EVENT_DV_M_S: double = nan;
+  EVENT_IN_TRACK_M_S: double = nan;
+  DV_RATIO: double = nan;
+  IN_TRACK_RATIO: double = nan;
+}
+
+/// A detection matched to no known maneuver.
+table MDEUnmatchedEvent {
+  OBJECT_KEY: string;
+  ID: string;
+  TIME_MS: int64;
+  DV_M_S: double = nan;
+  IN_TRACK_M_S: double = nan;
+  CROSS_TRACK_M_S: double = nan;
+  /// Inside an explained span.
+  EXPLAINED: bool;
+  /// Inside an assessed span (a false alarm when not explained).
+  ASSESSED: bool;
+}
+
+/// Result of scoring detections.
+table MDEScoreReport {
+  OPTIONS: MDEScoreOptions;
+  SUMMARY: MDEScoreSummary;
+  MATCHES: [MDETruthMatch];
+  /// Known maneuvers not detected (EVENT fields empty).
+  MISSED: [MDETruthMatch];
+  UNMATCHED: [MDEUnmatchedEvent];
+}
+
+/// Maneuver Detection Evidence - exactly one arm is set.
+table MDE {
+  DETECT_OPTIONS: MDEDetectOptions;
+  DETECT_REPORT: MDEDetectReport;
+  COMPARE_OPTIONS: MDECompareOptions;
+  COMPARE_REPORT: MDECompareReport;
+  SCORE_OPTIONS: MDEScoreOptions;
+  SCORE_REPORT: MDEScoreReport;
+}
+
+root_type MDE;
+file_identifier "$MDE";

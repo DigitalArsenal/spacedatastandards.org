@@ -118,7 +118,7 @@ public enum DestructionCause: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Damage Models
-public struct DMG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct DMG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

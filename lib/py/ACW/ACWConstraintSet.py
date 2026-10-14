@@ -122,7 +122,7 @@ def ACWConstraintSetCreateCONSTRAINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONSTRAINTSVector(builder, data):
-    ACWConstraintSetCreateCONSTRAINTSVector(builder, data)
+    return ACWConstraintSetCreateCONSTRAINTSVector(builder, data)
 
 def ACWConstraintSetAddSETS(builder, SETS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(SETS), 0)
@@ -140,7 +140,7 @@ def ACWConstraintSetCreateSETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSETSVector(builder, data):
-    ACWConstraintSetCreateSETSVector(builder, data)
+    return ACWConstraintSetCreateSETSVector(builder, data)
 
 def ACWConstraintSetAddLABEL(builder, LABEL):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LABEL), 0)

@@ -53,7 +53,7 @@ public enum cmrMembershipState: Int8, FlatbuffersVectorInitializable, Enum, Veri
 ///  Each source gets its own entry. A publisher never merges a catalogue's
 ///  group membership, a reference catalogue's ownership assertion, and
 ///  $CAT/$BUS joins into one ambiguous citation.
-public struct CMRProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMRProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -185,7 +185,7 @@ public struct CMRProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  names and aliases are carried separately so consumers never use branding as
 ///  identity. Every emitted record names the independent source assertions used
 ///  to establish membership, operator, and catalogue joins.
-public struct CMR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CMR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

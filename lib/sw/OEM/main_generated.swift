@@ -11,7 +11,7 @@ import FlatBuffers
 ///  A single ephemeris data line (for non-uniform time steps only)
 ///  Use this format when time intervals between states are irregular.
 ///  For uniform time steps, use the compact EPHEMERIS_DATA array instead.
-public struct ephemerisDataLine: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ephemerisDataLine: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -187,7 +187,7 @@ public struct ephemerisDataLine: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Position/Velocity Covariance Matrix Line
-public struct covarianceMatrixLine: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct covarianceMatrixLine: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -388,7 +388,7 @@ public struct covarianceMatrixLine: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  OEM Ephemeris Data Block
-public struct ephemerisDataBlock: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ephemerisDataBlock: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -594,7 +594,7 @@ public struct ephemerisDataBlock: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Orbit Ephemeris Message
-public struct OEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OEM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

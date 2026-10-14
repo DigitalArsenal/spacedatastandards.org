@@ -253,7 +253,7 @@ def commsTransponderCreateCHANNELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHANNELSVector(builder, data):
-    commsTransponderCreateCHANNELSVector(builder, data)
+    return commsTransponderCreateCHANNELSVector(builder, data)
 
 def commsTransponderAddPOLARIZATION(builder, POLARIZATION):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(POLARIZATION), 0)

@@ -1,0 +1,579 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "scrScreeningRole": {
+      "type": "string",
+      "enum": [
+        "Secondary",
+        "Primary",
+        "Skip"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Secondary": {
+          "value": 0,
+          "description": "Screened only against primaries."
+        },
+        "Primary": {
+          "value": 1,
+          "description": "Screened against every non-skipped object."
+        },
+        "Skip": {
+          "value": 2,
+          "description": "Left out of the screen."
+        }
+      }
+    },
+    "scrPossibilityModel": {
+      "type": "string",
+      "enum": [
+        "FiniteSupport",
+        "EllipsoidalKernel"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "FiniteSupport": {
+          "value": 0,
+          "description": "Finite supports: sampled states each with a possibility degree."
+        },
+        "EllipsoidalKernel": {
+          "value": 1,
+          "description": "Ellipsoidal kernels: a centre state and a shape matrix, possibility exp(-d**2/2) with d the distance in the shape metric."
+        }
+      }
+    },
+    "SCRBlock": {
+      "type": "object",
+      "description": "A run of coarse steps of the screening window.",
+      "properties": {
+        "FIRST_STEP": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Absolute index of the first coarse step; step k is at the window start\nplus k coarse steps.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "STEP_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of steps.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRGridState": {
+      "type": "object",
+      "description": "One object's state at one coarse step, in the screen's evaluation frame.",
+      "properties": {
+        "X_KM": {
+          "type": "number",
+          "description": "Position, km."
+        },
+        "Y_KM": {
+          "type": "number"
+        },
+        "Z_KM": {
+          "type": "number"
+        },
+        "DEVIATION_KM": {
+          "type": "number",
+          "description": "Deviation bound, km: how far the object's true path can stray from the\nstraight line r + v t over half a coarse step either side."
+        },
+        "VX_KM_S": {
+          "type": "number",
+          "description": "Velocity, km/s."
+        },
+        "VY_KM_S": {
+          "type": "number"
+        },
+        "VZ_KM_S": {
+          "type": "number"
+        },
+        "RESERVED": {
+          "type": "number",
+          "description": "Zero (keeps the row 32 bytes)."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRRadiusBand": {
+      "type": "object",
+      "description": "Bounds of an object's geocentric radius over a block, km.",
+      "properties": {
+        "LOW_KM": {
+          "type": "number"
+        },
+        "HIGH_KM": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRGrid": {
+      "type": "object",
+      "description": "The coarse grid of one block.",
+      "properties": {
+        "FIRST_STEP": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STEP_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Objects (rows per step), in the screen's index order.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FRAME": {
+          "type": "string",
+          "description": "Evaluation frame, e.g. \"TEME\", \"GCRF\", \"EME2000\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STEP_S": {
+          "type": "number",
+          "description": "Coarse step, s; 0 = not stated.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRGridState"
+          },
+          "description": "States, step-major: STEP_COUNT * OBJECTS rows, row (s, n) at\ns * OBJECTS + n. An excluded object's rows are NaN.",
+          "x-flatbuffer-type": "[SCRGridState]"
+        },
+        "BANDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRRadiusBand"
+          },
+          "description": "Radius band of each object over the block (widened by the deviation\nbound); NaN for an excluded object. Pairs whose bands are further apart\nthan the threshold cannot close.",
+          "x-flatbuffer-type": "[SCRRadiusBand]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRRoles": {
+      "type": "object",
+      "description": "Roles of the objects of a screen.",
+      "properties": {
+        "ROLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/scrScreeningRole"
+          },
+          "description": "One role per object, in the screen's index order. Absent roles mean\nevery object is a primary (all against all).",
+          "x-flatbuffer-type": "[scrScreeningRole]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRCandidatePair": {
+      "type": "object",
+      "description": "A pair and coarse step that survived the coarse filter.",
+      "properties": {
+        "OBJECT1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index of the first object (lower index)."
+        },
+        "OBJECT2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index of the second object."
+        },
+        "STEP": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Absolute coarse step."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRCandidates": {
+      "type": "object",
+      "description": "Candidates of a block or a screen, ordered by step then pair.",
+      "properties": {
+        "PAIRS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRCandidatePair"
+          },
+          "x-flatbuffer-type": "[SCRCandidatePair]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRExclusion": {
+      "type": "object",
+      "description": "An object left out of the screen because it could not be propagated.",
+      "properties": {
+        "INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Index of the object in the screen's index order.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FIRST_FAILURE_JD": {
+          "type": "number",
+          "description": "First time the propagation failed, Julian date (UTC).",
+          "x-flatbuffer-type": "double"
+        },
+        "REASON": {
+          "type": "string",
+          "description": "The propagator's or source's failure text.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRExclusions": {
+      "type": "object",
+      "description": "Objects left out of a screen.",
+      "properties": {
+        "EXCLUSIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRExclusion"
+          },
+          "x-flatbuffer-type": "[SCRExclusion]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRSearchReport": {
+      "type": "object",
+      "description": "What one coarse-filter stage did.",
+      "properties": {
+        "FIRST_STEP": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STEP_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "LAST_STEP": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Last coarse step of the window, inclusive.",
+          "x-flatbuffer-type": "int32"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Objects in the grid.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXCLUDED": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRExclusion"
+          },
+          "description": "Objects that could not be propagated in this block.",
+          "x-flatbuffer-type": "[SCRExclusion]"
+        },
+        "PRIMARIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Objects by role (all primaries when no roles were given).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SECONDARIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SKIPPED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "CANDIDATE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Candidate cells found.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRPossibilityPoint": {
+      "type": "object",
+      "description": "One sampled state of an object with its possibility degree.",
+      "properties": {
+        "X_M": {
+          "type": "number",
+          "description": "Position, m, in one inertial frame shared by both objects."
+        },
+        "Y_M": {
+          "type": "number"
+        },
+        "Z_M": {
+          "type": "number"
+        },
+        "VX_M_S": {
+          "type": "number",
+          "description": "Velocity, m/s."
+        },
+        "VY_M_S": {
+          "type": "number"
+        },
+        "VZ_M_S": {
+          "type": "number"
+        },
+        "POSSIBILITY": {
+          "type": "number",
+          "description": "Possibility degree, (0, 1]."
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRPossibilityKernel": {
+      "type": "object",
+      "description": "An ellipsoidal possibility kernel.",
+      "properties": {
+        "CENTRE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Centre state x, y, z (m), vx, vy, vz (m/s): 6 values.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SHAPE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Shape matrix, 6x6 row-major (36 values), positive definite, used like a\ncovariance in SI units.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRPossibilityRequest": {
+      "type": "object",
+      "description": "A possibility-of-collision assessment of one encounter.",
+      "properties": {
+        "COMBINED_RADIUS_M": {
+          "type": "number",
+          "description": "Combined hard-body radius, m (> 0).",
+          "x-flatbuffer-type": "double"
+        },
+        "HALF_WINDOW_S": {
+          "type": "number",
+          "description": "Closest approach is searched over [-T, T] s about the common epoch of\nthe states.",
+          "x-flatbuffer-type": "double"
+        },
+        "MODEL": {
+          "$ref": "#/definitions/scrPossibilityModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "FiniteSupport": {
+              "value": 0,
+              "description": "Finite supports: sampled states each with a possibility degree."
+            },
+            "EllipsoidalKernel": {
+              "value": 1,
+              "description": "Ellipsoidal kernels: a centre state and a shape matrix, possibility exp(-d**2/2) with d the distance in the shape metric."
+            }
+          },
+          "x-flatbuffer-default": "FiniteSupport"
+        },
+        "A_POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRPossibilityPoint"
+          },
+          "description": "Object A's and B's sampled states (FiniteSupport), 1 to 200000 each.",
+          "x-flatbuffer-type": "[SCRPossibilityPoint]"
+        },
+        "B_POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRPossibilityPoint"
+          },
+          "x-flatbuffer-type": "[SCRPossibilityPoint]"
+        },
+        "A_KERNEL": {
+          "$ref": "#/definitions/SCRPossibilityKernel",
+          "description": "Object A's and B's kernels (EllipsoidalKernel).",
+          "x-flatbuffer-type": "SCRPossibilityKernel"
+        },
+        "B_KERNEL": {
+          "$ref": "#/definitions/SCRPossibilityKernel",
+          "x-flatbuffer-type": "SCRPossibilityKernel"
+        },
+        "ALPHA_LEVELS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Alpha levels to report, each in (0, 1], at most 64.",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRAlphaCut": {
+      "type": "object",
+      "description": "Miss distance and closest-approach time ranges at one alpha level.",
+      "properties": {
+        "ALPHA": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_MISS_M": {
+          "type": "number",
+          "description": "Smallest and largest miss distance of the cut, m.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_MISS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TCA_MIN_S": {
+          "type": "number",
+          "description": "Earliest and latest closest approach, s from the common epoch.",
+          "x-flatbuffer-type": "double"
+        },
+        "TCA_MAX_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCRPossibilityResult": {
+      "type": "object",
+      "description": "Result of a possibility-of-collision assessment.",
+      "properties": {
+        "POSSIBILITY_COLLISION": {
+          "type": "number",
+          "description": "Possibility of collision, 0 to 1.",
+          "x-flatbuffer-type": "double"
+        },
+        "NECESSITY_COLLISION": {
+          "type": "number",
+          "description": "Necessity of collision, 1 - possibility of no collision.",
+          "x-flatbuffer-type": "double"
+        },
+        "NECESSITY_NO_COLLISION": {
+          "type": "number",
+          "description": "Necessity of no collision, 1 - POSSIBILITY_COLLISION.",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_MISS_M": {
+          "type": "number",
+          "description": "Smallest and largest miss distance over all pairs, m.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_MISS_M": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TCA_MIN_S": {
+          "type": "number",
+          "description": "Earliest and latest closest approach, s from the common epoch (clamped\nto the half window).",
+          "x-flatbuffer-type": "double"
+        },
+        "TCA_MAX_S": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "PAIRS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "State pairs evaluated, and those with miss <= the combined radius.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "COLLIDING_PAIRS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "ALPHA_CUTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SCRAlphaCut"
+          },
+          "description": "One per requested alpha level, in order.",
+          "x-flatbuffer-type": "[SCRAlphaCut]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SCR": {
+      "type": "object",
+      "description": "Conjunction Screening - exactly one arm is set.",
+      "properties": {
+        "BLOCK": {
+          "$ref": "#/definitions/SCRBlock",
+          "x-flatbuffer-type": "SCRBlock"
+        },
+        "GRID": {
+          "$ref": "#/definitions/SCRGrid",
+          "x-flatbuffer-type": "SCRGrid"
+        },
+        "ROLES": {
+          "$ref": "#/definitions/SCRRoles",
+          "x-flatbuffer-type": "SCRRoles"
+        },
+        "CANDIDATES": {
+          "$ref": "#/definitions/SCRCandidates",
+          "x-flatbuffer-type": "SCRCandidates"
+        },
+        "EXCLUSIONS": {
+          "$ref": "#/definitions/SCRExclusions",
+          "x-flatbuffer-type": "SCRExclusions"
+        },
+        "SEARCH_REPORT": {
+          "$ref": "#/definitions/SCRSearchReport",
+          "x-flatbuffer-type": "SCRSearchReport"
+        },
+        "POSSIBILITY_REQUEST": {
+          "$ref": "#/definitions/SCRPossibilityRequest",
+          "x-flatbuffer-type": "SCRPossibilityRequest"
+        },
+        "POSSIBILITY_RESULT": {
+          "$ref": "#/definitions/SCRPossibilityResult",
+          "x-flatbuffer-type": "SCRPossibilityResult"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SCR",
+  "x-flatbuffer-root-type": "SCR",
+  "x-flatbuffer-file-identifier": "$SCR"
+}

@@ -1,5 +1,5 @@
-// Hash: 3a3f956fc69b8dc74c11d6db599bf870e08c362b1ed6c1086ab5e47fd4bb8889
-// Version: 1.207.0
+// Hash: 9134c92eaff958b838fc3cc3a311a85e51810ee41b98c106ac69489a0940275e
+// Version: 1.207.1
 // -----------------------------------END_HEADER
 /// Node Status Record (NST)
 /// Description
@@ -65,6 +65,8 @@ table NSTNode {
   /// Onion-service address when the peer is reachable over an anonymity
   /// network.
   ONION_ADDRESS: string;
+  /// Standards the peer publishes or serves, as their codes, e.g. "OMM".
+  STANDARDS: [string];
 }
 
 /// Node Status Record - the set of peers a node reports.
@@ -74,6 +76,8 @@ table NST {
   GENERATED_AT: int64;
   /// Peer identifier of the emitting node.
   SOURCE_PEER_ID: string;
+  /// Entity tag of this set, for conditional requests.
+  ETAG: string;
 }
 
 root_type NST;

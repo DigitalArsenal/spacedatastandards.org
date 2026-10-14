@@ -24,6 +24,8 @@ import { PRWResidentRequest, PRWResidentRequestT } from './PRWResidentRequest.js
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWSpaceWeatherTable, PRWSpaceWeatherTableT } from './PRWSpaceWeatherTable.js';
 import { PRWVersionResult, PRWVersionResultT } from './PRWVersionResult.js';
+import { PRWWindowReport, PRWWindowReportT } from './PRWWindowReport.js';
+import { PRWWindowRequest, PRWWindowRequestT } from './PRWWindowRequest.js';
 
 
 /**
@@ -159,8 +161,21 @@ JB2008_INDICES(obj?:PRWJB2008IndicesTable):PRWJB2008IndicesTable|null {
   return offset ? (obj || new PRWJB2008IndicesTable()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Propagation over windows: one $OEM block per query answers it.
+ */
+WINDOW_REQUEST(obj?:PRWWindowRequest):PRWWindowRequest|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new PRWWindowRequest()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+WINDOW_REPORT(obj?:PRWWindowReport):PRWWindowReport|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new PRWWindowReport()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPRW(builder:flatbuffers.Builder) {
-  builder.startObject(21);
+  builder.startObject(23);
 }
 
 static addInit(builder:flatbuffers.Builder, INITOffset:flatbuffers.Offset) {
@@ -247,6 +262,14 @@ static addJb2008Indices(builder:flatbuffers.Builder, JB2008_INDICESOffset:flatbu
   builder.addFieldOffset(20, JB2008_INDICESOffset, 0);
 }
 
+static addWindowRequest(builder:flatbuffers.Builder, WINDOW_REQUESTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, WINDOW_REQUESTOffset, 0);
+}
+
+static addWindowReport(builder:flatbuffers.Builder, WINDOW_REPORTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, WINDOW_REPORTOffset, 0);
+}
+
 static endPRW(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -283,7 +306,9 @@ unpack(): PRWT {
     (this.VERSION_RESULT() !== null ? this.VERSION_RESULT()!.unpack() : null),
     (this.EARTH_ORIENTATION() !== null ? this.EARTH_ORIENTATION()!.unpack() : null),
     (this.SPACE_WEATHER() !== null ? this.SPACE_WEATHER()!.unpack() : null),
-    (this.JB2008_INDICES() !== null ? this.JB2008_INDICES()!.unpack() : null)
+    (this.JB2008_INDICES() !== null ? this.JB2008_INDICES()!.unpack() : null),
+    (this.WINDOW_REQUEST() !== null ? this.WINDOW_REQUEST()!.unpack() : null),
+    (this.WINDOW_REPORT() !== null ? this.WINDOW_REPORT()!.unpack() : null)
   );
 }
 
@@ -310,6 +335,8 @@ unpackTo(_o: PRWT): void {
   _o.EARTH_ORIENTATION = (this.EARTH_ORIENTATION() !== null ? this.EARTH_ORIENTATION()!.unpack() : null);
   _o.SPACE_WEATHER = (this.SPACE_WEATHER() !== null ? this.SPACE_WEATHER()!.unpack() : null);
   _o.JB2008_INDICES = (this.JB2008_INDICES() !== null ? this.JB2008_INDICES()!.unpack() : null);
+  _o.WINDOW_REQUEST = (this.WINDOW_REQUEST() !== null ? this.WINDOW_REQUEST()!.unpack() : null);
+  _o.WINDOW_REPORT = (this.WINDOW_REPORT() !== null ? this.WINDOW_REPORT()!.unpack() : null);
 }
 }
 
@@ -335,7 +362,9 @@ constructor(
   public VERSION_RESULT: PRWVersionResultT|null = null,
   public EARTH_ORIENTATION: PRWEarthOrientationT|null = null,
   public SPACE_WEATHER: PRWSpaceWeatherTableT|null = null,
-  public JB2008_INDICES: PRWJB2008IndicesTableT|null = null
+  public JB2008_INDICES: PRWJB2008IndicesTableT|null = null,
+  public WINDOW_REQUEST: PRWWindowRequestT|null = null,
+  public WINDOW_REPORT: PRWWindowReportT|null = null
 ){}
 
 
@@ -360,6 +389,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EARTH_ORIENTATION = (this.EARTH_ORIENTATION !== null ? this.EARTH_ORIENTATION!.pack(builder) : 0);
   const SPACE_WEATHER = (this.SPACE_WEATHER !== null ? this.SPACE_WEATHER!.pack(builder) : 0);
   const JB2008_INDICES = (this.JB2008_INDICES !== null ? this.JB2008_INDICES!.pack(builder) : 0);
+  const WINDOW_REQUEST = (this.WINDOW_REQUEST !== null ? this.WINDOW_REQUEST!.pack(builder) : 0);
+  const WINDOW_REPORT = (this.WINDOW_REPORT !== null ? this.WINDOW_REPORT!.pack(builder) : 0);
 
   PRW.startPRW(builder);
   PRW.addInit(builder, INIT);
@@ -383,6 +414,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRW.addEarthOrientation(builder, EARTH_ORIENTATION);
   PRW.addSpaceWeather(builder, SPACE_WEATHER);
   PRW.addJb2008Indices(builder, JB2008_INDICES);
+  PRW.addWindowRequest(builder, WINDOW_REQUEST);
+  PRW.addWindowReport(builder, WINDOW_REPORT);
 
   return PRW.endPRW(builder);
 }

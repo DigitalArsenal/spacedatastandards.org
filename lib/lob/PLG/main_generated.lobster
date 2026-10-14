@@ -173,6 +173,18 @@ enum hostCapabilityKind:
     /// single record without source attribution. Hosts gate
     /// storage.ingest_with_source on this capability specifically.
     hostCapabilityKind_STORAGE_INGEST = 36
+    /// Read the node's view of its peer-to-peer network: known peers, the
+    /// publication notices it has received and verified, and the latest
+    /// dataset of a lane (p2p.* host operations).
+    hostCapabilityKind_P2P_READ = 37
+    /// Read the node's own health: uptime, service state, storage and network
+    /// figures (node_status_read.status).
+    hostCapabilityKind_NODE_STATUS_READ = 38
+    /// Read the node's event log (node_activity_read.activity).
+    hostCapabilityKind_NODE_ACTIVITY_READ = 39
+    /// Read and write operator-held secrets by identifier (credentials for
+    /// upstream sources); the secret value is never persisted in a record.
+    hostCapabilityKind_SECRETS = 40
 
 /// Compile-time routing decision for an edge. The aligned option is legal only
 /// when the producer and consumer share the declared arena and the runtime can

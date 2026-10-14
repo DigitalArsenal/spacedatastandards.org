@@ -257,8 +257,31 @@ class PRW(object):
             return obj
         return None
 
+    # Propagation over windows: one $OEM block per query answers it.
+    # PRW
+    def WINDOW_REQUEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWWindowRequest import PRWWindowRequest
+            obj = PRWWindowRequest()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRW
+    def WINDOW_REPORT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PRWWindowReport import PRWWindowReport
+            obj = PRWWindowReport()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PRWStart(builder):
-    builder.StartObject(21)
+    builder.StartObject(23)
 
 def Start(builder):
     PRWStart(builder)
@@ -389,6 +412,18 @@ def PRWAddJB2008_INDICES(builder, JB2008_INDICES):
 def AddJB2008_INDICES(builder, JB2008_INDICES):
     PRWAddJB2008_INDICES(builder, JB2008_INDICES)
 
+def PRWAddWINDOW_REQUEST(builder, WINDOW_REQUEST):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_REQUEST), 0)
+
+def AddWINDOW_REQUEST(builder, WINDOW_REQUEST):
+    PRWAddWINDOW_REQUEST(builder, WINDOW_REQUEST)
+
+def PRWAddWINDOW_REPORT(builder, WINDOW_REPORT):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(WINDOW_REPORT), 0)
+
+def AddWINDOW_REPORT(builder, WINDOW_REPORT):
+    PRWAddWINDOW_REPORT(builder, WINDOW_REPORT)
+
 def PRWEnd(builder):
     return builder.EndObject()
 
@@ -415,6 +450,8 @@ import PRWResidentRequest
 import PRWResidentState
 import PRWSpaceWeatherTable
 import PRWVersionResult
+import PRWWindowReport
+import PRWWindowRequest
 try:
     from typing import Optional
 except:
@@ -446,6 +483,8 @@ class PRWT(object):
         EARTH_ORIENTATION = None,
         SPACE_WEATHER = None,
         JB2008_INDICES = None,
+        WINDOW_REQUEST = None,
+        WINDOW_REPORT = None,
     ):
         self.INIT = INIT  # type: Optional[PRWInit.PRWInitT]
         self.BATCH_REQUEST = BATCH_REQUEST  # type: Optional[PRWBatchRequest.PRWBatchRequestT]
@@ -468,6 +507,8 @@ class PRWT(object):
         self.EARTH_ORIENTATION = EARTH_ORIENTATION  # type: Optional[PRWEarthOrientation.PRWEarthOrientationT]
         self.SPACE_WEATHER = SPACE_WEATHER  # type: Optional[PRWSpaceWeatherTable.PRWSpaceWeatherTableT]
         self.JB2008_INDICES = JB2008_INDICES  # type: Optional[PRWJB2008IndicesTable.PRWJB2008IndicesTableT]
+        self.WINDOW_REQUEST = WINDOW_REQUEST  # type: Optional[PRWWindowRequest.PRWWindowRequestT]
+        self.WINDOW_REPORT = WINDOW_REPORT  # type: Optional[PRWWindowReport.PRWWindowReportT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -531,6 +572,10 @@ class PRWT(object):
             self.SPACE_WEATHER = PRWSpaceWeatherTable.PRWSpaceWeatherTableT.InitFromObj(PRW.SPACE_WEATHER())
         if PRW.JB2008_INDICES() is not None:
             self.JB2008_INDICES = PRWJB2008IndicesTable.PRWJB2008IndicesTableT.InitFromObj(PRW.JB2008_INDICES())
+        if PRW.WINDOW_REQUEST() is not None:
+            self.WINDOW_REQUEST = PRWWindowRequest.PRWWindowRequestT.InitFromObj(PRW.WINDOW_REQUEST())
+        if PRW.WINDOW_REPORT() is not None:
+            self.WINDOW_REPORT = PRWWindowReport.PRWWindowReportT.InitFromObj(PRW.WINDOW_REPORT())
 
     # PRWT
     def Pack(self, builder):
@@ -574,6 +619,10 @@ class PRWT(object):
             SPACE_WEATHER = self.SPACE_WEATHER.Pack(builder)
         if self.JB2008_INDICES is not None:
             JB2008_INDICES = self.JB2008_INDICES.Pack(builder)
+        if self.WINDOW_REQUEST is not None:
+            WINDOW_REQUEST = self.WINDOW_REQUEST.Pack(builder)
+        if self.WINDOW_REPORT is not None:
+            WINDOW_REPORT = self.WINDOW_REPORT.Pack(builder)
         PRWStart(builder)
         if self.INIT is not None:
             PRWAddINIT(builder, INIT)
@@ -616,5 +665,9 @@ class PRWT(object):
             PRWAddSPACE_WEATHER(builder, SPACE_WEATHER)
         if self.JB2008_INDICES is not None:
             PRWAddJB2008_INDICES(builder, JB2008_INDICES)
+        if self.WINDOW_REQUEST is not None:
+            PRWAddWINDOW_REQUEST(builder, WINDOW_REQUEST)
+        if self.WINDOW_REPORT is not None:
+            PRWAddWINDOW_REPORT(builder, WINDOW_REPORT)
         PRW = PRWEnd(builder)
         return PRW

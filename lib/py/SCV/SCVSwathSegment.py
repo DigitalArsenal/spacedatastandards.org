@@ -224,7 +224,7 @@ def SCVSwathSegmentCreateSENSOR_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSOR_IDSVector(builder, data):
-    SCVSwathSegmentCreateSENSOR_IDSVector(builder, data)
+    return SCVSwathSegmentCreateSENSOR_IDSVector(builder, data)
 
 def SCVSwathSegmentEnd(builder):
     return builder.EndObject()

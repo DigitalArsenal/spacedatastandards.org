@@ -17,6 +17,25 @@ public struct Record : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public Record __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  // Field-encryption format 3 walk program of Record (see FlatbuffersEncryption).
+  private static readonly int[] FlatbuffersEncryptionProgram = {
+    2, 3, 10, 1, 6, 6, 4, 1, 63, 1, 1, 2, 12, 1
+  };
+  /// <summary>
+  /// Encrypts, in place, the (encrypted) fields of the Record buffer that starts at
+  /// _bb.Position, with field-encryption format 3 (key: 32 bytes; recordIndex:
+  /// unique per buffer under the key). Throws ArgumentException, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  /// </summary>
+  public static void EncryptBuffer(ByteBuffer _bb, byte[] key, uint recordIndex) { FlatbuffersEncryption.CryptBuffer(_bb, key, recordIndex, FlatbuffersEncryptionProgram); }
+  /// <summary>
+  /// Decrypts, in place, the (encrypted) fields of the Record buffer that starts at
+  /// _bb.Position, with field-encryption format 3 (key: 32 bytes; recordIndex:
+  /// unique per buffer under the key). Throws ArgumentException, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  /// </summary>
+  public static void DecryptBuffer(ByteBuffer _bb, byte[] key, uint recordIndex) { FlatbuffersEncryption.CryptBuffer(_bb, key, recordIndex, FlatbuffersEncryptionProgram); }
+
   public RecordType value_type { get { int o = __p.__offset(4); return o != 0 ? (RecordType)__p.bb.Get(o + __p.bb_pos) : RecordType.NONE; } }
   /// The record data (union of all supported standards)
   public TTable? value<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }

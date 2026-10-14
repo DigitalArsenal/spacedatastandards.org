@@ -179,7 +179,7 @@ def FlatBufferTypeRefCreateSCHEMA_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateSCHEMA_HASHVector(builder, data):
-    FlatBufferTypeRefCreateSCHEMA_HASHVector(builder, data)
+    return FlatBufferTypeRefCreateSCHEMA_HASHVector(builder, data)
 
 def FlatBufferTypeRefAddACCEPTS_ANY_FLATBUFFER(builder, ACCEPTS_ANY_FLATBUFFER):
     builder.PrependBoolSlot(5, ACCEPTS_ANY_FLATBUFFER, 0)

@@ -312,7 +312,7 @@ def GCTCoverGridCreateLOW_COVERVector(builder, data):
     return builder.EndVector()
 
 def CreateLOW_COVERVector(builder, data):
-    GCTCoverGridCreateLOW_COVERVector(builder, data)
+    return GCTCoverGridCreateLOW_COVERVector(builder, data)
 
 def GCTCoverGridAddMEDIUM_COVER(builder, MEDIUM_COVER):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MEDIUM_COVER), 0)
@@ -334,7 +334,7 @@ def GCTCoverGridCreateMEDIUM_COVERVector(builder, data):
     return builder.EndVector()
 
 def CreateMEDIUM_COVERVector(builder, data):
-    GCTCoverGridCreateMEDIUM_COVERVector(builder, data)
+    return GCTCoverGridCreateMEDIUM_COVERVector(builder, data)
 
 def GCTCoverGridAddHIGH_COVER(builder, HIGH_COVER):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(HIGH_COVER), 0)
@@ -356,7 +356,7 @@ def GCTCoverGridCreateHIGH_COVERVector(builder, data):
     return builder.EndVector()
 
 def CreateHIGH_COVERVector(builder, data):
-    GCTCoverGridCreateHIGH_COVERVector(builder, data)
+    return GCTCoverGridCreateHIGH_COVERVector(builder, data)
 
 def GCTCoverGridAddBASE_HEIGHT_M(builder, BASE_HEIGHT_M):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_HEIGHT_M), 0)
@@ -378,7 +378,7 @@ def GCTCoverGridCreateBASE_HEIGHT_MVector(builder, data):
     return builder.EndVector()
 
 def CreateBASE_HEIGHT_MVector(builder, data):
-    GCTCoverGridCreateBASE_HEIGHT_MVector(builder, data)
+    return GCTCoverGridCreateBASE_HEIGHT_MVector(builder, data)
 
 def GCTCoverGridAddTOP_HEIGHT_M(builder, TOP_HEIGHT_M):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TOP_HEIGHT_M), 0)
@@ -400,7 +400,7 @@ def GCTCoverGridCreateTOP_HEIGHT_MVector(builder, data):
     return builder.EndVector()
 
 def CreateTOP_HEIGHT_MVector(builder, data):
-    GCTCoverGridCreateTOP_HEIGHT_MVector(builder, data)
+    return GCTCoverGridCreateTOP_HEIGHT_MVector(builder, data)
 
 def GCTCoverGridAddCOLUMN_OPTICAL_DEPTH(builder, COLUMN_OPTICAL_DEPTH):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(COLUMN_OPTICAL_DEPTH), 0)
@@ -422,7 +422,7 @@ def GCTCoverGridCreateCOLUMN_OPTICAL_DEPTHVector(builder, data):
     return builder.EndVector()
 
 def CreateCOLUMN_OPTICAL_DEPTHVector(builder, data):
-    GCTCoverGridCreateCOLUMN_OPTICAL_DEPTHVector(builder, data)
+    return GCTCoverGridCreateCOLUMN_OPTICAL_DEPTHVector(builder, data)
 
 def GCTCoverGridEnd(builder):
     return builder.EndObject()

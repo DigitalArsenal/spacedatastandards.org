@@ -1,0 +1,40 @@
+/**
+ * What an arc is in the plan. Append new values only; never reorder or reuse
+ * existing values.
+ */
+export declare enum mplArcRole {
+    Unspecified = 0,
+    /**
+     * Coast on the initial or final orbit.
+     */
+    Coast = 1,
+    /**
+     * Transfer arc between two burns.
+     */
+    Transfer = 2,
+    /**
+     * Revolutions on a phasing orbit.
+     */
+    Phasing = 3,
+    /**
+     * One leg of a relative waypoint mission.
+     */
+    Leg = 4,
+    /**
+     * Free-drift segment of a rendezvous.
+     */
+    Drift = 5,
+    /**
+     * Braking segment of a rendezvous.
+     */
+    Brake = 6,
+    /**
+     * Station-keeping hold.
+     */
+    Hold = 7,
+    /**
+     * Approach along a corridor.
+     */
+    Approach = 8
+}
+//# sourceMappingURL=mplArcRole.d.ts.map

@@ -95,7 +95,7 @@ def EVLParameterConditionConfigurationCreateCONDITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONDITIONSVector(builder, data):
-    EVLParameterConditionConfigurationCreateCONDITIONSVector(builder, data)
+    return EVLParameterConditionConfigurationCreateCONDITIONSVector(builder, data)
 
 def EVLParameterConditionConfigurationAddREPORT_AS_INTERVAL(builder, REPORT_AS_INTERVAL):
     builder.PrependBoolSlot(1, REPORT_AS_INTERVAL, 1)

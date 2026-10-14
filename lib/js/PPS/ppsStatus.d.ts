@@ -1,0 +1,22 @@
+/**
+ * Outcome of a run. Append new values only; never reorder or reuse existing
+ * values.
+ */
+export declare enum ppsStatus {
+    /**
+     * A request, not yet run.
+     */
+    Pending = 0,
+    /**
+     * The run completed with every constraint met.
+     */
+    Nominal = 1,
+    /**
+     * The run completed but a constraint was violated (battery floor, pointing
+     * budget, wheel saturation); see the telemetry and ASSUMPTIONS.
+     */
+    Degraded = 2,
+    InvalidRequest = 3,
+    Failed = 4
+}
+//# sourceMappingURL=ppsStatus.d.ts.map

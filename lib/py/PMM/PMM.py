@@ -229,7 +229,7 @@ def PMMCreateMODULESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODULESVector(builder, data):
-    PMMCreateMODULESVector(builder, data)
+    return PMMCreateMODULESVector(builder, data)
 
 def PMMAddCANONICAL_URL(builder, CANONICAL_URL):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_URL), 0)
@@ -275,7 +275,7 @@ def PMMCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    PMMCreateSIGNATUREVector(builder, data)
+    return PMMCreateSIGNATUREVector(builder, data)
 
 def PMMAddSIGNED_STATEMENT(builder, SIGNED_STATEMENT):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNED_STATEMENT), 0)

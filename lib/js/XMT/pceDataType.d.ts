@@ -1,0 +1,37 @@
+/**
+ * The shape of a parameter's value. Append new values only.
+ */
+export declare enum pceDataType {
+    UNSPECIFIED = 0,
+    /**
+     * One real number, carried in PCEParameterValue.VALUE.
+     */
+    REAL_SCALAR = 1,
+    /**
+     * An ordered run of real numbers, carried in PCEParameterValue.VALUES.
+     */
+    REAL_VECTOR = 2,
+    /**
+     * A real matrix, carried row-major in PCEParameterValue.VALUES with
+     * ROW_COUNT and COLUMN_COUNT set.
+     */
+    REAL_MATRIX = 3,
+    /**
+     * One integer, carried in PCEParameterValue.VALUE with no fractional part.
+     */
+    INTEGER_SCALAR = 4,
+    /**
+     * Text, carried in PCEParameterValue.STRING_VALUE.
+     */
+    STRING = 5,
+    /**
+     * An instant, carried in PCEParameterValue.STRING_VALUE as ISO 8601 or as
+     * the numeric day count in VALUE, per the parameter's own definition.
+     */
+    EPOCH = 6,
+    /**
+     * A truth value, carried in PCEParameterValue.VALUE as 0 or 1.
+     */
+    BOOLEAN = 7
+}
+//# sourceMappingURL=pceDataType.d.ts.map

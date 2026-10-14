@@ -72,7 +72,7 @@ public enum clmClaimRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 ///  One party's attestation to a claim, signed over the same canonical form the
 ///  claimant signed.
-public struct CLMCountersignature: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CLMCountersignature: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -133,7 +133,7 @@ public struct CLMCountersignature: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Ownership Claim Record - one claimant's signed statement over one object.
-public struct CLM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CLM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

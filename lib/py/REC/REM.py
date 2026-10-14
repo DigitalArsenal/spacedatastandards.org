@@ -742,7 +742,7 @@ def REMCreateFRAGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFRAGMENTSVector(builder, data):
-    REMCreateFRAGMENTSVector(builder, data)
+    return REMCreateFRAGMENTSVector(builder, data)
 
 def REMAddASSUMPTIONS(builder, ASSUMPTIONS):
     builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(ASSUMPTIONS), 0)
@@ -760,7 +760,7 @@ def REMCreateASSUMPTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSUMPTIONSVector(builder, data):
-    REMCreateASSUMPTIONSVector(builder, data)
+    return REMCreateASSUMPTIONSVector(builder, data)
 
 def REMAddCOMMENT(builder, COMMENT):
     builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)

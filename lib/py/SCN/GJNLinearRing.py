@@ -77,7 +77,7 @@ def GJNLinearRingCreatePOSITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOSITIONSVector(builder, data):
-    GJNLinearRingCreatePOSITIONSVector(builder, data)
+    return GJNLinearRingCreatePOSITIONSVector(builder, data)
 
 def GJNLinearRingEnd(builder):
     return builder.EndObject()

@@ -133,7 +133,7 @@ def ACMSensorCreateSENSOR_NOISE_STDDEVVector(builder, data):
     return builder.EndVector()
 
 def CreateSENSOR_NOISE_STDDEVVector(builder, data):
-    ACMSensorCreateSENSOR_NOISE_STDDEVVector(builder, data)
+    return ACMSensorCreateSENSOR_NOISE_STDDEVVector(builder, data)
 
 def ACMSensorAddSENSOR_FREQUENCY(builder, SENSOR_FREQUENCY):
     builder.PrependFloat64Slot(4, SENSOR_FREQUENCY, float('nan'))

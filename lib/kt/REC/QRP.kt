@@ -414,6 +414,130 @@ class QRP : Table() {
         get() {
             val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * How the request selects records in time.
+     */
+    val timeProfile : Byte
+        get() {
+            val o = __offset(78)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+     */
+    val profileEpochMs : Long
+        get() {
+            val o = __offset(80)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
+    /**
+     * Representation the client asks the page in.
+     */
+    val representation : Byte
+        get() {
+            val o = __offset(82)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Values bound to the placeholders of SQL, in order.
+     */
+    fun parameters(j: Int) : QRPValue? = parameters(QRPValue(), j)
+    fun parameters(obj: QRPValue, j: Int) : QRPValue? {
+        val o = __offset(84)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val parametersLength : Int
+        get() {
+            val o = __offset(84); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Rows of a projection (a query that selects columns rather than whole
+     * records), in COLUMNS order. Whole-record pages carry their records as
+     * frames after the header instead, and leave ROWS empty.
+     */
+    fun rows(j: Int) : QRPRow? = rows(QRPRow(), j)
+    fun rows(obj: QRPRow, j: Int) : QRPRow? {
+        val o = __offset(86)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val rowsLength : Int
+        get() {
+            val o = __offset(86); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * The serving node's queryable tables, answered to a request for the query
+     * surface.
+     */
+    fun tables(j: Int) : QRPTable? = tables(QRPTable(), j)
+    fun tables(obj: QRPTable, j: Int) : QRPTable? {
+        val o = __offset(88)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val tablesLength : Int
+        get() {
+            val o = __offset(88); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+     * none stated.
+     */
+    val maxElapsedMs : UInt
+        get() {
+            val o = __offset(90)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Most rows a page returns; 0 = none stated.
+     */
+    val maxRows : ULong
+        get() {
+            val o = __offset(92)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Most bytes a page returns; 0 = none stated.
+     */
+    val maxBytes : ULong
+        get() {
+            val o = __offset(94)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Transport status the answer carries, HTTP semantics (200, 304, 400,
+     * 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+     */
+    val httpStatus : UShort
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * When the page's record frames are not inline but held by the serving
+     * node for delivery out of band: the reference token the node resolves
+     * (single use), and the byte size of what it refers to. 0 = inline.
+     */
+    val bodyRefToken : ULong
+        get() {
+            val o = __offset(98)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    val bodyRefSize : ULong
+        get() {
+            val o = __offset(100)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsQRP(_bb: ByteBuffer): QRP = getRootAsQRP(_bb, QRP())
@@ -422,8 +546,13 @@ class QRP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun QRPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$QRP")
-        fun createQRP(builder: FlatBufferBuilder, kind: Byte, status: Byte, errorCodeOffset: Int, messageOffset: Int, retryAfterMs: UInt, schemaNameOffset: Int, fileIdentifierOffset: Int, sqlOffset: Int, searchOffset: Int, filtersOffset: Int, sortFieldOffset: Int, sortDesc: Boolean, providerIdOffset: Int, sourceNameOffset: Int, batchIdOffset: Int, producerPeerIdOffset: Int, originIdOffset: Int, fromEpochMs: Long, toEpochMs: Long, page: UInt, limit: UInt, cursorOffset: Int, nextCursorOffset: Int, recordCount: UInt, totalCount: ULong, scanned: ULong, stored: ULong, partial: Boolean, truncated: Boolean, asOfMs: Long, stale: Boolean, elapsedMs: UInt, generatedAtMs: Long, etagOffset: Int, cidOffset: Int, archiveIdOffset: Int, columnsOffset: Int) : Int {
-            builder.startTable(37)
+        fun createQRP(builder: FlatBufferBuilder, kind: Byte, status: Byte, errorCodeOffset: Int, messageOffset: Int, retryAfterMs: UInt, schemaNameOffset: Int, fileIdentifierOffset: Int, sqlOffset: Int, searchOffset: Int, filtersOffset: Int, sortFieldOffset: Int, sortDesc: Boolean, providerIdOffset: Int, sourceNameOffset: Int, batchIdOffset: Int, producerPeerIdOffset: Int, originIdOffset: Int, fromEpochMs: Long, toEpochMs: Long, page: UInt, limit: UInt, cursorOffset: Int, nextCursorOffset: Int, recordCount: UInt, totalCount: ULong, scanned: ULong, stored: ULong, partial: Boolean, truncated: Boolean, asOfMs: Long, stale: Boolean, elapsedMs: UInt, generatedAtMs: Long, etagOffset: Int, cidOffset: Int, archiveIdOffset: Int, columnsOffset: Int, timeProfile: Byte, profileEpochMs: Long, representation: Byte, parametersOffset: Int, rowsOffset: Int, tablesOffset: Int, maxElapsedMs: UInt, maxRows: ULong, maxBytes: ULong, httpStatus: UShort, bodyRefToken: ULong, bodyRefSize: ULong) : Int {
+            builder.startTable(49)
+            addBODYREFSIZE(builder, bodyRefSize)
+            addBODYREFTOKEN(builder, bodyRefToken)
+            addMAXBYTES(builder, maxBytes)
+            addMAXROWS(builder, maxRows)
+            addPROFILEEPOCHMS(builder, profileEpochMs)
             addGENERATEDATMS(builder, generatedAtMs)
             addASOFMS(builder, asOfMs)
             addSTORED(builder, stored)
@@ -431,6 +560,10 @@ class QRP : Table() {
             addTOTALCOUNT(builder, totalCount)
             addTOEPOCHMS(builder, toEpochMs)
             addFROMEPOCHMS(builder, fromEpochMs)
+            addMAXELAPSEDMS(builder, maxElapsedMs)
+            addTABLES(builder, tablesOffset)
+            addROWS(builder, rowsOffset)
+            addPARAMETERS(builder, parametersOffset)
             addCOLUMNS(builder, columnsOffset)
             addARCHIVEID(builder, archiveIdOffset)
             addCID(builder, cidOffset)
@@ -455,6 +588,9 @@ class QRP : Table() {
             addRETRYAFTERMS(builder, retryAfterMs)
             addMESSAGE(builder, messageOffset)
             addERRORCODE(builder, errorCodeOffset)
+            addHTTPSTATUS(builder, httpStatus)
+            addREPRESENTATION(builder, representation)
+            addTIMEPROFILE(builder, timeProfile)
             addSTALE(builder, stale)
             addTRUNCATED(builder, truncated)
             addPARTIAL(builder, partial)
@@ -463,7 +599,7 @@ class QRP : Table() {
             addKIND(builder, kind)
             return endQRP(builder)
         }
-        fun startQRP(builder: FlatBufferBuilder) = builder.startTable(37)
+        fun startQRP(builder: FlatBufferBuilder) = builder.startTable(49)
         fun addKIND(builder: FlatBufferBuilder, kind: Byte) = builder.addByte(0, kind, 0)
         fun addSTATUS(builder: FlatBufferBuilder, status: Byte) = builder.addByte(1, status, 0)
         fun addERRORCODE(builder: FlatBufferBuilder, errorCode: Int) = builder.addOffset(2, errorCode, 0)
@@ -517,6 +653,42 @@ class QRP : Table() {
             return builder.endVector()
         }
         fun startColumnsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTIMEPROFILE(builder: FlatBufferBuilder, timeProfile: Byte) = builder.addByte(37, timeProfile, 0)
+        fun addPROFILEEPOCHMS(builder: FlatBufferBuilder, profileEpochMs: Long) = builder.addLong(38, profileEpochMs, 0L)
+        fun addREPRESENTATION(builder: FlatBufferBuilder, representation: Byte) = builder.addByte(39, representation, 0)
+        fun addPARAMETERS(builder: FlatBufferBuilder, parameters: Int) = builder.addOffset(40, parameters, 0)
+        fun createParametersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addROWS(builder: FlatBufferBuilder, rows: Int) = builder.addOffset(41, rows, 0)
+        fun createRowsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startRowsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTABLES(builder: FlatBufferBuilder, tables: Int) = builder.addOffset(42, tables, 0)
+        fun createTablesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startTablesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMAXELAPSEDMS(builder: FlatBufferBuilder, maxElapsedMs: UInt) = builder.addInt(43, maxElapsedMs.toInt(), 0)
+        fun addMAXROWS(builder: FlatBufferBuilder, maxRows: ULong) = builder.addLong(44, maxRows.toLong(), 0)
+        fun addMAXBYTES(builder: FlatBufferBuilder, maxBytes: ULong) = builder.addLong(45, maxBytes.toLong(), 0)
+        fun addHTTPSTATUS(builder: FlatBufferBuilder, httpStatus: UShort) = builder.addShort(46, httpStatus.toShort(), 0)
+        fun addBODYREFTOKEN(builder: FlatBufferBuilder, bodyRefToken: ULong) = builder.addLong(47, bodyRefToken.toLong(), 0)
+        fun addBODYREFSIZE(builder: FlatBufferBuilder, bodyRefSize: ULong) = builder.addLong(48, bodyRefSize.toLong(), 0)
         fun endQRP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

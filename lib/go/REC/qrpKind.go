@@ -16,6 +16,12 @@ import "strconv"
 /// reader never waits and never mistakes a bounded page for the whole set. An
 /// error is exactly one frame with KIND Error; the HTTP status stays honest
 /// beside it. Cursors are opaque strings issued by the serving node.
+///
+/// A request may also select by time profile (the state of each object nearest
+/// to, as of, or after an instant), bind typed parameters to its SQL, and ask
+/// for a projection: a page then carries ROWS of typed cells described by
+/// COLUMNS instead of record frames. A request for the query surface is
+/// answered with TABLES and the serving limits.
 /// Role of a frame. Append new values only; never reorder or reuse existing
 /// values.
 type qrpKind int8

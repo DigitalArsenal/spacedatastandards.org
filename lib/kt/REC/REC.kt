@@ -66,6 +66,27 @@ class REC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
+        // Field-encryption format 3 walk program of REC (see FlatbuffersEncryption).
+        private val FLATBUFFERS_ENCRYPTION_PROGRAM = intArrayOf(
+            3, 4, 8, 15, 1, 5, 6, 1, 1, 6, 6, 4, 1, 63, 2, 1,
+            2, 12, 1
+        )
+        /**
+         * Encrypts, in place, the (encrypted) fields of the REC buffer that starts at
+         * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+         * an unsigned 32-bit value, unique per buffer under the key). Throws
+         * IllegalArgumentException, before any byte changes, for a bad key or a
+         * malformed buffer.
+         */
+        fun encryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
+        /**
+         * Decrypts, in place, the (encrypted) fields of the REC buffer that starts at
+         * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+         * an unsigned 32-bit value, unique per buffer under the key). Throws
+         * IllegalArgumentException, before any byte changes, for a bad key or a
+         * malformed buffer.
+         */
+        fun decryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
         fun RECBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REC")
         fun createREC(builder: FlatBufferBuilder, versionOffset: Int, recordsOffset: Int) : Int {
             builder.startTable(2)

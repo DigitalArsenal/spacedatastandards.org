@@ -18,6 +18,12 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 ///  reader never waits and never mistakes a bounded page for the whole set. An
 ///  error is exactly one frame with KIND Error; the HTTP status stays honest
 ///  beside it. Cursors are opaque strings issued by the serving node.
+///
+///  A request may also select by time profile (the state of each object nearest
+///  to, as of, or after an instant), bind typed parameters to its SQL, and ask
+///  for a projection: a page then carries ROWS of typed cells described by
+///  COLUMNS instead of record frames. A request for the query surface is
+///  answered with TABLES and the serving limits.
 ///  Role of a frame. Append new values only; never reorder or reuse existing
 ///  values.
 enum qrpKind {
@@ -144,6 +150,133 @@ class _qrpFilterOpReader extends fb.Reader<qrpFilterOp> {
   @override
   qrpFilterOp read(fb.BufferContext bc, int offset) =>
       qrpFilterOp.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  How a request selects records in time when the lane holds several
+///  versions of the same object. Append new values only; never reorder or
+///  reuse existing values.
+enum qrpTimeProfile {
+  Unspecified(0),
+  All(1),
+  Nearest(2),
+  AsOf(3),
+  Forward(4),
+  Latest(5);
+
+  final int value;
+  const qrpTimeProfile(this.value);
+
+  factory qrpTimeProfile.fromValue(int value) {
+    switch (value) {
+      case 0: return qrpTimeProfile.Unspecified;
+      case 1: return qrpTimeProfile.All;
+      case 2: return qrpTimeProfile.Nearest;
+      case 3: return qrpTimeProfile.AsOf;
+      case 4: return qrpTimeProfile.Forward;
+      case 5: return qrpTimeProfile.Latest;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static qrpTimeProfile? _createOrNull(int? value) =>
+      value == null ? null : qrpTimeProfile.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<qrpTimeProfile> reader = _qrpTimeProfileReader();
+}
+
+class _qrpTimeProfileReader extends fb.Reader<qrpTimeProfile> {
+  const _qrpTimeProfileReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  qrpTimeProfile read(fb.BufferContext bc, int offset) =>
+      qrpTimeProfile.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Representation the client asks the page in. Append new values only; never
+///  reorder or reuse existing values.
+enum qrpRepresentation {
+  Default(0),
+  FlatBuffer(1),
+  Json(2);
+
+  final int value;
+  const qrpRepresentation(this.value);
+
+  factory qrpRepresentation.fromValue(int value) {
+    switch (value) {
+      case 0: return qrpRepresentation.Default;
+      case 1: return qrpRepresentation.FlatBuffer;
+      case 2: return qrpRepresentation.Json;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static qrpRepresentation? _createOrNull(int? value) =>
+      value == null ? null : qrpRepresentation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<qrpRepresentation> reader = _qrpRepresentationReader();
+}
+
+class _qrpRepresentationReader extends fb.Reader<qrpRepresentation> {
+  const _qrpRepresentationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  qrpRepresentation read(fb.BufferContext bc, int offset) =>
+      qrpRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Type of a QRPValue. Append new values only; never reorder or reuse
+///  existing values.
+enum qrpValueKind {
+  Null(0),
+  Bool(1),
+  Int(2),
+  Float(3),
+  Text(4),
+  Bytes(5);
+
+  final int value;
+  const qrpValueKind(this.value);
+
+  factory qrpValueKind.fromValue(int value) {
+    switch (value) {
+      case 0: return qrpValueKind.Null;
+      case 1: return qrpValueKind.Bool;
+      case 2: return qrpValueKind.Int;
+      case 3: return qrpValueKind.Float;
+      case 4: return qrpValueKind.Text;
+      case 5: return qrpValueKind.Bytes;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static qrpValueKind? _createOrNull(int? value) =>
+      value == null ? null : qrpValueKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<qrpValueKind> reader = _qrpValueKindReader();
+}
+
+class _qrpValueKindReader extends fb.Reader<qrpValueKind> {
+  const _qrpValueKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  qrpValueKind read(fb.BufferContext bc, int offset) =>
+      qrpValueKind.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
 ///  One field filter of a request.
@@ -360,6 +493,334 @@ class QRPColumnObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  One typed value: a bound parameter of a request, or one cell of a row.
+///  Exactly the field named by KIND is meaningful.
+class QRPValue {
+  QRPValue._(this._bc, this._bcOffset);
+  factory QRPValue(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<QRPValue> reader = _QRPValueReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  qrpValueKind get KIND => qrpValueKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  bool get BOOL_VALUE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, false);
+  bool get boolValue => BOOL_VALUE;
+  int get INT_VALUE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get intValue => INT_VALUE;
+  double get FLOAT_VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get floatValue => FLOAT_VALUE;
+  String? get TEXT_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get textValue => TEXT_VALUE;
+  List<int>? get BYTES_VALUE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 14);
+  List<int>? get bytesValue => BYTES_VALUE;
+
+  @override
+  String toString() {
+    return 'QRPValue{KIND: ${KIND}, boolValue: ${boolValue}, intValue: ${intValue}, floatValue: ${floatValue}, textValue: ${textValue}, bytesValue: ${bytesValue}}';
+  }
+}
+
+class _QRPValueReader extends fb.TableReader<QRPValue> {
+  const _QRPValueReader();
+
+  @override
+  QRPValue createObject(fb.BufferContext bc, int offset) =>
+    QRPValue._(bc, offset);
+}
+
+class QRPValueBuilder {
+  QRPValueBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addKind(qrpValueKind? KIND) {
+    fbBuilder.addInt8(0, KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addBoolValue(bool? BOOL_VALUE) {
+    fbBuilder.addBool(1, BOOL_VALUE);
+    return fbBuilder.offset;
+  }
+  int addIntValue(int? INT_VALUE) {
+    fbBuilder.addInt64(2, INT_VALUE);
+    return fbBuilder.offset;
+  }
+  int addFloatValue(double? FLOAT_VALUE) {
+    fbBuilder.addFloat64(3, FLOAT_VALUE);
+    return fbBuilder.offset;
+  }
+  int addTextValueOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addBytesValueOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class QRPValueObjectBuilder extends fb.ObjectBuilder {
+  final qrpValueKind? _KIND;
+  final bool? _BOOL_VALUE;
+  final int? _INT_VALUE;
+  final double? _FLOAT_VALUE;
+  final String? _TEXT_VALUE;
+  final List<int>? _BYTES_VALUE;
+
+  QRPValueObjectBuilder({
+    qrpValueKind? KIND,
+    bool? BOOL_VALUE,
+    bool? boolValue,
+    int? INT_VALUE,
+    int? intValue,
+    double? FLOAT_VALUE,
+    double? floatValue,
+    String? TEXT_VALUE,
+    String? textValue,
+    List<int>? BYTES_VALUE,
+    List<int>? bytesValue,
+  })
+      : _KIND = KIND,
+        _BOOL_VALUE = boolValue ?? BOOL_VALUE,
+        _INT_VALUE = intValue ?? INT_VALUE,
+        _FLOAT_VALUE = floatValue ?? FLOAT_VALUE,
+        _TEXT_VALUE = textValue ?? TEXT_VALUE,
+        _BYTES_VALUE = bytesValue ?? BYTES_VALUE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TEXT_VALUEOffset = _TEXT_VALUE == null ? null
+        : fbBuilder.writeString(_TEXT_VALUE!);
+    final int? BYTES_VALUEOffset = _BYTES_VALUE == null ? null
+        : fbBuilder.writeListUint8(_BYTES_VALUE!);
+    fbBuilder.startTable(6);
+    fbBuilder.addInt8(0, _KIND?.value);
+    fbBuilder.addBool(1, _BOOL_VALUE);
+    fbBuilder.addInt64(2, _INT_VALUE);
+    fbBuilder.addFloat64(3, _FLOAT_VALUE);
+    fbBuilder.addOffset(4, TEXT_VALUEOffset);
+    fbBuilder.addOffset(5, BYTES_VALUEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One row of a projection, its cells in COLUMNS order.
+class QRPRow {
+  QRPRow._(this._bc, this._bcOffset);
+  factory QRPRow(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<QRPRow> reader = _QRPRowReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<QRPValue>? get CELLS => const fb.ListReader<QRPValue>(QRPValue.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'QRPRow{CELLS: ${CELLS}}';
+  }
+}
+
+class _QRPRowReader extends fb.TableReader<QRPRow> {
+  const _QRPRowReader();
+
+  @override
+  QRPRow createObject(fb.BufferContext bc, int offset) =>
+    QRPRow._(bc, offset);
+}
+
+class QRPRowBuilder {
+  QRPRowBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addCellsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class QRPRowObjectBuilder extends fb.ObjectBuilder {
+  final List<QRPValueObjectBuilder>? _CELLS;
+
+  QRPRowObjectBuilder({
+    List<QRPValueObjectBuilder>? CELLS,
+  })
+      : _CELLS = CELLS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CELLSOffset = _CELLS == null ? null
+        : fbBuilder.writeList(_CELLS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, CELLSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One queryable table of the serving node (the query surface).
+class QRPTable {
+  QRPTable._(this._bc, this._bcOffset);
+  factory QRPTable(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<QRPTable> reader = _QRPTableReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Table name as a query names it, e.g. "OMM".
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  What the table is, e.g. "standard" (records of one standard), "view",
+  ///  "lane" (an ingest lane), "system".
+  String? get KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Where the table's rows come from: a standard code, provider or source.
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Rows the table holds; -1 = unknown.
+  int get RECORDS => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Columns of the table.
+  List<QRPColumn>? get COLUMNS => const fb.ListReader<QRPColumn>(QRPColumn.reader).vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'QRPTable{NAME: ${NAME}, KIND: ${KIND}, SOURCE: ${SOURCE}, RECORDS: ${RECORDS}, COLUMNS: ${COLUMNS}}';
+  }
+}
+
+class _QRPTableReader extends fb.TableReader<QRPTable> {
+  const _QRPTableReader();
+
+  @override
+  QRPTable createObject(fb.BufferContext bc, int offset) =>
+    QRPTable._(bc, offset);
+}
+
+class QRPTableBuilder {
+  QRPTableBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addKindOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addRecords(int? RECORDS) {
+    fbBuilder.addInt64(3, RECORDS);
+    return fbBuilder.offset;
+  }
+  int addColumnsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class QRPTableObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final String? _KIND;
+  final String? _SOURCE;
+  final int? _RECORDS;
+  final List<QRPColumnObjectBuilder>? _COLUMNS;
+
+  QRPTableObjectBuilder({
+    String? NAME,
+    String? KIND,
+    String? SOURCE,
+    int? RECORDS,
+    List<QRPColumnObjectBuilder>? COLUMNS,
+  })
+      : _NAME = NAME,
+        _KIND = KIND,
+        _SOURCE = SOURCE,
+        _RECORDS = RECORDS,
+        _COLUMNS = COLUMNS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? KINDOffset = _KIND == null ? null
+        : fbBuilder.writeString(_KIND!);
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? COLUMNSOffset = _COLUMNS == null ? null
+        : fbBuilder.writeList(_COLUMNS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addOffset(1, KINDOffset);
+    fbBuilder.addOffset(2, SOURCEOffset);
+    fbBuilder.addInt64(3, _RECORDS);
+    fbBuilder.addOffset(4, COLUMNSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Query Page - request, page header or error frame.
 class QRP {
   QRP._(this._bc, this._bcOffset);
@@ -458,10 +919,48 @@ class QRP {
   String? get ARCHIVE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
   String? get archiveId => ARCHIVE_ID;
   List<QRPColumn>? get COLUMNS => const fb.ListReader<QRPColumn>(QRPColumn.reader).vTableGetNullable(_bc, _bcOffset, 76);
+  ///  How the request selects records in time.
+  qrpTimeProfile get TIME_PROFILE => qrpTimeProfile.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 78, 0));
+  qrpTimeProfile get timeProfile => TIME_PROFILE;
+  ///  Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+  int get PROFILE_EPOCH_MS => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 80, 0);
+  int get profileEpochMs => PROFILE_EPOCH_MS;
+  ///  Representation the client asks the page in.
+  qrpRepresentation get REPRESENTATION => qrpRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 82, 0));
+  ///  Values bound to the placeholders of SQL, in order.
+  List<QRPValue>? get PARAMETERS => const fb.ListReader<QRPValue>(QRPValue.reader).vTableGetNullable(_bc, _bcOffset, 84);
+  ///  Rows of a projection (a query that selects columns rather than whole
+  ///  records), in COLUMNS order. Whole-record pages carry their records as
+  ///  frames after the header instead, and leave ROWS empty.
+  List<QRPRow>? get ROWS => const fb.ListReader<QRPRow>(QRPRow.reader).vTableGetNullable(_bc, _bcOffset, 86);
+  ///  The serving node's queryable tables, answered to a request for the query
+  ///  surface.
+  List<QRPTable>? get TABLES => const fb.ListReader<QRPTable>(QRPTable.reader).vTableGetNullable(_bc, _bcOffset, 88);
+  ///  Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+  ///  none stated.
+  int get MAX_ELAPSED_MS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 90, 0);
+  int get maxElapsedMs => MAX_ELAPSED_MS;
+  ///  Most rows a page returns; 0 = none stated.
+  int get MAX_ROWS => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 92, 0);
+  int get maxRows => MAX_ROWS;
+  ///  Most bytes a page returns; 0 = none stated.
+  int get MAX_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 94, 0);
+  int get maxBytes => MAX_BYTES;
+  ///  Transport status the answer carries, HTTP semantics (200, 304, 400,
+  ///  406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+  int get HTTP_STATUS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  int get httpStatus => HTTP_STATUS;
+  ///  When the page's record frames are not inline but held by the serving
+  ///  node for delivery out of band: the reference token the node resolves
+  ///  (single use), and the byte size of what it refers to. 0 = inline.
+  int get BODY_REF_TOKEN => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 98, 0);
+  int get bodyRefToken => BODY_REF_TOKEN;
+  int get BODY_REF_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 100, 0);
+  int get bodyRefSize => BODY_REF_SIZE;
 
   @override
   String toString() {
-    return 'QRP{KIND: ${KIND}, STATUS: ${STATUS}, errorCode: ${errorCode}, MESSAGE: ${MESSAGE}, retryAfterMs: ${retryAfterMs}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, SQL: ${SQL}, SEARCH: ${SEARCH}, FILTERS: ${FILTERS}, sortField: ${sortField}, sortDesc: ${sortDesc}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}, producerPeerId: ${producerPeerId}, originId: ${originId}, fromEpochMs: ${fromEpochMs}, toEpochMs: ${toEpochMs}, PAGE: ${PAGE}, LIMIT: ${LIMIT}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, recordCount: ${recordCount}, totalCount: ${totalCount}, SCANNED: ${SCANNED}, STORED: ${STORED}, PARTIAL: ${PARTIAL}, TRUNCATED: ${TRUNCATED}, asOfMs: ${asOfMs}, STALE: ${STALE}, elapsedMs: ${elapsedMs}, generatedAtMs: ${generatedAtMs}, ETAG: ${ETAG}, CID: ${CID}, archiveId: ${archiveId}, COLUMNS: ${COLUMNS}}';
+    return 'QRP{KIND: ${KIND}, STATUS: ${STATUS}, errorCode: ${errorCode}, MESSAGE: ${MESSAGE}, retryAfterMs: ${retryAfterMs}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, SQL: ${SQL}, SEARCH: ${SEARCH}, FILTERS: ${FILTERS}, sortField: ${sortField}, sortDesc: ${sortDesc}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}, producerPeerId: ${producerPeerId}, originId: ${originId}, fromEpochMs: ${fromEpochMs}, toEpochMs: ${toEpochMs}, PAGE: ${PAGE}, LIMIT: ${LIMIT}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, recordCount: ${recordCount}, totalCount: ${totalCount}, SCANNED: ${SCANNED}, STORED: ${STORED}, PARTIAL: ${PARTIAL}, TRUNCATED: ${TRUNCATED}, asOfMs: ${asOfMs}, STALE: ${STALE}, elapsedMs: ${elapsedMs}, generatedAtMs: ${generatedAtMs}, ETAG: ${ETAG}, CID: ${CID}, archiveId: ${archiveId}, COLUMNS: ${COLUMNS}, timeProfile: ${timeProfile}, profileEpochMs: ${profileEpochMs}, REPRESENTATION: ${REPRESENTATION}, PARAMETERS: ${PARAMETERS}, ROWS: ${ROWS}, TABLES: ${TABLES}, maxElapsedMs: ${maxElapsedMs}, maxRows: ${maxRows}, maxBytes: ${maxBytes}, httpStatus: ${httpStatus}, bodyRefToken: ${bodyRefToken}, bodyRefSize: ${bodyRefSize}}';
   }
 }
 
@@ -479,7 +978,7 @@ class QRPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(37);
+    fbBuilder.startTable(49);
   }
 
   int addKind(qrpKind? KIND) {
@@ -630,6 +1129,54 @@ class QRPBuilder {
     fbBuilder.addOffset(36, offset);
     return fbBuilder.offset;
   }
+  int addTimeProfile(qrpTimeProfile? TIME_PROFILE) {
+    fbBuilder.addInt8(37, TIME_PROFILE?.value);
+    return fbBuilder.offset;
+  }
+  int addProfileEpochMs(int? PROFILE_EPOCH_MS) {
+    fbBuilder.addInt64(38, PROFILE_EPOCH_MS);
+    return fbBuilder.offset;
+  }
+  int addRepresentation(qrpRepresentation? REPRESENTATION) {
+    fbBuilder.addInt8(39, REPRESENTATION?.value);
+    return fbBuilder.offset;
+  }
+  int addParametersOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addRowsOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addTablesOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addMaxElapsedMs(int? MAX_ELAPSED_MS) {
+    fbBuilder.addUint32(43, MAX_ELAPSED_MS);
+    return fbBuilder.offset;
+  }
+  int addMaxRows(int? MAX_ROWS) {
+    fbBuilder.addUint64(44, MAX_ROWS);
+    return fbBuilder.offset;
+  }
+  int addMaxBytes(int? MAX_BYTES) {
+    fbBuilder.addUint64(45, MAX_BYTES);
+    return fbBuilder.offset;
+  }
+  int addHttpStatus(int? HTTP_STATUS) {
+    fbBuilder.addUint16(46, HTTP_STATUS);
+    return fbBuilder.offset;
+  }
+  int addBodyRefToken(int? BODY_REF_TOKEN) {
+    fbBuilder.addUint64(47, BODY_REF_TOKEN);
+    return fbBuilder.offset;
+  }
+  int addBodyRefSize(int? BODY_REF_SIZE) {
+    fbBuilder.addUint64(48, BODY_REF_SIZE);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -674,6 +1221,18 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
   final String? _CID;
   final String? _ARCHIVE_ID;
   final List<QRPColumnObjectBuilder>? _COLUMNS;
+  final qrpTimeProfile? _TIME_PROFILE;
+  final int? _PROFILE_EPOCH_MS;
+  final qrpRepresentation? _REPRESENTATION;
+  final List<QRPValueObjectBuilder>? _PARAMETERS;
+  final List<QRPRowObjectBuilder>? _ROWS;
+  final List<QRPTableObjectBuilder>? _TABLES;
+  final int? _MAX_ELAPSED_MS;
+  final int? _MAX_ROWS;
+  final int? _MAX_BYTES;
+  final int? _HTTP_STATUS;
+  final int? _BODY_REF_TOKEN;
+  final int? _BODY_REF_SIZE;
 
   QRPObjectBuilder({
     qrpKind? KIND,
@@ -733,6 +1292,26 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
     String? ARCHIVE_ID,
     String? archiveId,
     List<QRPColumnObjectBuilder>? COLUMNS,
+    qrpTimeProfile? TIME_PROFILE,
+    qrpTimeProfile? timeProfile,
+    int? PROFILE_EPOCH_MS,
+    int? profileEpochMs,
+    qrpRepresentation? REPRESENTATION,
+    List<QRPValueObjectBuilder>? PARAMETERS,
+    List<QRPRowObjectBuilder>? ROWS,
+    List<QRPTableObjectBuilder>? TABLES,
+    int? MAX_ELAPSED_MS,
+    int? maxElapsedMs,
+    int? MAX_ROWS,
+    int? maxRows,
+    int? MAX_BYTES,
+    int? maxBytes,
+    int? HTTP_STATUS,
+    int? httpStatus,
+    int? BODY_REF_TOKEN,
+    int? bodyRefToken,
+    int? BODY_REF_SIZE,
+    int? bodyRefSize,
   })
       : _KIND = KIND,
         _STATUS = STATUS,
@@ -770,7 +1349,19 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
         _ETAG = ETAG,
         _CID = CID,
         _ARCHIVE_ID = archiveId ?? ARCHIVE_ID,
-        _COLUMNS = COLUMNS;
+        _COLUMNS = COLUMNS,
+        _TIME_PROFILE = timeProfile ?? TIME_PROFILE,
+        _PROFILE_EPOCH_MS = profileEpochMs ?? PROFILE_EPOCH_MS,
+        _REPRESENTATION = REPRESENTATION,
+        _PARAMETERS = PARAMETERS,
+        _ROWS = ROWS,
+        _TABLES = TABLES,
+        _MAX_ELAPSED_MS = maxElapsedMs ?? MAX_ELAPSED_MS,
+        _MAX_ROWS = maxRows ?? MAX_ROWS,
+        _MAX_BYTES = maxBytes ?? MAX_BYTES,
+        _HTTP_STATUS = httpStatus ?? HTTP_STATUS,
+        _BODY_REF_TOKEN = bodyRefToken ?? BODY_REF_TOKEN,
+        _BODY_REF_SIZE = bodyRefSize ?? BODY_REF_SIZE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -813,7 +1404,13 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ARCHIVE_ID!);
     final int? COLUMNSOffset = _COLUMNS == null ? null
         : fbBuilder.writeList(_COLUMNS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(37);
+    final int? PARAMETERSOffset = _PARAMETERS == null ? null
+        : fbBuilder.writeList(_PARAMETERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? ROWSOffset = _ROWS == null ? null
+        : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? TABLESOffset = _TABLES == null ? null
+        : fbBuilder.writeList(_TABLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(49);
     fbBuilder.addInt8(0, _KIND?.value);
     fbBuilder.addInt8(1, _STATUS?.value);
     fbBuilder.addOffset(2, ERROR_CODEOffset);
@@ -851,6 +1448,18 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(34, CIDOffset);
     fbBuilder.addOffset(35, ARCHIVE_IDOffset);
     fbBuilder.addOffset(36, COLUMNSOffset);
+    fbBuilder.addInt8(37, _TIME_PROFILE?.value);
+    fbBuilder.addInt64(38, _PROFILE_EPOCH_MS);
+    fbBuilder.addInt8(39, _REPRESENTATION?.value);
+    fbBuilder.addOffset(40, PARAMETERSOffset);
+    fbBuilder.addOffset(41, ROWSOffset);
+    fbBuilder.addOffset(42, TABLESOffset);
+    fbBuilder.addUint32(43, _MAX_ELAPSED_MS);
+    fbBuilder.addUint64(44, _MAX_ROWS);
+    fbBuilder.addUint64(45, _MAX_BYTES);
+    fbBuilder.addUint16(46, _HTTP_STATUS);
+    fbBuilder.addUint64(47, _BODY_REF_TOKEN);
+    fbBuilder.addUint64(48, _BODY_REF_SIZE);
     return fbBuilder.endTable();
   }
 

@@ -233,7 +233,7 @@ def MetaCommandCreateARGUMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARGUMENTSVector(builder, data):
-    MetaCommandCreateARGUMENTSVector(builder, data)
+    return MetaCommandCreateARGUMENTSVector(builder, data)
 
 def MetaCommandAddCOMMAND_CONTAINER(builder, COMMAND_CONTAINER):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COMMAND_CONTAINER), 0)
@@ -263,7 +263,7 @@ def MetaCommandCreateVERIFIERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateVERIFIERSVector(builder, data):
-    MetaCommandCreateVERIFIERSVector(builder, data)
+    return MetaCommandCreateVERIFIERSVector(builder, data)
 
 def MetaCommandAddSIGNIFICANCE(builder, SIGNIFICANCE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNIFICANCE), 0)
@@ -287,7 +287,7 @@ def MetaCommandCreateINTERLOCKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTERLOCKSVector(builder, data):
-    MetaCommandCreateINTERLOCKSVector(builder, data)
+    return MetaCommandCreateINTERLOCKSVector(builder, data)
 
 def MetaCommandAddDEFAULT_SIGNIFICANCE(builder, DEFAULT_SIGNIFICANCE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_SIGNIFICANCE), 0)

@@ -91,7 +91,7 @@ def KMLStyleMapCreatePAIRSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePAIRSVector(builder, data):
-    KMLStyleMapCreatePAIRSVector(builder, data)
+    return KMLStyleMapCreatePAIRSVector(builder, data)
 
 def KMLStyleMapEnd(builder):
     return builder.EndObject()

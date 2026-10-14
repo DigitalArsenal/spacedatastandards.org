@@ -524,8 +524,35 @@ func (rcv *NSTNode) OnionAddress() []byte {
 
 /// Onion-service address when the peer is reachable over an anonymity
 /// network.
+/// Standards the peer publishes or serves, as their codes, e.g. "OMM".
+func (rcv *NSTNode) STANDARDS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *NSTNode) Standards(j int) []byte {
+	return rcv.STANDARDS(j)
+}
+
+func (rcv *NSTNode) STANDARDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *NSTNode) StandardsLength() int {
+	return rcv.STANDARDSLength()
+}
+
+/// Standards the peer publishes or serves, as their codes, e.g. "OMM".
 func NSTNodeStart(builder *flatbuffers.Builder) {
-	builder.StartObject(28)
+	builder.StartObject(29)
 }
 func NSTNodeAddPEER_ID(builder *flatbuffers.Builder, PEER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(PEER_ID), 0)
@@ -706,6 +733,18 @@ func NSTNodeAddONION_ADDRESS(builder *flatbuffers.Builder, ONION_ADDRESS flatbuf
 }
 func NSTNodeAddOnionAddress(builder *flatbuffers.Builder, ONION_ADDRESS flatbuffers.UOffsetT) {
 	NSTNodeAddONION_ADDRESS(builder, ONION_ADDRESS)
+}
+func NSTNodeAddSTANDARDS(builder *flatbuffers.Builder, STANDARDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(STANDARDS), 0)
+}
+func NSTNodeAddStandards(builder *flatbuffers.Builder, STANDARDS flatbuffers.UOffsetT) {
+	NSTNodeAddSTANDARDS(builder, STANDARDS)
+}
+func NSTNodeStartSTANDARDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func NSTNodeStartStandardsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return NSTNodeStartSTANDARDSVector(builder, numElems)
 }
 func NSTNodeEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

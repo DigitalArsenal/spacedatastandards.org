@@ -104,7 +104,7 @@ def PCEParameterSampleCreatePARAMETER_VALUESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARAMETER_VALUESVector(builder, data):
-    PCEParameterSampleCreatePARAMETER_VALUESVector(builder, data)
+    return PCEParameterSampleCreatePARAMETER_VALUESVector(builder, data)
 
 def PCEParameterSampleEnd(builder):
     return builder.EndObject()

@@ -497,7 +497,7 @@ def EPFCreateSAMPLE_EPOCHSVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_EPOCHSVector(builder, data):
-    EPFCreateSAMPLE_EPOCHSVector(builder, data)
+    return EPFCreateSAMPLE_EPOCHSVector(builder, data)
 
 def EPFAddSAMPLE_VALUES(builder, SAMPLE_VALUES):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_VALUES), 0)
@@ -519,7 +519,7 @@ def EPFCreateSAMPLE_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_VALUESVector(builder, data):
-    EPFCreateSAMPLE_VALUESVector(builder, data)
+    return EPFCreateSAMPLE_VALUESVector(builder, data)
 
 def EPFAddSAMPLE_LIMIT_VALUES(builder, SAMPLE_LIMIT_VALUES):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_LIMIT_VALUES), 0)
@@ -541,7 +541,7 @@ def EPFCreateSAMPLE_LIMIT_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_LIMIT_VALUESVector(builder, data):
-    EPFCreateSAMPLE_LIMIT_VALUESVector(builder, data)
+    return EPFCreateSAMPLE_LIMIT_VALUESVector(builder, data)
 
 def EPFAddSAMPLE_MARGIN_DB(builder, SAMPLE_MARGIN_DB):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_MARGIN_DB), 0)
@@ -563,7 +563,7 @@ def EPFCreateSAMPLE_MARGIN_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_MARGIN_DBVector(builder, data):
-    EPFCreateSAMPLE_MARGIN_DBVector(builder, data)
+    return EPFCreateSAMPLE_MARGIN_DBVector(builder, data)
 
 def EPFAddSAMPLE_EXCEEDS_LIMIT(builder, SAMPLE_EXCEEDS_LIMIT):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SAMPLE_EXCEEDS_LIMIT), 0)
@@ -585,7 +585,7 @@ def EPFCreateSAMPLE_EXCEEDS_LIMITVector(builder, data):
     return builder.EndVector()
 
 def CreateSAMPLE_EXCEEDS_LIMITVector(builder, data):
-    EPFCreateSAMPLE_EXCEEDS_LIMITVector(builder, data)
+    return EPFCreateSAMPLE_EXCEEDS_LIMITVector(builder, data)
 
 def EPFAddCONTRIBUTORS(builder, CONTRIBUTORS):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(CONTRIBUTORS), 0)
@@ -603,7 +603,7 @@ def EPFCreateCONTRIBUTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTRIBUTORSVector(builder, data):
-    EPFCreateCONTRIBUTORSVector(builder, data)
+    return EPFCreateCONTRIBUTORSVector(builder, data)
 
 def EPFAddCDF_VALUES(builder, CDF_VALUES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(CDF_VALUES), 0)
@@ -625,7 +625,7 @@ def EPFCreateCDF_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateCDF_VALUESVector(builder, data):
-    EPFCreateCDF_VALUESVector(builder, data)
+    return EPFCreateCDF_VALUESVector(builder, data)
 
 def EPFAddCDF_PERCENT_TIME_EXCEEDED(builder, CDF_PERCENT_TIME_EXCEEDED):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CDF_PERCENT_TIME_EXCEEDED), 0)
@@ -647,7 +647,7 @@ def EPFCreateCDF_PERCENT_TIME_EXCEEDEDVector(builder, data):
     return builder.EndVector()
 
 def CreateCDF_PERCENT_TIME_EXCEEDEDVector(builder, data):
-    EPFCreateCDF_PERCENT_TIME_EXCEEDEDVector(builder, data)
+    return EPFCreateCDF_PERCENT_TIME_EXCEEDEDVector(builder, data)
 
 def EPFAddVERDICT(builder, VERDICT):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(VERDICT), 0)
@@ -693,7 +693,7 @@ def EPFCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    EPFCreateSIGNATUREVector(builder, data)
+    return EPFCreateSIGNATUREVector(builder, data)
 
 def EPFAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -715,7 +715,7 @@ def EPFCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    EPFCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return EPFCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def EPFEnd(builder):
     return builder.EndObject()

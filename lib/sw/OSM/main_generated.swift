@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Observation Stability Message
-public struct OSM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OSM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

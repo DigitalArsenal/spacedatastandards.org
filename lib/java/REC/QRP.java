@@ -189,6 +189,70 @@ public final class QRP extends com.google.flatbuffers.Table {
   public int COLUMNSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public QRPColumn.Vector columnsVector() { return columnsVector(new QRPColumn.Vector()); }
   public QRPColumn.Vector columnsVector(QRPColumn.Vector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * How the request selects records in time.
+   */
+  public byte TIME_PROFILE() { int o = __offset(78); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+   */
+  public long PROFILE_EPOCH_MS() { int o = __offset(80); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Representation the client asks the page in.
+   */
+  public byte REPRESENTATION() { int o = __offset(82); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Values bound to the placeholders of SQL, in order.
+   */
+  public QRPValue PARAMETERS(int j) { return PARAMETERS(new QRPValue(), j); }
+  public QRPValue PARAMETERS(QRPValue obj, int j) { int o = __offset(84); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PARAMETERSLength() { int o = __offset(84); return o != 0 ? __vector_len(o) : 0; }
+  public QRPValue.Vector parametersVector() { return parametersVector(new QRPValue.Vector()); }
+  public QRPValue.Vector parametersVector(QRPValue.Vector obj) { int o = __offset(84); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Rows of a projection (a query that selects columns rather than whole
+   * records), in COLUMNS order. Whole-record pages carry their records as
+   * frames after the header instead, and leave ROWS empty.
+   */
+  public QRPRow ROWS(int j) { return ROWS(new QRPRow(), j); }
+  public QRPRow ROWS(QRPRow obj, int j) { int o = __offset(86); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ROWSLength() { int o = __offset(86); return o != 0 ? __vector_len(o) : 0; }
+  public QRPRow.Vector rowsVector() { return rowsVector(new QRPRow.Vector()); }
+  public QRPRow.Vector rowsVector(QRPRow.Vector obj) { int o = __offset(86); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * The serving node's queryable tables, answered to a request for the query
+   * surface.
+   */
+  public QRPTable TABLES(int j) { return TABLES(new QRPTable(), j); }
+  public QRPTable TABLES(QRPTable obj, int j) { int o = __offset(88); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TABLESLength() { int o = __offset(88); return o != 0 ? __vector_len(o) : 0; }
+  public QRPTable.Vector tablesVector() { return tablesVector(new QRPTable.Vector()); }
+  public QRPTable.Vector tablesVector(QRPTable.Vector obj) { int o = __offset(88); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+   * none stated.
+   */
+  public long MAX_ELAPSED_MS() { int o = __offset(90); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Most rows a page returns; 0 = none stated.
+   */
+  public long MAX_ROWS() { int o = __offset(92); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Most bytes a page returns; 0 = none stated.
+   */
+  public long MAX_BYTES() { int o = __offset(94); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Transport status the answer carries, HTTP semantics (200, 304, 400,
+   * 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+   */
+  public int HTTP_STATUS() { int o = __offset(96); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * When the page's record frames are not inline but held by the serving
+   * node for delivery out of band: the reference token the node resolves
+   * (single use), and the byte size of what it refers to. 0 = inline.
+   */
+  public long BODY_REF_TOKEN() { int o = __offset(98); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long BODY_REF_SIZE() { int o = __offset(100); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createQRP(FlatBufferBuilder builder,
       byte KIND,
@@ -227,8 +291,25 @@ public final class QRP extends com.google.flatbuffers.Table {
       int ETAGOffset,
       int CIDOffset,
       int ARCHIVE_IDOffset,
-      int COLUMNSOffset) {
-    builder.startTable(37);
+      int COLUMNSOffset,
+      byte TIME_PROFILE,
+      long PROFILE_EPOCH_MS,
+      byte REPRESENTATION,
+      int PARAMETERSOffset,
+      int ROWSOffset,
+      int TABLESOffset,
+      long MAX_ELAPSED_MS,
+      long MAX_ROWS,
+      long MAX_BYTES,
+      int HTTP_STATUS,
+      long BODY_REF_TOKEN,
+      long BODY_REF_SIZE) {
+    builder.startTable(49);
+    QRP.addBodyRefSize(builder, BODY_REF_SIZE);
+    QRP.addBodyRefToken(builder, BODY_REF_TOKEN);
+    QRP.addMaxBytes(builder, MAX_BYTES);
+    QRP.addMaxRows(builder, MAX_ROWS);
+    QRP.addProfileEpochMs(builder, PROFILE_EPOCH_MS);
     QRP.addGeneratedAtMs(builder, GENERATED_AT_MS);
     QRP.addAsOfMs(builder, AS_OF_MS);
     QRP.addStored(builder, STORED);
@@ -236,6 +317,10 @@ public final class QRP extends com.google.flatbuffers.Table {
     QRP.addTotalCount(builder, TOTAL_COUNT);
     QRP.addToEpochMs(builder, TO_EPOCH_MS);
     QRP.addFromEpochMs(builder, FROM_EPOCH_MS);
+    QRP.addMaxElapsedMs(builder, MAX_ELAPSED_MS);
+    QRP.addTables(builder, TABLESOffset);
+    QRP.addRows(builder, ROWSOffset);
+    QRP.addParameters(builder, PARAMETERSOffset);
     QRP.addColumns(builder, COLUMNSOffset);
     QRP.addArchiveId(builder, ARCHIVE_IDOffset);
     QRP.addCid(builder, CIDOffset);
@@ -260,6 +345,9 @@ public final class QRP extends com.google.flatbuffers.Table {
     QRP.addRetryAfterMs(builder, RETRY_AFTER_MS);
     QRP.addMessage(builder, MESSAGEOffset);
     QRP.addErrorCode(builder, ERROR_CODEOffset);
+    QRP.addHttpStatus(builder, HTTP_STATUS);
+    QRP.addRepresentation(builder, REPRESENTATION);
+    QRP.addTimeProfile(builder, TIME_PROFILE);
     QRP.addStale(builder, STALE);
     QRP.addTruncated(builder, TRUNCATED);
     QRP.addPartial(builder, PARTIAL);
@@ -269,7 +357,7 @@ public final class QRP extends com.google.flatbuffers.Table {
     return QRP.endQRP(builder);
   }
 
-  public static void startQRP(FlatBufferBuilder builder) { builder.startTable(37); }
+  public static void startQRP(FlatBufferBuilder builder) { builder.startTable(49); }
   public static void addKind(FlatBufferBuilder builder, byte KIND) { builder.addByte(0, KIND, 0); }
   public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(1, STATUS, 0); }
   public static void addErrorCode(FlatBufferBuilder builder, int ERROR_CODEOffset) { builder.addOffset(2, ERROR_CODEOffset, 0); }
@@ -311,6 +399,24 @@ public final class QRP extends com.google.flatbuffers.Table {
   public static void addColumns(FlatBufferBuilder builder, int COLUMNSOffset) { builder.addOffset(36, COLUMNSOffset, 0); }
   public static int createColumnsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startColumnsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTimeProfile(FlatBufferBuilder builder, byte TIME_PROFILE) { builder.addByte(37, TIME_PROFILE, 0); }
+  public static void addProfileEpochMs(FlatBufferBuilder builder, long PROFILE_EPOCH_MS) { builder.addLong(38, PROFILE_EPOCH_MS, 0L); }
+  public static void addRepresentation(FlatBufferBuilder builder, byte REPRESENTATION) { builder.addByte(39, REPRESENTATION, 0); }
+  public static void addParameters(FlatBufferBuilder builder, int PARAMETERSOffset) { builder.addOffset(40, PARAMETERSOffset, 0); }
+  public static int createParametersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addRows(FlatBufferBuilder builder, int ROWSOffset) { builder.addOffset(41, ROWSOffset, 0); }
+  public static int createRowsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startRowsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTables(FlatBufferBuilder builder, int TABLESOffset) { builder.addOffset(42, TABLESOffset, 0); }
+  public static int createTablesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startTablesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addMaxElapsedMs(FlatBufferBuilder builder, long MAX_ELAPSED_MS) { builder.addInt(43, (int) MAX_ELAPSED_MS, (int) 0L); }
+  public static void addMaxRows(FlatBufferBuilder builder, long MAX_ROWS) { builder.addLong(44, MAX_ROWS, 0L); }
+  public static void addMaxBytes(FlatBufferBuilder builder, long MAX_BYTES) { builder.addLong(45, MAX_BYTES, 0L); }
+  public static void addHttpStatus(FlatBufferBuilder builder, int HTTP_STATUS) { builder.addShort(46, (short) HTTP_STATUS, (short) 0); }
+  public static void addBodyRefToken(FlatBufferBuilder builder, long BODY_REF_TOKEN) { builder.addLong(47, BODY_REF_TOKEN, 0L); }
+  public static void addBodyRefSize(FlatBufferBuilder builder, long BODY_REF_SIZE) { builder.addLong(48, BODY_REF_SIZE, 0L); }
   public static int endQRP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

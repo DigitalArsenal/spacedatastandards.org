@@ -6,8 +6,13 @@ import * as flatbuffers from 'flatbuffers';
 
 import { QRPColumn, QRPColumnT } from './QRPColumn.js';
 import { QRPFilter, QRPFilterT } from './QRPFilter.js';
+import { QRPRow, QRPRowT } from './QRPRow.js';
+import { QRPTable, QRPTableT } from './QRPTable.js';
+import { QRPValue, QRPValueT } from './QRPValue.js';
 import { qrpKind } from './qrpKind.js';
+import { qrpRepresentation } from './qrpRepresentation.js';
 import { qrpStatus } from './qrpStatus.js';
+import { qrpTimeProfile } from './qrpTimeProfile.js';
 
 
 /**
@@ -346,8 +351,123 @@ columnsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * How the request selects records in time.
+ */
+TIME_PROFILE():qrpTimeProfile {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : qrpTimeProfile.Unspecified;
+}
+
+/**
+ * Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+ */
+PROFILE_EPOCH_MS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Representation the client asks the page in.
+ */
+REPRESENTATION():qrpRepresentation {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : qrpRepresentation.Default;
+}
+
+/**
+ * Values bound to the placeholders of SQL, in order.
+ */
+PARAMETERS(index: number, obj?:QRPValue):QRPValue|null {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? (obj || new QRPValue()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+parametersLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Rows of a projection (a query that selects columns rather than whole
+ * records), in COLUMNS order. Whole-record pages carry their records as
+ * frames after the header instead, and leave ROWS empty.
+ */
+ROWS(index: number, obj?:QRPRow):QRPRow|null {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? (obj || new QRPRow()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+rowsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * The serving node's queryable tables, answered to a request for the query
+ * surface.
+ */
+TABLES(index: number, obj?:QRPTable):QRPTable|null {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? (obj || new QRPTable()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+tablesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+ * none stated.
+ */
+MAX_ELAPSED_MS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Most rows a page returns; 0 = none stated.
+ */
+MAX_ROWS():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Most bytes a page returns; 0 = none stated.
+ */
+MAX_BYTES():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Transport status the answer carries, HTTP semantics (200, 304, 400,
+ * 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+ */
+HTTP_STATUS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * When the page's record frames are not inline but held by the serving
+ * node for delivery out of band: the reference token the node resolves
+ * (single use), and the byte size of what it refers to. 0 = inline.
+ */
+BODY_REF_TOKEN():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+BODY_REF_SIZE():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startQRP(builder:flatbuffers.Builder) {
-  builder.startObject(37);
+  builder.startObject(49);
 }
 
 static addKind(builder:flatbuffers.Builder, KIND:qrpKind) {
@@ -522,6 +642,90 @@ static startColumnsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addTimeProfile(builder:flatbuffers.Builder, TIME_PROFILE:qrpTimeProfile) {
+  builder.addFieldInt8(37, TIME_PROFILE, qrpTimeProfile.Unspecified);
+}
+
+static addProfileEpochMs(builder:flatbuffers.Builder, PROFILE_EPOCH_MS:bigint) {
+  builder.addFieldInt64(38, PROFILE_EPOCH_MS, BigInt('0'));
+}
+
+static addRepresentation(builder:flatbuffers.Builder, REPRESENTATION:qrpRepresentation) {
+  builder.addFieldInt8(39, REPRESENTATION, qrpRepresentation.Default);
+}
+
+static addParameters(builder:flatbuffers.Builder, PARAMETERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, PARAMETERSOffset, 0);
+}
+
+static createParametersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startParametersVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addRows(builder:flatbuffers.Builder, ROWSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(41, ROWSOffset, 0);
+}
+
+static createRowsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startRowsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addTables(builder:flatbuffers.Builder, TABLESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(42, TABLESOffset, 0);
+}
+
+static createTablesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startTablesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addMaxElapsedMs(builder:flatbuffers.Builder, MAX_ELAPSED_MS:number) {
+  builder.addFieldInt32(43, MAX_ELAPSED_MS, 0);
+}
+
+static addMaxRows(builder:flatbuffers.Builder, MAX_ROWS:bigint) {
+  builder.addFieldInt64(44, MAX_ROWS, BigInt('0'));
+}
+
+static addMaxBytes(builder:flatbuffers.Builder, MAX_BYTES:bigint) {
+  builder.addFieldInt64(45, MAX_BYTES, BigInt('0'));
+}
+
+static addHttpStatus(builder:flatbuffers.Builder, HTTP_STATUS:number) {
+  builder.addFieldInt16(46, HTTP_STATUS, 0);
+}
+
+static addBodyRefToken(builder:flatbuffers.Builder, BODY_REF_TOKEN:bigint) {
+  builder.addFieldInt64(47, BODY_REF_TOKEN, BigInt('0'));
+}
+
+static addBodyRefSize(builder:flatbuffers.Builder, BODY_REF_SIZE:bigint) {
+  builder.addFieldInt64(48, BODY_REF_SIZE, BigInt('0'));
+}
+
 static endQRP(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -535,7 +739,7 @@ static finishSizePrefixedQRPBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$QRP', true);
 }
 
-static createQRP(builder:flatbuffers.Builder, KIND:qrpKind, STATUS:qrpStatus, ERROR_CODEOffset:flatbuffers.Offset, MESSAGEOffset:flatbuffers.Offset, RETRY_AFTER_MS:number, SCHEMA_NAMEOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SQLOffset:flatbuffers.Offset, SEARCHOffset:flatbuffers.Offset, FILTERSOffset:flatbuffers.Offset, SORT_FIELDOffset:flatbuffers.Offset, SORT_DESC:boolean, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, BATCH_IDOffset:flatbuffers.Offset, PRODUCER_PEER_IDOffset:flatbuffers.Offset, ORIGIN_IDOffset:flatbuffers.Offset, FROM_EPOCH_MS:bigint, TO_EPOCH_MS:bigint, PAGE:number, LIMIT:number, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, RECORD_COUNT:number, TOTAL_COUNT:bigint, SCANNED:bigint, STORED:bigint, PARTIAL:boolean, TRUNCATED:boolean, AS_OF_MS:bigint, STALE:boolean, ELAPSED_MS:number, GENERATED_AT_MS:bigint, ETAGOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, ARCHIVE_IDOffset:flatbuffers.Offset, COLUMNSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createQRP(builder:flatbuffers.Builder, KIND:qrpKind, STATUS:qrpStatus, ERROR_CODEOffset:flatbuffers.Offset, MESSAGEOffset:flatbuffers.Offset, RETRY_AFTER_MS:number, SCHEMA_NAMEOffset:flatbuffers.Offset, FILE_IDENTIFIEROffset:flatbuffers.Offset, SQLOffset:flatbuffers.Offset, SEARCHOffset:flatbuffers.Offset, FILTERSOffset:flatbuffers.Offset, SORT_FIELDOffset:flatbuffers.Offset, SORT_DESC:boolean, PROVIDER_IDOffset:flatbuffers.Offset, SOURCE_NAMEOffset:flatbuffers.Offset, BATCH_IDOffset:flatbuffers.Offset, PRODUCER_PEER_IDOffset:flatbuffers.Offset, ORIGIN_IDOffset:flatbuffers.Offset, FROM_EPOCH_MS:bigint, TO_EPOCH_MS:bigint, PAGE:number, LIMIT:number, CURSOROffset:flatbuffers.Offset, NEXT_CURSOROffset:flatbuffers.Offset, RECORD_COUNT:number, TOTAL_COUNT:bigint, SCANNED:bigint, STORED:bigint, PARTIAL:boolean, TRUNCATED:boolean, AS_OF_MS:bigint, STALE:boolean, ELAPSED_MS:number, GENERATED_AT_MS:bigint, ETAGOffset:flatbuffers.Offset, CIDOffset:flatbuffers.Offset, ARCHIVE_IDOffset:flatbuffers.Offset, COLUMNSOffset:flatbuffers.Offset, TIME_PROFILE:qrpTimeProfile, PROFILE_EPOCH_MS:bigint, REPRESENTATION:qrpRepresentation, PARAMETERSOffset:flatbuffers.Offset, ROWSOffset:flatbuffers.Offset, TABLESOffset:flatbuffers.Offset, MAX_ELAPSED_MS:number, MAX_ROWS:bigint, MAX_BYTES:bigint, HTTP_STATUS:number, BODY_REF_TOKEN:bigint, BODY_REF_SIZE:bigint):flatbuffers.Offset {
   QRP.startQRP(builder);
   QRP.addKind(builder, KIND);
   QRP.addStatus(builder, STATUS);
@@ -574,6 +778,18 @@ static createQRP(builder:flatbuffers.Builder, KIND:qrpKind, STATUS:qrpStatus, ER
   QRP.addCid(builder, CIDOffset);
   QRP.addArchiveId(builder, ARCHIVE_IDOffset);
   QRP.addColumns(builder, COLUMNSOffset);
+  QRP.addTimeProfile(builder, TIME_PROFILE);
+  QRP.addProfileEpochMs(builder, PROFILE_EPOCH_MS);
+  QRP.addRepresentation(builder, REPRESENTATION);
+  QRP.addParameters(builder, PARAMETERSOffset);
+  QRP.addRows(builder, ROWSOffset);
+  QRP.addTables(builder, TABLESOffset);
+  QRP.addMaxElapsedMs(builder, MAX_ELAPSED_MS);
+  QRP.addMaxRows(builder, MAX_ROWS);
+  QRP.addMaxBytes(builder, MAX_BYTES);
+  QRP.addHttpStatus(builder, HTTP_STATUS);
+  QRP.addBodyRefToken(builder, BODY_REF_TOKEN);
+  QRP.addBodyRefSize(builder, BODY_REF_SIZE);
   return QRP.endQRP(builder);
 }
 
@@ -615,7 +831,19 @@ unpack(): QRPT {
     this.ETAG(),
     this.CID(),
     this.ARCHIVE_ID(),
-    this.bb!.createObjList<QRPColumn, QRPColumnT>(this.COLUMNS.bind(this), this.columnsLength())
+    this.bb!.createObjList<QRPColumn, QRPColumnT>(this.COLUMNS.bind(this), this.columnsLength()),
+    this.TIME_PROFILE(),
+    this.PROFILE_EPOCH_MS(),
+    this.REPRESENTATION(),
+    this.bb!.createObjList<QRPValue, QRPValueT>(this.PARAMETERS.bind(this), this.parametersLength()),
+    this.bb!.createObjList<QRPRow, QRPRowT>(this.ROWS.bind(this), this.rowsLength()),
+    this.bb!.createObjList<QRPTable, QRPTableT>(this.TABLES.bind(this), this.tablesLength()),
+    this.MAX_ELAPSED_MS(),
+    this.MAX_ROWS(),
+    this.MAX_BYTES(),
+    this.HTTP_STATUS(),
+    this.BODY_REF_TOKEN(),
+    this.BODY_REF_SIZE()
   );
 }
 
@@ -658,6 +886,18 @@ unpackTo(_o: QRPT): void {
   _o.CID = this.CID();
   _o.ARCHIVE_ID = this.ARCHIVE_ID();
   _o.COLUMNS = this.bb!.createObjList<QRPColumn, QRPColumnT>(this.COLUMNS.bind(this), this.columnsLength());
+  _o.TIME_PROFILE = this.TIME_PROFILE();
+  _o.PROFILE_EPOCH_MS = this.PROFILE_EPOCH_MS();
+  _o.REPRESENTATION = this.REPRESENTATION();
+  _o.PARAMETERS = this.bb!.createObjList<QRPValue, QRPValueT>(this.PARAMETERS.bind(this), this.parametersLength());
+  _o.ROWS = this.bb!.createObjList<QRPRow, QRPRowT>(this.ROWS.bind(this), this.rowsLength());
+  _o.TABLES = this.bb!.createObjList<QRPTable, QRPTableT>(this.TABLES.bind(this), this.tablesLength());
+  _o.MAX_ELAPSED_MS = this.MAX_ELAPSED_MS();
+  _o.MAX_ROWS = this.MAX_ROWS();
+  _o.MAX_BYTES = this.MAX_BYTES();
+  _o.HTTP_STATUS = this.HTTP_STATUS();
+  _o.BODY_REF_TOKEN = this.BODY_REF_TOKEN();
+  _o.BODY_REF_SIZE = this.BODY_REF_SIZE();
 }
 }
 
@@ -699,7 +939,19 @@ constructor(
   public ETAG: string|Uint8Array|null = null,
   public CID: string|Uint8Array|null = null,
   public ARCHIVE_ID: string|Uint8Array|null = null,
-  public COLUMNS: (QRPColumnT)[] = []
+  public COLUMNS: (QRPColumnT)[] = [],
+  public TIME_PROFILE: qrpTimeProfile = qrpTimeProfile.Unspecified,
+  public PROFILE_EPOCH_MS: bigint = BigInt('0'),
+  public REPRESENTATION: qrpRepresentation = qrpRepresentation.Default,
+  public PARAMETERS: (QRPValueT)[] = [],
+  public ROWS: (QRPRowT)[] = [],
+  public TABLES: (QRPTableT)[] = [],
+  public MAX_ELAPSED_MS: number = 0,
+  public MAX_ROWS: bigint = BigInt('0'),
+  public MAX_BYTES: bigint = BigInt('0'),
+  public HTTP_STATUS: number = 0,
+  public BODY_REF_TOKEN: bigint = BigInt('0'),
+  public BODY_REF_SIZE: bigint = BigInt('0')
 ){}
 
 
@@ -723,6 +975,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CID = (this.CID !== null ? builder.createString(this.CID!) : 0);
   const ARCHIVE_ID = (this.ARCHIVE_ID !== null ? builder.createString(this.ARCHIVE_ID!) : 0);
   const COLUMNS = QRP.createColumnsVector(builder, builder.createObjectOffsetList(this.COLUMNS));
+  const PARAMETERS = QRP.createParametersVector(builder, builder.createObjectOffsetList(this.PARAMETERS));
+  const ROWS = QRP.createRowsVector(builder, builder.createObjectOffsetList(this.ROWS));
+  const TABLES = QRP.createTablesVector(builder, builder.createObjectOffsetList(this.TABLES));
 
   return QRP.createQRP(builder,
     this.KIND,
@@ -761,7 +1016,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ETAG,
     CID,
     ARCHIVE_ID,
-    COLUMNS
+    COLUMNS,
+    this.TIME_PROFILE,
+    this.PROFILE_EPOCH_MS,
+    this.REPRESENTATION,
+    PARAMETERS,
+    ROWS,
+    TABLES,
+    this.MAX_ELAPSED_MS,
+    this.MAX_ROWS,
+    this.MAX_BYTES,
+    this.HTTP_STATUS,
+    this.BODY_REF_TOKEN,
+    this.BODY_REF_SIZE
   );
 }
 }

@@ -225,7 +225,7 @@ def ENVCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    ENVCreateRESERVEDVector(builder, data)
+    return ENVCreateRESERVEDVector(builder, data)
 
 def ENVEnd(builder):
     return builder.EndObject()

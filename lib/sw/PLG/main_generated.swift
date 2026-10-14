@@ -223,8 +223,20 @@ public enum hostCapabilityKind: UInt16, FlatbuffersVectorInitializable, Enum, Ve
   ///  single record without source attribution. Hosts gate
   ///  storage.ingest_with_source on this capability specifically.
   case storageIngest = 36
+  ///  Read the node's view of its peer-to-peer network: known peers, the
+  ///  publication notices it has received and verified, and the latest
+  ///  dataset of a lane (p2p.* host operations).
+  case p2pRead = 37
+  ///  Read the node's own health: uptime, service state, storage and network
+  ///  figures (node_status_read.status).
+  case nodeStatusRead = 38
+  ///  Read the node's event log (node_activity_read.activity).
+  case nodeActivityRead = 39
+  ///  Read and write operator-held secrets by identifier (credentials for
+  ///  upstream sources); the secret value is never persisted in a record.
+  case secrets = 40
 
-  public static var max: hostCapabilityKind { return .storageIngest }
+  public static var max: hostCapabilityKind { return .secrets }
   public static var min: hostCapabilityKind { return .clock }
 }
 
@@ -245,7 +257,7 @@ public enum flowEdgeRoutePolicy: UInt8, FlatbuffersVectorInitializable, Enum, Ve
 
 
 ///  Plugin capability declaration
-public struct PluginCapability: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PluginCapability: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -305,7 +317,7 @@ public struct PluginCapability: FlatBufferTable, FlatbuffersVectorInitializable,
 ///  ALLOWED_WIRE_FORMATS. Per SDK contract: a port that advertises
 ///  aligned-binary MUST also advertise the canonical flatbuffer fallback
 ///  for the same schema and file identifier in the same set.
-public struct PLGAcceptedTypeSet: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGAcceptedTypeSet: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -366,7 +378,7 @@ public struct PLGAcceptedTypeSet: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  One input or output port on a method.
-public struct PLGPortManifest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGPortManifest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -449,7 +461,7 @@ public struct PLGPortManifest: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  One host capability dependency (richer form of PluginCapability).
-public struct PLGHostCapability: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGHostCapability: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -506,7 +518,7 @@ public struct PLGHostCapability: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Timer entry declared by a plugin.
-public struct PLGTimerSpec: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGTimerSpec: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -570,7 +582,7 @@ public struct PLGTimerSpec: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Protocol handler declared by a plugin.
-public struct PLGProtocolSpec: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGProtocolSpec: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -697,7 +709,7 @@ public struct PLGProtocolSpec: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Build artifact emitted by the plugin toolchain.
-public struct PLGBuildArtifact: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGBuildArtifact: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -762,7 +774,7 @@ public struct PLGBuildArtifact: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Canonical method declaration.
-public struct PLGMethodManifest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGMethodManifest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -837,7 +849,7 @@ public struct PLGMethodManifest: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Plugin dependency on another plugin
-public struct PluginDependency: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PluginDependency: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -891,7 +903,7 @@ public struct PluginDependency: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Plugin entry point function definition
-public struct EntryFunction: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct EntryFunction: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -954,7 +966,7 @@ public struct EntryFunction: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  One node in a composed flow graph. A degenerate flow IS a module: a leaf
 ///  module leaves the flow-graph fields on PLG empty; a composed flow populates
 ///  them. This is how flows reuse the module schema rather than a separate one.
-public struct PLGFlowNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGFlowNode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1050,7 +1062,7 @@ public struct PLGFlowNode: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 ///  Exact validated SDS and representation contract bound into a signed flow
 ///  edge. CANONICAL_TYPE and ALIGNED_TYPE describe the same logical schema;
 ///  ALIGNED_TYPE carries its fixed layout in TAB.FlatBufferTypeRef.
-public struct PLGFlowEdgeContract: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGFlowEdgeContract: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1131,7 +1143,7 @@ public struct PLGFlowEdgeContract: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  One directed edge wiring a producer output port to a consumer input port.
-public struct PLGFlowEdge: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGFlowEdge: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1214,7 +1226,7 @@ public struct PLGFlowEdge: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  One flow trigger (e.g. a host timer or HTTP route) that starts a drain.
-public struct PLGFlowTrigger: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGFlowTrigger: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1283,7 +1295,7 @@ public struct PLGFlowTrigger: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Binds a trigger to the node + input port it delivers its frame to.
-public struct PLGFlowTriggerBinding: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLGFlowTriggerBinding: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1337,7 +1349,7 @@ public struct PLGFlowTriggerBinding: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Plugin Manifest - canonical signed storefront and WASM distribution record
-public struct PLG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

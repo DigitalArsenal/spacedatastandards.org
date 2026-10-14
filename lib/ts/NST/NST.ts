@@ -60,8 +60,18 @@ SOURCE_PEER_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Entity tag of this set, for conditional requests.
+ */
+ETAG():string|null
+ETAG(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ETAG(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startNST(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 }
 
 static addNodes(builder:flatbuffers.Builder, NODESOffset:flatbuffers.Offset) {
@@ -88,6 +98,10 @@ static addSourcePeerId(builder:flatbuffers.Builder, SOURCE_PEER_IDOffset:flatbuf
   builder.addFieldOffset(2, SOURCE_PEER_IDOffset, 0);
 }
 
+static addEtag(builder:flatbuffers.Builder, ETAGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ETAGOffset, 0);
+}
+
 static endNST(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -101,11 +115,12 @@ static finishSizePrefixedNSTBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$NST', true);
 }
 
-static createNST(builder:flatbuffers.Builder, NODESOffset:flatbuffers.Offset, GENERATED_AT:bigint, SOURCE_PEER_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createNST(builder:flatbuffers.Builder, NODESOffset:flatbuffers.Offset, GENERATED_AT:bigint, SOURCE_PEER_IDOffset:flatbuffers.Offset, ETAGOffset:flatbuffers.Offset):flatbuffers.Offset {
   NST.startNST(builder);
   NST.addNodes(builder, NODESOffset);
   NST.addGeneratedAt(builder, GENERATED_AT);
   NST.addSourcePeerId(builder, SOURCE_PEER_IDOffset);
+  NST.addEtag(builder, ETAGOffset);
   return NST.endNST(builder);
 }
 
@@ -113,7 +128,8 @@ unpack(): NSTT {
   return new NSTT(
     this.bb!.createObjList<NSTNode, NSTNodeT>(this.NODES.bind(this), this.nodesLength()),
     this.GENERATED_AT(),
-    this.SOURCE_PEER_ID()
+    this.SOURCE_PEER_ID(),
+    this.ETAG()
   );
 }
 
@@ -122,6 +138,7 @@ unpackTo(_o: NSTT): void {
   _o.NODES = this.bb!.createObjList<NSTNode, NSTNodeT>(this.NODES.bind(this), this.nodesLength());
   _o.GENERATED_AT = this.GENERATED_AT();
   _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID();
+  _o.ETAG = this.ETAG();
 }
 }
 
@@ -129,18 +146,21 @@ export class NSTT implements flatbuffers.IGeneratedObject {
 constructor(
   public NODES: (NSTNodeT)[] = [],
   public GENERATED_AT: bigint = BigInt('0'),
-  public SOURCE_PEER_ID: string|Uint8Array|null = null
+  public SOURCE_PEER_ID: string|Uint8Array|null = null,
+  public ETAG: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NODES = NST.createNodesVector(builder, builder.createObjectOffsetList(this.NODES));
   const SOURCE_PEER_ID = (this.SOURCE_PEER_ID !== null ? builder.createString(this.SOURCE_PEER_ID!) : 0);
+  const ETAG = (this.ETAG !== null ? builder.createString(this.ETAG!) : 0);
 
   return NST.createNST(builder,
     NODES,
     this.GENERATED_AT,
-    SOURCE_PEER_ID
+    SOURCE_PEER_ID,
+    ETAG
   );
 }
 }

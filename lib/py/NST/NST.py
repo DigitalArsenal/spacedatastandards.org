@@ -70,8 +70,16 @@ class NST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Entity tag of this set, for conditional requests.
+    # NST
+    def ETAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def NSTStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(4)
 
 def Start(builder):
     NSTStart(builder)
@@ -92,7 +100,7 @@ def NSTCreateNODESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNODESVector(builder, data):
-    NSTCreateNODESVector(builder, data)
+    return NSTCreateNODESVector(builder, data)
 
 def NSTAddGENERATED_AT(builder, GENERATED_AT):
     builder.PrependInt64Slot(1, GENERATED_AT, 0)
@@ -105,6 +113,12 @@ def NSTAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID):
 
 def AddSOURCE_PEER_ID(builder, SOURCE_PEER_ID):
     NSTAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
+
+def NSTAddETAG(builder, ETAG):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ETAG), 0)
+
+def AddETAG(builder, ETAG):
+    NSTAddETAG(builder, ETAG)
 
 def NSTEnd(builder):
     return builder.EndObject()
@@ -126,10 +140,12 @@ class NSTT(object):
         NODES = None,
         GENERATED_AT = 0,
         SOURCE_PEER_ID = None,
+        ETAG = None,
     ):
         self.NODES = NODES  # type: Optional[List[NSTNode.NSTNodeT]]
         self.GENERATED_AT = GENERATED_AT  # type: int
         self.SOURCE_PEER_ID = SOURCE_PEER_ID  # type: Optional[str]
+        self.ETAG = ETAG  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -162,6 +178,7 @@ class NSTT(object):
                     self.NODES.append(nSTNode_)
         self.GENERATED_AT = NST.GENERATED_AT()
         self.SOURCE_PEER_ID = NST.SOURCE_PEER_ID()
+        self.ETAG = NST.ETAG()
 
     # NSTT
     def Pack(self, builder):
@@ -175,11 +192,15 @@ class NSTT(object):
             NODES = builder.EndVector()
         if self.SOURCE_PEER_ID is not None:
             SOURCE_PEER_ID = builder.CreateString(self.SOURCE_PEER_ID)
+        if self.ETAG is not None:
+            ETAG = builder.CreateString(self.ETAG)
         NSTStart(builder)
         if self.NODES is not None:
             NSTAddNODES(builder, NODES)
         NSTAddGENERATED_AT(builder, self.GENERATED_AT)
         if self.SOURCE_PEER_ID is not None:
             NSTAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
+        if self.ETAG is not None:
+            NSTAddETAG(builder, ETAG)
         NST = NSTEnd(builder)
         return NST

@@ -1,0 +1,312 @@
+// Hash: 212e95a75c38fc16cc1848cf439ddd3f78f823187782772572ba4cc26b727aaf
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+/// Assignment (ASG)
+/// Description
+/// A linear assignment problem and its solution, and the association of
+/// measurements with predicted objects that such a solution decides. The
+/// problem is a cost matrix between rows (measurements, observations, tracks,
+/// tasks) and columns (tracks, catalog objects, sensors, resources), given
+/// dense or as sparse entries, with an optional cost for leaving a row
+/// unassigned; the solution is the minimum-cost assignment of at most one
+/// column per row and one row per column. This is the global-nearest-neighbour
+/// step of measurement-to-track association, of observation-to-object
+/// correlation and of any task allocation.
+///
+/// The association part records how a set of observations ($RDO, $EOO, $RFO or
+/// any other measurement record) was tested against predicted objects (for
+/// example $OEM with covariance): each observation's measurements and sigmas,
+/// its chi-square gate, every candidate object with its Mahalanobis distance
+/// d2 = r' inv(S) r on the innovation covariance S = H P H' + R, the p-value,
+/// the posterior association probability and the residuals, and the outcome
+/// (associated or uncorrelated, ambiguous or not). The observation records
+/// themselves keep their own standards; an ASG is the evidence beside them.
+///
+/// One ASG carries one of: a problem, a solution, association options or an
+/// association report. Units: km, km/s and degrees for measurements and
+/// geometry; costs in the caller's unit.
+
+/// Whether the problem minimizes or maximizes the total cost. Append new values
+/// only; never reorder or reuse existing values.
+enum asgObjective : ubyte {
+  /// Minimize the sum of the assigned costs (the usual form).
+  Minimize,
+  /// Maximize the sum of the assigned costs (a score or likelihood matrix).
+  Maximize
+}
+
+/// Quantity a measurement measures. Append new values only; never reorder or
+/// reuse existing values.
+enum asgMeasurementKind : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Range, km.
+  Range,
+  /// Range rate, km/s (also from a Doppler shift).
+  RangeRate,
+  /// Topocentric right ascension, degrees.
+  RightAscension,
+  /// Topocentric declination, degrees.
+  Declination,
+  /// Azimuth, degrees clockwise from north.
+  Azimuth,
+  /// Elevation above the local horizontal, degrees.
+  Elevation
+}
+
+/// Outcome of one observation's association. Append new values only; never
+/// reorder or reuse existing values.
+enum asgAssociationOutcome : ubyte {
+  /// Not decided.
+  Unspecified,
+  /// Assigned to a predicted object.
+  Associated,
+  /// Uncorrelated: assigned to no predicted object (a UCT).
+  Uncorrelated
+}
+
+/// Why an observation was left uncorrelated. Append new values only; never
+/// reorder or reuse existing values.
+enum asgUncorrelatedReason : ubyte {
+  /// Not uncorrelated, or no reason stated.
+  Unspecified,
+  /// No prediction covered the observation time.
+  NoPrediction,
+  /// The nearest candidate was outside the gate.
+  OutsideGate,
+  /// An in-gate candidate existed but the global assignment gave it to
+  /// another observation.
+  LostAssignment
+}
+
+/// How observations are grouped into scans, each scan solved as one
+/// assignment problem. Append new values only; never reorder or reuse existing
+/// values.
+enum asgScanGrouping : ubyte {
+  /// One scan per sensor and observation time.
+  SensorTime,
+  /// One scan per track identifier (observations without one fall back to
+  /// sensor and time).
+  Track,
+  /// Every observation is its own scan (no competition between observations).
+  Observation
+}
+
+/// One sparse cost: assigning ROW to COLUMN costs COST.
+table ASGCostEntry {
+  /// Row index, 0-based.
+  ROW: uint32;
+  /// Column index, 0-based.
+  COLUMN: uint32;
+  /// Cost of the pair, finite.
+  COST: double;
+}
+
+/// A rectangular linear assignment problem.
+table ASGProblem {
+  /// Number of rows.
+  ROWS: uint32;
+  /// Number of columns.
+  COLUMNS: uint32;
+  /// Dense cost matrix, row-major, ROWS * COLUMNS values. NaN or +Infinity
+  /// marks a forbidden pair. Empty when ENTRIES gives the problem.
+  DENSE_COST: [double];
+  /// Sparse costs; a pair not listed is forbidden. When a pair repeats, the
+  /// lowest cost stands. Empty when DENSE_COST gives the problem.
+  ENTRIES: [ASGCostEntry];
+  /// Cost of leaving a row unassigned: empty means every row must be assigned
+  /// (then ROWS <= COLUMNS); one value applies to every row; ROWS values give
+  /// one per row. In gated association this is the gate.
+  UNASSIGNED_COST: [double];
+  OBJECTIVE: asgObjective = Minimize;
+  /// Optional labels of the rows (e.g. observation identifiers), ROWS entries
+  /// or empty.
+  ROW_IDS: [string];
+  /// Optional labels of the columns (e.g. object keys), COLUMNS entries or
+  /// empty.
+  COLUMN_IDS: [string];
+}
+
+/// The optimal assignment of a problem.
+table ASGSolution {
+  /// Number of rows of the problem.
+  ROWS: uint32;
+  /// Number of columns of the problem.
+  COLUMNS: uint32;
+  /// Column assigned to each row, ROWS entries; -1 = unassigned.
+  ASSIGNMENT: [int32];
+  /// Sum of the assigned costs plus the unassigned costs paid.
+  TOTAL_COST: double;
+  /// Number of rows assigned to a real column.
+  ASSIGNED: uint32;
+  /// Algorithm, e.g. "Hungarian (shortest augmenting path with potentials)",
+  /// "auction", "JVC".
+  METHOD: string;
+}
+
+/// Identity of a predicted object.
+table ASGObjectRef {
+  /// The key the solver used for the object: its OBJECT_ID, else
+  /// "NORAD:<n>", else its name.
+  KEY: string;
+  /// NORAD catalog number; 0 = none.
+  NORAD_CAT_ID: uint32;
+  /// International designator or provider object identifier; empty = none.
+  OBJECT_ID: string;
+  /// Object name; empty = none.
+  OBJECT_NAME: string;
+}
+
+/// One measured quantity of an observation.
+table ASGMeasurement {
+  KIND: asgMeasurementKind = Unspecified;
+  /// Measured value: km, km/s or degrees by KIND.
+  VALUE: double;
+  /// One-sigma uncertainty, same unit as VALUE; positive.
+  SIGMA: double;
+  /// The field of the source record the value came from, e.g. "RANGE",
+  /// "RANGE_RATE", "DOPPLER", "RA", "DECLINATION", "AZIMUTH", "ELEVATION".
+  SOURCE_FIELD: string;
+}
+
+/// One predicted object tested against an observation.
+table ASGCandidate {
+  OBJECT: ASGObjectRef;
+  /// Mahalanobis distance squared of the residual on S = H P H' + R
+  /// (dimensionless, chi-square distributed with the observation's degrees
+  /// of freedom).
+  D2: double;
+  /// Chi-square upper-tail probability of D2.
+  P_VALUE: double;
+  /// Posterior association probability among the observation's candidates and
+  /// clutter, 0 to 1.
+  POSTERIOR: double;
+  /// True when D2 is within the observation's gate.
+  IN_GATE: bool;
+  /// Natural logarithm of det(S), in the measurement units' product.
+  LOG_DET_S: double;
+  /// Residuals, measured minus predicted, one per observation MEASUREMENTS
+  /// entry in the same order and unit (angles wrapped to +-180 degrees).
+  RESIDUAL: [double];
+  /// Predicted values, one per observation MEASUREMENTS entry.
+  PREDICTED: [double];
+  /// One-way light time applied, s; 0 = none.
+  LIGHT_TIME_S: double;
+  /// Predicted position at the observation time, GCRF, km (3 values); empty
+  /// when geometry was not requested.
+  POSITION_GCRF_KM: [double];
+  /// Predicted velocity, GCRF, km/s (3 values); empty when not requested.
+  VELOCITY_GCRF_KM_S: [double];
+  /// Predicted position covariance, GCRF, km**2, 3x3 row-major (9 values);
+  /// empty when not requested.
+  POSITION_COVARIANCE_KM2: [double];
+}
+
+/// One observation and its association.
+table ASGObservation {
+  /// Position of the observation in the input, 0-based.
+  INDEX: uint32;
+  /// Standard of the observation record, as its code, e.g. "RDO", "EOO",
+  /// "RFO".
+  RECORD_TYPE: string;
+  /// The record's identifier.
+  ID: string;
+  /// Observation time, UTC, ISO 8601 as the record states it.
+  TIME: string;
+  /// Sensor identifier (the record's sensor or original sensor id).
+  SENSOR: string;
+  /// Track identifier from the record; empty = none.
+  TRACK_ID: string;
+  /// The measured quantities, in the order every candidate's RESIDUAL and
+  /// PREDICTED follow.
+  MEASUREMENTS: [ASGMeasurement];
+  /// Degrees of freedom of the test (the number of MEASUREMENTS).
+  DEGREES_OF_FREEDOM: uint8;
+  /// Gate threshold on D2 for this observation.
+  GATE: double;
+  OUTCOME: asgAssociationOutcome = Unspecified;
+  REASON: asgUncorrelatedReason = Unspecified;
+  /// True when the judged candidate's posterior is under the minimum
+  /// posterior, or the assignment gave the observation other than its best
+  /// candidate.
+  AMBIGUOUS: bool;
+  /// True when the assignment gave the observation other than its best
+  /// in-gate candidate.
+  ASSIGNMENT_CONFLICT: bool;
+  /// Candidates by increasing D2: the best few plus every in-gate one. The
+  /// first is the nearest (the one a UCT report names).
+  CANDIDATES: [ASGCandidate];
+  /// Index into CANDIDATES of the assigned object; -1 = uncorrelated.
+  ASSIGNED_CANDIDATE: int32 = -1;
+  /// Sensor position at the observation time, GCRF, km (3 values).
+  SENSOR_POSITION_GCRF_KM: [double];
+  /// Sensor velocity, GCRF, km/s (3 values) for an Earth-fixed sensor; empty
+  /// for an inertial sensor position, which carries no velocity.
+  SENSOR_VELOCITY_GCRF_KM_S: [double];
+  /// Unit line of sight from the sensor, GCRF (3 values); empty when the
+  /// observation has no direction.
+  LINE_OF_SIGHT_GCRF: [double];
+}
+
+/// Settings of a gated association. Every field has its default.
+table ASGAssociationOptions {
+  /// Probability mass inside the chi-square gate, (0, 1).
+  GATE_PROBABILITY: double = 0.9973;
+  /// Correct predictions for light time.
+  LIGHT_TIME: bool = true;
+  /// Minimum posterior for an unambiguous association, (0, 1].
+  MIN_POSTERIOR: double = 0.99;
+  /// Spatial density of clutter (false or new-object detections) in the
+  /// posterior, per unit measurement volume; 0 = none.
+  CLUTTER_DENSITY: double = 0;
+  SCAN: asgScanGrouping = SensorTime;
+  /// Out-of-gate candidates reported per observation, 1 to 50.
+  MAX_CANDIDATES: uint8 = 5;
+  /// Report each candidate's predicted position, velocity and covariance.
+  GEOMETRY: bool = true;
+}
+
+/// Chi-square gate threshold for one number of degrees of freedom.
+table ASGGateThreshold {
+  DEGREES_OF_FREEDOM: uint8;
+  /// D2 threshold at the gate probability.
+  THRESHOLD: double;
+}
+
+/// The evidence of one association run. The association list and the
+/// uncorrelated list are OBSERVATIONS filtered by OUTCOME.
+table ASGAssociationReport {
+  /// Method, e.g. "chi-square gate on S = H P H^T + R, global nearest
+  /// neighbour per scan (Hungarian), gate as the non-assignment cost".
+  METHOD: string;
+  /// The options the run used, defaults filled in.
+  OPTIONS: ASGAssociationOptions;
+  /// Gate thresholds by degrees of freedom.
+  GATE_THRESHOLDS: [ASGGateThreshold];
+  /// Earth orientation rows supplied.
+  EARTH_ORIENTATION_ROWS: uint32;
+  /// Observations read.
+  OBSERVATION_COUNT: uint32;
+  /// Predicted objects (prediction blocks) read.
+  PREDICTION_COUNT: uint32;
+  /// Scans solved.
+  SCAN_COUNT: uint32;
+  /// Observations associated.
+  ASSOCIATED_COUNT: uint32;
+  /// Observations left uncorrelated.
+  UNCORRELATED_COUNT: uint32;
+  /// Observations marked ambiguous.
+  AMBIGUOUS_COUNT: uint32;
+  OBSERVATIONS: [ASGObservation];
+}
+
+/// Assignment - exactly one of the arms is set.
+table ASG {
+  PROBLEM: ASGProblem;
+  SOLUTION: ASGSolution;
+  ASSOCIATION_OPTIONS: ASGAssociationOptions;
+  ASSOCIATION_REPORT: ASGAssociationReport;
+}
+
+root_type ASG;
+file_identifier "$ASG";

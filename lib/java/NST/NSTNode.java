@@ -166,6 +166,13 @@ public final class NSTNode extends com.google.flatbuffers.Table {
   public String ONION_ADDRESS() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ONION_ADDRESSAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
   public ByteBuffer ONION_ADDRESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * Standards the peer publishes or serves, as their codes, e.g. "OMM".
+   */
+  public String STANDARDS(int j) { int o = __offset(60); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int STANDARDSLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector standardsVector() { return standardsVector(new StringVector()); }
+  public StringVector standardsVector(StringVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createNSTNode(FlatBufferBuilder builder,
       int PEER_IDOffset,
@@ -195,10 +202,12 @@ public final class NSTNode extends com.google.flatbuffers.Table {
       int ENCRYPTION_PUBLIC_KEYOffset,
       int EPM_CIDOffset,
       int STORAGE_DAEMON_VERSIONOffset,
-      int ONION_ADDRESSOffset) {
-    builder.startTable(28);
+      int ONION_ADDRESSOffset,
+      int STANDARDSOffset) {
+    builder.startTable(29);
     NSTNode.addUptimeS(builder, UPTIME_S);
     NSTNode.addLastSeen(builder, LAST_SEEN);
+    NSTNode.addStandards(builder, STANDARDSOffset);
     NSTNode.addOnionAddress(builder, ONION_ADDRESSOffset);
     NSTNode.addStorageDaemonVersion(builder, STORAGE_DAEMON_VERSIONOffset);
     NSTNode.addEpmCid(builder, EPM_CIDOffset);
@@ -228,7 +237,7 @@ public final class NSTNode extends com.google.flatbuffers.Table {
     return NSTNode.endNSTNode(builder);
   }
 
-  public static void startNSTNode(FlatBufferBuilder builder) { builder.startTable(28); }
+  public static void startNSTNode(FlatBufferBuilder builder) { builder.startTable(29); }
   public static void addPeerId(FlatBufferBuilder builder, int PEER_IDOffset) { builder.addOffset(0, PEER_IDOffset, 0); }
   public static void addDn(FlatBufferBuilder builder, int DNOffset) { builder.addOffset(1, DNOffset, 0); }
   public static void addOrganization(FlatBufferBuilder builder, int ORGANIZATIONOffset) { builder.addOffset(2, ORGANIZATIONOffset, 0); }
@@ -261,6 +270,9 @@ public final class NSTNode extends com.google.flatbuffers.Table {
   public static void addEpmCid(FlatBufferBuilder builder, int EPM_CIDOffset) { builder.addOffset(25, EPM_CIDOffset, 0); }
   public static void addStorageDaemonVersion(FlatBufferBuilder builder, int STORAGE_DAEMON_VERSIONOffset) { builder.addOffset(26, STORAGE_DAEMON_VERSIONOffset, 0); }
   public static void addOnionAddress(FlatBufferBuilder builder, int ONION_ADDRESSOffset) { builder.addOffset(27, ONION_ADDRESSOffset, 0); }
+  public static void addStandards(FlatBufferBuilder builder, int STANDARDSOffset) { builder.addOffset(28, STANDARDSOffset, 0); }
+  public static int createStandardsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startStandardsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endNSTNode(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

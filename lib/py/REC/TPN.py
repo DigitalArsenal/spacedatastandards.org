@@ -201,7 +201,7 @@ def TPNCreateCHANNELSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHANNELSVector(builder, data):
-    TPNCreateCHANNELSVector(builder, data)
+    return TPNCreateCHANNELSVector(builder, data)
 
 def TPNEnd(builder):
     return builder.EndObject()

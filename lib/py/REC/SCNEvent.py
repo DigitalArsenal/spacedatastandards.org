@@ -169,7 +169,7 @@ def SCNEventCreateMEAN_ELEMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMEAN_ELEMENTSVector(builder, data):
-    SCNEventCreateMEAN_ELEMENTSVector(builder, data)
+    return SCNEventCreateMEAN_ELEMENTSVector(builder, data)
 
 def SCNEventAddSTATE_VECTORS(builder, STATE_VECTORS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_VECTORS), 0)
@@ -187,7 +187,7 @@ def SCNEventCreateSTATE_VECTORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATE_VECTORSVector(builder, data):
-    SCNEventCreateSTATE_VECTORSVector(builder, data)
+    return SCNEventCreateSTATE_VECTORSVector(builder, data)
 
 def SCNEventAddEO_OBSERVATIONS(builder, EO_OBSERVATIONS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EO_OBSERVATIONS), 0)
@@ -205,7 +205,7 @@ def SCNEventCreateEO_OBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEO_OBSERVATIONSVector(builder, data):
-    SCNEventCreateEO_OBSERVATIONSVector(builder, data)
+    return SCNEventCreateEO_OBSERVATIONSVector(builder, data)
 
 def SCNEventAddRADAR_OBSERVATIONS(builder, RADAR_OBSERVATIONS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(RADAR_OBSERVATIONS), 0)
@@ -223,7 +223,7 @@ def SCNEventCreateRADAR_OBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRADAR_OBSERVATIONSVector(builder, data):
-    SCNEventCreateRADAR_OBSERVATIONSVector(builder, data)
+    return SCNEventCreateRADAR_OBSERVATIONSVector(builder, data)
 
 def SCNEventEnd(builder):
     return builder.EndObject()

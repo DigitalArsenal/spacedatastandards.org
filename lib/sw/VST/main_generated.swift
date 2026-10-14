@@ -54,7 +54,7 @@ public enum viewerSatelliteAlignmentMode: Int8, FlatbuffersVectorInitializable, 
 
 ///  Camera rotation offset. Quaternions are preferred when present; Euler
 ///  angles are retained for import of older scenario JSON.
-public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VSTCameraRotation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -141,7 +141,7 @@ public struct VSTCameraRotation: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  App display toggles for a scenario viewer.
-public struct VSTDisplaySettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VSTDisplaySettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -266,7 +266,7 @@ public struct VSTDisplaySettings: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Camera options for a space-domain scenario viewer.
-public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VSTCameraOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -324,7 +324,7 @@ public struct VSTCameraOptions: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Viewer State - display and camera state associated with a scenario.
-public struct VST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct VST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

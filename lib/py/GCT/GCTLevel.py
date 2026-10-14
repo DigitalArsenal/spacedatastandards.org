@@ -323,7 +323,7 @@ def GCTLevelCreateCENTERSVector(builder, data):
     return builder.EndVector()
 
 def CreateCENTERSVector(builder, data):
-    GCTLevelCreateCENTERSVector(builder, data)
+    return GCTLevelCreateCENTERSVector(builder, data)
 
 def GCTLevelAddSIGMAS(builder, SIGMAS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SIGMAS), 0)
@@ -345,7 +345,7 @@ def GCTLevelCreateSIGMASVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGMASVector(builder, data):
-    GCTLevelCreateSIGMASVector(builder, data)
+    return GCTLevelCreateSIGMASVector(builder, data)
 
 def GCTLevelAddBOUNDARY(builder, BOUNDARY):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BOUNDARY), 0)
@@ -367,7 +367,7 @@ def GCTLevelCreateBOUNDARYVector(builder, data):
     return builder.EndVector()
 
 def CreateBOUNDARYVector(builder, data):
-    GCTLevelCreateBOUNDARYVector(builder, data)
+    return GCTLevelCreateBOUNDARYVector(builder, data)
 
 def GCTLevelAddFINE_NORMAL(builder, FINE_NORMAL):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(FINE_NORMAL), 0)
@@ -389,7 +389,7 @@ def GCTLevelCreateFINE_NORMALVector(builder, data):
     return builder.EndVector()
 
 def CreateFINE_NORMALVector(builder, data):
-    GCTLevelCreateFINE_NORMALVector(builder, data)
+    return GCTLevelCreateFINE_NORMALVector(builder, data)
 
 def GCTLevelAddOPTICAL_DEPTH_POS(builder, OPTICAL_DEPTH_POS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OPTICAL_DEPTH_POS), 0)
@@ -411,7 +411,7 @@ def GCTLevelCreateOPTICAL_DEPTH_POSVector(builder, data):
     return builder.EndVector()
 
 def CreateOPTICAL_DEPTH_POSVector(builder, data):
-    GCTLevelCreateOPTICAL_DEPTH_POSVector(builder, data)
+    return GCTLevelCreateOPTICAL_DEPTH_POSVector(builder, data)
 
 def GCTLevelAddOPTICAL_DEPTH_NEG(builder, OPTICAL_DEPTH_NEG):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OPTICAL_DEPTH_NEG), 0)
@@ -433,7 +433,7 @@ def GCTLevelCreateOPTICAL_DEPTH_NEGVector(builder, data):
     return builder.EndVector()
 
 def CreateOPTICAL_DEPTH_NEGVector(builder, data):
-    GCTLevelCreateOPTICAL_DEPTH_NEGVector(builder, data)
+    return GCTLevelCreateOPTICAL_DEPTH_NEGVector(builder, data)
 
 def GCTLevelEnd(builder):
     return builder.EndObject()

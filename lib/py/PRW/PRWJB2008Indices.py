@@ -214,7 +214,7 @@ def PRWJB2008IndicesCreateDTC_HOURLY_KVector(builder, data):
     return builder.EndVector()
 
 def CreateDTC_HOURLY_KVector(builder, data):
-    PRWJB2008IndicesCreateDTC_HOURLY_KVector(builder, data)
+    return PRWJB2008IndicesCreateDTC_HOURLY_KVector(builder, data)
 
 def PRWJB2008IndicesAddSOURCE_FLAGS(builder, SOURCE_FLAGS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCE_FLAGS), 0)

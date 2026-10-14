@@ -148,7 +148,7 @@ def SCHEMA_STANDARDCreatefilesVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatefilesVector(builder, data):
-    SCHEMA_STANDARDCreatefilesVector(builder, data)
+    return SCHEMA_STANDARDCreatefilesVector(builder, data)
 
 def SCHEMA_STANDARDAddNAME(builder, NAME):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)

@@ -1,8 +1,13 @@
 import * as flatbuffers from 'flatbuffers';
 import { QRPColumn, QRPColumnT } from './QRPColumn.js';
 import { QRPFilter, QRPFilterT } from './QRPFilter.js';
+import { QRPRow, QRPRowT } from './QRPRow.js';
+import { QRPTable, QRPTableT } from './QRPTable.js';
+import { QRPValue, QRPValueT } from './QRPValue.js';
 import { qrpKind } from './qrpKind.js';
+import { qrpRepresentation } from './qrpRepresentation.js';
 import { qrpStatus } from './qrpStatus.js';
+import { qrpTimeProfile } from './qrpTimeProfile.js';
 /**
  * Query Page - request, page header or error frame.
  */
@@ -151,6 +156,61 @@ export declare class QRP implements flatbuffers.IUnpackableObject<QRPT> {
     ARCHIVE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     COLUMNS(index: number, obj?: QRPColumn): QRPColumn | null;
     columnsLength(): number;
+    /**
+     * How the request selects records in time.
+     */
+    TIME_PROFILE(): qrpTimeProfile;
+    /**
+     * Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+     */
+    PROFILE_EPOCH_MS(): bigint;
+    /**
+     * Representation the client asks the page in.
+     */
+    REPRESENTATION(): qrpRepresentation;
+    /**
+     * Values bound to the placeholders of SQL, in order.
+     */
+    PARAMETERS(index: number, obj?: QRPValue): QRPValue | null;
+    parametersLength(): number;
+    /**
+     * Rows of a projection (a query that selects columns rather than whole
+     * records), in COLUMNS order. Whole-record pages carry their records as
+     * frames after the header instead, and leave ROWS empty.
+     */
+    ROWS(index: number, obj?: QRPRow): QRPRow | null;
+    rowsLength(): number;
+    /**
+     * The serving node's queryable tables, answered to a request for the query
+     * surface.
+     */
+    TABLES(index: number, obj?: QRPTable): QRPTable | null;
+    tablesLength(): number;
+    /**
+     * Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+     * none stated.
+     */
+    MAX_ELAPSED_MS(): number;
+    /**
+     * Most rows a page returns; 0 = none stated.
+     */
+    MAX_ROWS(): bigint;
+    /**
+     * Most bytes a page returns; 0 = none stated.
+     */
+    MAX_BYTES(): bigint;
+    /**
+     * Transport status the answer carries, HTTP semantics (200, 304, 400,
+     * 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+     */
+    HTTP_STATUS(): number;
+    /**
+     * When the page's record frames are not inline but held by the serving
+     * node for delivery out of band: the reference token the node resolves
+     * (single use), and the byte size of what it refers to. 0 = inline.
+     */
+    BODY_REF_TOKEN(): bigint;
+    BODY_REF_SIZE(): bigint;
     static startQRP(builder: flatbuffers.Builder): void;
     static addKind(builder: flatbuffers.Builder, KIND: qrpKind): void;
     static addStatus(builder: flatbuffers.Builder, STATUS: qrpStatus): void;
@@ -193,10 +253,28 @@ export declare class QRP implements flatbuffers.IUnpackableObject<QRPT> {
     static addColumns(builder: flatbuffers.Builder, COLUMNSOffset: flatbuffers.Offset): void;
     static createColumnsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startColumnsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTimeProfile(builder: flatbuffers.Builder, TIME_PROFILE: qrpTimeProfile): void;
+    static addProfileEpochMs(builder: flatbuffers.Builder, PROFILE_EPOCH_MS: bigint): void;
+    static addRepresentation(builder: flatbuffers.Builder, REPRESENTATION: qrpRepresentation): void;
+    static addParameters(builder: flatbuffers.Builder, PARAMETERSOffset: flatbuffers.Offset): void;
+    static createParametersVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startParametersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addRows(builder: flatbuffers.Builder, ROWSOffset: flatbuffers.Offset): void;
+    static createRowsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startRowsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addTables(builder: flatbuffers.Builder, TABLESOffset: flatbuffers.Offset): void;
+    static createTablesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startTablesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addMaxElapsedMs(builder: flatbuffers.Builder, MAX_ELAPSED_MS: number): void;
+    static addMaxRows(builder: flatbuffers.Builder, MAX_ROWS: bigint): void;
+    static addMaxBytes(builder: flatbuffers.Builder, MAX_BYTES: bigint): void;
+    static addHttpStatus(builder: flatbuffers.Builder, HTTP_STATUS: number): void;
+    static addBodyRefToken(builder: flatbuffers.Builder, BODY_REF_TOKEN: bigint): void;
+    static addBodyRefSize(builder: flatbuffers.Builder, BODY_REF_SIZE: bigint): void;
     static endQRP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishQRPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedQRPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createQRP(builder: flatbuffers.Builder, KIND: qrpKind, STATUS: qrpStatus, ERROR_CODEOffset: flatbuffers.Offset, MESSAGEOffset: flatbuffers.Offset, RETRY_AFTER_MS: number, SCHEMA_NAMEOffset: flatbuffers.Offset, FILE_IDENTIFIEROffset: flatbuffers.Offset, SQLOffset: flatbuffers.Offset, SEARCHOffset: flatbuffers.Offset, FILTERSOffset: flatbuffers.Offset, SORT_FIELDOffset: flatbuffers.Offset, SORT_DESC: boolean, PROVIDER_IDOffset: flatbuffers.Offset, SOURCE_NAMEOffset: flatbuffers.Offset, BATCH_IDOffset: flatbuffers.Offset, PRODUCER_PEER_IDOffset: flatbuffers.Offset, ORIGIN_IDOffset: flatbuffers.Offset, FROM_EPOCH_MS: bigint, TO_EPOCH_MS: bigint, PAGE: number, LIMIT: number, CURSOROffset: flatbuffers.Offset, NEXT_CURSOROffset: flatbuffers.Offset, RECORD_COUNT: number, TOTAL_COUNT: bigint, SCANNED: bigint, STORED: bigint, PARTIAL: boolean, TRUNCATED: boolean, AS_OF_MS: bigint, STALE: boolean, ELAPSED_MS: number, GENERATED_AT_MS: bigint, ETAGOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, ARCHIVE_IDOffset: flatbuffers.Offset, COLUMNSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createQRP(builder: flatbuffers.Builder, KIND: qrpKind, STATUS: qrpStatus, ERROR_CODEOffset: flatbuffers.Offset, MESSAGEOffset: flatbuffers.Offset, RETRY_AFTER_MS: number, SCHEMA_NAMEOffset: flatbuffers.Offset, FILE_IDENTIFIEROffset: flatbuffers.Offset, SQLOffset: flatbuffers.Offset, SEARCHOffset: flatbuffers.Offset, FILTERSOffset: flatbuffers.Offset, SORT_FIELDOffset: flatbuffers.Offset, SORT_DESC: boolean, PROVIDER_IDOffset: flatbuffers.Offset, SOURCE_NAMEOffset: flatbuffers.Offset, BATCH_IDOffset: flatbuffers.Offset, PRODUCER_PEER_IDOffset: flatbuffers.Offset, ORIGIN_IDOffset: flatbuffers.Offset, FROM_EPOCH_MS: bigint, TO_EPOCH_MS: bigint, PAGE: number, LIMIT: number, CURSOROffset: flatbuffers.Offset, NEXT_CURSOROffset: flatbuffers.Offset, RECORD_COUNT: number, TOTAL_COUNT: bigint, SCANNED: bigint, STORED: bigint, PARTIAL: boolean, TRUNCATED: boolean, AS_OF_MS: bigint, STALE: boolean, ELAPSED_MS: number, GENERATED_AT_MS: bigint, ETAGOffset: flatbuffers.Offset, CIDOffset: flatbuffers.Offset, ARCHIVE_IDOffset: flatbuffers.Offset, COLUMNSOffset: flatbuffers.Offset, TIME_PROFILE: qrpTimeProfile, PROFILE_EPOCH_MS: bigint, REPRESENTATION: qrpRepresentation, PARAMETERSOffset: flatbuffers.Offset, ROWSOffset: flatbuffers.Offset, TABLESOffset: flatbuffers.Offset, MAX_ELAPSED_MS: number, MAX_ROWS: bigint, MAX_BYTES: bigint, HTTP_STATUS: number, BODY_REF_TOKEN: bigint, BODY_REF_SIZE: bigint): flatbuffers.Offset;
     unpack(): QRPT;
     unpackTo(_o: QRPT): void;
 }
@@ -238,7 +316,19 @@ export declare class QRPT implements flatbuffers.IGeneratedObject {
     CID: string | Uint8Array | null;
     ARCHIVE_ID: string | Uint8Array | null;
     COLUMNS: (QRPColumnT)[];
-    constructor(KIND?: qrpKind, STATUS?: qrpStatus, ERROR_CODE?: string | Uint8Array | null, MESSAGE?: string | Uint8Array | null, RETRY_AFTER_MS?: number, SCHEMA_NAME?: string | Uint8Array | null, FILE_IDENTIFIER?: string | Uint8Array | null, SQL?: string | Uint8Array | null, SEARCH?: string | Uint8Array | null, FILTERS?: (QRPFilterT)[], SORT_FIELD?: string | Uint8Array | null, SORT_DESC?: boolean, PROVIDER_ID?: string | Uint8Array | null, SOURCE_NAME?: string | Uint8Array | null, BATCH_ID?: string | Uint8Array | null, PRODUCER_PEER_ID?: string | Uint8Array | null, ORIGIN_ID?: string | Uint8Array | null, FROM_EPOCH_MS?: bigint, TO_EPOCH_MS?: bigint, PAGE?: number, LIMIT?: number, CURSOR?: string | Uint8Array | null, NEXT_CURSOR?: string | Uint8Array | null, RECORD_COUNT?: number, TOTAL_COUNT?: bigint, SCANNED?: bigint, STORED?: bigint, PARTIAL?: boolean, TRUNCATED?: boolean, AS_OF_MS?: bigint, STALE?: boolean, ELAPSED_MS?: number, GENERATED_AT_MS?: bigint, ETAG?: string | Uint8Array | null, CID?: string | Uint8Array | null, ARCHIVE_ID?: string | Uint8Array | null, COLUMNS?: (QRPColumnT)[]);
+    TIME_PROFILE: qrpTimeProfile;
+    PROFILE_EPOCH_MS: bigint;
+    REPRESENTATION: qrpRepresentation;
+    PARAMETERS: (QRPValueT)[];
+    ROWS: (QRPRowT)[];
+    TABLES: (QRPTableT)[];
+    MAX_ELAPSED_MS: number;
+    MAX_ROWS: bigint;
+    MAX_BYTES: bigint;
+    HTTP_STATUS: number;
+    BODY_REF_TOKEN: bigint;
+    BODY_REF_SIZE: bigint;
+    constructor(KIND?: qrpKind, STATUS?: qrpStatus, ERROR_CODE?: string | Uint8Array | null, MESSAGE?: string | Uint8Array | null, RETRY_AFTER_MS?: number, SCHEMA_NAME?: string | Uint8Array | null, FILE_IDENTIFIER?: string | Uint8Array | null, SQL?: string | Uint8Array | null, SEARCH?: string | Uint8Array | null, FILTERS?: (QRPFilterT)[], SORT_FIELD?: string | Uint8Array | null, SORT_DESC?: boolean, PROVIDER_ID?: string | Uint8Array | null, SOURCE_NAME?: string | Uint8Array | null, BATCH_ID?: string | Uint8Array | null, PRODUCER_PEER_ID?: string | Uint8Array | null, ORIGIN_ID?: string | Uint8Array | null, FROM_EPOCH_MS?: bigint, TO_EPOCH_MS?: bigint, PAGE?: number, LIMIT?: number, CURSOR?: string | Uint8Array | null, NEXT_CURSOR?: string | Uint8Array | null, RECORD_COUNT?: number, TOTAL_COUNT?: bigint, SCANNED?: bigint, STORED?: bigint, PARTIAL?: boolean, TRUNCATED?: boolean, AS_OF_MS?: bigint, STALE?: boolean, ELAPSED_MS?: number, GENERATED_AT_MS?: bigint, ETAG?: string | Uint8Array | null, CID?: string | Uint8Array | null, ARCHIVE_ID?: string | Uint8Array | null, COLUMNS?: (QRPColumnT)[], TIME_PROFILE?: qrpTimeProfile, PROFILE_EPOCH_MS?: bigint, REPRESENTATION?: qrpRepresentation, PARAMETERS?: (QRPValueT)[], ROWS?: (QRPRowT)[], TABLES?: (QRPTableT)[], MAX_ELAPSED_MS?: number, MAX_ROWS?: bigint, MAX_BYTES?: bigint, HTTP_STATUS?: number, BODY_REF_TOKEN?: bigint, BODY_REF_SIZE?: bigint);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=QRP.d.ts.map

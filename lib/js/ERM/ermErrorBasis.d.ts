@@ -1,0 +1,20 @@
+/**
+ * What the errors are taken against. Append new values only; never reorder
+ * or reuse existing values.
+ */
+export declare enum ermErrorBasis {
+    /**
+     * Not stated.
+     */
+    Unspecified = 0,
+    /**
+     * Later element sets of the same object (consecutive-set differences;
+     * not truth).
+     */
+    SetDifferences = 1,
+    /**
+     * Independent reference states.
+     */
+    ReferenceStates = 2
+}
+//# sourceMappingURL=ermErrorBasis.d.ts.map

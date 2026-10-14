@@ -175,7 +175,7 @@ def EVLContactConfigurationCreateAZIMUTH_ELEVATION_MASK_RADVector(builder, data)
     return builder.EndVector()
 
 def CreateAZIMUTH_ELEVATION_MASK_RADVector(builder, data):
-    EVLContactConfigurationCreateAZIMUTH_ELEVATION_MASK_RADVector(builder, data)
+    return EVLContactConfigurationCreateAZIMUTH_ELEVATION_MASK_RADVector(builder, data)
 
 def EVLContactConfigurationAddOCCULTING_BODY_IDS(builder, OCCULTING_BODY_IDS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OCCULTING_BODY_IDS), 0)
@@ -197,7 +197,7 @@ def EVLContactConfigurationCreateOCCULTING_BODY_IDSVector(builder, data):
     return builder.EndVector()
 
 def CreateOCCULTING_BODY_IDSVector(builder, data):
-    EVLContactConfigurationCreateOCCULTING_BODY_IDSVector(builder, data)
+    return EVLContactConfigurationCreateOCCULTING_BODY_IDSVector(builder, data)
 
 def EVLContactConfigurationAddABERRATION_CORRECTION(builder, ABERRATION_CORRECTION):
     builder.PrependUint8Slot(5, ABERRATION_CORRECTION, 0)

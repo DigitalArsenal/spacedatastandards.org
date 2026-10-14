@@ -31,19 +31,29 @@ public struct NST : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCE_PEER_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetSOURCE_PEER_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Entity tag of this set, for conditional requests.
+  public string ETAG { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetETAGBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetETAGBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetETAGArray() { return __p.__vector_as_array<byte>(10); }
 
   public static Offset<NST> CreateNST(FlatBufferBuilder builder,
       VectorOffset NODESOffset = default(VectorOffset),
       long GENERATED_AT = 0,
-      StringOffset SOURCE_PEER_IDOffset = default(StringOffset)) {
-    builder.StartTable(3);
+      StringOffset SOURCE_PEER_IDOffset = default(StringOffset),
+      StringOffset ETAGOffset = default(StringOffset)) {
+    builder.StartTable(4);
     NST.AddGENERATED_AT(builder, GENERATED_AT);
+    NST.AddETAG(builder, ETAGOffset);
     NST.AddSOURCE_PEER_ID(builder, SOURCE_PEER_IDOffset);
     NST.AddNODES(builder, NODESOffset);
     return NST.EndNST(builder);
   }
 
-  public static void StartNST(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartNST(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddNODES(FlatBufferBuilder builder, VectorOffset NODESOffset) { builder.AddOffset(0, NODESOffset.Value, 0); }
   public static VectorOffset CreateNODESVector(FlatBufferBuilder builder, Offset<NSTNode>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateNODESVectorBlock(FlatBufferBuilder builder, Offset<NSTNode>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -52,6 +62,7 @@ public struct NST : IFlatbufferObject
   public static void StartNODESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddGENERATED_AT(FlatBufferBuilder builder, long GENERATED_AT) { builder.AddLong(1, GENERATED_AT, 0); }
   public static void AddSOURCE_PEER_ID(FlatBufferBuilder builder, StringOffset SOURCE_PEER_IDOffset) { builder.AddOffset(2, SOURCE_PEER_IDOffset.Value, 0); }
+  public static void AddETAG(FlatBufferBuilder builder, StringOffset ETAGOffset) { builder.AddOffset(3, ETAGOffset.Value, 0); }
   public static Offset<NST> EndNST(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<NST>(o);
@@ -68,6 +79,7 @@ public struct NST : IFlatbufferObject
     for (var _j = 0; _j < this.NODESLength; ++_j) {_o.NODES.Add(this.NODES(_j).HasValue ? this.NODES(_j).Value.UnPack() : null);}
     _o.GENERATED_AT = this.GENERATED_AT;
     _o.SOURCE_PEER_ID = this.SOURCE_PEER_ID;
+    _o.ETAG = this.ETAG;
   }
   public static Offset<NST> Pack(FlatBufferBuilder builder, NSTT _o) {
     if (_o == null) return default(Offset<NST>);
@@ -78,11 +90,13 @@ public struct NST : IFlatbufferObject
       _NODES = CreateNODESVector(builder, __NODES);
     }
     var _SOURCE_PEER_ID = _o.SOURCE_PEER_ID == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_PEER_ID);
+    var _ETAG = _o.ETAG == null ? default(StringOffset) : builder.CreateString(_o.ETAG);
     return CreateNST(
       builder,
       _NODES,
       _o.GENERATED_AT,
-      _SOURCE_PEER_ID);
+      _SOURCE_PEER_ID,
+      _ETAG);
   }
 }
 
@@ -91,11 +105,13 @@ public class NSTT
   public List<NSTNodeT> NODES { get; set; }
   public long GENERATED_AT { get; set; }
   public string SOURCE_PEER_ID { get; set; }
+  public string ETAG { get; set; }
 
   public NSTT() {
     this.NODES = null;
     this.GENERATED_AT = 0;
     this.SOURCE_PEER_ID = null;
+    this.ETAG = null;
   }
   public static NSTT DeserializeFromBinary(byte[] fbBuffer) {
     return NST.GetRootAsNST(new ByteBuffer(fbBuffer)).UnPack();
@@ -116,6 +132,7 @@ static public class NSTVerify
       && verifier.VerifyVectorOfTables(tablePos, 4 /*NODES*/, NSTNodeVerify.Verify, false)
       && verifier.VerifyField(tablePos, 6 /*GENERATED_AT*/, 8 /*long*/, 8, false)
       && verifier.VerifyString(tablePos, 8 /*SOURCE_PEER_ID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ETAG*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

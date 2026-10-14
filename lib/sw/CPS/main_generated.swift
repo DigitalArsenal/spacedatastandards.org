@@ -29,7 +29,7 @@ public enum packetCompressionAlgorithm: UInt8, FlatbuffersVectorInitializable, E
 ///  is a sequence of PACKET_COUNT packets of PACKET_LENGTH bytes, each of which
 ///  projects to an $SPP record. This record carries a compressed packet stream
 ///  only; it is not a general-purpose compression envelope for SDS records.
-public struct CPS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CPS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

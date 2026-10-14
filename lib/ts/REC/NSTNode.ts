@@ -286,8 +286,23 @@ ONION_ADDRESS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Standards the peer publishes or serves, as their codes, e.g. "OMM".
+ */
+STANDARDS(index: number):string
+STANDARDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+STANDARDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+standardsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startNSTNode(builder:flatbuffers.Builder) {
-  builder.startObject(28);
+  builder.startObject(29);
 }
 
 static addPeerId(builder:flatbuffers.Builder, PEER_IDOffset:flatbuffers.Offset) {
@@ -426,12 +441,28 @@ static addOnionAddress(builder:flatbuffers.Builder, ONION_ADDRESSOffset:flatbuff
   builder.addFieldOffset(27, ONION_ADDRESSOffset, 0);
 }
 
+static addStandards(builder:flatbuffers.Builder, STANDARDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, STANDARDSOffset, 0);
+}
+
+static createStandardsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startStandardsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endNSTNode(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createNSTNode(builder:flatbuffers.Builder, PEER_IDOffset:flatbuffers.Offset, DNOffset:flatbuffers.Offset, ORGANIZATIONOffset:flatbuffers.Offset, TRUST_LEVELOffset:flatbuffers.Offset, ROLEOffset:flatbuffers.Offset, AGENT_VERSIONOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, LAST_SEEN:bigint, IS_ONLINE:boolean, LATENCY_MS:number, VCARDOffset:flatbuffers.Offset, LAT:number, LON:number, GEO_COUNTRYOffset:flatbuffers.Offset, GEO_CITYOffset:flatbuffers.Offset, IS_SELF:boolean, UPTIME_S:bigint, SUITE_VERSIONOffset:flatbuffers.Offset, STANDARDS_VERSIONOffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, PINNED:boolean, PIN_NOTEOffset:flatbuffers.Offset, CONNECTED_PEER_IDSOffset:flatbuffers.Offset, SIGNING_PUBLIC_KEYOffset:flatbuffers.Offset, ENCRYPTION_PUBLIC_KEYOffset:flatbuffers.Offset, EPM_CIDOffset:flatbuffers.Offset, STORAGE_DAEMON_VERSIONOffset:flatbuffers.Offset, ONION_ADDRESSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createNSTNode(builder:flatbuffers.Builder, PEER_IDOffset:flatbuffers.Offset, DNOffset:flatbuffers.Offset, ORGANIZATIONOffset:flatbuffers.Offset, TRUST_LEVELOffset:flatbuffers.Offset, ROLEOffset:flatbuffers.Offset, AGENT_VERSIONOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, LAST_SEEN:bigint, IS_ONLINE:boolean, LATENCY_MS:number, VCARDOffset:flatbuffers.Offset, LAT:number, LON:number, GEO_COUNTRYOffset:flatbuffers.Offset, GEO_CITYOffset:flatbuffers.Offset, IS_SELF:boolean, UPTIME_S:bigint, SUITE_VERSIONOffset:flatbuffers.Offset, STANDARDS_VERSIONOffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, PINNED:boolean, PIN_NOTEOffset:flatbuffers.Offset, CONNECTED_PEER_IDSOffset:flatbuffers.Offset, SIGNING_PUBLIC_KEYOffset:flatbuffers.Offset, ENCRYPTION_PUBLIC_KEYOffset:flatbuffers.Offset, EPM_CIDOffset:flatbuffers.Offset, STORAGE_DAEMON_VERSIONOffset:flatbuffers.Offset, ONION_ADDRESSOffset:flatbuffers.Offset, STANDARDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   NSTNode.startNSTNode(builder);
   NSTNode.addPeerId(builder, PEER_IDOffset);
   NSTNode.addDn(builder, DNOffset);
@@ -461,6 +492,7 @@ static createNSTNode(builder:flatbuffers.Builder, PEER_IDOffset:flatbuffers.Offs
   NSTNode.addEpmCid(builder, EPM_CIDOffset);
   NSTNode.addStorageDaemonVersion(builder, STORAGE_DAEMON_VERSIONOffset);
   NSTNode.addOnionAddress(builder, ONION_ADDRESSOffset);
+  NSTNode.addStandards(builder, STANDARDSOffset);
   return NSTNode.endNSTNode(builder);
 }
 
@@ -493,7 +525,8 @@ unpack(): NSTNodeT {
     this.ENCRYPTION_PUBLIC_KEY(),
     this.EPM_CID(),
     this.STORAGE_DAEMON_VERSION(),
-    this.ONION_ADDRESS()
+    this.ONION_ADDRESS(),
+    this.bb!.createScalarList<string>(this.STANDARDS.bind(this), this.standardsLength())
   );
 }
 
@@ -527,6 +560,7 @@ unpackTo(_o: NSTNodeT): void {
   _o.EPM_CID = this.EPM_CID();
   _o.STORAGE_DAEMON_VERSION = this.STORAGE_DAEMON_VERSION();
   _o.ONION_ADDRESS = this.ONION_ADDRESS();
+  _o.STANDARDS = this.bb!.createScalarList<string>(this.STANDARDS.bind(this), this.standardsLength());
 }
 }
 
@@ -559,7 +593,8 @@ constructor(
   public ENCRYPTION_PUBLIC_KEY: string|Uint8Array|null = null,
   public EPM_CID: string|Uint8Array|null = null,
   public STORAGE_DAEMON_VERSION: string|Uint8Array|null = null,
-  public ONION_ADDRESS: string|Uint8Array|null = null
+  public ONION_ADDRESS: string|Uint8Array|null = null,
+  public STANDARDS: (string)[] = []
 ){}
 
 
@@ -584,6 +619,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const EPM_CID = (this.EPM_CID !== null ? builder.createString(this.EPM_CID!) : 0);
   const STORAGE_DAEMON_VERSION = (this.STORAGE_DAEMON_VERSION !== null ? builder.createString(this.STORAGE_DAEMON_VERSION!) : 0);
   const ONION_ADDRESS = (this.ONION_ADDRESS !== null ? builder.createString(this.ONION_ADDRESS!) : 0);
+  const STANDARDS = NSTNode.createStandardsVector(builder, builder.createObjectOffsetList(this.STANDARDS));
 
   return NSTNode.createNSTNode(builder,
     PEER_ID,
@@ -613,7 +649,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ENCRYPTION_PUBLIC_KEY,
     EPM_CID,
     STORAGE_DAEMON_VERSION,
-    ONION_ADDRESS
+    ONION_ADDRESS,
+    STANDARDS
   );
 }
 }

@@ -2,6 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
+export * from './flatbuffers-encryption.js';
 export * from './keyMaterialAlgorithm.js';
 export * from './keyMaterialEncoding.js';
 export * from './keyMaterialRole.js';

@@ -127,7 +127,7 @@ public enum AntennaPattern: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Communications Systems
-public struct COM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct COM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

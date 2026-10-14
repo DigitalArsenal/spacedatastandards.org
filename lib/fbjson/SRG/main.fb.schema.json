@@ -1,0 +1,2442 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "icnConnectorKind": {
+      "type": "string",
+      "enum": [
+        "UploadSession",
+        "HttpsPull",
+        "FilesystemWatch"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UploadSession": {
+          "value": 0,
+          "description": "Files are supplied through a bounded upload session."
+        },
+        "HttpsPull": {
+          "value": 1,
+          "description": "Records are pulled from an HTTPS endpoint."
+        },
+        "FilesystemWatch": {
+          "value": 2,
+          "description": "A directory is scanned for settled files."
+        }
+      }
+    },
+    "icnConnectorStatus": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Validated",
+        "Active",
+        "Paused",
+        "Error",
+        "Retired"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Draft": {
+          "value": 0,
+          "description": "Configuration exists but has not been validated."
+        },
+        "Validated": {
+          "value": 1,
+          "description": "Configuration passed validation but is not ingesting."
+        },
+        "Active": {
+          "value": 2,
+          "description": "Connector is ingesting according to its configured trigger."
+        },
+        "Paused": {
+          "value": 3,
+          "description": "Connector is intentionally suspended."
+        },
+        "Error": {
+          "value": 4,
+          "description": "Connector requires attention after a failed operation."
+        },
+        "Retired": {
+          "value": 5,
+          "description": "Connector is permanently out of service."
+        }
+      }
+    },
+    "icnPostIngestAction": {
+      "type": "string",
+      "enum": [
+        "LeaveInPlace",
+        "Archive",
+        "DeleteAfterVerification"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LeaveInPlace": {
+          "value": 0,
+          "description": "Keep the source file at its original location."
+        },
+        "Archive": {
+          "value": 1,
+          "description": "Move the source file to an archive location."
+        },
+        "DeleteAfterVerification": {
+          "value": 2,
+          "description": "Delete the source file only after the ingested records are verified."
+        }
+      }
+    },
+    "icnAuthKind": {
+      "type": "string",
+      "enum": [
+        "None",
+        "BearerToken",
+        "ApiKeyHeader"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0,
+          "description": "No authentication header is sent."
+        },
+        "BearerToken": {
+          "value": 1,
+          "description": "A bearer token is resolved from CREDENTIAL_REFERENCE."
+        },
+        "ApiKeyHeader": {
+          "value": 2,
+          "description": "A credential is sent under AUTH_HEADER_NAME."
+        }
+      }
+    },
+    "capabilityClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "PROPAGATION",
+        "ORBIT_DETERMINATION",
+        "MANEUVER_PLANNING",
+        "CONJUNCTION_ASSESSMENT",
+        "REENTRY_AND_BREAKUP",
+        "ATTITUDE_AND_POINTING",
+        "REFERENCE_FRAMES_AND_TIME",
+        "SENSORS_AND_COVERAGE",
+        "TRACKING_AND_OBSERVATION",
+        "RF_AND_COMMUNICATIONS",
+        "ELECTRONIC_WARFARE",
+        "SPACE_ENVIRONMENT",
+        "DATA_SOURCES_AND_INGEST",
+        "DATA_VALIDATION_AND_QUALITY",
+        "CATALOG_AND_IDENTITY",
+        "VISUALIZATION_AND_RENDERING",
+        "GROUND_SEGMENT_AND_HARDWARE",
+        "MISSION_DESIGN_AND_ANALYSIS",
+        "FLOW_AND_COMPOSITION",
+        "DATA_STORAGE_AND_QUERY",
+        "SECURITY_AND_IDENTITY",
+        "COMMERCE_AND_LICENSING",
+        "NODE_INFRASTRUCTURE",
+        "FOUNDATION_AND_MATH"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: \"Unspecified\"."
+        },
+        "PROPAGATION": {
+          "value": 1,
+          "description": "Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: \"Propagation\"."
+        },
+        "ORBIT_DETERMINATION": {
+          "value": 2,
+          "description": "Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: \"Orbit Determination\"."
+        },
+        "MANEUVER_PLANNING": {
+          "value": 3,
+          "description": "Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: \"Maneuver Planning\"."
+        },
+        "CONJUNCTION_ASSESSMENT": {
+          "value": 4,
+          "description": "Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: \"Conjunction Assessment\"."
+        },
+        "REENTRY_AND_BREAKUP": {
+          "value": 5,
+          "description": "Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: \"Reentry & Breakup\"."
+        },
+        "ATTITUDE_AND_POINTING": {
+          "value": 6,
+          "description": "Attitude determination and control, body orientation, and pointing or slew planning. Display name: \"Attitude & Pointing\"."
+        },
+        "REFERENCE_FRAMES_AND_TIME": {
+          "value": 7,
+          "description": "Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: \"Reference Frames & Time\"."
+        },
+        "SENSORS_AND_COVERAGE": {
+          "value": 8,
+          "description": "Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: \"Sensors & Coverage\"."
+        },
+        "TRACKING_AND_OBSERVATION": {
+          "value": 9,
+          "description": "Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: \"Tracking & Observation\"."
+        },
+        "RF_AND_COMMUNICATIONS": {
+          "value": 10,
+          "description": "Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: \"RF & Communications\"."
+        },
+        "ELECTRONIC_WARFARE": {
+          "value": 11,
+          "description": "Interference, jamming, spoofing and countermeasure modelling. Display name: \"Electronic Warfare\"."
+        },
+        "SPACE_ENVIRONMENT": {
+          "value": 12,
+          "description": "Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: \"Space Environment\"."
+        },
+        "DATA_SOURCES_AND_INGEST": {
+          "value": 13,
+          "description": "Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: \"Data Sources & Ingest\"."
+        },
+        "DATA_VALIDATION_AND_QUALITY": {
+          "value": 14,
+          "description": "Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: \"Data Validation & Quality\"."
+        },
+        "CATALOG_AND_IDENTITY": {
+          "value": 15,
+          "description": "Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: \"Catalog & Identity\"."
+        },
+        "VISUALIZATION_AND_RENDERING": {
+          "value": 16,
+          "description": "Rendering, scene composition, shading and interactive display of space data. Display name: \"Visualization & Rendering\"."
+        },
+        "GROUND_SEGMENT_AND_HARDWARE": {
+          "value": 17,
+          "description": "Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: \"Ground Segment & Hardware\"."
+        },
+        "MISSION_DESIGN_AND_ANALYSIS": {
+          "value": 18,
+          "description": "Mission and constellation design, trade studies, performance analysis and report generation. Display name: \"Mission Design & Analysis\"."
+        },
+        "FLOW_AND_COMPOSITION": {
+          "value": 19,
+          "description": "Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: \"Flows & Composition\"."
+        },
+        "DATA_STORAGE_AND_QUERY": {
+          "value": 20,
+          "description": "Persisting, indexing and querying records; storage engines and query surfaces. Display name: \"Data Storage & Query\"."
+        },
+        "SECURITY_AND_IDENTITY": {
+          "value": 21,
+          "description": "Key custody, signing and verification, authentication, authorization and access control. Display name: \"Security & Identity\"."
+        },
+        "COMMERCE_AND_LICENSING": {
+          "value": 22,
+          "description": "Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: \"Commerce & Licensing\"."
+        },
+        "NODE_INFRASTRUCTURE": {
+          "value": 23,
+          "description": "Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: \"Node Infrastructure\"."
+        },
+        "FOUNDATION_AND_MATH": {
+          "value": 24,
+          "description": "Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: \"Foundation & Math\"."
+        }
+      }
+    },
+    "accessCategory": {
+      "type": "string",
+      "enum": [
+        "OneTime",
+        "Subscription",
+        "Streaming",
+        "Query"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OneTime": {
+          "value": 0,
+          "description": "One-time purchase"
+        },
+        "Subscription": {
+          "value": 1,
+          "description": "Recurring subscription"
+        },
+        "Streaming": {
+          "value": 2,
+          "description": "Real-time streaming access"
+        },
+        "Query": {
+          "value": 3,
+          "description": "Query-based access"
+        }
+      }
+    },
+    "paymentMethod": {
+      "type": "string",
+      "enum": [
+        "Crypto_ETH",
+        "Crypto_SOL",
+        "Crypto_BTC",
+        "SDN_Credits",
+        "Fiat_Stripe",
+        "Free",
+        "UsageBased",
+        "Enterprise"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Crypto_ETH": {
+          "value": 0,
+          "description": "Ethereum cryptocurrency"
+        },
+        "Crypto_SOL": {
+          "value": 1,
+          "description": "Solana cryptocurrency"
+        },
+        "Crypto_BTC": {
+          "value": 2,
+          "description": "Bitcoin cryptocurrency"
+        },
+        "SDN_Credits": {
+          "value": 3,
+          "description": "Internal SDN credits system"
+        },
+        "Fiat_Stripe": {
+          "value": 4,
+          "description": "Fiat payment via Stripe"
+        },
+        "Free": {
+          "value": 5,
+          "description": "Free/open data"
+        },
+        "UsageBased": {
+          "value": 6,
+          "description": "Usage-based billing settled after metered delivery"
+        },
+        "Enterprise": {
+          "value": 7,
+          "description": "Enterprise/offline invoicing"
+        }
+      }
+    },
+    "listingCategory": {
+      "type": "string",
+      "enum": [
+        "DataStream",
+        "WasmModule",
+        "Service"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DataStream": {
+          "value": 0
+        },
+        "WasmModule": {
+          "value": 1
+        },
+        "Service": {
+          "value": 2,
+          "description": "Provider-operated service."
+        }
+      }
+    },
+    "stfRetentionPolicy": {
+      "type": "string",
+      "enum": [
+        "ReplaceCurrent",
+        "ArchiveAll",
+        "KeepAll"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ReplaceCurrent": {
+          "value": 0
+        },
+        "ArchiveAll": {
+          "value": 1
+        },
+        "KeepAll": {
+          "value": 2,
+          "description": "Every publication stays in the store; nothing is superseded or pinned."
+        }
+      }
+    },
+    "srgRetrievalState": {
+      "type": "string",
+      "enum": [
+        "Unknown",
+        "Configured",
+        "Disabled",
+        "CredentialUnavailable",
+        "WaitingRefresh",
+        "InProgress",
+        "Complete",
+        "ArchiveBudgetReached",
+        "ProviderPageOnly",
+        "Failed"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unknown": {
+          "value": 0,
+          "description": "Not reported."
+        },
+        "Configured": {
+          "value": 1,
+          "description": "Settings were accepted; retrieval has not run yet."
+        },
+        "Disabled": {
+          "value": 2,
+          "description": "Retrieval is turned off."
+        },
+        "CredentialUnavailable": {
+          "value": 3,
+          "description": "The provider needs credentials and none are available to the retriever."
+        },
+        "WaitingRefresh": {
+          "value": 4,
+          "description": "All resources of the last discovery were retrieved; the next discovery waits for the provider's refresh interval."
+        },
+        "InProgress": {
+          "value": 5,
+          "description": "Resources remain in the current discovery queue."
+        },
+        "Complete": {
+          "value": 6,
+          "description": "Every resource of the current discovery queue (or page) was processed."
+        },
+        "ArchiveBudgetReached": {
+          "value": 7,
+          "description": "The retriever's storage budget is used up; nothing more is stored until it is raised."
+        },
+        "ProviderPageOnly": {
+          "value": 8,
+          "description": "The provider answered with a page, not a data file, so nothing was stored (NOTE says why)."
+        },
+        "Failed": {
+          "value": 9,
+          "description": "Retrieval failed (NOTE says why)."
+        }
+      }
+    },
+    "ICN": {
+      "type": "object",
+      "description": "Ingest Connector - Configuration and lifecycle of one ingest source.",
+      "properties": {
+        "CONNECTOR_ID": {
+          "type": "string",
+          "description": "Stable connector identifier.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "KIND": {
+          "$ref": "#/definitions/icnConnectorKind",
+          "description": "Transport or source shape used by this connector.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UploadSession": {
+              "value": 0,
+              "description": "Files are supplied through a bounded upload session."
+            },
+            "HttpsPull": {
+              "value": 1,
+              "description": "Records are pulled from an HTTPS endpoint."
+            },
+            "FilesystemWatch": {
+              "value": 2,
+              "description": "A directory is scanned for settled files."
+            }
+          }
+        },
+        "TARGET_SCHEMA": {
+          "type": "string",
+          "description": "Target SDS schema filename, e.g. \"OMM.fbs\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/icnConnectorStatus",
+          "description": "Connector lifecycle state, independent of any `$STF` listing status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Draft": {
+              "value": 0,
+              "description": "Configuration exists but has not been validated."
+            },
+            "Validated": {
+              "value": 1,
+              "description": "Configuration passed validation but is not ingesting."
+            },
+            "Active": {
+              "value": 2,
+              "description": "Connector is ingesting according to its configured trigger."
+            },
+            "Paused": {
+              "value": 3,
+              "description": "Connector is intentionally suspended."
+            },
+            "Error": {
+              "value": 4,
+              "description": "Connector requires attention after a failed operation."
+            },
+            "Retired": {
+              "value": 5,
+              "description": "Connector is permanently out of service."
+            }
+          }
+        },
+        "STATUS_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable detail about the current status.",
+          "x-flatbuffer-type": "string"
+        },
+        "ENDPOINT_URL": {
+          "type": "string",
+          "description": "HTTPS endpoint from which records are pulled.",
+          "x-flatbuffer-type": "string"
+        },
+        "HTTP_METHOD": {
+          "type": "string",
+          "description": "HTTP method used for an endpoint request.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUTH_KIND": {
+          "$ref": "#/definitions/icnAuthKind",
+          "description": "Authentication shape used for an endpoint request.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0,
+              "description": "No authentication header is sent."
+            },
+            "BearerToken": {
+              "value": 1,
+              "description": "A bearer token is resolved from CREDENTIAL_REFERENCE."
+            },
+            "ApiKeyHeader": {
+              "value": 2,
+              "description": "A credential is sent under AUTH_HEADER_NAME."
+            }
+          }
+        },
+        "AUTH_HEADER_NAME": {
+          "type": "string",
+          "description": "Header name used when AUTH_KIND is ApiKeyHeader.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREDENTIAL_REFERENCE": {
+          "type": "string",
+          "description": "Credential-store key resolved only at execution time. A secret never\nappears in an ICN record.",
+          "x-flatbuffer-type": "string"
+        },
+        "POLL_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval in milliseconds between endpoint polls.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DIRECTORY_PATH": {
+          "type": "string",
+          "description": "Directory scanned by a filesystem-watch connector.",
+          "x-flatbuffer-type": "string"
+        },
+        "FILE_PATTERN": {
+          "type": "string",
+          "description": "File-selection pattern applied within DIRECTORY_PATH.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval in milliseconds between directory scans.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SETTLE_DELAY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Minimum unchanged time in milliseconds before a file is ingested.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "POST_INGEST_ACTION": {
+          "$ref": "#/definitions/icnPostIngestAction",
+          "description": "Disposition of a source file after verified ingest.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LeaveInPlace": {
+              "value": 0,
+              "description": "Keep the source file at its original location."
+            },
+            "Archive": {
+              "value": 1,
+              "description": "Move the source file to an archive location."
+            },
+            "DeleteAfterVerification": {
+              "value": 2,
+              "description": "Delete the source file only after the ingested records are verified."
+            }
+          }
+        },
+        "UPLOAD_SESSION_ID": {
+          "type": "string",
+          "description": "Identifier of the bounded upload session.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPLOAD_FILE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of files accepted into the upload session.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "UPLOAD_TOTAL_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Total uploaded byte count across all session files.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPLOAD_CONTENT_HASH": {
+          "type": "string",
+          "description": "Content hash covering the uploaded session payload.",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTED_FORMAT": {
+          "type": "string",
+          "description": "Detected source serialization or container format.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLE_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of records detected in the validation sample.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LAST_INGEST_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds of the last successful ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_ERROR_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds of the last ingest error.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_ERROR": {
+          "type": "string",
+          "description": "Human-readable detail about the last ingest error.",
+          "x-flatbuffer-type": "string"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this connector was created.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp in milliseconds when this connector was last updated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer identifier of the provider that issued this connector record.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Provider signature over the connector record.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "ORIGIN_ID": {
+          "type": "string",
+          "description": "Upstream publisher the connector retrieves records from, as a host name\nor stable identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGIN_NAME": {
+          "type": "string",
+          "description": "Display name of the upstream publisher.",
+          "x-flatbuffer-type": "string"
+        },
+        "DATASET_ID": {
+          "type": "string",
+          "description": "Stable dataset identifier within the origin, e.g. \"gp-full-catalog\".",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Provider identifier the lane's records are stored under.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_NAME": {
+          "type": "string",
+          "description": "Source name the lane's records are stored under.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Licence under which the upstream publisher offers the records.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "description": "Citation the upstream publisher asks for.",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_FETCH_INTERVAL_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Minimum interval between fetches of the same dataset, milliseconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "NEXT_ELIGIBLE_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix milliseconds when the next fetch is eligible.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_HTTP_STATUS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "HTTP status of the last fetch.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "LAST_SOURCE_ETAG": {
+          "type": "string",
+          "description": "Entity tag returned by the last fetch.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_SOURCE_LAST_MODIFIED": {
+          "type": "string",
+          "description": "Last-Modified value returned by the last fetch.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_BATCH_ID": {
+          "type": "string",
+          "description": "Batch identifier of the last ingest.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records parsed by the last ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_INSERTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Records newly inserted by the last ingest.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_DURATION_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Duration of the last fetch and ingest, milliseconds.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "FETCH_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Fetches attempted over the connector's lifetime.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "INGEST_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Ingests completed over the connector's lifetime.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "LAST_PUBLICATION_CID": {
+          "type": "string",
+          "description": "Content identifier of the last publication manifest emitted.",
+          "x-flatbuffer-type": "string"
+        },
+        "LAST_PNM_CID": {
+          "type": "string",
+          "description": "Content identifier of the last publish notification emitted.",
+          "x-flatbuffer-type": "string"
+        },
+        "FEED_HEAD": {
+          "type": "string",
+          "description": "Feed head the connector last advanced to.",
+          "x-flatbuffer-type": "string"
+        },
+        "EMITS_SCHEMAS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Standard codes the connector emits, e.g. [\"OMM\", \"MPE\"].",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "required": [
+        "CONNECTOR_ID"
+      ],
+      "additionalProperties": false
+    },
+    "CCTCategory": {
+      "type": "object",
+      "description": "One ratified category in the taxonomy.\n\nDISPLAY_NAME, SUMMARY and SLUG are required: a category cannot be published\nwithout the label a surface will render, the sentence a browse row will\nshow, and the route a link will target. This is what stops each consumer\nfrom inventing its own wording for the same code.",
+      "properties": {
+        "CODE": {
+          "$ref": "#/definitions/capabilityClass",
+          "description": "The ratified category code. This is the join key every consumer uses.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: \"Unspecified\"."
+            },
+            "PROPAGATION": {
+              "value": 1,
+              "description": "Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: \"Propagation\"."
+            },
+            "ORBIT_DETERMINATION": {
+              "value": 2,
+              "description": "Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: \"Orbit Determination\"."
+            },
+            "MANEUVER_PLANNING": {
+              "value": 3,
+              "description": "Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: \"Maneuver Planning\"."
+            },
+            "CONJUNCTION_ASSESSMENT": {
+              "value": 4,
+              "description": "Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: \"Conjunction Assessment\"."
+            },
+            "REENTRY_AND_BREAKUP": {
+              "value": 5,
+              "description": "Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: \"Reentry & Breakup\"."
+            },
+            "ATTITUDE_AND_POINTING": {
+              "value": 6,
+              "description": "Attitude determination and control, body orientation, and pointing or slew planning. Display name: \"Attitude & Pointing\"."
+            },
+            "REFERENCE_FRAMES_AND_TIME": {
+              "value": 7,
+              "description": "Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: \"Reference Frames & Time\"."
+            },
+            "SENSORS_AND_COVERAGE": {
+              "value": 8,
+              "description": "Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: \"Sensors & Coverage\"."
+            },
+            "TRACKING_AND_OBSERVATION": {
+              "value": 9,
+              "description": "Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: \"Tracking & Observation\"."
+            },
+            "RF_AND_COMMUNICATIONS": {
+              "value": 10,
+              "description": "Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: \"RF & Communications\"."
+            },
+            "ELECTRONIC_WARFARE": {
+              "value": 11,
+              "description": "Interference, jamming, spoofing and countermeasure modelling. Display name: \"Electronic Warfare\"."
+            },
+            "SPACE_ENVIRONMENT": {
+              "value": 12,
+              "description": "Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: \"Space Environment\"."
+            },
+            "DATA_SOURCES_AND_INGEST": {
+              "value": 13,
+              "description": "Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: \"Data Sources & Ingest\"."
+            },
+            "DATA_VALIDATION_AND_QUALITY": {
+              "value": 14,
+              "description": "Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: \"Data Validation & Quality\"."
+            },
+            "CATALOG_AND_IDENTITY": {
+              "value": 15,
+              "description": "Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: \"Catalog & Identity\"."
+            },
+            "VISUALIZATION_AND_RENDERING": {
+              "value": 16,
+              "description": "Rendering, scene composition, shading and interactive display of space data. Display name: \"Visualization & Rendering\"."
+            },
+            "GROUND_SEGMENT_AND_HARDWARE": {
+              "value": 17,
+              "description": "Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: \"Ground Segment & Hardware\"."
+            },
+            "MISSION_DESIGN_AND_ANALYSIS": {
+              "value": 18,
+              "description": "Mission and constellation design, trade studies, performance analysis and report generation. Display name: \"Mission Design & Analysis\"."
+            },
+            "FLOW_AND_COMPOSITION": {
+              "value": 19,
+              "description": "Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: \"Flows & Composition\"."
+            },
+            "DATA_STORAGE_AND_QUERY": {
+              "value": 20,
+              "description": "Persisting, indexing and querying records; storage engines and query surfaces. Display name: \"Data Storage & Query\"."
+            },
+            "SECURITY_AND_IDENTITY": {
+              "value": 21,
+              "description": "Key custody, signing and verification, authentication, authorization and access control. Display name: \"Security & Identity\"."
+            },
+            "COMMERCE_AND_LICENSING": {
+              "value": 22,
+              "description": "Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: \"Commerce & Licensing\"."
+            },
+            "NODE_INFRASTRUCTURE": {
+              "value": 23,
+              "description": "Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: \"Node Infrastructure\"."
+            },
+            "FOUNDATION_AND_MATH": {
+              "value": 24,
+              "description": "Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: \"Foundation & Math\"."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "DISPLAY_NAME": {
+          "type": "string",
+          "description": "Canonical human-readable label, rendered verbatim. MUST equal the display\nname stated in the CODE member's doc comment.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SUMMARY": {
+          "type": "string",
+          "description": "One-sentence description shown on browse rows and category headers.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SLUG": {
+          "type": "string",
+          "description": "Route-safe identifier: the CODE identifier lowercased with `_` replaced by\n`-`. Published explicitly rather than derived so every surface routes\nidentically.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Longer editorial description for a category landing page.",
+          "x-flatbuffer-type": "string"
+        },
+        "PARENT": {
+          "$ref": "#/definitions/capabilityClass",
+          "description": "Parent category for hierarchical browse. UNSPECIFIED means this is a\ntop-level category. A category MUST NOT name itself as its parent.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: \"Unspecified\"."
+            },
+            "PROPAGATION": {
+              "value": 1,
+              "description": "Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: \"Propagation\"."
+            },
+            "ORBIT_DETERMINATION": {
+              "value": 2,
+              "description": "Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: \"Orbit Determination\"."
+            },
+            "MANEUVER_PLANNING": {
+              "value": 3,
+              "description": "Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: \"Maneuver Planning\"."
+            },
+            "CONJUNCTION_ASSESSMENT": {
+              "value": 4,
+              "description": "Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: \"Conjunction Assessment\"."
+            },
+            "REENTRY_AND_BREAKUP": {
+              "value": 5,
+              "description": "Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: \"Reentry & Breakup\"."
+            },
+            "ATTITUDE_AND_POINTING": {
+              "value": 6,
+              "description": "Attitude determination and control, body orientation, and pointing or slew planning. Display name: \"Attitude & Pointing\"."
+            },
+            "REFERENCE_FRAMES_AND_TIME": {
+              "value": 7,
+              "description": "Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: \"Reference Frames & Time\"."
+            },
+            "SENSORS_AND_COVERAGE": {
+              "value": 8,
+              "description": "Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: \"Sensors & Coverage\"."
+            },
+            "TRACKING_AND_OBSERVATION": {
+              "value": 9,
+              "description": "Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: \"Tracking & Observation\"."
+            },
+            "RF_AND_COMMUNICATIONS": {
+              "value": 10,
+              "description": "Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: \"RF & Communications\"."
+            },
+            "ELECTRONIC_WARFARE": {
+              "value": 11,
+              "description": "Interference, jamming, spoofing and countermeasure modelling. Display name: \"Electronic Warfare\"."
+            },
+            "SPACE_ENVIRONMENT": {
+              "value": 12,
+              "description": "Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: \"Space Environment\"."
+            },
+            "DATA_SOURCES_AND_INGEST": {
+              "value": 13,
+              "description": "Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: \"Data Sources & Ingest\"."
+            },
+            "DATA_VALIDATION_AND_QUALITY": {
+              "value": 14,
+              "description": "Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: \"Data Validation & Quality\"."
+            },
+            "CATALOG_AND_IDENTITY": {
+              "value": 15,
+              "description": "Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: \"Catalog & Identity\"."
+            },
+            "VISUALIZATION_AND_RENDERING": {
+              "value": 16,
+              "description": "Rendering, scene composition, shading and interactive display of space data. Display name: \"Visualization & Rendering\"."
+            },
+            "GROUND_SEGMENT_AND_HARDWARE": {
+              "value": 17,
+              "description": "Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: \"Ground Segment & Hardware\"."
+            },
+            "MISSION_DESIGN_AND_ANALYSIS": {
+              "value": 18,
+              "description": "Mission and constellation design, trade studies, performance analysis and report generation. Display name: \"Mission Design & Analysis\"."
+            },
+            "FLOW_AND_COMPOSITION": {
+              "value": 19,
+              "description": "Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: \"Flows & Composition\"."
+            },
+            "DATA_STORAGE_AND_QUERY": {
+              "value": 20,
+              "description": "Persisting, indexing and querying records; storage engines and query surfaces. Display name: \"Data Storage & Query\"."
+            },
+            "SECURITY_AND_IDENTITY": {
+              "value": 21,
+              "description": "Key custody, signing and verification, authentication, authorization and access control. Display name: \"Security & Identity\"."
+            },
+            "COMMERCE_AND_LICENSING": {
+              "value": 22,
+              "description": "Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: \"Commerce & Licensing\"."
+            },
+            "NODE_INFRASTRUCTURE": {
+              "value": 23,
+              "description": "Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: \"Node Infrastructure\"."
+            },
+            "FOUNDATION_AND_MATH": {
+              "value": 24,
+              "description": "Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: \"Foundation & Math\"."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SORT_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Presentation order within its parent, ascending. Ties break on\nDISPLAY_NAME.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "KEYWORDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Search synonyms and alternate phrasings that resolve to this category.\nFeeds type-ahead; never rendered as the category label.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "ICON_KEY": {
+          "type": "string",
+          "description": "Key of a self-hosted icon or capsule asset for this category. A KEY, not a\nURL: consuming node surfaces load zero external-origin bytes, so the\nconsumer resolves this against its own local asset set.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "DISPLAY_NAME",
+        "SUMMARY",
+        "SLUG"
+      ],
+      "additionalProperties": false
+    },
+    "CCTCategoryRollup": {
+      "type": "object",
+      "description": "An observed count of catalogue items in one category.\n\nCounts are VOLATILE and are never part of the ratified taxonomy itself. A\nrollup exists only with COUNTED_AT and SOURCE_CATALOG_ID, so a published\ncount can never omit when it was taken or what it was taken over. A consumer\nthat needs a live number computes it from the items; a consumer rendering a\npublished rollup MUST show it as of COUNTED_AT.",
+      "properties": {
+        "CODE": {
+          "$ref": "#/definitions/capabilityClass",
+          "description": "Category being counted.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: \"Unspecified\"."
+            },
+            "PROPAGATION": {
+              "value": 1,
+              "description": "Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: \"Propagation\"."
+            },
+            "ORBIT_DETERMINATION": {
+              "value": 2,
+              "description": "Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: \"Orbit Determination\"."
+            },
+            "MANEUVER_PLANNING": {
+              "value": 3,
+              "description": "Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: \"Maneuver Planning\"."
+            },
+            "CONJUNCTION_ASSESSMENT": {
+              "value": 4,
+              "description": "Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: \"Conjunction Assessment\"."
+            },
+            "REENTRY_AND_BREAKUP": {
+              "value": 5,
+              "description": "Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: \"Reentry & Breakup\"."
+            },
+            "ATTITUDE_AND_POINTING": {
+              "value": 6,
+              "description": "Attitude determination and control, body orientation, and pointing or slew planning. Display name: \"Attitude & Pointing\"."
+            },
+            "REFERENCE_FRAMES_AND_TIME": {
+              "value": 7,
+              "description": "Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: \"Reference Frames & Time\"."
+            },
+            "SENSORS_AND_COVERAGE": {
+              "value": 8,
+              "description": "Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: \"Sensors & Coverage\"."
+            },
+            "TRACKING_AND_OBSERVATION": {
+              "value": 9,
+              "description": "Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: \"Tracking & Observation\"."
+            },
+            "RF_AND_COMMUNICATIONS": {
+              "value": 10,
+              "description": "Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: \"RF & Communications\"."
+            },
+            "ELECTRONIC_WARFARE": {
+              "value": 11,
+              "description": "Interference, jamming, spoofing and countermeasure modelling. Display name: \"Electronic Warfare\"."
+            },
+            "SPACE_ENVIRONMENT": {
+              "value": 12,
+              "description": "Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: \"Space Environment\"."
+            },
+            "DATA_SOURCES_AND_INGEST": {
+              "value": 13,
+              "description": "Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: \"Data Sources & Ingest\"."
+            },
+            "DATA_VALIDATION_AND_QUALITY": {
+              "value": 14,
+              "description": "Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: \"Data Validation & Quality\"."
+            },
+            "CATALOG_AND_IDENTITY": {
+              "value": 15,
+              "description": "Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: \"Catalog & Identity\"."
+            },
+            "VISUALIZATION_AND_RENDERING": {
+              "value": 16,
+              "description": "Rendering, scene composition, shading and interactive display of space data. Display name: \"Visualization & Rendering\"."
+            },
+            "GROUND_SEGMENT_AND_HARDWARE": {
+              "value": 17,
+              "description": "Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: \"Ground Segment & Hardware\"."
+            },
+            "MISSION_DESIGN_AND_ANALYSIS": {
+              "value": 18,
+              "description": "Mission and constellation design, trade studies, performance analysis and report generation. Display name: \"Mission Design & Analysis\"."
+            },
+            "FLOW_AND_COMPOSITION": {
+              "value": 19,
+              "description": "Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: \"Flows & Composition\"."
+            },
+            "DATA_STORAGE_AND_QUERY": {
+              "value": 20,
+              "description": "Persisting, indexing and querying records; storage engines and query surfaces. Display name: \"Data Storage & Query\"."
+            },
+            "SECURITY_AND_IDENTITY": {
+              "value": 21,
+              "description": "Key custody, signing and verification, authentication, authorization and access control. Display name: \"Security & Identity\"."
+            },
+            "COMMERCE_AND_LICENSING": {
+              "value": 22,
+              "description": "Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: \"Commerce & Licensing\"."
+            },
+            "NODE_INFRASTRUCTURE": {
+              "value": 23,
+              "description": "Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: \"Node Infrastructure\"."
+            },
+            "FOUNDATION_AND_MATH": {
+              "value": 24,
+              "description": "Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: \"Foundation & Math\"."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ITEM_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of catalogue items whose PRIMARY_CATEGORY or CATEGORIES include\nCODE, counted over SOURCE_CATALOG_ID at COUNTED_AT.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SOURCE_CATALOG_ID": {
+          "type": "string",
+          "description": "Identifier of the catalogue the count was taken over.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "COUNTED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix seconds when the count was taken.",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "required": [
+        "SOURCE_CATALOG_ID"
+      ],
+      "additionalProperties": false
+    },
+    "CCT": {
+      "type": "object",
+      "description": "$CCT \u2014 Capability Category Taxonomy.\n\nThe ratified set of capability classes that distributable units (modules,\napplications, composed flows) are classified under, together with the labels\nand routes every consuming surface renders. One published $CCT is the single\nsource of truth shared by a storefront, a library, a search index and the\nunit manifests themselves.\n\nDivision of labour: `$CCT` = the category vocabulary and its presentation;\n`$PLG` = one module's listing, which cites categories by code; `$APP` = one\napplication's manifest, which cites categories by code; `$PMM` = which\nmodules a provider serves; `$STO`/`$STF` = commerce.",
+      "properties": {
+        "TAXONOMY_ID": {
+          "type": "string",
+          "description": "Stable identifier of this taxonomy publication.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "VERSION": {
+          "type": "string",
+          "description": "SemVer 2.0.0 version of the taxonomy content.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "ISSUED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix seconds when this taxonomy revision was issued.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Human-readable title of the taxonomy.",
+          "x-flatbuffer-type": "string"
+        },
+        "CATEGORIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CCTCategory"
+          },
+          "description": "The ratified categories. Every capabilityClass member a consumer may\nencounter SHOULD appear exactly once; a code appearing twice is invalid.",
+          "x-flatbuffer-type": "[CCTCategory]",
+          "x-flatbuffer-required": true
+        },
+        "ROLLUPS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CCTCategoryRollup"
+          },
+          "description": "Optional per-category item counts as observed over a named catalogue.\nAbsent means counts are computed by the consumer.",
+          "x-flatbuffer-type": "[CCTCategoryRollup]"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Signature from the publishing node key over the canonical taxonomy bytes.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "required": [
+        "TAXONOMY_ID",
+        "VERSION",
+        "CATEGORIES"
+      ],
+      "additionalProperties": false
+    },
+    "GrantFieldStreamPolicy": {
+      "type": "object",
+      "description": "Field-level stream policy bound into protected delivery and grants.",
+      "properties": {
+        "POLICY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "POLICY_VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "STREAM_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_CODE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALLOWED_FIELD_PATHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "REDACTED_FIELD_PATHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "KEY_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GRANT_SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALLOWED_OPERATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProtectedDeliveryBinding": {
+      "type": "object",
+      "description": "Immutable encrypted artifact/window metadata for protected delivery.",
+      "properties": {
+        "ENCRYPTED_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MANIFEST_CID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_HASH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTENT_KEY_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULE_VERSION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUIRED_SCOPES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "GRANT_SCOPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DELIVERY_PROTOCOL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "FIELD_STREAM_POLICY": {
+          "$ref": "#/definitions/GrantFieldStreamPolicy",
+          "x-flatbuffer-type": "GrantFieldStreamPolicy"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProviderReputation": {
+      "type": "object",
+      "description": "Provider reputation summary surfaced in marketplace listings.",
+      "properties": {
+        "TOTAL_SALES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "AVERAGE_RATING_X10": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "TOTAL_RATINGS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "UPTIME_PERCENTAGE_X100": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "x-flatbuffer-type": "uint16"
+        },
+        "AVG_DELIVERY_LATENCY_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DISPUTE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "PROVIDER_SINCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SpatialCoverage": {
+      "type": "object",
+      "description": "Spatial coverage definition",
+      "properties": {
+        "TYPE": {
+          "type": "string",
+          "description": "Type of coverage: \"global\", \"region\", \"object_list\"",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Regions covered, e.g., [\"LEO\", \"GEO\", \"MEO\"]",
+          "x-flatbuffer-type": "[string]"
+        },
+        "OBJECT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Specific NORAD IDs or catalog numbers",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MIN_ALTITUDE_KM": {
+          "type": "number",
+          "description": "Minimum altitude in kilometers for altitude-bounded offerings",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_ALTITUDE_KM": {
+          "type": "number",
+          "description": "Maximum altitude in kilometers for altitude-bounded offerings",
+          "x-flatbuffer-type": "double"
+        },
+        "GEO_BOUNDS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Bounding box as [min_lat, min_lon, max_lat, max_lon]",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TemporalCoverage": {
+      "type": "object",
+      "description": "Temporal coverage definition",
+      "properties": {
+        "START_EPOCH": {
+          "type": "string",
+          "description": "Start epoch in ISO 8601 format",
+          "x-flatbuffer-type": "string"
+        },
+        "END_EPOCH": {
+          "type": "string",
+          "description": "End epoch in ISO 8601 format",
+          "x-flatbuffer-type": "string"
+        },
+        "UPDATE_FREQUENCY": {
+          "type": "string",
+          "description": "Update frequency: \"realtime\", \"hourly\", \"daily\"",
+          "x-flatbuffer-type": "string"
+        },
+        "HISTORICAL_DEPTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Days of historical data available",
+          "x-flatbuffer-type": "uint32"
+        },
+        "LATENCY_SECONDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Typical provider latency in seconds",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DataCoverage": {
+      "type": "object",
+      "description": "Data coverage combining spatial and temporal",
+      "properties": {
+        "SPATIAL": {
+          "$ref": "#/definitions/SpatialCoverage",
+          "description": "Spatial coverage definition",
+          "x-flatbuffer-type": "SpatialCoverage"
+        },
+        "TEMPORAL": {
+          "$ref": "#/definitions/TemporalCoverage",
+          "description": "Temporal coverage definition",
+          "x-flatbuffer-type": "TemporalCoverage"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PricingTier": {
+      "type": "object",
+      "description": "Pricing tier for a listing",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Tier name, e.g., \"Basic\", \"Pro\", \"Enterprise\"",
+          "x-flatbuffer-type": "string"
+        },
+        "PRICE_AMOUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Price in smallest unit (cents, satoshis, etc.)",
+          "x-flatbuffer-type": "uint64"
+        },
+        "PRICE_CURRENCY": {
+          "type": "string",
+          "description": "Currency code: \"USD\", \"ETH\", \"SOL\", \"SDN_CREDITS\"",
+          "x-flatbuffer-type": "string"
+        },
+        "DURATION_DAYS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Duration in days (0 = one-time purchase)",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RATE_LIMIT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Rate limit in requests per hour",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of features included in this tier",
+          "x-flatbuffer-type": "[string]"
+        },
+        "MAX_RECORDS_PER_REQUEST": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Maximum records returned per request",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Human-readable tier description",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "STF": {
+      "type": "object",
+      "properties": {
+        "LISTING_ID": {
+          "type": "string",
+          "description": "Unique identifier for the listing",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID of the data provider",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PROVIDER_EPM_CID": {
+          "type": "string",
+          "description": "IPFS CID of provider's EPM (Entity Profile Message)",
+          "x-flatbuffer-type": "string"
+        },
+        "TITLE": {
+          "type": "string",
+          "description": "Title of the data listing",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Detailed description of the data offering",
+          "x-flatbuffer-type": "string"
+        },
+        "DATA_TYPES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "SDS data types offered, e.g., [\"OMM\", \"CDM\", \"TLE\"]",
+          "x-flatbuffer-type": "[string]"
+        },
+        "COVERAGE": {
+          "$ref": "#/definitions/DataCoverage",
+          "description": "Coverage information (spatial and temporal)",
+          "x-flatbuffer-type": "DataCoverage"
+        },
+        "SAMPLE_CID": {
+          "type": "string",
+          "description": "IPFS CID of sample data",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCESS_TYPE": {
+          "$ref": "#/definitions/accessCategory",
+          "description": "Type of access offered",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OneTime": {
+              "value": 0,
+              "description": "One-time purchase"
+            },
+            "Subscription": {
+              "value": 1,
+              "description": "Recurring subscription"
+            },
+            "Streaming": {
+              "value": 2,
+              "description": "Real-time streaming access"
+            },
+            "Query": {
+              "value": 3,
+              "description": "Query-based access"
+            }
+          }
+        },
+        "ENCRYPTION_REQUIRED": {
+          "type": "boolean",
+          "description": "Whether encryption is required for data delivery",
+          "x-flatbuffer-type": "bool"
+        },
+        "PRICING": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingTier"
+          },
+          "description": "Available pricing tiers",
+          "x-flatbuffer-type": "[PricingTier]"
+        },
+        "ACCEPTED_PAYMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/paymentMethod"
+          },
+          "description": "Payment methods accepted",
+          "x-flatbuffer-type": "[paymentMethod]"
+        },
+        "CREATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when listing was created",
+          "x-flatbuffer-type": "uint64"
+        },
+        "UPDATED_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when listing was last updated",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ACTIVE": {
+          "type": "boolean",
+          "description": "Whether the listing is currently active",
+          "x-flatbuffer-type": "bool"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Ed25519 signature from provider",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "LISTING_KIND": {
+          "$ref": "#/definitions/listingCategory",
+          "description": "Listing category: data stream or WASM module",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DataStream": {
+              "value": 0
+            },
+            "WasmModule": {
+              "value": 1
+            },
+            "Service": {
+              "value": 2,
+              "description": "Provider-operated service."
+            }
+          }
+        },
+        "TAGS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Search tags",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SAMPLE_RECORD_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of records in sample data, when available",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DELIVERY_METHODS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Supported delivery methods",
+          "x-flatbuffer-type": "[string]"
+        },
+        "PROTECTED_DELIVERY": {
+          "$ref": "#/definitions/ProtectedDeliveryBinding",
+          "description": "Protected delivery metadata for encrypted artifacts or streams",
+          "x-flatbuffer-type": "ProtectedDeliveryBinding"
+        },
+        "REPUTATION": {
+          "$ref": "#/definitions/ProviderReputation",
+          "description": "Provider reputation summary",
+          "x-flatbuffer-type": "ProviderReputation"
+        },
+        "VERSION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Listing version",
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXPIRES_AT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Unix timestamp when the listing expires, or 0 for no expiry",
+          "x-flatbuffer-type": "uint64"
+        },
+        "TERMS_CID": {
+          "type": "string",
+          "description": "Terms document CID",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "License label or SPDX-style identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_PEER_ID": {
+          "type": "string",
+          "description": "Peer ID this listing was sourced from when discovered remotely",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIMARY_CATEGORY": {
+          "$ref": "#/definitions/capabilityClass",
+          "description": "The one ratified `$CCT` category this listing is shelved under, using the\nsame vocabulary and semantics as PLG.PRIMARY_CATEGORY and\nAPP.PRIMARY_CATEGORY. Before this field existed a listing carried no\ncapability category at all \u2014 only DATA_TYPES and TAGS \u2014 so a storefront\nshelf and a library shelf were grouped by two unrelated systems. A\nconsumer MUST group listings by this field and MUST NOT re-derive a\ncategory from DATA_TYPES, TAGS or TITLE, none of which are a controlled\nvocabulary.\n\nDistinct from LISTING_KIND, which is the delivery kind (data stream vs\nmodule artifact), and from ACCESS_TYPE, which is the commercial access\nmodel. UNSPECIFIED means the provider did not classify the listing; a\nconsumer renders it ungrouped and never guesses.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "No capability class stated. The publisher did not classify the unit. A consumer MUST render an UNSPECIFIED unit as ungrouped and MUST NOT infer a class from the unit's name, description or tags. Display name: \"Unspecified\"."
+            },
+            "PROPAGATION": {
+              "value": 1,
+              "description": "Advancing an object's state forward or backward in time under a force model, and interpolating between computed states. Display name: \"Propagation\"."
+            },
+            "ORBIT_DETERMINATION": {
+              "value": 2,
+              "description": "Estimating an object's state or model parameters by fitting to observations or ephemerides. Display name: \"Orbit Determination\"."
+            },
+            "MANEUVER_PLANNING": {
+              "value": 3,
+              "description": "Planning, targeting and optimizing trajectory changes, including station-keeping, transfers and collision-avoidance maneuvers. Display name: \"Maneuver Planning\"."
+            },
+            "CONJUNCTION_ASSESSMENT": {
+              "value": 4,
+              "description": "Screening for close approaches between objects and quantifying collision probability and miss distance. Display name: \"Conjunction Assessment\"."
+            },
+            "REENTRY_AND_BREAKUP": {
+              "value": 5,
+              "description": "Atmospheric reentry, decay prediction, fragmentation and debris-cloud evolution. Display name: \"Reentry & Breakup\"."
+            },
+            "ATTITUDE_AND_POINTING": {
+              "value": 6,
+              "description": "Attitude determination and control, body orientation, and pointing or slew planning. Display name: \"Attitude & Pointing\"."
+            },
+            "REFERENCE_FRAMES_AND_TIME": {
+              "value": 7,
+              "description": "Coordinate frame realization and transformation, time scale conversion, and earth-orientation parameter handling. Display name: \"Reference Frames & Time\"."
+            },
+            "SENSORS_AND_COVERAGE": {
+              "value": 8,
+              "description": "Sensor modelling and tasking, field-of-regard and access computation, and area or target coverage figures of merit. Display name: \"Sensors & Coverage\"."
+            },
+            "TRACKING_AND_OBSERVATION": {
+              "value": 9,
+              "description": "Producing, correlating or associating observations of tracked objects, and maintaining tracks from them. Display name: \"Tracking & Observation\"."
+            },
+            "RF_AND_COMMUNICATIONS": {
+              "value": 10,
+              "description": "Radio-frequency link modelling, emitter and band characterization, signal capture handling, and communications planning. Display name: \"RF & Communications\"."
+            },
+            "ELECTRONIC_WARFARE": {
+              "value": 11,
+              "description": "Interference, jamming, spoofing and countermeasure modelling. Display name: \"Electronic Warfare\"."
+            },
+            "SPACE_ENVIRONMENT": {
+              "value": 12,
+              "description": "Atmospheric density, gravity field, magnetic field, radiation, solar and geomagnetic activity, and ionospheric modelling. Display name: \"Space Environment\"."
+            },
+            "DATA_SOURCES_AND_INGEST": {
+              "value": 13,
+              "description": "Acquiring bytes from upstream providers and parsing or exporting them across canonical record formats. Display name: \"Data Sources & Ingest\"."
+            },
+            "DATA_VALIDATION_AND_QUALITY": {
+              "value": 14,
+              "description": "Validating records for integrity, physical plausibility, continuity and schema conformance, and scoring data quality. Display name: \"Data Validation & Quality\"."
+            },
+            "CATALOG_AND_IDENTITY": {
+              "value": 15,
+              "description": "Object catalogue curation, cross-identifier resolution, bus and physical property association, and entity identity. Display name: \"Catalog & Identity\"."
+            },
+            "VISUALIZATION_AND_RENDERING": {
+              "value": 16,
+              "description": "Rendering, scene composition, shading and interactive display of space data. Display name: \"Visualization & Rendering\"."
+            },
+            "GROUND_SEGMENT_AND_HARDWARE": {
+              "value": 17,
+              "description": "Ground station operation and control of physical equipment, including antenna rotators, radios and other hardware interfaces. Display name: \"Ground Segment & Hardware\"."
+            },
+            "MISSION_DESIGN_AND_ANALYSIS": {
+              "value": 18,
+              "description": "Mission and constellation design, trade studies, performance analysis and report generation. Display name: \"Mission Design & Analysis\"."
+            },
+            "FLOW_AND_COMPOSITION": {
+              "value": 19,
+              "description": "Composition of other units into a graph. The unit of distribution is a flow of modules, not a leaf algorithm. Display name: \"Flows & Composition\"."
+            },
+            "DATA_STORAGE_AND_QUERY": {
+              "value": 20,
+              "description": "Persisting, indexing and querying records; storage engines and query surfaces. Display name: \"Data Storage & Query\"."
+            },
+            "SECURITY_AND_IDENTITY": {
+              "value": 21,
+              "description": "Key custody, signing and verification, authentication, authorization and access control. Display name: \"Security & Identity\"."
+            },
+            "COMMERCE_AND_LICENSING": {
+              "value": 22,
+              "description": "Listing, purchase, subscription, entitlement and license enforcement for distributed units. Display name: \"Commerce & Licensing\"."
+            },
+            "NODE_INFRASTRUCTURE": {
+              "value": 23,
+              "description": "Node runtime, artifact delivery, registry, publication and peer transport plumbing. Display name: \"Node Infrastructure\"."
+            },
+            "FOUNDATION_AND_MATH": {
+              "value": 24,
+              "description": "Foundational mathematics and general-purpose utility libraries consumed by other units rather than run on their own. Display name: \"Foundation & Math\"."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CATEGORIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/capabilityClass"
+          },
+          "description": "Every ratified `$CCT` category this listing belongs to, for browse,\nfilter and per-category counting. A listing MAY carry several. If\nnonempty it MUST include PRIMARY_CATEGORY. Codes MUST NOT repeat.",
+          "x-flatbuffer-type": "[capabilityClass]"
+        },
+        "RECOMMENDED_RETENTION": {
+          "$ref": "#/definitions/stfRetentionPolicy",
+          "description": "Retention rule the publisher recommends to subscribers of a dataset\nlisting: ReplaceCurrent when each publication is a complete current set,\nKeepAll when publications accumulate history the store should keep,\nArchiveAll when that history should also stay pinned.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ReplaceCurrent": {
+              "value": 0
+            },
+            "ArchiveAll": {
+              "value": 1
+            },
+            "KeepAll": {
+              "value": 2,
+              "description": "Every publication stays in the store; nothing is superseded or pinned."
+            }
+          },
+          "x-flatbuffer-default": "ReplaceCurrent"
+        }
+      },
+      "required": [
+        "LISTING_ID",
+        "PROVIDER_PEER_ID",
+        "TITLE"
+      ],
+      "additionalProperties": false
+    },
+    "SRGProvider": {
+      "type": "object",
+      "description": "One data provider: a publisher a retriever may fetch from.",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Stable identifier of the provider within the registry, lower-case, e.g.\n\"spacex-starlink\", \"iss\", \"gps-precise\".",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Display name, e.g. \"NASA ISS\".",
+          "x-flatbuffer-type": "string"
+        },
+        "OPERATOR": {
+          "type": "string",
+          "description": "Organization that operates the provider, e.g. \"NASA\", \"SES S.A.\".",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMAT": {
+          "type": "string",
+          "description": "Default format of the provider's resources, as a format token the\nretriever and its parsers agree on, e.g. \"ccsds-oem-kvn\", \"sp3-gzip\",\n\"tle\". A resource may state its own FORMAT. Containers with an SDS\nformat class are named by $NCD's container format.",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Origins (scheme, host and optional port, no path, e.g.\n\"https://api.starlink.com\") every resource URL of this provider must\nstart with. A URL outside these is refused. Empty = none allowed.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "REFRESH_INTERVAL_S": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval at which the provider publishes new data, and so the shortest\nuseful interval between discoveries, seconds; 0 = not stated.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CREDENTIALED": {
+          "type": "boolean",
+          "description": "True when retrieval needs credentials (an account, a token or a key).\nThe registry never carries the credentials themselves.",
+          "x-flatbuffer-type": "bool"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Short description of what the provider publishes.",
+          "x-flatbuffer-type": "string"
+        },
+        "INFO_URL": {
+          "type": "string",
+          "description": "Home page or documentation of the provider's data.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Licence under which the provider offers the data, and its URL.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_URL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CONNECTOR": {
+          "$ref": "#/definitions/ICN",
+          "description": "The provider as configured as an ingest source on a node, when it is:\nlifecycle, credential reference, polling and last-fetch figures.",
+          "x-flatbuffer-type": "ICN"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRGResource": {
+      "type": "object",
+      "description": "One retrievable resource of a provider: a file or an endpoint that\nreturns one document.",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "SOURCE_ID of the provider the resource belongs to.",
+          "x-flatbuffer-type": "string"
+        },
+        "RESOURCE_ID": {
+          "type": "string",
+          "description": "Identifier of the resource within its provider, stable across\ndiscoveries (normally the file name), e.g. \"ISS.OEM_J2K_EPH.txt\".",
+          "x-flatbuffer-type": "string"
+        },
+        "URL": {
+          "type": "string",
+          "description": "Absolute URL the resource is fetched from; it lies inside one of the\nprovider's ORIGINS. Never carries credentials.",
+          "x-flatbuffer-type": "string"
+        },
+        "FORMAT": {
+          "type": "string",
+          "description": "Format token of the resource; empty = the provider's FORMAT.",
+          "x-flatbuffer-type": "string"
+        },
+        "COVERAGE": {
+          "$ref": "#/definitions/DataCoverage",
+          "description": "What the resource covers (objects, regions, time span), when the\nprovider states it or discovery can tell; absent = not known.",
+          "x-flatbuffer-type": "DataCoverage"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size of the resource in bytes when the listing states it; 0 = unknown.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MODIFIED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the provider last modified the resource, when the\nlisting states it; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "DISCOVERED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the resource was discovered; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRGContentReceipt": {
+      "type": "object",
+      "description": "Receipt from a content-addressed store (IPFS or similar) for bytes it\nstored.",
+      "properties": {
+        "CID": {
+          "type": "string",
+          "description": "Content identifier the store assigned (a CID), e.g. \"bafy...\".",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Name the store recorded with the content, if any.",
+          "x-flatbuffer-type": "string"
+        },
+        "MULTIFORMAT_ADDRESS": {
+          "type": "string",
+          "description": "Address of the content, e.g. \"/ipfs/<CID>\"; empty = derive from CID.",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Bytes stored; 0 = not reported.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "SHA256": {
+          "type": "string",
+          "description": "SHA-256 of the stored bytes, lower-case hex; empty = not computed.",
+          "x-flatbuffer-type": "string"
+        },
+        "PINNED": {
+          "type": "boolean",
+          "description": "True when the store pinned the content (keeps it from eviction).",
+          "x-flatbuffer-type": "bool"
+        },
+        "STORED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the content was stored; 0 = not reported.",
+          "x-flatbuffer-type": "int64"
+        },
+        "STORE_ID": {
+          "type": "string",
+          "description": "Store that issued the receipt, e.g. \"ipfs\", or a node identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "RESOURCE_ID": {
+          "type": "string",
+          "description": "RESOURCE_ID of the resource the bytes came from, when they came from\none; empty for other content (e.g. a pinned discovery queue).",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRGRetrievalSettings": {
+      "type": "object",
+      "description": "Limits and choices a retriever runs under. A field left 0 or empty takes\nthe retriever's default.",
+      "properties": {
+        "ENABLED": {
+          "type": "boolean",
+          "description": "True to retrieve on schedule; false leaves the retriever idle.",
+          "x-flatbuffer-type": "bool"
+        },
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "SOURCE_ID of the provider to retrieve from.",
+          "x-flatbuffer-type": "string"
+        },
+        "MAX_RESOURCES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Resources fetched per run at most.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MAX_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Largest single resource accepted, bytes; a larger one is refused, never\ntruncated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "TIMEOUT_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Time allowed for one request, milliseconds.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "MAX_RUNTIME_MS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Time allowed for one run, milliseconds.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFRESH_INTERVAL_S": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Interval between discoveries, seconds (overrides the provider's\nREFRESH_INTERVAL_S).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ARCHIVE_MAX_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Total bytes the retriever may store over its lifetime.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CREDENTIAL_REFERENCE": {
+          "type": "string",
+          "description": "Key of the credential in the host's credential store, resolved only at\nretrieval time (as $ICN CREDENTIAL_REFERENCE). Never the secret itself.",
+          "x-flatbuffer-type": "string"
+        },
+        "PATHS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Provider API paths to read, for providers that expose several (absolute\npaths without query strings, e.g. \"/v2/ephemeris\").",
+          "x-flatbuffer-type": "[string]"
+        },
+        "EPOCH_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of the retrieval epoch (selects dated products, e.g.\nthe GPS week); 0 = now.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRGRetrievalStatus": {
+      "type": "object",
+      "description": "Progress of a retriever through a provider's resources.",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "SOURCE_ID of the provider.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE": {
+          "$ref": "#/definitions/srgRetrievalState",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unknown": {
+              "value": 0,
+              "description": "Not reported."
+            },
+            "Configured": {
+              "value": 1,
+              "description": "Settings were accepted; retrieval has not run yet."
+            },
+            "Disabled": {
+              "value": 2,
+              "description": "Retrieval is turned off."
+            },
+            "CredentialUnavailable": {
+              "value": 3,
+              "description": "The provider needs credentials and none are available to the retriever."
+            },
+            "WaitingRefresh": {
+              "value": 4,
+              "description": "All resources of the last discovery were retrieved; the next discovery waits for the provider's refresh interval."
+            },
+            "InProgress": {
+              "value": 5,
+              "description": "Resources remain in the current discovery queue."
+            },
+            "Complete": {
+              "value": 6,
+              "description": "Every resource of the current discovery queue (or page) was processed."
+            },
+            "ArchiveBudgetReached": {
+              "value": 7,
+              "description": "The retriever's storage budget is used up; nothing more is stored until it is raised."
+            },
+            "ProviderPageOnly": {
+              "value": 8,
+              "description": "The provider answered with a page, not a data file, so nothing was stored (NOTE says why)."
+            },
+            "Failed": {
+              "value": 9,
+              "description": "Retrieval failed (NOTE says why)."
+            }
+          },
+          "x-flatbuffer-default": "Unknown"
+        },
+        "ENABLED": {
+          "type": "boolean",
+          "description": "True when retrieval is turned on.",
+          "x-flatbuffer-type": "bool"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of this status; 0 = not stated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "RETRIEVED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Resources fetched in the run that produced this status.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COMPLETED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Resources of the current discovery queue processed so far.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TOTAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Resources in the current discovery queue; 0 = no queue or unknown.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REMAINING_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Resources still to process (TOTAL_COUNT - COMPLETED_COUNT).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "QUEUE_CID": {
+          "type": "string",
+          "description": "CID of the stored discovery queue (an SRG with RESOURCES) the retriever\nworks through; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "ARCHIVE_RESERVED_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Bytes stored (or reserved) against ARCHIVE_MAX_BYTES so far.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "ARCHIVE_MAX_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "The storage budget, bytes; 0 = unlimited or not stated.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "NORMALIZED_RECORDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Normalized SDS records produced from the retrieved resources (raw\npreservation produces none).",
+          "x-flatbuffer-type": "uint64"
+        },
+        "RESOURCE_URL": {
+          "type": "string",
+          "description": "The resource the status concerns, when it concerns one (e.g. a\nProviderPageOnly answer): its URL, size and SHA-256 (lower-case hex).",
+          "x-flatbuffer-type": "string"
+        },
+        "BYTE_LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "x-flatbuffer-type": "uint64"
+        },
+        "SHA256": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCANNED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "For a paged pass over stored resources (rebuilding coverage from\narchived descriptors): items scanned in this page, items of a supported\nformat among them, and the offset the next page starts at. STATE is\nComplete on the last page.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SUPPORTED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "NEXT_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "NOTE": {
+          "type": "string",
+          "description": "Human-readable detail.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRG": {
+      "type": "object",
+      "description": "Data Source Registry - providers, their resources, storage receipts and\nretrieval progress.",
+      "properties": {
+        "REGISTRY_ID": {
+          "type": "string",
+          "description": "Identifier of the registry, e.g. a repository name or a node's registry\nname; empty = not named.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPSTREAM_REPOSITORY": {
+          "type": "string",
+          "description": "Where the registry's provider list comes from, when it mirrors an\nupstream list: the repository URL, the revision mirrored and the path of\nthe list inside it.",
+          "x-flatbuffer-type": "string"
+        },
+        "UPSTREAM_REVISION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REGISTRY_PATH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds this record was generated (for a discovery queue, the\ntime of discovery); 0 = not stated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "PROVIDERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SRGProvider"
+          },
+          "x-flatbuffer-type": "[SRGProvider]"
+        },
+        "RESOURCES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SRGResource"
+          },
+          "description": "Resources, in retrieval order. A single job carries one.",
+          "x-flatbuffer-type": "[SRGResource]"
+        },
+        "RECEIPTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SRGContentReceipt"
+          },
+          "x-flatbuffer-type": "[SRGContentReceipt]"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/SRGRetrievalStatus",
+          "x-flatbuffer-type": "SRGRetrievalStatus"
+        },
+        "SETTINGS": {
+          "$ref": "#/definitions/SRGRetrievalSettings",
+          "x-flatbuffer-type": "SRGRetrievalSettings"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SRG",
+  "x-flatbuffer-root-type": "SRG",
+  "x-flatbuffer-file-identifier": "$SRG"
+}

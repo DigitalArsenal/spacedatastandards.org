@@ -324,6 +324,14 @@ class PRWAtmosphereResult
 
 class PRWVersionResult
 
+class PRWWindowQuery
+
+class PRWWindowRequest
+
+class PRWWindowRefusal
+
+class PRWWindowReport
+
 class PRW
 
 /// Propagator initialization request — assigns TLE / OMM / Keplerian /
@@ -2623,6 +2631,234 @@ struct PRWVersionResultBuilder:
     def end():
         return b_.EndObject()
 
+/// One propagation window: propagate one source (an element set, an
+/// initialized entity or a resident handle) from START to STOP, sampling at
+/// most STEP_SECONDS apart with the last sample exactly at STOP. The answer is
+/// one $OEM data block per query, in SEQUENCE order, covering [START, STOP];
+/// a provider that cannot answer returns an empty block whose COMMENT begins
+/// "REFUSED" and reports the reason in PRWWindowReport.
+class PRWWindowQuery : flatbuffers.handle
+    /// Position of the query in the request, 0-based; answers keep this order.
+    def SEQUENCE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// 0-based index of the source record among the source records passed
+    /// with the request (e.g. the $OMM element sets, across all frames, in input
+    /// order). Ignored when ENTITY_HANDLE is used.
+    def SET_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    /// Entity handle of an initialized or resident source; 0 = use SET_INDEX.
+    def ENTITY_HANDLE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// Object key of the source as the requester names it (e.g. "NORAD:25544");
+    /// the answer block must be of this object.
+    def OBJECT_KEY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies
+    /// it).
+    def NORAD_CAT_ID() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    /// International designator or provider object identifier; empty = none.
+    def OBJECT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+    /// Epoch of the source record, for reference; absent = not stated.
+    def SOURCE_EPOCH() -> TIMInstant?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: TIMInstant { buf_, o } else: nil
+    /// First and last instants of the window (UTC unless TIME_SYSTEM says
+    /// otherwise).
+    def START() -> TIMInstant:
+        let o = flatbuffers.field_table(buf_, pos_, 18)
+        return TIMInstant { buf_, assert o }
+    def STOP() -> TIMInstant:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return TIMInstant { buf_, assert o }
+    /// Largest sample spacing, seconds (> 0).
+    def STEP_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+
+def GetRootAsPRWWindowQuery(buf:string): return PRWWindowQuery { buf, flatbuffers.indirect(buf, 0) }
+
+struct PRWWindowQueryBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(10)
+        return this
+    def add_SEQUENCE(SEQUENCE:int):
+        b_.PrependUint32Slot(0, SEQUENCE, 0)
+        return this
+    def add_SET_INDEX(SET_INDEX:int):
+        b_.PrependUint32Slot(1, SET_INDEX, 0)
+        return this
+    def add_ENTITY_HANDLE(ENTITY_HANDLE:int):
+        b_.PrependUint32Slot(2, ENTITY_HANDLE, 0)
+        return this
+    def add_OBJECT_KEY(OBJECT_KEY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, OBJECT_KEY)
+        return this
+    def add_NORAD_CAT_ID(NORAD_CAT_ID:int):
+        b_.PrependUint32Slot(4, NORAD_CAT_ID, 0)
+        return this
+    def add_OBJECT_ID(OBJECT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, OBJECT_ID)
+        return this
+    def add_SOURCE_EPOCH(SOURCE_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, SOURCE_EPOCH)
+        return this
+    def add_START(START:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, START)
+        return this
+    def add_STOP(STOP:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, STOP)
+        return this
+    def add_STEP_SECONDS(STEP_SECONDS:float):
+        b_.PrependFloat64Slot(9, STEP_SECONDS, 0.0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// A batch of propagation windows. Existing BATCH_REQUEST propagates every
+/// entity to one EPOCH; a window request propagates each query's source over
+/// its own [START, STOP] at STEP_SECONDS.
+class PRWWindowRequest : flatbuffers.handle
+    def QUERIES(i:int) -> PRWWindowQuery:
+        return PRWWindowQuery { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
+    def QUERIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+    /// Port of the propagator expected to answer; empty = the host's default.
+    def PROPAGATOR_PORT_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Neighbouring source records each window spans on either side (context
+    /// for the requester's replay); 0 = not stated.
+    def NEIGHBOUR_SETS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");
+    /// empty = the provider's native frame.
+    def TARGET_FRAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// How to answer, human-readable.
+    def INSTRUCTIONS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+
+def GetRootAsPRWWindowRequest(buf:string): return PRWWindowRequest { buf, flatbuffers.indirect(buf, 0) }
+
+struct PRWWindowRequestBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_QUERIES(QUERIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, QUERIES)
+        return this
+    def add_PROPAGATOR_PORT_ID(PROPAGATOR_PORT_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, PROPAGATOR_PORT_ID)
+        return this
+    def add_NEIGHBOUR_SETS(NEIGHBOUR_SETS:int):
+        b_.PrependUint32Slot(2, NEIGHBOUR_SETS, 0)
+        return this
+    def add_TARGET_FRAME(TARGET_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, TARGET_FRAME)
+        return this
+    def add_INSTRUCTIONS(INSTRUCTIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, INSTRUCTIONS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def PRWWindowRequestStartQUERIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PRWWindowRequestCreateQUERIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// A window the provider refused.
+class PRWWindowRefusal : flatbuffers.handle
+    /// The query's SEQUENCE.
+    def SEQUENCE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// The query's SET_INDEX.
+    def SET_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    /// Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",
+    /// "invalid-span", "span-too-long", "sgp4-propagate".
+    def REASON() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+
+def GetRootAsPRWWindowRefusal(buf:string): return PRWWindowRefusal { buf, flatbuffers.indirect(buf, 0) }
+
+struct PRWWindowRefusalBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_SEQUENCE(SEQUENCE:int):
+        b_.PrependUint32Slot(0, SEQUENCE, 0)
+        return this
+    def add_SET_INDEX(SET_INDEX:int):
+        b_.PrependUint32Slot(1, SET_INDEX, 0)
+        return this
+    def add_REASON(REASON:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, REASON)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Summary of the answers to a window request.
+class PRWWindowReport : flatbuffers.handle
+    /// Queries received, answered and refused.
+    def QUERIES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    def ANSWERED() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    def REFUSED() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// Source records received.
+    def SOURCE_RECORDS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    def REFUSALS(i:int) -> PRWWindowRefusal:
+        return PRWWindowRefusal { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 12) + i * 4) }
+    def REFUSALS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 12)
+    /// The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,
+    /// opsmode i; TEME, UTC, km and km/s".
+    def PROVIDER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+
+def GetRootAsPRWWindowReport(buf:string): return PRWWindowReport { buf, flatbuffers.indirect(buf, 0) }
+
+struct PRWWindowReportBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_QUERIES(QUERIES:int):
+        b_.PrependUint32Slot(0, QUERIES, 0)
+        return this
+    def add_ANSWERED(ANSWERED:int):
+        b_.PrependUint32Slot(1, ANSWERED, 0)
+        return this
+    def add_REFUSED(REFUSED:int):
+        b_.PrependUint32Slot(2, REFUSED, 0)
+        return this
+    def add_SOURCE_RECORDS(SOURCE_RECORDS:int):
+        b_.PrependUint32Slot(3, SOURCE_RECORDS, 0)
+        return this
+    def add_REFUSALS(REFUSALS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, REFUSALS)
+        return this
+    def add_PROVIDER(PROVIDER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, PROVIDER)
+        return this
+    def end():
+        return b_.EndObject()
+
+def PRWWindowReportStartREFUSALSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PRWWindowReportCreateREFUSALSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
 /// Exactly one arm per envelope. Existing three arms keep their ordinals.
 class PRW : flatbuffers.handle
     def INIT() -> PRWInit?:
@@ -2688,13 +2924,20 @@ class PRW : flatbuffers.handle
     def JB2008_INDICES() -> PRWJB2008IndicesTable?:
         let o = flatbuffers.field_table(buf_, pos_, 44)
         return if o: PRWJB2008IndicesTable { buf_, o } else: nil
+    /// Propagation over windows: one $OEM block per query answers it.
+    def WINDOW_REQUEST() -> PRWWindowRequest?:
+        let o = flatbuffers.field_table(buf_, pos_, 46)
+        return if o: PRWWindowRequest { buf_, o } else: nil
+    def WINDOW_REPORT() -> PRWWindowReport?:
+        let o = flatbuffers.field_table(buf_, pos_, 48)
+        return if o: PRWWindowReport { buf_, o } else: nil
 
 def GetRootAsPRW(buf:string): return PRW { buf, flatbuffers.indirect(buf, 0) }
 
 struct PRWBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(21)
+        b_.StartObject(23)
         return this
     def add_INIT(INIT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, INIT)
@@ -2758,6 +3001,12 @@ struct PRWBuilder:
         return this
     def add_JB2008_INDICES(JB2008_INDICES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(20, JB2008_INDICES)
+        return this
+    def add_WINDOW_REQUEST(WINDOW_REQUEST:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, WINDOW_REQUEST)
+        return this
+    def add_WINDOW_REPORT(WINDOW_REPORT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(22, WINDOW_REPORT)
         return this
     def end():
         return b_.EndObject()

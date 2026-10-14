@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Reference to the store module that runs a store.
-public struct STOModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct STOModuleRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -63,7 +63,7 @@ public struct STOModuleRef: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  Store Descriptor — storefront identity
-public struct STO: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct STO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

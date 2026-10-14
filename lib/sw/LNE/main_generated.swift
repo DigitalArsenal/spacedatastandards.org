@@ -24,7 +24,7 @@ public enum launchOutcome: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Launch Event
-public struct LNE: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LNE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

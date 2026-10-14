@@ -6524,6 +6524,554 @@ class PRWVersionResultObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  One propagation window: propagate one source (an element set, an
+///  initialized entity or a resident handle) from START to STOP, sampling at
+///  most STEP_SECONDS apart with the last sample exactly at STOP. The answer is
+///  one $OEM data block per query, in SEQUENCE order, covering [START, STOP];
+///  a provider that cannot answer returns an empty block whose COMMENT begins
+///  "REFUSED" and reports the reason in PRWWindowReport.
+class PRWWindowQuery {
+  PRWWindowQuery._(this._bc, this._bcOffset);
+  factory PRWWindowQuery(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWWindowQuery> reader = _PRWWindowQueryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Position of the query in the request, 0-based; answers keep this order.
+  int get SEQUENCE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  0-based index of the source record among the source records passed
+  ///  with the request (e.g. the $OMM element sets, across all frames, in input
+  ///  order). Ignored when ENTITY_HANDLE is used.
+  int get SET_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get setIndex => SET_INDEX;
+  ///  Entity handle of an initialized or resident source; 0 = use SET_INDEX.
+  int get ENTITY_HANDLE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get entityHandle => ENTITY_HANDLE;
+  ///  Object key of the source as the requester names it (e.g. "NORAD:25544");
+  ///  the answer block must be of this object.
+  String? get OBJECT_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get objectKey => OBJECT_KEY;
+  ///  NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies
+  ///  it).
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  int get noradCatId => NORAD_CAT_ID;
+  ///  International designator or provider object identifier; empty = none.
+  String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get objectId => OBJECT_ID;
+  ///  Epoch of the source record, for reference; absent = not stated.
+  TIMInstant? get SOURCE_EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  TIMInstant? get sourceEpoch => SOURCE_EPOCH;
+  ///  First and last instants of the window (UTC unless TIME_SYSTEM says
+  ///  otherwise).
+  TIMInstant? get START => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  TIMInstant? get STOP => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Largest sample spacing, seconds (> 0).
+  double get STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get stepSeconds => STEP_SECONDS;
+
+  @override
+  String toString() {
+    return 'PRWWindowQuery{SEQUENCE: ${SEQUENCE}, setIndex: ${setIndex}, entityHandle: ${entityHandle}, objectKey: ${objectKey}, noradCatId: ${noradCatId}, objectId: ${objectId}, sourceEpoch: ${sourceEpoch}, START: ${START}, STOP: ${STOP}, stepSeconds: ${stepSeconds}}';
+  }
+}
+
+class _PRWWindowQueryReader extends fb.TableReader<PRWWindowQuery> {
+  const _PRWWindowQueryReader();
+
+  @override
+  PRWWindowQuery createObject(fb.BufferContext bc, int offset) =>
+    PRWWindowQuery._(bc, offset);
+}
+
+class PRWWindowQueryBuilder {
+  PRWWindowQueryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addSequence(int? SEQUENCE) {
+    fbBuilder.addUint32(0, SEQUENCE);
+    return fbBuilder.offset;
+  }
+  int addSetIndex(int? SET_INDEX) {
+    fbBuilder.addUint32(1, SET_INDEX);
+    return fbBuilder.offset;
+  }
+  int addEntityHandle(int? ENTITY_HANDLE) {
+    fbBuilder.addUint32(2, ENTITY_HANDLE);
+    return fbBuilder.offset;
+  }
+  int addObjectKeyOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(4, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceEpochOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addStartOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addStopOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addStepSeconds(double? STEP_SECONDS) {
+    fbBuilder.addFloat64(9, STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWWindowQueryObjectBuilder extends fb.ObjectBuilder {
+  final int? _SEQUENCE;
+  final int? _SET_INDEX;
+  final int? _ENTITY_HANDLE;
+  final String? _OBJECT_KEY;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_ID;
+  final TIMInstantObjectBuilder? _SOURCE_EPOCH;
+  final TIMInstantObjectBuilder? _START;
+  final TIMInstantObjectBuilder? _STOP;
+  final double? _STEP_SECONDS;
+
+  PRWWindowQueryObjectBuilder({
+    int? SEQUENCE,
+    int? SET_INDEX,
+    int? setIndex,
+    int? ENTITY_HANDLE,
+    int? entityHandle,
+    String? OBJECT_KEY,
+    String? objectKey,
+    int? NORAD_CAT_ID,
+    int? noradCatId,
+    String? OBJECT_ID,
+    String? objectId,
+    TIMInstantObjectBuilder? SOURCE_EPOCH,
+    TIMInstantObjectBuilder? sourceEpoch,
+    TIMInstantObjectBuilder? START,
+    TIMInstantObjectBuilder? STOP,
+    double? STEP_SECONDS,
+    double? stepSeconds,
+  })
+      : _SEQUENCE = SEQUENCE,
+        _SET_INDEX = setIndex ?? SET_INDEX,
+        _ENTITY_HANDLE = entityHandle ?? ENTITY_HANDLE,
+        _OBJECT_KEY = objectKey ?? OBJECT_KEY,
+        _NORAD_CAT_ID = noradCatId ?? NORAD_CAT_ID,
+        _OBJECT_ID = objectId ?? OBJECT_ID,
+        _SOURCE_EPOCH = sourceEpoch ?? SOURCE_EPOCH,
+        _START = START,
+        _STOP = STOP,
+        _STEP_SECONDS = stepSeconds ?? STEP_SECONDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? OBJECT_KEYOffset = _OBJECT_KEY == null ? null
+        : fbBuilder.writeString(_OBJECT_KEY!);
+    final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
+        : fbBuilder.writeString(_OBJECT_ID!);
+    final int? SOURCE_EPOCHOffset = _SOURCE_EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? STARTOffset = _START?.getOrCreateOffset(fbBuilder);
+    final int? STOPOffset = _STOP?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(10);
+    fbBuilder.addUint32(0, _SEQUENCE);
+    fbBuilder.addUint32(1, _SET_INDEX);
+    fbBuilder.addUint32(2, _ENTITY_HANDLE);
+    fbBuilder.addOffset(3, OBJECT_KEYOffset);
+    fbBuilder.addUint32(4, _NORAD_CAT_ID);
+    fbBuilder.addOffset(5, OBJECT_IDOffset);
+    fbBuilder.addOffset(6, SOURCE_EPOCHOffset);
+    fbBuilder.addOffset(7, STARTOffset);
+    fbBuilder.addOffset(8, STOPOffset);
+    fbBuilder.addFloat64(9, _STEP_SECONDS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A batch of propagation windows. Existing BATCH_REQUEST propagates every
+///  entity to one EPOCH; a window request propagates each query's source over
+///  its own [START, STOP] at STEP_SECONDS.
+class PRWWindowRequest {
+  PRWWindowRequest._(this._bc, this._bcOffset);
+  factory PRWWindowRequest(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWWindowRequest> reader = _PRWWindowRequestReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  List<PRWWindowQuery>? get QUERIES => const fb.ListReader<PRWWindowQuery>(PRWWindowQuery.reader).vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Port of the propagator expected to answer; empty = the host's default.
+  String? get PROPAGATOR_PORT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get propagatorPortId => PROPAGATOR_PORT_ID;
+  ///  Neighbouring source records each window spans on either side (context
+  ///  for the requester's replay); 0 = not stated.
+  int get NEIGHBOUR_SETS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  int get neighbourSets => NEIGHBOUR_SETS;
+  ///  Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");
+  ///  empty = the provider's native frame.
+  String? get TARGET_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get targetFrame => TARGET_FRAME;
+  ///  How to answer, human-readable.
+  String? get INSTRUCTIONS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'PRWWindowRequest{QUERIES: ${QUERIES}, propagatorPortId: ${propagatorPortId}, neighbourSets: ${neighbourSets}, targetFrame: ${targetFrame}, INSTRUCTIONS: ${INSTRUCTIONS}}';
+  }
+}
+
+class _PRWWindowRequestReader extends fb.TableReader<PRWWindowRequest> {
+  const _PRWWindowRequestReader();
+
+  @override
+  PRWWindowRequest createObject(fb.BufferContext bc, int offset) =>
+    PRWWindowRequest._(bc, offset);
+}
+
+class PRWWindowRequestBuilder {
+  PRWWindowRequestBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addQueriesOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addPropagatorPortIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNeighbourSets(int? NEIGHBOUR_SETS) {
+    fbBuilder.addUint32(2, NEIGHBOUR_SETS);
+    return fbBuilder.offset;
+  }
+  int addTargetFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addInstructionsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWWindowRequestObjectBuilder extends fb.ObjectBuilder {
+  final List<PRWWindowQueryObjectBuilder>? _QUERIES;
+  final String? _PROPAGATOR_PORT_ID;
+  final int? _NEIGHBOUR_SETS;
+  final String? _TARGET_FRAME;
+  final String? _INSTRUCTIONS;
+
+  PRWWindowRequestObjectBuilder({
+    List<PRWWindowQueryObjectBuilder>? QUERIES,
+    String? PROPAGATOR_PORT_ID,
+    String? propagatorPortId,
+    int? NEIGHBOUR_SETS,
+    int? neighbourSets,
+    String? TARGET_FRAME,
+    String? targetFrame,
+    String? INSTRUCTIONS,
+  })
+      : _QUERIES = QUERIES,
+        _PROPAGATOR_PORT_ID = propagatorPortId ?? PROPAGATOR_PORT_ID,
+        _NEIGHBOUR_SETS = neighbourSets ?? NEIGHBOUR_SETS,
+        _TARGET_FRAME = targetFrame ?? TARGET_FRAME,
+        _INSTRUCTIONS = INSTRUCTIONS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? QUERIESOffset = _QUERIES == null ? null
+        : fbBuilder.writeList(_QUERIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROPAGATOR_PORT_IDOffset = _PROPAGATOR_PORT_ID == null ? null
+        : fbBuilder.writeString(_PROPAGATOR_PORT_ID!);
+    final int? TARGET_FRAMEOffset = _TARGET_FRAME == null ? null
+        : fbBuilder.writeString(_TARGET_FRAME!);
+    final int? INSTRUCTIONSOffset = _INSTRUCTIONS == null ? null
+        : fbBuilder.writeString(_INSTRUCTIONS!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, QUERIESOffset);
+    fbBuilder.addOffset(1, PROPAGATOR_PORT_IDOffset);
+    fbBuilder.addUint32(2, _NEIGHBOUR_SETS);
+    fbBuilder.addOffset(3, TARGET_FRAMEOffset);
+    fbBuilder.addOffset(4, INSTRUCTIONSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A window the provider refused.
+class PRWWindowRefusal {
+  PRWWindowRefusal._(this._bc, this._bcOffset);
+  factory PRWWindowRefusal(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWWindowRefusal> reader = _PRWWindowRefusalReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The query's SEQUENCE.
+  int get SEQUENCE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  ///  The query's SET_INDEX.
+  int get SET_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get setIndex => SET_INDEX;
+  ///  Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",
+  ///  "invalid-span", "span-too-long", "sgp4-propagate".
+  String? get REASON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'PRWWindowRefusal{SEQUENCE: ${SEQUENCE}, setIndex: ${setIndex}, REASON: ${REASON}}';
+  }
+}
+
+class _PRWWindowRefusalReader extends fb.TableReader<PRWWindowRefusal> {
+  const _PRWWindowRefusalReader();
+
+  @override
+  PRWWindowRefusal createObject(fb.BufferContext bc, int offset) =>
+    PRWWindowRefusal._(bc, offset);
+}
+
+class PRWWindowRefusalBuilder {
+  PRWWindowRefusalBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addSequence(int? SEQUENCE) {
+    fbBuilder.addUint32(0, SEQUENCE);
+    return fbBuilder.offset;
+  }
+  int addSetIndex(int? SET_INDEX) {
+    fbBuilder.addUint32(1, SET_INDEX);
+    return fbBuilder.offset;
+  }
+  int addReasonOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWWindowRefusalObjectBuilder extends fb.ObjectBuilder {
+  final int? _SEQUENCE;
+  final int? _SET_INDEX;
+  final String? _REASON;
+
+  PRWWindowRefusalObjectBuilder({
+    int? SEQUENCE,
+    int? SET_INDEX,
+    int? setIndex,
+    String? REASON,
+  })
+      : _SEQUENCE = SEQUENCE,
+        _SET_INDEX = setIndex ?? SET_INDEX,
+        _REASON = REASON;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REASONOffset = _REASON == null ? null
+        : fbBuilder.writeString(_REASON!);
+    fbBuilder.startTable(3);
+    fbBuilder.addUint32(0, _SEQUENCE);
+    fbBuilder.addUint32(1, _SET_INDEX);
+    fbBuilder.addOffset(2, REASONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Summary of the answers to a window request.
+class PRWWindowReport {
+  PRWWindowReport._(this._bc, this._bcOffset);
+  factory PRWWindowReport(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWWindowReport> reader = _PRWWindowReportReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Queries received, answered and refused.
+  int get QUERIES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get ANSWERED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get REFUSED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Source records received.
+  int get SOURCE_RECORDS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get sourceRecords => SOURCE_RECORDS;
+  List<PRWWindowRefusal>? get REFUSALS => const fb.ListReader<PRWWindowRefusal>(PRWWindowRefusal.reader).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,
+  ///  opsmode i; TEME, UTC, km and km/s".
+  String? get PROVIDER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'PRWWindowReport{QUERIES: ${QUERIES}, ANSWERED: ${ANSWERED}, REFUSED: ${REFUSED}, sourceRecords: ${sourceRecords}, REFUSALS: ${REFUSALS}, PROVIDER: ${PROVIDER}}';
+  }
+}
+
+class _PRWWindowReportReader extends fb.TableReader<PRWWindowReport> {
+  const _PRWWindowReportReader();
+
+  @override
+  PRWWindowReport createObject(fb.BufferContext bc, int offset) =>
+    PRWWindowReport._(bc, offset);
+}
+
+class PRWWindowReportBuilder {
+  PRWWindowReportBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addQueries(int? QUERIES) {
+    fbBuilder.addUint32(0, QUERIES);
+    return fbBuilder.offset;
+  }
+  int addAnswered(int? ANSWERED) {
+    fbBuilder.addUint32(1, ANSWERED);
+    return fbBuilder.offset;
+  }
+  int addRefused(int? REFUSED) {
+    fbBuilder.addUint32(2, REFUSED);
+    return fbBuilder.offset;
+  }
+  int addSourceRecords(int? SOURCE_RECORDS) {
+    fbBuilder.addUint32(3, SOURCE_RECORDS);
+    return fbBuilder.offset;
+  }
+  int addRefusalsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addProviderOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWWindowReportObjectBuilder extends fb.ObjectBuilder {
+  final int? _QUERIES;
+  final int? _ANSWERED;
+  final int? _REFUSED;
+  final int? _SOURCE_RECORDS;
+  final List<PRWWindowRefusalObjectBuilder>? _REFUSALS;
+  final String? _PROVIDER;
+
+  PRWWindowReportObjectBuilder({
+    int? QUERIES,
+    int? ANSWERED,
+    int? REFUSED,
+    int? SOURCE_RECORDS,
+    int? sourceRecords,
+    List<PRWWindowRefusalObjectBuilder>? REFUSALS,
+    String? PROVIDER,
+  })
+      : _QUERIES = QUERIES,
+        _ANSWERED = ANSWERED,
+        _REFUSED = REFUSED,
+        _SOURCE_RECORDS = sourceRecords ?? SOURCE_RECORDS,
+        _REFUSALS = REFUSALS,
+        _PROVIDER = PROVIDER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REFUSALSOffset = _REFUSALS == null ? null
+        : fbBuilder.writeList(_REFUSALS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVIDEROffset = _PROVIDER == null ? null
+        : fbBuilder.writeString(_PROVIDER!);
+    fbBuilder.startTable(6);
+    fbBuilder.addUint32(0, _QUERIES);
+    fbBuilder.addUint32(1, _ANSWERED);
+    fbBuilder.addUint32(2, _REFUSED);
+    fbBuilder.addUint32(3, _SOURCE_RECORDS);
+    fbBuilder.addOffset(4, REFUSALSOffset);
+    fbBuilder.addOffset(5, PROVIDEROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Exactly one arm per envelope. Existing three arms keep their ordinals.
 class PRW {
   PRW._(this._bc, this._bcOffset);
@@ -6579,10 +7127,15 @@ class PRW {
   PRWSpaceWeatherTable? get spaceWeather => SPACE_WEATHER;
   PRWJB2008IndicesTable? get JB2008_INDICES => PRWJB2008IndicesTable.reader.vTableGetNullable(_bc, _bcOffset, 44);
   PRWJB2008IndicesTable? get jb2008Indices => JB2008_INDICES;
+  ///  Propagation over windows: one $OEM block per query answers it.
+  PRWWindowRequest? get WINDOW_REQUEST => PRWWindowRequest.reader.vTableGetNullable(_bc, _bcOffset, 46);
+  PRWWindowRequest? get windowRequest => WINDOW_REQUEST;
+  PRWWindowReport? get WINDOW_REPORT => PRWWindowReport.reader.vTableGetNullable(_bc, _bcOffset, 48);
+  PRWWindowReport? get windowReport => WINDOW_REPORT;
 
   @override
   String toString() {
-    return 'PRW{INIT: ${INIT}, batchRequest: ${batchRequest}, batchResponse: ${batchResponse}, executionRequest: ${executionRequest}, executionResult: ${executionResult}, residentState: ${residentState}, residentRequest: ${residentRequest}, prepareRequest: ${prepareRequest}, prepareResult: ${prepareResult}, describeRequest: ${describeRequest}, describeResult: ${describeResult}, nativeInput: ${nativeInput}, ephemerisRequest: ${ephemerisRequest}, ephemerisResult: ${ephemerisResult}, atmosphereRequest: ${atmosphereRequest}, atmosphereResult: ${atmosphereResult}, versionQuery: ${versionQuery}, versionResult: ${versionResult}, earthOrientation: ${earthOrientation}, spaceWeather: ${spaceWeather}, jb2008Indices: ${jb2008Indices}}';
+    return 'PRW{INIT: ${INIT}, batchRequest: ${batchRequest}, batchResponse: ${batchResponse}, executionRequest: ${executionRequest}, executionResult: ${executionResult}, residentState: ${residentState}, residentRequest: ${residentRequest}, prepareRequest: ${prepareRequest}, prepareResult: ${prepareResult}, describeRequest: ${describeRequest}, describeResult: ${describeResult}, nativeInput: ${nativeInput}, ephemerisRequest: ${ephemerisRequest}, ephemerisResult: ${ephemerisResult}, atmosphereRequest: ${atmosphereRequest}, atmosphereResult: ${atmosphereResult}, versionQuery: ${versionQuery}, versionResult: ${versionResult}, earthOrientation: ${earthOrientation}, spaceWeather: ${spaceWeather}, jb2008Indices: ${jb2008Indices}, windowRequest: ${windowRequest}, windowReport: ${windowReport}}';
   }
 }
 
@@ -6600,7 +7153,7 @@ class PRWBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(21);
+    fbBuilder.startTable(23);
   }
 
   int addInitOffset(int? offset) {
@@ -6687,6 +7240,14 @@ class PRWBuilder {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
+  int addWindowRequestOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addWindowReportOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -6715,6 +7276,8 @@ class PRWObjectBuilder extends fb.ObjectBuilder {
   final PRWEarthOrientationObjectBuilder? _EARTH_ORIENTATION;
   final PRWSpaceWeatherTableObjectBuilder? _SPACE_WEATHER;
   final PRWJB2008IndicesTableObjectBuilder? _JB2008_INDICES;
+  final PRWWindowRequestObjectBuilder? _WINDOW_REQUEST;
+  final PRWWindowReportObjectBuilder? _WINDOW_REPORT;
 
   PRWObjectBuilder({
     PRWInitObjectBuilder? INIT,
@@ -6758,6 +7321,10 @@ class PRWObjectBuilder extends fb.ObjectBuilder {
     PRWSpaceWeatherTableObjectBuilder? spaceWeather,
     PRWJB2008IndicesTableObjectBuilder? JB2008_INDICES,
     PRWJB2008IndicesTableObjectBuilder? jb2008Indices,
+    PRWWindowRequestObjectBuilder? WINDOW_REQUEST,
+    PRWWindowRequestObjectBuilder? windowRequest,
+    PRWWindowReportObjectBuilder? WINDOW_REPORT,
+    PRWWindowReportObjectBuilder? windowReport,
   })
       : _INIT = INIT,
         _BATCH_REQUEST = batchRequest ?? BATCH_REQUEST,
@@ -6779,7 +7346,9 @@ class PRWObjectBuilder extends fb.ObjectBuilder {
         _VERSION_RESULT = versionResult ?? VERSION_RESULT,
         _EARTH_ORIENTATION = earthOrientation ?? EARTH_ORIENTATION,
         _SPACE_WEATHER = spaceWeather ?? SPACE_WEATHER,
-        _JB2008_INDICES = jb2008Indices ?? JB2008_INDICES;
+        _JB2008_INDICES = jb2008Indices ?? JB2008_INDICES,
+        _WINDOW_REQUEST = windowRequest ?? WINDOW_REQUEST,
+        _WINDOW_REPORT = windowReport ?? WINDOW_REPORT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -6804,7 +7373,9 @@ class PRWObjectBuilder extends fb.ObjectBuilder {
     final int? EARTH_ORIENTATIONOffset = _EARTH_ORIENTATION?.getOrCreateOffset(fbBuilder);
     final int? SPACE_WEATHEROffset = _SPACE_WEATHER?.getOrCreateOffset(fbBuilder);
     final int? JB2008_INDICESOffset = _JB2008_INDICES?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(21);
+    final int? WINDOW_REQUESTOffset = _WINDOW_REQUEST?.getOrCreateOffset(fbBuilder);
+    final int? WINDOW_REPORTOffset = _WINDOW_REPORT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(23);
     fbBuilder.addOffset(0, INITOffset);
     fbBuilder.addOffset(1, BATCH_REQUESTOffset);
     fbBuilder.addOffset(2, BATCH_RESPONSEOffset);
@@ -6826,6 +7397,8 @@ class PRWObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(18, EARTH_ORIENTATIONOffset);
     fbBuilder.addOffset(19, SPACE_WEATHEROffset);
     fbBuilder.addOffset(20, JB2008_INDICESOffset);
+    fbBuilder.addOffset(21, WINDOW_REQUESTOffset);
+    fbBuilder.addOffset(22, WINDOW_REPORTOffset);
     return fbBuilder.endTable();
   }
 

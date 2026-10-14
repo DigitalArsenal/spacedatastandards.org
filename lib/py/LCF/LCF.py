@@ -267,7 +267,7 @@ def LCFCreateCAPABILITY_TOKENVector(builder, data):
     return builder.EndVector()
 
 def CreateCAPABILITY_TOKENVector(builder, data):
-    LCFCreateCAPABILITY_TOKENVector(builder, data)
+    return LCFCreateCAPABILITY_TOKENVector(builder, data)
 
 def LCFAddINITIALIZED(builder, INITIALIZED):
     builder.PrependBoolSlot(11, INITIALIZED, 0)

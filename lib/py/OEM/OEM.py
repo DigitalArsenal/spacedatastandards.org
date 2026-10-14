@@ -151,7 +151,7 @@ def OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEPHEMERIS_DATA_BLOCKVector(builder, data):
-    OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data)
+    return OEMCreateEPHEMERIS_DATA_BLOCKVector(builder, data)
 
 def OEMAddCOMMENT(builder, COMMENT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)

@@ -218,7 +218,7 @@ def PCEEvaluationContextCreateCOORDINATE_SYSTEMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOORDINATE_SYSTEMSVector(builder, data):
-    PCEEvaluationContextCreateCOORDINATE_SYSTEMSVector(builder, data)
+    return PCEEvaluationContextCreateCOORDINATE_SYSTEMSVector(builder, data)
 
 def PCEEvaluationContextAddDEFAULT_COORDINATE_SYSTEM_NAME(builder, DEFAULT_COORDINATE_SYSTEM_NAME):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DEFAULT_COORDINATE_SYSTEM_NAME), 0)

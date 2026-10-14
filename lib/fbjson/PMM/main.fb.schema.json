@@ -485,7 +485,11 @@
         "CRYPTO_KEY_AGREEMENT",
         "CRYPTO_KDF",
         "SCHEDULE_CRON",
-        "STORAGE_INGEST"
+        "STORAGE_INGEST",
+        "P2P_READ",
+        "NODE_STATUS_READ",
+        "NODE_ACTIVITY_READ",
+        "SECRETS"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -601,6 +605,22 @@
         "STORAGE_INGEST": {
           "value": 36,
           "description": "Batch record ingest with source provenance tags (provider id, source name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a single record without source attribution. Hosts gate storage.ingest_with_source on this capability specifically."
+        },
+        "P2P_READ": {
+          "value": 37,
+          "description": "Read the node's view of its peer-to-peer network: known peers, the publication notices it has received and verified, and the latest dataset of a lane (p2p.* host operations)."
+        },
+        "NODE_STATUS_READ": {
+          "value": 38,
+          "description": "Read the node's own health: uptime, service state, storage and network figures (node_status_read.status)."
+        },
+        "NODE_ACTIVITY_READ": {
+          "value": 39,
+          "description": "Read the node's event log (node_activity_read.activity)."
+        },
+        "SECRETS": {
+          "value": 40,
+          "description": "Read and write operator-held secrets by identifier (credentials for upstream sources); the secret value is never persisted in a record."
         }
       }
     },
@@ -1931,6 +1951,22 @@
             "STORAGE_INGEST": {
               "value": 36,
               "description": "Batch record ingest with source provenance tags (provider id, source name/url, batch id) \u2014 distinct from STORAGE_WRITE, which stores a single record without source attribution. Hosts gate storage.ingest_with_source on this capability specifically."
+            },
+            "P2P_READ": {
+              "value": 37,
+              "description": "Read the node's view of its peer-to-peer network: known peers, the publication notices it has received and verified, and the latest dataset of a lane (p2p.* host operations)."
+            },
+            "NODE_STATUS_READ": {
+              "value": 38,
+              "description": "Read the node's own health: uptime, service state, storage and network figures (node_status_read.status)."
+            },
+            "NODE_ACTIVITY_READ": {
+              "value": 39,
+              "description": "Read the node's event log (node_activity_read.activity)."
+            },
+            "SECRETS": {
+              "value": 40,
+              "description": "Read and write operator-held secrets by identifier (credentials for upstream sources); the secret value is never persisted in a record."
             }
           }
         },

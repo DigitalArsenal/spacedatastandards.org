@@ -189,7 +189,7 @@ def TCFCreateDATAVector(builder, data):
     return builder.EndVector()
 
 def CreateDATAVector(builder, data):
-    TCFCreateDATAVector(builder, data)
+    return TCFCreateDATAVector(builder, data)
 
 def TCFAddFECF(builder, FECF):
     builder.PrependUint16Slot(8, FECF, 0)

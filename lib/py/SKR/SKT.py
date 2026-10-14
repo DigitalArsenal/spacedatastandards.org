@@ -693,7 +693,7 @@ def SKTCreatePOINTSVector(builder, data):
     return builder.EndVector()
 
 def CreatePOINTSVector(builder, data):
-    SKTCreatePOINTSVector(builder, data)
+    return SKTCreatePOINTSVector(builder, data)
 
 def SKTAddROW_COLLECTION_CID(builder, ROW_COLLECTION_CID):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(ROW_COLLECTION_CID), 0)
@@ -769,7 +769,7 @@ def SKTCreateMAP_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreateMAP_VALUESVector(builder, data):
-    SKTCreateMAP_VALUESVector(builder, data)
+    return SKTCreateMAP_VALUESVector(builder, data)
 
 def SKTAddSTRETCH(builder, STRETCH):
     builder.PrependUint8Slot(34, STRETCH, 0)
@@ -815,7 +815,7 @@ def SKTCreatePERCENTILE_LEVELSVector(builder, data):
     return builder.EndVector()
 
 def CreatePERCENTILE_LEVELSVector(builder, data):
-    SKTCreatePERCENTILE_LEVELSVector(builder, data)
+    return SKTCreatePERCENTILE_LEVELSVector(builder, data)
 
 def SKTAddPERCENTILE_VALUES(builder, PERCENTILE_VALUES):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(PERCENTILE_VALUES), 0)
@@ -837,7 +837,7 @@ def SKTCreatePERCENTILE_VALUESVector(builder, data):
     return builder.EndVector()
 
 def CreatePERCENTILE_VALUESVector(builder, data):
-    SKTCreatePERCENTILE_VALUESVector(builder, data)
+    return SKTCreatePERCENTILE_VALUESVector(builder, data)
 
 def SKTAddPAYLOAD_CID(builder, PAYLOAD_CID):
     builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(PAYLOAD_CID), 0)
@@ -879,7 +879,7 @@ def SKTCreateSOURCE_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCE_NAMESVector(builder, data):
-    SKTCreateSOURCE_NAMESVector(builder, data)
+    return SKTCreateSOURCE_NAMESVector(builder, data)
 
 def SKTAddPRODUCER_PEER_ID(builder, PRODUCER_PEER_ID):
     builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(PRODUCER_PEER_ID), 0)

@@ -23,7 +23,7 @@ public enum licensingProofMessageType: Int8, FlatbuffersVectorInitializable, Enu
 
 
 ///  Licensing proof message
-public struct LPF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LPF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

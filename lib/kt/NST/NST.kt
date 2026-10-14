@@ -64,6 +64,20 @@ class NST : Table() {
         }
     val sourcePeerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun sourcePeerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Entity tag of this set, for conditional requests.
+     */
+    val etag : String?
+        get() {
+            val o = __offset(10)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val etagAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(10, 1)
+    fun etagInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 10, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsNST(_bb: ByteBuffer): NST = getRootAsNST(_bb, NST())
@@ -72,14 +86,15 @@ class NST : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun NSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NST")
-        fun createNST(builder: FlatBufferBuilder, nodesOffset: Int, generatedAt: Long, sourcePeerIdOffset: Int) : Int {
-            builder.startTable(3)
+        fun createNST(builder: FlatBufferBuilder, nodesOffset: Int, generatedAt: Long, sourcePeerIdOffset: Int, etagOffset: Int) : Int {
+            builder.startTable(4)
             addGENERATEDAT(builder, generatedAt)
+            addETAG(builder, etagOffset)
             addSOURCEPEERID(builder, sourcePeerIdOffset)
             addNODES(builder, nodesOffset)
             return endNST(builder)
         }
-        fun startNST(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startNST(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addNODES(builder: FlatBufferBuilder, nodes: Int) = builder.addOffset(0, nodes, 0)
         fun createNodesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -91,6 +106,7 @@ class NST : Table() {
         fun startNodesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addGENERATEDAT(builder: FlatBufferBuilder, generatedAt: Long) = builder.addLong(1, generatedAt, 0L)
         fun addSOURCEPEERID(builder: FlatBufferBuilder, sourcePeerId: Int) = builder.addOffset(2, sourcePeerId, 0)
+        fun addETAG(builder: FlatBufferBuilder, etag: Int) = builder.addOffset(3, etag, 0)
         fun endNST(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

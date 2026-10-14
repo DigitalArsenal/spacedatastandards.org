@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "rndSource" : {
+      "type" : "string",
+      "enum": ["Unspecified", "SystemCsprng", "Hardware", "Deterministic", "Beacon"]
+    },
+    "RND" : {
+      "type" : "object",
+      "description" : "Random Data - a request for random bytes, or the bytes.",
+      "properties" : {
+        "LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of bytes requested or delivered."
+              },
+        "BYTES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The random bytes; empty in a request."
+              },
+        "SOURCE" : {
+                "$ref" : "#/definitions/rndSource"
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the bytes were generated; 0 in a request."
+              },
+        "GENERATOR_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the generator or beacon (a device serial, a beacon URL)."
+              },
+        "SEQUENCE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Position of this block in the generator's output, for beacons and\ndeterministic generators; 0 = not sequenced."
+              },
+        "SEED" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Seed of a Deterministic generator, so the block can be reproduced."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/RND"
+}

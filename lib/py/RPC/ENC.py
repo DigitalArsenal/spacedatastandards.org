@@ -247,7 +247,7 @@ def ENCCreateEPHEMERAL_PUBLIC_KEYVector(builder, data):
     return builder.EndVector()
 
 def CreateEPHEMERAL_PUBLIC_KEYVector(builder, data):
-    ENCCreateEPHEMERAL_PUBLIC_KEYVector(builder, data)
+    return ENCCreateEPHEMERAL_PUBLIC_KEYVector(builder, data)
 
 def ENCAddNONCE_START(builder, NONCE_START):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE_START), 0)
@@ -269,7 +269,7 @@ def ENCCreateNONCE_STARTVector(builder, data):
     return builder.EndVector()
 
 def CreateNONCE_STARTVector(builder, data):
-    ENCCreateNONCE_STARTVector(builder, data)
+    return ENCCreateNONCE_STARTVector(builder, data)
 
 def ENCAddRECIPIENT_KEY_ID(builder, RECIPIENT_KEY_ID):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(RECIPIENT_KEY_ID), 0)
@@ -291,7 +291,7 @@ def ENCCreateRECIPIENT_KEY_IDVector(builder, data):
     return builder.EndVector()
 
 def CreateRECIPIENT_KEY_IDVector(builder, data):
-    ENCCreateRECIPIENT_KEY_IDVector(builder, data)
+    return ENCCreateRECIPIENT_KEY_IDVector(builder, data)
 
 def ENCAddCONTEXT(builder, CONTEXT):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CONTEXT), 0)
@@ -319,7 +319,7 @@ def ENCCreateSCHEMA_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateSCHEMA_HASHVector(builder, data):
-    ENCCreateSCHEMA_HASHVector(builder, data)
+    return ENCCreateSCHEMA_HASHVector(builder, data)
 
 def ENCAddROOT_TYPE(builder, ROOT_TYPE):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ROOT_TYPE), 0)

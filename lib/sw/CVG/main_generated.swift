@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Coverage Grid Figure-of-Merit
-public struct CVG: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct CVG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

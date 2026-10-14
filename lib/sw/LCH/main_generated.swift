@@ -36,7 +36,7 @@ public enum licensingChallengeMessageType: Int8, FlatbuffersVectorInitializable,
 
 
 ///  Licensing challenge message
-public struct LCH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LCH: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

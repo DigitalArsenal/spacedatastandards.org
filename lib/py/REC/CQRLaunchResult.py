@@ -186,7 +186,7 @@ def CQRLaunchResultCreateCLOSURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCLOSURESVector(builder, data):
-    CQRLaunchResultCreateCLOSURESVector(builder, data)
+    return CQRLaunchResultCreateCLOSURESVector(builder, data)
 
 def CQRLaunchResultAddAPPROACHES(builder, APPROACHES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(APPROACHES), 0)
@@ -204,7 +204,7 @@ def CQRLaunchResultCreateAPPROACHESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAPPROACHESVector(builder, data):
-    CQRLaunchResultCreateAPPROACHESVector(builder, data)
+    return CQRLaunchResultCreateAPPROACHESVector(builder, data)
 
 def CQRLaunchResultAddSTATISTICS(builder, STATISTICS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(STATISTICS), 0)

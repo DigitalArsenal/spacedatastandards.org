@@ -22,22 +22,11 @@ import kotlin.math.sign
 @Suppress("unused")
 class KMF : Table() {
 
-    /** Encryption context for decrypting encrypted fields */
-    var encryptionCtx: ByteArray? = null
-
     fun __init(_i: Int, _bb: ByteBuffer)  {
         __reset(_i, _bb)
     }
-    fun __init(_i: Int, _bb: ByteBuffer, _encryptionCtx: ByteArray?)  {
-        __reset(_i, _bb)
-        encryptionCtx = _encryptionCtx
-    }
     fun __assign(_i: Int, _bb: ByteBuffer) : KMF {
         __init(_i, _bb)
-        return this
-    }
-    fun __assign(_i: Int, _bb: ByteBuffer, _encryptionCtx: ByteArray?) : KMF {
-        __init(_i, _bb, _encryptionCtx)
         return this
     }
     /**
@@ -120,11 +109,26 @@ class KMF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun getRootAsKMF(_bb: ByteBuffer, _encryptionCtx: ByteArray?): KMF = getRootAsKMF(_bb, KMF(), _encryptionCtx)
-        fun getRootAsKMF(_bb: ByteBuffer, obj: KMF, _encryptionCtx: ByteArray?): KMF {
-            _bb.order(ByteOrder.LITTLE_ENDIAN)
-            return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb, _encryptionCtx))
-        }
+        // Field-encryption format 3 walk program of KMF (see FlatbuffersEncryption).
+        private val FLATBUFFERS_ENCRYPTION_PROGRAM = intArrayOf(
+            1, 2, 1, 2, 12, 1
+        )
+        /**
+         * Encrypts, in place, the (encrypted) fields of the KMF buffer that starts at
+         * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+         * an unsigned 32-bit value, unique per buffer under the key). Throws
+         * IllegalArgumentException, before any byte changes, for a bad key or a
+         * malformed buffer.
+         */
+        fun encryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
+        /**
+         * Decrypts, in place, the (encrypted) fields of the KMF buffer that starts at
+         * _bb.position(), with field-encryption format 3 (key: 32 bytes; recordIndex:
+         * an unsigned 32-bit value, unique per buffer under the key). Throws
+         * IllegalArgumentException, before any byte changes, for a bad key or a
+         * malformed buffer.
+         */
+        fun decryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
         fun KMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$KMF")
         fun createKMF(builder: FlatBufferBuilder, keyIdOffset: Int, role: Byte, algorithm: Byte, encoding: Byte, keyBytesOffset: Int, version: UInt, expiresAt: ULong) : Int {
             builder.startTable(7)

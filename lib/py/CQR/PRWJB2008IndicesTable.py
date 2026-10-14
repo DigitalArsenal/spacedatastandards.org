@@ -77,7 +77,7 @@ def PRWJB2008IndicesTableCreateROWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateROWSVector(builder, data):
-    PRWJB2008IndicesTableCreateROWSVector(builder, data)
+    return PRWJB2008IndicesTableCreateROWSVector(builder, data)
 
 def PRWJB2008IndicesTableEnd(builder):
     return builder.EndObject()

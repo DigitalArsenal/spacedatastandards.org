@@ -27,7 +27,7 @@ public enum odMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Sensor contribution to an orbit determination solution
-public struct odSensorContribution: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct odSensorContribution: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -101,7 +101,7 @@ public struct odSensorContribution: FlatBufferTable, FlatbuffersVectorInitializa
 }
 
 ///  Orbit Determination Results
-public struct OBD: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OBD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

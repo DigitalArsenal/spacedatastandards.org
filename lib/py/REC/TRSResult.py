@@ -380,7 +380,7 @@ def TRSResultCreateVISIBLE_MASKVector(builder, data):
     return builder.EndVector()
 
 def CreateVISIBLE_MASKVector(builder, data):
-    TRSResultCreateVISIBLE_MASKVector(builder, data)
+    return TRSResultCreateVISIBLE_MASKVector(builder, data)
 
 def TRSResultAddOCCLUDED_MASK(builder, OCCLUDED_MASK):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(OCCLUDED_MASK), 0)
@@ -402,7 +402,7 @@ def TRSResultCreateOCCLUDED_MASKVector(builder, data):
     return builder.EndVector()
 
 def CreateOCCLUDED_MASKVector(builder, data):
-    TRSResultCreateOCCLUDED_MASKVector(builder, data)
+    return TRSResultCreateOCCLUDED_MASKVector(builder, data)
 
 def TRSResultAddPOSITIVE_LINK_MASK(builder, POSITIVE_LINK_MASK):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(POSITIVE_LINK_MASK), 0)
@@ -424,7 +424,7 @@ def TRSResultCreatePOSITIVE_LINK_MASKVector(builder, data):
     return builder.EndVector()
 
 def CreatePOSITIVE_LINK_MASKVector(builder, data):
-    TRSResultCreatePOSITIVE_LINK_MASKVector(builder, data)
+    return TRSResultCreatePOSITIVE_LINK_MASKVector(builder, data)
 
 def TRSResultAddPATH_CLASS(builder, PATH_CLASS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PATH_CLASS), 0)
@@ -446,7 +446,7 @@ def TRSResultCreatePATH_CLASSVector(builder, data):
     return builder.EndVector()
 
 def CreatePATH_CLASSVector(builder, data):
-    TRSResultCreatePATH_CLASSVector(builder, data)
+    return TRSResultCreatePATH_CLASSVector(builder, data)
 
 def TRSResultAddPATH_LOSS_DB(builder, PATH_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(PATH_LOSS_DB), 0)
@@ -468,7 +468,7 @@ def TRSResultCreatePATH_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreatePATH_LOSS_DBVector(builder, data):
-    TRSResultCreatePATH_LOSS_DBVector(builder, data)
+    return TRSResultCreatePATH_LOSS_DBVector(builder, data)
 
 def TRSResultAddEXCESS_LOSS_DB(builder, EXCESS_LOSS_DB):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EXCESS_LOSS_DB), 0)
@@ -490,7 +490,7 @@ def TRSResultCreateEXCESS_LOSS_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateEXCESS_LOSS_DBVector(builder, data):
-    TRSResultCreateEXCESS_LOSS_DBVector(builder, data)
+    return TRSResultCreateEXCESS_LOSS_DBVector(builder, data)
 
 def TRSResultAddLINK_MARGIN_DB(builder, LINK_MARGIN_DB):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_MARGIN_DB), 0)
@@ -512,7 +512,7 @@ def TRSResultCreateLINK_MARGIN_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateLINK_MARGIN_DBVector(builder, data):
-    TRSResultCreateLINK_MARGIN_DBVector(builder, data)
+    return TRSResultCreateLINK_MARGIN_DBVector(builder, data)
 
 def TRSResultAddDIFFRACTION_PARAMETER(builder, DIFFRACTION_PARAMETER):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DIFFRACTION_PARAMETER), 0)
@@ -534,7 +534,7 @@ def TRSResultCreateDIFFRACTION_PARAMETERVector(builder, data):
     return builder.EndVector()
 
 def CreateDIFFRACTION_PARAMETERVector(builder, data):
-    TRSResultCreateDIFFRACTION_PARAMETERVector(builder, data)
+    return TRSResultCreateDIFFRACTION_PARAMETERVector(builder, data)
 
 def TRSResultAddREFLECTION_CONTRIBUTION_DB(builder, REFLECTION_CONTRIBUTION_DB):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(REFLECTION_CONTRIBUTION_DB), 0)
@@ -556,7 +556,7 @@ def TRSResultCreateREFLECTION_CONTRIBUTION_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateREFLECTION_CONTRIBUTION_DBVector(builder, data):
-    TRSResultCreateREFLECTION_CONTRIBUTION_DBVector(builder, data)
+    return TRSResultCreateREFLECTION_CONTRIBUTION_DBVector(builder, data)
 
 def TRSResultAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

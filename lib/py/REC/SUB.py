@@ -241,7 +241,7 @@ def SUBCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    SUBCreateSIGNATUREVector(builder, data)
+    return SUBCreateSIGNATUREVector(builder, data)
 
 def SUBEnd(builder):
     return builder.EndObject()

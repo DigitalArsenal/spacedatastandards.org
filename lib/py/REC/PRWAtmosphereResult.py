@@ -208,7 +208,7 @@ def PRWAtmosphereResultCreateNUMBER_DENSITIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNUMBER_DENSITIESVector(builder, data):
-    PRWAtmosphereResultCreateNUMBER_DENSITIESVector(builder, data)
+    return PRWAtmosphereResultCreateNUMBER_DENSITIESVector(builder, data)
 
 def PRWAtmosphereResultEnd(builder):
     return builder.EndObject()

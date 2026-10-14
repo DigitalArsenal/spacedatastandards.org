@@ -341,7 +341,7 @@ def OCMTrajectoryBlockCreateLINESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINESVector(builder, data):
-    OCMTrajectoryBlockCreateLINESVector(builder, data)
+    return OCMTrajectoryBlockCreateLINESVector(builder, data)
 
 def OCMTrajectoryBlockEnd(builder):
     return builder.EndObject()

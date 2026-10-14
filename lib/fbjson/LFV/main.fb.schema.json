@@ -1,0 +1,3854 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CelestialFrame": {
+      "type": "string",
+      "enum": [
+        "GCRF",
+        "ICRF",
+        "J2000",
+        "J2000A",
+        "EME2000",
+        "TEMEOFDATE",
+        "GTOD",
+        "CIRS",
+        "MOD_EARTH",
+        "MOD_CB",
+        "MOD_MOON",
+        "TOD_EARTH",
+        "TOD_CB",
+        "TOD_MOON",
+        "TOE_EARTH",
+        "TOE_CB",
+        "TOE_MOON",
+        "ITRF2000",
+        "ITRF93",
+        "ITRF97",
+        "EFG",
+        "FIXED_CB",
+        "FIXED_EARTH",
+        "WGS84",
+        "DTRFYYYY",
+        "ALIGN_EARTH",
+        "ALIGN_CB",
+        "B1950"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GCRF": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+        },
+        "ICRF": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+        },
+        "J2000": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+        },
+        "J2000A": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+        },
+        "EME2000": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+        },
+        "TEMEOFDATE": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+        },
+        "GTOD": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+        },
+        "CIRS": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+        },
+        "MOD_EARTH": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+        },
+        "MOD_CB": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+        },
+        "MOD_MOON": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+        },
+        "TOD_EARTH": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+        },
+        "TOD_CB": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+        },
+        "TOD_MOON": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+        },
+        "TOE_EARTH": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+        },
+        "TOE_CB": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+        },
+        "TOE_MOON": {
+          "value": 16,
+          "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+        },
+        "ITRF2000": {
+          "value": 17,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+        },
+        "ITRF93": {
+          "value": 18,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+        },
+        "ITRF97": {
+          "value": 19,
+          "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+        },
+        "EFG": {
+          "value": 20,
+          "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+        },
+        "FIXED_CB": {
+          "value": 21,
+          "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+        },
+        "FIXED_EARTH": {
+          "value": 22,
+          "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+        },
+        "WGS84": {
+          "value": 23,
+          "description": "WGS84 Earth-fixed terrestrial system."
+        },
+        "DTRFYYYY": {
+          "value": 24,
+          "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+        },
+        "ALIGN_EARTH": {
+          "value": 25,
+          "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+        },
+        "ALIGN_CB": {
+          "value": 26,
+          "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+        },
+        "B1950": {
+          "value": 27,
+          "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+        }
+      }
+    },
+    "SpacecraftFrame": {
+      "type": "string",
+      "enum": [
+        "ACC_i",
+        "ACTUATOR_i",
+        "AST_i",
+        "CSS_i",
+        "DSS_i",
+        "ESA_i",
+        "GYRO_FRAME_i",
+        "IMU_FRAME_i",
+        "INSTRUMENT_i",
+        "MTA_i",
+        "RW_i",
+        "SA_i",
+        "SC_BODY_i",
+        "SENSOR_i",
+        "STARTRACKER_i",
+        "TAM_i"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACC_i": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+        },
+        "ACTUATOR_i": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+        },
+        "AST_i": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+        },
+        "CSS_i": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+        },
+        "DSS_i": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+        },
+        "ESA_i": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+        },
+        "GYRO_FRAME_i": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+        },
+        "IMU_FRAME_i": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+        },
+        "INSTRUMENT_i": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+        },
+        "MTA_i": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+        },
+        "RW_i": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+        },
+        "SA_i": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+        },
+        "SC_BODY_i": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+        },
+        "SENSOR_i": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+        },
+        "STARTRACKER_i": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+        },
+        "TAM_i": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+        }
+      }
+    },
+    "OrbitFrame": {
+      "type": "string",
+      "enum": [
+        "EQW_INERTIAL",
+        "LVLH_INERTIAL",
+        "LVLH_ROTATING",
+        "NSW_INERTIAL",
+        "NSW_ROTATING",
+        "NTW_INERTIAL",
+        "NTW_ROTATING",
+        "PQW_INERTIAL",
+        "RSW_INERTIAL",
+        "RSW_ROTATING",
+        "SEZ_INERTIAL",
+        "SEZ_ROTATING",
+        "TNW_INERTIAL",
+        "TNW_ROTATING",
+        "VNC_INERTIAL",
+        "VNC_ROTATING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EQW_INERTIAL": {
+          "value": 0,
+          "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+        },
+        "LVLH_INERTIAL": {
+          "value": 1,
+          "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+        },
+        "LVLH_ROTATING": {
+          "value": 2,
+          "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+        },
+        "NSW_INERTIAL": {
+          "value": 3,
+          "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+        },
+        "NSW_ROTATING": {
+          "value": 4,
+          "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+        },
+        "NTW_INERTIAL": {
+          "value": 5,
+          "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+        },
+        "NTW_ROTATING": {
+          "value": 6,
+          "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+        },
+        "PQW_INERTIAL": {
+          "value": 7,
+          "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+        },
+        "RSW_INERTIAL": {
+          "value": 8,
+          "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+        },
+        "RSW_ROTATING": {
+          "value": 9,
+          "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+        },
+        "SEZ_INERTIAL": {
+          "value": 10,
+          "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+        },
+        "SEZ_ROTATING": {
+          "value": 11,
+          "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+        },
+        "TNW_INERTIAL": {
+          "value": 12,
+          "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+        },
+        "TNW_ROTATING": {
+          "value": 13,
+          "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+        },
+        "VNC_INERTIAL": {
+          "value": 14,
+          "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+        },
+        "VNC_ROTATING": {
+          "value": 15,
+          "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+        }
+      }
+    },
+    "CustomFrame": {
+      "type": "string",
+      "enum": [
+        "ECEF",
+        "TEME",
+        "TEMEOFEPOCH",
+        "ENU",
+        "NED",
+        "NEU",
+        "RIC",
+        "RTN",
+        "TVN",
+        "VVLH",
+        "QSW",
+        "LTP",
+        "LVLH",
+        "PNE",
+        "BRF",
+        "RSW",
+        "TNW",
+        "UVW"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ECEF": {
+          "value": 0,
+          "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+        },
+        "TEME": {
+          "value": 1,
+          "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+        },
+        "TEMEOFEPOCH": {
+          "value": 2,
+          "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+        },
+        "ENU": {
+          "value": 3,
+          "description": "East-North-Up: Local tangent plane for surface points."
+        },
+        "NED": {
+          "value": 4,
+          "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+        },
+        "NEU": {
+          "value": 5,
+          "description": "North-East-Up: Local tangent plane variant with Up positive."
+        },
+        "RIC": {
+          "value": 6,
+          "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+        },
+        "RTN": {
+          "value": 7,
+          "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+        },
+        "TVN": {
+          "value": 8,
+          "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+        },
+        "VVLH": {
+          "value": 9,
+          "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+        },
+        "QSW": {
+          "value": 10,
+          "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+        },
+        "LTP": {
+          "value": 11,
+          "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+        },
+        "LVLH": {
+          "value": 12,
+          "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+        },
+        "PNE": {
+          "value": 13,
+          "description": "Polar-North-East: Surface coordinate frame."
+        },
+        "BRF": {
+          "value": 14,
+          "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+        },
+        "RSW": {
+          "value": 15,
+          "description": "Radial-Along-track-Cross-track: Same as RSW."
+        },
+        "TNW": {
+          "value": 16,
+          "description": "Tangential-Normal-Cross-track: Same as TNW."
+        },
+        "UVW": {
+          "value": 17,
+          "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+        }
+      }
+    },
+    "rfmAxisType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "MEAN_EQUATOR_EQUINOX_J2000",
+        "MEAN_ECLIPTIC_EQUINOX_J2000",
+        "ICRF",
+        "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+        "MEAN_OF_DATE_EQUATOR",
+        "MEAN_OF_DATE_ECLIPTIC",
+        "TRUE_OF_DATE_EQUATOR",
+        "TRUE_OF_DATE_ECLIPTIC",
+        "MEAN_OF_EPOCH_EQUATOR",
+        "MEAN_OF_EPOCH_ECLIPTIC",
+        "TRUE_OF_EPOCH_EQUATOR",
+        "TRUE_OF_EPOCH_ECLIPTIC",
+        "BODY_FIXED",
+        "BODY_INERTIAL",
+        "OBJECT_REFERENCED",
+        "LOCAL_ALIGNED_CONSTRAINED",
+        "BODY_EQUATOR",
+        "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+        "SOLAR_MAGNETOSPHERIC",
+        "TOPOCENTRIC",
+        "BODY_SPIN_SUN",
+        "EPHEMERIS_KERNEL_DEFINED",
+        "MEAN_OF_DATE_EQUATOR_FK5",
+        "TRUE_OF_DATE_EQUATOR_FK5",
+        "TRUE_OF_DATE_EQUATOR_IERS1996",
+        "TRUE_OF_DATE_EQUATOR_IERS2003",
+        "TOPOCENTRIC_EAST_NORTH_UP",
+        "TOPOCENTRIC_NORTH_EAST_DOWN",
+        "TOPOCENTRIC_SOUTH_EAST_ZENITH",
+        "ORBITAL_VELOCITY_NORMAL_CONORMAL",
+        "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+        "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "MEAN_EQUATOR_EQUINOX_J2000": {
+          "value": 1,
+          "description": "Mean equator and mean equinox of the J2000.0 epoch."
+        },
+        "MEAN_ECLIPTIC_EQUINOX_J2000": {
+          "value": 2,
+          "description": "Mean ecliptic and mean equinox of the J2000.0 epoch."
+        },
+        "ICRF": {
+          "value": 3,
+          "description": "International Celestial Reference Frame axes."
+        },
+        "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE": {
+          "value": 4,
+          "description": "True equator, mean equinox of date."
+        },
+        "MEAN_OF_DATE_EQUATOR": {
+          "value": 5,
+          "description": "Mean equator of date (precession applied to the epoch of the state)."
+        },
+        "MEAN_OF_DATE_ECLIPTIC": {
+          "value": 6,
+          "description": "Mean ecliptic of date."
+        },
+        "TRUE_OF_DATE_EQUATOR": {
+          "value": 7,
+          "description": "True equator of date (precession and nutation applied)."
+        },
+        "TRUE_OF_DATE_ECLIPTIC": {
+          "value": 8,
+          "description": "True ecliptic of date."
+        },
+        "MEAN_OF_EPOCH_EQUATOR": {
+          "value": 9,
+          "description": "Mean equator of a fixed reference epoch."
+        },
+        "MEAN_OF_EPOCH_ECLIPTIC": {
+          "value": 10,
+          "description": "Mean ecliptic of a fixed reference epoch."
+        },
+        "TRUE_OF_EPOCH_EQUATOR": {
+          "value": 11,
+          "description": "True equator of a fixed reference epoch."
+        },
+        "TRUE_OF_EPOCH_ECLIPTIC": {
+          "value": 12,
+          "description": "True ecliptic of a fixed reference epoch."
+        },
+        "BODY_FIXED": {
+          "value": 13,
+          "description": "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+        },
+        "BODY_INERTIAL": {
+          "value": 14,
+          "description": "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+        },
+        "OBJECT_REFERENCED": {
+          "value": 15,
+          "description": "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+        },
+        "LOCAL_ALIGNED_CONSTRAINED": {
+          "value": 16,
+          "description": "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+        },
+        "BODY_EQUATOR": {
+          "value": 17,
+          "description": "Axes in the reference body's equatorial plane at the requested epoch."
+        },
+        "SOLAR_ECLIPTIC_MAGNETOSPHERIC": {
+          "value": 18,
+          "description": "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+        },
+        "SOLAR_MAGNETOSPHERIC": {
+          "value": 19,
+          "description": "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+        },
+        "TOPOCENTRIC": {
+          "value": 20,
+          "description": "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+        },
+        "BODY_SPIN_SUN": {
+          "value": 21,
+          "description": "Axes fixed by the body spin axis and the body-to-Sun direction."
+        },
+        "EPHEMERIS_KERNEL_DEFINED": {
+          "value": 22,
+          "description": "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+        },
+        "MEAN_OF_DATE_EQUATOR_FK5": {
+          "value": 23,
+          "description": "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+        },
+        "TRUE_OF_DATE_EQUATOR_FK5": {
+          "value": 24,
+          "description": "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+        },
+        "TRUE_OF_DATE_EQUATOR_IERS1996": {
+          "value": 25,
+          "description": "True equator of date computed with the IERS Conventions (1996) reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980 nutation with the observed celestial pole offsets applied. Distinct from TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR (IAU-2006/2000A)."
+        },
+        "TRUE_OF_DATE_EQUATOR_IERS2003": {
+          "value": 26,
+          "description": "True equator of date computed with the IERS Conventions (2003) reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976 precession with the IAU 2000 precession-rate corrections. The mean-of-date equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5."
+        },
+        "TOPOCENTRIC_EAST_NORTH_UP": {
+          "value": 27,
+          "description": "Topocentric East-North-Up axes at a surface site; the site is carried on RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does."
+        },
+        "TOPOCENTRIC_NORTH_EAST_DOWN": {
+          "value": 28,
+          "description": "Topocentric North-East-Down axes at a surface site."
+        },
+        "TOPOCENTRIC_SOUTH_EAST_ZENITH": {
+          "value": 29,
+          "description": "Topocentric South-East-Zenith axes at a surface site."
+        },
+        "ORBITAL_VELOCITY_NORMAL_CONORMAL": {
+          "value": 30,
+          "description": "Orbital axes from the object's state: X along the velocity, Z along the orbit normal, Y completing the right-handed set (VNC). The object is the origin body of the coordinate system."
+        },
+        "ORBITAL_RADIAL_TRANSVERSE_NORMAL": {
+          "value": 31,
+          "description": "Orbital axes from the object's state: X radial (outward), Z along the orbit normal, Y transverse completing the set (RTN, also RSW)."
+        },
+        "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
+          "value": 32,
+          "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+        }
+      }
+    },
+    "rfmOriginKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CELESTIAL_BODY",
+        "BARYCENTRE",
+        "LIBRATION_POINT",
+        "SPACE_OBJECT",
+        "GROUND_SITE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CELESTIAL_BODY": {
+          "value": 1,
+          "description": "The centre of mass of a single celestial body."
+        },
+        "BARYCENTRE": {
+          "value": 2,
+          "description": "The barycentre of a named system of bodies."
+        },
+        "LIBRATION_POINT": {
+          "value": 3,
+          "description": "A libration (Lagrange) point of a two-body system."
+        },
+        "SPACE_OBJECT": {
+          "value": 4,
+          "description": "Another tracked space object, identified by OBJECT_ID."
+        },
+        "GROUND_SITE": {
+          "value": 5,
+          "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+        }
+      }
+    },
+    "rfmLibrationPoint": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "L1",
+        "L2",
+        "L3",
+        "L4",
+        "L5"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "L1": {
+          "value": 1
+        },
+        "L2": {
+          "value": 2
+        },
+        "L3": {
+          "value": 3
+        },
+        "L4": {
+          "value": 4
+        },
+        "L5": {
+          "value": 5
+        }
+      }
+    },
+    "rfmVectorSpecification": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RADIAL",
+        "ANTI_RADIAL",
+        "VELOCITY",
+        "ANTI_VELOCITY",
+        "ORBIT_NORMAL",
+        "ANTI_ORBIT_NORMAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RADIAL": {
+          "value": 1,
+          "description": "Primary-to-secondary position direction."
+        },
+        "ANTI_RADIAL": {
+          "value": 2,
+          "description": "Negated RADIAL."
+        },
+        "VELOCITY": {
+          "value": 3,
+          "description": "Relative velocity direction."
+        },
+        "ANTI_VELOCITY": {
+          "value": 4,
+          "description": "Negated VELOCITY."
+        },
+        "ORBIT_NORMAL": {
+          "value": 5,
+          "description": "Orbit normal, RADIAL crossed into VELOCITY."
+        },
+        "ANTI_ORBIT_NORMAL": {
+          "value": 6,
+          "description": "Negated ORBIT_NORMAL."
+        }
+      }
+    },
+    "RFMUnion": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "CelestialFrameWrapper",
+        "SpacecraftFrameWrapper",
+        "OrbitFrameWrapper",
+        "CustomFrameWrapper",
+        "RFMCoordinateSystemWrapper"
+      ]
+    },
+    "timingStandard": {
+      "type": "string",
+      "enum": [
+        "GMST",
+        "GPS",
+        "MET",
+        "MRT",
+        "SCLK",
+        "TAI",
+        "TCB",
+        "TDB",
+        "TCG",
+        "TT",
+        "UT1",
+        "UTC",
+        "GLONASS",
+        "GST",
+        "QZSS",
+        "BDT",
+        "NAVIC",
+        "SBAS",
+        "A1"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GMST": {
+          "value": 0,
+          "description": "Greenwich Mean Sidereal Time"
+        },
+        "GPS": {
+          "value": 1,
+          "description": "Global Positioning System"
+        },
+        "MET": {
+          "value": 2,
+          "description": "Mission Elapsed Time"
+        },
+        "MRT": {
+          "value": 3,
+          "description": "Mission Relative Time"
+        },
+        "SCLK": {
+          "value": 4,
+          "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+        },
+        "TAI": {
+          "value": 5,
+          "description": "International Atomic Time"
+        },
+        "TCB": {
+          "value": 6,
+          "description": "Barycentric Coordinate Time"
+        },
+        "TDB": {
+          "value": 7,
+          "description": "Barycentric Dynamical Time"
+        },
+        "TCG": {
+          "value": 8,
+          "description": "Geocentric Coordinate Time"
+        },
+        "TT": {
+          "value": 9,
+          "description": "Terrestrial Time"
+        },
+        "UT1": {
+          "value": 10,
+          "description": "Universal Time"
+        },
+        "UTC": {
+          "value": 11,
+          "description": "Coordinated Universal Time"
+        },
+        "GLONASS": {
+          "value": 12,
+          "description": "GLONASS Time"
+        },
+        "GST": {
+          "value": 13,
+          "description": "Galileo System Time"
+        },
+        "QZSS": {
+          "value": 14,
+          "description": "Quasi-Zenith Satellite System Time"
+        },
+        "BDT": {
+          "value": 15,
+          "description": "BeiDou Time"
+        },
+        "NAVIC": {
+          "value": 16,
+          "description": "Navigation with Indian Constellation Time"
+        },
+        "SBAS": {
+          "value": 17,
+          "description": "Satellite-Based Augmentation System Time"
+        },
+        "A1": {
+          "value": 18,
+          "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
+        }
+      }
+    },
+    "timEpochRepresentation": {
+      "type": "string",
+      "enum": [
+        "JULIAN_DATE",
+        "MODIFIED_JULIAN_DATE",
+        "UNIX_SECONDS",
+        "ISO8601",
+        "GPS_SECONDS",
+        "GNSS_WEEK_SECONDS",
+        "CCSDS_TIME_CODE",
+        "MISSION_ELAPSED_SECONDS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "JULIAN_DATE": {
+          "value": 0,
+          "description": "Julian Date day count."
+        },
+        "MODIFIED_JULIAN_DATE": {
+          "value": 1,
+          "description": "Modified Julian Date day count (JD - 2400000.5)."
+        },
+        "UNIX_SECONDS": {
+          "value": 2,
+          "description": "Seconds since 1970-01-01T00:00:00 UTC."
+        },
+        "ISO8601": {
+          "value": 3,
+          "description": "ISO 8601 timestamp text."
+        },
+        "GPS_SECONDS": {
+          "value": 4,
+          "description": "Seconds since 1980-01-06T00:00:00 GPS."
+        },
+        "GNSS_WEEK_SECONDS": {
+          "value": 5,
+          "description": "GNSS week number plus seconds within the week."
+        },
+        "CCSDS_TIME_CODE": {
+          "value": 6,
+          "description": "CCSDS binary time-code field with preamble metadata."
+        },
+        "MISSION_ELAPSED_SECONDS": {
+          "value": 7,
+          "description": "Seconds from an application-defined mission epoch."
+        }
+      }
+    },
+    "timCcsdsTimeCodeKind": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "UNSEGMENTED",
+        "DAY_SEGMENTED",
+        "CALENDAR_SEGMENTED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "No CCSDS time code selected."
+        },
+        "UNSEGMENTED": {
+          "value": 1,
+          "description": "CCSDS Unsegmented Time Code (CUC)."
+        },
+        "DAY_SEGMENTED": {
+          "value": 2,
+          "description": "CCSDS Day Segmented Time Code (CDS)."
+        },
+        "CALENDAR_SEGMENTED": {
+          "value": 3,
+          "description": "CCSDS Calendar Segmented Time Code (CCS)."
+        }
+      }
+    },
+    "timConversionStatus": {
+      "type": "string",
+      "enum": [
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_TIME_SYSTEM",
+        "LEAP_SECOND_DATA_REQUIRED",
+        "EOP_DATA_REQUIRED",
+        "OUT_OF_RANGE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OK": {
+          "value": 0,
+          "description": "Conversion completed."
+        },
+        "INVALID_INPUT": {
+          "value": 1,
+          "description": "Input epoch or requested representation is invalid."
+        },
+        "UNSUPPORTED_TIME_SYSTEM": {
+          "value": 2,
+          "description": "Requested source or target time system is not supported."
+        },
+        "LEAP_SECOND_DATA_REQUIRED": {
+          "value": 3,
+          "description": "Conversion requires leap-second data that was not available."
+        },
+        "EOP_DATA_REQUIRED": {
+          "value": 4,
+          "description": "Conversion requires Earth-orientation data that was not available."
+        },
+        "OUT_OF_RANGE": {
+          "value": 5,
+          "description": "Requested instant is outside the supported conversion range."
+        }
+      }
+    },
+    "meanElementSource": {
+      "type": "string",
+      "enum": [
+        "SGP4",
+        "SGP4XP",
+        "DSST",
+        "USM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SGP4": {
+          "value": 0,
+          "description": "Simplified General Perturbation Model 4"
+        },
+        "SGP4XP": {
+          "value": 1,
+          "description": "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+        },
+        "DSST": {
+          "value": 2,
+          "description": "Draper Semi-analytical Satellite Theory"
+        },
+        "USM": {
+          "value": 3,
+          "description": "Universal Semianalytical Method"
+        }
+      }
+    },
+    "covarianceCalibration": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Uncalibrated",
+        "Calibrated"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Calibration not stated"
+        },
+        "Uncalibrated": {
+          "value": 1,
+          "description": "Not measured against independent reference states, or measured and failed"
+        },
+        "Calibrated": {
+          "value": 2,
+          "description": "Measured against independent reference states and passed"
+        }
+      }
+    },
+    "covarianceRule": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Operator",
+        "ScaledFit",
+        "SourceModel",
+        "PooledModel"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "Operator": {
+          "value": 1,
+          "description": "The operator's covariance, as supplied"
+        },
+        "ScaledFit": {
+          "value": 2,
+          "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+        },
+        "SourceModel": {
+          "value": 3,
+          "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+        },
+        "PooledModel": {
+          "value": 4,
+          "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+        }
+      }
+    },
+    "pvnSourceKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ElementSet",
+        "Ephemeris",
+        "Observation"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "ElementSet": {
+          "value": 1,
+          "description": "Element sets of a catalog"
+        },
+        "Ephemeris": {
+          "value": 2,
+          "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+        },
+        "Observation": {
+          "value": 3,
+          "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        }
+      }
+    },
+    "pvnLicenseClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Reproducible",
+        "CiteOnly",
+        "ShareAlike",
+        "NonCommercial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated. Never a grant: treated as CiteOnly."
+        },
+        "Reproducible": {
+          "value": 1,
+          "description": "The records may be republished, with the credit the terms ask."
+        },
+        "CiteOnly": {
+          "value": 2,
+          "description": "The records are computed on and cited, never republished."
+        },
+        "ShareAlike": {
+          "value": 3,
+          "description": "The records may be republished under the same terms, which every derived record carries."
+        },
+        "NonCommercial": {
+          "value": 4,
+          "description": "The records may be republished for non-commercial use only."
+        }
+      }
+    },
+    "ephemerisFormat": {
+      "type": "string",
+      "enum": [
+        "SGP",
+        "SGP4",
+        "SDP4",
+        "SGP8",
+        "SDP8"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SGP": {
+          "value": 0,
+          "description": "Simplified General Perturbation Model"
+        },
+        "SGP4": {
+          "value": 1,
+          "description": "Simplified General Perturbation Model 4"
+        },
+        "SDP4": {
+          "value": 2,
+          "description": "Simplified Deep Space Perturbation Model 4"
+        },
+        "SGP8": {
+          "value": 3,
+          "description": "Simplified General Perturbation Model 8"
+        },
+        "SDP8": {
+          "value": 4,
+          "description": "Simplified Deep Space Perturbation Model 8"
+        }
+      }
+    },
+    "lfvRole": {
+      "type": "string",
+      "enum": [
+        "Unlabelled",
+        "Real",
+        "Decoy"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unlabelled": {
+          "value": 0,
+          "description": "Not labelled (a row to be scored)."
+        },
+        "Real": {
+          "value": 1,
+          "description": "Computed from a real object's data."
+        },
+        "Decoy": {
+          "value": 2,
+          "description": "Computed from synthetic data made to resemble a real object."
+        }
+      }
+    },
+    "lfvRegionSide": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Above",
+        "AtOrBelow"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "Above": {
+          "value": 1,
+          "description": "Scores strictly above THRESHOLD."
+        },
+        "AtOrBelow": {
+          "value": 2,
+          "description": "Scores at or below THRESHOLD."
+        }
+      }
+    },
+    "RFMOrigin": {
+      "type": "object",
+      "description": "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties": {
+        "KIND": {
+          "$ref": "#/definitions/rfmOriginKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CELESTIAL_BODY": {
+              "value": 1,
+              "description": "The centre of mass of a single celestial body."
+            },
+            "BARYCENTRE": {
+              "value": 2,
+              "description": "The barycentre of a named system of bodies."
+            },
+            "LIBRATION_POINT": {
+              "value": 3,
+              "description": "A libration (Lagrange) point of a two-body system."
+            },
+            "SPACE_OBJECT": {
+              "value": 4,
+              "description": "Another tracked space object, identified by OBJECT_ID."
+            },
+            "GROUND_SITE": {
+              "value": 5,
+              "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CELESTIAL_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code when KIND is CELESTIAL_BODY.",
+          "x-flatbuffer-type": "int"
+        },
+        "BARYCENTRE_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the barycentre when KIND is BARYCENTRE.",
+          "x-flatbuffer-type": "int"
+        },
+        "LIBRATION_POINT": {
+          "$ref": "#/definitions/rfmLibrationPoint",
+          "description": "Which libration point, when KIND is LIBRATION_POINT.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "L1": {
+              "value": 1
+            },
+            "L2": {
+              "value": 2
+            },
+            "L3": {
+              "value": 3
+            },
+            "L4": {
+              "value": 4
+            },
+            "L5": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "LIBRATION_PRIMARY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the libration system primary.",
+          "x-flatbuffer-type": "int"
+        },
+        "LIBRATION_SECONDARY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the libration system secondary.",
+          "x-flatbuffer-type": "int"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "Identifier of the space object when KIND is SPACE_OBJECT.",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_ID": {
+          "type": "string",
+          "description": "Identifier of the surface site when KIND is GROUND_SITE.",
+          "x-flatbuffer-type": "string"
+        },
+        "SITE_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the body the site sits on.",
+          "x-flatbuffer-type": "int"
+        },
+        "SITE_LATITUDE": {
+          "type": "number",
+          "description": "Geodetic latitude of the site, degrees, positive north.",
+          "x-flatbuffer-type": "double"
+        },
+        "SITE_LONGITUDE": {
+          "type": "number",
+          "description": "Geodetic longitude of the site, degrees, positive east.",
+          "x-flatbuffer-type": "double"
+        },
+        "SITE_ALTITUDE": {
+          "type": "number",
+          "description": "Height of the site above the reference ellipsoid, metres.",
+          "x-flatbuffer-type": "double"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Human-readable label. Descriptive only.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMObjectReferencedAxes": {
+      "type": "object",
+      "description": "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties": {
+        "PRIMARY_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SECONDARY_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "X_AXIS": {
+          "$ref": "#/definitions/rfmVectorSpecification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADIAL": {
+              "value": 1,
+              "description": "Primary-to-secondary position direction."
+            },
+            "ANTI_RADIAL": {
+              "value": 2,
+              "description": "Negated RADIAL."
+            },
+            "VELOCITY": {
+              "value": 3,
+              "description": "Relative velocity direction."
+            },
+            "ANTI_VELOCITY": {
+              "value": 4,
+              "description": "Negated VELOCITY."
+            },
+            "ORBIT_NORMAL": {
+              "value": 5,
+              "description": "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            "ANTI_ORBIT_NORMAL": {
+              "value": 6,
+              "description": "Negated ORBIT_NORMAL."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "Y_AXIS": {
+          "$ref": "#/definitions/rfmVectorSpecification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADIAL": {
+              "value": 1,
+              "description": "Primary-to-secondary position direction."
+            },
+            "ANTI_RADIAL": {
+              "value": 2,
+              "description": "Negated RADIAL."
+            },
+            "VELOCITY": {
+              "value": 3,
+              "description": "Relative velocity direction."
+            },
+            "ANTI_VELOCITY": {
+              "value": 4,
+              "description": "Negated VELOCITY."
+            },
+            "ORBIT_NORMAL": {
+              "value": 5,
+              "description": "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            "ANTI_ORBIT_NORMAL": {
+              "value": 6,
+              "description": "Negated ORBIT_NORMAL."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "Z_AXIS": {
+          "$ref": "#/definitions/rfmVectorSpecification",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RADIAL": {
+              "value": 1,
+              "description": "Primary-to-secondary position direction."
+            },
+            "ANTI_RADIAL": {
+              "value": 2,
+              "description": "Negated RADIAL."
+            },
+            "VELOCITY": {
+              "value": 3,
+              "description": "Relative velocity direction."
+            },
+            "ANTI_VELOCITY": {
+              "value": 4,
+              "description": "Negated VELOCITY."
+            },
+            "ORBIT_NORMAL": {
+              "value": 5,
+              "description": "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            "ANTI_ORBIT_NORMAL": {
+              "value": 6,
+              "description": "Negated ORBIT_NORMAL."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMLocalAlignedConstrainedAxes": {
+      "type": "object",
+      "description": "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties": {
+        "REFERENCE_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_COORDINATE_SYSTEM_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ALIGNMENT_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "ALIGNMENT_REFERENCE_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "CONSTRAINT_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        },
+        "CONSTRAINT_REFERENCE_VECTOR": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMCoordinateSystem": {
+      "type": "object",
+      "description": "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Stable name for this coordinate system within the producing data set.",
+          "x-flatbuffer-type": "string"
+        },
+        "AXIS_TYPE": {
+          "$ref": "#/definitions/rfmAxisType",
+          "description": "Orientation rule.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "MEAN_EQUATOR_EQUINOX_J2000": {
+              "value": 1,
+              "description": "Mean equator and mean equinox of the J2000.0 epoch."
+            },
+            "MEAN_ECLIPTIC_EQUINOX_J2000": {
+              "value": 2,
+              "description": "Mean ecliptic and mean equinox of the J2000.0 epoch."
+            },
+            "ICRF": {
+              "value": 3,
+              "description": "International Celestial Reference Frame axes."
+            },
+            "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE": {
+              "value": 4,
+              "description": "True equator, mean equinox of date."
+            },
+            "MEAN_OF_DATE_EQUATOR": {
+              "value": 5,
+              "description": "Mean equator of date (precession applied to the epoch of the state)."
+            },
+            "MEAN_OF_DATE_ECLIPTIC": {
+              "value": 6,
+              "description": "Mean ecliptic of date."
+            },
+            "TRUE_OF_DATE_EQUATOR": {
+              "value": 7,
+              "description": "True equator of date (precession and nutation applied)."
+            },
+            "TRUE_OF_DATE_ECLIPTIC": {
+              "value": 8,
+              "description": "True ecliptic of date."
+            },
+            "MEAN_OF_EPOCH_EQUATOR": {
+              "value": 9,
+              "description": "Mean equator of a fixed reference epoch."
+            },
+            "MEAN_OF_EPOCH_ECLIPTIC": {
+              "value": 10,
+              "description": "Mean ecliptic of a fixed reference epoch."
+            },
+            "TRUE_OF_EPOCH_EQUATOR": {
+              "value": 11,
+              "description": "True equator of a fixed reference epoch."
+            },
+            "TRUE_OF_EPOCH_ECLIPTIC": {
+              "value": 12,
+              "description": "True ecliptic of a fixed reference epoch."
+            },
+            "BODY_FIXED": {
+              "value": 13,
+              "description": "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+            },
+            "BODY_INERTIAL": {
+              "value": 14,
+              "description": "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+            },
+            "OBJECT_REFERENCED": {
+              "value": 15,
+              "description": "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+            },
+            "LOCAL_ALIGNED_CONSTRAINED": {
+              "value": 16,
+              "description": "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+            },
+            "BODY_EQUATOR": {
+              "value": 17,
+              "description": "Axes in the reference body's equatorial plane at the requested epoch."
+            },
+            "SOLAR_ECLIPTIC_MAGNETOSPHERIC": {
+              "value": 18,
+              "description": "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+            },
+            "SOLAR_MAGNETOSPHERIC": {
+              "value": 19,
+              "description": "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+            },
+            "TOPOCENTRIC": {
+              "value": 20,
+              "description": "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+            },
+            "BODY_SPIN_SUN": {
+              "value": 21,
+              "description": "Axes fixed by the body spin axis and the body-to-Sun direction."
+            },
+            "EPHEMERIS_KERNEL_DEFINED": {
+              "value": 22,
+              "description": "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+            },
+            "MEAN_OF_DATE_EQUATOR_FK5": {
+              "value": 23,
+              "description": "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+            },
+            "TRUE_OF_DATE_EQUATOR_FK5": {
+              "value": 24,
+              "description": "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+            },
+            "TRUE_OF_DATE_EQUATOR_IERS1996": {
+              "value": 25,
+              "description": "True equator of date computed with the IERS Conventions (1996) reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980 nutation with the observed celestial pole offsets applied. Distinct from TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR (IAU-2006/2000A)."
+            },
+            "TRUE_OF_DATE_EQUATOR_IERS2003": {
+              "value": 26,
+              "description": "True equator of date computed with the IERS Conventions (2003) reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976 precession with the IAU 2000 precession-rate corrections. The mean-of-date equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5."
+            },
+            "TOPOCENTRIC_EAST_NORTH_UP": {
+              "value": 27,
+              "description": "Topocentric East-North-Up axes at a surface site; the site is carried on RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does."
+            },
+            "TOPOCENTRIC_NORTH_EAST_DOWN": {
+              "value": 28,
+              "description": "Topocentric North-East-Down axes at a surface site."
+            },
+            "TOPOCENTRIC_SOUTH_EAST_ZENITH": {
+              "value": 29,
+              "description": "Topocentric South-East-Zenith axes at a surface site."
+            },
+            "ORBITAL_VELOCITY_NORMAL_CONORMAL": {
+              "value": 30,
+              "description": "Orbital axes from the object's state: X along the velocity, Z along the orbit normal, Y completing the right-handed set (VNC). The object is the origin body of the coordinate system."
+            },
+            "ORBITAL_RADIAL_TRANSVERSE_NORMAL": {
+              "value": 31,
+              "description": "Orbital axes from the object's state: X radial (outward), Z along the orbit normal, Y transverse completing the set (RTN, also RSW)."
+            },
+            "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
+              "value": 32,
+              "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ORIGIN": {
+          "$ref": "#/definitions/RFMOrigin",
+          "description": "Centre of the system.",
+          "x-flatbuffer-type": "RFMOrigin"
+        },
+        "AXIS_REFERENCE_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN.",
+          "x-flatbuffer-type": "int"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\").",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_REFERENCED_AXES": {
+          "$ref": "#/definitions/RFMObjectReferencedAxes",
+          "description": "Extra parameters for OBJECT_REFERENCED axes.",
+          "x-flatbuffer-type": "RFMObjectReferencedAxes"
+        },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES": {
+          "$ref": "#/definitions/RFMLocalAlignedConstrainedAxes",
+          "description": "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.",
+          "x-flatbuffer-type": "RFMLocalAlignedConstrainedAxes"
+        },
+        "KERNEL_FRAME_NAME": {
+          "type": "string",
+          "description": "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.",
+          "x-flatbuffer-type": "string"
+        },
+        "KERNEL_FRAME_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.",
+          "x-flatbuffer-type": "int"
+        },
+        "EOP_DATA_SET_CID": {
+          "type": "string",
+          "description": "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "CelestialFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CelestialFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GCRF": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+            },
+            "ICRF": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+            },
+            "J2000": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+            },
+            "J2000A": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+            },
+            "EME2000": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+            },
+            "TEMEOFDATE": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+            },
+            "GTOD": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+            },
+            "CIRS": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+            },
+            "MOD_EARTH": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+            },
+            "MOD_CB": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+            },
+            "MOD_MOON": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+            },
+            "TOD_EARTH": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+            },
+            "TOD_CB": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+            },
+            "TOD_MOON": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+            },
+            "TOE_EARTH": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+            },
+            "TOE_CB": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+            },
+            "TOE_MOON": {
+              "value": 16,
+              "description": "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+            },
+            "ITRF2000": {
+              "value": 17,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+            },
+            "ITRF93": {
+              "value": 18,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+            },
+            "ITRF97": {
+              "value": 19,
+              "description": "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+            },
+            "EFG": {
+              "value": 20,
+              "description": "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+            },
+            "FIXED_CB": {
+              "value": 21,
+              "description": "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+            },
+            "FIXED_EARTH": {
+              "value": 22,
+              "description": "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+            },
+            "WGS84": {
+              "value": 23,
+              "description": "WGS84 Earth-fixed terrestrial system."
+            },
+            "DTRFYYYY": {
+              "value": 24,
+              "description": "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+            },
+            "ALIGN_EARTH": {
+              "value": 25,
+              "description": "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+            },
+            "ALIGN_CB": {
+              "value": 26,
+              "description": "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+            },
+            "B1950": {
+              "value": 27,
+              "description": "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "SpacecraftFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/SpacecraftFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACC_i": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+            },
+            "ACTUATOR_i": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.8.2 Actuator system frame."
+            },
+            "AST_i": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+            },
+            "CSS_i": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+            },
+            "DSS_i": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+            },
+            "ESA_i": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+            },
+            "GYRO_FRAME_i": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+            },
+            "IMU_FRAME_i": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+            },
+            "INSTRUMENT_i": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+            },
+            "MTA_i": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+            },
+            "RW_i": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+            },
+            "SA_i": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.8.12 Solar Array frame."
+            },
+            "SC_BODY_i": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+            },
+            "SENSOR_i": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+            },
+            "STARTRACKER_i": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+            },
+            "TAM_i": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "OrbitFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/OrbitFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EQW_INERTIAL": {
+              "value": 0,
+              "description": "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+            },
+            "LVLH_INERTIAL": {
+              "value": 1,
+              "description": "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+            },
+            "LVLH_ROTATING": {
+              "value": 2,
+              "description": "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+            },
+            "NSW_INERTIAL": {
+              "value": 3,
+              "description": "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+            },
+            "NSW_ROTATING": {
+              "value": 4,
+              "description": "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+            },
+            "NTW_INERTIAL": {
+              "value": 5,
+              "description": "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+            },
+            "NTW_ROTATING": {
+              "value": 6,
+              "description": "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+            },
+            "PQW_INERTIAL": {
+              "value": 7,
+              "description": "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+            },
+            "RSW_INERTIAL": {
+              "value": 8,
+              "description": "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+            },
+            "RSW_ROTATING": {
+              "value": 9,
+              "description": "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+            },
+            "SEZ_INERTIAL": {
+              "value": 10,
+              "description": "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+            },
+            "SEZ_ROTATING": {
+              "value": 11,
+              "description": "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+            },
+            "TNW_INERTIAL": {
+              "value": 12,
+              "description": "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+            },
+            "TNW_ROTATING": {
+              "value": 13,
+              "description": "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+            },
+            "VNC_INERTIAL": {
+              "value": 14,
+              "description": "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+            },
+            "VNC_ROTATING": {
+              "value": 15,
+              "description": "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CustomFrameWrapper": {
+      "type": "object",
+      "properties": {
+        "frame": {
+          "$ref": "#/definitions/CustomFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ECEF": {
+              "value": 0,
+              "description": "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+            },
+            "TEME": {
+              "value": 1,
+              "description": "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+            },
+            "TEMEOFEPOCH": {
+              "value": 2,
+              "description": "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+            },
+            "ENU": {
+              "value": 3,
+              "description": "East-North-Up: Local tangent plane for surface points."
+            },
+            "NED": {
+              "value": 4,
+              "description": "North-East-Down: Aviation/navigation frame aligned with gravity."
+            },
+            "NEU": {
+              "value": 5,
+              "description": "North-East-Up: Local tangent plane variant with Up positive."
+            },
+            "RIC": {
+              "value": 6,
+              "description": "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+            },
+            "RTN": {
+              "value": 7,
+              "description": "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+            },
+            "TVN": {
+              "value": 8,
+              "description": "Transverse-Velocity-Normal: Alternative orbit frame."
+            },
+            "VVLH": {
+              "value": 9,
+              "description": "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+            },
+            "QSW": {
+              "value": 10,
+              "description": "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+            },
+            "LTP": {
+              "value": 11,
+              "description": "Local Tangent Plane: Surface-fixed frame centered on a point."
+            },
+            "LVLH": {
+              "value": 12,
+              "description": "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+            },
+            "PNE": {
+              "value": 13,
+              "description": "Polar-North-East: Surface coordinate frame."
+            },
+            "BRF": {
+              "value": 14,
+              "description": "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+            },
+            "RSW": {
+              "value": 15,
+              "description": "Radial-Along-track-Cross-track: Same as RSW."
+            },
+            "TNW": {
+              "value": 16,
+              "description": "Tangential-Normal-Cross-track: Same as TNW."
+            },
+            "UVW": {
+              "value": 17,
+              "description": "Radial-UTF: Radial, Along-track, Cross-track variant."
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFMCoordinateSystemWrapper": {
+      "type": "object",
+      "properties": {
+        "COORDINATE_SYSTEM": {
+          "$ref": "#/definitions/RFMCoordinateSystem",
+          "x-flatbuffer-type": "RFMCoordinateSystem"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RFM": {
+      "type": "object",
+      "description": "Reference Frame Message",
+      "properties": {
+        "REFERENCE_FRAME_type": {
+          "$ref": "#/definitions/RFMUnion"
+        },
+        "REFERENCE_FRAME": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CelestialFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/SpacecraftFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/OrbitFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/CustomFrameWrapper"
+            },
+            {
+              "$ref": "#/definitions/RFMCoordinateSystemWrapper"
+            }
+          ],
+          "x-flatbuffer-type": "RFMUnion"
+        },
+        "INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "x-flatbuffer-type": "int"
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMCcsdsTimeCode": {
+      "type": "object",
+      "description": "CCSDS time-code payload and preamble metadata.",
+      "properties": {
+        "CODE_KIND": {
+          "$ref": "#/definitions/timCcsdsTimeCodeKind",
+          "description": "CCSDS time-code family.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "No CCSDS time code selected."
+            },
+            "UNSEGMENTED": {
+              "value": 1,
+              "description": "CCSDS Unsegmented Time Code (CUC)."
+            },
+            "DAY_SEGMENTED": {
+              "value": 2,
+              "description": "CCSDS Day Segmented Time Code (CDS)."
+            },
+            "CALENDAR_SEGMENTED": {
+              "value": 3,
+              "description": "CCSDS Calendar Segmented Time Code (CCS)."
+            }
+          }
+        },
+        "PREAMBLE_FIELD1": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "First CCSDS preamble field octet.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "PREAMBLE_FIELD2": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Second CCSDS preamble field octet; ignored when not signaled by preamble 1.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "TIME_FIELD": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Raw CCSDS time field octets.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "AGENCY_DEFINED_EPOCH_ISO8601": {
+          "type": "string",
+          "description": "Optional agency-defined epoch timestamp for agency epoch time codes.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_EPOCH_ISO8601": {
+          "type": "string",
+          "description": "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMInstant": {
+      "type": "object",
+      "description": "Numeric or textual instant tagged with its time system and representation.",
+      "properties": {
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Time system for this instant.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
+            }
+          }
+        },
+        "EPOCH_FORMAT": {
+          "$ref": "#/definitions/timEpochRepresentation",
+          "description": "Interpretation of JULIAN_DATE, SECONDS, and ISO8601.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "JULIAN_DATE": {
+              "value": 0,
+              "description": "Julian Date day count."
+            },
+            "MODIFIED_JULIAN_DATE": {
+              "value": 1,
+              "description": "Modified Julian Date day count (JD - 2400000.5)."
+            },
+            "UNIX_SECONDS": {
+              "value": 2,
+              "description": "Seconds since 1970-01-01T00:00:00 UTC."
+            },
+            "ISO8601": {
+              "value": 3,
+              "description": "ISO 8601 timestamp text."
+            },
+            "GPS_SECONDS": {
+              "value": 4,
+              "description": "Seconds since 1980-01-06T00:00:00 GPS."
+            },
+            "GNSS_WEEK_SECONDS": {
+              "value": 5,
+              "description": "GNSS week number plus seconds within the week."
+            },
+            "CCSDS_TIME_CODE": {
+              "value": 6,
+              "description": "CCSDS binary time-code field with preamble metadata."
+            },
+            "MISSION_ELAPSED_SECONDS": {
+              "value": 7,
+              "description": "Seconds from an application-defined mission epoch."
+            }
+          }
+        },
+        "JULIAN_DATE": {
+          "type": "number",
+          "description": "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT.",
+          "x-flatbuffer-type": "double"
+        },
+        "SECONDS": {
+          "type": "number",
+          "description": "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS.",
+          "x-flatbuffer-type": "double"
+        },
+        "ISO8601": {
+          "type": "string",
+          "description": "ISO 8601 timestamp text for ISO8601 inputs or display outputs.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBSECOND_NANOS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Additional nanoseconds beyond the fractional scalar/text value.",
+          "x-flatbuffer-type": "int"
+        },
+        "EPOCH_LABEL": {
+          "type": "string",
+          "description": "Optional application-defined epoch label for MET, MRT, or SCLK values.",
+          "x-flatbuffer-type": "string"
+        },
+        "GNSS_WEEK": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS.",
+          "x-flatbuffer-type": "int"
+        },
+        "HAS_GNSS_ROLLOVER_REFERENCE": {
+          "type": "boolean",
+          "description": "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied.",
+          "x-flatbuffer-type": "bool"
+        },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601": {
+          "type": "string",
+          "description": "Optional Orekit-style GNSS week rollover reference timestamp.",
+          "x-flatbuffer-type": "string"
+        },
+        "CCSDS_TIME_CODE": {
+          "$ref": "#/definitions/TIMCcsdsTimeCode",
+          "description": "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE.",
+          "x-flatbuffer-type": "TIMCcsdsTimeCode"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMConversionRequest": {
+      "type": "object",
+      "description": "Request to convert one instant into another time system/representation.",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Source instant to convert.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "TARGET_TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Target time system.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
+            }
+          }
+        },
+        "TARGET_EPOCH_FORMAT": {
+          "$ref": "#/definitions/timEpochRepresentation",
+          "description": "Preferred target representation.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "JULIAN_DATE": {
+              "value": 0,
+              "description": "Julian Date day count."
+            },
+            "MODIFIED_JULIAN_DATE": {
+              "value": 1,
+              "description": "Modified Julian Date day count (JD - 2400000.5)."
+            },
+            "UNIX_SECONDS": {
+              "value": 2,
+              "description": "Seconds since 1970-01-01T00:00:00 UTC."
+            },
+            "ISO8601": {
+              "value": 3,
+              "description": "ISO 8601 timestamp text."
+            },
+            "GPS_SECONDS": {
+              "value": 4,
+              "description": "Seconds since 1980-01-06T00:00:00 GPS."
+            },
+            "GNSS_WEEK_SECONDS": {
+              "value": 5,
+              "description": "GNSS week number plus seconds within the week."
+            },
+            "CCSDS_TIME_CODE": {
+              "value": 6,
+              "description": "CCSDS binary time-code field with preamble metadata."
+            },
+            "MISSION_ELAPSED_SECONDS": {
+              "value": 7,
+              "description": "Seconds from an application-defined mission epoch."
+            }
+          }
+        },
+        "TAI_MINUS_UTC_SECONDS": {
+          "type": "number",
+          "description": "Optional TAI-UTC override in seconds for the source instant.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_TAI_MINUS_UTC": {
+          "type": "boolean",
+          "description": "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data.",
+          "x-flatbuffer-type": "bool"
+        },
+        "DUT1_SECONDS": {
+          "type": "number",
+          "description": "Optional UT1-UTC override in seconds for UT1 conversions.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_DUT1": {
+          "type": "boolean",
+          "description": "Whether DUT1_SECONDS should override runtime Earth-orientation data.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Optional caller trace/correlation identifier.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIMConversionResult": {
+      "type": "object",
+      "description": "Result of a time conversion request.",
+      "properties": {
+        "SOURCE": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Original source instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "TARGET": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Converted target instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "DELTA_SECONDS": {
+          "type": "number",
+          "description": "Target minus source offset in SI seconds for the requested conversion.",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/timConversionStatus",
+          "description": "Conversion status.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OK": {
+              "value": 0,
+              "description": "Conversion completed."
+            },
+            "INVALID_INPUT": {
+              "value": 1,
+              "description": "Input epoch or requested representation is invalid."
+            },
+            "UNSUPPORTED_TIME_SYSTEM": {
+              "value": 2,
+              "description": "Requested source or target time system is not supported."
+            },
+            "LEAP_SECOND_DATA_REQUIRED": {
+              "value": 3,
+              "description": "Conversion requires leap-second data that was not available."
+            },
+            "EOP_DATA_REQUIRED": {
+              "value": 4,
+              "description": "Conversion requires Earth-orientation data that was not available."
+            },
+            "OUT_OF_RANGE": {
+              "value": 5,
+              "description": "Requested instant is outside the supported conversion range."
+            }
+          }
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Optional error detail when STATUS is not OK.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "description": "Caller trace/correlation identifier copied from the request when present.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "TIM": {
+      "type": "object",
+      "description": "Time System and time-conversion envelope.",
+      "properties": {
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Legacy time-system selector retained for existing TIM consumers.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
+            }
+          }
+        },
+        "INSTANT": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "A single tagged instant.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "CONVERSION_REQUEST": {
+          "$ref": "#/definitions/TIMConversionRequest",
+          "description": "Time conversion request.",
+          "x-flatbuffer-type": "TIMConversionRequest"
+        },
+        "CONVERSION_RESULT": {
+          "$ref": "#/definitions/TIMConversionResult",
+          "description": "Time conversion result.",
+          "x-flatbuffer-type": "TIMConversionResult"
+        }
+      },
+      "additionalProperties": false
+    },
+    "MET": {
+      "type": "object",
+      "description": "Mean Element Theory",
+      "properties": {
+        "MEAN_ELEMENT_THEORY": {
+          "$ref": "#/definitions/meanElementSource",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP4": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SGP4XP": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+            },
+            "DSST": {
+              "value": 2,
+              "description": "Draper Semi-analytical Satellite Theory"
+            },
+            "USM": {
+              "value": 3,
+              "description": "Universal Semianalytical Method"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "CVR": {
+      "type": "object",
+      "description": "Covariance Realism",
+      "properties": {
+        "RULE": {
+          "$ref": "#/definitions/covarianceRule",
+          "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "Operator": {
+              "value": 1,
+              "description": "The operator's covariance, as supplied"
+            },
+            "ScaledFit": {
+              "value": 2,
+              "description": "The formal covariance of an orbit fit, multiplied by the realism factor measured for the source and the fit's class (SCALE_FACTOR)"
+            },
+            "SourceModel": {
+              "value": 3,
+              "description": "The source's own empirical model of its element sets' errors, by orbit regime and element-set age"
+            },
+            "PooledModel": {
+              "value": 4,
+              "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MODEL_ID": {
+          "type": "string",
+          "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+          "x-flatbuffer-type": "string"
+        },
+        "REGIME": {
+          "type": "string",
+          "description": "Orbit regime of the cell, as the model names it.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGE_DAYS": {
+          "type": "number",
+          "description": "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HORIZON_DAYS": {
+          "type": "number",
+          "description": "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MEASURED_LINEAGE": {
+          "type": "string",
+          "description": "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated.",
+          "x-flatbuffer-type": "string"
+        },
+        "TEST_WINDOW": {
+          "type": "string",
+          "description": "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end.",
+          "x-flatbuffer-type": "string"
+        },
+        "MEAN_D2_OVER_3": {
+          "type": "number",
+          "description": "Mean of d2/3 over the held-out samples. NaN when not measured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COVERAGE_95": {
+          "type": "number",
+          "description": "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of held-out samples the test used.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of distinct objects the samples came from.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CALIBRATION": {
+          "$ref": "#/definitions/covarianceCalibration",
+          "description": "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Calibration not stated"
+            },
+            "Uncalibrated": {
+              "value": 1,
+              "description": "Not measured against independent reference states, or measured and failed"
+            },
+            "Calibrated": {
+              "value": 2,
+              "description": "Measured against independent reference states and passed"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "EVIDENCE": {
+          "type": "string",
+          "description": "Identifier of the report or record that holds the test.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PVN": {
+      "type": "object",
+      "description": "Product Provenance",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_KIND": {
+          "$ref": "#/definitions/pvnSourceKind",
+          "description": "What kind of data the source supplies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "ElementSet": {
+              "value": 1,
+              "description": "Element sets of a catalog"
+            },
+            "Ephemeris": {
+              "value": 2,
+              "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            "Observation": {
+              "value": 3,
+              "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/pvnLicenseClass",
+          "description": "What the source's terms permit for the product.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated. Never a grant: treated as CiteOnly."
+            },
+            "Reproducible": {
+              "value": 1,
+              "description": "The records may be republished, with the credit the terms ask."
+            },
+            "CiteOnly": {
+              "value": 2,
+              "description": "The records are computed on and cited, never republished."
+            },
+            "ShareAlike": {
+              "value": 3,
+              "description": "The records may be republished under the same terms, which every derived record carries."
+            },
+            "NonCommercial": {
+              "value": 4,
+              "description": "The records may be republished for non-commercial use only."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINEAGE": {
+          "type": "string",
+          "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OMM": {
+      "type": "object",
+      "description": "Orbit Mean Elements Message",
+      "properties": {
+        "CCSDS_OMM_VERS": {
+          "type": "number",
+          "description": "CCSDS OMM Version",
+          "x-flatbuffer-type": "double"
+        },
+        "CREATION_DATE": {
+          "type": "string",
+          "description": "Creation Date (ISO 8601 UTC format)",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Originator",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Satellite Name(s)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International Designator (YYYY-NNNAAA)",
+          "x-flatbuffer-type": "string"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "Center Name (e.g. EARTH, MARS)",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Reference Frame\nTypically TEMEOFDATE",
+          "x-flatbuffer-type": "RFM"
+        },
+        "REFERENCE_FRAME_EPOCH": {
+          "type": "string",
+          "description": "Reference Frame Epoch (ISO 8601 UTC format)",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "$ref": "#/definitions/timingStandard",
+          "description": "Time System [M, UTC]",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GMST": {
+              "value": 0,
+              "description": "Greenwich Mean Sidereal Time"
+            },
+            "GPS": {
+              "value": 1,
+              "description": "Global Positioning System"
+            },
+            "MET": {
+              "value": 2,
+              "description": "Mission Elapsed Time"
+            },
+            "MRT": {
+              "value": 3,
+              "description": "Mission Relative Time"
+            },
+            "SCLK": {
+              "value": 4,
+              "description": "Spacecraft Clock (receiver) (requires rules for interpretation in ICD)"
+            },
+            "TAI": {
+              "value": 5,
+              "description": "International Atomic Time"
+            },
+            "TCB": {
+              "value": 6,
+              "description": "Barycentric Coordinate Time"
+            },
+            "TDB": {
+              "value": 7,
+              "description": "Barycentric Dynamical Time"
+            },
+            "TCG": {
+              "value": 8,
+              "description": "Geocentric Coordinate Time"
+            },
+            "TT": {
+              "value": 9,
+              "description": "Terrestrial Time"
+            },
+            "UT1": {
+              "value": 10,
+              "description": "Universal Time"
+            },
+            "UTC": {
+              "value": 11,
+              "description": "Coordinated Universal Time"
+            },
+            "GLONASS": {
+              "value": 12,
+              "description": "GLONASS Time"
+            },
+            "GST": {
+              "value": 13,
+              "description": "Galileo System Time"
+            },
+            "QZSS": {
+              "value": 14,
+              "description": "Quasi-Zenith Satellite System Time"
+            },
+            "BDT": {
+              "value": 15,
+              "description": "BeiDou Time"
+            },
+            "NAVIC": {
+              "value": 16,
+              "description": "Navigation with Indian Constellation Time"
+            },
+            "SBAS": {
+              "value": 17,
+              "description": "Satellite-Based Augmentation System Time"
+            },
+            "A1": {
+              "value": 18,
+              "description": "Atomic time scale of the reference atomic-time network, offset from International Atomic Time by the fixed constant A1 - TAI = 0.0343817 s exactly. Appended last; never reorder or reuse existing values."
+            }
+          },
+          "x-flatbuffer-default": "UTC"
+        },
+        "MEAN_ELEMENT_THEORY": {
+          "$ref": "#/definitions/meanElementSource",
+          "description": "Mean Element Theory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP4": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SGP4XP": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP), as published in the 2022 astrodynamics conference literature."
+            },
+            "DSST": {
+              "value": 2,
+              "description": "Draper Semi-analytical Satellite Theory"
+            },
+            "USM": {
+              "value": 3,
+              "description": "Universal Semianalytical Method"
+            }
+          },
+          "x-flatbuffer-default": "SGP4"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "EPOCH of Mean Keplerian elements (ISO 8601 UTC format)",
+          "x-flatbuffer-type": "string"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "description": "Semi-major axis in km or Mean Motion in rev/day",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION": {
+          "type": "number",
+          "description": "Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity (unitless)",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_OF_ASC_NODE": {
+          "type": "number",
+          "description": "RA_OF_ASC_NODE in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERICENTER": {
+          "type": "number",
+          "description": "ARG_OF_PERICENTER in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ANOMALY": {
+          "type": "number",
+          "description": "MEAN_ANOMALY in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "GM": {
+          "type": "number",
+          "description": "GM in km**3/s**2",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "MASS in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_RAD_AREA": {
+          "type": "number",
+          "description": "SOLAR_RAD_AREA in m**2",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_RAD_COEFF": {
+          "type": "number",
+          "description": "SOLAR_RAD_COEFF (unitless)",
+          "x-flatbuffer-type": "double"
+        },
+        "DRAG_AREA": {
+          "type": "number",
+          "description": "DRAG_AREA in m**2",
+          "x-flatbuffer-type": "double"
+        },
+        "DRAG_COEFF": {
+          "type": "number",
+          "description": "DRAG_COEFF (unitless)",
+          "x-flatbuffer-type": "double"
+        },
+        "EPHEMERIS_TYPE": {
+          "$ref": "#/definitions/ephemerisFormat",
+          "description": "TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)\nEPHEMERIS_TYPE Default=0",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SGP": {
+              "value": 0,
+              "description": "Simplified General Perturbation Model"
+            },
+            "SGP4": {
+              "value": 1,
+              "description": "Simplified General Perturbation Model 4"
+            },
+            "SDP4": {
+              "value": 2,
+              "description": "Simplified Deep Space Perturbation Model 4"
+            },
+            "SGP8": {
+              "value": 3,
+              "description": "Simplified General Perturbation Model 8"
+            },
+            "SDP8": {
+              "value": 4,
+              "description": "Simplified Deep Space Perturbation Model 8"
+            }
+          },
+          "x-flatbuffer-default": "SGP4"
+        },
+        "CLASSIFICATION_TYPE": {
+          "type": "string",
+          "description": "CLASSIFICATION_TYPE Default=U",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD_CAT_ID (integer) [O if SGP/SGP4]",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ELEMENT_SET_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "ELEMENT_SET_NO [O if SGP/SGP4]",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REV_AT_EPOCH": {
+          "type": "number",
+          "description": "REV_AT_EPOCH [O if SGP/SGP4]",
+          "x-flatbuffer-type": "double"
+        },
+        "BSTAR": {
+          "type": "number",
+          "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION_DOT": {
+          "type": "number",
+          "description": "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_MOTION_DDOT": {
+          "type": "number",
+          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+          "x-flatbuffer-type": "double"
+        },
+        "COV_REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW",
+          "x-flatbuffer-type": "RFM"
+        },
+        "COVARIANCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s",
+          "x-flatbuffer-type": "[double]"
+        },
+        "USER_DEFINED_BIP_0044_TYPE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "USER_DEFINED_BIP_0044_TYPE [O, units per ICD]",
+          "x-flatbuffer-type": "uint"
+        },
+        "USER_DEFINED_OBJECT_DESIGNATOR": {
+          "type": "string",
+          "description": "USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]",
+          "x-flatbuffer-type": "string"
+        },
+        "USER_DEFINED_EARTH_MODEL": {
+          "type": "string",
+          "description": "USER_DEFINED_EARTH_MODEL [O, units per ICD]",
+          "x-flatbuffer-type": "string"
+        },
+        "USER_DEFINED_EPOCH_TIMESTAMP": {
+          "type": "number",
+          "description": "USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]",
+          "x-flatbuffer-type": "double"
+        },
+        "USER_DEFINED_MICROSECONDS": {
+          "type": "number",
+          "description": "USER_DEFINED_MICROSECONDS [O, units per ICD]",
+          "x-flatbuffer-type": "double"
+        },
+        "CLASSIFICATION": {
+          "type": "string",
+          "description": "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S.",
+          "x-flatbuffer-type": "string"
+        },
+        "MESSAGE_ID": {
+          "type": "string",
+          "description": "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message.",
+          "x-flatbuffer-type": "string"
+        },
+        "USER_DEFINED_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OMMUserDefinedParameter"
+          },
+          "description": "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order.",
+          "x-flatbuffer-type": "[OMMUserDefinedParameter]"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Where the element set comes from and the terms it travels under.",
+          "x-flatbuffer-type": "PVN"
+        },
+        "COV_REALISM": {
+          "$ref": "#/definitions/CVR",
+          "description": "Realism of COVARIANCE.",
+          "x-flatbuffer-type": "CVR"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OMMUserDefinedParameter": {
+      "type": "object",
+      "description": "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties": {
+        "PARAM_NAME": {
+          "type": "string",
+          "description": "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)",
+          "x-flatbuffer-type": "string"
+        },
+        "PARAM_VALUE": {
+          "type": "string",
+          "description": "The value as written, unit-less text",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVRow": {
+      "type": "object",
+      "description": "One labelled feature vector.",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Identifier of what the row was computed from: an object (catalog number\nor international designator), a history, or an element set (an $OMM\nMESSAGE_ID or OBJECT_ID plus ELEMENT_SET_NO).",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET": {
+          "type": "string",
+          "description": "Group the row belongs to, e.g. the real object a decoy stands in for;\nrows are split and ranked by group. Empty = SOURCE_ID.",
+          "x-flatbuffer-type": "string"
+        },
+        "ROLE": {
+          "$ref": "#/definitions/lfvRole",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unlabelled": {
+              "value": 0,
+              "description": "Not labelled (a row to be scored)."
+            },
+            "Real": {
+              "value": 1,
+              "description": "Computed from a real object's data."
+            },
+            "Decoy": {
+              "value": 2,
+              "description": "Computed from synthetic data made to resemble a real object."
+            }
+          },
+          "x-flatbuffer-default": "Unlabelled"
+        },
+        "GENERATOR": {
+          "type": "string",
+          "description": "Generator that made a synthetic row, e.g. \"rotated\", \"chained\"; empty\nfor real rows.",
+          "x-flatbuffer-type": "string"
+        },
+        "CLASS_LABEL": {
+          "type": "string",
+          "description": "Class label, e.g. an orbit regime or object type; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Feature values in FEATURE_NAMES order, in the units FEATURE_UNITS gives;\nNaN = not computable for this row.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SCORE": {
+          "type": "number",
+          "description": "Score a classifier gave the row (higher = more likely Real); NaN or\nabsent when not scored.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ELEMENT_SETS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OMM"
+          },
+          "description": "Element sets the row was computed from, when carried alongside.",
+          "x-flatbuffer-type": "[OMM]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVRankProbability": {
+      "type": "object",
+      "description": "Probability that the real row of a group scores highest among N\ncandidates (one real, N - 1 decoys).",
+      "properties": {
+        "N": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Candidates per group.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "P_REAL_FIRST": {
+          "type": "number",
+          "description": "Probability that the real row scores highest; ties count as a uniform\ndraw among the tied.",
+          "x-flatbuffer-type": "double"
+        },
+        "N_EFFECTIVE": {
+          "type": "number",
+          "description": "Effective number of candidates, 1 / P_REAL_FIRST (N when the classes\ncannot be told apart, 1 when they always can); NaN when P_REAL_FIRST is\n0.",
+          "x-flatbuffer-type": "double"
+        },
+        "IDEAL": {
+          "type": "number",
+          "description": "The value for indistinguishable classes, 1 / N; NaN = not reported.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVThresholdTest": {
+      "type": "object",
+      "description": "One threshold test on the scores, decided on one part of the data and\ncounted on another (held out).",
+      "properties": {
+        "THRESHOLD": {
+          "type": "number",
+          "description": "Score threshold of the decision region.",
+          "x-flatbuffer-type": "double"
+        },
+        "SIDE": {
+          "$ref": "#/definitions/lfvRegionSide",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "Above": {
+              "value": 1,
+              "description": "Scores strictly above THRESHOLD."
+            },
+            "AtOrBelow": {
+              "value": 2,
+              "description": "Scores at or below THRESHOLD."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "REGION_ROLE": {
+          "$ref": "#/definitions/lfvRole",
+          "description": "Role the region indicates: Real (real rows are more likely inside) or\nDecoy (decoy rows are).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unlabelled": {
+              "value": 0,
+              "description": "Not labelled (a row to be scored)."
+            },
+            "Real": {
+              "value": 1,
+              "description": "Computed from a real object's data."
+            },
+            "Decoy": {
+              "value": 2,
+              "description": "Computed from synthetic data made to resemble a real object."
+            }
+          },
+          "x-flatbuffer-default": "Unlabelled"
+        },
+        "REAL_IN_REGION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Confusion counts on the held-out data: real rows inside the region and\nin all, decoy rows inside the region and in all.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REAL_TOTAL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DECOY_IN_REGION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "DECOY_TOTAL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "EPSILON_LOWER_BOUND": {
+          "type": "number",
+          "description": "Lower confidence bound on the privacy loss epsilon = ln(P(region | one\nrole) / P(region | the other)), from one-sided Clopper-Pearson limits;\n0 = no evidence the roles differ.",
+          "x-flatbuffer-type": "double"
+        },
+        "CONFIDENCE": {
+          "type": "number",
+          "description": "Confidence level of the bound, 0..1, e.g. 0.95.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVFeatureSeparation": {
+      "type": "object",
+      "description": "How well one feature separates the roles on its own, and how much the\nclassifier used it.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Feature name, one of FEATURE_NAMES.",
+          "x-flatbuffer-type": "string"
+        },
+        "AUC": {
+          "type": "number",
+          "description": "Area under the ROC curve of the feature alone (real vs decoy), 0..1;\nNaN = not computable.",
+          "x-flatbuffer-type": "double"
+        },
+        "SEPARATION": {
+          "type": "number",
+          "description": "max(AUC, 1 - AUC), 0.5..1.",
+          "x-flatbuffer-type": "double"
+        },
+        "GAIN_SHARE": {
+          "type": "number",
+          "description": "Share of the classifier's total split gain from this feature, 0..1.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVClassResult": {
+      "type": "object",
+      "description": "Results for the real rows of one class.",
+      "properties": {
+        "CLASS_LABEL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Real rows of this class.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "AUC": {
+          "type": "number",
+          "description": "AUC of this class's real rows against all decoy rows, 0..1.",
+          "x-flatbuffer-type": "double"
+        },
+        "RANK_PROBABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVRankProbability"
+          },
+          "x-flatbuffer-type": "[LFVRankProbability]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVWithinGroup": {
+      "type": "object",
+      "description": "Rank of each real row within its own group, when groups have enough\ndecoys.",
+      "properties": {
+        "GROUP_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Groups (targets) ranked.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "FEWEST_DECOYS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Fewest decoys any ranked group has.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "POOLED_DECOYS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Decoy rows pooled for standardized scores.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "RANK_HISTOGRAM": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "description": "Histogram of the real row's normalized rank within its group, in equal\nbins over 0..1 (uniform when indistinguishable).",
+          "x-flatbuffer-type": "[uint32]"
+        },
+        "RANK_KS": {
+          "type": "number",
+          "description": "Kolmogorov-Smirnov distance of the normalized ranks from uniform, 0..1.",
+          "x-flatbuffer-type": "double"
+        },
+        "RANK_PROBABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVRankProbability"
+          },
+          "description": "P(real first of N) from the empirical within-group ranks.",
+          "x-flatbuffer-type": "[LFVRankProbability]"
+        },
+        "STANDARDIZED_RANK_PROBABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVRankProbability"
+          },
+          "description": "P(real first of N) from scores standardized per group and pooled.",
+          "x-flatbuffer-type": "[LFVRankProbability]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVClassifier": {
+      "type": "object",
+      "description": "The classifier and how it was validated. In a request, the settings to\nuse; 0 or empty = the method's default.",
+      "properties": {
+        "METHOD": {
+          "type": "string",
+          "description": "Method, e.g. \"gradient-boosted trees, logistic loss\".",
+          "x-flatbuffer-type": "string"
+        },
+        "DEPTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Tree depth, boosting rounds, learning rate, L2 regularization (lambda),\nminimum child hessian and histogram bins, for tree ensembles.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROUNDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "LEARNING_RATE": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "L2_REGULARIZATION": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_CHILD_HESSIAN": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "BINS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "FOLDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Cross-validation folds.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SPLIT": {
+          "type": "string",
+          "description": "How rows were split into folds, e.g. \"by target\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SEED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Seed of the split and any randomness; 0 = not stated.",
+          "x-flatbuffer-type": "uint64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFVTestReport": {
+      "type": "object",
+      "description": "Report of a test that distinguishes the labelled classes.",
+      "properties": {
+        "TEST_NAME": {
+          "type": "string",
+          "description": "Name of the test, e.g. \"cross-validated classifier\",\n\"two-sample Kolmogorov-Smirnov\".",
+          "x-flatbuffer-type": "string"
+        },
+        "STATISTIC_NAME": {
+          "type": "string",
+          "description": "The test's statistic and its name, and its p-value; NaN = not computed.",
+          "x-flatbuffer-type": "string"
+        },
+        "STATISTIC": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "P_VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REAL_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Rows of each role tested.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "DECOY_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "EXCLUDED_FEATURES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Features left out of the test.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "RELATIVE": {
+          "type": "boolean",
+          "description": "True when each feature was taken relative to its group (minus the\ngroup's median) before testing.",
+          "x-flatbuffer-type": "bool"
+        },
+        "CLASSIFIER": {
+          "$ref": "#/definitions/LFVClassifier",
+          "x-flatbuffer-type": "LFVClassifier"
+        },
+        "AUC": {
+          "type": "number",
+          "description": "Area under the ROC curve of the scores (real vs decoy), 0..1; 0.5 =\nindistinguishable.",
+          "x-flatbuffer-type": "double"
+        },
+        "BALANCED_ACCURACY": {
+          "type": "number",
+          "description": "Mean of the real and decoy recall at score 0, 0..1.",
+          "x-flatbuffer-type": "double"
+        },
+        "THRESHOLDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVThresholdTest"
+          },
+          "description": "Threshold tests (decision region, confusion counts, epsilon bound).",
+          "x-flatbuffer-type": "[LFVThresholdTest]"
+        },
+        "RANK_PROBABILITIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVRankProbability"
+          },
+          "description": "P(real first of N) for each N asked, over all classes.",
+          "x-flatbuffer-type": "[LFVRankProbability]"
+        },
+        "CLASS_RESULTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVClassResult"
+          },
+          "x-flatbuffer-type": "[LFVClassResult]"
+        },
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVFeatureSeparation"
+          },
+          "description": "Per-feature separation, highest GAIN_SHARE first.",
+          "x-flatbuffer-type": "[LFVFeatureSeparation]"
+        },
+        "WITHIN_GROUP": {
+          "$ref": "#/definitions/LFVWithinGroup",
+          "description": "Absent when groups are too few or too small to rank within.",
+          "x-flatbuffer-type": "LFVWithinGroup"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LFV": {
+      "type": "object",
+      "description": "Labelled Feature Vectors - labelled rows and, optionally, the report of a\ntest that distinguishes their classes.",
+      "properties": {
+        "VIEW": {
+          "type": "string",
+          "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"hpop\"\n(from propagated ephemeris).",
+          "x-flatbuffer-type": "string"
+        },
+        "FEATURE_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Feature names, in the order of every row's VALUES.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "FEATURE_UNITS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Unit of each feature, same order, e.g. \"km\", \"deg\", \"km/day\", \"1\";\nempty = not stated.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "WINDOW_START_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Window of data the features were computed over, Unix milliseconds\n[start, end); 0 = not stated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "WINDOW_END_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "int64"
+        },
+        "MIN_POINTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Fewest data points a source needed to get a row.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ROWS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LFVRow"
+          },
+          "x-flatbuffer-type": "[LFVRow]"
+        },
+        "SOURCE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Sources offered, reference objects compared against (the catalog),\nand sources skipped for having too few points.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REFERENCE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "SKIPPED_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint32"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds this record was generated; 0 = not stated.",
+          "x-flatbuffer-type": "int64"
+        },
+        "REPORT": {
+          "$ref": "#/definitions/LFVTestReport",
+          "x-flatbuffer-type": "LFVTestReport"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/LFV",
+  "x-flatbuffer-root-type": "LFV",
+  "x-flatbuffer-file-identifier": "$LFV"
+}

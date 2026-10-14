@@ -169,7 +169,7 @@ def RelativeTimeParameterTypeCreateUNITSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUNITSVector(builder, data):
-    RelativeTimeParameterTypeCreateUNITSVector(builder, data)
+    return RelativeTimeParameterTypeCreateUNITSVector(builder, data)
 
 def RelativeTimeParameterTypeAddDATA_ENCODING(builder, DATA_ENCODING):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_ENCODING), 0)
@@ -199,7 +199,7 @@ def RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTEXT_ALARMSVector(builder, data):
-    RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
+    return RelativeTimeParameterTypeCreateCONTEXT_ALARMSVector(builder, data)
 
 def RelativeTimeParameterTypeEnd(builder):
     return builder.EndObject()

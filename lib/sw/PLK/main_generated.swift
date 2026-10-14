@@ -34,7 +34,7 @@ public enum licenseCategory: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 ///  Plugin License Key - Issued license for plugin access
 ///  Uses ECIES: both parties derive symmetric key via X25519 ECDH
 ///  Key derivation: X25519(private, peer_public) → HKDF-SHA256 → AES-256-GCM
-public struct PLK: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PLK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

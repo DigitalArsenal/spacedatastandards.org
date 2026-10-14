@@ -193,7 +193,7 @@ def TMECreateSUNRISE_SUNSET_QUERYVector(builder, data):
     return builder.EndVector()
 
 def CreateSUNRISE_SUNSET_QUERYVector(builder, data):
-    TMECreateSUNRISE_SUNSET_QUERYVector(builder, data)
+    return TMECreateSUNRISE_SUNSET_QUERYVector(builder, data)
 
 def TMEAddCLOCK_PROPAGATION(builder, CLOCK_PROPAGATION):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CLOCK_PROPAGATION), 0)

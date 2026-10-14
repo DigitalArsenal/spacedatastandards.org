@@ -51,5 +51,25 @@ class hostCapabilityKind private constructor() {
          * storage.ingest_with_source on this capability specifically.
          */
         const val STORAGE_INGEST: UShort = 36u
+        /**
+         * Read the node's view of its peer-to-peer network: known peers, the
+         * publication notices it has received and verified, and the latest
+         * dataset of a lane (p2p.* host operations).
+         */
+        const val P2P_READ: UShort = 37u
+        /**
+         * Read the node's own health: uptime, service state, storage and network
+         * figures (node_status_read.status).
+         */
+        const val NODE_STATUS_READ: UShort = 38u
+        /**
+         * Read the node's event log (node_activity_read.activity).
+         */
+        const val NODE_ACTIVITY_READ: UShort = 39u
+        /**
+         * Read and write operator-held secrets by identifier (credentials for
+         * upstream sources); the secret value is never persisted in a record.
+         */
+        const val SECRETS: UShort = 40u
     }
 }

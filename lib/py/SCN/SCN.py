@@ -189,7 +189,7 @@ def SCNCreateREFERENCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFERENCESVector(builder, data):
-    SCNCreateREFERENCESVector(builder, data)
+    return SCNCreateREFERENCESVector(builder, data)
 
 def SCNAddEVENT(builder, EVENT):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT), 0)

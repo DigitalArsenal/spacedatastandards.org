@@ -139,7 +139,7 @@ def PSSCreateOBJECTIVE_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECTIVE_IDSVector(builder, data):
-    PSSCreateOBJECTIVE_IDSVector(builder, data)
+    return PSSCreateOBJECTIVE_IDSVector(builder, data)
 
 def PSSAddSOLUTIONS(builder, SOLUTIONS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SOLUTIONS), 0)
@@ -157,7 +157,7 @@ def PSSCreateSOLUTIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOLUTIONSVector(builder, data):
-    PSSCreateSOLUTIONSVector(builder, data)
+    return PSSCreateSOLUTIONSVector(builder, data)
 
 def PSSAddGENERATED_AT(builder, GENERATED_AT):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(GENERATED_AT), 0)

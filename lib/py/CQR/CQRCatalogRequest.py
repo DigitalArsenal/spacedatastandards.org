@@ -236,7 +236,7 @@ def CQRCatalogRequestCreatePRIMARIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePRIMARIESVector(builder, data):
-    CQRCatalogRequestCreatePRIMARIESVector(builder, data)
+    return CQRCatalogRequestCreatePRIMARIESVector(builder, data)
 
 def CQRCatalogRequestAddSECONDARIES(builder, SECONDARIES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(SECONDARIES), 0)
@@ -254,7 +254,7 @@ def CQRCatalogRequestCreateSECONDARIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSECONDARIESVector(builder, data):
-    CQRCatalogRequestCreateSECONDARIESVector(builder, data)
+    return CQRCatalogRequestCreateSECONDARIESVector(builder, data)
 
 def CQRCatalogRequestAddCONTROLS(builder, CONTROLS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CONTROLS), 0)
@@ -288,7 +288,7 @@ def CQRCatalogRequestCreateORDERED_CATALOG_INDICESVector(builder, data):
     return builder.EndVector()
 
 def CreateORDERED_CATALOG_INDICESVector(builder, data):
-    CQRCatalogRequestCreateORDERED_CATALOG_INDICESVector(builder, data)
+    return CQRCatalogRequestCreateORDERED_CATALOG_INDICESVector(builder, data)
 
 def CQRCatalogRequestAddSTART_ORDER_INDEX(builder, START_ORDER_INDEX):
     builder.PrependUint32Slot(5, START_ORDER_INDEX, 0)
@@ -354,7 +354,7 @@ def CQRCatalogRequestCreateSELECTED_SOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSELECTED_SOURCESVector(builder, data):
-    CQRCatalogRequestCreateSELECTED_SOURCESVector(builder, data)
+    return CQRCatalogRequestCreateSELECTED_SOURCESVector(builder, data)
 
 def CQRCatalogRequestEnd(builder):
     return builder.EndObject()

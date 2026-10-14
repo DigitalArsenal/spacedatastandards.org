@@ -315,7 +315,7 @@ def LWKCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data):
-    LWKCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data)
+    return LWKCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data)
 
 def LWKAddPROVIDER_EPHEMERAL_PUBKEY(builder, PROVIDER_EPHEMERAL_PUBKEY):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PROVIDER_EPHEMERAL_PUBKEY), 0)
@@ -337,7 +337,7 @@ def LWKCreatePROVIDER_EPHEMERAL_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_EPHEMERAL_PUBKEYVector(builder, data):
-    LWKCreatePROVIDER_EPHEMERAL_PUBKEYVector(builder, data)
+    return LWKCreatePROVIDER_EPHEMERAL_PUBKEYVector(builder, data)
 
 def LWKAddHKDF_SALT(builder, HKDF_SALT):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(HKDF_SALT), 0)
@@ -359,7 +359,7 @@ def LWKCreateHKDF_SALTVector(builder, data):
     return builder.EndVector()
 
 def CreateHKDF_SALTVector(builder, data):
-    LWKCreateHKDF_SALTVector(builder, data)
+    return LWKCreateHKDF_SALTVector(builder, data)
 
 def LWKAddIV(builder, IV):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(IV), 0)
@@ -381,7 +381,7 @@ def LWKCreateIVVector(builder, data):
     return builder.EndVector()
 
 def CreateIVVector(builder, data):
-    LWKCreateIVVector(builder, data)
+    return LWKCreateIVVector(builder, data)
 
 def LWKAddCIPHERTEXT(builder, CIPHERTEXT):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHERTEXT), 0)
@@ -403,7 +403,7 @@ def LWKCreateCIPHERTEXTVector(builder, data):
     return builder.EndVector()
 
 def CreateCIPHERTEXTVector(builder, data):
-    LWKCreateCIPHERTEXTVector(builder, data)
+    return LWKCreateCIPHERTEXTVector(builder, data)
 
 def LWKAddTAG(builder, TAG):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
@@ -425,7 +425,7 @@ def LWKCreateTAGVector(builder, data):
     return builder.EndVector()
 
 def CreateTAGVector(builder, data):
-    LWKCreateTAGVector(builder, data)
+    return LWKCreateTAGVector(builder, data)
 
 def LWKAddEXPIRES_AT(builder, EXPIRES_AT):
     builder.PrependUint64Slot(12, EXPIRES_AT, 0)

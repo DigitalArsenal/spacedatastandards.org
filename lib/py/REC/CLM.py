@@ -282,7 +282,7 @@ def CLMCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    CLMCreateSIGNATUREVector(builder, data)
+    return CLMCreateSIGNATUREVector(builder, data)
 
 def CLMAddCOUNTERSIGNATURES(builder, COUNTERSIGNATURES):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTERSIGNATURES), 0)
@@ -300,7 +300,7 @@ def CLMCreateCOUNTERSIGNATURESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOUNTERSIGNATURESVector(builder, data):
-    CLMCreateCOUNTERSIGNATURESVector(builder, data)
+    return CLMCreateCOUNTERSIGNATURESVector(builder, data)
 
 def CLMEnd(builder):
     return builder.EndObject()

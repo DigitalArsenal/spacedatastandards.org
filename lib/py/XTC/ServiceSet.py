@@ -77,7 +77,7 @@ def ServiceSetCreateSERVICESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSERVICESVector(builder, data):
-    ServiceSetCreateSERVICESVector(builder, data)
+    return ServiceSetCreateSERVICESVector(builder, data)
 
 def ServiceSetEnd(builder):
     return builder.EndObject()

@@ -451,7 +451,7 @@ def IRMCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    IRMCreateTAGSVector(builder, data)
+    return IRMCreateTAGSVector(builder, data)
 
 def IRMAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)

@@ -311,7 +311,7 @@ def ParameterTypeSetCreateINTEGER_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTEGER_TYPESVector(builder, data):
-    ParameterTypeSetCreateINTEGER_TYPESVector(builder, data)
+    return ParameterTypeSetCreateINTEGER_TYPESVector(builder, data)
 
 def ParameterTypeSetAddFLOAT_TYPES(builder, FLOAT_TYPES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FLOAT_TYPES), 0)
@@ -329,7 +329,7 @@ def ParameterTypeSetCreateFLOAT_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLOAT_TYPESVector(builder, data):
-    ParameterTypeSetCreateFLOAT_TYPESVector(builder, data)
+    return ParameterTypeSetCreateFLOAT_TYPESVector(builder, data)
 
 def ParameterTypeSetAddSTRING_TYPES(builder, STRING_TYPES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STRING_TYPES), 0)
@@ -347,7 +347,7 @@ def ParameterTypeSetCreateSTRING_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRING_TYPESVector(builder, data):
-    ParameterTypeSetCreateSTRING_TYPESVector(builder, data)
+    return ParameterTypeSetCreateSTRING_TYPESVector(builder, data)
 
 def ParameterTypeSetAddBOOLEAN_TYPES(builder, BOOLEAN_TYPES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BOOLEAN_TYPES), 0)
@@ -365,7 +365,7 @@ def ParameterTypeSetCreateBOOLEAN_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBOOLEAN_TYPESVector(builder, data):
-    ParameterTypeSetCreateBOOLEAN_TYPESVector(builder, data)
+    return ParameterTypeSetCreateBOOLEAN_TYPESVector(builder, data)
 
 def ParameterTypeSetAddENUMERATED_TYPES(builder, ENUMERATED_TYPES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATED_TYPES), 0)
@@ -383,7 +383,7 @@ def ParameterTypeSetCreateENUMERATED_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENUMERATED_TYPESVector(builder, data):
-    ParameterTypeSetCreateENUMERATED_TYPESVector(builder, data)
+    return ParameterTypeSetCreateENUMERATED_TYPESVector(builder, data)
 
 def ParameterTypeSetAddBINARY_TYPES(builder, BINARY_TYPES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BINARY_TYPES), 0)
@@ -401,7 +401,7 @@ def ParameterTypeSetCreateBINARY_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBINARY_TYPESVector(builder, data):
-    ParameterTypeSetCreateBINARY_TYPESVector(builder, data)
+    return ParameterTypeSetCreateBINARY_TYPESVector(builder, data)
 
 def ParameterTypeSetAddABSOLUTE_TIME_TYPES(builder, ABSOLUTE_TIME_TYPES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ABSOLUTE_TIME_TYPES), 0)
@@ -419,7 +419,7 @@ def ParameterTypeSetCreateABSOLUTE_TIME_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateABSOLUTE_TIME_TYPESVector(builder, data):
-    ParameterTypeSetCreateABSOLUTE_TIME_TYPESVector(builder, data)
+    return ParameterTypeSetCreateABSOLUTE_TIME_TYPESVector(builder, data)
 
 def ParameterTypeSetAddRELATIVE_TIME_TYPES(builder, RELATIVE_TIME_TYPES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(RELATIVE_TIME_TYPES), 0)
@@ -437,7 +437,7 @@ def ParameterTypeSetCreateRELATIVE_TIME_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRELATIVE_TIME_TYPESVector(builder, data):
-    ParameterTypeSetCreateRELATIVE_TIME_TYPESVector(builder, data)
+    return ParameterTypeSetCreateRELATIVE_TIME_TYPESVector(builder, data)
 
 def ParameterTypeSetAddARRAY_TYPES(builder, ARRAY_TYPES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ARRAY_TYPES), 0)
@@ -455,7 +455,7 @@ def ParameterTypeSetCreateARRAY_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateARRAY_TYPESVector(builder, data):
-    ParameterTypeSetCreateARRAY_TYPESVector(builder, data)
+    return ParameterTypeSetCreateARRAY_TYPESVector(builder, data)
 
 def ParameterTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(AGGREGATE_TYPES), 0)
@@ -473,7 +473,7 @@ def ParameterTypeSetCreateAGGREGATE_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAGGREGATE_TYPESVector(builder, data):
-    ParameterTypeSetCreateAGGREGATE_TYPESVector(builder, data)
+    return ParameterTypeSetCreateAGGREGATE_TYPESVector(builder, data)
 
 def ParameterTypeSetEnd(builder):
     return builder.EndObject()

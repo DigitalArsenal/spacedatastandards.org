@@ -1,0 +1,28 @@
+/**
+ * Verdict of a trajectory comparison. Append new values only; never reorder or
+ * reuse existing values.
+ */
+export declare enum xmtPairVerdict {
+    /**
+     * Not compared.
+     */
+    Unspecified = 0,
+    /**
+     * Trajectories agree within the tolerances (supports review; not proof).
+     */
+    Compatible = 1,
+    /**
+     * Agree, but another proposed pairing of the same identity also passes.
+     */
+    Ambiguous = 2,
+    /**
+     * Separation exceeds the tolerances.
+     */
+    Rejected = 3,
+    /**
+     * Could not be judged: different grids or frames, too short an arc, or
+     * supplied velocities inconsistent with the positions.
+     */
+    Insufficient = 4
+}
+//# sourceMappingURL=xmtPairVerdict.d.ts.map

@@ -131,7 +131,7 @@ def TRPGroupCreatePREDICATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePREDICATESVector(builder, data):
-    TRPGroupCreatePREDICATESVector(builder, data)
+    return TRPGroupCreatePREDICATESVector(builder, data)
 
 def TRPGroupAddGROUPS(builder, GROUPS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(GROUPS), 0)
@@ -149,7 +149,7 @@ def TRPGroupCreateGROUPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUPSVector(builder, data):
-    TRPGroupCreateGROUPSVector(builder, data)
+    return TRPGroupCreateGROUPSVector(builder, data)
 
 def TRPGroupEnd(builder):
     return builder.EndObject()

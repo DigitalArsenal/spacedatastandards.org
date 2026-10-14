@@ -77,7 +77,7 @@ def GPXTrackSegmentCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    GPXTrackSegmentCreatePOINTSVector(builder, data)
+    return GPXTrackSegmentCreatePOINTSVector(builder, data)
 
 def GPXTrackSegmentEnd(builder):
     return builder.EndObject()

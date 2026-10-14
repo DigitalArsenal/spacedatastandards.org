@@ -240,7 +240,7 @@ def PRWFiniteBurnCreateTHROTTLEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTHROTTLEVector(builder, data):
-    PRWFiniteBurnCreateTHROTTLEVector(builder, data)
+    return PRWFiniteBurnCreateTHROTTLEVector(builder, data)
 
 def PRWFiniteBurnEnd(builder):
     return builder.EndObject()

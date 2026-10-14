@@ -128,7 +128,7 @@ def CQRLaunchClosureCreateOBJECT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOBJECT_IDSVector(builder, data):
-    CQRLaunchClosureCreateOBJECT_IDSVector(builder, data)
+    return CQRLaunchClosureCreateOBJECT_IDSVector(builder, data)
 
 def CQRLaunchClosureAddSEGMENT_IDS(builder, SEGMENT_IDS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENT_IDS), 0)
@@ -146,7 +146,7 @@ def CQRLaunchClosureCreateSEGMENT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENT_IDSVector(builder, data):
-    CQRLaunchClosureCreateSEGMENT_IDSVector(builder, data)
+    return CQRLaunchClosureCreateSEGMENT_IDSVector(builder, data)
 
 def CQRLaunchClosureEnd(builder):
     return builder.EndObject()

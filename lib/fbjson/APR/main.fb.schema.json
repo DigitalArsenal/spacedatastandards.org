@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "aprMethod": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "GET",
+        "HEAD",
+        "POST",
+        "PUT",
+        "PATCH",
+        "DELETE",
+        "OPTIONS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "GET": {
+          "value": 1
+        },
+        "HEAD": {
+          "value": 2
+        },
+        "POST": {
+          "value": 3
+        },
+        "PUT": {
+          "value": 4
+        },
+        "PATCH": {
+          "value": 5
+        },
+        "DELETE": {
+          "value": 6
+        },
+        "OPTIONS": {
+          "value": 7
+        }
+      }
+    },
+    "aprRepresentation": {
+      "type": "string",
+      "enum": [
+        "Default",
+        "FlatBuffer",
+        "Json",
+        "Csv",
+        "Text"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Default": {
+          "value": 0,
+          "description": "The service's default (normally FlatBuffers)."
+        },
+        "FlatBuffer": {
+          "value": 1,
+          "description": "Size-prefixed FlatBuffer records of the standard served."
+        },
+        "Json": {
+          "value": 2,
+          "description": "JSON rendering of the same records."
+        },
+        "Csv": {
+          "value": 3,
+          "description": "Comma-separated values."
+        },
+        "Text": {
+          "value": 4,
+          "description": "Plain text."
+        }
+      }
+    },
+    "APRParameter": {
+      "type": "object",
+      "description": "One named request parameter (a query-string pair, a path segment bound to\na name, a form field or a header the service reads).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Parameter name as the service defines it, e.g. \"limit\", \"epoch\",\n\"peerId\".",
+          "x-flatbuffer-type": "string"
+        },
+        "VALUE": {
+          "type": "string",
+          "description": "Parameter value as received, as text.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "APR": {
+      "type": "object",
+      "description": "API Request - one normalized request and its serving decision.",
+      "properties": {
+        "REQUEST_ID": {
+          "type": "string",
+          "description": "Identifier of the request, unique within the gateway (for correlating\nlogs and answers); empty when the gateway does not assign one.",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when the gateway received the request; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/aprMethod",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "GET": {
+              "value": 1
+            },
+            "HEAD": {
+              "value": 2
+            },
+            "POST": {
+              "value": 3
+            },
+            "PUT": {
+              "value": 4
+            },
+            "PATCH": {
+              "value": 5
+            },
+            "DELETE": {
+              "value": 6
+            },
+            "OPTIONS": {
+              "value": 7
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "PATH": {
+          "type": "string",
+          "description": "Path of the request as received, without the query string, e.g.\n\"/api/v1/data/omm/bulk\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ROUTE": {
+          "type": "string",
+          "description": "The gateway's routing decision: the stable name of the operation that\nserves the request, e.g. \"bulk\", \"query\", \"status\", \"activity\",\n\"peer_get\". Empty when no route matched (STATUS then says why).",
+          "x-flatbuffer-type": "string"
+        },
+        "SCHEMA_NAME": {
+          "type": "string",
+          "description": "Standard the request selects, as its schema file name, e.g. \"OMM.fbs\";\nempty when the route is not about one standard.",
+          "x-flatbuffer-type": "string"
+        },
+        "PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APRParameter"
+          },
+          "description": "Request parameters, in the order received. A parameter the service\ndefaults is absent rather than empty.",
+          "x-flatbuffer-type": "[APRParameter]"
+        },
+        "SELECTION": {
+          "type": "string",
+          "description": "Selection text the request carries in its body, when the route takes\none: an SQL statement, a search expression or a command line.",
+          "x-flatbuffer-type": "string"
+        },
+        "IF_NONE_MATCH": {
+          "type": "string",
+          "description": "Entity tag the client already holds (HTTP If-None-Match), verbatim; the\nservice answers \"not modified\" when its current tag equals it.",
+          "x-flatbuffer-type": "string"
+        },
+        "IF_MODIFIED_SINCE_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of the client's copy (HTTP If-Modified-Since); 0 =\nnone.",
+          "x-flatbuffer-type": "int64"
+        },
+        "ACCEPT": {
+          "$ref": "#/definitions/aprRepresentation",
+          "description": "Representation the client accepts.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Default": {
+              "value": 0,
+              "description": "The service's default (normally FlatBuffers)."
+            },
+            "FlatBuffer": {
+              "value": 1,
+              "description": "Size-prefixed FlatBuffer records of the standard served."
+            },
+            "Json": {
+              "value": 2,
+              "description": "JSON rendering of the same records."
+            },
+            "Csv": {
+              "value": 3,
+              "description": "Comma-separated values."
+            },
+            "Text": {
+              "value": 4,
+              "description": "Plain text."
+            }
+          },
+          "x-flatbuffer-default": "Default"
+        },
+        "CONTENT_TYPE": {
+          "type": "string",
+          "description": "Media type of BODY as the client declared it, e.g. \"application/sql\".",
+          "x-flatbuffer-type": "string"
+        },
+        "BODY": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Request body verbatim, when the route uses it and it is not already\nexpressed as SELECTION.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "STATUS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Outcome to answer with when the request is refused or failed, as an HTTP\nstatus (400 bad request, 404 no route, 405 method not allowed, 503\nunavailable, ...); 0 while the request is being served normally.",
+          "x-flatbuffer-type": "uint16"
+        },
+        "ERROR_CODE": {
+          "type": "string",
+          "description": "Stable machine-readable reason for STATUS, e.g. \"missing-sql\",\n\"method-not-allowed\"; empty when STATUS is 0.",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "description": "Human-readable detail for STATUS.",
+          "x-flatbuffer-type": "string"
+        },
+        "CALLER_ID": {
+          "type": "string",
+          "description": "Identity of the authenticated caller (a peer identifier or account),\nwhen the gateway authenticated one.",
+          "x-flatbuffer-type": "string"
+        },
+        "RESPONSE_HEADERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/APRParameter"
+          },
+          "description": "Headers a serving stage asks the answer to carry, e.g. \"cache-control\",\n\"last-modified\", \"content-disposition\" (name lower-case).",
+          "x-flatbuffer-type": "[APRParameter]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/APR",
+  "x-flatbuffer-root-type": "APR",
+  "x-flatbuffer-file-identifier": "$APR"
+}

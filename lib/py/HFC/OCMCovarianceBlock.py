@@ -298,7 +298,7 @@ def OCMCovarianceBlockCreateLINESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateLINESVector(builder, data):
-    OCMCovarianceBlockCreateLINESVector(builder, data)
+    return OCMCovarianceBlockCreateLINESVector(builder, data)
 
 def OCMCovarianceBlockAddCOV_REALISM(builder, COV_REALISM):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(COV_REALISM), 0)
@@ -316,7 +316,7 @@ def OCMCovarianceBlockCreateCOV_REALISMVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOV_REALISMVector(builder, data):
-    OCMCovarianceBlockCreateCOV_REALISMVector(builder, data)
+    return OCMCovarianceBlockCreateCOV_REALISMVector(builder, data)
 
 def OCMCovarianceBlockEnd(builder):
     return builder.EndObject()

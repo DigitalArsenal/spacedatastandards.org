@@ -423,7 +423,7 @@ def TXSCreatePRIOR_POSITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePRIOR_POSITIONSVector(builder, data):
-    TXSCreatePRIOR_POSITIONSVector(builder, data)
+    return TXSCreatePRIOR_POSITIONSVector(builder, data)
 
 def TXSAddGROUND_ELEVATION_AMSL_M(builder, GROUND_ELEVATION_AMSL_M):
     builder.PrependFloat64Slot(16, GROUND_ELEVATION_AMSL_M, 0.0)
@@ -465,7 +465,7 @@ def TXSCreateEMISSIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEMISSIONSVector(builder, data):
-    TXSCreateEMISSIONSVector(builder, data)
+    return TXSCreateEMISSIONSVector(builder, data)
 
 def TXSAddFIRST_OBSERVED(builder, FIRST_OBSERVED):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(FIRST_OBSERVED), 0)
@@ -495,7 +495,7 @@ def TXSCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    TXSCreateSOURCESVector(builder, data)
+    return TXSCreateSOURCESVector(builder, data)
 
 def TXSAddCONSENSUS(builder, CONSENSUS):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CONSENSUS), 0)

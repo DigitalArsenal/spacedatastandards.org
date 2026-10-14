@@ -272,6 +272,27 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -2127,17 +2148,59 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_CVR = 257,
   RecordTypeExtended_PVN = 258,
   RecordTypeExtended_SBD = 259,
+  RecordTypeExtended_APR = 260,
+  RecordTypeExtended_ASG = 261,
+  RecordTypeExtended_DAV = 262,
+  RecordTypeExtended_DCL = 263,
+  RecordTypeExtended_ERM = 264,
+  RecordTypeExtended_FIL = 265,
+  RecordTypeExtended_LFV = 266,
+  RecordTypeExtended_MDE = 267,
+  RecordTypeExtended_MPL = 268,
+  RecordTypeExtended_NEV = 269,
+  RecordTypeExtended_NHS = 270,
+  RecordTypeExtended_OIL = 271,
+  RecordTypeExtended_PNV = 272,
+  RecordTypeExtended_PPS = 273,
+  RecordTypeExtended_RND = 274,
+  RecordTypeExtended_SBC = 275,
+  RecordTypeExtended_SCR = 276,
+  RecordTypeExtended_SRG = 277,
+  RecordTypeExtended_TBP = 278,
+  RecordTypeExtended_WHA = 279,
+  RecordTypeExtended_XMT = 280,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_SBD
+  RecordTypeExtended_MAX = RecordTypeExtended_XMT
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[5] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[26] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
     RecordTypeExtended_CVR,
     RecordTypeExtended_PVN,
-    RecordTypeExtended_SBD
+    RecordTypeExtended_SBD,
+    RecordTypeExtended_APR,
+    RecordTypeExtended_ASG,
+    RecordTypeExtended_DAV,
+    RecordTypeExtended_DCL,
+    RecordTypeExtended_ERM,
+    RecordTypeExtended_FIL,
+    RecordTypeExtended_LFV,
+    RecordTypeExtended_MDE,
+    RecordTypeExtended_MPL,
+    RecordTypeExtended_NEV,
+    RecordTypeExtended_NHS,
+    RecordTypeExtended_OIL,
+    RecordTypeExtended_PNV,
+    RecordTypeExtended_PPS,
+    RecordTypeExtended_RND,
+    RecordTypeExtended_SBC,
+    RecordTypeExtended_SCR,
+    RecordTypeExtended_SRG,
+    RecordTypeExtended_TBP,
+    RecordTypeExtended_WHA,
+    RecordTypeExtended_XMT
   };
   return values;
 }
@@ -2149,6 +2212,27 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_CVR: return "CVR";
     case RecordTypeExtended_PVN: return "PVN";
     case RecordTypeExtended_SBD: return "SBD";
+    case RecordTypeExtended_APR: return "APR";
+    case RecordTypeExtended_ASG: return "ASG";
+    case RecordTypeExtended_DAV: return "DAV";
+    case RecordTypeExtended_DCL: return "DCL";
+    case RecordTypeExtended_ERM: return "ERM";
+    case RecordTypeExtended_FIL: return "FIL";
+    case RecordTypeExtended_LFV: return "LFV";
+    case RecordTypeExtended_MDE: return "MDE";
+    case RecordTypeExtended_MPL: return "MPL";
+    case RecordTypeExtended_NEV: return "NEV";
+    case RecordTypeExtended_NHS: return "NHS";
+    case RecordTypeExtended_OIL: return "OIL";
+    case RecordTypeExtended_PNV: return "PNV";
+    case RecordTypeExtended_PPS: return "PPS";
+    case RecordTypeExtended_RND: return "RND";
+    case RecordTypeExtended_SBC: return "SBC";
+    case RecordTypeExtended_SCR: return "SCR";
+    case RecordTypeExtended_SRG: return "SRG";
+    case RecordTypeExtended_TBP: return "TBP";
+    case RecordTypeExtended_WHA: return "WHA";
+    case RecordTypeExtended_XMT: return "XMT";
     default: return "";
   }
 }

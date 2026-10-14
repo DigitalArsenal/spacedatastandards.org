@@ -129,7 +129,7 @@ def CQRCatalogResultCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    CQRCatalogResultCreateEVENTSVector(builder, data)
+    return CQRCatalogResultCreateEVENTSVector(builder, data)
 
 def CQRCatalogResultAddSTATISTICS(builder, STATISTICS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(STATISTICS), 0)

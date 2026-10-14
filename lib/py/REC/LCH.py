@@ -323,7 +323,7 @@ def LCHCreateREQUESTER_SIGNING_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUESTER_SIGNING_PUBKEYVector(builder, data):
-    LCHCreateREQUESTER_SIGNING_PUBKEYVector(builder, data)
+    return LCHCreateREQUESTER_SIGNING_PUBKEYVector(builder, data)
 
 def LCHAddREQUESTER_EPHEMERAL_PUBKEY(builder, REQUESTER_EPHEMERAL_PUBKEY):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(REQUESTER_EPHEMERAL_PUBKEY), 0)
@@ -345,7 +345,7 @@ def LCHCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data):
-    LCHCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data)
+    return LCHCreateREQUESTER_EPHEMERAL_PUBKEYVector(builder, data)
 
 def LCHAddREQUESTED_DOMAIN(builder, REQUESTED_DOMAIN):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(REQUESTED_DOMAIN), 0)
@@ -385,7 +385,7 @@ def LCHCreateCHALLENGE_NONCEVector(builder, data):
     return builder.EndVector()
 
 def CreateCHALLENGE_NONCEVector(builder, data):
-    LCHCreateCHALLENGE_NONCEVector(builder, data)
+    return LCHCreateCHALLENGE_NONCEVector(builder, data)
 
 def LCHAddEXPIRES_AT(builder, EXPIRES_AT):
     builder.PrependUint64Slot(13, EXPIRES_AT, 0)
@@ -431,7 +431,7 @@ def LCHCreateREQUESTER_EPMVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUESTER_EPMVector(builder, data):
-    LCHCreateREQUESTER_EPMVector(builder, data)
+    return LCHCreateREQUESTER_EPMVector(builder, data)
 
 def LCHEnd(builder):
     return builder.EndObject()

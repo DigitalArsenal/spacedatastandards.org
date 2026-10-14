@@ -300,7 +300,11 @@ enum hostCapabilityKind {
   CRYPTO_KEY_AGREEMENT(33),
   CRYPTO_KDF(34),
   SCHEDULE_CRON(35),
-  STORAGE_INGEST(36);
+  STORAGE_INGEST(36),
+  P2P_READ(37),
+  NODE_STATUS_READ(38),
+  NODE_ACTIVITY_READ(39),
+  SECRETS(40);
 
   final int value;
   const hostCapabilityKind(this.value);
@@ -344,6 +348,10 @@ enum hostCapabilityKind {
       case 34: return hostCapabilityKind.CRYPTO_KDF;
       case 35: return hostCapabilityKind.SCHEDULE_CRON;
       case 36: return hostCapabilityKind.STORAGE_INGEST;
+      case 37: return hostCapabilityKind.P2P_READ;
+      case 38: return hostCapabilityKind.NODE_STATUS_READ;
+      case 39: return hostCapabilityKind.NODE_ACTIVITY_READ;
+      case 40: return hostCapabilityKind.SECRETS;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -352,7 +360,7 @@ enum hostCapabilityKind {
       value == null ? null : hostCapabilityKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 36;
+  static const int maxValue = 40;
   static const fb.Reader<hostCapabilityKind> reader = _hostCapabilityKindReader();
 }
 

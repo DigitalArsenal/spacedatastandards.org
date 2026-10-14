@@ -309,7 +309,7 @@ def SCVCoverageRequestCreateSENSORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSENSORSVector(builder, data):
-    SCVCoverageRequestCreateSENSORSVector(builder, data)
+    return SCVCoverageRequestCreateSENSORSVector(builder, data)
 
 def SCVCoverageRequestAddSTATE_SAMPLES(builder, STATE_SAMPLES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_SAMPLES), 0)
@@ -327,7 +327,7 @@ def SCVCoverageRequestCreateSTATE_SAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATE_SAMPLESVector(builder, data):
-    SCVCoverageRequestCreateSTATE_SAMPLESVector(builder, data)
+    return SCVCoverageRequestCreateSTATE_SAMPLESVector(builder, data)
 
 def SCVCoverageRequestAddTARGETS(builder, TARGETS):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(TARGETS), 0)
@@ -345,7 +345,7 @@ def SCVCoverageRequestCreateTARGETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGETSVector(builder, data):
-    SCVCoverageRequestCreateTARGETSVector(builder, data)
+    return SCVCoverageRequestCreateTARGETSVector(builder, data)
 
 def SCVCoverageRequestAddTARGET_STATE_SAMPLES(builder, TARGET_STATE_SAMPLES):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_STATE_SAMPLES), 0)
@@ -363,7 +363,7 @@ def SCVCoverageRequestCreateTARGET_STATE_SAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTARGET_STATE_SAMPLESVector(builder, data):
-    SCVCoverageRequestCreateTARGET_STATE_SAMPLESVector(builder, data)
+    return SCVCoverageRequestCreateTARGET_STATE_SAMPLESVector(builder, data)
 
 def SCVCoverageRequestAddREQUESTED_PRODUCTS(builder, REQUESTED_PRODUCTS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(REQUESTED_PRODUCTS), 0)
@@ -385,7 +385,7 @@ def SCVCoverageRequestCreateREQUESTED_PRODUCTSVector(builder, data):
     return builder.EndVector()
 
 def CreateREQUESTED_PRODUCTSVector(builder, data):
-    SCVCoverageRequestCreateREQUESTED_PRODUCTSVector(builder, data)
+    return SCVCoverageRequestCreateREQUESTED_PRODUCTSVector(builder, data)
 
 def SCVCoverageRequestAddSENSOR_BATCH_START(builder, SENSOR_BATCH_START):
     builder.PrependUint32Slot(11, SENSOR_BATCH_START, 0)

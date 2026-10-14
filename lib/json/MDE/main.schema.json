@@ -1,0 +1,1333 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "maneuverStatus" : {
+      "type" : "string",
+      "enum": ["DETECTED", "CONFIRMED", "PREDICTED", "PLANNED", "EXECUTED", "CANCELLED", "UNKNOWN"]
+    },
+    "maneuverCharacterization" : {
+      "type" : "string",
+      "enum": ["IN_PLANE", "OUT_OF_PLANE", "COMBINED", "STATION_KEEPING", "ORBIT_RAISING", "ORBIT_LOWERING", "PHASING", "DEORBIT", "COLLISION_AVOIDANCE", "UNKNOWN"]
+    },
+    "mdeDetector" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Crossing", "LevelShift", "RateChange", "Combined"]
+    },
+    "mdeRunStatus" : {
+      "type" : "string",
+      "enum": ["Unspecified", "NeedsPropagation", "Detected"]
+    },
+    "mdeObjectStatus" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Screened", "InsufficientHistory"]
+    },
+    "mdeTimeBasis" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Crossing", "Gap"]
+    },
+    "mdeComparisonMode" : {
+      "type" : "string",
+      "enum": ["Unspecified", "NoComparison", "Overlap", "Adjacent", "WithinVersion"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "mnvOrbitalState" : {
+      "type" : "object",
+      "description" : "Pre/post-maneuver orbital state",
+      "properties" : {
+        "ID_ELSET" : {
+                "type" : "string",
+                "description" : "Element set identifier"
+              },
+        "ELSET" : {
+                "type" : "string",
+                "description" : "Element set data reference"
+              },
+        "ID_STATE_VECTOR" : {
+                "type" : "string",
+                "description" : "State vector identifier"
+              },
+        "STATE_VECTOR" : {
+                "type" : "string",
+                "description" : "State vector data reference"
+              },
+        "POS_X" : {
+                "type" : "number",
+                "description" : "Position X (km)"
+              },
+        "POS_Y" : {
+                "type" : "number",
+                "description" : "Position Y (km)"
+              },
+        "POS_Z" : {
+                "type" : "number",
+                "description" : "Position Z (km)"
+              },
+        "VEL_X" : {
+                "type" : "number",
+                "description" : "Velocity X (km/s)"
+              },
+        "VEL_Y" : {
+                "type" : "number",
+                "description" : "Velocity Y (km/s)"
+              },
+        "VEL_Z" : {
+                "type" : "number",
+                "description" : "Velocity Z (km/s)"
+              },
+        "RADIATION_PRESS_COEFF" : {
+                "type" : "number",
+                "description" : "Radiation pressure coefficient (Cr)"
+              },
+        "BALLISTIC_COEFF" : {
+                "type" : "number",
+                "description" : "Ballistic coefficient (m^2/kg)"
+              },
+        "APOGEE" : {
+                "type" : "number",
+                "description" : "Apogee altitude (km)"
+              },
+        "PERIGEE" : {
+                "type" : "number",
+                "description" : "Perigee altitude (km)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination (degrees)"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "PERIOD" : {
+                "type" : "number",
+                "description" : "Orbital period (minutes)"
+              },
+        "RAAN" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node (degrees)"
+              },
+        "SMA" : {
+                "type" : "number",
+                "description" : "Semi-major axis (km)"
+              },
+        "GEO_LONGITUDE" : {
+                "type" : "number",
+                "description" : "GEO longitude (degrees east)"
+              },
+        "DRIFT_RATE" : {
+                "type" : "number",
+                "description" : "Longitude drift rate (degrees/day)"
+              },
+        "SIGMA_U" : {
+                "type" : "number",
+                "description" : "Position uncertainty along U, radial, in the UVW frame of this state (km, 1-sigma)"
+              },
+        "SIGMA_V" : {
+                "type" : "number",
+                "description" : "Position uncertainty along V, in-track, in the UVW frame of this state (km, 1-sigma)"
+              },
+        "SIGMA_W" : {
+                "type" : "number",
+                "description" : "Position uncertainty along W, cross-track, in the UVW frame of this state (km, 1-sigma)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MNV" : {
+      "type" : "object",
+      "description" : "Spacecraft Maneuver\n\nU, V and W are the UVW axes of an orbit state: U radial, along the position\nvector away from the central body; W cross-track, along the orbit normal\n(the direction of r x v); V in-track, W x U, completing the right-handed\nframe. DELTA_VEL_U/V/W and DELTA_POS_U/V/W are in the UVW frame of the\npre-maneuver state at EVENT_START_TIME.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator"
+              },
+        "ON_ORBIT" : {
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/maneuverStatus",
+                "description" : "Maneuver status"
+              },
+        "CHARACTERIZATION" : {
+                "$ref" : "#/definitions/maneuverCharacterization",
+                "description" : "Maneuver characterization"
+              },
+        "CHARACTERIZATION_UNC" : {
+                "type" : "number",
+                "description" : "Characterization uncertainty (0-1)"
+              },
+        "REPORT_TIME" : {
+                "type" : "string",
+                "description" : "Detection report time (ISO 8601)"
+              },
+        "EVENT_START_TIME" : {
+                "type" : "string",
+                "description" : "Maneuver start time (ISO 8601)"
+              },
+        "EVENT_END_TIME" : {
+                "type" : "string",
+                "description" : "Maneuver end time (ISO 8601)"
+              },
+        "TOTAL_BURN_TIME" : {
+                "type" : "number",
+                "description" : "Total burn time (seconds)"
+              },
+        "OD_FIT_END_TIME" : {
+                "type" : "string",
+                "description" : "OD fit end time (ISO 8601)"
+              },
+        "ID_SENSOR" : {
+                "type" : "string",
+                "description" : "Detecting sensor identifier"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Original sensor identifier"
+              },
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "Maneuver event identifier. Records of one event share it: a merged event\nand the source records it combines."
+              },
+        "UCT" : {
+                "type" : "boolean",
+                "description" : "True if object is uncorrelated"
+              },
+        "MANEUVER_UNC" : {
+                "type" : "number",
+                "description" : "Maneuver detection uncertainty (km)"
+              },
+        "DELTA_VEL" : {
+                "type" : "number",
+                "description" : "Total delta-V magnitude (km/s)"
+              },
+        "DELTA_VEL_U" : {
+                "type" : "number",
+                "description" : "Delta-V along U, radial (km/s)"
+              },
+        "DELTA_VEL_V" : {
+                "type" : "number",
+                "description" : "Delta-V along V, in-track (km/s)"
+              },
+        "DELTA_VEL_W" : {
+                "type" : "number",
+                "description" : "Delta-V along W, cross-track (km/s)"
+              },
+        "DELTA_POS" : {
+                "type" : "number",
+                "description" : "Total delta position (km)"
+              },
+        "DELTA_POS_U" : {
+                "type" : "number",
+                "description" : "Delta position along U, radial (km)"
+              },
+        "DELTA_POS_V" : {
+                "type" : "number",
+                "description" : "Delta position along V, in-track (km)"
+              },
+        "DELTA_POS_W" : {
+                "type" : "number",
+                "description" : "Delta position along W, cross-track (km)"
+              },
+        "DELTA_MASS" : {
+                "type" : "number",
+                "description" : "Propellant mass consumed (kg)"
+              },
+        "PRE_EVENT" : {
+                "$ref" : "#/definitions/mnvOrbitalState",
+                "description" : "Pre-maneuver orbital state"
+              },
+        "POST_EVENT" : {
+                "$ref" : "#/definitions/mnvOrbitalState",
+                "description" : "Post-maneuver orbital state"
+              },
+        "POST_MASS" : {
+                "type" : "number",
+                "description" : "Post-maneuver mass (kg)"
+              },
+        "POST_AREA" : {
+                "type" : "number",
+                "description" : "Post-maneuver cross-sectional area (m^2)"
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "6x6 covariance matrix (upper triangle, row-major)"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of observations used"
+              },
+        "STATE_MODEL" : {
+                "type" : "string",
+                "description" : "State model used"
+              },
+        "STATE_MODEL_VERSION" : {
+                "type" : "number",
+                "description" : "State model version"
+              },
+        "NUM_ACCEL_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of acceleration profile points"
+              },
+        "MNVR_ACCEL_TIMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Acceleration profile times (ISO 8601)"
+              },
+        "MNVR_ACCELS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Acceleration values (km/s^2): U, V and W per point, in the UVW frame of\nthe state at that point's MNVR_ACCEL_TIMES entry"
+              },
+        "MNVR_ACCEL_UNCS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Acceleration uncertainties (km/s^2)"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string",
+                "description" : "Event descriptor"
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Algorithm used for detection"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
+              },
+        "SOURCED_DATA" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Sourced data references: identifiers of the records this one was\ndetermined from (CIDv1 for records of this network), such as the source\nrecords a merged event combines"
+              },
+        "SOURCED_DATA_TYPES" : {
+                "type" : "string",
+                "description" : "Sourced data types"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "Transaction identifier"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the maneuver's data comes from and the terms it travels under."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEDetectOptions" : {
+      "type" : "object",
+      "description" : "Detection settings. Every field has its default.",
+      "properties" : {
+        "DETECTORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/mdeDetector"},
+                "description" : "Detectors enabled; empty = Crossing and LevelShift, combined."
+              },
+        "REPORT_TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Report time of the emitted maneuvers, Unix ms; 0 = the ephemeris\ncreation date."
+              },
+        "PROPAGATOR_PORT_ID" : {
+                "type" : "string",
+                "description" : "Port of the propagator that answers window requests; empty = default."
+              },
+        "REPORT_PAIRS" : {
+                "type" : "boolean",
+                "description" : "Report every crossing pair."
+              },
+        "REPORT_LEVELS" : {
+                "type" : "boolean",
+                "description" : "Report the level series."
+              },
+        "K" : {
+                "type" : "number",
+                "description" : "D1 threshold multiple of the robust scale."
+              },
+        "FLOOR_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "D1 in-track threshold floor, m/s."
+              },
+        "FLOOR_CROSS_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "D1 cross-track threshold floor, m/s."
+              },
+        "MEDIAN_SETS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Element sets in the running median."
+              },
+        "SCALE_WINDOW_PAIRS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Pairs in the robust scale window."
+              },
+        "GRID_STEP_S" : {
+                "type" : "number",
+                "description" : "Sampling step of the crossing search, s."
+              },
+        "NEIGHBOUR_SETS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Neighbouring element sets each set is propagated across."
+              },
+        "GLR_SETS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "D2 element sets per GLR window."
+              },
+        "GLR_SPAN_DAYS" : {
+                "type" : "number",
+                "description" : "D2 GLR window span, days."
+              },
+        "GLR_H" : {
+                "type" : "number",
+                "description" : "D2 GLR threshold."
+              },
+        "GLR_FLOOR_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "D2 in-track sigma floor, m/s."
+              },
+        "GLR_FLOOR_PLANE_RAD" : {
+                "type" : "number",
+                "description" : "D2 plane sigma floor, rad."
+              },
+        "LT_H" : {
+                "type" : "number",
+                "description" : "D3 GLR threshold."
+              },
+        "LT_FLOOR_M_S_PER_DAY" : {
+                "type" : "number",
+                "description" : "D3 rate sigma floor, m/s per day."
+              },
+        "LT_SPAN_DAYS" : {
+                "type" : "number",
+                "description" : "D3 window span, days."
+              },
+        "LT_SETS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "D3 element sets per window."
+              },
+        "MERGE_HOURS" : {
+                "type" : "number",
+                "description" : "Events of different detectors within this time merge, hours."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDECrossingPair" : {
+      "type" : "object",
+      "description" : "One pair of consecutive element sets, compared at the crossing of their\npredictions.",
+      "properties" : {
+        "SPAN_START_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch of the earlier set, Unix ms."
+              },
+        "SPAN_STOP_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch of the later set, Unix ms."
+              },
+        "CROSSING_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Time of closest approach of the two predictions, Unix ms."
+              },
+        "CROSSING_AT_EDGE" : {
+                "type" : "boolean",
+                "description" : "True when the crossing is at an end of the span (no interior minimum)."
+              },
+        "SEPARATION_KM" : {
+                "type" : "number",
+                "description" : "Separation at the crossing, km."
+              },
+        "DELTA_SMA_KM" : {
+                "type" : "number",
+                "description" : "Semi-major axis change, km."
+              },
+        "IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "In-track velocity change at the crossing, m/s."
+              },
+        "PLANE_M_S" : {
+                "type" : "number",
+                "description" : "Plane (cross-track) velocity change, m/s."
+              },
+        "STEP_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "D1 in-track step after the running median, m/s; NaN = not screened."
+              },
+        "STEP_PLANE_M_S" : {
+                "type" : "number",
+                "description" : "D1 plane step, m/s; NaN = not screened."
+              },
+        "THRESHOLD_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "D1 in-track threshold, m/s; NaN = not screened."
+              },
+        "THRESHOLD_PLANE_M_S" : {
+                "type" : "number",
+                "description" : "D1 plane threshold, m/s; NaN = not screened."
+              },
+        "CANDIDATE" : {
+                "type" : "boolean",
+                "description" : "True when D1 found a candidate here."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDELevel" : {
+      "type" : "object",
+      "description" : "The level of one element set in the GLR series.",
+      "properties" : {
+        "SET_EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch of the set, Unix ms."
+              },
+        "SMA_KM" : {
+                "type" : "number",
+                "description" : "Semi-major axis, km."
+              },
+        "LEVEL_M_S" : {
+                "type" : "number",
+                "description" : "Mean-motion level as an in-track speed, m/s."
+              },
+        "SIGMA_M_S" : {
+                "type" : "number",
+                "description" : "Its sigma, m/s."
+              },
+        "PLANE_M_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Orbit-plane vector scaled to speed, m/s (3 values)."
+              },
+        "PLANE_SIGMA_M_S" : {
+                "type" : "number",
+                "description" : "Its sigma, m/s."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEEvidence" : {
+      "type" : "object",
+      "description" : "The statistic behind one event. A combined event lists the evidence of\neach detector in COMPONENTS.",
+      "properties" : {
+        "DETECTOR" : {
+                "$ref" : "#/definitions/mdeDetector"
+              },
+        "TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Time the component detector gave, Unix ms (for a combined event's\ncomponents); 0 = the event's."
+              },
+        "PAIR_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "D1: index of the crossing pair; -1 = none."
+              },
+        "STEP_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "D1: step and threshold values, m/s; NaN = not computed."
+              },
+        "STEP_PLANE_M_S" : {
+                "type" : "number"
+              },
+        "THRESHOLD_IN_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "THRESHOLD_PLANE_M_S" : {
+                "type" : "number"
+              },
+        "CROSSING_AT_EDGE" : {
+                "type" : "boolean",
+                "description" : "D1: crossing at an end of the span."
+              },
+        "SPAN_START_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Span (D1) or gap (D2, D3) start and stop, Unix ms; 0 = none."
+              },
+        "SPAN_STOP_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "GLR_STATISTIC" : {
+                "type" : "number",
+                "description" : "D2/D3: GLR statistic of the in-track (or rate) test; NaN = not computed."
+              },
+        "STEP_M_S" : {
+                "type" : "number",
+                "description" : "D2: level step, m/s, and its standard deviation."
+              },
+        "STEP_SD_M_S" : {
+                "type" : "number"
+              },
+        "SIGMA_M_S" : {
+                "type" : "number",
+                "description" : "D2: sigma of the levels, m/s."
+              },
+        "TREND_M_S_PER_DAY" : {
+                "type" : "number",
+                "description" : "D2: level trend removed, m/s per day."
+              },
+        "OLD_LEVEL_SET_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "D2: epochs of the last old-level and first new-level sets, Unix ms."
+              },
+        "NEW_LEVEL_SET_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TIME_BASIS" : {
+                "$ref" : "#/definitions/mdeTimeBasis"
+              },
+        "PLANE_GLR_STATISTIC" : {
+                "type" : "number",
+                "description" : "D2: GLR statistic of the plane test; NaN = not computed."
+              },
+        "PLANE_STEP_M_S" : {
+                "type" : "number",
+                "description" : "D2: plane step, m/s."
+              },
+        "RATE_CHANGE_M_S_PER_DAY" : {
+                "type" : "number",
+                "description" : "D3: change of the level rate, m/s per day, and its standard deviation."
+              },
+        "RATE_CHANGE_SD" : {
+                "type" : "number"
+              },
+        "TREND_BEFORE_M_S_PER_DAY" : {
+                "type" : "number",
+                "description" : "D3: rate before the change, m/s per day."
+              },
+        "COMPONENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEEvidence"},
+                "description" : "C: the evidence of each component detector."
+              },
+        "KEPT" : {
+                "$ref" : "#/definitions/mdeDetector",
+                "description" : "C: the component whose time and size were kept."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEEvent" : {
+      "type" : "object",
+      "description" : "One event a detector raised.",
+      "properties" : {
+        "DETECTOR" : {
+                "$ref" : "#/definitions/mdeDetector"
+              },
+        "TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Event time, Unix ms."
+              },
+        "CHARACTERIZATION" : {
+                "$ref" : "#/definitions/maneuverCharacterization"
+              },
+        "IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "In-track delta-v, m/s; 0 unless its test fired."
+              },
+        "CROSS_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "Cross-track delta-v, m/s; 0 unless its test fired."
+              },
+        "IN_TRACK_FIRED" : {
+                "type" : "boolean"
+              },
+        "CROSS_TRACK_FIRED" : {
+                "type" : "boolean"
+              },
+        "RAW_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "In-track and cross-track estimates before the firing rule, m/s."
+              },
+        "RAW_CROSS_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "DELTA_SMA_KM" : {
+                "type" : "number",
+                "description" : "Semi-major axis change, km."
+              },
+        "SEPARATION_KM" : {
+                "type" : "number",
+                "description" : "Separation at the crossing, km."
+              },
+        "TIME_FROM_CROSSING" : {
+                "type" : "boolean",
+                "description" : "True when TIME_MS is a crossing time (else a gap middle)."
+              },
+        "BLOCK_BEFORE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Indices of the history blocks (element sets or versions) before and\nafter the event."
+              },
+        "BLOCK_AFTER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "EVIDENCE" : {
+                "$ref" : "#/definitions/MDEEvidence"
+              },
+        "ACCEL_CHANGE_M_S2" : {
+                "type" : "number",
+                "description" : "D3: change of along-track acceleration, m/s**2; NaN = not computed."
+              },
+        "MNV_ID" : {
+                "type" : "string",
+                "description" : "ID of the $MNV record emitted for the event; empty when not emitted."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEDuplicateEpoch" : {
+      "type" : "object",
+      "description" : "An element set dropped as a republication of another.",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string"
+              },
+        "EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Epoch, Unix ms."
+              },
+        "KEPT_RECORD" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "0-based input record kept and dropped."
+              },
+        "DROPPED_RECORD" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDERefusedSet" : {
+      "type" : "object",
+      "description" : "An element set that could not be used.",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string"
+              },
+        "EPOCH_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "SET_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "0-based input record; -1 = not applicable."
+              },
+        "REASON" : {
+                "type" : "string",
+                "description" : "Reason, e.g. \"a single element set\" or the propagator's refusal text."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEObjectDetection" : {
+      "type" : "object",
+      "description" : "One object screened.",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string",
+                "description" : "Object key: \"NORAD:<n>\", else OBJECT_ID, else OBJECT_NAME."
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "ELEMENT_SETS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Element sets in its history."
+              },
+        "FRAME" : {
+                "type" : "string",
+                "description" : "Frame the history was screened in, e.g. \"TEMEOFDATE\", \"EME2000\"."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/mdeObjectStatus"
+              },
+        "DETAIL" : {
+                "type" : "string",
+                "description" : "Why the history was insufficient; empty otherwise."
+              },
+        "PAIRS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDECrossingPair"},
+                "description" : "Crossing pairs (when REPORT_PAIRS)."
+              },
+        "LEVELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDELevel"},
+                "description" : "Level series (when REPORT_LEVELS)."
+              },
+        "DETECTOR_EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEEvent"},
+                "description" : "Every event each enabled detector raised, before combining."
+              },
+        "EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEEvent"},
+                "description" : "The events emitted (one $MNV each)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEDetectReport" : {
+      "type" : "object",
+      "description" : "Result of a detection run.",
+      "properties" : {
+        "STATUS" : {
+                "$ref" : "#/definitions/mdeRunStatus"
+              },
+        "QUERIES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Window requests emitted (NeedsPropagation)."
+              },
+        "DUPLICATE_EPOCHS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEDuplicateEpoch"}
+              },
+        "OPTIONS" : {
+                "$ref" : "#/definitions/MDEDetectOptions",
+                "description" : "The options used, defaults filled in."
+              },
+        "OBJECTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEObjectDetection"}
+              },
+        "OBJECTS_SCREENED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REFUSED_SETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDERefusedSet"}
+              },
+        "DETECTIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Events emitted over all objects."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDECompareOptions" : {
+      "type" : "object",
+      "description" : "Settings of a comparison of ephemeris versions.",
+      "properties" : {
+        "REPORT_TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Report time, Unix ms; 0 = from the versions."
+              },
+        "WITHIN_VERSION" : {
+                "type" : "boolean",
+                "description" : "Also look for changes inside one version."
+              },
+        "MARGIN_S" : {
+                "type" : "number",
+                "description" : "Margin around a planned ignition, s."
+              },
+        "POST_START_AFTER_S" : {
+                "type" : "number",
+                "description" : "The post-burn version must start this long after ignition, s."
+              },
+        "EXECUTED_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of the planned change that marks EXECUTED."
+              },
+        "CANCELLED_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction below which the plan is CANCELLED (<= EXECUTED_FRACTION)."
+              },
+        "UNPLANNED_THRESHOLD_KM" : {
+                "type" : "number",
+                "description" : "Semi-major axis change that flags an unplanned change, km; NaN = off."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEVersionChange" : {
+      "type" : "object",
+      "description" : "One comparison of two versions (or one version with itself).",
+      "properties" : {
+        "OLDER" : {
+                "type" : "string",
+                "description" : "Older and newer version descriptions; WITHIN names the version for a\nWithinVersion change."
+              },
+        "NEWER" : {
+                "type" : "string"
+              },
+        "WITHIN" : {
+                "type" : "string"
+              },
+        "MODE" : {
+                "$ref" : "#/definitions/mdeComparisonMode"
+              },
+        "DETAIL" : {
+                "type" : "string",
+                "description" : "Why there was no comparison; empty otherwise."
+              },
+        "WINDOW_START_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Window compared, Unix ms."
+              },
+        "WINDOW_STOP_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "DELTA_SMA_KM" : {
+                "type" : "number",
+                "description" : "Semi-major axis change, km."
+              },
+        "IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "In-track and cross-track equivalent delta-v, m/s."
+              },
+        "CROSS_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "GAP_S" : {
+                "type" : "number",
+                "description" : "Gap between adjacent versions, s."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEPlannedCheck" : {
+      "type" : "object",
+      "description" : "One planned maneuver checked against the versions.",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "The plan's maneuver ID."
+              },
+        "TIG_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Planned ignition, Unix ms."
+              },
+        "PLANNED_M_S" : {
+                "type" : "number",
+                "description" : "Planned delta-v, m/s."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/maneuverStatus",
+                "description" : "EXECUTED, CANCELLED or UNKNOWN."
+              },
+        "GROUP_START_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Group of plans checked together, Unix ms."
+              },
+        "GROUP_STOP_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "DETAIL" : {
+                "type" : "string",
+                "description" : "Why it could not be decided; empty otherwise."
+              },
+        "PRE" : {
+                "type" : "string",
+                "description" : "Pre-burn and post-burn version descriptions; empty = none."
+              },
+        "POST" : {
+                "type" : "string"
+              },
+        "WINDOW_START_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Window compared, Unix ms."
+              },
+        "WINDOW_STOP_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MODELED_DELTA_SMA_KM" : {
+                "type" : "number",
+                "description" : "Semi-major axis change the plan models, km."
+              },
+        "POST_MINUS_PRE_SMA_KM" : {
+                "type" : "number",
+                "description" : "Post-burn minus pre-burn semi-major axis, km."
+              },
+        "EXECUTED_DELTA_SMA_KM" : {
+                "type" : "number",
+                "description" : "Executed semi-major axis change, km."
+              },
+        "EXECUTED_IN_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "Executed in-track and cross-track delta-v, m/s."
+              },
+        "EXECUTED_CROSS_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "MODELED_CROSS_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "Cross-track delta-v the plan models, m/s."
+              },
+        "POST_MINUS_PRE_CROSS_TRACK_M_S" : {
+                "type" : "number",
+                "description" : "Post minus pre cross-track, m/s."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEObjectComparison" : {
+      "type" : "object",
+      "description" : "Comparison results for one object.",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string"
+              },
+        "VERSIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Versions read."
+              },
+        "CHANGES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEVersionChange"}
+              },
+        "PLANNED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEPlannedCheck"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDECompareReport" : {
+      "type" : "object",
+      "description" : "Result of comparing ephemeris versions.",
+      "properties" : {
+        "OPTIONS" : {
+                "$ref" : "#/definitions/MDECompareOptions"
+              },
+        "OBJECTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEObjectComparison"}
+              },
+        "EXECUTED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "CANCELLED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "UNDECIDED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "UNPLANNED_CHANGE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEObjectSpan" : {
+      "type" : "object",
+      "description" : "A time span of one object.",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string"
+              },
+        "FROM_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TO_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEScoreOptions" : {
+      "type" : "object",
+      "description" : "Settings of scoring detections against known maneuvers.",
+      "properties" : {
+        "BEFORE_S" : {
+                "type" : "number",
+                "description" : "A detection up to this long before a known maneuver matches, s."
+              },
+        "AFTER_S" : {
+                "type" : "number",
+                "description" : "A detection up to this long after a known maneuver matches, s."
+              },
+        "BINS_M_S" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Delta-v bin edges for recall, increasing, m/s; empty = 0.05, 0.2, 1.0."
+              },
+        "EXPLAINED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEObjectSpan"},
+                "description" : "Spans where an unmatched detection is explained (not a false alarm)."
+              },
+        "ASSESSED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEObjectSpan"},
+                "description" : "Spans where truth is complete (false alarms count only here)."
+              },
+        "SPANS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEObjectSpan"},
+                "description" : "Spans of observation of each object (object-years)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEDistribution" : {
+      "type" : "object",
+      "description" : "Summary of a distribution.",
+      "properties" : {
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "MEDIAN" : {
+                "type" : "number"
+              },
+        "P10" : {
+                "type" : "number"
+              },
+        "P90" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDERecallBin" : {
+      "type" : "object",
+      "description" : "Recall in one delta-v bin.",
+      "properties" : {
+        "FROM_M_S" : {
+                "type" : "number"
+              },
+        "TO_M_S" : {
+                "type" : "number",
+                "description" : "Upper edge, m/s; +Infinity = open."
+              },
+        "TRUTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DETECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "RECALL" : {
+                "type" : "number",
+                "description" : "Recall, 0 to 1; NaN when TRUTH is 0."
+              },
+        "WILSON95_LOW" : {
+                "type" : "number",
+                "description" : "Wilson 95 % interval; NaN when TRUTH is 0."
+              },
+        "WILSON95_HIGH" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEScoreSummary" : {
+      "type" : "object",
+      "description" : "Scoring summary.",
+      "properties" : {
+        "TRUTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Known maneuvers."
+              },
+        "EVENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Detections scored."
+              },
+        "DETECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Known maneuvers detected."
+              },
+        "RECALL" : {
+                "type" : "number"
+              },
+        "WILSON95_LOW" : {
+                "type" : "number"
+              },
+        "WILSON95_HIGH" : {
+                "type" : "number"
+              },
+        "BY_DELTA_V" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDERecallBin"}
+              },
+        "TIME_ERROR_ABS_S" : {
+                "$ref" : "#/definitions/MDEDistribution",
+                "description" : "Absolute time error of matches, s; absent when none."
+              },
+        "DV_RATIO" : {
+                "$ref" : "#/definitions/MDEDistribution",
+                "description" : "Detected over known delta-v; absent when none."
+              },
+        "IN_TRACK_RATIO" : {
+                "$ref" : "#/definitions/MDEDistribution",
+                "description" : "Detected over known in-track delta-v; absent when none."
+              },
+        "UNMATCHED_EVENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "EXPLAINED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Unmatched detections inside explained spans."
+              },
+        "FALSE_ALARMS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "OBJECT_YEARS" : {
+                "type" : "number",
+                "description" : "Object-years assessed."
+              },
+        "FALSE_ALARMS_PER_OBJECT_YEAR" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDETruthMatch" : {
+      "type" : "object",
+      "description" : "A known maneuver and the detection matched to it (if any).",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string"
+              },
+        "ID" : {
+                "type" : "string",
+                "description" : "The known maneuver's ID and time, Unix ms."
+              },
+        "TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "DV_M_S" : {
+                "type" : "number",
+                "description" : "Known delta-v and its in-track part, m/s."
+              },
+        "IN_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "The matched detection's ID and time; empty and 0 for a miss."
+              },
+        "EVENT_TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "TIME_ERROR_S" : {
+                "type" : "number",
+                "description" : "Detection minus truth time, s; NaN for a miss."
+              },
+        "EVENT_DV_M_S" : {
+                "type" : "number"
+              },
+        "EVENT_IN_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "DV_RATIO" : {
+                "type" : "number"
+              },
+        "IN_TRACK_RATIO" : {
+                "type" : "number"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEUnmatchedEvent" : {
+      "type" : "object",
+      "description" : "A detection matched to no known maneuver.",
+      "properties" : {
+        "OBJECT_KEY" : {
+                "type" : "string"
+              },
+        "ID" : {
+                "type" : "string"
+              },
+        "TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "DV_M_S" : {
+                "type" : "number"
+              },
+        "IN_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "CROSS_TRACK_M_S" : {
+                "type" : "number"
+              },
+        "EXPLAINED" : {
+                "type" : "boolean",
+                "description" : "Inside an explained span."
+              },
+        "ASSESSED" : {
+                "type" : "boolean",
+                "description" : "Inside an assessed span (a false alarm when not explained)."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDEScoreReport" : {
+      "type" : "object",
+      "description" : "Result of scoring detections.",
+      "properties" : {
+        "OPTIONS" : {
+                "$ref" : "#/definitions/MDEScoreOptions"
+              },
+        "SUMMARY" : {
+                "$ref" : "#/definitions/MDEScoreSummary"
+              },
+        "MATCHES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDETruthMatch"}
+              },
+        "MISSED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDETruthMatch"},
+                "description" : "Known maneuvers not detected (EVENT fields empty)."
+              },
+        "UNMATCHED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/MDEUnmatchedEvent"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MDE" : {
+      "type" : "object",
+      "description" : "Maneuver Detection Evidence - exactly one arm is set.",
+      "properties" : {
+        "DETECT_OPTIONS" : {
+                "$ref" : "#/definitions/MDEDetectOptions"
+              },
+        "DETECT_REPORT" : {
+                "$ref" : "#/definitions/MDEDetectReport"
+              },
+        "COMPARE_OPTIONS" : {
+                "$ref" : "#/definitions/MDECompareOptions"
+              },
+        "COMPARE_REPORT" : {
+                "$ref" : "#/definitions/MDECompareReport"
+              },
+        "SCORE_OPTIONS" : {
+                "$ref" : "#/definitions/MDEScoreOptions"
+              },
+        "SCORE_REPORT" : {
+                "$ref" : "#/definitions/MDEScoreReport"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/MDE"
+}

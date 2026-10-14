@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Star Catalog Entry
-public struct STR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -50,7 +50,7 @@ public enum brokerLiveness: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 
 
 ///  Publisher Key-Broker Descriptor
-public struct PKB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PKB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

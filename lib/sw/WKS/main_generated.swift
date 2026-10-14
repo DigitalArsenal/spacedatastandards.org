@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  One saved FlatSQL query belonging to a workspace.
-public struct WKSQuery: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WKSQuery: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -71,7 +71,7 @@ public struct WKSQuery: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Workspace — named scene snapshot + FlatSQL query state + share grants
-public struct WKS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct WKS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

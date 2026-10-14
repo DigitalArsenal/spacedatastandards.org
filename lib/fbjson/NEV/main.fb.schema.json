@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "nevEventKind": {
+      "type": "string",
+      "enum": [
+        "Other",
+        "PeerConnected",
+        "PeerDisconnected",
+        "PublicationSent",
+        "PublicationReceived",
+        "RecordsStored",
+        "RecordsDeleted",
+        "GrantIssued",
+        "GrantRevoked",
+        "ServiceStarted",
+        "ServiceStopped",
+        "Warning",
+        "Failure"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Other": {
+          "value": 0,
+          "description": "Not classified; DETAIL says what it was."
+        },
+        "PeerConnected": {
+          "value": 1,
+          "description": "A peer connected."
+        },
+        "PeerDisconnected": {
+          "value": 2,
+          "description": "A peer disconnected."
+        },
+        "PublicationSent": {
+          "value": 3,
+          "description": "The node published a notice of new data (a $PNM)."
+        },
+        "PublicationReceived": {
+          "value": 4,
+          "description": "The node received a notice of new data from a peer."
+        },
+        "RecordsStored": {
+          "value": 5,
+          "description": "Records were stored."
+        },
+        "RecordsDeleted": {
+          "value": 6,
+          "description": "Records were deleted (retention, expiry or an operator)."
+        },
+        "GrantIssued": {
+          "value": 7,
+          "description": "An access or capability grant was issued."
+        },
+        "GrantRevoked": {
+          "value": 8,
+          "description": "An access or capability grant was revoked or expired."
+        },
+        "ServiceStarted": {
+          "value": 9,
+          "description": "A service or module started."
+        },
+        "ServiceStopped": {
+          "value": 10,
+          "description": "A service or module stopped."
+        },
+        "Warning": {
+          "value": 11,
+          "description": "A condition worth an operator's attention."
+        },
+        "Failure": {
+          "value": 12,
+          "description": "An operation failed."
+        }
+      }
+    },
+    "NEVEvent": {
+      "type": "object",
+      "description": "One event.",
+      "properties": {
+        "TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when the event happened.",
+          "x-flatbuffer-type": "int64"
+        },
+        "KIND": {
+          "$ref": "#/definitions/nevEventKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Other": {
+              "value": 0,
+              "description": "Not classified; DETAIL says what it was."
+            },
+            "PeerConnected": {
+              "value": 1,
+              "description": "A peer connected."
+            },
+            "PeerDisconnected": {
+              "value": 2,
+              "description": "A peer disconnected."
+            },
+            "PublicationSent": {
+              "value": 3,
+              "description": "The node published a notice of new data (a $PNM)."
+            },
+            "PublicationReceived": {
+              "value": 4,
+              "description": "The node received a notice of new data from a peer."
+            },
+            "RecordsStored": {
+              "value": 5,
+              "description": "Records were stored."
+            },
+            "RecordsDeleted": {
+              "value": 6,
+              "description": "Records were deleted (retention, expiry or an operator)."
+            },
+            "GrantIssued": {
+              "value": 7,
+              "description": "An access or capability grant was issued."
+            },
+            "GrantRevoked": {
+              "value": 8,
+              "description": "An access or capability grant was revoked or expired."
+            },
+            "ServiceStarted": {
+              "value": 9,
+              "description": "A service or module started."
+            },
+            "ServiceStopped": {
+              "value": 10,
+              "description": "A service or module stopped."
+            },
+            "Warning": {
+              "value": 11,
+              "description": "A condition worth an operator's attention."
+            },
+            "Failure": {
+              "value": 12,
+              "description": "An operation failed."
+            }
+          },
+          "x-flatbuffer-default": "Other"
+        },
+        "PEER_ID": {
+          "type": "string",
+          "description": "Peer the event concerns, when it concerns one.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT": {
+          "type": "string",
+          "description": "Subject the event concerns, when it is not a peer: a standard code, a\nmodule identifier, a grant identifier or a content identifier.",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "How many items the event covers (records stored, records deleted); 0 =\nnot a count.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "DETAIL": {
+          "type": "string",
+          "description": "Short human-readable detail.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NEV": {
+      "type": "object",
+      "description": "Node Event - one read of a node's event log.",
+      "properties": {
+        "NODE_ID": {
+          "type": "string",
+          "description": "Identifier of the node whose log this is.",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when this set was read.",
+          "x-flatbuffer-type": "int64"
+        },
+        "EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NEVEvent"
+          },
+          "description": "Events in this set, newest first.",
+          "x-flatbuffer-type": "[NEVEvent]"
+        },
+        "TOTAL_EVENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Events the node holds in its log; 0 = unknown.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "OLDEST_TIME_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of the oldest event the node still holds; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/NEV",
+  "x-flatbuffer-root-type": "NEV",
+  "x-flatbuffer-file-identifier": "$NEV"
+}

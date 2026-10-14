@@ -300,7 +300,7 @@ def ODRCreateITERATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateITERATIONSVector(builder, data):
-    ODRCreateITERATIONSVector(builder, data)
+    return ODRCreateITERATIONSVector(builder, data)
 
 def ODRAddEDITED_OBSERVATIONS(builder, EDITED_OBSERVATIONS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EDITED_OBSERVATIONS), 0)
@@ -318,7 +318,7 @@ def ODRCreateEDITED_OBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEDITED_OBSERVATIONSVector(builder, data):
-    ODRCreateEDITED_OBSERVATIONSVector(builder, data)
+    return ODRCreateEDITED_OBSERVATIONSVector(builder, data)
 
 def ODRAddESTIMATED_PARAMETERS(builder, ESTIMATED_PARAMETERS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ESTIMATED_PARAMETERS), 0)
@@ -336,7 +336,7 @@ def ODRCreateESTIMATED_PARAMETERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateESTIMATED_PARAMETERSVector(builder, data):
-    ODRCreateESTIMATED_PARAMETERSVector(builder, data)
+    return ODRCreateESTIMATED_PARAMETERSVector(builder, data)
 
 def ODRAddESTIMATED_EPOCH_STATE(builder, ESTIMATED_EPOCH_STATE):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ESTIMATED_EPOCH_STATE), 0)
@@ -370,7 +370,7 @@ def ODRCreateSTATE_COVARIANCEVector(builder, data):
     return builder.EndVector()
 
 def CreateSTATE_COVARIANCEVector(builder, data):
-    ODRCreateSTATE_COVARIANCEVector(builder, data)
+    return ODRCreateSTATE_COVARIANCEVector(builder, data)
 
 def ODRAddOCM_CONTENT_ID(builder, OCM_CONTENT_ID):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OCM_CONTENT_ID), 0)
@@ -394,7 +394,7 @@ def ODRCreateFILTER_HISTORYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFILTER_HISTORYVector(builder, data):
-    ODRCreateFILTER_HISTORYVector(builder, data)
+    return ODRCreateFILTER_HISTORYVector(builder, data)
 
 def ODRAddRESIDUAL_RMS(builder, RESIDUAL_RMS):
     builder.PrependFloat64Slot(13, RESIDUAL_RMS, 0.0)

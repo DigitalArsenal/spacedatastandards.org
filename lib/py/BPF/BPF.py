@@ -237,7 +237,7 @@ def BPFCreatePARTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePARTSVector(builder, data):
-    BPFCreatePARTSVector(builder, data)
+    return BPFCreatePARTSVector(builder, data)
 
 def BPFAddMODULES(builder, MODULES):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MODULES), 0)
@@ -255,7 +255,7 @@ def BPFCreateMODULESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODULESVector(builder, data):
-    BPFCreateMODULESVector(builder, data)
+    return BPFCreateMODULESVector(builder, data)
 
 def BPFAddRUNTIME_LOCK(builder, RUNTIME_LOCK):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(RUNTIME_LOCK), 0)

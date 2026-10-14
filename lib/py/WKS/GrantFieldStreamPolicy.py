@@ -177,7 +177,7 @@ def GrantFieldStreamPolicyCreateALLOWED_FIELD_PATHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_FIELD_PATHSVector(builder, data):
-    GrantFieldStreamPolicyCreateALLOWED_FIELD_PATHSVector(builder, data)
+    return GrantFieldStreamPolicyCreateALLOWED_FIELD_PATHSVector(builder, data)
 
 def GrantFieldStreamPolicyAddREDACTED_FIELD_PATHS(builder, REDACTED_FIELD_PATHS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(REDACTED_FIELD_PATHS), 0)
@@ -195,7 +195,7 @@ def GrantFieldStreamPolicyCreateREDACTED_FIELD_PATHSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREDACTED_FIELD_PATHSVector(builder, data):
-    GrantFieldStreamPolicyCreateREDACTED_FIELD_PATHSVector(builder, data)
+    return GrantFieldStreamPolicyCreateREDACTED_FIELD_PATHSVector(builder, data)
 
 def GrantFieldStreamPolicyAddKEY_EPOCH(builder, KEY_EPOCH):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_EPOCH), 0)
@@ -225,7 +225,7 @@ def GrantFieldStreamPolicyCreateALLOWED_OPERATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_OPERATIONSVector(builder, data):
-    GrantFieldStreamPolicyCreateALLOWED_OPERATIONSVector(builder, data)
+    return GrantFieldStreamPolicyCreateALLOWED_OPERATIONSVector(builder, data)
 
 def GrantFieldStreamPolicyEnd(builder):
     return builder.EndObject()

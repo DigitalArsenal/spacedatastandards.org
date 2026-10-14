@@ -292,22 +292,42 @@ class NSTNode extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Standards the peer publishes or serves, as their codes, e.g. "OMM".
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getSTANDARDS($j)
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSTANDARDSLength()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startNSTNode(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(28);
+        $builder->StartObject(29);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return NSTNode
      */
-    public static function createNSTNode(FlatBufferBuilder $builder, $PEER_ID, $DN, $ORGANIZATION, $TRUST_LEVEL, $ROLE, $AGENT_VERSION, $MULTIFORMAT_ADDRESS, $LAST_SEEN, $IS_ONLINE, $LATENCY_MS, $VCARD, $LAT, $LON, $GEO_COUNTRY, $GEO_CITY, $IS_SELF, $UPTIME_S, $SUITE_VERSION, $STANDARDS_VERSION, $SOURCE, $PINNED, $PIN_NOTE, $CONNECTED_PEER_IDS, $SIGNING_PUBLIC_KEY, $ENCRYPTION_PUBLIC_KEY, $EPM_CID, $STORAGE_DAEMON_VERSION, $ONION_ADDRESS)
+    public static function createNSTNode(FlatBufferBuilder $builder, $PEER_ID, $DN, $ORGANIZATION, $TRUST_LEVEL, $ROLE, $AGENT_VERSION, $MULTIFORMAT_ADDRESS, $LAST_SEEN, $IS_ONLINE, $LATENCY_MS, $VCARD, $LAT, $LON, $GEO_COUNTRY, $GEO_CITY, $IS_SELF, $UPTIME_S, $SUITE_VERSION, $STANDARDS_VERSION, $SOURCE, $PINNED, $PIN_NOTE, $CONNECTED_PEER_IDS, $SIGNING_PUBLIC_KEY, $ENCRYPTION_PUBLIC_KEY, $EPM_CID, $STORAGE_DAEMON_VERSION, $ONION_ADDRESS, $STANDARDS)
     {
-        $builder->startObject(28);
+        $builder->startObject(29);
         self::addPEER_ID($builder, $PEER_ID);
         self::addDN($builder, $DN);
         self::addORGANIZATION($builder, $ORGANIZATION);
@@ -336,6 +356,7 @@ class NSTNode extends Table
         self::addEPM_CID($builder, $EPM_CID);
         self::addSTORAGE_DAEMON_VERSION($builder, $STORAGE_DAEMON_VERSION);
         self::addONION_ADDRESS($builder, $ONION_ADDRESS);
+        self::addSTANDARDS($builder, $STANDARDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -666,6 +687,40 @@ class NSTNode extends Table
     public static function addONION_ADDRESS(FlatBufferBuilder $builder, $ONION_ADDRESS)
     {
         $builder->addOffsetX(27, $ONION_ADDRESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTANDARDS(FlatBufferBuilder $builder, $STANDARDS)
+    {
+        $builder->addOffsetX(28, $STANDARDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSTANDARDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSTANDARDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

@@ -276,7 +276,7 @@ def ACICreateINTERVALSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTERVALSVector(builder, data):
-    ACICreateINTERVALSVector(builder, data)
+    return ACICreateINTERVALSVector(builder, data)
 
 def ACIAddWINDOW_START(builder, WINDOW_START):
     builder.PrependFloat64Slot(5, WINDOW_START, 0.0)
@@ -334,7 +334,7 @@ def ACICreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    ACICreateSIGNATUREVector(builder, data)
+    return ACICreateSIGNATUREVector(builder, data)
 
 def ACIAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -356,7 +356,7 @@ def ACICreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    ACICreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return ACICreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def ACIAddDATA_VOLUME_BY_MODCOD(builder, DATA_VOLUME_BY_MODCOD):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_VOLUME_BY_MODCOD), 0)
@@ -374,7 +374,7 @@ def ACICreateDATA_VOLUME_BY_MODCODVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateDATA_VOLUME_BY_MODCODVector(builder, data):
-    ACICreateDATA_VOLUME_BY_MODCODVector(builder, data)
+    return ACICreateDATA_VOLUME_BY_MODCODVector(builder, data)
 
 def ACIEnd(builder):
     return builder.EndObject()

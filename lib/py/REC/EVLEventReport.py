@@ -195,7 +195,7 @@ def EVLEventReportCreateEVENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVENTSVector(builder, data):
-    EVLEventReportCreateEVENTSVector(builder, data)
+    return EVLEventReportCreateEVENTSVector(builder, data)
 
 def EVLEventReportAddFUNCTION_EVALUATION_COUNT(builder, FUNCTION_EVALUATION_COUNT):
     builder.PrependUint32Slot(8, FUNCTION_EVALUATION_COUNT, 0)

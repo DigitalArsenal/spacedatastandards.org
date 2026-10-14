@@ -469,7 +469,7 @@ def GSTCreateTRANSMIT_BANDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRANSMIT_BANDSVector(builder, data):
-    GSTCreateTRANSMIT_BANDSVector(builder, data)
+    return GSTCreateTRANSMIT_BANDSVector(builder, data)
 
 def GSTAddRECEIVE_BANDS(builder, RECEIVE_BANDS):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVE_BANDS), 0)
@@ -487,7 +487,7 @@ def GSTCreateRECEIVE_BANDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRECEIVE_BANDSVector(builder, data):
-    GSTCreateRECEIVE_BANDSVector(builder, data)
+    return GSTCreateRECEIVE_BANDSVector(builder, data)
 
 def GSTAddCLOCK_OFFSET_S(builder, CLOCK_OFFSET_S):
     builder.PrependFloat64Slot(25, CLOCK_OFFSET_S, 0.0)

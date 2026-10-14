@@ -1,5 +1,5 @@
-// Hash: a280c96b15827928d4ee27fae810065c22510d33111dbfa2908d0cc0db751255
-// Version: 1.207.0
+// Hash: 2d18a83cad64a1abffaa368ca93009937c79b93213588b234eb9a2e8f936f4ed
+// Version: 1.207.1
 // -----------------------------------END_HEADER
 /// Query Page (QRP)
 /// Description
@@ -13,6 +13,12 @@
 /// reader never waits and never mistakes a bounded page for the whole set. An
 /// error is exactly one frame with KIND Error; the HTTP status stays honest
 /// beside it. Cursors are opaque strings issued by the serving node.
+///
+/// A request may also select by time profile (the state of each object nearest
+/// to, as of, or after an instant), bind typed parameters to its SQL, and ask
+/// for a projection: a page then carries ROWS of typed cells described by
+/// COLUMNS instead of record frames. A request for the query surface is
+/// answered with TABLES and the serving limits.
 
 /// Role of a frame. Append new values only; never reorder or reuse existing
 /// values.
@@ -68,6 +74,74 @@ table QRPColumn {
   SORTABLE: bool;
   /// True when the serving node holds an index on this column.
   INDEXED: bool;
+}
+
+/// How a request selects records in time when the lane holds several
+/// versions of the same object. Append new values only; never reorder or
+/// reuse existing values.
+enum qrpTimeProfile : byte {
+  /// Not stated: the serving node applies its configured default.
+  Unspecified,
+  /// Every record in the epoch window.
+  All,
+  /// For each object, the record whose epoch is nearest PROFILE_EPOCH_MS.
+  Nearest,
+  /// For each object, the latest record at or before PROFILE_EPOCH_MS (the
+  /// state as it was known then).
+  AsOf,
+  /// For each object, the earliest record at or after PROFILE_EPOCH_MS.
+  Forward,
+  /// For each object, its latest record.
+  Latest
+}
+/// Representation the client asks the page in. Append new values only; never
+/// reorder or reuse existing values.
+enum qrpRepresentation : byte {
+  /// The serving node's default (FlatBuffer records).
+  Default,
+  /// Size-prefixed FlatBuffer records of the standard, or ROWS for a
+  /// projection.
+  FlatBuffer,
+  /// JSON rendering of the same records or rows.
+  Json
+}
+/// Type of a QRPValue. Append new values only; never reorder or reuse
+/// existing values.
+enum qrpValueKind : byte {
+  Null,
+  Bool,
+  Int,
+  Float,
+  Text,
+  Bytes
+}
+/// One typed value: a bound parameter of a request, or one cell of a row.
+/// Exactly the field named by KIND is meaningful.
+table QRPValue {
+  KIND: qrpValueKind = Null;
+  BOOL_VALUE: bool;
+  INT_VALUE: int64;
+  FLOAT_VALUE: double;
+  TEXT_VALUE: string;
+  BYTES_VALUE: [ubyte];
+}
+/// One row of a projection, its cells in COLUMNS order.
+table QRPRow {
+  CELLS: [QRPValue];
+}
+/// One queryable table of the serving node (the query surface).
+table QRPTable {
+  /// Table name as a query names it, e.g. "OMM".
+  NAME: string;
+  /// What the table is, e.g. "standard" (records of one standard), "view",
+  /// "lane" (an ingest lane), "system".
+  KIND: string;
+  /// Where the table's rows come from: a standard code, provider or source.
+  SOURCE: string;
+  /// Rows the table holds; -1 = unknown.
+  RECORDS: int64;
+  /// Columns of the table.
+  COLUMNS: [QRPColumn];
 }
 
 /// Query Page - request, page header or error frame.
@@ -137,6 +211,36 @@ table QRP {
   /// Archive identifier named by a request or a reply.
   ARCHIVE_ID: string;
   COLUMNS: [QRPColumn];
+  /// How the request selects records in time.
+  TIME_PROFILE: qrpTimeProfile = Unspecified;
+  /// Reference instant of TIME_PROFILE, Unix milliseconds; 0 = now.
+  PROFILE_EPOCH_MS: int64;
+  /// Representation the client asks the page in.
+  REPRESENTATION: qrpRepresentation = Default;
+  /// Values bound to the placeholders of SQL, in order.
+  PARAMETERS: [QRPValue];
+  /// Rows of a projection (a query that selects columns rather than whole
+  /// records), in COLUMNS order. Whole-record pages carry their records as
+  /// frames after the header instead, and leave ROWS empty.
+  ROWS: [QRPRow];
+  /// The serving node's queryable tables, answered to a request for the query
+  /// surface.
+  TABLES: [QRPTable];
+  /// Wall-clock budget the serving node applies to a query, milliseconds; 0 =
+  /// none stated.
+  MAX_ELAPSED_MS: uint32;
+  /// Most rows a page returns; 0 = none stated.
+  MAX_ROWS: uint64;
+  /// Most bytes a page returns; 0 = none stated.
+  MAX_BYTES: uint64;
+  /// Transport status the answer carries, HTTP semantics (200, 304, 400,
+  /// 406, 503 ...); 0 = derive it from STATUS and ERROR_CODE.
+  HTTP_STATUS: uint16;
+  /// When the page's record frames are not inline but held by the serving
+  /// node for delivery out of band: the reference token the node resolves
+  /// (single use), and the byte size of what it refers to. 0 = inline.
+  BODY_REF_TOKEN: uint64;
+  BODY_REF_SIZE: uint64;
 }
 
 root_type QRP;

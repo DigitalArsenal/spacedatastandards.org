@@ -134,7 +134,7 @@ def PRWResidentRequestCreateENTITY_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreateENTITY_HANDLESVector(builder, data):
-    PRWResidentRequestCreateENTITY_HANDLESVector(builder, data)
+    return PRWResidentRequestCreateENTITY_HANDLESVector(builder, data)
 
 def PRWResidentRequestAddMAXIMUM_COUNT(builder, MAXIMUM_COUNT):
     builder.PrependUint32Slot(3, MAXIMUM_COUNT, 0)

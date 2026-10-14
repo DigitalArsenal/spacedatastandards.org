@@ -32,7 +32,7 @@ public enum pivStatus: Int32, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Request envelope carried by `plugin_invoke_stream`.
-public struct PIVRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PIVRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -105,7 +105,7 @@ public struct PIVRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Response envelope emitted by `plugin_invoke_stream`.
-public struct PIVResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PIVResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -204,7 +204,7 @@ public struct PIVResponse: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 
 ///  Envelope — carries either a request or a response. Either REQUEST or
 ///  RESPONSE is populated per message; both populated is undefined.
-public struct PIV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PIV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

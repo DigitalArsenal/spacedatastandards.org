@@ -24,7 +24,7 @@ public enum licensingModuleRequestAction: Int8, FlatbuffersVectorInitializable, 
 
 
 ///  Module fetch/register/load control message
-public struct LMR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct LMR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

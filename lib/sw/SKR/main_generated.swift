@@ -259,7 +259,7 @@ public struct SKRExclusion_Mutable: FlatBufferStruct, FlatbuffersVectorInitializ
 }
 
 ///  Sky Query Result: the answer to one `$SKQ`.
-public struct SKR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SKR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

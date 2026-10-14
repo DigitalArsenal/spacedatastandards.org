@@ -230,7 +230,7 @@ def SCXCreateSPLIT_RECIPIENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSPLIT_RECIPIENTSVector(builder, data):
-    SCXCreateSPLIT_RECIPIENTSVector(builder, data)
+    return SCXCreateSPLIT_RECIPIENTSVector(builder, data)
 
 def SCXAddMIN_CONFIRMATIONS(builder, MIN_CONFIRMATIONS):
     builder.PrependUint32Slot(10, MIN_CONFIRMATIONS, 0)

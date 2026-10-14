@@ -259,7 +259,7 @@ def BSPInterpolationRequestCreateX_DOT_0Vector(builder, data):
     return builder.EndVector()
 
 def CreateX_DOT_0Vector(builder, data):
-    BSPInterpolationRequestCreateX_DOT_0Vector(builder, data)
+    return BSPInterpolationRequestCreateX_DOT_0Vector(builder, data)
 
 def BSPInterpolationRequestAddHAS_X_DOT_N(builder, HAS_X_DOT_N):
     builder.PrependBoolSlot(5, HAS_X_DOT_N, 0)
@@ -287,7 +287,7 @@ def BSPInterpolationRequestCreateX_DOT_NVector(builder, data):
     return builder.EndVector()
 
 def CreateX_DOT_NVector(builder, data):
-    BSPInterpolationRequestCreateX_DOT_NVector(builder, data)
+    return BSPInterpolationRequestCreateX_DOT_NVector(builder, data)
 
 def BSPInterpolationRequestAddHAS_X_D_DOT_0(builder, HAS_X_D_DOT_0):
     builder.PrependBoolSlot(7, HAS_X_D_DOT_0, 0)
@@ -315,7 +315,7 @@ def BSPInterpolationRequestCreateX_D_DOT_0Vector(builder, data):
     return builder.EndVector()
 
 def CreateX_D_DOT_0Vector(builder, data):
-    BSPInterpolationRequestCreateX_D_DOT_0Vector(builder, data)
+    return BSPInterpolationRequestCreateX_D_DOT_0Vector(builder, data)
 
 def BSPInterpolationRequestAddHAS_X_D_DOT_N(builder, HAS_X_D_DOT_N):
     builder.PrependBoolSlot(9, HAS_X_D_DOT_N, 0)
@@ -343,7 +343,7 @@ def BSPInterpolationRequestCreateX_D_DOT_NVector(builder, data):
     return builder.EndVector()
 
 def CreateX_D_DOT_NVector(builder, data):
-    BSPInterpolationRequestCreateX_D_DOT_NVector(builder, data)
+    return BSPInterpolationRequestCreateX_D_DOT_NVector(builder, data)
 
 def BSPInterpolationRequestAddTRACE_ID(builder, TRACE_ID):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(TRACE_ID), 0)

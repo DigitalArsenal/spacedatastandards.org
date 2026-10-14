@@ -1,0 +1,918 @@
+// Hash: f403677464a6e25768a61a75c9e41066c0a783a1dd462d40b4d0bdb77af75ad9
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+include "../OEM/main.fbs";
+include "../MNV/main.fbs";
+include "../CDM/main.fbs";
+
+/// Maneuver Plan (MPL)
+/// Description
+/// A request to plan an orbital maneuver and the plan that answers it. The
+/// planning problems covered are the classical transfers (Hohmann,
+/// bi-elliptic, plane change, combined transfer and plane change), Lambert
+/// problems (one revolution count, or the cheapest over several), phasing
+/// (from a phase angle, or from the chaser's and target's orbits),
+/// relative-motion planning about a reference orbit (relative-orbital-element
+/// state transition, waypoint missions, approach corridors, closed-loop
+/// rendezvous) and collision-avoidance planning, together with the
+/// orbit-geometry questions a planner asks along the way (the state and
+/// elements at a point of an orbit, anomaly conversion, time of flight between
+/// anomalies, sampled orbit tracks, and delta-v frame rotation).
+///
+/// One record carries the question and its answer. A request fills PROBLEM
+/// and REQUEST and leaves the result fields empty; the answer echoes the
+/// request and adds STATUS, BURNS (each with its epoch, its delta-v vector in
+/// a stated frame and its magnitude), ARCS (the coasts and transfers between
+/// burns), the costs (TOTAL_DELTA_V_KM_S, TOTAL_TIME_S), the options the
+/// planner weighed (OPTIONS) and the problem's own solution detail. A planner
+/// that cannot solve the problem answers with STATUS and ERROR_CODE instead.
+///
+/// MPL is the plan; $MNV is the maneuver that happened (or that operations
+/// committed to). A planned burn becomes an $MNV with STATUS = PLANNED, its
+/// EVENT_START_TIME from EPOCH_MS, DELTA_VEL_U/V/W from a RIC delta-v (MNV's
+/// UVW axes are the same radial, in-track, cross-track triad as AXES = RIC
+/// here), DELTA_VEL from MAGNITUDE_KM_S, TOTAL_BURN_TIME from DURATION_S,
+/// DELTA_MASS from DELTA_MASS_KG and CHARACTERIZATION from PURPOSE; the burn's
+/// MANEUVER_ID then names that $MNV. Inertial states use the $OEM
+/// ephemerisDataLine (km, km/s) and the frame named by REFERENCE_FRAME ($RFM);
+/// a collision-avoidance request can carry the $CDM it answers.
+///
+/// Units: km, km/s, km/s^2, seconds and degrees throughout; the gravitational
+/// parameter in km^3/s^2. Relative positions and velocities are in the
+/// reference orbit's RIC axes unless a field says otherwise.
+
+/// The planning problem a record poses. Append new values only; never reorder
+/// or reuse existing values.
+enum mplProblem : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Two-impulse coplanar transfer between circular orbits.
+  Hohmann,
+  /// Three-impulse coplanar transfer through an intermediate apoapsis.
+  BiElliptic,
+  /// Inclination change at a given radius and speed.
+  PlaneChange,
+  /// Hohmann transfer with the plane change folded into the second burn.
+  CombinedTransfer,
+  /// Lambert problem: the arc between two positions in a time of flight.
+  Lambert,
+  /// Lambert problem ranked over revolution counts and branches by delta-v.
+  LambertMinimumDeltaV,
+  /// Phasing orbit closing a stated phase angle.
+  Phasing,
+  /// Phasing from the chaser's and the target's orbits (the angle is derived).
+  PhasingToTarget,
+  /// Relative-orbital-element state transition about a reference orbit.
+  RelativeStateTransition,
+  /// Two-burn legs through a list of relative waypoints.
+  RelativeWaypoints,
+  /// Collision-avoidance maneuver for a required miss distance.
+  CollisionAvoidance,
+  /// Approach along a V-bar, R-bar or H-bar corridor.
+  ApproachCorridor,
+  /// Closed-loop rendezvous: drift, braking and hold under feedback control.
+  RendezvousSimulation,
+  /// State, elements and local frames at a point of an orbit.
+  OrbitGeometry,
+  /// Conversion between true, mean and eccentric anomaly.
+  AnomalyConversion,
+  /// Time of flight between two true anomalies.
+  TimeOfFlight,
+  /// Positions sampled along an orbit.
+  OrbitSampling,
+  /// Rotation of a delta-v between the RIC and inertial axes.
+  DeltaVTransform
+}
+
+/// The axes a delta-v, relative position or relative velocity is expressed
+/// in. The orbital axes are built from the inertial state of the orbit they
+/// refer to at the instant of the burn or sample. Append new values only;
+/// never reorder or reuse existing values.
+enum mplAxes : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// The inertial frame of the plan (REFERENCE_FRAME); components x, y, z.
+  Inertial,
+  /// Radial, in-track, cross-track: R = r/|r|, C = (r x v)/|r x v|,
+  /// I = C x R; components ordered R, I, C. The same triad as $MNV's U, V, W
+  /// and $RFM's ORBITAL_RADIAL_TRANSVERSE_NORMAL.
+  RIC,
+  /// Velocity, normal, co-normal: V = v/|v|, N = (r x v)/|r x v|, C = V x N;
+  /// components ordered V, N, C. Differs from RIC away from the apsides.
+  VNC
+}
+
+/// Overall outcome of a plan. Append new values only; never reorder or reuse
+/// existing values.
+enum mplStatus : ubyte {
+  /// A request, not yet answered.
+  Pending,
+  /// Solved; the result fields carry the plan.
+  Solved,
+  /// The geometry has no solution (e.g. no Lambert arc of the requested
+  /// revolution count).
+  NoSolution,
+  /// A solution exists in principle but not within the stated limits (e.g.
+  /// the miss distance is not reachable with the available delta-v).
+  Infeasible,
+  /// The geometry is singular (e.g. a radial state has no orbit normal).
+  SingularGeometry,
+  /// The request is malformed or a parameter is out of range.
+  InvalidRequest,
+  /// The planner failed for another reason; see ERROR_MESSAGE.
+  Failed
+}
+
+/// Which of the two arcs of a multi-revolution Lambert problem. Append new
+/// values only; never reorder or reuse existing values.
+enum mplLambertBranch : ubyte {
+  /// No branch: zero revolutions (the solution is unique) or not stated.
+  Unspecified,
+  /// The first time-of-flight crossing of the revolution count.
+  Low,
+  /// The second time-of-flight crossing of the revolution count.
+  High
+}
+
+/// Conic type of an arc. Append new values only; never reorder or reuse
+/// existing values.
+enum mplConic : ubyte {
+  Unspecified,
+  Elliptic,
+  Parabolic,
+  Hyperbolic
+}
+
+/// What an arc is in the plan. Append new values only; never reorder or reuse
+/// existing values.
+enum mplArcRole : ubyte {
+  Unspecified,
+  /// Coast on the initial or final orbit.
+  Coast,
+  /// Transfer arc between two burns.
+  Transfer,
+  /// Revolutions on a phasing orbit.
+  Phasing,
+  /// One leg of a relative waypoint mission.
+  Leg,
+  /// Free-drift segment of a rendezvous.
+  Drift,
+  /// Braking segment of a rendezvous.
+  Brake,
+  /// Station-keeping hold.
+  Hold,
+  /// Approach along a corridor.
+  Approach
+}
+
+/// Way to close an along-track gap in phasing. Append new values only; never
+/// reorder or reuse existing values.
+enum mplPhasingDirection : ubyte {
+  /// Whichever of catching up or falling behind is the smaller angle.
+  Shortest,
+  /// The chaser gains phase (relative phase angle in (0, 360] deg).
+  CatchUp,
+  /// The chaser loses phase (relative phase angle in [-360, 0) deg).
+  FallBehind
+}
+
+/// Dynamics a relative-orbital-element transition or targeting uses. Append
+/// new values only; never reorder or reuse existing values.
+enum mplRelativeDynamics : ubyte {
+  Unspecified,
+  /// Two-body (Keplerian) relative motion.
+  Keplerian,
+  /// Including the J2 secular effects.
+  J2,
+  /// J2 with differential drag, eccentric-orbit drag model.
+  J2DragEccentric,
+  /// J2 with differential drag, arbitrary differential-drag model.
+  J2DragArbitrary
+}
+
+/// Approach corridor axis in the target's RIC axes. Append new values only;
+/// never reorder or reuse existing values.
+enum mplApproachAxis : ubyte {
+  /// Along the target's velocity direction (in-track).
+  VBar,
+  /// Along the target's radius vector (radial).
+  RBar,
+  /// Along the target's orbit normal (cross-track).
+  HBar
+}
+
+/// What a semi-major-axis tolerance is measured against. Append new values
+/// only; never reorder or reuse existing values.
+enum mplToleranceBasis : ubyte {
+  /// An absolute length, km.
+  AbsoluteKm,
+  /// A fraction of the chaser's semi-major axis (dimensionless).
+  RelativeToChaserSemiMajorAxis
+}
+
+/// Kind of anomaly a value is. Append new values only; never reorder or reuse
+/// existing values.
+enum mplAnomalyKind : ubyte {
+  Unspecified,
+  TrueAnomaly,
+  MeanAnomaly,
+  EccentricAnomaly
+}
+
+/// Phase of a closed-loop rendezvous sample. Append new values only; never
+/// reorder or reuse existing values.
+enum mplRendezvousPhase : ubyte {
+  Unspecified,
+  Drift,
+  Brake,
+  Hold
+}
+
+/// Classical (osculating) orbital elements of one orbit. In a request the
+/// first fields describe the orbit; in an answer the derived fields are
+/// filled too.
+table mplElements {
+  /// Semi-major axis, km; negative for a hyperbola.
+  SEMI_MAJOR_AXIS_KM: double;
+  /// Eccentricity, dimensionless.
+  ECCENTRICITY: double;
+  /// Inclination, deg.
+  INCLINATION_DEG: double;
+  /// Right ascension of the ascending node, deg.
+  RAAN_DEG: double;
+  /// Argument of periapsis, deg.
+  ARG_OF_PERIAPSIS_DEG: double;
+  /// True anomaly, deg; NaN = not stated (MEAN_ANOMALY_DEG places the
+  /// object instead).
+  TRUE_ANOMALY_DEG: double = nan;
+  /// Mean anomaly, deg; NaN = not stated.
+  MEAN_ANOMALY_DEG: double = nan;
+  /// Eccentric anomaly, deg; NaN = not stated.
+  ECCENTRIC_ANOMALY_DEG: double = nan;
+  /// Gravitational parameter of the central body, km^3/s^2; 0 = the plan's
+  /// MU_KM3_S2.
+  MU_KM3_S2: double;
+  /// Specific angular momentum, km^2/s; 0 = derived from the elements.
+  ANGULAR_MOMENTUM_KM2_S: double;
+  /// Mean motion, deg/s; 0 = not computed.
+  MEAN_MOTION_DEG_S: double;
+  /// Orbital period, s; 0 = not computed or not closed.
+  PERIOD_S: double;
+  /// Periapsis radius from the body centre, km; 0 = not computed.
+  PERIAPSIS_RADIUS_KM: double;
+  /// Apoapsis radius from the body centre, km; 0 = not computed or none.
+  APOAPSIS_RADIUS_KM: double;
+  /// True anomaly of the ascending node, deg; NaN = not computed.
+  ASCENDING_NODE_TRUE_ANOMALY_DEG: double = nan;
+  /// Mean argument of latitude (argument of periapsis + mean anomaly), deg;
+  /// NaN = not computed.
+  MEAN_ARGUMENT_OF_LATITUDE_DEG: double = nan;
+}
+
+/// One orbit, given by EXACTLY ONE of ELEMENTS or STATE. A request that
+/// carries both, or neither, is invalid: the form is always stated, never
+/// inferred.
+table mplOrbit {
+  /// Identifier of the object on this orbit (catalog number, international
+  /// designator or name); empty = not stated.
+  OBJECT_ID: string;
+  ELEMENTS: mplElements;
+  /// Inertial state in the plan's REFERENCE_FRAME (km, km/s). EPOCH empty =
+  /// the plan's start (PLAN_EPOCH_MS, or offset 0).
+  STATE: ephemerisDataLine;
+}
+
+/// One impulsive (or short finite) burn of a plan.
+table mplBurn {
+  /// Label of the burn within the plan, e.g. "departure", "circularize".
+  NAME: string;
+  /// What the burn does.
+  PURPOSE: maneuverCharacterization = UNKNOWN;
+  /// Unix milliseconds of the burn (its start for a finite burn); 0 = not
+  /// anchored to an absolute time (use OFFSET_S).
+  EPOCH_MS: int64;
+  /// Seconds from the plan's start (PLAN_EPOCH_MS) to the burn.
+  OFFSET_S: double;
+  /// True anomaly on the orbit being left at which to burn, deg; NaN = not
+  /// stated.
+  TRUE_ANOMALY_DEG: double = nan;
+  /// Axes DELTA_V is expressed in.
+  AXES: mplAxes = Unspecified;
+  /// Delta-v vector, km/s, 3 values in AXES order. Components are signed (a
+  /// retrograde in-track burn has a negative I component).
+  DELTA_V: [double];
+  /// Delta-v magnitude, km/s (always >= 0).
+  MAGNITUDE_KM_S: double;
+  /// Burn duration, s; 0 = impulsive.
+  DURATION_S: double;
+  /// Propellant consumed, kg; 0 = not computed.
+  DELTA_MASS_KG: double;
+  /// The orbit the burn's axes are built from (the chaser's for an absolute
+  /// burn, the reference orbit at the burn for a relative-motion leg); empty
+  /// = the plan's initial orbit.
+  REFERENCE_ORBIT: mplElements;
+  /// Index into ARCS of the arc this burn starts; -1 = none (the final burn).
+  ARC_INDEX: int32 = -1;
+  /// Identifier of the $MNV this burn became once committed; empty until
+  /// then.
+  MANEUVER_ID: string;
+}
+
+/// States sampled along an arc or a whole plan, column-major and parallel:
+/// OFFSETS_S has one entry per sample and STATES has STATE_SIZE entries per
+/// sample.
+table mplTrajectory {
+  /// Axes and origin of STATES: Inertial = the plan's REFERENCE_FRAME about
+  /// the central body; RIC or VNC = relative to the reference orbit (the
+  /// target), centred on it.
+  AXES: mplAxes = Unspecified;
+  /// Values per sample in STATES: 3 = position only, 6 = position and
+  /// velocity. 0 is read as 6.
+  STATE_SIZE: uint8 = 6;
+  /// Seconds from the plan's start, one per sample, signed (negative for a
+  /// track sampled backwards).
+  OFFSETS_S: [double];
+  /// Positions (km) and velocities (km/s), STATE_SIZE values per sample.
+  STATES: [double];
+}
+
+/// Solver evidence for an arc or a plan.
+table mplSolver {
+  /// True when the solver met its tolerance.
+  CONVERGED: bool;
+  /// Iterations used.
+  ITERATIONS: uint32;
+  /// Solver status as text, e.g. "success", "max-iterations".
+  STATUS_TEXT: string;
+  /// Final residual, in the solver's own measure (time of flight in s for
+  /// Lambert; position error in km for targeting).
+  RESIDUAL: double;
+  /// The residual the solver had to meet, same unit; 0 = not stated.
+  RESIDUAL_TOLERANCE: double;
+}
+
+/// One arc of a plan: a coast or transfer between burns, or a leg, phase or
+/// segment of a relative-motion plan.
+table mplArc {
+  /// Label within the plan, e.g. "transfer", "leg 2".
+  NAME: string;
+  ROLE: mplArcRole = Unspecified;
+  /// Seconds from the plan's start to the arc's start.
+  START_OFFSET_S: double;
+  /// Duration of the arc, s (time of flight for a transfer).
+  DURATION_S: double;
+  /// Revolutions completed on the arc (Lambert revolution count, phasing
+  /// revolutions); 0 = less than one.
+  REVOLUTIONS: uint32;
+  BRANCH: mplLambertBranch = Unspecified;
+  CONIC: mplConic = Unspecified;
+  /// Semi-major axis of the arc's conic, km; 0 = not representable
+  /// (parabola) or not computed.
+  SEMI_MAJOR_AXIS_KM: double;
+  /// Eccentricity of the arc's conic.
+  ECCENTRICITY: double;
+  /// Periapsis radius from the body centre, km. Reported, never a refusal: an
+  /// arc may pass below the body surface, and the consumer screens.
+  PERIAPSIS_RADIUS_KM: double;
+  /// Apoapsis radius, km; 0 = none (parabolic or hyperbolic).
+  APOAPSIS_RADIUS_KM: double;
+  /// Period of the arc's orbit, s; 0 = not closed or not computed.
+  PERIOD_S: double;
+  /// State at the arc's start (position and velocity just after the burn
+  /// that starts it). Inertial (km, km/s) unless STATE_AXES says relative.
+  START_STATE: ephemerisDataLine;
+  /// State at the arc's end (just before the burn that ends it).
+  END_STATE: ephemerisDataLine;
+  /// Axes of START_STATE and END_STATE.
+  STATE_AXES: mplAxes = Inertial;
+  /// Delta-v of the burns that start and end this arc, km/s; 0 = not
+  /// computed.
+  DELTA_V_KM_S: double;
+  /// Universal variable z of a Lambert solution (dimensionless); 0 elsewhere.
+  LAMBERT_Z: double;
+  SOLVER: mplSolver;
+  /// Sampled states along the arc; empty = not sampled.
+  TRAJECTORY: mplTrajectory;
+}
+
+/// An option the planner weighed: another revolution count or branch of a
+/// Lambert problem, or the other phasing direction. Lets a consumer show the
+/// road not taken beside the chosen plan.
+table mplOption {
+  /// Label, e.g. "catchUp", "1 rev high".
+  NAME: string;
+  /// True for the option the plan carries.
+  SELECTED: bool;
+  REVOLUTIONS: uint32;
+  BRANCH: mplLambertBranch = Unspecified;
+  DIRECTION: mplPhasingDirection = Shortest;
+  /// Phase angle this option closes, deg (signed).
+  PHASE_ANGLE_DEG: double;
+  /// Magnitude of each burn, km/s, in burn order.
+  BURN_DELTA_V_KM_S: [double];
+  /// Total delta-v, km/s.
+  TOTAL_DELTA_V_KM_S: double;
+  /// Total time, s.
+  TOTAL_TIME_S: double;
+  /// Semi-major axis of the option's transfer or phasing orbit, km.
+  SEMI_MAJOR_AXIS_KM: double;
+  /// True when the option's orbit was clamped to the body's floor.
+  CLAMPED_TO_FLOOR: bool;
+  /// True when the option met the delta-v budget.
+  WITHIN_BUDGET: bool;
+}
+
+// ---------------------------------------------------------------------------
+// Requests
+// ---------------------------------------------------------------------------
+
+/// Classical transfer and plane change between circular orbits (Hohmann,
+/// BiElliptic, PlaneChange, CombinedTransfer).
+table mplTransferRequest {
+  /// Radius of the initial circular orbit, km (also the orbit radius of a
+  /// PlaneChange).
+  INITIAL_RADIUS_KM: double;
+  /// Radius of the final circular orbit, km.
+  FINAL_RADIUS_KM: double;
+  /// Apoapsis radius of the intermediate orbit of a BiElliptic transfer, km.
+  INTERMEDIATE_RADIUS_KM: double;
+  /// Orbital speed at the burn of a PlaneChange, km/s.
+  SPEED_KM_S: double;
+  /// Inclination change, deg (signed).
+  INCLINATION_CHANGE_DEG: double;
+}
+
+/// Lambert problem (Lambert, LambertMinimumDeltaV). DEPARTURE and ARRIVAL
+/// give the two positions; their velocities, when given, are the velocities
+/// of the orbits being left and joined, and make the result's burns real
+/// delta-v (LambertMinimumDeltaV requires them, since ranking needs a cost).
+table mplLambertRequest {
+  /// Departure position (and the departing orbit's velocity), inertial.
+  DEPARTURE: ephemerisDataLine;
+  /// Arrival position (and the arrival orbit's velocity), inertial.
+  ARRIVAL: ephemerisDataLine;
+  /// True when DEPARTURE and ARRIVAL carry orbit velocities; false = position
+  /// only (the result then gives the transfer velocities, not delta-v).
+  ENDPOINT_VELOCITIES: bool;
+  /// Time of flight, s.
+  TIME_OF_FLIGHT_S: double;
+  /// True for a prograde (short-way in the direction of motion) transfer.
+  PROGRADE: bool = true;
+  /// Revolution count of a Lambert problem; the largest count ranked by
+  /// LambertMinimumDeltaV.
+  REVOLUTIONS: uint32;
+  /// Lambert: the arc to return when REVOLUTIONS >= 1 (Unspecified = Low).
+  /// LambertMinimumDeltaV: narrows the ranking to one branch (Unspecified =
+  /// rank both).
+  BRANCH: mplLambertBranch = Unspecified;
+}
+
+/// Phasing (Phasing, PhasingToTarget).
+table mplPhasingRequest {
+  /// Phasing: radius of the chaser's circular orbit, km.
+  ORBIT_RADIUS_KM: double;
+  /// Phasing: phase angle to close, deg; positive when the target leads.
+  PHASE_ANGLE_DEG: double;
+  /// Revolutions on the phasing orbit; read only when HAS_REVOLUTIONS.
+  REVOLUTIONS: uint32;
+  /// True when REVOLUTIONS is stated (0 is then a real request for zero
+  /// revolutions, which a planner may refuse); false = recommend the
+  /// smallest count that neither clamps to the floor nor exceeds the budget
+  /// (Phasing: the planner's default count).
+  HAS_REVOLUTIONS: bool = false;
+  /// Largest revolution count a recommendation may use; 0 = the planner's
+  /// default (a planner searches at least one revolution).
+  MAX_REVOLUTIONS: uint32;
+  /// PhasingToTarget: the chaser's orbit.
+  CHASER: mplOrbit;
+  /// PhasingToTarget: the target's orbit.
+  TARGET: mplOrbit;
+  DIRECTION: mplPhasingDirection = Shortest;
+  /// Delta-v budget, km/s; 0 = DELTA_V_BUDGET_FRACTION of the chaser's
+  /// circular speed.
+  DELTA_V_BUDGET_KM_S: double;
+  /// Budget as a fraction of the chaser's circular speed; 0 = the planner's
+  /// default (0.01).
+  DELTA_V_BUDGET_FRACTION: double;
+  /// Largest angle between the two orbit normals still called coplanar, deg;
+  /// read only when HAS_COPLANAR_TOLERANCE (false = the planner's default).
+  COPLANAR_TOLERANCE_DEG: double;
+  HAS_COPLANAR_TOLERANCE: bool = false;
+  /// Largest eccentricity still called near-circular; read only when
+  /// HAS_ECCENTRICITY_TOLERANCE (false = the planner's default).
+  ECCENTRICITY_TOLERANCE: double;
+  HAS_ECCENTRICITY_TOLERANCE: bool = false;
+  /// Largest semi-major-axis difference still called co-orbital, in the unit
+  /// CO_ORBITAL_TOLERANCE_BASIS states (km, or a fraction of the chaser's
+  /// semi-major axis); read only when HAS_CO_ORBITAL_TOLERANCE (false = the
+  /// planner's default).
+  CO_ORBITAL_TOLERANCE: double;
+  CO_ORBITAL_TOLERANCE_BASIS: mplToleranceBasis = AbsoluteKm;
+  HAS_CO_ORBITAL_TOLERANCE: bool = false;
+}
+
+/// A differential-drag model for relative motion.
+table mplDifferentialDrag {
+  /// Which drag model; J2DragEccentric or J2DragArbitrary.
+  MODEL: mplRelativeDynamics = J2DragEccentric;
+  /// Differential drag rates of the dimensionless relative orbital
+  /// elements, 1/s: of the relative semi-major axis da (multiply by the
+  /// reference semi-major axis for a length rate), and of the relative
+  /// eccentricity-vector components dex and dey. DA_DOT_PER_S alone for
+  /// J2DragEccentric; all three for J2DragArbitrary.
+  DA_DOT_PER_S: double;
+  DEX_DOT_PER_S: double;
+  DEY_DOT_PER_S: double;
+}
+
+/// One relative waypoint.
+table mplWaypoint {
+  /// Position relative to the reference orbit, RIC, km, 3 values.
+  POSITION_KM: [double];
+  /// Velocity to arrive with, RIC, km/s, 3 values; empty = free.
+  VELOCITY_KM_S: [double];
+  /// Time of flight of the leg to this waypoint, s; 0 = the planner chooses.
+  TIME_OF_FLIGHT_S: double;
+}
+
+/// Relative-motion planning about a reference orbit
+/// (RelativeStateTransition, RelativeWaypoints, CollisionAvoidance,
+/// ApproachCorridor).
+table mplRelativeRequest {
+  /// The reference (target, chief) orbit.
+  REFERENCE: mplElements;
+  /// Chaser state relative to the reference, RIC, km and km/s.
+  RELATIVE_STATE: ephemerisDataLine;
+  /// Dynamics of propagation and targeting: RelativeStateTransition
+  /// propagates INITIAL_ROE with these (J2 on or off; the drag model is
+  /// DRAG); the targeting problems plan with them.
+  DYNAMICS: mplRelativeDynamics = J2;
+  /// RelativeStateTransition: dynamics of the state transition matrix
+  /// returned, chosen independently of DYNAMICS (e.g. a Keplerian matrix
+  /// beside a J2 propagation). J2DragEccentric and J2DragArbitrary also
+  /// return the drag columns.
+  STM_DYNAMICS: mplRelativeDynamics = J2;
+  /// Differential drag; empty = none.
+  DRAG: mplDifferentialDrag;
+  /// RelativeStateTransition: propagation time, s.
+  DURATION_S: double;
+  /// RelativeStateTransition: quasi-nonsingular relative orbital elements to
+  /// propagate (da, dlambda, dex, dey, dix, diy), dimensionless; empty = the
+  /// transition matrix only.
+  INITIAL_ROE: [double];
+  /// RelativeWaypoints: the waypoints, in order.
+  WAYPOINTS: [mplWaypoint];
+  /// Targeting: velocity to arrive with at every waypoint without its own,
+  /// RIC, km/s, 3 values; empty = free.
+  TARGET_VELOCITY_KM_S: [double];
+  /// Targeting iteration limit; 0 = default.
+  MAX_ITERATIONS: uint32;
+  /// Targeting position tolerance, km; 0 = default.
+  POSITION_TOLERANCE_KM: double;
+  /// Targeting velocity tolerance, km/s; 0 = default.
+  VELOCITY_TOLERANCE_KM_S: double;
+  /// Shortest and longest leg time the planner may choose, in reference
+  /// orbits; 0 = default.
+  LEG_TIME_LOWER_ORBITS: double;
+  LEG_TIME_UPPER_ORBITS: double;
+  /// States sampled per leg in the answer's trajectory; 0 = default.
+  SAMPLES_PER_LEG: uint32;
+  /// CollisionAvoidance: required miss distance, km.
+  MISS_DISTANCE_KM: double;
+  /// CollisionAvoidance: time from now to closest approach, s.
+  TIME_TO_CLOSEST_APPROACH_S: double;
+  /// CollisionAvoidance: delta-v available, km/s; read only when
+  /// HAS_MAX_DELTA_V. When stated, 0 = unlimited.
+  MAX_DELTA_V_KM_S: double;
+  /// True when MAX_DELTA_V_KM_S is stated; false = the planner's default
+  /// limit.
+  HAS_MAX_DELTA_V: bool = false;
+  /// CollisionAvoidance: prefer radial burns (they preserve the period).
+  PREFER_RADIAL: bool;
+  /// CollisionAvoidance: the conjunction being avoided, when the request
+  /// comes from a conjunction data message.
+  CONJUNCTION: CDM;
+  /// ApproachCorridor: the corridor axis.
+  APPROACH_AXIS: mplApproachAxis = VBar;
+  /// ApproachCorridor: point to reach, RIC, km, 3 values.
+  APPROACH_TARGET_KM: [double];
+  /// ApproachCorridor: speed at the target point, km/s.
+  APPROACH_SPEED_KM_S: double;
+  /// ApproachCorridor: half-width of the safety corridor, km.
+  CORRIDOR_HALF_WIDTH_KM: double;
+}
+
+/// Closed-loop rendezvous in the target's RIC axes: a free-drift leg to a
+/// brake point, a fifth-order braking profile to a hold point, and a hold,
+/// tracked by a feedback controller and propagated on a truth model.
+table mplRendezvousRequest {
+  /// The target's orbit.
+  REFERENCE: mplElements;
+  /// Chaser's starting position, RIC, km, 3 values.
+  INITIAL_POSITION_KM: [double];
+  /// Chaser's starting velocity, RIC, km/s, 3 values; empty = solve it so
+  /// the drift leg reaches BRAKE_POINT_KM after DRIFT_DURATION_S.
+  INITIAL_VELOCITY_KM_S: [double];
+  /// Brake gate, RIC, km, 3 values.
+  BRAKE_POINT_KM: [double];
+  /// Hold point reached with zero relative velocity, RIC, km, 3 values.
+  HOLD_POINT_KM: [double];
+  DRIFT_DURATION_S: double;
+  BRAKE_DURATION_S: double;
+  /// Hold after braking, s; 0 = none.
+  HOLD_DURATION_S: double;
+  /// Closed-loop natural frequency, rad/s; 0 = ten times the mean motion.
+  BANDWIDTH_RAD_S: double;
+  /// Closed-loop damping ratio; read only when HAS_DAMPING_RATIO (false = 1,
+  /// critically damped).
+  DAMPING_RATIO: double;
+  HAS_DAMPING_RATIO: bool = false;
+  /// Proportional gain, 1/s^2; read only when HAS_KP (false = from the
+  /// bandwidth).
+  KP_PER_S2: double;
+  HAS_KP: bool = false;
+  /// Derivative gain, 1/s; read only when HAS_KD (false = from the damping
+  /// ratio).
+  KD_PER_S: double;
+  HAS_KD: bool = false;
+  /// Apply the reference acceleration as feedforward.
+  FEEDFORWARD: bool = true;
+  /// Cancel the Coriolis coupling of the relative dynamics.
+  COMPENSATE_CORIOLIS: bool = true;
+  /// Cancel the gravity-gradient coupling.
+  COMPENSATE_GRAVITY_GRADIENT: bool = true;
+  /// Command saturation, km/s^2; 0 = unlimited.
+  MAX_ACCELERATION_KM_S2: double;
+  /// Integration step and control period, s; 0 = 1 s.
+  TIME_STEP_S: double;
+  /// Log every Nth step to the answer's samples (the last step always); 0 =
+  /// default.
+  OUTPUT_EVERY: uint32;
+  /// Include J2 in the truth gravity.
+  INCLUDE_J2: bool;
+}
+
+/// Orbit-geometry questions (OrbitGeometry, AnomalyConversion,
+/// TimeOfFlight, OrbitSampling, DeltaVTransform).
+table mplGeometryRequest {
+  /// The orbit asked about (all but AnomalyConversion).
+  ORBIT: mplOrbit;
+  /// OrbitGeometry: evaluate at this true anomaly, deg; NaN = at the orbit's
+  /// own epoch (or after ELAPSED_S). Not together with HAS_ELAPSED.
+  AT_TRUE_ANOMALY_DEG: double = nan;
+  /// OrbitGeometry: coast this long from the orbit's epoch first, s (signed);
+  /// read only when HAS_ELAPSED.
+  ELAPSED_S: double;
+  /// True when ELAPSED_S is stated (0 is then a real zero-length coast);
+  /// false = no coast.
+  HAS_ELAPSED: bool = false;
+  /// OrbitGeometry: a burn to apply at the evaluated point;
+  /// DeltaVTransform: the delta-v to rotate (its AXES is the source axes).
+  BURN: mplBurn;
+  /// DeltaVTransform: axes to rotate the delta-v into.
+  TO_AXES: mplAxes = Unspecified;
+  /// AnomalyConversion: eccentricity.
+  ECCENTRICITY: double;
+  /// AnomalyConversion: the anomaly to convert, deg.
+  ANOMALY_DEG: double;
+  ANOMALY_KIND: mplAnomalyKind = Unspecified;
+  /// TimeOfFlight and OrbitSampling: start true anomaly, deg.
+  FROM_TRUE_ANOMALY_DEG: double;
+  /// TimeOfFlight: end true anomaly, deg.
+  TO_TRUE_ANOMALY_DEG: double;
+  /// TimeOfFlight: whole revolutions to add.
+  REVOLUTIONS: uint32;
+  /// OrbitSampling: signed sweep from FROM_TRUE_ANOMALY_DEG, deg, at most one
+  /// revolution; read only when HAS_SWEEP.
+  SWEEP_DEG: double;
+  /// True when SWEEP_DEG is stated; false = one full revolution forward.
+  HAS_SWEEP: bool = false;
+  /// OrbitSampling: samples, endpoints included.
+  SAMPLE_COUNT: uint32;
+}
+
+/// The question: which problem and its inputs. Only the sub-table matching
+/// PROBLEM is read.
+table mplRequest {
+  /// Gravitational parameter of the central body, km^3/s^2; 0 = Earth
+  /// (398600.4418).
+  MU_KM3_S2: double;
+  TRANSFER: mplTransferRequest;
+  LAMBERT: mplLambertRequest;
+  PHASING: mplPhasingRequest;
+  RELATIVE: mplRelativeRequest;
+  RENDEZVOUS: mplRendezvousRequest;
+  GEOMETRY: mplGeometryRequest;
+}
+
+// ---------------------------------------------------------------------------
+// Problem-specific solution detail
+// ---------------------------------------------------------------------------
+
+/// Phasing detail: the phase geometry and the floor guard.
+table mplPhasingSolution {
+  /// Phase angle the plan closes, deg (signed).
+  PHASE_ANGLE_DEG: double;
+  /// Phase angle the flown (possibly clamped) phasing orbit delivers, deg.
+  ACHIEVED_PHASE_ANGLE_DEG: double;
+  /// Semi-major axis and period the unclamped plan would have needed.
+  REQUESTED_SEMI_MAJOR_AXIS_KM: double;
+  REQUESTED_PERIOD_S: double;
+  /// Lowest radius the phasing orbit's far apse may reach, km (body radius
+  /// plus margin).
+  FLOOR_RADIUS_KM: double;
+  /// True when the phasing orbit was raised to the floor.
+  CLAMPED_TO_FLOOR: bool;
+  /// Radius of the phasing orbit's far apse (the apse opposite the burn
+  /// point: its apoapsis when raised, its periapsis when lowered), km.
+  FAR_APSE_RADIUS_KM: double;
+  /// The radius the plan was flown at (the chaser's semi-major axis), km.
+  PHASING_RADIUS_KM: double;
+  /// PhasingToTarget: relative phase angle, deg, in (-180, 180]; positive
+  /// when the target leads. The relative mean argument of latitude plus the
+  /// RAAN difference times cos(chaser inclination).
+  RELATIVE_PHASE_ANGLE_DEG: double;
+  /// The catch-up angle, in (0, 360], and the fall-behind angle, in
+  /// [-360, 0), deg.
+  CATCH_UP_ANGLE_DEG: double;
+  FALL_BEHIND_ANGLE_DEG: double;
+  /// The direction the plan flies.
+  DIRECTION: mplPhasingDirection = Shortest;
+  /// The chaser's and target's elements as used (with their mean arguments
+  /// of latitude).
+  CHASER: mplElements;
+  TARGET: mplElements;
+  RAAN_DIFFERENCE_DEG: double;
+  INCLINATION_DIFFERENCE_DEG: double;
+  /// Angle between the two orbit normals, deg.
+  PLANE_ANGLE_DEG: double;
+  /// Target minus chaser semi-major axis, km.
+  SEMI_MAJOR_AXIS_DIFFERENCE_KM: double;
+  /// Verdicts, each beside the tolerance that produced it (none refuses).
+  COPLANAR: bool;
+  COPLANAR_TOLERANCE_DEG: double;
+  NEAR_CIRCULAR: bool;
+  ECCENTRICITY_TOLERANCE: double;
+  CO_ORBITAL: bool;
+  /// The co-orbital tolerance applied, as an absolute length, km, and as a
+  /// fraction of the chaser's semi-major axis (the same threshold both ways).
+  CO_ORBITAL_TOLERANCE_KM: double;
+  CO_ORBITAL_TOLERANCE_FRACTION: double;
+  /// Recommended revolution count, and whether the count came from the
+  /// caller instead.
+  RECOMMENDED_REVOLUTIONS: uint32;
+  REVOLUTIONS_FROM_CALLER: bool;
+  /// Largest revolution count searched (after clamping).
+  MAX_REVOLUTIONS: uint32;
+  /// The budget applied, km/s, and whether the plan met it.
+  DELTA_V_BUDGET_KM_S: double;
+  WITHIN_BUDGET: bool;
+}
+
+/// Relative-motion detail.
+table mplRelativeSolution {
+  /// Model reference, e.g. "Koenig-Guffanti-D'Amico ROE STM".
+  MODEL_REFERENCE: string;
+  /// Dynamics INITIAL_ROE was propagated with.
+  DYNAMICS: mplRelativeDynamics = Unspecified;
+  /// Dynamics of STATE_TRANSITION and DRAG_COLUMNS.
+  STM_DYNAMICS: mplRelativeDynamics = Unspecified;
+  /// 6x6 relative-orbital-element state transition matrix over DURATION_S,
+  /// row-major (36 values), dimensionless (the ROE are dimensionless).
+  STATE_TRANSITION: [double];
+  /// Drag sensitivity columns, row-major 6 x DRAG_COLUMN_COUNT: entry (i, k)
+  /// is the change in ROE i at DURATION_S per unit of drag rate k, the rates
+  /// being those of mplDifferentialDrag (1/s): k = 0 da-dot, 1 dex-dot, 2
+  /// dey-dot. Unit: seconds (e.g. entry (0, 0) equals
+  /// DURATION_S). J2DragEccentric gives one column (the da-dot column of the
+  /// eccentric model), J2DragArbitrary three. Empty = no drag model.
+  DRAG_COLUMNS: [double];
+  DRAG_COLUMN_COUNT: uint8;
+  /// Initial and propagated relative orbital elements (6 values each).
+  INITIAL_ROE: [double];
+  PROPAGATED_ROE: [double];
+  /// CollisionAvoidance: miss distance the burn achieves, km.
+  ACHIEVED_MISS_KM: double;
+  /// CollisionAvoidance: true when the required miss is reachable within the
+  /// available delta-v.
+  FEASIBLE: bool;
+  /// ApproachCorridor: largest lateral deviation from the corridor axis, km,
+  /// and whether it stays within the corridor.
+  CORRIDOR_DEVIATION_KM: double;
+  WITHIN_CORRIDOR: bool;
+}
+
+/// Closed-loop rendezvous detail. Samples are column-major and parallel,
+/// one entry (or three, for vectors) per sample, all in the target's RIC
+/// axes.
+table mplRendezvousSolution {
+  /// Model reference, e.g. "HCW drift + quintic brake + feedback-linearized
+  /// PD".
+  MODEL_REFERENCE: string;
+  /// Mean motion of the target, rad/s.
+  MEAN_MOTION_RAD_S: double;
+  /// Drift-leg initial velocity (solved or given), km/s, 3 values.
+  INITIAL_VELOCITY_KM_S: [double];
+  /// Per-axis proportional (1/s^2) and derivative (1/s) gains, 3 values each.
+  KP_PER_S2: [double];
+  KD_PER_S: [double];
+  /// End of the drift and of the braking phase, and the total time, s from
+  /// the start.
+  DRIFT_END_S: double;
+  BRAKE_END_S: double;
+  TOTAL_TIME_S: double;
+  /// Control effort and tracking metrics.
+  MAX_CONTROL_ACCELERATION_KM_S2: double;
+  SATURATED_STEPS: uint32;
+  MAX_POSITION_ERROR_KM: double;
+  RMS_POSITION_ERROR_KM: double;
+  MAX_POSITION_ERROR_DRIFT_KM: double;
+  MAX_POSITION_ERROR_BRAKE_KM: double;
+  MAX_POSITION_ERROR_HOLD_KM: double;
+  FINAL_POSITION_ERROR_KM: double;
+  FINAL_VELOCITY_ERROR_KM_S: double;
+  /// Sample times, s from the start.
+  SAMPLE_TIME_S: [double];
+  SAMPLE_PHASE: [mplRendezvousPhase];
+  /// Actual and reference relative position (km) and velocity (km/s), 3
+  /// values per sample.
+  POSITION_KM: [double];
+  VELOCITY_KM_S: [double];
+  REFERENCE_POSITION_KM: [double];
+  REFERENCE_VELOCITY_KM_S: [double];
+  /// Reference and commanded control acceleration, km/s^2, 3 per sample.
+  REFERENCE_ACCELERATION_KM_S2: [double];
+  CONTROL_ACCELERATION_KM_S2: [double];
+  /// Tracking error magnitudes per sample.
+  POSITION_ERROR_KM: [double];
+  VELOCITY_ERROR_KM_S: [double];
+}
+
+/// Orbit-geometry detail.
+table mplGeometrySolution {
+  /// OrbitGeometry: the inertial state at the evaluated point (after BURN).
+  STATE: ephemerisDataLine;
+  /// OrbitGeometry: elements at the point (all anomalies and derived fields
+  /// filled); AnomalyConversion: the three anomalies.
+  ELEMENTS: mplElements;
+  /// Distance from the body centre, km.
+  RADIUS_KM: double;
+  /// The RIC axes at the point, before the burn, as three inertial unit
+  /// vectors R, I, C (9 values, row by row).
+  RIC_BASIS: [double];
+  /// The VNC axes at the point, before the burn: V, N, C (9 values).
+  VNC_BASIS: [double];
+  /// TimeOfFlight: forward time between the anomalies, s.
+  TIME_OF_FLIGHT_S: double;
+  /// DeltaVTransform: the rotated delta-v (its AXES the target axes).
+  BURN: mplBurn;
+}
+
+/// Maneuver Plan - one planning request and the plan that answers it.
+table MPL {
+  /// Identifier of the plan; empty = not assigned.
+  ID: string;
+  /// Unix milliseconds the request was made (or the plan produced).
+  CREATED_AT_MS: int64;
+  /// Identifier of the planning service or tool that answered.
+  PLANNER: string;
+  PROBLEM: mplProblem = Unspecified;
+  /// Unix milliseconds of the plan's start (offset 0); 0 = the plan is in
+  /// relative time only.
+  PLAN_EPOCH_MS: int64;
+  /// The maneuvering object (chaser) and, for relative problems, the target.
+  OBJECT_ID: string;
+  TARGET_OBJECT_ID: string;
+  /// Inertial frame of every inertial state and Inertial-axes vector; empty =
+  /// the central body's GCRF/EME2000.
+  REFERENCE_FRAME: RFM;
+  REQUEST: mplRequest;
+  STATUS: mplStatus = Pending;
+  /// Stable machine-readable reason when STATUS is not Solved, e.g.
+  /// "invalid-parameter", "no-solution"; empty otherwise.
+  ERROR_CODE: string;
+  ERROR_MESSAGE: string;
+  /// The burns, in time order.
+  BURNS: [mplBurn];
+  /// The arcs, in time order.
+  ARCS: [mplArc];
+  /// Total delta-v: the sum of burn magnitudes (the propellant budget), km/s.
+  TOTAL_DELTA_V_KM_S: double;
+  /// Time from the plan's start to its end, s.
+  TOTAL_TIME_S: double;
+  /// Propellant for the whole plan, kg; 0 = not computed.
+  TOTAL_DELTA_MASS_KG: double;
+  /// Solver evidence for the plan as a whole.
+  SOLVER: mplSolver;
+  /// Options weighed, including the selected one.
+  OPTIONS: [mplOption];
+  /// The whole plan's sampled trajectory; empty = not sampled.
+  TRAJECTORY: mplTrajectory;
+  PHASING: mplPhasingSolution;
+  RELATIVE: mplRelativeSolution;
+  RENDEZVOUS: mplRendezvousSolution;
+  GEOMETRY: mplGeometrySolution;
+}
+
+root_type MPL;
+file_identifier "$MPL";

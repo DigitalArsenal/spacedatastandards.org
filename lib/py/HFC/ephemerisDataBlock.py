@@ -419,7 +419,7 @@ def ephemerisDataBlockCreateEPHEMERIS_DATAVector(builder, data):
     return builder.EndVector()
 
 def CreateEPHEMERIS_DATAVector(builder, data):
-    ephemerisDataBlockCreateEPHEMERIS_DATAVector(builder, data)
+    return ephemerisDataBlockCreateEPHEMERIS_DATAVector(builder, data)
 
 def ephemerisDataBlockAddEPHEMERIS_DATA_LINES(builder, EPHEMERIS_DATA_LINES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(EPHEMERIS_DATA_LINES), 0)
@@ -437,7 +437,7 @@ def ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEPHEMERIS_DATA_LINESVector(builder, data):
-    ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(builder, data)
+    return ephemerisDataBlockCreateEPHEMERIS_DATA_LINESVector(builder, data)
 
 def ephemerisDataBlockAddCOVARIANCE_MATRIX_LINES(builder, COVARIANCE_MATRIX_LINES):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(COVARIANCE_MATRIX_LINES), 0)
@@ -455,7 +455,7 @@ def ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOVARIANCE_MATRIX_LINESVector(builder, data):
-    ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(builder, data)
+    return ephemerisDataBlockCreateCOVARIANCE_MATRIX_LINESVector(builder, data)
 
 def ephemerisDataBlockAddPOLYNOMIAL_POSITION_RECORDS(builder, POLYNOMIAL_POSITION_RECORDS):
     builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(POLYNOMIAL_POSITION_RECORDS), 0)
@@ -473,7 +473,7 @@ def ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data):
-    ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
+    return ephemerisDataBlockCreatePOLYNOMIAL_POSITION_RECORDSVector(builder, data)
 
 def ephemerisDataBlockAddOBJECT_NAIF_ID(builder, OBJECT_NAIF_ID):
     builder.PrependInt32Slot(19, OBJECT_NAIF_ID, 0)

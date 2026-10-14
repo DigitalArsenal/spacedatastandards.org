@@ -259,7 +259,7 @@ def RPTCreateSOURCE_DATA_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateSOURCE_DATA_HASHVector(builder, data):
-    RPTCreateSOURCE_DATA_HASHVector(builder, data)
+    return RPTCreateSOURCE_DATA_HASHVector(builder, data)
 
 def RPTAddCONTENT_HASH(builder, CONTENT_HASH):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CONTENT_HASH), 0)
@@ -281,7 +281,7 @@ def RPTCreateCONTENT_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateCONTENT_HASHVector(builder, data):
-    RPTCreateCONTENT_HASHVector(builder, data)
+    return RPTCreateCONTENT_HASHVector(builder, data)
 
 def RPTAddCONTENT_TYPE(builder, CONTENT_TYPE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CONTENT_TYPE), 0)
@@ -339,7 +339,7 @@ def RPTCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    RPTCreateSIGNATUREVector(builder, data)
+    return RPTCreateSIGNATUREVector(builder, data)
 
 def RPTEnd(builder):
     return builder.EndObject()

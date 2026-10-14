@@ -158,7 +158,7 @@ def FRMStateVectorCreateELEMENTSVector(builder, data):
     return builder.EndVector()
 
 def CreateELEMENTSVector(builder, data):
-    FRMStateVectorCreateELEMENTSVector(builder, data)
+    return FRMStateVectorCreateELEMENTSVector(builder, data)
 
 def FRMStateVectorAddPOSITION(builder, POSITION):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION), 0)

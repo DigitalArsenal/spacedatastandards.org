@@ -1,0 +1,366 @@
+// Hash: 7692bd090e2b9f879bdcc9389be7ec7dc40fc3279983094309b4440cd07a8db1
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+include "../RFM/main.fbs";
+include "../MPL/main.fbs";
+
+/// Three-Body Problem (TBP)
+/// Description
+/// Solutions of the circular restricted three-body problem (CR3BP): a small
+/// body moving under the gravity of two primaries that circle their common
+/// barycentre. A TBP names the system (its mass ratio and the length and time
+/// that scale it), and carries one kind of answer about it: a propagated
+/// trajectory in the synodic (rotating) frame, the five libration (Lagrange)
+/// points and their linear stability, the Jacobi constant of a state,
+/// periodic orbits (planar and vertical Lyapunov, northern and southern halo,
+/// near-rectilinear halo, distant retrograde, butterfly) with their period,
+/// Jacobi constant, monodromy matrix and stability, members of a family of
+/// such orbits, transfers into the system (with their burns), station-keeping
+/// budgets, and states converted between the synodic and inertial frames.
+///
+/// Mission designers, cislunar and Sun-Earth libration-point analysts, and
+/// catalogues of periodic orbits (such as the JPL three-body periodic-orbit
+/// database) use it. The synodic frame is an $RFM coordinate system: origin
+/// at the primaries' barycentre, X from the larger primary toward the
+/// smaller, Z along the system's angular momentum, Y completing the
+/// right-handed set; libration points use $RFM's rfmLibrationPoint. Transfer
+/// burns are $MPL burns, so a three-body transfer plan reads like any other
+/// maneuver plan and its burns can become $MNV records.
+///
+/// Units: synodic states, times and periods are non-dimensional (length in
+/// units of CHARACTERISTIC_LENGTH_KM, time in units of
+/// CHARACTERISTIC_TIME_S, so the primaries' angular rate is 1); dimensional
+/// fields say km, km/s or s in their names.
+
+/// The question a record answers. Append new values only; never reorder or
+/// reuse existing values.
+enum tbpProblem : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Propagate a synodic state (optionally with its state transition matrix).
+  Propagation,
+  /// The five libration points.
+  LibrationPoints,
+  /// Jacobi constant of a state.
+  JacobiConstant,
+  /// Differentially corrected periodic orbit.
+  PeriodicOrbit,
+  /// Analytic first guess of a halo orbit (Richardson third order).
+  HaloFirstGuess,
+  /// Near-rectilinear halo orbit from perilune and apolune altitudes.
+  NearRectilinearHalo,
+  /// Transfer from a parking orbit about the larger primary.
+  Transfer,
+  /// Station-keeping budget for a periodic orbit.
+  StationKeeping,
+  /// State conversion between the synodic and inertial frames.
+  FrameConversion,
+  /// Members of a periodic-orbit family.
+  Family
+}
+
+/// Family of a periodic orbit. Append new values only; never reorder or reuse
+/// existing values.
+enum tbpOrbitFamily : ubyte {
+  Unspecified,
+  /// Halo orbit whose largest out-of-plane excursion is north (+Z).
+  HaloNorthern,
+  /// Halo orbit whose largest out-of-plane excursion is south (-Z).
+  HaloSouthern,
+  /// Planar Lyapunov orbit.
+  PlanarLyapunov,
+  /// Vertical Lyapunov orbit.
+  VerticalLyapunov,
+  /// Near-rectilinear halo orbit (the high-amplitude end of the halo family).
+  NearRectilinearHalo,
+  /// Distant retrograde orbit about the smaller primary.
+  DistantRetrograde,
+  /// Butterfly orbit.
+  Butterfly,
+  /// Axial orbit.
+  Axial,
+  /// Short- or long-period orbit about L4 or L5.
+  LongShortPeriod
+}
+
+/// How a transfer is built. Append new values only; never reorder or reuse
+/// existing values.
+enum tbpTransferKind : ubyte {
+  Unspecified,
+  /// Direct two-body patched-conic transfer.
+  HohmannLike,
+  /// Low-energy (ballistic capture) transfer.
+  LowEnergy,
+  /// Free-return trajectory about the smaller primary.
+  FreeReturn,
+  /// Powered flyby of the smaller primary.
+  PoweredFlyby,
+  /// Weak-stability-boundary transfer.
+  WeakStabilityBoundary,
+  /// Direct insertion into an orbit about the smaller primary.
+  DirectInsertion,
+  /// Insertion into a periodic orbit (TARGET_ORBIT).
+  PeriodicOrbitInsertion
+}
+
+/// When station-keeping burns are placed. Append new values only; never
+/// reorder or reuse existing values.
+enum tbpStationKeepingStrategy : ubyte {
+  /// Correct at each crossing of the synodic XZ plane.
+  PlaneCrossing,
+  /// Target a reference point on the periodic orbit.
+  TargetPoint,
+  /// Suppress the unstable Floquet mode.
+  FloquetMode
+}
+
+/// Direction of a frame conversion. Append new values only; never reorder or
+/// reuse existing values.
+enum tbpConversionDirection : ubyte {
+  SynodicToInertial,
+  InertialToSynodic
+}
+
+/// Outcome. Append new values only; never reorder or reuse existing values.
+enum tbpStatus : ubyte {
+  /// A request, not yet answered.
+  Pending,
+  Solved,
+  /// The corrector or targeter did not converge; the result is its last
+  /// iterate.
+  NotConverged,
+  InvalidRequest,
+  Failed
+}
+
+/// The two-primary system.
+table tbpSystem {
+  /// Name, e.g. "Earth-Moon", "Sun-Earth".
+  NAME: string;
+  /// Ephemeris body codes of the larger and smaller primary (e.g. 399, 301);
+  /// 0 = not stated.
+  PRIMARY_BODY_ID: int;
+  SECONDARY_BODY_ID: int;
+  /// Mass ratio mu = m2 / (m1 + m2), dimensionless. The larger primary sits
+  /// at x = -mu and the smaller at x = 1 - mu.
+  MASS_RATIO: double;
+  /// Masses of the primaries, kg; 0 = not stated.
+  PRIMARY_MASS_KG: double;
+  SECONDARY_MASS_KG: double;
+  /// Characteristic length: the distance between the primaries, km.
+  CHARACTERISTIC_LENGTH_KM: double;
+  /// Characteristic time: 1 / (the primaries' angular rate), s.
+  CHARACTERISTIC_TIME_S: double;
+  /// The synodic frame as an $RFM coordinate system; empty = the convention
+  /// above, barycentre origin.
+  SYNODIC_FRAME: RFM;
+}
+
+/// One synodic state, non-dimensional.
+table tbpState {
+  X: double;
+  Y: double;
+  Z: double;
+  VX: double;
+  VY: double;
+  VZ: double;
+  /// Non-dimensional time of the state from the trajectory's start.
+  TIME: double;
+}
+
+/// A trajectory, column-major: TIMES has one entry per sample, STATES six,
+/// STATE_TRANSITION 36 (row-major 6x6) when it was propagated.
+table tbpTrajectory {
+  /// True when TIMES and STATES are dimensional (s, km, km/s) in FRAME;
+  /// false = non-dimensional synodic.
+  DIMENSIONAL: bool;
+  /// Frame of a dimensional trajectory; empty for synodic.
+  FRAME: RFM;
+  /// Unix milliseconds of time 0 of a dimensional trajectory; 0 = relative.
+  EPOCH_MS: int64;
+  TIMES: [double];
+  /// x, y, z, vx, vy, vz per sample.
+  STATES: [double];
+  /// State transition matrix from time 0, 36 values per sample; empty = not
+  /// propagated.
+  STATE_TRANSITION: [double];
+  /// Jacobi constant of the trajectory (conserved in the CR3BP).
+  JACOBI: double;
+}
+
+/// One libration point and its linear stability.
+table tbpLibrationPoint {
+  POINT: rfmLibrationPoint = UNSPECIFIED;
+  /// Synodic position, non-dimensional.
+  X: double;
+  Y: double;
+  Z: double;
+  /// Jacobi constant at the point.
+  JACOBI: double;
+  /// Eigenvalues of the linearised dynamics at the point (6 each); empty =
+  /// not computed.
+  EIGENVALUES_REAL: [double];
+  EIGENVALUES_IMAGINARY: [double];
+  /// True when every eigenvalue has a non-positive real part.
+  STABLE: bool;
+}
+
+/// A periodic orbit, or a first guess of one.
+table tbpPeriodicOrbit {
+  FAMILY: tbpOrbitFamily = Unspecified;
+  /// Libration point the orbit is about; UNSPECIFIED for orbits about a
+  /// primary (distant retrograde).
+  LIBRATION_POINT: rfmLibrationPoint = UNSPECIFIED;
+  /// Amplitude that selects the member of the family, non-dimensional (the
+  /// out-of-plane amplitude Az for halo orbits, the in-plane amplitude Ax
+  /// for planar Lyapunov orbits).
+  AMPLITUDE: double;
+  /// NRHO: perilune and apolune altitudes above the smaller primary, km; 0 =
+  /// not an NRHO request.
+  PERILUNE_ALTITUDE_KM: double;
+  APOLUNE_ALTITUDE_KM: double;
+  /// The orbit's state at time 0 (on the XZ-plane crossing for symmetric
+  /// families).
+  INITIAL_STATE: tbpState;
+  /// Period, non-dimensional, and the same in seconds.
+  PERIOD: double;
+  PERIOD_S: double;
+  /// Jacobi constant.
+  JACOBI: double;
+  /// True when the orbit was differentially corrected; false = an analytic
+  /// first guess.
+  CORRECTED: bool;
+  /// Corrector convergence.
+  CONVERGED: bool;
+  ITERATIONS: uint32;
+  /// Corrector tolerance and iteration limit used (or requested); 0 =
+  /// default.
+  TOLERANCE: double;
+  MAX_ITERATIONS: uint32;
+  /// Monodromy matrix (state transition over one period), row-major 6x6;
+  /// empty = not computed.
+  MONODROMY: [double];
+  /// Floquet multipliers (eigenvalues of the monodromy matrix), 6 each.
+  FLOQUET_REAL: [double];
+  FLOQUET_IMAGINARY: [double];
+  /// Stability index (|lambda_max| + 1/|lambda_max|) / 2; 1 = marginally
+  /// stable; 0 = not computed.
+  STABILITY_INDEX: double;
+  /// True when the orbit is linearly stable (STABILITY_INDEX <= 1).
+  STABLE: bool;
+  /// One period of the orbit; empty = not sampled.
+  TRAJECTORY: tbpTrajectory;
+}
+
+/// Options for a propagation.
+table tbpPropagationRequest {
+  INITIAL_STATE: tbpState;
+  /// Non-dimensional duration (negative = backwards).
+  DURATION: double;
+  /// Non-dimensional integration step; 0 = default.
+  STEP: double;
+  /// Samples in the answer, endpoints included; 0 = default.
+  OUTPUT_POINTS: uint32;
+  /// Also propagate the state transition matrix.
+  STATE_TRANSITION: bool;
+}
+
+/// A transfer into the system.
+table tbpTransfer {
+  KIND: tbpTransferKind = Unspecified;
+  /// Altitude of the circular parking orbit about the larger primary, km.
+  PARKING_ALTITUDE_KM: double;
+  /// Altitude of the final orbit about the smaller primary, km.
+  TARGET_ALTITUDE_KM: double;
+  /// Inclination of the transfer plane, deg.
+  INCLINATION_DEG: double;
+  /// PeriodicOrbitInsertion: the orbit to insert into.
+  TARGET_ORBIT: tbpPeriodicOrbit;
+  /// Targeter limits; 0 = default.
+  MAX_ITERATIONS: uint32;
+  TOLERANCE: double;
+  /// Result: convergence of the targeter.
+  CONVERGED: bool;
+  /// Result: departure and arrival burns (their DELTA_V in the axes they
+  /// state, km/s; offsets in seconds from departure).
+  BURNS: [mplBurn];
+  /// Result: total delta-v, km/s, and time of flight, s.
+  TOTAL_DELTA_V_KM_S: double;
+  TIME_OF_FLIGHT_S: double;
+  /// Result: the transfer trajectory; empty = not sampled.
+  TRAJECTORY: tbpTrajectory;
+}
+
+/// Station-keeping budget for a periodic orbit.
+table tbpStationKeeping {
+  /// The orbit kept (its INITIAL_STATE, PERIOD and JACOBI at least).
+  ORBIT: tbpPeriodicOrbit;
+  STRATEGY: tbpStationKeepingStrategy = PlaneCrossing;
+  /// Navigation (orbit knowledge) error, km, 1 sigma.
+  NAVIGATION_ERROR_KM: double;
+  /// Maneuver execution error, fraction of each burn, 1 sigma.
+  EXECUTION_ERROR_FRACTION: double;
+  /// Station-keeping cycles simulated.
+  CYCLES: uint32;
+  /// Result: delta-v per year, km/s.
+  ANNUAL_DELTA_V_KM_S: double;
+  /// Result: mean and largest delta-v per cycle, km/s.
+  MEAN_CYCLE_DELTA_V_KM_S: double;
+  MAX_CYCLE_DELTA_V_KM_S: double;
+  /// Result: delta-v of each cycle, km/s.
+  CYCLE_DELTA_V_KM_S: [double];
+  /// Result: true when the orbit stays bounded over the simulation.
+  BOUNDED: bool;
+}
+
+/// A state converted between the synodic and inertial frames. The inertial
+/// frame is centred on the barycentre with its X axis along the synodic X
+/// axis at REFERENCE_EPOCH_MS (elapsed time 0) and Z along the system's
+/// angular momentum.
+table tbpFrameConversion {
+  DIRECTION: tbpConversionDirection = SynodicToInertial;
+  /// Unix milliseconds when the two frames are aligned; 0 = relative time
+  /// only.
+  REFERENCE_EPOCH_MS: int64;
+  /// Seconds from the alignment to the state.
+  ELAPSED_S: double;
+  /// The synodic state (input or result), non-dimensional.
+  SYNODIC: tbpState;
+  /// The inertial state (input or result): km and km/s, 6 values.
+  INERTIAL: [double];
+}
+
+/// Three-Body Problem - a CR3BP system and one answer about it.
+table TBP {
+  /// Identifier of the record; empty = not assigned.
+  ID: string;
+  /// Unix milliseconds the record was produced.
+  CREATED_AT_MS: int64;
+  /// Identifier of the producing service or tool.
+  PRODUCER: string;
+  PROBLEM: tbpProblem = Unspecified;
+  SYSTEM: tbpSystem;
+  STATUS: tbpStatus = Pending;
+  /// Stable machine-readable reason when STATUS is not Solved.
+  ERROR_CODE: string;
+  ERROR_MESSAGE: string;
+  /// Propagation: the request, and the propagated trajectory.
+  PROPAGATION: tbpPropagationRequest;
+  TRAJECTORY: tbpTrajectory;
+  /// LibrationPoints: L1 to L5.
+  LIBRATION_POINTS: [tbpLibrationPoint];
+  /// JacobiConstant: the state, and its Jacobi constant.
+  STATE: tbpState;
+  JACOBI: double;
+  /// PeriodicOrbit, HaloFirstGuess, NearRectilinearHalo: the request fields
+  /// (FAMILY, LIBRATION_POINT, AMPLITUDE or perilune/apolune, TOLERANCE,
+  /// MAX_ITERATIONS) and the result. Family: the members, ordered along the
+  /// family's continuation parameter (AMPLITUDE).
+  ORBITS: [tbpPeriodicOrbit];
+  TRANSFER: tbpTransfer;
+  STATION_KEEPING: tbpStationKeeping;
+  FRAME_CONVERSION: tbpFrameConversion;
+}
+
+root_type TBP;
+file_identifier "$TBP";

@@ -217,6 +217,27 @@ class PRW : Table() {
             null
         }
     }
+    /**
+     * Propagation over windows: one $OEM block per query answers it.
+     */
+    val windowRequest : PRWWindowRequest? get() = windowRequest(PRWWindowRequest())
+    fun windowRequest(obj: PRWWindowRequest) : PRWWindowRequest? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    val windowReport : PRWWindowReport? get() = windowReport(PRWWindowReport())
+    fun windowReport(obj: PRWWindowReport) : PRWWindowReport? {
+        val o = __offset(48)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRW(_bb: ByteBuffer): PRW = getRootAsPRW(_bb, PRW())
@@ -225,8 +246,10 @@ class PRW : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PRWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PRW")
-        fun createPRW(builder: FlatBufferBuilder, initOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int, executionRequestOffset: Int, executionResultOffset: Int, residentStateOffset: Int, residentRequestOffset: Int, prepareRequestOffset: Int, prepareResultOffset: Int, describeRequestOffset: Int, describeResultOffset: Int, nativeInputOffset: Int, ephemerisRequestOffset: Int, ephemerisResultOffset: Int, atmosphereRequestOffset: Int, atmosphereResultOffset: Int, versionQuery: Boolean, versionResultOffset: Int, earthOrientationOffset: Int, spaceWeatherOffset: Int, jb2008IndicesOffset: Int) : Int {
-            builder.startTable(21)
+        fun createPRW(builder: FlatBufferBuilder, initOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int, executionRequestOffset: Int, executionResultOffset: Int, residentStateOffset: Int, residentRequestOffset: Int, prepareRequestOffset: Int, prepareResultOffset: Int, describeRequestOffset: Int, describeResultOffset: Int, nativeInputOffset: Int, ephemerisRequestOffset: Int, ephemerisResultOffset: Int, atmosphereRequestOffset: Int, atmosphereResultOffset: Int, versionQuery: Boolean, versionResultOffset: Int, earthOrientationOffset: Int, spaceWeatherOffset: Int, jb2008IndicesOffset: Int, windowRequestOffset: Int, windowReportOffset: Int) : Int {
+            builder.startTable(23)
+            addWINDOWREPORT(builder, windowReportOffset)
+            addWINDOWREQUEST(builder, windowRequestOffset)
             addJB2008INDICES(builder, jb2008IndicesOffset)
             addSPACEWEATHER(builder, spaceWeatherOffset)
             addEARTHORIENTATION(builder, earthOrientationOffset)
@@ -250,7 +273,7 @@ class PRW : Table() {
             addVERSIONQUERY(builder, versionQuery)
             return endPRW(builder)
         }
-        fun startPRW(builder: FlatBufferBuilder) = builder.startTable(21)
+        fun startPRW(builder: FlatBufferBuilder) = builder.startTable(23)
         fun addINIT(builder: FlatBufferBuilder, init: Int) = builder.addOffset(0, init, 0)
         fun addBATCHREQUEST(builder: FlatBufferBuilder, batchRequest: Int) = builder.addOffset(1, batchRequest, 0)
         fun addBATCHRESPONSE(builder: FlatBufferBuilder, batchResponse: Int) = builder.addOffset(2, batchResponse, 0)
@@ -272,6 +295,8 @@ class PRW : Table() {
         fun addEARTHORIENTATION(builder: FlatBufferBuilder, earthOrientation: Int) = builder.addOffset(18, earthOrientation, 0)
         fun addSPACEWEATHER(builder: FlatBufferBuilder, spaceWeather: Int) = builder.addOffset(19, spaceWeather, 0)
         fun addJB2008INDICES(builder: FlatBufferBuilder, jb2008Indices: Int) = builder.addOffset(20, jb2008Indices, 0)
+        fun addWINDOWREQUEST(builder: FlatBufferBuilder, windowRequest: Int) = builder.addOffset(21, windowRequest, 0)
+        fun addWINDOWREPORT(builder: FlatBufferBuilder, windowReport: Int) = builder.addOffset(22, windowReport, 0)
         fun endPRW(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

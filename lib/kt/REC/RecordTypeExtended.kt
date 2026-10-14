@@ -17,5 +17,26 @@ class RecordTypeExtended private constructor() {
         const val CVR: UShort = 257u
         const val PVN: UShort = 258u
         const val SBD: UShort = 259u
+        const val APR: UShort = 260u
+        const val ASG: UShort = 261u
+        const val DAV: UShort = 262u
+        const val DCL: UShort = 263u
+        const val ERM: UShort = 264u
+        const val FIL: UShort = 265u
+        const val LFV: UShort = 266u
+        const val MDE: UShort = 267u
+        const val MPL: UShort = 268u
+        const val NEV: UShort = 269u
+        const val NHS: UShort = 270u
+        const val OIL: UShort = 271u
+        const val PNV: UShort = 272u
+        const val PPS: UShort = 273u
+        const val RND: UShort = 274u
+        const val SBC: UShort = 275u
+        const val SCR: UShort = 276u
+        const val SRG: UShort = 277u
+        const val TBP: UShort = 278u
+        const val WHA: UShort = 279u
+        const val XMT: UShort = 280u
     }
 }

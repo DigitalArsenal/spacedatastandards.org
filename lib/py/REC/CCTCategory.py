@@ -191,7 +191,7 @@ def CCTCategoryCreateKEYWORDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateKEYWORDSVector(builder, data):
-    CCTCategoryCreateKEYWORDSVector(builder, data)
+    return CCTCategoryCreateKEYWORDSVector(builder, data)
 
 def CCTCategoryAddICON_KEY(builder, ICON_KEY):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ICON_KEY), 0)

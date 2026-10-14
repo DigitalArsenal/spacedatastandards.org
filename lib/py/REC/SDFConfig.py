@@ -145,7 +145,7 @@ def SDFConfigCreateCOMPONENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMPONENTSVector(builder, data):
-    SDFConfigCreateCOMPONENTSVector(builder, data)
+    return SDFConfigCreateCOMPONENTSVector(builder, data)
 
 def SDFConfigAddCOMPOSITIONS(builder, COMPOSITIONS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(COMPOSITIONS), 0)
@@ -163,7 +163,7 @@ def SDFConfigCreateCOMPOSITIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMPOSITIONSVector(builder, data):
-    SDFConfigCreateCOMPOSITIONSVector(builder, data)
+    return SDFConfigCreateCOMPOSITIONSVector(builder, data)
 
 def SDFConfigAddINVERSE_TRANSFORM(builder, INVERSE_TRANSFORM):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INVERSE_TRANSFORM), 0)
@@ -185,7 +185,7 @@ def SDFConfigCreateINVERSE_TRANSFORMVector(builder, data):
     return builder.EndVector()
 
 def CreateINVERSE_TRANSFORMVector(builder, data):
-    SDFConfigCreateINVERSE_TRANSFORMVector(builder, data)
+    return SDFConfigCreateINVERSE_TRANSFORMVector(builder, data)
 
 def SDFConfigEnd(builder):
     return builder.EndObject()

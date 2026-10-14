@@ -1,0 +1,429 @@
+// Hash: 07794b8e3c8163b382c7de0f1c5fd10ce18e1347bcecbfb107f6c19e65cb3ee3
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+include "../ATM/main.fbs";
+include "../PRW/main.fbs";
+include "../OMM/main.fbs";
+include "../OEM/main.fbs";
+
+/// Density Calibration (DCL)
+/// Description
+/// A calibration of a thermospheric density model and the results computed
+/// with it. A calibration is a correction to the model's exospheric
+/// temperature (added where the model adds its geomagnetic term, so a
+/// constant correction is the same as raising every hourly Dst-derived
+/// temperature change by that amount), estimated either from observed
+/// densities (accelerometer or precise-orbit densities) or from the orbital
+/// decay of catalogued objects, in the manner of the Dynamic Calibration of
+/// the Atmosphere in the High Accuracy Satellite Drag Model. The correction
+/// is either spherical harmonics in latitude and local solar time per time
+/// bin, or values at time nodes, optionally at several altitudes.
+///
+/// The same record carries what a calibration is for: density at points
+/// with the correction applied; the drag decay of element-set histories;
+/// the orbital energy of states (the Jacobi integral of the geopotential in
+/// Earth-fixed axes, conserved when only gravity acts, and its gradient);
+/// and the drag power and work along a trajectory. Each comes with the fit
+/// statistics (residual RMS before and after, chi-square, iterations,
+/// formal sigmas, points used and edited) that say how far to trust it.
+/// Orbit-determination and conjunction-assessment teams use it to correct
+/// drag, and space-weather analysts to compare models.
+///
+/// DCL names the model with $ATM, takes the model's drivers as published:
+/// the JB2008 daily solar indices and the hourly Dst-derived exospheric
+/// temperature change (K) as $PRW PRWJB2008Indices rows, and the daily
+/// space weather an NRLMSISE-00 evaluation reads (F10.7, its 81-day mean,
+/// Ap) as $SPW rows. Element-set histories are $OMM records and state
+/// trajectories $OEM ephemeris blocks. $HFC carries flow conditions
+/// (density, Mach, heating) along an entry trajectory; a DCL density
+/// evaluation along the same trajectory supplies its calibrated density.
+///
+/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+
+/// What a record computes. Append new values only; never reorder or reuse
+/// existing values.
+enum dclProduct : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Density at points, with the correction applied.
+  DensityEvaluation,
+  /// Harmonic correction per time bin, fitted to observed densities.
+  DensityCalibration,
+  /// Drag decay of element-set histories (the forward model).
+  OrbitalDecay,
+  /// Node correction and ballistic coefficients fitted to orbital decay.
+  DecayCalibration,
+  /// Orbital energy (Jacobi integral of the geopotential) of states.
+  OrbitalEnergy,
+  /// Drag power and work along a trajectory.
+  DragWork
+}
+
+/// Form of a temperature correction. Append new values only; never reorder or
+/// reuse existing values.
+enum dclCorrectionForm : ubyte {
+  /// No correction (dT = 0).
+  None,
+  /// Spherical harmonics in latitude and local solar time per time segment.
+  Harmonic,
+  /// Values at time nodes, optionally at altitude nodes.
+  Nodes
+}
+
+/// Outcome. Append new values only; never reorder or reuse existing values.
+enum dclStatus : ubyte {
+  /// A request, not yet answered.
+  Pending,
+  Solved,
+  /// The fit stopped at its iteration limit without meeting its tolerance.
+  NotConverged,
+  InvalidRequest,
+  /// A trajectory left the drivers' span or was refused by the propagator.
+  IntegrationFailed,
+  Failed
+}
+
+/// Fit statistics of one fit (a bin, an object, or the whole calibration).
+table dclFitStatistics {
+  /// Iterations run and whether the fit met its tolerance.
+  ITERATIONS: uint32;
+  CONVERGED: bool;
+  /// Observations available and used (after robust editing).
+  OBSERVATIONS: uint32;
+  USED: uint32;
+  /// Parameters estimated.
+  PARAMETERS: uint32;
+  /// RMS of the residuals before and after the fit, in the residual's unit
+  /// (log density for a density fit, m for a decay fit).
+  PREFIT_RMS: double;
+  POSTFIT_RMS: double;
+  /// Weighted sum of squared residuals plus prior terms at the solution.
+  CHI_SQUARE: double;
+}
+
+/// One harmonic correction segment: dT(lat, h) = sum over l <= DEGREE, m <=
+/// l of P_l^m(sin lat) (a_lm cos m h + b_lm sin m h), Schmidt
+/// semi-normalised, h the hour angle from the Sun (local solar time = 12 h +
+/// h). It applies from FROM_MS (inclusive) to TO_MS (exclusive).
+table dclHarmonicSegment {
+  FROM_MS: int64;
+  TO_MS: int64;
+  /// Coefficients, K, (DEGREE + 1)^2 values in the order (0,0), (1,0),
+  /// (1,1)c, (1,1)s, (2,0), (2,1)c, ...; the first is the global mean. Empty
+  /// = the bin had too few points and was not fitted.
+  COEFFICIENTS_K: [double];
+  /// Formal posterior standard deviation of each coefficient, K; empty = not
+  /// computed.
+  SIGMAS_K: [double];
+  /// The fit of this segment.
+  FIT: dclFitStatistics;
+}
+
+/// The mean level of a node correction at one altitude node.
+table dclLevel {
+  /// Altitude node, km; NaN = the single global node.
+  ALTITUDE_KM: double = nan;
+  /// Mean correction over the time nodes, K, and its formal sigma (NaN = not
+  /// computed).
+  MEAN_K: double;
+  SIGMA_K: double = nan;
+}
+
+/// An exospheric-temperature correction.
+table dclCorrection {
+  FORM: dclCorrectionForm = None;
+  /// Harmonic: the degree (0 = a global constant per segment).
+  DEGREE: uint8;
+  /// Harmonic: segments in time order, not overlapping; an instant in no
+  /// segment has dT = 0.
+  SEGMENTS: [dclHarmonicSegment];
+  /// Nodes: node times, strictly increasing. dT is linear in time between
+  /// nodes and held outside them.
+  NODE_TIMES_MS: [int64];
+  /// Nodes: altitude nodes, km, strictly increasing; empty = one global
+  /// value per time node (at least two otherwise). dT is linear in altitude
+  /// between them, extrapolated linearly up to 100 km beyond the outer ones
+  /// and held beyond that.
+  NODE_ALTITUDES_KM: [double];
+  /// Nodes: values, K, time-node-major (time node j, altitude node a at
+  /// j * altitudes + a).
+  NODE_VALUES_K: [double];
+  /// Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not
+  /// estimated.
+  NODE_SIGMAS_K: [double];
+}
+
+/// Points, column-major and parallel (one entry per point; vectors as
+/// stated).
+table dclPoints {
+  /// Instant of each point.
+  TIME_MS: [int64];
+  /// WGS84 geodetic latitude and longitude, deg, and height, km.
+  LATITUDE_DEG: [double];
+  LONGITUDE_DEG: [double];
+  ALTITUDE_KM: [double];
+  /// Calibration: observed density, kg/m^3, and its relative weight (empty
+  /// = 1 each; 0 = excluded).
+  OBSERVED_DENSITY_KG_M3: [double];
+  WEIGHT: [double];
+  /// Validation input: the Sun's right ascension and declination, deg, and
+  /// the model subroutine's own nine driver values per point (F10, F10 81-day
+  /// mean, S10, S10 mean, M10, M10 mean, Y10, Y10 mean, DSTDTC K). When
+  /// present they replace the driver lookup and the Sun computation.
+  SUN_RIGHT_ASCENSION_DEG: [double];
+  SUN_DECLINATION_DEG: [double];
+  MODEL_DRIVERS: [double];
+  /// Result: density, kg/m^3 (NaN = refused).
+  DENSITY_KG_M3: [double];
+  /// Result: the correction applied, K.
+  DELTA_T_K: [double];
+  /// Result: local solar time, h.
+  LOCAL_SOLAR_TIME_H: [double];
+  /// Result: d ln(density) / dT, 1/K; empty = not asked for.
+  DLN_DENSITY_DT_PER_K: [double];
+  /// Result: the Sun's Earth-fixed longitude and geocentric latitude, deg;
+  /// empty = not asked for.
+  SUN_LONGITUDE_DEG: [double];
+  SUN_LATITUDE_DEG: [double];
+  /// Result: indices of the points refused (outside the drivers, outside the
+  /// model's altitude range, or malformed).
+  REFUSED: [uint32];
+}
+
+/// A refused element set.
+table dclRefusal {
+  /// Index of the set in ELEMENT_SETS.
+  INDEX: uint32;
+  /// Why, e.g. "deep-space", "sgp4-init", "mean-motion-or-eccentricity".
+  REASON: string;
+}
+
+/// One object's element-set history and its decay.
+table dclObject {
+  /// Identifier (catalog number or designator).
+  ID: string;
+  /// The element sets, in epoch order; each needs EPOCH, MEAN_MOTION,
+  /// ECCENTRICITY, INCLINATION, RA_OF_ASC_NODE, ARG_OF_PERICENTER,
+  /// MEAN_ANOMALY and BSTAR.
+  ELEMENT_SETS: [OMM];
+  /// Ballistic coefficient B = Cd A / m, m^2/kg (forward model input, or the
+  /// fitted value); 0 = 1 m^2/kg in a request.
+  BALLISTIC_COEFFICIENT_M2_KG: double;
+  /// Forward model with a single set: integrate it alone over this span, s;
+  /// 0 = to the next set.
+  SPAN_S: double;
+  /// Prior on ln B (mean, and sigma; sigma 0 = no prior).
+  LN_B_PRIOR_MEAN: double;
+  LN_B_PRIOR_SIGMA: double;
+  /// Result: false when the object's trajectory could not be integrated.
+  OK: bool;
+  /// Result: why the object was left out of a calibration; empty = used.
+  SKIPPED_REASON: string;
+  /// Result: sets refused, with the reason.
+  REFUSED: [dclRefusal];
+  /// Result per set, parallel to ELEMENT_SETS: mean (Brouwer) semi-major
+  /// axis and perigee height, km, eccentricity, the cumulative drag decay
+  /// from the start of the set's chain, m (NaN = not in a chain), and the
+  /// fit residual, m (NaN = none) and whether it was used.
+  SET_TIME_MS: [int64];
+  SET_MEAN_SEMI_MAJOR_AXIS_KM: [double];
+  SET_PERIGEE_HEIGHT_KM: [double];
+  SET_ECCENTRICITY: [double];
+  SET_CUMULATIVE_DECAY_M: [double];
+  SET_RESIDUAL_M: [double];
+  SET_USED: [bool];
+  /// Result per integrated segment (set epoch to the next): span, drag change
+  /// in mean semi-major axis (m) and mean geodetic height (km).
+  SEGMENT_FROM_MS: [int64];
+  SEGMENT_TO_MS: [int64];
+  SEGMENT_DECAY_M: [double];
+  SEGMENT_MEAN_ALTITUDE_KM: [double];
+  /// Result: mean geodetic height along the trajectory, km.
+  MEAN_ALTITUDE_KM: double;
+  /// Calibration result: ln B, its formal sigma (NaN = not computed), the
+  /// object's robust residual scale (m), chains of sets, sets in chains.
+  LN_B: double;
+  LN_B_SIGMA: double = nan;
+  RESIDUAL_SCALE_M: double;
+  CHAINS: uint32;
+  SETS_IN_CHAINS: uint32;
+  /// Calibration result: first and last set used.
+  FIRST_MS: int64;
+  LAST_MS: int64;
+  /// Calibration result: observed and modelled drop in mean semi-major axis
+  /// over the chains, m.
+  OBSERVED_DECAY_M: double;
+  MODEL_DECAY_M: double;
+  /// Calibration result: residual RMS before and after (m), sets used.
+  FIT: dclFitStatistics;
+  /// Result, when asked for: the trajectory points, column-major. TEME
+  /// position and velocity (km, km/s, 6 per point), geodetic point, density
+  /// and the drag-decay factor q = (a^2 / mu) |v_r| (v . v_r), m^2/s, so that
+  /// da/dt = -B density q.
+  SAMPLE_TIME_MS: [int64];
+  SAMPLE_TEME_STATE: [double];
+  SAMPLE_LATITUDE_DEG: [double];
+  SAMPLE_LONGITUDE_DEG: [double];
+  SAMPLE_ALTITUDE_KM: [double];
+  SAMPLE_DENSITY_KG_M3: [double];
+  SAMPLE_DECAY_FACTOR_M2_S: [double];
+}
+
+/// One iteration of a decay calibration.
+table dclIteration {
+  ITERATION: uint32;
+  CHI_SQUARE: double;
+  OBSERVATIONS: uint32;
+  /// Largest step in the correction (K), in any ln B, and in any chain offset
+  /// (m).
+  MAX_STEP_K: double;
+  MAX_STEP_LN_B: double;
+  MAX_STEP_OFFSET_M: double;
+}
+
+/// Settings of a calibration or a forward model.
+table dclSettings {
+  /// Calibration span.
+  FROM_MS: int64;
+  TO_MS: int64;
+  /// DensityCalibration: harmonic degree, 0-8.
+  DEGREE: uint8;
+  /// DensityCalibration: bin length, s; 0 = 3 h.
+  BIN_S: double;
+  /// DensityCalibration: sigma of a log-density residual; 0 = 0.1.
+  LOG_DENSITY_SIGMA: double;
+  /// DensityCalibration: prior sigma of the coefficients of each degree, K
+  /// (DEGREE + 1 values); empty = 100 K each.
+  PRIOR_SIGMA_K: [double];
+  /// DensityCalibration: fewest points for a bin to be fitted; 0 = 30.
+  MIN_POINTS: uint32;
+  /// Iteration limit; 0 = 10.
+  MAX_ITERATIONS: uint32;
+  /// Robust edit threshold in robust sigmas (1.4826 MAD); 0 = 4.
+  EDIT_SIGMA: double;
+  /// DecayCalibration: spacing of the correction's time nodes, s, and its
+  /// altitude nodes, km (empty = global).
+  NODE_STEP_S: double;
+  NODE_ALTITUDES_KM: [double];
+  /// DecayCalibration priors: random walk between consecutive nodes,
+  /// K per square-root day; the mean level of each altitude node, K; the tie
+  /// between neighbouring altitude nodes, K. 0 = 30, 150, 100.
+  RANDOM_WALK_K_PER_SQRT_DAY: double;
+  MEAN_LEVEL_K: double;
+  ALTITUDE_DIFFERENCE_K: double;
+  /// Decay: integration step along each trajectory, s (1-600); 0 = 60.
+  STEP_S: double;
+  /// Decay: sets further apart than this start a new chain, s; 0 = 3 days.
+  MAX_GAP_S: double;
+  /// DecayCalibration: floor of each object's residual scale, m; 0 = 1.
+  RESIDUAL_FLOOR_M: double;
+  /// DecayCalibration: iterations in which scales and edits are re-estimated
+  /// before being held; 0 = 4.
+  REWEIGHT_ITERATIONS: uint32;
+  /// DecayCalibration convergence: every step below these; 0 = 0.5 K,
+  /// 0.001, 0.1 m.
+  TOLERANCE_K: double;
+  TOLERANCE_LN_B: double;
+  TOLERANCE_OFFSET_M: double;
+  /// DecayCalibration: fewest sets in chains for an object to be used; 0 =
+  /// 5.
+  MIN_SETS: uint32;
+  /// Ask for the derivative d ln(density)/dT, the Sun diagnostics, the
+  /// per-set residuals, the trajectory samples, the energy gradient.
+  WANT_DERIVATIVE: bool;
+  WANT_SUN_DIAGNOSTICS: bool;
+  WANT_RESIDUALS: bool;
+  WANT_SAMPLES: bool;
+  WANT_GRADIENT: bool;
+}
+
+/// States for energy and drag work: an $OEM ephemeris block (GCRF, km,
+/// km/s) and, parallel to its states, the Earth-orientation values used to
+/// turn each into Earth-fixed axes, with the results per state.
+table dclStates {
+  EPHEMERIS: ephemerisDataBlock;
+  /// UT1 - UTC, s, and polar motion, arcsec, per state; empty = 0.
+  DUT1_S: [double];
+  POLAR_MOTION_X_ARCSEC: [double];
+  POLAR_MOTION_Y_ARCSEC: [double];
+  /// Energy: the Jacobi integral C = |v|^2 / 2 + U(r) - omega . (r x v),
+  /// J/kg, and its kinetic, potential and rotational parts.
+  ENERGY_J_KG: [double];
+  KINETIC_J_KG: [double];
+  POTENTIAL_J_KG: [double];
+  ROTATIONAL_J_KG: [double];
+  /// Energy: dC/dr (J/kg/m) and dC/dv (m/s) in GCRF, 6 values per state;
+  /// empty = not asked for.
+  ENERGY_GRADIENT: [double];
+  /// Speed relative to the co-rotating atmosphere, m/s.
+  RELATIVE_SPEED_M_S: [double];
+  /// WGS84 geodetic point of each state.
+  LATITUDE_DEG: [double];
+  LONGITUDE_DEG: [double];
+  ALTITUDE_KM: [double];
+  /// Drag work: density, kg/m^3, and drag power -B density |v_r|^3 / 2,
+  /// W/kg.
+  DENSITY_KG_M3: [double];
+  DRAG_POWER_W_KG: [double];
+  /// Drag work between consecutive states (one fewer than the states), and
+  /// its running sum from the first state (one per state), J/kg.
+  DRAG_WORK_J_KG: [double];
+  CUMULATIVE_DRAG_WORK_J_KG: [double];
+  /// Indices of the states refused.
+  REFUSED: [uint32];
+}
+
+/// Density Calibration - a density-model correction, how it was fitted, and
+/// the densities, decays, energies and drag work computed with it.
+table DCL {
+  /// Identifier of the record; empty = not assigned.
+  ID: string;
+  /// Unix milliseconds the record was produced.
+  CREATED_AT_MS: int64;
+  /// Identifier of the producing service or tool.
+  PRODUCER: string;
+  PRODUCT: dclProduct = Unspecified;
+  /// The density model and version (JB08 2008, NRLMSIS00E 2000, ...).
+  ATMOSPHERE: ATM;
+  /// JB2008 drivers: daily solar indices and the hourly Dst-derived
+  /// exospheric temperature change (DTC_HOURLY_K).
+  JB2008_DRIVERS: PRWJB2008IndicesTable;
+  /// NRLMSISE-00 drivers: daily space weather.
+  SPACE_WEATHER: [SPW];
+  /// Geopotential for the energy: field name (e.g. "EGM2008"), degree and
+  /// order, central-term GM (m^3/s^2; 0 = 3.986004418e14) and the Earth's
+  /// rotation rate (rad/s; 0 = 7.292115e-5).
+  GRAVITY_FIELD: string;
+  GRAVITY_DEGREE: uint16;
+  GRAVITY_ORDER: uint16;
+  GM_M3_S2: double;
+  EARTH_ROTATION_RAD_S: double;
+  /// Drag work: ballistic coefficient Cd A / m, m^2/kg; 0 = 1.
+  BALLISTIC_COEFFICIENT_M2_KG: double;
+  SETTINGS: dclSettings;
+  /// The correction: applied (an input) or estimated (a result).
+  CORRECTION: dclCorrection;
+  STATUS: dclStatus = Pending;
+  /// Stable machine-readable reason when STATUS is not Solved, e.g.
+  /// "invalid-request", "invalid-correction", "integration-failed".
+  ERROR_CODE: string;
+  ERROR_MESSAGE: string;
+  /// DensityEvaluation and DensityCalibration: the points.
+  POINTS: dclPoints;
+  /// OrbitalDecay and DecayCalibration: the objects.
+  OBJECTS: [dclObject];
+  /// DecayCalibration: the overall fit, the correction's level at each
+  /// altitude node, the iteration history, the correlation of the level
+  /// with the precision-weighted mean ln B (near -1 = the level is not
+  /// determined), and the formal sigma of the mean level, K.
+  FIT: dclFitStatistics;
+  LEVELS: [dclLevel];
+  HISTORY: [dclIteration];
+  LEVEL_LN_B_CORRELATION: double = nan;
+  MEAN_LEVEL_SIGMA_K: double = nan;
+  /// OrbitalEnergy and DragWork: the states and their results.
+  STATES: dclStates;
+}
+
+root_type DCL;
+file_identifier "$DCL";

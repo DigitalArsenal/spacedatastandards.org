@@ -126,7 +126,7 @@ def PRGCreateMESSAGE_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMESSAGE_TYPESVector(builder, data):
-    PRGCreateMESSAGE_TYPESVector(builder, data)
+    return PRGCreateMESSAGE_TYPESVector(builder, data)
 
 def PRGAddUSERS(builder, USERS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(USERS), 0)
@@ -144,7 +144,7 @@ def PRGCreateUSERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateUSERSVector(builder, data):
-    PRGCreateUSERSVector(builder, data)
+    return PRGCreateUSERSVector(builder, data)
 
 def PRGEnd(builder):
     return builder.EndObject()

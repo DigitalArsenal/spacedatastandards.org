@@ -166,7 +166,7 @@ def SCCCreateSCENARIOSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCENARIOSVector(builder, data):
-    SCCCreateSCENARIOSVector(builder, data)
+    return SCCCreateSCENARIOSVector(builder, data)
 
 def SCCAddSCENARIO(builder, SCENARIO):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(SCENARIO), 0)

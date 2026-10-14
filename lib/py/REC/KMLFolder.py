@@ -435,7 +435,7 @@ def KMLFolderCreatePLACEMARKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePLACEMARKSVector(builder, data):
-    KMLFolderCreatePLACEMARKSVector(builder, data)
+    return KMLFolderCreatePLACEMARKSVector(builder, data)
 
 def KMLFolderAddFOLDERS(builder, FOLDERS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(FOLDERS), 0)
@@ -453,7 +453,7 @@ def KMLFolderCreateFOLDERSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFOLDERSVector(builder, data):
-    KMLFolderCreateFOLDERSVector(builder, data)
+    return KMLFolderCreateFOLDERSVector(builder, data)
 
 def KMLFolderAddNETWORK_LINKS(builder, NETWORK_LINKS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NETWORK_LINKS), 0)
@@ -471,7 +471,7 @@ def KMLFolderCreateNETWORK_LINKSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNETWORK_LINKSVector(builder, data):
-    KMLFolderCreateNETWORK_LINKSVector(builder, data)
+    return KMLFolderCreateNETWORK_LINKSVector(builder, data)
 
 def KMLFolderAddGROUND_OVERLAYS(builder, GROUND_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(GROUND_OVERLAYS), 0)
@@ -489,7 +489,7 @@ def KMLFolderCreateGROUND_OVERLAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGROUND_OVERLAYSVector(builder, data):
-    KMLFolderCreateGROUND_OVERLAYSVector(builder, data)
+    return KMLFolderCreateGROUND_OVERLAYSVector(builder, data)
 
 def KMLFolderAddSTYLES(builder, STYLES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(STYLES), 0)
@@ -507,7 +507,7 @@ def KMLFolderCreateSTYLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTYLESVector(builder, data):
-    KMLFolderCreateSTYLESVector(builder, data)
+    return KMLFolderCreateSTYLESVector(builder, data)
 
 def KMLFolderAddSTYLE_MAPS(builder, STYLE_MAPS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_MAPS), 0)
@@ -525,7 +525,7 @@ def KMLFolderCreateSTYLE_MAPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTYLE_MAPSVector(builder, data):
-    KMLFolderCreateSTYLE_MAPSVector(builder, data)
+    return KMLFolderCreateSTYLE_MAPSVector(builder, data)
 
 def KMLFolderAddSCREEN_OVERLAYS(builder, SCREEN_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(SCREEN_OVERLAYS), 0)
@@ -543,7 +543,7 @@ def KMLFolderCreateSCREEN_OVERLAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSCREEN_OVERLAYSVector(builder, data):
-    KMLFolderCreateSCREEN_OVERLAYSVector(builder, data)
+    return KMLFolderCreateSCREEN_OVERLAYSVector(builder, data)
 
 def KMLFolderAddPHOTO_OVERLAYS(builder, PHOTO_OVERLAYS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(PHOTO_OVERLAYS), 0)
@@ -561,7 +561,7 @@ def KMLFolderCreatePHOTO_OVERLAYSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePHOTO_OVERLAYSVector(builder, data):
-    KMLFolderCreatePHOTO_OVERLAYSVector(builder, data)
+    return KMLFolderCreatePHOTO_OVERLAYSVector(builder, data)
 
 def KMLFolderAddTOURS(builder, TOURS):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(TOURS), 0)
@@ -579,7 +579,7 @@ def KMLFolderCreateTOURSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTOURSVector(builder, data):
-    KMLFolderCreateTOURSVector(builder, data)
+    return KMLFolderCreateTOURSVector(builder, data)
 
 def KMLFolderAddSTYLE_URL(builder, STYLE_URL):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(STYLE_URL), 0)
@@ -609,7 +609,7 @@ def KMLFolderCreateEXTENDED_DATAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEXTENDED_DATAVector(builder, data):
-    KMLFolderCreateEXTENDED_DATAVector(builder, data)
+    return KMLFolderCreateEXTENDED_DATAVector(builder, data)
 
 def KMLFolderAddLOOK_AT(builder, LOOK_AT):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(LOOK_AT), 0)

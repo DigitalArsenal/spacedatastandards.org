@@ -1,0 +1,13 @@
+/**
+ * Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+ * infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+ * is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+ * emissivity zonal to the second Legendre degree with the annual term of
+ * the first, from the elements of the Earth's surface the spacecraft sees
+ * (as Orekit's KnockeRediffusedForceModel evaluates it).
+ */
+export declare enum prwEarthRadiationModel {
+    NONE = 0,
+    KNOCKE = 1
+}
+//# sourceMappingURL=prwEarthRadiationModel.d.ts.map

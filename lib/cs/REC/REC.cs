@@ -19,6 +19,26 @@ public struct REC : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public REC __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  // Field-encryption format 3 walk program of REC (see FlatbuffersEncryption).
+  private static readonly int[] FlatbuffersEncryptionProgram = {
+    3, 4, 8, 15, 1, 5, 6, 1, 1, 6, 6, 4, 1, 63, 2, 1,
+    2, 12, 1
+  };
+  /// <summary>
+  /// Encrypts, in place, the (encrypted) fields of the REC buffer that starts at
+  /// _bb.Position, with field-encryption format 3 (key: 32 bytes; recordIndex:
+  /// unique per buffer under the key). Throws ArgumentException, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  /// </summary>
+  public static void EncryptBuffer(ByteBuffer _bb, byte[] key, uint recordIndex) { FlatbuffersEncryption.CryptBuffer(_bb, key, recordIndex, FlatbuffersEncryptionProgram); }
+  /// <summary>
+  /// Decrypts, in place, the (encrypted) fields of the REC buffer that starts at
+  /// _bb.Position, with field-encryption format 3 (key: 32 bytes; recordIndex:
+  /// unique per buffer under the key). Throws ArgumentException, before any
+  /// byte changes, for a bad key or a malformed buffer.
+  /// </summary>
+  public static void DecryptBuffer(ByteBuffer _bb, byte[] key, uint recordIndex) { FlatbuffersEncryption.CryptBuffer(_bb, key, recordIndex, FlatbuffersEncryptionProgram); }
+
   /// Schema version identifier
   public string version { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T

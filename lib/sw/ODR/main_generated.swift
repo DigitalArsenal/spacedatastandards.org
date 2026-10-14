@@ -68,7 +68,7 @@ public enum odrParameterDisposition: UInt8, FlatbuffersVectorInitializable, Enum
 }
 
 
-public struct ODRSolverConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODRSolverConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -160,7 +160,7 @@ public struct ODRSolverConfiguration: FlatBufferTable, FlatbuffersVectorInitiali
   }
 }
 
-public struct ODRIterationStatistics: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODRIterationStatistics: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -237,7 +237,7 @@ public struct ODRIterationStatistics: FlatBufferTable, FlatbuffersVectorInitiali
   }
 }
 
-public struct ODREditedObservation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODREditedObservation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -298,7 +298,7 @@ public struct ODREditedObservation: FlatBufferTable, FlatbuffersVectorInitializa
   }
 }
 
-public struct ODREstimatedParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODREstimatedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -369,7 +369,7 @@ public struct ODREstimatedParameter: FlatBufferTable, FlatbuffersVectorInitializ
   }
 }
 
-public struct ODRFilterEpoch: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODRFilterEpoch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -437,7 +437,7 @@ public struct ODRFilterEpoch: FlatBufferTable, FlatbuffersVectorInitializable, V
   }
 }
 
-public struct ODRAttestation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODRAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -498,7 +498,7 @@ public struct ODRAttestation: FlatBufferTable, FlatbuffersVectorInitializable, V
 ///  model. STATE_COVARIANCE is row-major with COVARIANCE_DIMENSION squared
 ///  entries and is also published as the $OCM named by OCM_CONTENT_ID. The
 ///  estimator report never substitutes a propagator name for its input port.
-public struct ODR: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ODR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

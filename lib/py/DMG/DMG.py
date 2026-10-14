@@ -277,7 +277,7 @@ def DMGCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    DMGCreateRESERVEDVector(builder, data)
+    return DMGCreateRESERVEDVector(builder, data)
 
 def DMGEnd(builder):
     return builder.EndObject()

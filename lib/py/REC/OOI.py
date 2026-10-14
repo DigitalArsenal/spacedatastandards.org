@@ -629,7 +629,7 @@ def OOICreateDELTA_VSVector(builder, data):
     return builder.EndVector()
 
 def CreateDELTA_VSVector(builder, data):
-    OOICreateDELTA_VSVector(builder, data)
+    return OOICreateDELTA_VSVector(builder, data)
 
 def OOIAddDELTA_TS(builder, DELTA_TS):
     builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(DELTA_TS), 0)
@@ -651,7 +651,7 @@ def OOICreateDELTA_TSVector(builder, data):
     return builder.EndVector()
 
 def CreateDELTA_TSVector(builder, data):
-    OOICreateDELTA_TSVector(builder, data)
+    return OOICreateDELTA_TSVector(builder, data)
 
 def OOIAddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(AFFECTED_OBJECTS), 0)
@@ -669,7 +669,7 @@ def OOICreateAFFECTED_OBJECTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAFFECTED_OBJECTSVector(builder, data):
-    OOICreateAFFECTED_OBJECTSVector(builder, data)
+    return OOICreateAFFECTED_OBJECTSVector(builder, data)
 
 def OOIAddMANIFOLDS(builder, MANIFOLDS):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(MANIFOLDS), 0)
@@ -687,7 +687,7 @@ def OOICreateMANIFOLDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMANIFOLDSVector(builder, data):
-    OOICreateMANIFOLDSVector(builder, data)
+    return OOICreateMANIFOLDSVector(builder, data)
 
 def OOIEnd(builder):
     return builder.EndObject()

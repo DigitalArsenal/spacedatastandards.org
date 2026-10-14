@@ -16255,6 +16255,183 @@
       ],
       "additionalProperties": false
     },
+    "PRWWindowQuery": {
+      "type": "object",
+      "description": "One propagation window: propagate one source (an element set, an\ninitialized entity or a resident handle) from START to STOP, sampling at\nmost STEP_SECONDS apart with the last sample exactly at STOP. The answer is\none $OEM data block per query, in SEQUENCE order, covering [START, STOP];\na provider that cannot answer returns an empty block whose COMMENT begins\n\"REFUSED\" and reports the reason in PRWWindowReport.",
+      "properties": {
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Position of the query in the request, 0-based; answers keep this order.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SET_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "0-based index of the source record among the source records passed\nwith the request (e.g. the $OMM element sets, across all frames, in input\norder). Ignored when ENTITY_HANDLE is used.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ENTITY_HANDLE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Entity handle of an initialized or resident source; 0 = use SET_INDEX.",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_KEY": {
+          "type": "string",
+          "description": "Object key of the source as the requester names it (e.g. \"NORAD:25544\");\nthe answer block must be of this object.",
+          "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies\nit).",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBJECT_ID": {
+          "type": "string",
+          "description": "International designator or provider object identifier; empty = none.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_EPOCH": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Epoch of the source record, for reference; absent = not stated.",
+          "x-flatbuffer-type": "TIMInstant"
+        },
+        "START": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "First and last instants of the window (UTC unless TIME_SYSTEM says\notherwise).",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "STOP": {
+          "$ref": "#/definitions/TIMInstant",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "STEP_SECONDS": {
+          "type": "number",
+          "description": "Largest sample spacing, seconds (> 0).",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "required": [
+        "START",
+        "STOP"
+      ],
+      "additionalProperties": false
+    },
+    "PRWWindowRequest": {
+      "type": "object",
+      "description": "A batch of propagation windows. Existing BATCH_REQUEST propagates every\nentity to one EPOCH; a window request propagates each query's source over\nits own [START, STOP] at STEP_SECONDS.",
+      "properties": {
+        "QUERIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PRWWindowQuery"
+          },
+          "x-flatbuffer-type": "[PRWWindowQuery]"
+        },
+        "PROPAGATOR_PORT_ID": {
+          "type": "string",
+          "description": "Port of the propagator expected to answer; empty = the host's default.",
+          "x-flatbuffer-type": "string"
+        },
+        "NEIGHBOUR_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Neighbouring source records each window spans on either side (context\nfor the requester's replay); 0 = not stated.",
+          "x-flatbuffer-type": "uint"
+        },
+        "TARGET_FRAME": {
+          "type": "string",
+          "description": "Frame the answers should be in, as an RFM name (e.g. \"TEME\", \"GCRF\");\nempty = the provider's native frame.",
+          "x-flatbuffer-type": "string"
+        },
+        "INSTRUCTIONS": {
+          "type": "string",
+          "description": "How to answer, human-readable.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWWindowRefusal": {
+      "type": "object",
+      "description": "A window the provider refused.",
+      "properties": {
+        "SEQUENCE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "The query's SEQUENCE.",
+          "x-flatbuffer-type": "uint"
+        },
+        "SET_INDEX": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "The query's SET_INDEX.",
+          "x-flatbuffer-type": "uint"
+        },
+        "REASON": {
+          "type": "string",
+          "description": "Reason code, e.g. \"set-out-of-range\", \"mean-element-theory-not-sgp4:X\",\n\"invalid-span\", \"span-too-long\", \"sgp4-propagate\".",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PRWWindowReport": {
+      "type": "object",
+      "description": "Summary of the answers to a window request.",
+      "properties": {
+        "QUERIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Queries received, answered and refused.",
+          "x-flatbuffer-type": "uint"
+        },
+        "ANSWERED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "REFUSED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "SOURCE_RECORDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Source records received.",
+          "x-flatbuffer-type": "uint"
+        },
+        "REFUSALS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PRWWindowRefusal"
+          },
+          "x-flatbuffer-type": "[PRWWindowRefusal]"
+        },
+        "PROVIDER": {
+          "type": "string",
+          "description": "The propagator and its configuration, e.g. \"SGP4, Vallado, WGS-72,\nopsmode i; TEME, UTC, km and km/s\".",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "PRW": {
       "type": "object",
       "description": "Exactly one arm per envelope. Existing three arms keep their ordinals.",
@@ -16344,6 +16521,15 @@
         "JB2008_INDICES": {
           "$ref": "#/definitions/PRWJB2008IndicesTable",
           "x-flatbuffer-type": "PRWJB2008IndicesTable"
+        },
+        "WINDOW_REQUEST": {
+          "$ref": "#/definitions/PRWWindowRequest",
+          "description": "Propagation over windows: one $OEM block per query answers it.",
+          "x-flatbuffer-type": "PRWWindowRequest"
+        },
+        "WINDOW_REPORT": {
+          "$ref": "#/definitions/PRWWindowReport",
+          "x-flatbuffer-type": "PRWWindowReport"
         }
       },
       "additionalProperties": false

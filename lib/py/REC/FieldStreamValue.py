@@ -277,7 +277,7 @@ def FieldStreamValueCreateFIELD_ID_PATHVector(builder, data):
     return builder.EndVector()
 
 def CreateFIELD_ID_PATHVector(builder, data):
-    FieldStreamValueCreateFIELD_ID_PATHVector(builder, data)
+    return FieldStreamValueCreateFIELD_ID_PATHVector(builder, data)
 
 def FieldStreamValueAddSTATE(builder, STATE):
     builder.PrependInt8Slot(2, STATE, 3)
@@ -311,7 +311,7 @@ def FieldStreamValueCreateVALUEVector(builder, data):
     return builder.EndVector()
 
 def CreateVALUEVector(builder, data):
-    FieldStreamValueCreateVALUEVector(builder, data)
+    return FieldStreamValueCreateVALUEVector(builder, data)
 
 def FieldStreamValueAddCIPHERTEXT(builder, CIPHERTEXT):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CIPHERTEXT), 0)
@@ -333,7 +333,7 @@ def FieldStreamValueCreateCIPHERTEXTVector(builder, data):
     return builder.EndVector()
 
 def CreateCIPHERTEXTVector(builder, data):
-    FieldStreamValueCreateCIPHERTEXTVector(builder, data)
+    return FieldStreamValueCreateCIPHERTEXTVector(builder, data)
 
 def FieldStreamValueAddNONCE(builder, NONCE):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NONCE), 0)
@@ -355,7 +355,7 @@ def FieldStreamValueCreateNONCEVector(builder, data):
     return builder.EndVector()
 
 def CreateNONCEVector(builder, data):
-    FieldStreamValueCreateNONCEVector(builder, data)
+    return FieldStreamValueCreateNONCEVector(builder, data)
 
 def FieldStreamValueAddTAG(builder, TAG):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TAG), 0)
@@ -377,7 +377,7 @@ def FieldStreamValueCreateTAGVector(builder, data):
     return builder.EndVector()
 
 def CreateTAGVector(builder, data):
-    FieldStreamValueCreateTAGVector(builder, data)
+    return FieldStreamValueCreateTAGVector(builder, data)
 
 def FieldStreamValueAddKEY_ID(builder, KEY_ID):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(KEY_ID), 0)
@@ -405,7 +405,7 @@ def FieldStreamValueCreateAAD_HASHVector(builder, data):
     return builder.EndVector()
 
 def CreateAAD_HASHVector(builder, data):
-    FieldStreamValueCreateAAD_HASHVector(builder, data)
+    return FieldStreamValueCreateAAD_HASHVector(builder, data)
 
 def FieldStreamValueAddRELEASE_TAGS(builder, RELEASE_TAGS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RELEASE_TAGS), 0)
@@ -423,7 +423,7 @@ def FieldStreamValueCreateRELEASE_TAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateRELEASE_TAGSVector(builder, data):
-    FieldStreamValueCreateRELEASE_TAGSVector(builder, data)
+    return FieldStreamValueCreateRELEASE_TAGSVector(builder, data)
 
 def FieldStreamValueAddDECISION(builder, DECISION):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DECISION), 0)

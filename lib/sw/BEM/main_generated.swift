@@ -57,7 +57,7 @@ public enum bemHopSlotState: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Provenance of a deployed-beam descriptor or hop schedule.
-public struct BEMProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BEMProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -149,7 +149,7 @@ public struct BEMProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  One time slice of a periodic beam-hopping plan.
-public struct BEMHopSlot: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BEMHopSlot: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -251,7 +251,7 @@ public struct BEMHopSlot: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Periodic beam-hopping schedule carried by a deployed beam descriptor.
-public struct BEMHopSchedule: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BEMHopSchedule: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -320,7 +320,7 @@ public struct BEMHopSchedule: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  Beam Contour Point (gain pattern boundary)
-public struct beamContourPoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct beamContourPoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -371,7 +371,7 @@ public struct beamContourPoint: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Beam Contour (iso-gain boundary)
-public struct beamContour: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct beamContour: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -423,7 +423,7 @@ public struct beamContour: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Antenna Beam
-public struct BEM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BEM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

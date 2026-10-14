@@ -134,7 +134,7 @@ def PLGAcceptedTypeSetCreateALLOWED_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALLOWED_TYPESVector(builder, data):
-    PLGAcceptedTypeSetCreateALLOWED_TYPESVector(builder, data)
+    return PLGAcceptedTypeSetCreateALLOWED_TYPESVector(builder, data)
 
 def PLGAcceptedTypeSetAddALLOWED_WIRE_FORMATS(builder, ALLOWED_WIRE_FORMATS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ALLOWED_WIRE_FORMATS), 0)
@@ -156,7 +156,7 @@ def PLGAcceptedTypeSetCreateALLOWED_WIRE_FORMATSVector(builder, data):
     return builder.EndVector()
 
 def CreateALLOWED_WIRE_FORMATSVector(builder, data):
-    PLGAcceptedTypeSetCreateALLOWED_WIRE_FORMATSVector(builder, data)
+    return PLGAcceptedTypeSetCreateALLOWED_WIRE_FORMATSVector(builder, data)
 
 def PLGAcceptedTypeSetAddDESCRIPTION(builder, DESCRIPTION):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)

@@ -146,7 +146,7 @@ def SCNExclusionZoneCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    SCNExclusionZoneCreatePOINTSVector(builder, data)
+    return SCNExclusionZoneCreatePOINTSVector(builder, data)
 
 def SCNExclusionZoneAddBOUNDARY(builder, BOUNDARY):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BOUNDARY), 0)

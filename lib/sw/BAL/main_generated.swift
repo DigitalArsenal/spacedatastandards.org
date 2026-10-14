@@ -98,7 +98,7 @@ public enum PenetrationModel: Int8, FlatbuffersVectorInitializable, Enum, Verifi
 
 
 ///  Ballistics
-public struct BAL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct BAL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

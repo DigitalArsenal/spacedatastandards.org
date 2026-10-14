@@ -123,7 +123,7 @@ def SHWUniformCreateUNIFORM_DEFAULT_VALUEVector(builder, data):
     return builder.EndVector()
 
 def CreateUNIFORM_DEFAULT_VALUEVector(builder, data):
-    SHWUniformCreateUNIFORM_DEFAULT_VALUEVector(builder, data)
+    return SHWUniformCreateUNIFORM_DEFAULT_VALUEVector(builder, data)
 
 def SHWUniformEnd(builder):
     return builder.EndObject()

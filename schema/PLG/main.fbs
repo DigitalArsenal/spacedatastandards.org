@@ -1,5 +1,5 @@
-// Hash: 21ec6c50cbe999dbfada38c8630ab0fd747cbde73b3ed6d1a3508da940a6054b
-// Version: 1.0.17
+// Hash: a9832de154b4f864004b64e69608ed2a4592c2723979451cafe83a21f9bdd988
+// Version: 1.0.18
 // -----------------------------------END_HEADER
 include "../TAB/main.fbs";
 include "../CCT/main.fbs";
@@ -190,7 +190,19 @@ enum hostCapabilityKind : ushort {
   /// name/url, batch id) — distinct from STORAGE_WRITE, which stores a
   /// single record without source attribution. Hosts gate
   /// storage.ingest_with_source on this capability specifically.
-  STORAGE_INGEST
+  STORAGE_INGEST,
+  /// Read the node's view of its peer-to-peer network: known peers, the
+  /// publication notices it has received and verified, and the latest
+  /// dataset of a lane (p2p.* host operations).
+  P2P_READ,
+  /// Read the node's own health: uptime, service state, storage and network
+  /// figures (node_status_read.status).
+  NODE_STATUS_READ,
+  /// Read the node's event log (node_activity_read.activity).
+  NODE_ACTIVITY_READ,
+  /// Read and write operator-held secrets by identifier (credentials for
+  /// upstream sources); the secret value is never persisted in a record.
+  SECRETS
 }
 
 /// Accepted schema family for a port. When a port accepts multiple wire

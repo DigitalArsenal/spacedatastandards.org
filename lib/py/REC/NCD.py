@@ -318,7 +318,7 @@ def NCDCreateCOMMENT_AREAVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENT_AREAVector(builder, data):
-    NCDCreateCOMMENT_AREAVector(builder, data)
+    return NCDCreateCOMMENT_AREAVector(builder, data)
 
 def NCDAddNATIVE_FRAME_NAME(builder, NATIVE_FRAME_NAME):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(NATIVE_FRAME_NAME), 0)
@@ -354,7 +354,7 @@ def NCDCreateSEGMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSEGMENTSVector(builder, data):
-    NCDCreateSEGMENTSVector(builder, data)
+    return NCDCreateSEGMENTSVector(builder, data)
 
 def NCDAddSP3_HEADER(builder, SP3_HEADER):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SP3_HEADER), 0)

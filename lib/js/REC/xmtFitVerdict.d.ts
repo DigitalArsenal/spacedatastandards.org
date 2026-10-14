@@ -1,0 +1,27 @@
+/**
+ * Outcome of an epoch-state fit check. Append new values only; never reorder
+ * or reuse existing values.
+ */
+export declare enum xmtFitVerdict {
+    /**
+     * Not decided.
+     */
+    Unspecified = 0,
+    /**
+     * Training and held-out residuals within the tolerance.
+     */
+    Validated = 1,
+    /**
+     * Residuals exceed the tolerance; refine the state.
+     */
+    RequiresRefinement = 2,
+    /**
+     * Held-out RMS above the policy's maximum.
+     */
+    RejectedHoldoutRegression = 3,
+    /**
+     * A corrected state was proposed and must be re-propagated and validated.
+     */
+    CandidateNeedsPropagation = 4
+}
+//# sourceMappingURL=xmtFitVerdict.d.ts.map

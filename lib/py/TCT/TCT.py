@@ -326,7 +326,7 @@ def TCTCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    TCTCreatePOINTSVector(builder, data)
+    return TCTCreatePOINTSVector(builder, data)
 
 def TCTAddORIGIN_ID(builder, ORIGIN_ID):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGIN_ID), 0)

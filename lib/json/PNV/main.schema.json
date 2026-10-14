@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pnvAttribution" : {
+      "type" : "string",
+      "enum": ["Unknown", "Direct", "Relayed", "OwnNode", "Unattributed"]
+    },
+    "pnvKeySource" : {
+      "type" : "string",
+      "enum": ["None", "IdentityRecord", "PeerIdentifier", "OperatorTrust", "SelfAsserted"]
+    },
+    "PNVEntry" : {
+      "type" : "object",
+      "description" : "One received notice and the verdict on it.",
+      "properties" : {
+        "PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the $PNM the verdict is about."
+              },
+        "PUBLISHER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer that signed and published the notice."
+              },
+        "RECEIVED_FROM_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer the notice arrived from (gossip or direct)."
+              },
+        "STANDARD" : {
+                "type" : "string",
+                "description" : "Standard the publication is in, as its code, e.g. \"OMM\"."
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Schema file name of the published records, e.g. \"OMM.fbs\"."
+              },
+        "FILE_ID" : {
+                "type" : "string",
+                "description" : "The notice's FILE_ID (publication or update identity)."
+              },
+        "FILE_NAME" : {
+                "type" : "string",
+                "description" : "The notice's FILE_NAME."
+              },
+        "CID" : {
+                "type" : "string",
+                "description" : "The notice's CID (the published content or its manifest)."
+              },
+        "PUBLISHED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of publication, from the notice."
+              },
+        "RECEIVED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds the receiving node received the notice."
+              },
+        "SIGNATURE_TYPE" : {
+                "type" : "string",
+                "description" : "Signature scheme of the notice, e.g. \"ed25519\", \"secp256k1\"."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The notice's signature, verbatim."
+              },
+        "SIGNATURE_VERIFIED" : {
+                "type" : "boolean",
+                "description" : "True when the signature verified against PUBLISHER_KEY."
+              },
+        "ATTRIBUTION" : {
+                "$ref" : "#/definitions/pnvAttribution"
+              },
+        "PUBLISHER_KEY" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The public key the signature was checked against."
+              },
+        "KEY_SOURCE" : {
+                "$ref" : "#/definitions/pnvKeySource"
+              },
+        "REASON" : {
+                "type" : "string",
+                "description" : "Why verification failed or was not attempted; empty when it verified."
+              },
+        "PNM_BYTES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The notice itself as received, a size-prefixed $PNM, so a reader can\nverify the signature on its own instead of trusting this verdict."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PNV" : {
+      "type" : "object",
+      "description" : "Publication Verification - one node's verdicts on received notices.",
+      "properties" : {
+        "VERIFIER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the node that verified."
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when this set was generated."
+              },
+        "ENTRIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PNVEntry"}
+              },
+        "ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag of this set, for conditional requests."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/PNV"
+}

@@ -486,7 +486,7 @@ def MetadataCreateCOMMENTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMENTVector(builder, data):
-    MetadataCreateCOMMENTVector(builder, data)
+    return MetadataCreateCOMMENTVector(builder, data)
 
 def MetadataAddOBJECT_NAME(builder, OBJECT_NAME):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
@@ -528,7 +528,7 @@ def MetadataCreateALTERNATE_NAMESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALTERNATE_NAMESVector(builder, data):
-    MetadataCreateALTERNATE_NAMESVector(builder, data)
+    return MetadataCreateALTERNATE_NAMESVector(builder, data)
 
 def MetadataAddORIGINATOR_POC(builder, ORIGINATOR_POC):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ORIGINATOR_POC), 0)
@@ -648,7 +648,7 @@ def MetadataCreateTDM_MSG_LINKVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTDM_MSG_LINKVector(builder, data):
-    MetadataCreateTDM_MSG_LINKVector(builder, data)
+    return MetadataCreateTDM_MSG_LINKVector(builder, data)
 
 def MetadataAddOPERATOR(builder, OPERATOR):
     builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATOR), 0)
@@ -720,7 +720,7 @@ def MetadataCreateOCM_DATA_ELEMENTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateOCM_DATA_ELEMENTSVector(builder, data):
-    MetadataCreateOCM_DATA_ELEMENTSVector(builder, data)
+    return MetadataCreateOCM_DATA_ELEMENTSVector(builder, data)
 
 def MetadataAddSCLK_OFFSET_AT_EPOCH(builder, SCLK_OFFSET_AT_EPOCH):
     builder.PrependFloat64Slot(34, SCLK_OFFSET_AT_EPOCH, 0.0)

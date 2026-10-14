@@ -101,7 +101,7 @@ public enum slpSolveStatus: UInt8, FlatbuffersVectorInitializable, Enum, Verifia
 }
 
 
-public struct SLPVariable: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPVariable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -205,7 +205,7 @@ public struct SLPVariable: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   }
 }
 
-public struct SLPGoal: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPGoal: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -297,7 +297,7 @@ public struct SLPGoal: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   }
 }
 
-public struct SLPObjective: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPObjective: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -383,7 +383,7 @@ public struct SLPObjective: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   }
 }
 
-public struct SLPNonlinearConstraint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPNonlinearConstraint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -487,7 +487,7 @@ public struct SLPNonlinearConstraint: FlatBufferTable, FlatbuffersVectorInitiali
   }
 }
 
-public struct SLPSolverSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPSolverSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -570,7 +570,7 @@ public struct SLPSolverSettings: FlatBufferTable, FlatbuffersVectorInitializable
   }
 }
 
-public struct SLPIteration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPIteration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -655,7 +655,7 @@ public struct SLPIteration: FlatBufferTable, FlatbuffersVectorInitializable, Ver
   }
 }
 
-public struct SLPSolverReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPSolverReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -747,7 +747,7 @@ public struct SLPSolverReport: FlatBufferTable, FlatbuffersVectorInitializable, 
   }
 }
 
-public struct SLPAttestation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLPAttestation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -809,7 +809,7 @@ public struct SLPAttestation: FlatBufferTable, FlatbuffersVectorInitializable, V
   }
 }
 
-public struct SLP: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SLP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

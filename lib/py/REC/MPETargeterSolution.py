@@ -197,7 +197,7 @@ def MPETargeterSolutionCreateRESIDUALSVector(builder, data):
     return builder.EndVector()
 
 def CreateRESIDUALSVector(builder, data):
-    MPETargeterSolutionCreateRESIDUALSVector(builder, data)
+    return MPETargeterSolutionCreateRESIDUALSVector(builder, data)
 
 def MPETargeterSolutionAddCONSTRAINTS(builder, CONSTRAINTS):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTRAINTS), 0)
@@ -215,7 +215,7 @@ def MPETargeterSolutionCreateCONSTRAINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONSTRAINTSVector(builder, data):
-    MPETargeterSolutionCreateCONSTRAINTSVector(builder, data)
+    return MPETargeterSolutionCreateCONSTRAINTSVector(builder, data)
 
 def MPETargeterSolutionAddTOTAL_DELTA_V(builder, TOTAL_DELTA_V):
     builder.PrependFloat64Slot(7, TOTAL_DELTA_V, 0.0)

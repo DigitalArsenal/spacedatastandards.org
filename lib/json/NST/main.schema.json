@@ -106,6 +106,10 @@
         "ONION_ADDRESS" : {
                 "type" : "string",
                 "description" : "Onion-service address when the peer is reachable over an anonymity\nnetwork."
+              },
+        "STANDARDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Standards the peer publishes or serves, as their codes, e.g. \"OMM\"."
               }
       },
       "additionalProperties" : false
@@ -124,6 +128,10 @@
         "SOURCE_PEER_ID" : {
                 "type" : "string",
                 "description" : "Peer identifier of the emitting node."
+              },
+        "ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag of this set, for conditional requests."
               }
       },
       "additionalProperties" : false

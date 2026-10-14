@@ -1,0 +1,1136 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "CelestialFrame" : {
+      "type" : "string",
+      "enum": ["GCRF", "ICRF", "J2000", "J2000A", "EME2000", "TEMEOFDATE", "GTOD", "CIRS", "MOD_EARTH", "MOD_CB", "MOD_MOON", "TOD_EARTH", "TOD_CB", "TOD_MOON", "TOE_EARTH", "TOE_CB", "TOE_MOON", "ITRF2000", "ITRF93", "ITRF97", "EFG", "FIXED_CB", "FIXED_EARTH", "WGS84", "DTRFYYYY", "ALIGN_EARTH", "ALIGN_CB", "B1950"]
+    },
+    "SpacecraftFrame" : {
+      "type" : "string",
+      "enum": ["ACC_i", "ACTUATOR_i", "AST_i", "CSS_i", "DSS_i", "ESA_i", "GYRO_FRAME_i", "IMU_FRAME_i", "INSTRUMENT_i", "MTA_i", "RW_i", "SA_i", "SC_BODY_i", "SENSOR_i", "STARTRACKER_i", "TAM_i"]
+    },
+    "OrbitFrame" : {
+      "type" : "string",
+      "enum": ["EQW_INERTIAL", "LVLH_INERTIAL", "LVLH_ROTATING", "NSW_INERTIAL", "NSW_ROTATING", "NTW_INERTIAL", "NTW_ROTATING", "PQW_INERTIAL", "RSW_INERTIAL", "RSW_ROTATING", "SEZ_INERTIAL", "SEZ_ROTATING", "TNW_INERTIAL", "TNW_ROTATING", "VNC_INERTIAL", "VNC_ROTATING"]
+    },
+    "CustomFrame" : {
+      "type" : "string",
+      "enum": ["ECEF", "TEME", "TEMEOFEPOCH", "ENU", "NED", "NEU", "RIC", "RTN", "TVN", "VVLH", "QSW", "LTP", "LVLH", "PNE", "BRF", "RSW", "TNW", "UVW"]
+    },
+    "rfmAxisType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"]
+    },
+    "rfmOriginKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE"]
+    },
+    "rfmLibrationPoint" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "L1", "L2", "L3", "L4", "L5"]
+    },
+    "rfmVectorSpecification" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RADIAL", "ANTI_RADIAL", "VELOCITY", "ANTI_VELOCITY", "ORBIT_NORMAL", "ANTI_ORBIT_NORMAL"]
+    },
+    "RFMUnion" : {
+      "type" : "string",
+      "enum": ["NONE", "CelestialFrameWrapper", "SpacecraftFrameWrapper", "OrbitFrameWrapper", "CustomFrameWrapper", "RFMCoordinateSystemWrapper"]
+    },
+    "timingStandard" : {
+      "type" : "string",
+      "enum": ["GMST", "GPS", "MET", "MRT", "SCLK", "TAI", "TCB", "TDB", "TCG", "TT", "UT1", "UTC", "GLONASS", "GST", "QZSS", "BDT", "NAVIC", "SBAS", "A1"]
+    },
+    "timEpochRepresentation" : {
+      "type" : "string",
+      "enum": ["JULIAN_DATE", "MODIFIED_JULIAN_DATE", "UNIX_SECONDS", "ISO8601", "GPS_SECONDS", "GNSS_WEEK_SECONDS", "CCSDS_TIME_CODE", "MISSION_ELAPSED_SECONDS"]
+    },
+    "timCcsdsTimeCodeKind" : {
+      "type" : "string",
+      "enum": ["NONE", "UNSEGMENTED", "DAY_SEGMENTED", "CALENDAR_SEGMENTED"]
+    },
+    "timConversionStatus" : {
+      "type" : "string",
+      "enum": ["OK", "INVALID_INPUT", "UNSUPPORTED_TIME_SYSTEM", "LEAP_SECOND_DATA_REQUIRED", "EOP_DATA_REQUIRED", "OUT_OF_RANGE"]
+    },
+    "meanElementSource" : {
+      "type" : "string",
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+    },
+    "covarianceCalibration" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Uncalibrated", "Calibrated"]
+    },
+    "covarianceRule" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Operator", "ScaledFit", "SourceModel", "PooledModel"]
+    },
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "ephemerisFormat" : {
+      "type" : "string",
+      "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
+    },
+    "lfvRole" : {
+      "type" : "string",
+      "enum": ["Unlabelled", "Real", "Decoy"]
+    },
+    "lfvRegionSide" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Above", "AtOrBelow"]
+    },
+    "RFMOrigin" : {
+      "type" : "object",
+      "description" : "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/rfmOriginKind"
+              },
+        "CELESTIAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code when KIND is CELESTIAL_BODY."
+              },
+        "BARYCENTRE_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+              },
+        "LIBRATION_POINT" : {
+                "$ref" : "#/definitions/rfmLibrationPoint",
+                "description" : "Which libration point, when KIND is LIBRATION_POINT."
+              },
+        "LIBRATION_PRIMARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system primary."
+              },
+        "LIBRATION_SECONDARY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the libration system secondary."
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the space object when KIND is SPACE_OBJECT."
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the surface site when KIND is GROUND_SITE."
+              },
+        "SITE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code of the body the site sits on."
+              },
+        "SITE_LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude of the site, degrees, positive north."
+              },
+        "SITE_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude of the site, degrees, positive east."
+              },
+        "SITE_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Height of the site above the reference ellipsoid, metres."
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Human-readable label. Descriptive only."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMObjectReferencedAxes" : {
+      "type" : "object",
+      "description" : "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+      "properties" : {
+        "PRIMARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "SECONDARY_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "X_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Y_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              },
+        "Z_AXIS" : {
+                "$ref" : "#/definitions/rfmVectorSpecification"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMLocalAlignedConstrainedAxes" : {
+      "type" : "object",
+      "description" : "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+      "properties" : {
+        "REFERENCE_OBJECT_ID" : {
+                "type" : "string"
+              },
+        "REFERENCE_COORDINATE_SYSTEM_NAME" : {
+                "type" : "string"
+              },
+        "ALIGNMENT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "ALIGNMENT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              },
+        "CONSTRAINT_REFERENCE_VECTOR" : {
+                "type" : "array", "items" : {"type" : "number"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystem" : {
+      "type" : "object",
+      "description" : "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Stable name for this coordinate system within the producing data set."
+              },
+        "AXIS_TYPE" : {
+                "$ref" : "#/definitions/rfmAxisType",
+                "description" : "Orientation rule."
+              },
+        "ORIGIN" : {
+                "$ref" : "#/definitions/RFMOrigin",
+                "description" : "Centre of the system."
+              },
+        "AXIS_REFERENCE_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+              },
+        "EPOCH_TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example \"UTC\", \"TAI\", \"TT\", \"TDB\", \"A1\")."
+              },
+        "OBJECT_REFERENCED_AXES" : {
+                "$ref" : "#/definitions/RFMObjectReferencedAxes",
+                "description" : "Extra parameters for OBJECT_REFERENCED axes."
+              },
+        "LOCAL_ALIGNED_CONSTRAINED_AXES" : {
+                "$ref" : "#/definitions/RFMLocalAlignedConstrainedAxes",
+                "description" : "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+              },
+        "KERNEL_FRAME_NAME" : {
+                "type" : "string",
+                "description" : "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "KERNEL_FRAME_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+              },
+        "EOP_DATA_SET_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CelestialFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CelestialFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SpacecraftFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/SpacecraftFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OrbitFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/OrbitFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CustomFrameWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "frame" : {
+                "$ref" : "#/definitions/CustomFrame"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFMCoordinateSystemWrapper" : {
+      "type" : "object",
+      "properties" : {
+        "COORDINATE_SYSTEM" : {
+                "$ref" : "#/definitions/RFMCoordinateSystem"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "RFM" : {
+      "type" : "object",
+      "description" : "Reference Frame Message",
+      "properties" : {
+        "REFERENCE_FRAME_type" : {
+                "$ref" : "#/definitions/RFMUnion"
+              },
+        "REFERENCE_FRAME" : {
+                "anyOf": [{ "$ref" : "#/definitions/CelestialFrameWrapper" },{ "$ref" : "#/definitions/SpacecraftFrameWrapper" },{ "$ref" : "#/definitions/OrbitFrameWrapper" },{ "$ref" : "#/definitions/CustomFrameWrapper" },{ "$ref" : "#/definitions/RFMCoordinateSystemWrapper" }]
+              },
+        "INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+              },
+        "NAME" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMCcsdsTimeCode" : {
+      "type" : "object",
+      "description" : "CCSDS time-code payload and preamble metadata.",
+      "properties" : {
+        "CODE_KIND" : {
+                "$ref" : "#/definitions/timCcsdsTimeCodeKind",
+                "description" : "CCSDS time-code family."
+              },
+        "PREAMBLE_FIELD1" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "First CCSDS preamble field octet."
+              },
+        "PREAMBLE_FIELD2" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Second CCSDS preamble field octet; ignored when not signaled by preamble 1."
+              },
+        "TIME_FIELD" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Raw CCSDS time field octets."
+              },
+        "AGENCY_DEFINED_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional agency-defined epoch timestamp for agency epoch time codes."
+              },
+        "CCSDS_EPOCH_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional CCSDS epoch override timestamp; defaults to 1958-01-01T00:00:00 TAI."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMInstant" : {
+      "type" : "object",
+      "description" : "Numeric or textual instant tagged with its time system and representation.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time system for this instant."
+              },
+        "EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Interpretation of JULIAN_DATE, SECONDS, and ISO8601."
+              },
+        "JULIAN_DATE" : {
+                "type" : "number",
+                "description" : "Julian Date or Modified Julian Date day value, selected by EPOCH_FORMAT."
+              },
+        "SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds for UNIX_SECONDS, GPS_SECONDS, GNSS_WEEK_SECONDS, or MISSION_ELAPSED_SECONDS."
+              },
+        "ISO8601" : {
+                "type" : "string",
+                "description" : "ISO 8601 timestamp text for ISO8601 inputs or display outputs."
+              },
+        "SUBSECOND_NANOS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Additional nanoseconds beyond the fractional scalar/text value."
+              },
+        "EPOCH_LABEL" : {
+                "type" : "string",
+                "description" : "Optional application-defined epoch label for MET, MRT, or SCLK values."
+              },
+        "GNSS_WEEK" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "GNSS week number when EPOCH_FORMAT is GNSS_WEEK_SECONDS."
+              },
+        "HAS_GNSS_ROLLOVER_REFERENCE" : {
+                "type" : "boolean",
+                "description" : "Whether GNSS_ROLLOVER_REFERENCE_ISO8601 should be applied."
+              },
+        "GNSS_ROLLOVER_REFERENCE_ISO8601" : {
+                "type" : "string",
+                "description" : "Optional Orekit-style GNSS week rollover reference timestamp."
+              },
+        "CCSDS_TIME_CODE" : {
+                "$ref" : "#/definitions/TIMCcsdsTimeCode",
+                "description" : "CCSDS time-code payload when EPOCH_FORMAT is CCSDS_TIME_CODE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionRequest" : {
+      "type" : "object",
+      "description" : "Request to convert one instant into another time system/representation.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Source instant to convert."
+              },
+        "TARGET_TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Target time system."
+              },
+        "TARGET_EPOCH_FORMAT" : {
+                "$ref" : "#/definitions/timEpochRepresentation",
+                "description" : "Preferred target representation."
+              },
+        "TAI_MINUS_UTC_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional TAI-UTC override in seconds for the source instant."
+              },
+        "HAS_TAI_MINUS_UTC" : {
+                "type" : "boolean",
+                "description" : "Whether TAI_MINUS_UTC_SECONDS should override runtime leap-second data."
+              },
+        "DUT1_SECONDS" : {
+                "type" : "number",
+                "description" : "Optional UT1-UTC override in seconds for UT1 conversions."
+              },
+        "HAS_DUT1" : {
+                "type" : "boolean",
+                "description" : "Whether DUT1_SECONDS should override runtime Earth-orientation data."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Optional caller trace/correlation identifier."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIMConversionResult" : {
+      "type" : "object",
+      "description" : "Result of a time conversion request.",
+      "properties" : {
+        "SOURCE" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Original source instant."
+              },
+        "TARGET" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Converted target instant."
+              },
+        "DELTA_SECONDS" : {
+                "type" : "number",
+                "description" : "Target minus source offset in SI seconds for the requested conversion."
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/timConversionStatus",
+                "description" : "Conversion status."
+              },
+        "ERROR_MESSAGE" : {
+                "type" : "string",
+                "description" : "Optional error detail when STATUS is not OK."
+              },
+        "TRACE_ID" : {
+                "type" : "string",
+                "description" : "Caller trace/correlation identifier copied from the request when present."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "TIM" : {
+      "type" : "object",
+      "description" : "Time System and time-conversion envelope.",
+      "properties" : {
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Legacy time-system selector retained for existing TIM consumers."
+              },
+        "INSTANT" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "A single tagged instant."
+              },
+        "CONVERSION_REQUEST" : {
+                "$ref" : "#/definitions/TIMConversionRequest",
+                "description" : "Time conversion request."
+              },
+        "CONVERSION_RESULT" : {
+                "$ref" : "#/definitions/TIMConversionResult",
+                "description" : "Time conversion result."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "MET" : {
+      "type" : "object",
+      "description" : "Mean Element Theory",
+      "properties" : {
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "CVR" : {
+      "type" : "object",
+      "description" : "Covariance Realism",
+      "properties" : {
+        "RULE" : {
+                "$ref" : "#/definitions/covarianceRule",
+                "description" : "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID."
+              },
+        "MODEL_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator."
+              },
+        "REGIME" : {
+                "type" : "string",
+                "description" : "Orbit regime of the cell, as the model names it."
+              },
+        "AGE_DAYS" : {
+                "type" : "number",
+                "description" : "Age of the element set at the covariance's epoch, in days. NaN when the\ncovariance is not an element set's."
+              },
+        "HORIZON_DAYS" : {
+                "type" : "number",
+                "description" : "Prediction horizon of the cell, in days: the element-set age its\nstatistics were measured at. NaN when no cell applies."
+              },
+        "MEASURED_LINEAGE" : {
+                "type" : "string",
+                "description" : "Lineage of the reference data the cell was measured on (a PVN LINEAGE).\nThe test speaks for a covariance whose source has this lineage; for any\nother lineage the numbers are the cell's, and CALIBRATION is Uncalibrated."
+              },
+        "TEST_WINDOW" : {
+                "type" : "string",
+                "description" : "Window of the held-out reference states the test used: an ISO 8601 UTC\ninterval, start/end."
+              },
+        "MEAN_D2_OVER_3" : {
+                "type" : "number",
+                "description" : "Mean of d2/3 over the held-out samples. NaN when not measured."
+              },
+        "COVERAGE_95" : {
+                "type" : "number",
+                "description" : "Share of the held-out samples inside the 95 % region, 0 to 1. NaN when\nnot measured."
+              },
+        "SAMPLES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of held-out samples the test used."
+              },
+        "OBJECTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of distinct objects the samples came from."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "Factor the covariance was multiplied by to make it realistic. NaN when\nnone was applied."
+              },
+        "CALIBRATION" : {
+                "$ref" : "#/definitions/covarianceCalibration",
+                "description" : "The verdict. Calibrated when MEAN_D2_OVER_3 lies in [0.8, 1.25] and\nCOVERAGE_95 in [0.93, 0.97], from at least 30 samples of at least 3\nobjects of MEASURED_LINEAGE; Uncalibrated otherwise, including a cell\nnever measured."
+              },
+        "EVIDENCE" : {
+                "type" : "string",
+                "description" : "Identifier of the report or record that holds the test."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMM" : {
+      "type" : "object",
+      "description" : "Orbit Mean Elements Message",
+      "properties" : {
+        "CCSDS_OMM_VERS" : {
+                "type" : "number",
+                "description" : "CCSDS OMM Version"
+              },
+        "CREATION_DATE" : {
+                "type" : "string",
+                "description" : "Creation Date (ISO 8601 UTC format)"
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Originator"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Satellite Name(s)"
+              },
+        "OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International Designator (YYYY-NNNAAA)"
+              },
+        "CENTER_NAME" : {
+                "type" : "string",
+                "description" : "Center Name (e.g. EARTH, MARS)"
+              },
+        "REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Reference Frame\nTypically TEMEOFDATE"
+              },
+        "REFERENCE_FRAME_EPOCH" : {
+                "type" : "string",
+                "description" : "Reference Frame Epoch (ISO 8601 UTC format)"
+              },
+        "TIME_SYSTEM" : {
+                "$ref" : "#/definitions/timingStandard",
+                "description" : "Time System [M, UTC]"
+              },
+        "MEAN_ELEMENT_THEORY" : {
+                "$ref" : "#/definitions/meanElementSource",
+                "description" : "Mean Element Theory"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "COMMENT (O): every COMMENT line of the message, in message order, joined by\na line feed. A message states comments in its header, its metadata and each\ndata group; this field holds them all, so a message written from the record\nstates them together in its header."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "EPOCH of Mean Keplerian elements (ISO 8601 UTC format)"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis in km or Mean Motion in rev/day"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion in rev/day if MEAN_ELEMENT_THEORY=SGP/SGP4 else unused"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity (unitless)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "RA_OF_ASC_NODE in degrees"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "ARG_OF_PERICENTER in degrees"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "MEAN_ANOMALY in degrees"
+              },
+        "GM" : {
+                "type" : "number",
+                "description" : "GM in km**3/s**2"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "MASS in kg"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_AREA in m**2"
+              },
+        "SOLAR_RAD_COEFF" : {
+                "type" : "number",
+                "description" : "SOLAR_RAD_COEFF (unitless)"
+              },
+        "DRAG_AREA" : {
+                "type" : "number",
+                "description" : "DRAG_AREA in m**2"
+              },
+        "DRAG_COEFF" : {
+                "type" : "number",
+                "description" : "DRAG_COEFF (unitless)"
+              },
+        "EPHEMERIS_TYPE" : {
+                "$ref" : "#/definitions/ephemerisFormat",
+                "description" : "TLE Related Parameters (Only if MEAN_ELEMENT_THEORY=SGP/SGP4)\nEPHEMERIS_TYPE Default=0"
+              },
+        "CLASSIFICATION_TYPE" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION_TYPE Default=U"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD_CAT_ID (integer) [O if SGP/SGP4]"
+              },
+        "ELEMENT_SET_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "ELEMENT_SET_NO [O if SGP/SGP4]"
+              },
+        "REV_AT_EPOCH" : {
+                "type" : "number",
+                "description" : "REV_AT_EPOCH [O if SGP/SGP4]"
+              },
+        "BSTAR" : {
+                "type" : "number",
+                "description" : "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number",
+                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              },
+        "COV_REFERENCE_FRAME" : {
+                "$ref" : "#/definitions/RFM",
+                "description" : "Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]\nCOV_REF_FRAME reference frame for covariance [C if covariance given]\nTypically RSW"
+              },
+        "COVARIANCE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Covariance matrix as flat array (6x6 lower triangular = 21 elements).\nOrder: [CX_X, CY_X, CY_Y, CZ_X, CZ_Y, CZ_Z,\nCX_DOT_X, CX_DOT_Y, CX_DOT_Z, CX_DOT_X_DOT,\nCY_DOT_X, CY_DOT_Y, CY_DOT_Z, CY_DOT_X_DOT, CY_DOT_Y_DOT,\nCZ_DOT_X, CZ_DOT_Y, CZ_DOT_Z, CZ_DOT_X_DOT, CZ_DOT_Y_DOT, CZ_DOT_Z_DOT]\nUnits: position in km**2, velocity in km**2/s**2, cross in km**2/s"
+              },
+        "USER_DEFINED_BIP_0044_TYPE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "USER_DEFINED_BIP_0044_TYPE [O, units per ICD]"
+              },
+        "USER_DEFINED_OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "USER_DEFINED_OBJECT_DESIGNATOR [O, units per ICD]"
+              },
+        "USER_DEFINED_EARTH_MODEL" : {
+                "type" : "string",
+                "description" : "USER_DEFINED_EARTH_MODEL [O, units per ICD]"
+              },
+        "USER_DEFINED_EPOCH_TIMESTAMP" : {
+                "type" : "number",
+                "description" : "USER_DEFINED_EPOCH_TIMESTAMP [O, units per ICD]"
+              },
+        "USER_DEFINED_MICROSECONDS" : {
+                "type" : "number",
+                "description" : "USER_DEFINED_MICROSECONDS [O, units per ICD]"
+              },
+        "CLASSIFICATION" : {
+                "type" : "string",
+                "description" : "CLASSIFICATION of the message: the optional CCSDS 502.0-B-3 header keyword\nthat states its security classification or handling caveat. Not\nCLASSIFICATION_TYPE, which is the TLE element set's U, C or S."
+              },
+        "MESSAGE_ID" : {
+                "type" : "string",
+                "description" : "MESSAGE_ID: the optional CCSDS 502.0-B-3 header keyword, an identifier the\noriginator makes unique for this message."
+              },
+        "USER_DEFINED_PARAMETERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMMUserDefinedParameter"},
+                "description" : "Every USER_DEFINED_x keyword (KVN) or USER_DEFINED element (NDM/XML) of the\nmessage that has no dedicated field above, in message order."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where the element set comes from and the terms it travels under."
+              },
+        "COV_REALISM" : {
+                "$ref" : "#/definitions/CVR",
+                "description" : "Realism of COVARIANCE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "OMMUserDefinedParameter" : {
+      "type" : "object",
+      "description" : "One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML\nform: the parameter name (the x) and the value as written.",
+      "properties" : {
+        "PARAM_NAME" : {
+                "type" : "string",
+                "description" : "x, the part of the keyword after USER_DEFINED_ (the XML parameter attribute)"
+              },
+        "PARAM_VALUE" : {
+                "type" : "string",
+                "description" : "The value as written, unit-less text"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVRow" : {
+      "type" : "object",
+      "description" : "One labelled feature vector.",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of what the row was computed from: an object (catalog number\nor international designator), a history, or an element set (an $OMM\nMESSAGE_ID or OBJECT_ID plus ELEMENT_SET_NO)."
+              },
+        "TARGET" : {
+                "type" : "string",
+                "description" : "Group the row belongs to, e.g. the real object a decoy stands in for;\nrows are split and ranked by group. Empty = SOURCE_ID."
+              },
+        "ROLE" : {
+                "$ref" : "#/definitions/lfvRole"
+              },
+        "GENERATOR" : {
+                "type" : "string",
+                "description" : "Generator that made a synthetic row, e.g. \"rotated\", \"chained\"; empty\nfor real rows."
+              },
+        "CLASS_LABEL" : {
+                "type" : "string",
+                "description" : "Class label, e.g. an orbit regime or object type; empty = none."
+              },
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Feature values in FEATURE_NAMES order, in the units FEATURE_UNITS gives;\nNaN = not computable for this row."
+              },
+        "SCORE" : {
+                "type" : "number",
+                "description" : "Score a classifier gave the row (higher = more likely Real); NaN or\nabsent when not scored."
+              },
+        "ELEMENT_SETS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/OMM"},
+                "description" : "Element sets the row was computed from, when carried alongside."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVRankProbability" : {
+      "type" : "object",
+      "description" : "Probability that the real row of a group scores highest among N\ncandidates (one real, N - 1 decoys).",
+      "properties" : {
+        "N" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Candidates per group."
+              },
+        "P_REAL_FIRST" : {
+                "type" : "number",
+                "description" : "Probability that the real row scores highest; ties count as a uniform\ndraw among the tied."
+              },
+        "N_EFFECTIVE" : {
+                "type" : "number",
+                "description" : "Effective number of candidates, 1 / P_REAL_FIRST (N when the classes\ncannot be told apart, 1 when they always can); NaN when P_REAL_FIRST is\n0."
+              },
+        "IDEAL" : {
+                "type" : "number",
+                "description" : "The value for indistinguishable classes, 1 / N; NaN = not reported."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVThresholdTest" : {
+      "type" : "object",
+      "description" : "One threshold test on the scores, decided on one part of the data and\ncounted on another (held out).",
+      "properties" : {
+        "THRESHOLD" : {
+                "type" : "number",
+                "description" : "Score threshold of the decision region."
+              },
+        "SIDE" : {
+                "$ref" : "#/definitions/lfvRegionSide"
+              },
+        "REGION_ROLE" : {
+                "$ref" : "#/definitions/lfvRole",
+                "description" : "Role the region indicates: Real (real rows are more likely inside) or\nDecoy (decoy rows are)."
+              },
+        "REAL_IN_REGION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Confusion counts on the held-out data: real rows inside the region and\nin all, decoy rows inside the region and in all."
+              },
+        "REAL_TOTAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DECOY_IN_REGION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "DECOY_TOTAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "EPSILON_LOWER_BOUND" : {
+                "type" : "number",
+                "description" : "Lower confidence bound on the privacy loss epsilon = ln(P(region | one\nrole) / P(region | the other)), from one-sided Clopper-Pearson limits;\n0 = no evidence the roles differ."
+              },
+        "CONFIDENCE" : {
+                "type" : "number",
+                "description" : "Confidence level of the bound, 0..1, e.g. 0.95."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVFeatureSeparation" : {
+      "type" : "object",
+      "description" : "How well one feature separates the roles on its own, and how much the\nclassifier used it.",
+      "properties" : {
+        "NAME" : {
+                "type" : "string",
+                "description" : "Feature name, one of FEATURE_NAMES."
+              },
+        "AUC" : {
+                "type" : "number",
+                "description" : "Area under the ROC curve of the feature alone (real vs decoy), 0..1;\nNaN = not computable."
+              },
+        "SEPARATION" : {
+                "type" : "number",
+                "description" : "max(AUC, 1 - AUC), 0.5..1."
+              },
+        "GAIN_SHARE" : {
+                "type" : "number",
+                "description" : "Share of the classifier's total split gain from this feature, 0..1."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVClassResult" : {
+      "type" : "object",
+      "description" : "Results for the real rows of one class.",
+      "properties" : {
+        "CLASS_LABEL" : {
+                "type" : "string"
+              },
+        "REAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Real rows of this class."
+              },
+        "AUC" : {
+                "type" : "number",
+                "description" : "AUC of this class's real rows against all decoy rows, 0..1."
+              },
+        "RANK_PROBABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVRankProbability"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVWithinGroup" : {
+      "type" : "object",
+      "description" : "Rank of each real row within its own group, when groups have enough\ndecoys.",
+      "properties" : {
+        "GROUP_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Groups (targets) ranked."
+              },
+        "FEWEST_DECOYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Fewest decoys any ranked group has."
+              },
+        "POOLED_DECOYS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Decoy rows pooled for standardized scores."
+              },
+        "RANK_HISTOGRAM" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Histogram of the real row's normalized rank within its group, in equal\nbins over 0..1 (uniform when indistinguishable)."
+              },
+        "RANK_KS" : {
+                "type" : "number",
+                "description" : "Kolmogorov-Smirnov distance of the normalized ranks from uniform, 0..1."
+              },
+        "RANK_PROBABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVRankProbability"},
+                "description" : "P(real first of N) from the empirical within-group ranks."
+              },
+        "STANDARDIZED_RANK_PROBABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVRankProbability"},
+                "description" : "P(real first of N) from scores standardized per group and pooled."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVClassifier" : {
+      "type" : "object",
+      "description" : "The classifier and how it was validated. In a request, the settings to\nuse; 0 or empty = the method's default.",
+      "properties" : {
+        "METHOD" : {
+                "type" : "string",
+                "description" : "Method, e.g. \"gradient-boosted trees, logistic loss\"."
+              },
+        "DEPTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Tree depth, boosting rounds, learning rate, L2 regularization (lambda),\nminimum child hessian and histogram bins, for tree ensembles."
+              },
+        "ROUNDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "LEARNING_RATE" : {
+                "type" : "number"
+              },
+        "L2_REGULARIZATION" : {
+                "type" : "number"
+              },
+        "MIN_CHILD_HESSIAN" : {
+                "type" : "number"
+              },
+        "BINS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "FOLDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Cross-validation folds."
+              },
+        "SPLIT" : {
+                "type" : "string",
+                "description" : "How rows were split into folds, e.g. \"by target\"."
+              },
+        "SEED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Seed of the split and any randomness; 0 = not stated."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFVTestReport" : {
+      "type" : "object",
+      "description" : "Report of a test that distinguishes the labelled classes.",
+      "properties" : {
+        "TEST_NAME" : {
+                "type" : "string",
+                "description" : "Name of the test, e.g. \"cross-validated classifier\",\n\"two-sample Kolmogorov-Smirnov\"."
+              },
+        "STATISTIC_NAME" : {
+                "type" : "string",
+                "description" : "The test's statistic and its name, and its p-value; NaN = not computed."
+              },
+        "STATISTIC" : {
+                "type" : "number"
+              },
+        "P_VALUE" : {
+                "type" : "number"
+              },
+        "REAL_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Rows of each role tested."
+              },
+        "DECOY_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "EXCLUDED_FEATURES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Features left out of the test."
+              },
+        "RELATIVE" : {
+                "type" : "boolean",
+                "description" : "True when each feature was taken relative to its group (minus the\ngroup's median) before testing."
+              },
+        "CLASSIFIER" : {
+                "$ref" : "#/definitions/LFVClassifier"
+              },
+        "AUC" : {
+                "type" : "number",
+                "description" : "Area under the ROC curve of the scores (real vs decoy), 0..1; 0.5 =\nindistinguishable."
+              },
+        "BALANCED_ACCURACY" : {
+                "type" : "number",
+                "description" : "Mean of the real and decoy recall at score 0, 0..1."
+              },
+        "THRESHOLDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVThresholdTest"},
+                "description" : "Threshold tests (decision region, confusion counts, epsilon bound)."
+              },
+        "RANK_PROBABILITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVRankProbability"},
+                "description" : "P(real first of N) for each N asked, over all classes."
+              },
+        "CLASS_RESULTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVClassResult"}
+              },
+        "FEATURES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVFeatureSeparation"},
+                "description" : "Per-feature separation, highest GAIN_SHARE first."
+              },
+        "WITHIN_GROUP" : {
+                "$ref" : "#/definitions/LFVWithinGroup",
+                "description" : "Absent when groups are too few or too small to rank within."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "LFV" : {
+      "type" : "object",
+      "description" : "Labelled Feature Vectors - labelled rows and, optionally, the report of a\ntest that distinguishes their classes.",
+      "properties" : {
+        "VIEW" : {
+                "type" : "string",
+                "description" : "Name of the feature set or view, e.g. \"gp\" (from element sets), \"hpop\"\n(from propagated ephemeris)."
+              },
+        "FEATURE_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Feature names, in the order of every row's VALUES."
+              },
+        "FEATURE_UNITS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Unit of each feature, same order, e.g. \"km\", \"deg\", \"km/day\", \"1\";\nempty = not stated."
+              },
+        "WINDOW_START_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Window of data the features were computed over, Unix milliseconds\n[start, end); 0 = not stated."
+              },
+        "WINDOW_END_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MIN_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Fewest data points a source needed to get a row."
+              },
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/LFVRow"}
+              },
+        "SOURCE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Sources offered, reference objects compared against (the catalog),\nand sources skipped for having too few points."
+              },
+        "REFERENCE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "SKIPPED_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds this record was generated; 0 = not stated."
+              },
+        "REPORT" : {
+                "$ref" : "#/definitions/LFVTestReport"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/LFV"
+}

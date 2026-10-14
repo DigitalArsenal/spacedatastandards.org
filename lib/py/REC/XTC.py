@@ -208,7 +208,7 @@ def XTCCreateCHILD_SYSTEMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCHILD_SYSTEMSVector(builder, data):
-    XTCCreateCHILD_SYSTEMSVector(builder, data)
+    return XTCCreateCHILD_SYSTEMSVector(builder, data)
 
 def XTCEnd(builder):
     return builder.EndObject()

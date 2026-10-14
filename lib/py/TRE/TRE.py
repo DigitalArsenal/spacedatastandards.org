@@ -186,7 +186,7 @@ def TRECreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    TRECreatePROVIDER_SIGNATUREVector(builder, data)
+    return TRECreatePROVIDER_SIGNATUREVector(builder, data)
 
 def TREEnd(builder):
     return builder.EndObject()

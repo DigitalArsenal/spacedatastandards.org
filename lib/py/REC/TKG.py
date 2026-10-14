@@ -188,7 +188,7 @@ def TKGCreateTRACKS_TO_CORRELATEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTRACKS_TO_CORRELATEVector(builder, data):
-    TKGCreateTRACKS_TO_CORRELATEVector(builder, data)
+    return TKGCreateTRACKS_TO_CORRELATEVector(builder, data)
 
 def TKGEnd(builder):
     return builder.EndObject()

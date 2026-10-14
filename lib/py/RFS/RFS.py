@@ -619,7 +619,7 @@ def RFSCreateFREQUENCY_SAMPLESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFREQUENCY_SAMPLESVector(builder, data):
-    RFSCreateFREQUENCY_SAMPLESVector(builder, data)
+    return RFSCreateFREQUENCY_SAMPLESVector(builder, data)
 
 def RFSAddREFLECTION_TABLE(builder, REFLECTION_TABLE):
     builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(REFLECTION_TABLE), 0)
@@ -637,7 +637,7 @@ def RFSCreateREFLECTION_TABLEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREFLECTION_TABLEVector(builder, data):
-    RFSCreateREFLECTION_TABLEVector(builder, data)
+    return RFSCreateREFLECTION_TABLEVector(builder, data)
 
 def RFSAddGEOMETRY(builder, GEOMETRY):
     builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(GEOMETRY), 0)
@@ -655,7 +655,7 @@ def RFSCreateGEOMETRYVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateGEOMETRYVector(builder, data):
-    RFSCreateGEOMETRYVector(builder, data)
+    return RFSCreateGEOMETRYVector(builder, data)
 
 def RFSAddPROVENANCE(builder, PROVENANCE):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
@@ -695,7 +695,7 @@ def RFSCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    RFSCreateSIGNATUREVector(builder, data)
+    return RFSCreateSIGNATUREVector(builder, data)
 
 def RFSEnd(builder):
     return builder.EndObject()

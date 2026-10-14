@@ -281,7 +281,7 @@ def VCFCreatePROPERTIESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePROPERTIESVector(builder, data):
-    VCFCreatePROPERTIESVector(builder, data)
+    return VCFCreatePROPERTIESVector(builder, data)
 
 def VCFAddALIASES(builder, ALIASES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ALIASES), 0)
@@ -299,7 +299,7 @@ def VCFCreateALIASESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALIASESVector(builder, data):
-    VCFCreateALIASESVector(builder, data)
+    return VCFCreateALIASESVector(builder, data)
 
 def VCFAddPHOTO_POLICY(builder, PHOTO_POLICY):
     builder.PrependInt8Slot(7, PHOTO_POLICY, 0)
@@ -365,7 +365,7 @@ def VCFCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    VCFCreateTAGSVector(builder, data)
+    return VCFCreateTAGSVector(builder, data)
 
 def VCFAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)

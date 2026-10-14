@@ -110,7 +110,7 @@ def TRNCreateSOURCESVector(builder, data):
     return builder.EndVector()
 
 def CreateSOURCESVector(builder, data):
-    TRNCreateSOURCESVector(builder, data)
+    return TRNCreateSOURCESVector(builder, data)
 
 def TRNAddINTERPOLATION(builder, INTERPOLATION):
     builder.PrependInt8Slot(1, INTERPOLATION, 1)

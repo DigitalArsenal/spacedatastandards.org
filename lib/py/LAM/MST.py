@@ -853,7 +853,7 @@ def MSTCreateVECTORSVector(builder, data):
     return builder.EndVector()
 
 def CreateVECTORSVector(builder, data):
-    MSTCreateVECTORSVector(builder, data)
+    return MSTCreateVECTORSVector(builder, data)
 
 def MSTAddAOU_RPT(builder, AOU_RPT):
     builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(AOU_RPT), 0)
@@ -875,7 +875,7 @@ def MSTCreateAOU_RPTVector(builder, data):
     return builder.EndVector()
 
 def CreateAOU_RPTVector(builder, data):
-    MSTCreateAOU_RPTVector(builder, data)
+    return MSTCreateAOU_RPTVector(builder, data)
 
 def MSTAddLAUNCH_AOU(builder, LAUNCH_AOU):
     builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_AOU), 0)
@@ -897,7 +897,7 @@ def MSTCreateLAUNCH_AOUVector(builder, data):
     return builder.EndVector()
 
 def CreateLAUNCH_AOUVector(builder, data):
-    MSTCreateLAUNCH_AOUVector(builder, data)
+    return MSTCreateLAUNCH_AOUVector(builder, data)
 
 def MSTAddIMPACT_AOU(builder, IMPACT_AOU):
     builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_AOU), 0)
@@ -919,7 +919,7 @@ def MSTCreateIMPACT_AOUVector(builder, data):
     return builder.EndVector()
 
 def CreateIMPACT_AOUVector(builder, data):
-    MSTCreateIMPACT_AOUVector(builder, data)
+    return MSTCreateIMPACT_AOUVector(builder, data)
 
 def MSTEnd(builder):
     return builder.EndObject()

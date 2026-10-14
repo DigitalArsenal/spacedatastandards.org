@@ -77,25 +77,33 @@ class NST extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Entity tag of this set, for conditional requests.
+    public function getETAG()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startNST(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return NST
      */
-    public static function createNST(FlatBufferBuilder $builder, $NODES, $GENERATED_AT, $SOURCE_PEER_ID)
+    public static function createNST(FlatBufferBuilder $builder, $NODES, $GENERATED_AT, $SOURCE_PEER_ID, $ETAG)
     {
-        $builder->startObject(3);
+        $builder->startObject(4);
         self::addNODES($builder, $NODES);
         self::addGENERATED_AT($builder, $GENERATED_AT);
         self::addSOURCE_PEER_ID($builder, $SOURCE_PEER_ID);
+        self::addETAG($builder, $ETAG);
         $o = $builder->endObject();
         return $o;
     }
@@ -152,6 +160,16 @@ class NST extends Table
     public static function addSOURCE_PEER_ID(FlatBufferBuilder $builder, $SOURCE_PEER_ID)
     {
         $builder->addOffsetX(2, $SOURCE_PEER_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addETAG(FlatBufferBuilder $builder, $ETAG)
+    {
+        $builder->addOffsetX(3, $ETAG, 0);
     }
 
     /**

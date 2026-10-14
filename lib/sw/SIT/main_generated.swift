@@ -38,7 +38,7 @@ public enum SiteType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Geometry table with information about geometric properties
-public struct Geometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct Geometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -84,7 +84,7 @@ public struct Geometry: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Site Information Message
-public struct SIT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

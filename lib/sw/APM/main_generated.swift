@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Attitude Parameter Message
-public struct APM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -194,7 +194,7 @@ public struct APM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
 ///  A quaternion state of an APM (CCSDS 504.0-B-2 Table 3-3): rotation from
 ///  REF_FRAME_A to REF_FRAME_B. The derivative is NaN when the message states none.
-public struct APMQuaternionState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APMQuaternionState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -305,7 +305,7 @@ public struct APMQuaternionState: FlatBufferTable, FlatbuffersVectorInitializabl
 
 ///  An Euler angle state of an APM (EULER_START block). Angles in degrees; a rate
 ///  is NaN when the message states none.
-public struct APMEulerAngleState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APMEulerAngleState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -409,7 +409,7 @@ public struct APMEulerAngleState: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  An angular velocity of an APM (ANGVEL_START block), in deg/s.
-public struct APMAngularVelocity: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APMAngularVelocity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -494,7 +494,7 @@ public struct APMAngularVelocity: FlatBufferTable, FlatbuffersVectorInitializabl
 ///  A spin state of an APM (SPIN_START block). The nutation terms come as either of
 ///  two groups, nutation angle, period and phase or the momentum direction and the
 ///  velocity around it; those not stated are NaN.
-public struct APMSpinState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APMSpinState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -621,7 +621,7 @@ public struct APMSpinState: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 }
 
 ///  An inertia tensor of an APM (INERTIA_START block), in kg*m**2.
-public struct APMInertia: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APMInertia: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -709,7 +709,7 @@ public struct APMInertia: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  An attitude maneuver of an APM (MAN_START block).
-public struct APMManeuver: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct APMManeuver: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

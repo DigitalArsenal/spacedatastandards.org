@@ -66,7 +66,7 @@ public enum GVHEngineType: Int8, FlatbuffersVectorInitializable, Enum, Verifiabl
 
 
 ///  Ground Vehicles
-public struct GVH: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct GVH: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

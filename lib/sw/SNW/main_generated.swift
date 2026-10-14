@@ -41,7 +41,7 @@ public enum snwErrorCode: Int32, FlatbuffersVectorInitializable, Enum, Verifiabl
 ///  stream lives at INPUT_OFFSET as a tightly packed array of `targetState`
 ///  structs from SDR; the output detection stream is written to
 ///  OUTPUT_OFFSET as a tightly packed array of SDR `detectionResult` structs.
-public struct SNWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SNWBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -165,7 +165,7 @@ public struct SNWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Batch target detection response header.
-public struct SNWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SNWBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -232,7 +232,7 @@ public struct SNWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 
 ///  Sensor Runtime Wire envelope — carries either a batch request or a batch
 ///  response across the runtime boundary.
-public struct SNW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SNW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

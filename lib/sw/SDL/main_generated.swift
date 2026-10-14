@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Space Data Link Security (CCSDS 355.0-B-1)
-public struct SDL: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SDL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

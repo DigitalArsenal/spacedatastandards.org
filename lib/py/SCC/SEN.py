@@ -263,7 +263,7 @@ def SENCreateMAINTENANCEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMAINTENANCEVector(builder, data):
-    SENCreateMAINTENANCEVector(builder, data)
+    return SENCreateMAINTENANCEVector(builder, data)
 
 def SENAddPLANS(builder, PLANS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(PLANS), 0)
@@ -281,7 +281,7 @@ def SENCreatePLANSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePLANSVector(builder, data):
-    SENCreatePLANSVector(builder, data)
+    return SENCreatePLANSVector(builder, data)
 
 def SENAddSTATISTICS(builder, STATISTICS):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(STATISTICS), 0)
@@ -299,7 +299,7 @@ def SENCreateSTATISTICSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTATISTICSVector(builder, data):
-    SENCreateSTATISTICSVector(builder, data)
+    return SENCreateSTATISTICSVector(builder, data)
 
 def SENAddNOTES(builder, NOTES):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)

@@ -138,7 +138,7 @@ def PRWPrepareRequestCreateSOURCE_HANDLESVector(builder, data):
     return builder.EndVector()
 
 def CreateSOURCE_HANDLESVector(builder, data):
-    PRWPrepareRequestCreateSOURCE_HANDLESVector(builder, data)
+    return PRWPrepareRequestCreateSOURCE_HANDLESVector(builder, data)
 
 def PRWPrepareRequestAddSTART_EPOCH(builder, START_EPOCH):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(START_EPOCH), 0)

@@ -1,0 +1,14 @@
+/**
+ * Solid Earth tide model for the central body's field. NONE leaves the
+ * tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+ * and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+ * numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+ * frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+ * the permanent tide handled for the field's own tide system. Pole tide is
+ * not included.
+ */
+export declare enum prwSolidTideModel {
+    NONE = 0,
+    IERS_2010 = 1
+}
+//# sourceMappingURL=prwSolidTideModel.d.ts.map

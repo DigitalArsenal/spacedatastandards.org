@@ -265,7 +265,7 @@ def PHBCreateRESPONSE_WAVELENGTH_NMVector(builder, data):
     return builder.EndVector()
 
 def CreateRESPONSE_WAVELENGTH_NMVector(builder, data):
-    PHBCreateRESPONSE_WAVELENGTH_NMVector(builder, data)
+    return PHBCreateRESPONSE_WAVELENGTH_NMVector(builder, data)
 
 def PHBAddRESPONSE(builder, RESPONSE):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RESPONSE), 0)
@@ -287,7 +287,7 @@ def PHBCreateRESPONSEVector(builder, data):
     return builder.EndVector()
 
 def CreateRESPONSEVector(builder, data):
-    PHBCreateRESPONSEVector(builder, data)
+    return PHBCreateRESPONSEVector(builder, data)
 
 def PHBAddRESPONSE_IS_ENERGY(builder, RESPONSE_IS_ENERGY):
     builder.PrependBoolSlot(11, RESPONSE_IS_ENERGY, 0)

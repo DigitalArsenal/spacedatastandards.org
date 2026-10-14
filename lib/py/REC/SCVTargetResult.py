@@ -253,7 +253,7 @@ def SCVTargetResultCreateINTERVAL_START_SECVector(builder, data):
     return builder.EndVector()
 
 def CreateINTERVAL_START_SECVector(builder, data):
-    SCVTargetResultCreateINTERVAL_START_SECVector(builder, data)
+    return SCVTargetResultCreateINTERVAL_START_SECVector(builder, data)
 
 def SCVTargetResultAddINTERVAL_STOP_SEC(builder, INTERVAL_STOP_SEC):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(INTERVAL_STOP_SEC), 0)
@@ -275,7 +275,7 @@ def SCVTargetResultCreateINTERVAL_STOP_SECVector(builder, data):
     return builder.EndVector()
 
 def CreateINTERVAL_STOP_SECVector(builder, data):
-    SCVTargetResultCreateINTERVAL_STOP_SECVector(builder, data)
+    return SCVTargetResultCreateINTERVAL_STOP_SECVector(builder, data)
 
 def SCVTargetResultAddPASS_START_BUCKETS(builder, PASS_START_BUCKETS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PASS_START_BUCKETS), 0)
@@ -297,7 +297,7 @@ def SCVTargetResultCreatePASS_START_BUCKETSVector(builder, data):
     return builder.EndVector()
 
 def CreatePASS_START_BUCKETSVector(builder, data):
-    SCVTargetResultCreatePASS_START_BUCKETSVector(builder, data)
+    return SCVTargetResultCreatePASS_START_BUCKETSVector(builder, data)
 
 def SCVTargetResultAddACCESS_BITSET(builder, ACCESS_BITSET):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ACCESS_BITSET), 0)
@@ -319,7 +319,7 @@ def SCVTargetResultCreateACCESS_BITSETVector(builder, data):
     return builder.EndVector()
 
 def CreateACCESS_BITSETVector(builder, data):
-    SCVTargetResultCreateACCESS_BITSETVector(builder, data)
+    return SCVTargetResultCreateACCESS_BITSETVector(builder, data)
 
 def SCVTargetResultEnd(builder):
     return builder.EndObject()

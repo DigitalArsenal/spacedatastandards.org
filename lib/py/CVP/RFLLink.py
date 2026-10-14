@@ -380,7 +380,7 @@ def RFLLinkCreateMODCOD_SETVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateMODCOD_SETVector(builder, data):
-    RFLLinkCreateMODCOD_SETVector(builder, data)
+    return RFLLinkCreateMODCOD_SETVector(builder, data)
 
 def RFLLinkAddACM_ENABLED(builder, ACM_ENABLED):
     builder.PrependBoolSlot(21, ACM_ENABLED, 0)

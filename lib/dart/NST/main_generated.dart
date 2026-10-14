@@ -100,10 +100,12 @@ class NSTNode {
   ///  network.
   String? get ONION_ADDRESS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
   String? get onionAddress => ONION_ADDRESS;
+  ///  Standards the peer publishes or serves, as their codes, e.g. "OMM".
+  List<String>? get STANDARDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 60);
 
   @override
   String toString() {
-    return 'NSTNode{peerId: ${peerId}, DN: ${DN}, ORGANIZATION: ${ORGANIZATION}, trustLevel: ${trustLevel}, ROLE: ${ROLE}, agentVersion: ${agentVersion}, multiformatAddress: ${multiformatAddress}, lastSeen: ${lastSeen}, isOnline: ${isOnline}, latencyMs: ${latencyMs}, VCARD: ${VCARD}, LAT: ${LAT}, LON: ${LON}, geoCountry: ${geoCountry}, geoCity: ${geoCity}, isSelf: ${isSelf}, uptimeS: ${uptimeS}, suiteVersion: ${suiteVersion}, standardsVersion: ${standardsVersion}, SOURCE: ${SOURCE}, PINNED: ${PINNED}, pinNote: ${pinNote}, connectedPeerIds: ${connectedPeerIds}, signingPublicKey: ${signingPublicKey}, encryptionPublicKey: ${encryptionPublicKey}, epmCid: ${epmCid}, storageDaemonVersion: ${storageDaemonVersion}, onionAddress: ${onionAddress}}';
+    return 'NSTNode{peerId: ${peerId}, DN: ${DN}, ORGANIZATION: ${ORGANIZATION}, trustLevel: ${trustLevel}, ROLE: ${ROLE}, agentVersion: ${agentVersion}, multiformatAddress: ${multiformatAddress}, lastSeen: ${lastSeen}, isOnline: ${isOnline}, latencyMs: ${latencyMs}, VCARD: ${VCARD}, LAT: ${LAT}, LON: ${LON}, geoCountry: ${geoCountry}, geoCity: ${geoCity}, isSelf: ${isSelf}, uptimeS: ${uptimeS}, suiteVersion: ${suiteVersion}, standardsVersion: ${standardsVersion}, SOURCE: ${SOURCE}, PINNED: ${PINNED}, pinNote: ${pinNote}, connectedPeerIds: ${connectedPeerIds}, signingPublicKey: ${signingPublicKey}, encryptionPublicKey: ${encryptionPublicKey}, epmCid: ${epmCid}, storageDaemonVersion: ${storageDaemonVersion}, onionAddress: ${onionAddress}, STANDARDS: ${STANDARDS}}';
   }
 }
 
@@ -121,7 +123,7 @@ class NSTNodeBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(28);
+    fbBuilder.startTable(29);
   }
 
   int addPeerIdOffset(int? offset) {
@@ -236,6 +238,10 @@ class NSTNodeBuilder {
     fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
+  int addStandardsOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -271,6 +277,7 @@ class NSTNodeObjectBuilder extends fb.ObjectBuilder {
   final String? _EPM_CID;
   final String? _STORAGE_DAEMON_VERSION;
   final String? _ONION_ADDRESS;
+  final List<String>? _STANDARDS;
 
   NSTNodeObjectBuilder({
     String? PEER_ID,
@@ -321,6 +328,7 @@ class NSTNodeObjectBuilder extends fb.ObjectBuilder {
     String? storageDaemonVersion,
     String? ONION_ADDRESS,
     String? onionAddress,
+    List<String>? STANDARDS,
   })
       : _PEER_ID = peerId ?? PEER_ID,
         _DN = DN,
@@ -349,7 +357,8 @@ class NSTNodeObjectBuilder extends fb.ObjectBuilder {
         _ENCRYPTION_PUBLIC_KEY = encryptionPublicKey ?? ENCRYPTION_PUBLIC_KEY,
         _EPM_CID = epmCid ?? EPM_CID,
         _STORAGE_DAEMON_VERSION = storageDaemonVersion ?? STORAGE_DAEMON_VERSION,
-        _ONION_ADDRESS = onionAddress ?? ONION_ADDRESS;
+        _ONION_ADDRESS = onionAddress ?? ONION_ADDRESS,
+        _STANDARDS = STANDARDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -394,7 +403,9 @@ class NSTNodeObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_STORAGE_DAEMON_VERSION!);
     final int? ONION_ADDRESSOffset = _ONION_ADDRESS == null ? null
         : fbBuilder.writeString(_ONION_ADDRESS!);
-    fbBuilder.startTable(28);
+    final int? STANDARDSOffset = _STANDARDS == null ? null
+        : fbBuilder.writeList(_STANDARDS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(29);
     fbBuilder.addOffset(0, PEER_IDOffset);
     fbBuilder.addOffset(1, DNOffset);
     fbBuilder.addOffset(2, ORGANIZATIONOffset);
@@ -423,6 +434,7 @@ class NSTNodeObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(25, EPM_CIDOffset);
     fbBuilder.addOffset(26, STORAGE_DAEMON_VERSIONOffset);
     fbBuilder.addOffset(27, ONION_ADDRESSOffset);
+    fbBuilder.addOffset(28, STANDARDSOffset);
     return fbBuilder.endTable();
   }
 
@@ -454,10 +466,12 @@ class NST {
   ///  Peer identifier of the emitting node.
   String? get SOURCE_PEER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
   String? get sourcePeerId => SOURCE_PEER_ID;
+  ///  Entity tag of this set, for conditional requests.
+  String? get ETAG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
 
   @override
   String toString() {
-    return 'NST{NODES: ${NODES}, generatedAt: ${generatedAt}, sourcePeerId: ${sourcePeerId}}';
+    return 'NST{NODES: ${NODES}, generatedAt: ${generatedAt}, sourcePeerId: ${sourcePeerId}, ETAG: ${ETAG}}';
   }
 }
 
@@ -475,7 +489,7 @@ class NSTBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
   int addNodesOffset(int? offset) {
@@ -490,6 +504,10 @@ class NSTBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addEtagOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -500,6 +518,7 @@ class NSTObjectBuilder extends fb.ObjectBuilder {
   final List<NSTNodeObjectBuilder>? _NODES;
   final int? _GENERATED_AT;
   final String? _SOURCE_PEER_ID;
+  final String? _ETAG;
 
   NSTObjectBuilder({
     List<NSTNodeObjectBuilder>? NODES,
@@ -507,10 +526,12 @@ class NSTObjectBuilder extends fb.ObjectBuilder {
     int? generatedAt,
     String? SOURCE_PEER_ID,
     String? sourcePeerId,
+    String? ETAG,
   })
       : _NODES = NODES,
         _GENERATED_AT = generatedAt ?? GENERATED_AT,
-        _SOURCE_PEER_ID = sourcePeerId ?? SOURCE_PEER_ID;
+        _SOURCE_PEER_ID = sourcePeerId ?? SOURCE_PEER_ID,
+        _ETAG = ETAG;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -519,10 +540,13 @@ class NSTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_NODES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? SOURCE_PEER_IDOffset = _SOURCE_PEER_ID == null ? null
         : fbBuilder.writeString(_SOURCE_PEER_ID!);
-    fbBuilder.startTable(3);
+    final int? ETAGOffset = _ETAG == null ? null
+        : fbBuilder.writeString(_ETAG!);
+    fbBuilder.startTable(4);
     fbBuilder.addOffset(0, NODESOffset);
     fbBuilder.addInt64(1, _GENERATED_AT);
     fbBuilder.addOffset(2, SOURCE_PEER_IDOffset);
+    fbBuilder.addOffset(3, ETAGOffset);
     return fbBuilder.endTable();
   }
 

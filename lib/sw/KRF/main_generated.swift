@@ -43,7 +43,7 @@ public enum keyReferenceAlgorithm: Int8, FlatbuffersVectorInitializable, Enum, V
 
 
 ///  Key Reference Frame
-public struct KRF: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct KRF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

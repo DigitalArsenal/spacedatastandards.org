@@ -539,7 +539,7 @@ def RSDCreateRANGE_MVector(builder, data):
     return builder.EndVector()
 
 def CreateRANGE_MVector(builder, data):
-    RSDCreateRANGE_MVector(builder, data)
+    return RSDCreateRANGE_MVector(builder, data)
 
 def RSDAddDETECTION_PROBABILITY(builder, DETECTION_PROBABILITY):
     builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_PROBABILITY), 0)
@@ -561,7 +561,7 @@ def RSDCreateDETECTION_PROBABILITYVector(builder, data):
     return builder.EndVector()
 
 def CreateDETECTION_PROBABILITYVector(builder, data):
-    RSDCreateDETECTION_PROBABILITYVector(builder, data)
+    return RSDCreateDETECTION_PROBABILITYVector(builder, data)
 
 def RSDAddFALSE_ALARM_PROBABILITY(builder, FALSE_ALARM_PROBABILITY):
     builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(FALSE_ALARM_PROBABILITY), 0)
@@ -583,7 +583,7 @@ def RSDCreateFALSE_ALARM_PROBABILITYVector(builder, data):
     return builder.EndVector()
 
 def CreateFALSE_ALARM_PROBABILITYVector(builder, data):
-    RSDCreateFALSE_ALARM_PROBABILITYVector(builder, data)
+    return RSDCreateFALSE_ALARM_PROBABILITYVector(builder, data)
 
 def RSDAddSNR_DB(builder, SNR_DB):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SNR_DB), 0)
@@ -605,7 +605,7 @@ def RSDCreateSNR_DBVector(builder, data):
     return builder.EndVector()
 
 def CreateSNR_DBVector(builder, data):
-    RSDCreateSNR_DBVector(builder, data)
+    return RSDCreateSNR_DBVector(builder, data)
 
 def RSDAddMAXIMUM_DETECTION_RANGE_M(builder, MAXIMUM_DETECTION_RANGE_M):
     builder.PrependFloat64Slot(22, MAXIMUM_DETECTION_RANGE_M, 0.0)
@@ -693,7 +693,7 @@ def RSDCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    RSDCreateSIGNATUREVector(builder, data)
+    return RSDCreateSIGNATUREVector(builder, data)
 
 def RSDAddCANONICAL_JSON_SIGNATURE(builder, CANONICAL_JSON_SIGNATURE):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(CANONICAL_JSON_SIGNATURE), 0)
@@ -715,7 +715,7 @@ def RSDCreateCANONICAL_JSON_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateCANONICAL_JSON_SIGNATUREVector(builder, data):
-    RSDCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
+    return RSDCreateCANONICAL_JSON_SIGNATUREVector(builder, data)
 
 def RSDEnd(builder):
     return builder.EndObject()

@@ -15,6 +15,27 @@ class RecordTypeExtended
     const CVR = 257;
     const PVN = 258;
     const SBD = 259;
+    const APR = 260;
+    const ASG = 261;
+    const DAV = 262;
+    const DCL = 263;
+    const ERM = 264;
+    const FIL = 265;
+    const LFV = 266;
+    const MDE = 267;
+    const MPL = 268;
+    const NEV = 269;
+    const NHS = 270;
+    const OIL = 271;
+    const PNV = 272;
+    const PPS = 273;
+    const RND = 274;
+    const SBC = 275;
+    const SCR = 276;
+    const SRG = 277;
+    const TBP = 278;
+    const WHA = 279;
+    const XMT = 280;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
@@ -22,6 +43,27 @@ class RecordTypeExtended
         RecordTypeExtended::CVR=>"CVR",
         RecordTypeExtended::PVN=>"PVN",
         RecordTypeExtended::SBD=>"SBD",
+        RecordTypeExtended::APR=>"APR",
+        RecordTypeExtended::ASG=>"ASG",
+        RecordTypeExtended::DAV=>"DAV",
+        RecordTypeExtended::DCL=>"DCL",
+        RecordTypeExtended::ERM=>"ERM",
+        RecordTypeExtended::FIL=>"FIL",
+        RecordTypeExtended::LFV=>"LFV",
+        RecordTypeExtended::MDE=>"MDE",
+        RecordTypeExtended::MPL=>"MPL",
+        RecordTypeExtended::NEV=>"NEV",
+        RecordTypeExtended::NHS=>"NHS",
+        RecordTypeExtended::OIL=>"OIL",
+        RecordTypeExtended::PNV=>"PNV",
+        RecordTypeExtended::PPS=>"PPS",
+        RecordTypeExtended::RND=>"RND",
+        RecordTypeExtended::SBC=>"SBC",
+        RecordTypeExtended::SCR=>"SCR",
+        RecordTypeExtended::SRG=>"SRG",
+        RecordTypeExtended::TBP=>"TBP",
+        RecordTypeExtended::WHA=>"WHA",
+        RecordTypeExtended::XMT=>"XMT",
     );
 
     public static function Name($e)

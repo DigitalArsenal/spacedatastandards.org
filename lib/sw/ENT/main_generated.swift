@@ -30,7 +30,7 @@ public enum entitlementLifecycleStatus: Int8, FlatbuffersVectorInitializable, En
 ///  license key. It records the current authoritative entitlement for an SDN
 ///  account identity and can be projected into subscription, billing, and
 ///  access-control surfaces.
-public struct ENT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ENT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

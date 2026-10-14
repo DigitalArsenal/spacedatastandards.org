@@ -521,7 +521,7 @@ def SKICreateSEN_QUATVector(builder, data):
     return builder.EndVector()
 
 def CreateSEN_QUATVector(builder, data):
-    SKICreateSEN_QUATVector(builder, data)
+    return SKICreateSEN_QUATVector(builder, data)
 
 def SKIAddSEN_QUAT_DOT(builder, SEN_QUAT_DOT):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_QUAT_DOT), 0)
@@ -543,7 +543,7 @@ def SKICreateSEN_QUAT_DOTVector(builder, data):
     return builder.EndVector()
 
 def CreateSEN_QUAT_DOTVector(builder, data):
-    SKICreateSEN_QUAT_DOTVector(builder, data)
+    return SKICreateSEN_QUAT_DOTVector(builder, data)
 
 def SKIAddIMAGE_TYPE(builder, IMAGE_TYPE):
     builder.PrependInt8Slot(14, IMAGE_TYPE, 0)
@@ -705,7 +705,7 @@ def SKICreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    SKICreateTAGSVector(builder, data)
+    return SKICreateTAGSVector(builder, data)
 
 def SKIAddDESCRIPTION(builder, DESCRIPTION):
     builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
@@ -729,7 +729,7 @@ def SKICreateEO_OBSERVATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEO_OBSERVATIONSVector(builder, data):
-    SKICreateEO_OBSERVATIONSVector(builder, data)
+    return SKICreateEO_OBSERVATIONSVector(builder, data)
 
 def SKIEnd(builder):
     return builder.EndObject()

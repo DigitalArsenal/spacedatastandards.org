@@ -142,7 +142,7 @@ def XTCHeaderCreateNOTESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateNOTESVector(builder, data):
-    XTCHeaderCreateNOTESVector(builder, data)
+    return XTCHeaderCreateNOTESVector(builder, data)
 
 def XTCHeaderEnd(builder):
     return builder.EndObject()

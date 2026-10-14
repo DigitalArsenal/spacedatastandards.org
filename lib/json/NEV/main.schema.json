@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "nevEventKind" : {
+      "type" : "string",
+      "enum": ["Other", "PeerConnected", "PeerDisconnected", "PublicationSent", "PublicationReceived", "RecordsStored", "RecordsDeleted", "GrantIssued", "GrantRevoked", "ServiceStarted", "ServiceStopped", "Warning", "Failure"]
+    },
+    "NEVEvent" : {
+      "type" : "object",
+      "description" : "One event.",
+      "properties" : {
+        "TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the event happened."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/nevEventKind"
+              },
+        "PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer the event concerns, when it concerns one."
+              },
+        "SUBJECT" : {
+                "type" : "string",
+                "description" : "Subject the event concerns, when it is not a peer: a standard code, a\nmodule identifier, a grant identifier or a content identifier."
+              },
+        "COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "How many items the event covers (records stored, records deleted); 0 =\nnot a count."
+              },
+        "DETAIL" : {
+                "type" : "string",
+                "description" : "Short human-readable detail."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NEV" : {
+      "type" : "object",
+      "description" : "Node Event - one read of a node's event log.",
+      "properties" : {
+        "NODE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the node whose log this is."
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when this set was read."
+              },
+        "EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NEVEvent"},
+                "description" : "Events in this set, newest first."
+              },
+        "TOTAL_EVENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Events the node holds in its log; 0 = unknown."
+              },
+        "OLDEST_TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of the oldest event the node still holds; 0 = unknown."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NEV"
+}

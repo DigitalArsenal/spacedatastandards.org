@@ -23,7 +23,7 @@ public enum mtiStandard: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Moving Target Indicator
-public struct MTI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct MTI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

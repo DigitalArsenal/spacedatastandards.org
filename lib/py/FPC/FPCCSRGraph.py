@@ -153,7 +153,7 @@ def FPCCSRGraphCreateOFFSETSVector(builder, data):
     return builder.EndVector()
 
 def CreateOFFSETSVector(builder, data):
-    FPCCSRGraphCreateOFFSETSVector(builder, data)
+    return FPCCSRGraphCreateOFFSETSVector(builder, data)
 
 def FPCCSRGraphAddDESTINATIONS(builder, DESTINATIONS):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DESTINATIONS), 0)
@@ -175,7 +175,7 @@ def FPCCSRGraphCreateDESTINATIONSVector(builder, data):
     return builder.EndVector()
 
 def CreateDESTINATIONSVector(builder, data):
-    FPCCSRGraphCreateDESTINATIONSVector(builder, data)
+    return FPCCSRGraphCreateDESTINATIONSVector(builder, data)
 
 def FPCCSRGraphAddWEIGHTS(builder, WEIGHTS):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(WEIGHTS), 0)
@@ -197,7 +197,7 @@ def FPCCSRGraphCreateWEIGHTSVector(builder, data):
     return builder.EndVector()
 
 def CreateWEIGHTSVector(builder, data):
-    FPCCSRGraphCreateWEIGHTSVector(builder, data)
+    return FPCCSRGraphCreateWEIGHTSVector(builder, data)
 
 def FPCCSRGraphEnd(builder):
     return builder.EndObject()

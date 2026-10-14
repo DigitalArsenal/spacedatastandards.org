@@ -22,7 +22,7 @@ public enum rpcDirection: Int8, FlatbuffersVectorInitializable, Enum, Verifiable
 
 
 ///  Plaintext carried, size-prefixed, inside RPC.CIPHERTEXT.
-public struct RPCBody: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RPCBody: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -125,7 +125,7 @@ public struct RPCBody: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
 }
 
 ///  Sealed Remote Procedure Call envelope (outer, plaintext, signed).
-public struct RPC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RPC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

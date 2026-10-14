@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "davUnavailableReason" : {
+      "type" : "string",
+      "enum": ["None", "NotPublished", "NotHeld", "Stale", "Unverified", "NotEntitled"]
+    },
+    "DAV" : {
+      "type" : "object",
+      "description" : "Dataset Availability - the latest dataset of a lane, as one node holds it.",
+      "properties" : {
+        "STANDARD" : {
+                "type" : "string",
+                "description" : "Standard of the dataset, as its code, e.g. \"OMM\"."
+              },
+        "SCHEMA_NAME" : {
+                "type" : "string",
+                "description" : "Schema file name of its records, e.g. \"OMM.fbs\"."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string"
+              },
+        "SOURCE_NAME" : {
+                "type" : "string"
+              },
+        "KNOWN" : {
+                "type" : "boolean",
+                "description" : "True when the node knows of a publication of this lane."
+              },
+        "AVAILABLE" : {
+                "type" : "boolean",
+                "description" : "True when the node can serve the dataset now."
+              },
+        "UNAVAILABLE_REASON" : {
+                "$ref" : "#/definitions/davUnavailableReason"
+              },
+        "SELF_PUBLISHED" : {
+                "type" : "boolean",
+                "description" : "True when the node published the dataset itself."
+              },
+        "PINNED" : {
+                "type" : "boolean",
+                "description" : "True when the node keeps the content (it is not evicted)."
+              },
+        "FRESH" : {
+                "type" : "boolean",
+                "description" : "True when the node's copy is the latest known publication."
+              },
+        "BATCH_ID" : {
+                "type" : "string",
+                "description" : "Batch identifier of the dataset."
+              },
+        "RECORD_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records in the dataset."
+              },
+        "BYTE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Bytes of the dataset's record stream."
+              },
+        "PARTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Parts the dataset is split into for transfer; 0 or 1 = one part."
+              },
+        "PUBLISHED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds the dataset was published."
+              },
+        "PNM_CID" : {
+                "type" : "string",
+                "description" : "Content identifier of the $PNM that announced it."
+              },
+        "PNM_FILE_ID" : {
+                "type" : "string",
+                "description" : "The notice's FILE_ID."
+              },
+        "PNM_PUBLISHED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of the notice."
+              },
+        "PNM_SIGNATURE_VERIFIED" : {
+                "type" : "boolean",
+                "description" : "True when the notice's signature verified."
+              },
+        "PUBLISHER_PEER_ID" : {
+                "type" : "string",
+                "description" : "Peer that published the notice."
+              },
+        "ETAG" : {
+                "type" : "string",
+                "description" : "Entity tag of the dataset, for conditional requests."
+              },
+        "BODY_REF_TOKEN" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "When the dataset's records are not inline but held by the serving node\nfor delivery out of band: the reference token the node resolves (single\nuse), and the byte size of what it refers to. 0 = inline."
+              },
+        "BODY_REF_SIZE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/DAV"
+}

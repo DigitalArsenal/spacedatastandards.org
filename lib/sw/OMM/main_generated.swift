@@ -29,7 +29,7 @@ public enum ephemerisFormat: Int8, FlatbuffersVectorInitializable, Enum, Verifia
 
 
 ///  Orbit Mean Elements Message
-public struct OMM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -405,7 +405,7 @@ public struct OMM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
 
 ///  One USER_DEFINED_x keyword of an OMM, or one USER_DEFINED element of its XML
 ///  form: the parameter name (the x) and the value as written.
-public struct OMMUserDefinedParameter: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OMMUserDefinedParameter: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

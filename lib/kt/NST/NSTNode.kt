@@ -360,6 +360,21 @@ class NSTNode : Table() {
         }
     val onionAddressAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
     fun onionAddressInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Standards the peer publishes or serves, as their codes, e.g. "OMM".
+     */
+    fun standards(j: Int) : String? {
+        val o = __offset(60)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val standardsLength : Int
+        get() {
+            val o = __offset(60); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsNSTNode(_bb: ByteBuffer): NSTNode = getRootAsNSTNode(_bb, NSTNode())
@@ -367,10 +382,11 @@ class NSTNode : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createNSTNode(builder: FlatBufferBuilder, peerIdOffset: Int, dnOffset: Int, organizationOffset: Int, trustLevelOffset: Int, roleOffset: Int, agentVersionOffset: Int, multiformatAddressOffset: Int, lastSeen: Long, isOnline: Boolean, latencyMs: Float, vcardOffset: Int, lat: Float, lon: Float, geoCountryOffset: Int, geoCityOffset: Int, isSelf: Boolean, uptimeS: Long, suiteVersionOffset: Int, standardsVersionOffset: Int, sourceOffset: Int, pinned: Boolean, pinNoteOffset: Int, connectedPeerIdsOffset: Int, signingPublicKeyOffset: Int, encryptionPublicKeyOffset: Int, epmCidOffset: Int, storageDaemonVersionOffset: Int, onionAddressOffset: Int) : Int {
-            builder.startTable(28)
+        fun createNSTNode(builder: FlatBufferBuilder, peerIdOffset: Int, dnOffset: Int, organizationOffset: Int, trustLevelOffset: Int, roleOffset: Int, agentVersionOffset: Int, multiformatAddressOffset: Int, lastSeen: Long, isOnline: Boolean, latencyMs: Float, vcardOffset: Int, lat: Float, lon: Float, geoCountryOffset: Int, geoCityOffset: Int, isSelf: Boolean, uptimeS: Long, suiteVersionOffset: Int, standardsVersionOffset: Int, sourceOffset: Int, pinned: Boolean, pinNoteOffset: Int, connectedPeerIdsOffset: Int, signingPublicKeyOffset: Int, encryptionPublicKeyOffset: Int, epmCidOffset: Int, storageDaemonVersionOffset: Int, onionAddressOffset: Int, standardsOffset: Int) : Int {
+            builder.startTable(29)
             addUPTIMES(builder, uptimeS)
             addLASTSEEN(builder, lastSeen)
+            addSTANDARDS(builder, standardsOffset)
             addONIONADDRESS(builder, onionAddressOffset)
             addSTORAGEDAEMONVERSION(builder, storageDaemonVersionOffset)
             addEPMCID(builder, epmCidOffset)
@@ -399,7 +415,7 @@ class NSTNode : Table() {
             addISONLINE(builder, isOnline)
             return endNSTNode(builder)
         }
-        fun startNSTNode(builder: FlatBufferBuilder) = builder.startTable(28)
+        fun startNSTNode(builder: FlatBufferBuilder) = builder.startTable(29)
         fun addPEERID(builder: FlatBufferBuilder, peerId: Int) = builder.addOffset(0, peerId, 0)
         fun addDN(builder: FlatBufferBuilder, dn: Int) = builder.addOffset(1, dn, 0)
         fun addORGANIZATION(builder: FlatBufferBuilder, organization: Int) = builder.addOffset(2, organization, 0)
@@ -444,6 +460,15 @@ class NSTNode : Table() {
         fun addEPMCID(builder: FlatBufferBuilder, epmCid: Int) = builder.addOffset(25, epmCid, 0)
         fun addSTORAGEDAEMONVERSION(builder: FlatBufferBuilder, storageDaemonVersion: Int) = builder.addOffset(26, storageDaemonVersion, 0)
         fun addONIONADDRESS(builder: FlatBufferBuilder, onionAddress: Int) = builder.addOffset(27, onionAddress, 0)
+        fun addSTANDARDS(builder: FlatBufferBuilder, standards: Int) = builder.addOffset(28, standards, 0)
+        fun createStandardsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startStandardsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endNSTNode(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

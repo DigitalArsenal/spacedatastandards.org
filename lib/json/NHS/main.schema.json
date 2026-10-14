@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "nhsServiceState" : {
+      "type" : "string",
+      "enum": ["Unknown", "Starting", "Running", "Degraded", "Draining", "Stopped", "Failed"]
+    },
+    "NHSThroughputSample" : {
+      "type" : "object",
+      "description" : "One sample of network throughput.",
+      "properties" : {
+        "TIME_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds of the sample."
+              },
+        "TOTAL_IN_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total bytes received since the service started, at this sample."
+              },
+        "TOTAL_OUT_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total bytes sent since the service started, at this sample."
+              },
+        "RATE_IN_BPS" : {
+                "type" : "number",
+                "description" : "Receive rate at this sample, bytes per second."
+              },
+        "RATE_OUT_BPS" : {
+                "type" : "number",
+                "description" : "Send rate at this sample, bytes per second."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "NHS" : {
+      "type" : "object",
+      "description" : "Node Health Status - one snapshot of a node's own health.",
+      "properties" : {
+        "NODE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the node reporting (a peer identifier, host name or asset\nidentifier)."
+              },
+        "GENERATED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the snapshot was taken."
+              },
+        "STARTED_AT_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds when the service started; 0 = unknown."
+              },
+        "UPTIME_S" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Seconds the service has been running."
+              },
+        "SERVICE_STATE" : {
+                "$ref" : "#/definitions/nhsServiceState"
+              },
+        "SERVICE_MODE" : {
+                "type" : "string",
+                "description" : "Operating mode the service runs in, as the service names it, e.g.\n\"full\", \"edge\", \"relay\", \"maintenance\"."
+              },
+        "SOFTWARE_VERSION" : {
+                "type" : "string",
+                "description" : "Software name and version of the service, e.g. \"sdn-server 1.4.2\"."
+              },
+        "STORAGE_PATH" : {
+                "type" : "string",
+                "description" : "Location of the node's data store (a path or URI)."
+              },
+        "STORE_TOTAL_RECORDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Records the node's data store holds."
+              },
+        "STORE_TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Bytes the node's data store occupies."
+              },
+        "HAS_DISK" : {
+                "type" : "boolean",
+                "description" : "True when the disk figures below were measured."
+              },
+        "DISK_CAPACITY_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Capacity of the volume holding the store, bytes."
+              },
+        "DISK_FREE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Free bytes on that volume."
+              },
+        "DISK_AVAILABLE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Bytes on that volume available to the service (free bytes less any\nreserve the service may not use)."
+              },
+        "HAS_NETWORK" : {
+                "type" : "boolean",
+                "description" : "True when the network figures below were measured."
+              },
+        "TOTAL_IN_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total bytes received since the service started."
+              },
+        "TOTAL_OUT_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total bytes sent since the service started."
+              },
+        "RATE_IN_BPS" : {
+                "type" : "number",
+                "description" : "Current receive rate, bytes per second."
+              },
+        "RATE_OUT_BPS" : {
+                "type" : "number",
+                "description" : "Current send rate, bytes per second."
+              },
+        "THROUGHPUT_HISTORY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/NHSThroughputSample"},
+                "description" : "Recent throughput, oldest first."
+              },
+        "HAS_COMPUTE" : {
+                "type" : "boolean",
+                "description" : "True when the processor and memory figures below were measured."
+              },
+        "CPU_LOAD" : {
+                "type" : "number",
+                "description" : "Processor load, 0..1 of all cores."
+              },
+        "CPU_CORES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Processor cores available to the service."
+              },
+        "MEMORY_USED_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Memory the service uses, bytes."
+              },
+        "MEMORY_TOTAL_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Memory available to the service, bytes."
+              },
+        "CONNECTION_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Peers or clients currently connected; 0 = none or not measured."
+              },
+        "NOTES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Short human-readable notes on anything degraded, e.g. \"disk 92% full\"."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/NHS"
+}

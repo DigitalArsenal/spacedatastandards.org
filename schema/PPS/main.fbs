@@ -1,0 +1,237 @@
+// Hash: 530ade3e019cc5eb71e2af839e55798397f08f906edfc3e2126e668866d08c84
+// Version: 1.248.0
+// -----------------------------------END_HEADER
+include "../ACM/main.fbs";
+include "../BUS/main.fbs";
+include "../OEM/main.fbs";
+
+/// Pointing and Power Scenario (PPS)
+/// Description
+/// A spacecraft pointing and power simulation scenario and the telemetry it
+/// produces. The scenario states the time span, the attitude (pointing)
+/// modes and when each applies, the attitude control state at the start
+/// (pointing error, body rate, reaction-wheel momentum), the solar array,
+/// the battery, the electrical loads and the attitude sensor noise; it may
+/// carry the spacecraft's trajectory and its bus description. The telemetry
+/// is the simulated time series: attitude (pointing error, body rate,
+/// optionally the attitude quaternion), reaction-wheel momentum, relative
+/// position to a target, solar illumination, power generated and consumed,
+/// battery state of charge and energy, sensor noise, and the active pointing
+/// mode, sample by sample.
+///
+/// Mission and systems engineers use it for power-positive and pointing
+/// budget checks, and viewers to replay a scenario beside the orbit. The same
+/// record is the request (SCENARIO only) and the answer (SCENARIO echoed,
+/// with STATUS and TELEMETRY). Telemetry is column-major: every series is an
+/// array with one entry per sample (three or four for vectors, as stated),
+/// parallel to ELAPSED_S, so a chart or a time-dynamic property reads each
+/// series directly. An absolute time of a sample is START_EPOCH_MS +
+/// 1000 * ELAPSED_S.
+///
+/// The initial attitude can be an $ACM attitudeState, the bus an $BUS
+/// record, and the trajectory an $OEM ephemeris block. PPS carries
+/// engineering values; a $TMF transfer frame carries raw downlinked
+/// telemetry, and an $SCN scene can reference a PPS run for display.
+///
+/// Units: SI (s, m, W, Wh, N m s), angles in degrees.
+
+/// Attitude (pointing) mode. Append new values only; never reorder or reuse
+/// existing values.
+enum ppsAttitudeMode : ubyte {
+  /// Not stated.
+  Unspecified,
+  /// Solar-array normal toward the Sun.
+  SunPointing,
+  /// A body axis toward the nadir.
+  NadirPointing,
+  /// Fixed inertial attitude.
+  InertialHold,
+  /// A body axis toward a moving target (ground site or space object).
+  TargetTracking,
+  /// Large-angle slew between attitudes.
+  Slew,
+  /// Fine tracking (error below the fine-pointing threshold).
+  FineTrack,
+  /// Safe mode.
+  Safe,
+  /// Rate damping (detumble).
+  RateDamping
+}
+
+/// Telemetry products a run produces. Append new values only; never reorder
+/// or reuse existing values.
+enum ppsProduct : ubyte {
+  Attitude,
+  Power,
+  Sensor,
+  RelativeMotion
+}
+
+/// Outcome of a run. Append new values only; never reorder or reuse existing
+/// values.
+enum ppsStatus : ubyte {
+  /// A request, not yet run.
+  Pending,
+  /// The run completed with every constraint met.
+  Nominal,
+  /// The run completed but a constraint was violated (battery floor, pointing
+  /// budget, wheel saturation); see the telemetry and ASSUMPTIONS.
+  Degraded,
+  InvalidRequest,
+  Failed
+}
+
+/// One pointing-mode interval.
+table ppsPointingSegment {
+  MODE: ppsAttitudeMode = Unspecified;
+  /// Seconds from the start of the scenario when the mode begins; it lasts
+  /// until the next segment or the end.
+  START_S: double;
+  /// Target of TargetTracking: a space object or site identifier; empty = none.
+  TARGET_ID: string;
+  /// Body axis to point, unit vector in body axes, 3 values; empty = the
+  /// mode's default.
+  BODY_AXIS: [double];
+  /// InertialHold: target attitude; empty = hold the attitude at entry.
+  ATTITUDE: attitudeState;
+}
+
+/// The solar array.
+table ppsSolarArray {
+  /// Active area, m^2.
+  AREA_M2: double;
+  /// Cell efficiency at the operating temperature, 0-1; 0 = the
+  /// simulator's default.
+  EFFICIENCY: double;
+  /// Solar irradiance at 1 AU, W/m^2; 0 = 1361.
+  SOLAR_CONSTANT_W_M2: double;
+  /// Array normal in body axes, unit vector, 3 values; empty = the
+  /// simulator's default.
+  NORMAL_BODY: [double];
+  /// Fractional loss of output per year; 0 = none.
+  DEGRADATION_PER_YEAR: double;
+}
+
+/// The battery.
+table ppsBattery {
+  /// Usable capacity, Wh; 0 = from BUS_SPECIFICATION.BATTERY_CAPACITY, else the
+  /// simulator's default.
+  CAPACITY_WH: double;
+  /// State of charge at the start, 0-1; NaN = the simulator's default.
+  INITIAL_STATE_OF_CHARGE: double = nan;
+  /// Lowest state of charge allowed, 0-1; 0 = none.
+  MIN_STATE_OF_CHARGE: double;
+  /// Charge and discharge efficiency, 0-1; 0 = 1.
+  CHARGE_EFFICIENCY: double;
+  DISCHARGE_EFFICIENCY: double;
+}
+
+/// The scenario: what to simulate.
+table ppsScenario {
+  /// Identifier of the scenario.
+  SCENARIO_ID: string;
+  /// Human-readable name.
+  NAME: string;
+  /// Unix milliseconds of the start; 0 = relative time only.
+  START_EPOCH_MS: int64;
+  /// Duration and output step, s.
+  DURATION_S: double;
+  STEP_S: double;
+  /// The spacecraft whose scenario this is (catalog number or name).
+  OBJECT_ID: string;
+  /// The bus, when described.
+  BUS_SPECIFICATION: BUS;
+  /// The trajectory over the span (for Sun, eclipse and target geometry);
+  /// empty = the simulator's own orbit model.
+  TRAJECTORY: ephemerisDataBlock;
+  /// Pointing modes, in time order; empty = one mode for the whole span.
+  POINTING: [ppsPointingSegment];
+  /// Attitude at the start; empty = derived from the first mode.
+  INITIAL_ATTITUDE: attitudeState;
+  /// Pointing error at the start, deg.
+  INITIAL_POINTING_ERROR_DEG: double;
+  /// Body rate magnitude at the start, deg/s.
+  INITIAL_BODY_RATE_DEG_S: double;
+  /// Reaction-wheel momentum magnitude at the start, N m s.
+  INITIAL_WHEEL_MOMENTUM_NMS: double;
+  /// Largest wheel momentum before saturation, N m s; 0 = not limited.
+  WHEEL_MOMENTUM_CAPACITY_NMS: double;
+  /// Pointing error below which the mode is fine tracking, deg; 0 = the
+  /// simulator's default.
+  FINE_POINTING_THRESHOLD_DEG: double;
+  SOLAR_ARRAY: ppsSolarArray;
+  BATTERY: ppsBattery;
+  /// Constant electrical load, W; 0 = the simulator's default.
+  BUS_LOAD_W: double;
+  /// Attitude sensor noise, arcsec, 1 sigma.
+  SENSOR_NOISE_ARCSEC: double;
+  /// Target of the relative-position series; empty = none.
+  RELATIVE_TARGET_ID: string;
+}
+
+/// The telemetry: simulated time series, column-major and parallel. An empty
+/// series was not produced.
+table ppsTelemetry {
+  /// Number of samples; every per-sample series has this many entries (three
+  /// or four times as many for vectors).
+  SAMPLE_COUNT: uint32;
+  /// Seconds from the scenario start, one per sample.
+  ELAPSED_S: [double];
+  /// Active pointing mode.
+  MODE: [ppsAttitudeMode];
+  /// Pointing error, deg.
+  POINTING_ERROR_DEG: [double];
+  /// Body rate magnitude, deg/s.
+  BODY_RATE_DEG_S: [double];
+  /// Body angular velocity in body axes, deg/s, 3 per sample.
+  BODY_RATE_VECTOR_DEG_S: [double];
+  /// Attitude quaternion inertial-to-body, scalar last (q1, q2, q3, qc), 4
+  /// per sample.
+  ATTITUDE_QUATERNION: [double];
+  /// Reaction-wheel momentum magnitude, N m s.
+  WHEEL_MOMENTUM_NMS: [double];
+  /// Attitude sensor noise, arcsec, 1 sigma.
+  SENSOR_NOISE_ARCSEC: [double];
+  /// Position relative to RELATIVE_TARGET_ID in the target's radial,
+  /// in-track, cross-track axes, m, 3 per sample.
+  RELATIVE_POSITION_M: [double];
+  /// Fraction of full sunlight on the array (0 in eclipse, 1 at normal
+  /// incidence with no eclipse), 0-1.
+  ILLUMINATION: [double];
+  /// True while the spacecraft is in eclipse.
+  IN_ECLIPSE: [bool];
+  /// Power generated by the array, W.
+  GENERATED_POWER_W: [double];
+  /// Electrical load, W.
+  LOAD_POWER_W: [double];
+  /// Generated minus load, W (positive = charging).
+  NET_POWER_W: [double];
+  /// Battery state of charge, 0-1.
+  BATTERY_STATE_OF_CHARGE: [double];
+  /// Battery stored energy, Wh.
+  BATTERY_ENERGY_WH: [double];
+}
+
+/// Pointing and Power Scenario - a scenario, and the telemetry a run of it
+/// produced.
+table PPS {
+  /// Identifier of the run; empty = not assigned.
+  RUN_ID: string;
+  /// Unix milliseconds the run was made.
+  CREATED_AT_MS: int64;
+  /// Identifier of the simulator that ran it.
+  PROVIDER: string;
+  SCENARIO: ppsScenario;
+  STATUS: ppsStatus = Pending;
+  /// Stable machine-readable reason for InvalidRequest or Failed.
+  ERROR_CODE: string;
+  ERROR_MESSAGE: string;
+  /// Products the telemetry carries.
+  PRODUCTS: [ppsProduct];
+  /// Modelling assumptions and simplifications of the run, as text.
+  ASSUMPTIONS: [string];
+  TELEMETRY: ppsTelemetry;
+}
+
+root_type PPS;
+file_identifier "$PPS";

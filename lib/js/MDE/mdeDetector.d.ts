@@ -1,0 +1,30 @@
+/**
+ * A detection test. Append new values only; never reorder or reuse existing
+ * values.
+ */
+export declare enum mdeDetector {
+    /**
+     * Not stated.
+     */
+    Unspecified = 0,
+    /**
+     * D1: in-track and cross-track velocity step at the crossing of the
+     * predictions of consecutive element sets, against a robust threshold.
+     */
+    Crossing = 1,
+    /**
+     * D2: GLR test for a step in the mean-motion level (in-track) or the
+     * orbit plane (cross-track).
+     */
+    LevelShift = 2,
+    /**
+     * D3: GLR test for a change in the long-term rate of the mean-motion
+     * level (decay or thrusting).
+     */
+    RateChange = 3,
+    /**
+     * C: the combination of tests, merged within a time tolerance.
+     */
+    Combined = 4
+}
+//# sourceMappingURL=mdeDetector.d.ts.map

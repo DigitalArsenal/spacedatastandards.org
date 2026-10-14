@@ -19,7 +19,7 @@ import FlatBuffers
 ///  an operator, or seen on a live connection. A set carries every row the
 ///  emitting node currently admits and the emitting node's own row.
 ///  One known peer as reported by the emitting node.
-public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NSTNode: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -59,6 +59,7 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
     static let EPM_CID: VOffset = 54
     static let STORAGE_DAEMON_VERSION: VOffset = 56
     static let ONION_ADDRESS: VOffset = 58
+    static let STANDARDS: VOffset = 60
   }
 
   ///  Peer identifier (multihash, base58).
@@ -130,7 +131,9 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   ///  network.
   public var ONION_ADDRESS: String? { let o = _accessor.offset(VT.ONION_ADDRESS); return o == 0 ? nil : _accessor.string(at: o) }
   public var ONION_ADDRESSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ONION_ADDRESS) }
-  public static func startNSTNode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 28) }
+  ///  Standards the peer publishes or serves, as their codes, e.g. "OMM".
+  public var STANDARDS: FlatbufferVector<String?> { return _accessor.vector(at: VT.STANDARDS, byteSize: 4) }
+  public static func startNSTNode(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 29) }
   public static func add(PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PEER_ID, at: VT.PEER_ID) }
   public static func add(DN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DN, at: VT.DN) }
   public static func add(ORGANIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORGANIZATION, at: VT.ORGANIZATION) }
@@ -162,6 +165,7 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   public static func add(EPM_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPM_CID, at: VT.EPM_CID) }
   public static func add(STORAGE_DAEMON_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STORAGE_DAEMON_VERSION, at: VT.STORAGE_DAEMON_VERSION) }
   public static func add(ONION_ADDRESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ONION_ADDRESS, at: VT.ONION_ADDRESS) }
+  public static func addVectorOf(STANDARDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STANDARDS, at: VT.STANDARDS) }
   public static func endNSTNode(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createNSTNode(
     _ fbb: inout FlatBufferBuilder,
@@ -192,7 +196,8 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
     ENCRYPTION_PUBLIC_KEYOffset ENCRYPTION_PUBLIC_KEY: Offset = Offset(),
     EPM_CIDOffset EPM_CID: Offset = Offset(),
     STORAGE_DAEMON_VERSIONOffset STORAGE_DAEMON_VERSION: Offset = Offset(),
-    ONION_ADDRESSOffset ONION_ADDRESS: Offset = Offset()
+    ONION_ADDRESSOffset ONION_ADDRESS: Offset = Offset(),
+    STANDARDSVectorOffset STANDARDS: Offset = Offset()
   ) -> Offset {
     let __start = NSTNode.startNSTNode(&fbb)
     NSTNode.add(PEER_ID: PEER_ID, &fbb)
@@ -223,6 +228,7 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
     NSTNode.add(EPM_CID: EPM_CID, &fbb)
     NSTNode.add(STORAGE_DAEMON_VERSION: STORAGE_DAEMON_VERSION, &fbb)
     NSTNode.add(ONION_ADDRESS: ONION_ADDRESS, &fbb)
+    NSTNode.addVectorOf(STANDARDS: STANDARDS, &fbb)
     return NSTNode.endNSTNode(&fbb, start: __start)
   }
 
@@ -256,12 +262,13 @@ public struct NSTNode: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
     try _v.visit(field: VT.EPM_CID, fieldName: "EPM_CID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.STORAGE_DAEMON_VERSION, fieldName: "STORAGE_DAEMON_VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ONION_ADDRESS, fieldName: "ONION_ADDRESS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STANDARDS, fieldName: "STANDARDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }
 
 ///  Node Status Record - the set of peers a node reports.
-public struct NST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NST: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -276,6 +283,7 @@ public struct NST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let NODES: VOffset = 4
     static let GENERATED_AT: VOffset = 6
     static let SOURCE_PEER_ID: VOffset = 8
+    static let ETAG: VOffset = 10
   }
 
   public var NODES: FlatbufferVector<NSTNode> { return _accessor.vector(at: VT.NODES, byteSize: 4) }
@@ -284,21 +292,27 @@ public struct NST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   ///  Peer identifier of the emitting node.
   public var SOURCE_PEER_ID: String? { let o = _accessor.offset(VT.SOURCE_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_PEER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_PEER_ID) }
-  public static func startNST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Entity tag of this set, for conditional requests.
+  public var ETAG: String? { let o = _accessor.offset(VT.ETAG); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ETAGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ETAG) }
+  public static func startNST(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func addVectorOf(NODES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODES, at: VT.NODES) }
   public static func add(GENERATED_AT: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GENERATED_AT, def: 0, at: VT.GENERATED_AT) }
   public static func add(SOURCE_PEER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_PEER_ID, at: VT.SOURCE_PEER_ID) }
+  public static func add(ETAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETAG, at: VT.ETAG) }
   public static func endNST(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createNST(
     _ fbb: inout FlatBufferBuilder,
     NODESVectorOffset NODES: Offset = Offset(),
     GENERATED_AT: Int64 = 0,
-    SOURCE_PEER_IDOffset SOURCE_PEER_ID: Offset = Offset()
+    SOURCE_PEER_IDOffset SOURCE_PEER_ID: Offset = Offset(),
+    ETAGOffset ETAG: Offset = Offset()
   ) -> Offset {
     let __start = NST.startNST(&fbb)
     NST.addVectorOf(NODES: NODES, &fbb)
     NST.add(GENERATED_AT: GENERATED_AT, &fbb)
     NST.add(SOURCE_PEER_ID: SOURCE_PEER_ID, &fbb)
+    NST.add(ETAG: ETAG, &fbb)
     return NST.endNST(&fbb, start: __start)
   }
 
@@ -307,6 +321,7 @@ public struct NST: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.NODES, fieldName: "NODES", required: false, type: ForwardOffset<Vector<ForwardOffset<NSTNode>, NSTNode>>.self)
     try _v.visit(field: VT.GENERATED_AT, fieldName: "GENERATED_AT", required: false, type: Int64.self)
     try _v.visit(field: VT.SOURCE_PEER_ID, fieldName: "SOURCE_PEER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ETAG, fieldName: "ETAG", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

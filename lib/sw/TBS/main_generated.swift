@@ -76,7 +76,7 @@ public enum tbsMergeMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
 ///  and returned nothing". Provider identity is DATA: PROVIDER_ID and AUTHORITY
 ///  carry verbatim what that provider states about itself. The standard names
 ///  no provider, dataset, or site.
-public struct TBSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TBSProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -223,7 +223,7 @@ public struct TBSProvenance: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 
 ///  How one site's independent provider reports were reduced to the single
 ///  published position, and how strongly those reports agreed.
-public struct TBSConsensus: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TBSConsensus: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -327,7 +327,7 @@ public struct TBSConsensus: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 ///  Identity is ID, the publisher's own. The network addressing fields are the
 ///  mobile network's, are assigned by its operator, and are reused worldwide;
 ///  none of them is a global key on its own.
-public struct TBS: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct TBS: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

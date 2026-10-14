@@ -71,7 +71,7 @@ public enum DCState: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 
 ///  Naval Vessels
-public struct NAV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct NAV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

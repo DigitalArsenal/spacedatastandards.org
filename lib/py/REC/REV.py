@@ -279,7 +279,7 @@ def REVCreateREVIEWER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateREVIEWER_SIGNATUREVector(builder, data):
-    REVCreateREVIEWER_SIGNATUREVector(builder, data)
+    return REVCreateREVIEWER_SIGNATUREVector(builder, data)
 
 def REVAddQUALITY_METRICS(builder, QUALITY_METRICS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(QUALITY_METRICS), 0)

@@ -932,7 +932,7 @@ def TRKCreateSRC_TYPSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_TYPSVector(builder, data):
-    TRKCreateSRC_TYPSVector(builder, data)
+    return TRKCreateSRC_TYPSVector(builder, data)
 
 def TRKAddSRC_IDS(builder, SRC_IDS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
@@ -950,7 +950,7 @@ def TRKCreateSRC_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSRC_IDSVector(builder, data):
-    TRKCreateSRC_IDSVector(builder, data)
+    return TRKCreateSRC_IDSVector(builder, data)
 
 def TRKAddCALL_SIGN(builder, CALL_SIGN):
     builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
@@ -1028,7 +1028,7 @@ def TRKCreateTAGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateTAGSVector(builder, data):
-    TRKCreateTAGSVector(builder, data)
+    return TRKCreateTAGSVector(builder, data)
 
 def TRKAddTRACK_START_TIME(builder, TRACK_START_TIME):
     builder.PrependUOffsetTRelativeSlot(48, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_START_TIME), 0)
@@ -1068,7 +1068,7 @@ def TRKCreateECEF_POSVector(builder, data):
     return builder.EndVector()
 
 def CreateECEF_POSVector(builder, data):
-    TRKCreateECEF_POSVector(builder, data)
+    return TRKCreateECEF_POSVector(builder, data)
 
 def TRKAddECEF_VEL(builder, ECEF_VEL):
     builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_VEL), 0)
@@ -1090,7 +1090,7 @@ def TRKCreateECEF_VELVector(builder, data):
     return builder.EndVector()
 
 def CreateECEF_VELVector(builder, data):
-    TRKCreateECEF_VELVector(builder, data)
+    return TRKCreateECEF_VELVector(builder, data)
 
 def TRKAddECEF_ACC(builder, ECEF_ACC):
     builder.PrependUOffsetTRelativeSlot(53, flatbuffers.number_types.UOffsetTFlags.py_type(ECEF_ACC), 0)
@@ -1112,7 +1112,7 @@ def TRKCreateECEF_ACCVector(builder, data):
     return builder.EndVector()
 
 def CreateECEF_ACCVector(builder, data):
-    TRKCreateECEF_ACCVector(builder, data)
+    return TRKCreateECEF_ACCVector(builder, data)
 
 def TRKAddLC_POS(builder, LC_POS):
     builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(LC_POS), 0)
@@ -1134,7 +1134,7 @@ def TRKCreateLC_POSVector(builder, data):
     return builder.EndVector()
 
 def CreateLC_POSVector(builder, data):
-    TRKCreateLC_POSVector(builder, data)
+    return TRKCreateLC_POSVector(builder, data)
 
 def TRKAddLC_VEL(builder, LC_VEL):
     builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(LC_VEL), 0)
@@ -1156,7 +1156,7 @@ def TRKCreateLC_VELVector(builder, data):
     return builder.EndVector()
 
 def CreateLC_VELVector(builder, data):
-    TRKCreateLC_VELVector(builder, data)
+    return TRKCreateLC_VELVector(builder, data)
 
 def TRKAddLC_ACC(builder, LC_ACC):
     builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(LC_ACC), 0)
@@ -1178,7 +1178,7 @@ def TRKCreateLC_ACCVector(builder, data):
     return builder.EndVector()
 
 def CreateLC_ACCVector(builder, data):
-    TRKCreateLC_ACCVector(builder, data)
+    return TRKCreateLC_ACCVector(builder, data)
 
 def TRKAddCOV(builder, COV):
     builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(COV), 0)
@@ -1200,7 +1200,7 @@ def TRKCreateCOVVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVVector(builder, data):
-    TRKCreateCOVVector(builder, data)
+    return TRKCreateCOVVector(builder, data)
 
 def TRKAddERR_ELLP(builder, ERR_ELLP):
     builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(ERR_ELLP), 0)
@@ -1222,7 +1222,7 @@ def TRKCreateERR_ELLPVector(builder, data):
     return builder.EndVector()
 
 def CreateERR_ELLPVector(builder, data):
-    TRKCreateERR_ELLPVector(builder, data)
+    return TRKCreateERR_ELLPVector(builder, data)
 
 def TRKEnd(builder):
     return builder.EndObject()

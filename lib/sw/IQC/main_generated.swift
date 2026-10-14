@@ -54,7 +54,7 @@ public enum iqcCustody: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 ///  A separate table because latitude/longitude 0,0 is a VALID coordinate: an
 ///  absent GEOLOCATION means "the source published no position", which a
 ///  zero-defaulted scalar pair could never express.
-public struct IQCGeolocation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQCGeolocation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -127,7 +127,7 @@ public struct IQCGeolocation: FlatBufferTable, FlatbuffersVectorInitializable, V
 ///  Every field is a verbatim string. SigMF `core:hw` is free text and the
 ///  non-SigMF archives publish nothing more structured; splitting free text
 ///  into a manufacturer and a model by guessing is a defect.
-public struct IQCHardware: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQCHardware: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -200,7 +200,7 @@ public struct IQCHardware: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 ///  One SigMF capture segment: the point in the sample stream at which the
 ///  listed tuning took effect. A retuned or frequency-hopped recording has
 ///  several; a single-tune recording has one.
-public struct IQCSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQCSegment: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -268,7 +268,7 @@ public struct IQCSegment: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  One labelled region of the capture in time and frequency.
-public struct IQCAnnotation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQCAnnotation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -361,7 +361,7 @@ public struct IQCAnnotation: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  A SigMF extension namespace the upstream metadata declares.
-public struct IQCExtension: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQCExtension: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -419,7 +419,7 @@ public struct IQCExtension: FlatBufferTable, FlatbuffersVectorInitializable, Ver
 ///  The record NEVER carries sample bytes. It carries where they are, how big
 ///  they are, and what they hash to, so a consumer can decide for itself
 ///  whether to fetch 400 kB or 127 GB.
-public struct IQCPayloadRef: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQCPayloadRef: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -571,7 +571,7 @@ public struct IQCPayloadRef: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  archived baseband recording itself. $DPM remains the manifest under which
 ///  THIS network publishes a shard of $IQC records; it does not describe an
 ///  upstream third party's capture.
-public struct IQC: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct IQC: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

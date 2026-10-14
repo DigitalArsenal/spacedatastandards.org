@@ -47,6 +47,18 @@ class hostCapabilityKind
     /// single record without source attribution. Hosts gate
     /// storage.ingest_with_source on this capability specifically.
     const STORAGE_INGEST = 36;
+    /// Read the node's view of its peer-to-peer network: known peers, the
+    /// publication notices it has received and verified, and the latest
+    /// dataset of a lane (p2p.* host operations).
+    const P2P_READ = 37;
+    /// Read the node's own health: uptime, service state, storage and network
+    /// figures (node_status_read.status).
+    const NODE_STATUS_READ = 38;
+    /// Read the node's event log (node_activity_read.activity).
+    const NODE_ACTIVITY_READ = 39;
+    /// Read and write operator-held secrets by identifier (credentials for
+    /// upstream sources); the secret value is never persisted in a record.
+    const SECRETS = 40;
 
     private static $names = array(
         hostCapabilityKind::CLOCK=>"CLOCK",
@@ -86,6 +98,10 @@ class hostCapabilityKind
         hostCapabilityKind::CRYPTO_KDF=>"CRYPTO_KDF",
         hostCapabilityKind::SCHEDULE_CRON=>"SCHEDULE_CRON",
         hostCapabilityKind::STORAGE_INGEST=>"STORAGE_INGEST",
+        hostCapabilityKind::P2P_READ=>"P2P_READ",
+        hostCapabilityKind::NODE_STATUS_READ=>"NODE_STATUS_READ",
+        hostCapabilityKind::NODE_ACTIVITY_READ=>"NODE_ACTIVITY_READ",
+        hostCapabilityKind::SECRETS=>"SECRETS",
     );
 
     public static function Name($e)

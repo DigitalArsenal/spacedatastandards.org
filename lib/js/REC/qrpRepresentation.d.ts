@@ -1,0 +1,20 @@
+/**
+ * Representation the client asks the page in. Append new values only; never
+ * reorder or reuse existing values.
+ */
+export declare enum qrpRepresentation {
+    /**
+     * The serving node's default (FlatBuffer records).
+     */
+    Default = 0,
+    /**
+     * Size-prefixed FlatBuffer records of the standard, or ROWS for a
+     * projection.
+     */
+    FlatBuffer = 1,
+    /**
+     * JSON rendering of the same records or rows.
+     */
+    Json = 2
+}
+//# sourceMappingURL=qrpRepresentation.d.ts.map

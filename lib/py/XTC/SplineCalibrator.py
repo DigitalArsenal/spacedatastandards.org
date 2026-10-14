@@ -93,7 +93,7 @@ def SplineCalibratorCreatePOINTSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreatePOINTSVector(builder, data):
-    SplineCalibratorCreatePOINTSVector(builder, data)
+    return SplineCalibratorCreatePOINTSVector(builder, data)
 
 def SplineCalibratorAddEXTRAPOLATE_LOW(builder, EXTRAPOLATE_LOW):
     builder.PrependBoolSlot(1, EXTRAPOLATE_LOW, 0)

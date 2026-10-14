@@ -121,8 +121,22 @@ func (rcv *NST) SourcePeerId() []byte {
 }
 
 /// Peer identifier of the emitting node.
+/// Entity tag of this set, for conditional requests.
+func (rcv *NST) ETAG() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *NST) Etag() []byte {
+	return rcv.ETAG()
+}
+
+/// Entity tag of this set, for conditional requests.
 func NSTStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(4)
 }
 func NSTAddNODES(builder *flatbuffers.Builder, NODES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NODES), 0)
@@ -147,6 +161,12 @@ func NSTAddSOURCE_PEER_ID(builder *flatbuffers.Builder, SOURCE_PEER_ID flatbuffe
 }
 func NSTAddSourcePeerId(builder *flatbuffers.Builder, SOURCE_PEER_ID flatbuffers.UOffsetT) {
 	NSTAddSOURCE_PEER_ID(builder, SOURCE_PEER_ID)
+}
+func NSTAddETAG(builder *flatbuffers.Builder, ETAG flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ETAG), 0)
+}
+func NSTAddEtag(builder *flatbuffers.Builder, ETAG flatbuffers.UOffsetT) {
+	NSTAddETAG(builder, ETAG)
 }
 func NSTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

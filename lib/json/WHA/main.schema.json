@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "whaAssetKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Native", "FungibleToken", "NonFungibleToken"]
+    },
+    "WHAAccount" : {
+      "type" : "object",
+      "description" : "One wallet or account to read.",
+      "properties" : {
+        "CHAIN_ID" : {
+                "type" : "string",
+                "description" : "Chain, as a CAIP-2 chain identifier, e.g. \"eip155:1\",\n\"bip122:000000000019d6689c085ae165831e93\",\n\"solana:5eykt4UsFv8P8NJdTREpY1vzQKqZKvdp\"."
+              },
+        "CHAIN_NAME" : {
+                "type" : "string",
+                "description" : "Short chain label for display, e.g. \"BTC\", \"ETH\", \"SOL\"."
+              },
+        "ADDRESS" : {
+                "type" : "string",
+                "description" : "Address on that chain, as the chain writes it."
+              },
+        "ACCOUNT_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the account record that links this wallet (an $ACT\nACCOUNT_ID), when there is one."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "WHAHolding" : {
+      "type" : "object",
+      "description" : "One asset held at one address.",
+      "properties" : {
+        "CHAIN_ID" : {
+                "type" : "string"
+              },
+        "CHAIN_NAME" : {
+                "type" : "string"
+              },
+        "ADDRESS" : {
+                "type" : "string"
+              },
+        "ASSET_KIND" : {
+                "$ref" : "#/definitions/whaAssetKind"
+              },
+        "SYMBOL" : {
+                "type" : "string",
+                "description" : "Asset symbol as its issuer or quote source names it, e.g. \"ETH\",\n\"USDC\"; a placeholder when it has none."
+              },
+        "CONTRACT" : {
+                "type" : "string",
+                "description" : "Contract address or mint of a token; empty for a native coin. This, not\nSYMBOL, identifies the asset."
+              },
+        "ASSET_ID" : {
+                "type" : "string",
+                "description" : "CAIP-19 asset identifier, when known, e.g.\n\"eip155:1/erc20:0xa0b8...\"."
+              },
+        "AMOUNT" : {
+                "type" : "number",
+                "description" : "Amount held, in whole units of the asset (base units / 10^DECIMALS)."
+              },
+        "AMOUNT_BASE_UNITS" : {
+                "type" : "string",
+                "description" : "Amount held in base units, exact, as a decimal integer string; empty =\nnot reported."
+              },
+        "DECIMALS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Decimal places between base units and whole units; 0 = not stated or\nnone."
+              },
+        "VALUED" : {
+                "type" : "boolean",
+                "description" : "True when the holding was priced; VALUE and PRICE are meaningful only\nthen."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Value of AMOUNT in the attestation's CURRENCY."
+              },
+        "PRICE" : {
+                "type" : "number",
+                "description" : "Price of one whole unit in CURRENCY; 0 = not reported."
+              },
+        "PRICE_SOURCE" : {
+                "type" : "string",
+                "description" : "Where the price came from, e.g. \"coinbase\", \"dexscreener\", or the\nbalance service's own rate."
+              },
+        "BALANCE_SOURCE" : {
+                "type" : "string",
+                "description" : "Where the balance came from, e.g. \"mempool.space\", a public RPC host."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "WHAChain" : {
+      "type" : "object",
+      "description" : "One account's lookup on one chain.",
+      "properties" : {
+        "CHAIN_ID" : {
+                "type" : "string"
+              },
+        "CHAIN_NAME" : {
+                "type" : "string"
+              },
+        "ADDRESS" : {
+                "type" : "string"
+              },
+        "TOKEN_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Assets with a positive amount at this address."
+              },
+        "COMPLETE" : {
+                "type" : "boolean",
+                "description" : "True when every balance at this address was read and every holding was\npriced. When false, VALUE is a partial sum and the chain is named in\nERRORS."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Sum of the priced holdings' values in CURRENCY (complete only when\nCOMPLETE)."
+              },
+        "BLOCK_HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Chain height the balances were read at; 0 = not reported."
+              },
+        "COMMITMENT" : {
+                "type" : "string",
+                "description" : "Commitment level of the read, e.g. \"finalized\", \"latest\", \"confirmed\"."
+              },
+        "ERROR" : {
+                "type" : "string",
+                "description" : "Why the lookup is incomplete; empty when COMPLETE."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "WHA" : {
+      "type" : "object",
+      "description" : "Wallet Holdings Attestation - holdings of wallets across chains and their\nvalue at one time.",
+      "properties" : {
+        "ATTESTATION_ID" : {
+                "type" : "string",
+                "description" : "Identifier of this attestation; empty = not assigned."
+              },
+        "SUBJECT_ID" : {
+                "type" : "string",
+                "description" : "Whose holdings these are: a peer identifier, an account or an\norganization; empty = the attester's own."
+              },
+        "PURPOSE" : {
+                "type" : "string",
+                "description" : "What the attestation is for, e.g. \"security-bond\", \"treasury\",\n\"collateral\"; empty = general."
+              },
+        "ACCOUNTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/WHAAccount"},
+                "description" : "Wallets read (in a request, the wallets to read)."
+              },
+        "HOLDINGS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/WHAHolding"}
+              },
+        "CHAINS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/WHAChain"}
+              },
+        "CURRENCY" : {
+                "type" : "string",
+                "description" : "Valuation currency, ISO 4217 code, e.g. \"USD\"."
+              },
+        "ATTESTED" : {
+                "type" : "boolean",
+                "description" : "True when at least one chain was read, every chain is COMPLETE and\nERRORS is empty: TOTAL_VALUE is then the attested value."
+              },
+        "TOTAL_VALUE" : {
+                "type" : "number",
+                "description" : "Sum of all priced holdings' values in CURRENCY. Meaningful as the\nattested value only when ATTESTED; otherwise a partial sum."
+              },
+        "ERRORS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Problems met, one per line, e.g. \"ETH: lookup incomplete\"; empty when\nATTESTED."
+              },
+        "AS_OF_MS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix milliseconds the holdings were read (the as-of time); 0 in a\nrequest."
+              },
+        "ATTESTER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the attester (a peer identifier or module identifier)."
+              },
+        "SIGNATURE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Attester's signature over the attestation, and its scheme (e.g.\n\"ed25519\"); empty when unsigned."
+              },
+        "SIGNATURE_TYPE" : {
+                "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/WHA"
+}

@@ -135,7 +135,7 @@ def ServiceCreateCONTAINER_REFSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCONTAINER_REFSVector(builder, data):
-    ServiceCreateCONTAINER_REFSVector(builder, data)
+    return ServiceCreateCONTAINER_REFSVector(builder, data)
 
 def ServiceAddCOMMAND_REFS(builder, COMMAND_REFS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(COMMAND_REFS), 0)
@@ -153,7 +153,7 @@ def ServiceCreateCOMMAND_REFSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateCOMMAND_REFSVector(builder, data):
-    ServiceCreateCOMMAND_REFSVector(builder, data)
+    return ServiceCreateCOMMAND_REFSVector(builder, data)
 
 def ServiceEnd(builder):
     return builder.EndObject()

@@ -144,7 +144,7 @@ def VAMValidationCreateERRORSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateERRORSVector(builder, data):
-    VAMValidationCreateERRORSVector(builder, data)
+    return VAMValidationCreateERRORSVector(builder, data)
 
 def VAMValidationAddWARNINGS(builder, WARNINGS):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(WARNINGS), 0)
@@ -162,7 +162,7 @@ def VAMValidationCreateWARNINGSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateWARNINGSVector(builder, data):
-    VAMValidationCreateWARNINGSVector(builder, data)
+    return VAMValidationCreateWARNINGSVector(builder, data)
 
 def VAMValidationEnd(builder):
     return builder.EndObject()

@@ -173,7 +173,7 @@ def ACWGroundStationCreateBLACKOUT_WINDOWSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBLACKOUT_WINDOWSVector(builder, data):
-    ACWGroundStationCreateBLACKOUT_WINDOWSVector(builder, data)
+    return ACWGroundStationCreateBLACKOUT_WINDOWSVector(builder, data)
 
 def ACWGroundStationEnd(builder):
     return builder.EndObject()

@@ -31,7 +31,7 @@ public enum entityKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 ///  Entity Metadata — generic queryable metadata for a host-local entity.
 ///  Participates in shared FlatSQL/WASM runtimes where multiple plugins
 ///  cross-query the same entity collection.
-public struct ETM: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct ETM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

@@ -103,7 +103,7 @@ def CommandContainerCreateENTRY_LISTVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENTRY_LISTVector(builder, data):
-    CommandContainerCreateENTRY_LISTVector(builder, data)
+    return CommandContainerCreateENTRY_LISTVector(builder, data)
 
 def CommandContainerAddBASE_CONTAINER(builder, BASE_CONTAINER):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(BASE_CONTAINER), 0)

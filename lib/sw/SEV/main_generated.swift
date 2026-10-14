@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Space Environment Observation Detail
-public struct SEV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct SEV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

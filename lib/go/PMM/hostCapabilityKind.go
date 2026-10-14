@@ -51,6 +51,18 @@ const (
 	/// single record without source attribution. Hosts gate
 	/// storage.ingest_with_source on this capability specifically.
 	hostCapabilityKindSTORAGE_INGEST       hostCapabilityKind = 36
+	/// Read the node's view of its peer-to-peer network: known peers, the
+	/// publication notices it has received and verified, and the latest
+	/// dataset of a lane (p2p.* host operations).
+	hostCapabilityKindP2P_READ             hostCapabilityKind = 37
+	/// Read the node's own health: uptime, service state, storage and network
+	/// figures (node_status_read.status).
+	hostCapabilityKindNODE_STATUS_READ     hostCapabilityKind = 38
+	/// Read the node's event log (node_activity_read.activity).
+	hostCapabilityKindNODE_ACTIVITY_READ   hostCapabilityKind = 39
+	/// Read and write operator-held secrets by identifier (credentials for
+	/// upstream sources); the secret value is never persisted in a record.
+	hostCapabilityKindSECRETS              hostCapabilityKind = 40
 )
 
 var EnumNameshostCapabilityKind = map[hostCapabilityKind]string{
@@ -91,6 +103,10 @@ var EnumNameshostCapabilityKind = map[hostCapabilityKind]string{
 	hostCapabilityKindCRYPTO_KDF:           "CRYPTO_KDF",
 	hostCapabilityKindSCHEDULE_CRON:        "SCHEDULE_CRON",
 	hostCapabilityKindSTORAGE_INGEST:       "STORAGE_INGEST",
+	hostCapabilityKindP2P_READ:             "P2P_READ",
+	hostCapabilityKindNODE_STATUS_READ:     "NODE_STATUS_READ",
+	hostCapabilityKindNODE_ACTIVITY_READ:   "NODE_ACTIVITY_READ",
+	hostCapabilityKindSECRETS:              "SECRETS",
 }
 
 var EnumValueshostCapabilityKind = map[string]hostCapabilityKind{
@@ -131,6 +147,10 @@ var EnumValueshostCapabilityKind = map[string]hostCapabilityKind{
 	"CRYPTO_KDF":           hostCapabilityKindCRYPTO_KDF,
 	"SCHEDULE_CRON":        hostCapabilityKindSCHEDULE_CRON,
 	"STORAGE_INGEST":       hostCapabilityKindSTORAGE_INGEST,
+	"P2P_READ":             hostCapabilityKindP2P_READ,
+	"NODE_STATUS_READ":     hostCapabilityKindNODE_STATUS_READ,
+	"NODE_ACTIVITY_READ":   hostCapabilityKindNODE_ACTIVITY_READ,
+	"SECRETS":              hostCapabilityKindSECRETS,
 }
 
 func (v hostCapabilityKind) String() string {

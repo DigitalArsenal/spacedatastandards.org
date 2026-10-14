@@ -467,7 +467,7 @@ def CVGCreateCELL_INDEXESVector(builder, data):
     return builder.EndVector()
 
 def CreateCELL_INDEXESVector(builder, data):
-    CVGCreateCELL_INDEXESVector(builder, data)
+    return CVGCreateCELL_INDEXESVector(builder, data)
 
 def CVGAddWINDOW_START(builder, WINDOW_START):
     builder.PrependFloat64Slot(5, WINDOW_START, 0.0)
@@ -503,7 +503,7 @@ def CVGCreateSENSOR_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSENSOR_IDSVector(builder, data):
-    CVGCreateSENSOR_IDSVector(builder, data)
+    return CVGCreateSENSOR_IDSVector(builder, data)
 
 def CVGAddASSET_IDS(builder, ASSET_IDS):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ASSET_IDS), 0)
@@ -521,7 +521,7 @@ def CVGCreateASSET_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSET_IDSVector(builder, data):
-    CVGCreateASSET_IDSVector(builder, data)
+    return CVGCreateASSET_IDSVector(builder, data)
 
 def CVGAddACCESS_COUNTS(builder, ACCESS_COUNTS):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ACCESS_COUNTS), 0)
@@ -543,7 +543,7 @@ def CVGCreateACCESS_COUNTSVector(builder, data):
     return builder.EndVector()
 
 def CreateACCESS_COUNTSVector(builder, data):
-    CVGCreateACCESS_COUNTSVector(builder, data)
+    return CVGCreateACCESS_COUNTSVector(builder, data)
 
 def CVGAddACCESS_TOTAL_S(builder, ACCESS_TOTAL_S):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ACCESS_TOTAL_S), 0)
@@ -565,7 +565,7 @@ def CVGCreateACCESS_TOTAL_SVector(builder, data):
     return builder.EndVector()
 
 def CreateACCESS_TOTAL_SVector(builder, data):
-    CVGCreateACCESS_TOTAL_SVector(builder, data)
+    return CVGCreateACCESS_TOTAL_SVector(builder, data)
 
 def CVGAddREVISIT_MEAN_S(builder, REVISIT_MEAN_S):
     builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(REVISIT_MEAN_S), 0)
@@ -587,7 +587,7 @@ def CVGCreateREVISIT_MEAN_SVector(builder, data):
     return builder.EndVector()
 
 def CreateREVISIT_MEAN_SVector(builder, data):
-    CVGCreateREVISIT_MEAN_SVector(builder, data)
+    return CVGCreateREVISIT_MEAN_SVector(builder, data)
 
 def CVGAddREVISIT_MAX_S(builder, REVISIT_MAX_S):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(REVISIT_MAX_S), 0)
@@ -609,7 +609,7 @@ def CVGCreateREVISIT_MAX_SVector(builder, data):
     return builder.EndVector()
 
 def CreateREVISIT_MAX_SVector(builder, data):
-    CVGCreateREVISIT_MAX_SVector(builder, data)
+    return CVGCreateREVISIT_MAX_SVector(builder, data)
 
 def CVGAddRESPONSE_MEAN_S(builder, RESPONSE_MEAN_S):
     builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(RESPONSE_MEAN_S), 0)
@@ -631,7 +631,7 @@ def CVGCreateRESPONSE_MEAN_SVector(builder, data):
     return builder.EndVector()
 
 def CreateRESPONSE_MEAN_SVector(builder, data):
-    CVGCreateRESPONSE_MEAN_SVector(builder, data)
+    return CVGCreateRESPONSE_MEAN_SVector(builder, data)
 
 def CVGAddRESPONSE_MAX_S(builder, RESPONSE_MAX_S):
     builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(RESPONSE_MAX_S), 0)
@@ -653,7 +653,7 @@ def CVGCreateRESPONSE_MAX_SVector(builder, data):
     return builder.EndVector()
 
 def CreateRESPONSE_MAX_SVector(builder, data):
-    CVGCreateRESPONSE_MAX_SVector(builder, data)
+    return CVGCreateRESPONSE_MAX_SVector(builder, data)
 
 def CVGAddGAP_MAX_S(builder, GAP_MAX_S):
     builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(GAP_MAX_S), 0)
@@ -675,7 +675,7 @@ def CVGCreateGAP_MAX_SVector(builder, data):
     return builder.EndVector()
 
 def CreateGAP_MAX_SVector(builder, data):
-    CVGCreateGAP_MAX_SVector(builder, data)
+    return CVGCreateGAP_MAX_SVector(builder, data)
 
 def CVGAddCOVERAGE_FRACTION(builder, COVERAGE_FRACTION):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(COVERAGE_FRACTION), 0)
@@ -697,7 +697,7 @@ def CVGCreateCOVERAGE_FRACTIONVector(builder, data):
     return builder.EndVector()
 
 def CreateCOVERAGE_FRACTIONVector(builder, data):
-    CVGCreateCOVERAGE_FRACTIONVector(builder, data)
+    return CVGCreateCOVERAGE_FRACTIONVector(builder, data)
 
 def CVGAddCOMPUTED_AT(builder, COMPUTED_AT):
     builder.PrependUint64Slot(18, COMPUTED_AT, 0)
@@ -725,7 +725,7 @@ def CVGCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    CVGCreateSIGNATUREVector(builder, data)
+    return CVGCreateSIGNATUREVector(builder, data)
 
 def CVGEnd(builder):
     return builder.EndObject()

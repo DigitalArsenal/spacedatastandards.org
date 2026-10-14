@@ -307,7 +307,7 @@ def DPMCreateASSETSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateASSETSVector(builder, data):
-    DPMCreateASSETSVector(builder, data)
+    return DPMCreateASSETSVector(builder, data)
 
 def DPMAddSOURCES(builder, SOURCES):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCES), 0)
@@ -325,7 +325,7 @@ def DPMCreateSOURCESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSOURCESVector(builder, data):
-    DPMCreateSOURCESVector(builder, data)
+    return DPMCreateSOURCESVector(builder, data)
 
 def DPMAddQUERY(builder, QUERY):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(QUERY), 0)
@@ -349,7 +349,7 @@ def DPMCreateINDEXESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINDEXESVector(builder, data):
-    DPMCreateINDEXESVector(builder, data)
+    return DPMCreateINDEXESVector(builder, data)
 
 def DPMAddENCRYPTION(builder, ENCRYPTION):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ENCRYPTION), 0)
@@ -377,7 +377,7 @@ def DPMCreatePROVIDER_SIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreatePROVIDER_SIGNATUREVector(builder, data):
-    DPMCreatePROVIDER_SIGNATUREVector(builder, data)
+    return DPMCreatePROVIDER_SIGNATUREVector(builder, data)
 
 def DPMAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)

@@ -1,0 +1,310 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "whaAssetKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Native",
+        "FungibleToken",
+        "NonFungibleToken"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "Native": {
+          "value": 1,
+          "description": "The chain's native coin (BTC, ETH, SOL, ...)."
+        },
+        "FungibleToken": {
+          "value": 2,
+          "description": "A fungible token issued by a contract or mint (ERC-20, SPL, ...)."
+        },
+        "NonFungibleToken": {
+          "value": 3,
+          "description": "A non-fungible token (an attestation of value normally leaves these out)."
+        }
+      }
+    },
+    "WHAAccount": {
+      "type": "object",
+      "description": "One wallet or account to read.",
+      "properties": {
+        "CHAIN_ID": {
+          "type": "string",
+          "description": "Chain, as a CAIP-2 chain identifier, e.g. \"eip155:1\",\n\"bip122:000000000019d6689c085ae165831e93\",\n\"solana:5eykt4UsFv8P8NJdTREpY1vzQKqZKvdp\".",
+          "x-flatbuffer-type": "string"
+        },
+        "CHAIN_NAME": {
+          "type": "string",
+          "description": "Short chain label for display, e.g. \"BTC\", \"ETH\", \"SOL\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "type": "string",
+          "description": "Address on that chain, as the chain writes it.",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCOUNT_ID": {
+          "type": "string",
+          "description": "Identifier of the account record that links this wallet (an $ACT\nACCOUNT_ID), when there is one.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WHAHolding": {
+      "type": "object",
+      "description": "One asset held at one address.",
+      "properties": {
+        "CHAIN_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHAIN_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET_KIND": {
+          "$ref": "#/definitions/whaAssetKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "Native": {
+              "value": 1,
+              "description": "The chain's native coin (BTC, ETH, SOL, ...)."
+            },
+            "FungibleToken": {
+              "value": 2,
+              "description": "A fungible token issued by a contract or mint (ERC-20, SPL, ...)."
+            },
+            "NonFungibleToken": {
+              "value": 3,
+              "description": "A non-fungible token (an attestation of value normally leaves these out)."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "SYMBOL": {
+          "type": "string",
+          "description": "Asset symbol as its issuer or quote source names it, e.g. \"ETH\",\n\"USDC\"; a placeholder when it has none.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTRACT": {
+          "type": "string",
+          "description": "Contract address or mint of a token; empty for a native coin. This, not\nSYMBOL, identifies the asset.",
+          "x-flatbuffer-type": "string"
+        },
+        "ASSET_ID": {
+          "type": "string",
+          "description": "CAIP-19 asset identifier, when known, e.g.\n\"eip155:1/erc20:0xa0b8...\".",
+          "x-flatbuffer-type": "string"
+        },
+        "AMOUNT": {
+          "type": "number",
+          "description": "Amount held, in whole units of the asset (base units / 10^DECIMALS).",
+          "x-flatbuffer-type": "double"
+        },
+        "AMOUNT_BASE_UNITS": {
+          "type": "string",
+          "description": "Amount held in base units, exact, as a decimal integer string; empty =\nnot reported.",
+          "x-flatbuffer-type": "string"
+        },
+        "DECIMALS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Decimal places between base units and whole units; 0 = not stated or\nnone.",
+          "x-flatbuffer-type": "uint8"
+        },
+        "VALUED": {
+          "type": "boolean",
+          "description": "True when the holding was priced; VALUE and PRICE are meaningful only\nthen.",
+          "x-flatbuffer-type": "bool"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Value of AMOUNT in the attestation's CURRENCY.",
+          "x-flatbuffer-type": "double"
+        },
+        "PRICE": {
+          "type": "number",
+          "description": "Price of one whole unit in CURRENCY; 0 = not reported.",
+          "x-flatbuffer-type": "double"
+        },
+        "PRICE_SOURCE": {
+          "type": "string",
+          "description": "Where the price came from, e.g. \"coinbase\", \"dexscreener\", or the\nbalance service's own rate.",
+          "x-flatbuffer-type": "string"
+        },
+        "BALANCE_SOURCE": {
+          "type": "string",
+          "description": "Where the balance came from, e.g. \"mempool.space\", a public RPC host.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WHAChain": {
+      "type": "object",
+      "description": "One account's lookup on one chain.",
+      "properties": {
+        "CHAIN_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CHAIN_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ADDRESS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TOKEN_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Assets with a positive amount at this address.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "COMPLETE": {
+          "type": "boolean",
+          "description": "True when every balance at this address was read and every holding was\npriced. When false, VALUE is a partial sum and the chain is named in\nERRORS.",
+          "x-flatbuffer-type": "bool"
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Sum of the priced holdings' values in CURRENCY (complete only when\nCOMPLETE).",
+          "x-flatbuffer-type": "double"
+        },
+        "BLOCK_HEIGHT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Chain height the balances were read at; 0 = not reported.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "COMMITMENT": {
+          "type": "string",
+          "description": "Commitment level of the read, e.g. \"finalized\", \"latest\", \"confirmed\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ERROR": {
+          "type": "string",
+          "description": "Why the lookup is incomplete; empty when COMPLETE.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "WHA": {
+      "type": "object",
+      "description": "Wallet Holdings Attestation - holdings of wallets across chains and their\nvalue at one time.",
+      "properties": {
+        "ATTESTATION_ID": {
+          "type": "string",
+          "description": "Identifier of this attestation; empty = not assigned.",
+          "x-flatbuffer-type": "string"
+        },
+        "SUBJECT_ID": {
+          "type": "string",
+          "description": "Whose holdings these are: a peer identifier, an account or an\norganization; empty = the attester's own.",
+          "x-flatbuffer-type": "string"
+        },
+        "PURPOSE": {
+          "type": "string",
+          "description": "What the attestation is for, e.g. \"security-bond\", \"treasury\",\n\"collateral\"; empty = general.",
+          "x-flatbuffer-type": "string"
+        },
+        "ACCOUNTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WHAAccount"
+          },
+          "description": "Wallets read (in a request, the wallets to read).",
+          "x-flatbuffer-type": "[WHAAccount]"
+        },
+        "HOLDINGS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WHAHolding"
+          },
+          "x-flatbuffer-type": "[WHAHolding]"
+        },
+        "CHAINS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WHAChain"
+          },
+          "x-flatbuffer-type": "[WHAChain]"
+        },
+        "CURRENCY": {
+          "type": "string",
+          "description": "Valuation currency, ISO 4217 code, e.g. \"USD\".",
+          "x-flatbuffer-type": "string"
+        },
+        "ATTESTED": {
+          "type": "boolean",
+          "description": "True when at least one chain was read, every chain is COMPLETE and\nERRORS is empty: TOTAL_VALUE is then the attested value.",
+          "x-flatbuffer-type": "bool"
+        },
+        "TOTAL_VALUE": {
+          "type": "number",
+          "description": "Sum of all priced holdings' values in CURRENCY. Meaningful as the\nattested value only when ATTESTED; otherwise a partial sum.",
+          "x-flatbuffer-type": "double"
+        },
+        "ERRORS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Problems met, one per line, e.g. \"ETH: lookup incomplete\"; empty when\nATTESTED.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "AS_OF_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds the holdings were read (the as-of time); 0 in a\nrequest.",
+          "x-flatbuffer-type": "int64"
+        },
+        "ATTESTER_ID": {
+          "type": "string",
+          "description": "Identifier of the attester (a peer identifier or module identifier).",
+          "x-flatbuffer-type": "string"
+        },
+        "SIGNATURE": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Attester's signature over the attestation, and its scheme (e.g.\n\"ed25519\"); empty when unsigned.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "SIGNATURE_TYPE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/WHA",
+  "x-flatbuffer-root-type": "WHA",
+  "x-flatbuffer-file-identifier": "$WHA"
+}

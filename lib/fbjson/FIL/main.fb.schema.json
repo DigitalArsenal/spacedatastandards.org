@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "filEntryKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "File",
+        "Directory",
+        "Link"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated."
+        },
+        "File": {
+          "value": 1,
+          "description": "A regular file."
+        },
+        "Directory": {
+          "value": 2,
+          "description": "A directory."
+        },
+        "Link": {
+          "value": 3,
+          "description": "A symbolic link."
+        }
+      }
+    },
+    "filDigestAlgorithm": {
+      "type": "string",
+      "enum": [
+        "None",
+        "SHA256",
+        "SHA512",
+        "BLAKE3"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "None": {
+          "value": 0
+        },
+        "SHA256": {
+          "value": 1
+        },
+        "SHA512": {
+          "value": 2
+        },
+        "BLAKE3": {
+          "value": 3
+        }
+      }
+    },
+    "FILEntry": {
+      "type": "object",
+      "description": "One entry of a directory listing.",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "Entry name within the directory.",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/filEntryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "File": {
+              "value": 1,
+              "description": "A regular file."
+            },
+            "Directory": {
+              "value": 2,
+              "description": "A directory."
+            },
+            "Link": {
+              "value": 3,
+              "description": "A symbolic link."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size in bytes; 0 for a directory.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "MODIFIED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of the last modification; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        }
+      },
+      "additionalProperties": false
+    },
+    "FIL": {
+      "type": "object",
+      "description": "File - a file, its description and, when being moved, its content.",
+      "properties": {
+        "PATH": {
+          "type": "string",
+          "description": "Path of the file as the system holding it names it (relative paths are\nrelative to that system's root for the caller).",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "File name (the last element of PATH), for display.",
+          "x-flatbuffer-type": "string"
+        },
+        "KIND": {
+          "$ref": "#/definitions/filEntryKind",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated."
+            },
+            "File": {
+              "value": 1,
+              "description": "A regular file."
+            },
+            "Directory": {
+              "value": 2,
+              "description": "A directory."
+            },
+            "Link": {
+              "value": 3,
+              "description": "A symbolic link."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "MEDIA_TYPE": {
+          "type": "string",
+          "description": "Media type, e.g. \"text/csv\", \"application/octet-stream\".",
+          "x-flatbuffer-type": "string"
+        },
+        "SIZE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size of the file in bytes.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "CREATED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of creation; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "MODIFIED_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds of the last modification; 0 = unknown.",
+          "x-flatbuffer-type": "int64"
+        },
+        "DIGEST_ALGORITHM": {
+          "$ref": "#/definitions/filDigestAlgorithm",
+          "description": "Digest of the content.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "None": {
+              "value": 0
+            },
+            "SHA256": {
+              "value": 1
+            },
+            "SHA512": {
+              "value": 2
+            },
+            "BLAKE3": {
+              "value": 3
+            }
+          },
+          "x-flatbuffer-default": "None"
+        },
+        "DIGEST": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "CONTENT": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "The content verbatim; empty when only the description travels.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "APPEND": {
+          "type": "boolean",
+          "description": "Content was appended to the existing file rather than replacing it.",
+          "x-flatbuffer-type": "bool"
+        },
+        "WRITTEN_AT_MS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix milliseconds when the content was written; set in the answer to a\nwrite.",
+          "x-flatbuffer-type": "int64"
+        },
+        "ENTRIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FILEntry"
+          },
+          "description": "Entries of a directory listing, sorted by NAME.",
+          "x-flatbuffer-type": "[FILEntry]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FIL",
+  "x-flatbuffer-root-type": "FIL",
+  "x-flatbuffer-file-identifier": "$FIL"
+}

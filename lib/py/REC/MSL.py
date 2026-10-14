@@ -485,7 +485,7 @@ def MSLCreateRESERVEDVector(builder, data):
     return builder.EndVector()
 
 def CreateRESERVEDVector(builder, data):
-    MSLCreateRESERVEDVector(builder, data)
+    return MSLCreateRESERVEDVector(builder, data)
 
 def MSLEnd(builder):
     return builder.EndObject()

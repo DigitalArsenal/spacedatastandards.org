@@ -324,7 +324,7 @@ def PPEPositionRecordCreatePOS_COEFF_XVector(builder, data):
     return builder.EndVector()
 
 def CreatePOS_COEFF_XVector(builder, data):
-    PPEPositionRecordCreatePOS_COEFF_XVector(builder, data)
+    return PPEPositionRecordCreatePOS_COEFF_XVector(builder, data)
 
 def PPEPositionRecordAddPOS_COEFF_Y(builder, POS_COEFF_Y):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(POS_COEFF_Y), 0)
@@ -346,7 +346,7 @@ def PPEPositionRecordCreatePOS_COEFF_YVector(builder, data):
     return builder.EndVector()
 
 def CreatePOS_COEFF_YVector(builder, data):
-    PPEPositionRecordCreatePOS_COEFF_YVector(builder, data)
+    return PPEPositionRecordCreatePOS_COEFF_YVector(builder, data)
 
 def PPEPositionRecordAddPOS_COEFF_Z(builder, POS_COEFF_Z):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(POS_COEFF_Z), 0)
@@ -368,7 +368,7 @@ def PPEPositionRecordCreatePOS_COEFF_ZVector(builder, data):
     return builder.EndVector()
 
 def CreatePOS_COEFF_ZVector(builder, data):
-    PPEPositionRecordCreatePOS_COEFF_ZVector(builder, data)
+    return PPEPositionRecordCreatePOS_COEFF_ZVector(builder, data)
 
 def PPEPositionRecordAddHAS_VELOCITY_COEFFICIENTS(builder, HAS_VELOCITY_COEFFICIENTS):
     builder.PrependBoolSlot(7, HAS_VELOCITY_COEFFICIENTS, 0)
@@ -396,7 +396,7 @@ def PPEPositionRecordCreateVEL_COEFF_XVector(builder, data):
     return builder.EndVector()
 
 def CreateVEL_COEFF_XVector(builder, data):
-    PPEPositionRecordCreateVEL_COEFF_XVector(builder, data)
+    return PPEPositionRecordCreateVEL_COEFF_XVector(builder, data)
 
 def PPEPositionRecordAddVEL_COEFF_Y(builder, VEL_COEFF_Y):
     builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(VEL_COEFF_Y), 0)
@@ -418,7 +418,7 @@ def PPEPositionRecordCreateVEL_COEFF_YVector(builder, data):
     return builder.EndVector()
 
 def CreateVEL_COEFF_YVector(builder, data):
-    PPEPositionRecordCreateVEL_COEFF_YVector(builder, data)
+    return PPEPositionRecordCreateVEL_COEFF_YVector(builder, data)
 
 def PPEPositionRecordAddVEL_COEFF_Z(builder, VEL_COEFF_Z):
     builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(VEL_COEFF_Z), 0)
@@ -440,7 +440,7 @@ def PPEPositionRecordCreateVEL_COEFF_ZVector(builder, data):
     return builder.EndVector()
 
 def CreateVEL_COEFF_ZVector(builder, data):
-    PPEPositionRecordCreateVEL_COEFF_ZVector(builder, data)
+    return PPEPositionRecordCreateVEL_COEFF_ZVector(builder, data)
 
 def PPEPositionRecordAddMAX_POSITION_RESIDUAL(builder, MAX_POSITION_RESIDUAL):
     builder.PrependFloat64Slot(11, MAX_POSITION_RESIDUAL, 0.0)

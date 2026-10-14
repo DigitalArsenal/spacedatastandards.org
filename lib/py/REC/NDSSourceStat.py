@@ -365,7 +365,7 @@ def NDSSourceStatCreateEVIDENCEVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateEVIDENCEVector(builder, data):
-    NDSSourceStatCreateEVIDENCEVector(builder, data)
+    return NDSSourceStatCreateEVIDENCEVector(builder, data)
 
 def NDSSourceStatAddLAST_PUBLICATION_CID(builder, LAST_PUBLICATION_CID):
     builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_PUBLICATION_CID), 0)

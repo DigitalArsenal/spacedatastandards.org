@@ -427,7 +427,7 @@ public enum prwGnssSpacecraftBlock: UInt8, FlatbuffersVectorInitializable, Enum,
 ///  Callers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the
 ///  bytes verbatim; the propagator uses SOURCE_KIND to decide how to
 ///  consume them.
-public struct PRWInit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWInit: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -471,7 +471,7 @@ public struct PRWInit: FlatBufferTable, FlatbuffersVectorInitializable, Verifiab
   }
 }
 
-public struct PRWKeplerianElements: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWKeplerianElements: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -556,7 +556,7 @@ public struct PRWKeplerianElements: FlatBufferTable, FlatbuffersVectorInitializa
   }
 }
 
-public struct PRWTleLines: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWTleLines: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -616,7 +616,7 @@ public struct PRWTleLines: FlatBufferTable, FlatbuffersVectorInitializable, Veri
   }
 }
 
-public struct PRWInitSource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWInitSource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -685,7 +685,7 @@ public struct PRWInitSource: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 ///  Batch propagation request — propagate every entity in ENTITY_HANDLES[] to
 ///  EPOCH and write the result StateVector stream to OUTPUT_OFFSET in the
 ///  shared arena.
-public struct PRWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWBatchRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -755,7 +755,7 @@ public struct PRWBatchRequest: FlatBufferTable, FlatbuffersVectorInitializable, 
 ///  Batch propagation response header — describes the stream written to
 ///  OUTPUT_OFFSET and reports errors. The stream itself is
 ///  `STATE_VECTOR_SIZE`-tuple rows in the SDS `OCM` STATE_DATA layout.
-public struct PRWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWBatchResponse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -838,7 +838,7 @@ public struct PRWBatchResponse: FlatBufferTable, FlatbuffersVectorInitializable,
 ///  ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
 ///  doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
 ///  added to the a priori model and scaled by the visible Sun fraction.
-public struct PRWEcom2: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWEcom2: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -934,7 +934,7 @@ public struct PRWEcom2: FlatBufferTable, FlatbuffersVectorInitializable, Verifia
 }
 
 ///  Instance identity is host-provided, opaque, and not a physical quantity.
-public struct PRWInstance: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWInstance: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -985,7 +985,7 @@ public struct PRWInstance: FlatBufferTable, FlatbuffersVectorInitializable, Veri
 }
 
 ///  Units are SI. A scalar legacy tolerance must be expanded by the adapter.
-public struct PRWIntegratorSettings: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWIntegratorSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1059,7 +1059,7 @@ public struct PRWIntegratorSettings: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
-public struct PRWSpaceWeather: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWSpaceWeather: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1121,7 +1121,7 @@ public struct PRWSpaceWeather: FlatBufferTable, FlatbuffersVectorInitializable, 
 
 ///  Executable subset currently reachable through HPOP invoke. No implied
 ///  support for coefficients, drag models or bodies the provider cannot supply.
-public struct PRWForceConfiguration: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWForceConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1441,7 +1441,7 @@ public struct PRWForceConfiguration: FlatBufferTable, FlatbuffersVectorInitializ
 ///  request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
 ///  Covariance entries have row*column units; STM entries row/column units;
 ///  an STM's parameter rows are the identity (parameters are constant).
-public struct PRWStateMatrix: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWStateMatrix: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1484,7 +1484,7 @@ public struct PRWStateMatrix: FlatBufferTable, FlatbuffersVectorInitializable, V
 }
 
 ///  The process noise a propagated covariance includes: P(t) = Phi P0 Phi^T + Q.
-public struct PRWProcessNoise: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWProcessNoise: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1541,7 +1541,7 @@ public struct PRWProcessNoise: FlatBufferTable, FlatbuffersVectorInitializable, 
 }
 
 ///  Identity/state at one epoch. FRM state is m/m/s with named frame/time scale.
-public struct PRWResidentState: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWResidentState: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1705,7 +1705,7 @@ public struct PRWResidentState: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Impulsive change at TDB epoch; delta velocity is m/s in the named basis.
-public struct PRWImpulse: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWImpulse: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1753,7 +1753,7 @@ public struct PRWImpulse: FlatBufferTable, FlatbuffersVectorInitializable, Verif
 }
 
 ///  Piecewise-linear throttle. Clock is seconds from initial propagation epoch.
-public struct PRWThrottlePoint: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWThrottlePoint: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1795,7 +1795,7 @@ public struct PRWThrottlePoint: FlatBufferTable, FlatbuffersVectorInitializable,
 }
 
 ///  Scheduled time gates an optional condition. At least one must be present.
-public struct PRWBurnBoundary: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWBurnBoundary: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1847,7 +1847,7 @@ public struct PRWBurnBoundary: FlatBufferTable, FlatbuffersVectorInitializable, 
 
 ///  Finite thrust. RTN=(rhat, N cross rhat, N), N=unit(r cross v).
 ///  VNC=(vhat, unit(r cross v), vhat cross unit(r cross v)).
-public struct PRWFiniteBurn: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWFiniteBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -1955,7 +1955,7 @@ public struct PRWFiniteBurn: FlatBufferTable, FlatbuffersVectorInitializable, Ve
 }
 
 ///  Fixed endpoint propagation. Provider selected by the host's connected port.
-public struct PRWExecutionRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2083,7 +2083,7 @@ public struct PRWExecutionRequest: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Burn times absent until reached; zero means an actual edge at initial epoch.
-public struct PRWBurnReport: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWBurnReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2199,7 +2199,7 @@ public struct PRWBurnReport: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   }
 }
 
-public struct PRWPropagationSample: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWPropagationSample: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2284,7 +2284,7 @@ public struct PRWPropagationSample: FlatBufferTable, FlatbuffersVectorInitializa
   }
 }
 
-public struct PRWExecutionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2358,7 +2358,7 @@ public struct PRWExecutionResult: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Portable batch request: no output pointer; state records returned via TAB.
-public struct PRWResidentRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWResidentRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2419,7 +2419,7 @@ public struct PRWResidentRequest: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  All epochs explicit; duration seconds >=0; empty handles means all resident.
-public struct PRWPrepareRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWPrepareRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2487,7 +2487,7 @@ public struct PRWPrepareRequest: FlatBufferTable, FlatbuffersVectorInitializable
   }
 }
 
-public struct PRWFitQuality: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWFitQuality: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2565,7 +2565,7 @@ public struct PRWFitQuality: FlatBufferTable, FlatbuffersVectorInitializable, Ve
   }
 }
 
-public struct PRWPrepareResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWPrepareResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2619,7 +2619,7 @@ public struct PRWPrepareResult: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
-public struct PRWDescribeRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWDescribeRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2668,7 +2668,7 @@ public struct PRWDescribeRequest: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Existing PPE retains km/km/s, midpoint/time-system and coefficient meaning.
-public struct PRWTrajectorySource: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWTrajectorySource: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2723,7 +2723,7 @@ public struct PRWTrajectorySource: FlatBufferTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct PRWDescribeResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWDescribeResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2785,7 +2785,7 @@ public struct PRWDescribeResult: FlatBufferTable, FlatbuffersVectorInitializable
 }
 
 ///  Native container bytes wholly inside the FlatBuffer; not an NCD trailer.
-public struct PRWNativeInput: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWNativeInput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2832,7 +2832,7 @@ public struct PRWNativeInput: FlatBufferTable, FlatbuffersVectorInitializable, V
 ///  of one series (same SERIES, IAU_CONVENTION and data-set provenance) with
 ///  strictly increasing MJD that cover the arc. A provider interpolates as
 ///  published by the series and does not extrapolate.
-public struct PRWEarthOrientation: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWEarthOrientation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2871,7 +2871,7 @@ public struct PRWEarthOrientation: FlatBufferTable, FlatbuffersVectorInitializab
 ///  increasing DATE covering the arc plus what the atmosphere model reads
 ///  before it (NRLMSISE-00 reads the previous day's F10.7). A provider derives
 ///  its model inputs from these rows and reports which ones it reads.
-public struct PRWSpaceWeatherTable: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWSpaceWeatherTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -2912,7 +2912,7 @@ public struct PRWSpaceWeatherTable: FlatBufferTable, FlatbuffersVectorInitializa
 ///  Dst-derived exospheric temperature change. A provider applies the model's
 ///  own lags (1 day for F10 and S10, 2 for M10, 5 for Y10) by reading earlier
 ///  rows, and states how it interpolates between them.
-public struct PRWJB2008Indices: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWJB2008Indices: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3015,7 +3015,7 @@ public struct PRWJB2008Indices: FlatBufferTable, FlatbuffersVectorInitializable,
 
 ///  JB2008 drivers for a propagation: daily rows with strictly increasing
 ///  DATE covering the arc plus the days the model's lags read before it.
-public struct PRWJB2008IndicesTable: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWJB2008IndicesTable: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3051,7 +3051,7 @@ public struct PRWJB2008IndicesTable: FlatBufferTable, FlatbuffersVectorInitializ
 }
 
 ///  Geometric SPK state query, TDB; NAIF IDs state origin and target explicitly.
-public struct PRWEphemerisRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWEphemerisRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3098,7 +3098,7 @@ public struct PRWEphemerisRequest: FlatBufferTable, FlatbuffersVectorInitializab
   }
 }
 
-public struct PRWEphemerisResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWEphemerisResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3154,7 +3154,7 @@ public struct PRWEphemerisResult: FlatBufferTable, FlatbuffersVectorInitializabl
 }
 
 ///  Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
-public struct PRWAtmosphereRequest: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWAtmosphereRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3253,7 +3253,7 @@ public struct PRWAtmosphereRequest: FlatBufferTable, FlatbuffersVectorInitializa
   }
 }
 
-public struct PRWSpeciesDensity: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWSpeciesDensity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3294,7 +3294,7 @@ public struct PRWSpeciesDensity: FlatBufferTable, FlatbuffersVectorInitializable
   }
 }
 
-public struct PRWAtmosphereResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWAtmosphereResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3397,7 +3397,7 @@ public struct PRWAtmosphereResult: FlatBufferTable, FlatbuffersVectorInitializab
 }
 
 ///  Runtime diagnostic version; PLG remains the authoritative manifest identity.
-public struct PRWVersionResult: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRWVersionResult: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3440,8 +3440,314 @@ public struct PRWVersionResult: FlatBufferTable, FlatbuffersVectorInitializable,
   }
 }
 
+///  One propagation window: propagate one source (an element set, an
+///  initialized entity or a resident handle) from START to STOP, sampling at
+///  most STEP_SECONDS apart with the last sample exactly at STOP. The answer is
+///  one $OEM data block per query, in SEQUENCE order, covering [START, STOP];
+///  a provider that cannot answer returns an empty block whose COMMENT begins
+///  "REFUSED" and reports the reason in PRWWindowReport.
+public struct PRWWindowQuery: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWWindowQuery.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SEQUENCE: VOffset = 4
+    static let SET_INDEX: VOffset = 6
+    static let ENTITY_HANDLE: VOffset = 8
+    static let OBJECT_KEY: VOffset = 10
+    static let NORAD_CAT_ID: VOffset = 12
+    static let OBJECT_ID: VOffset = 14
+    static let SOURCE_EPOCH: VOffset = 16
+    static let START: VOffset = 18
+    static let STOP: VOffset = 20
+    static let STEP_SECONDS: VOffset = 22
+  }
+
+  ///  Position of the query in the request, 0-based; answers keep this order.
+  public var SEQUENCE: UInt32 { let o = _accessor.offset(VT.SEQUENCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  0-based index of the source record among the source records passed
+  ///  with the request (e.g. the $OMM element sets, across all frames, in input
+  ///  order). Ignored when ENTITY_HANDLE is used.
+  public var SET_INDEX: UInt32 { let o = _accessor.offset(VT.SET_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Entity handle of an initialized or resident source; 0 = use SET_INDEX.
+  public var ENTITY_HANDLE: UInt32 { let o = _accessor.offset(VT.ENTITY_HANDLE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Object key of the source as the requester names it (e.g. "NORAD:25544");
+  ///  the answer block must be of this object.
+  public var OBJECT_KEY: String? { let o = _accessor.offset(VT.OBJECT_KEY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_KEY) }
+  ///  NORAD catalog number of the object; 0 = none (then OBJECT_ID identifies
+  ///  it).
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VT.NORAD_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator or provider object identifier; empty = none.
+  public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
+  ///  Epoch of the source record, for reference; absent = not stated.
+  public var SOURCE_EPOCH: TIMInstant? { let o = _accessor.offset(VT.SOURCE_EPOCH); return o == 0 ? nil : TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  First and last instants of the window (UTC unless TIME_SYSTEM says
+  ///  otherwise).
+  public var START: TIMInstant! { let o = _accessor.offset(VT.START); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var STOP: TIMInstant! { let o = _accessor.offset(VT.STOP); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Largest sample spacing, seconds (> 0).
+  public var STEP_SECONDS: Double { let o = _accessor.offset(VT.STEP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPRWWindowQuery(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(SEQUENCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE, def: 0, at: VT.SEQUENCE) }
+  public static func add(SET_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SET_INDEX, def: 0, at: VT.SET_INDEX) }
+  public static func add(ENTITY_HANDLE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENTITY_HANDLE, def: 0, at: VT.ENTITY_HANDLE) }
+  public static func add(OBJECT_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_KEY, at: VT.OBJECT_KEY) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VT.NORAD_CAT_ID) }
+  public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VT.OBJECT_ID) }
+  public static func add(SOURCE_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_EPOCH, at: VT.SOURCE_EPOCH) }
+  public static func add(START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START, at: VT.START) }
+  public static func add(STOP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STOP, at: VT.STOP) }
+  public static func add(STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SECONDS, def: 0.0, at: VT.STEP_SECONDS) }
+  public static func endPRWWindowQuery(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [18, 20]); return end }
+  public static func createPRWWindowQuery(
+    _ fbb: inout FlatBufferBuilder,
+    SEQUENCE: UInt32 = 0,
+    SET_INDEX: UInt32 = 0,
+    ENTITY_HANDLE: UInt32 = 0,
+    OBJECT_KEYOffset OBJECT_KEY: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    SOURCE_EPOCHOffset SOURCE_EPOCH: Offset = Offset(),
+    STARTOffset START: Offset,
+    STOPOffset STOP: Offset,
+    STEP_SECONDS: Double = 0.0
+  ) -> Offset {
+    let __start = PRWWindowQuery.startPRWWindowQuery(&fbb)
+    PRWWindowQuery.add(SEQUENCE: SEQUENCE, &fbb)
+    PRWWindowQuery.add(SET_INDEX: SET_INDEX, &fbb)
+    PRWWindowQuery.add(ENTITY_HANDLE: ENTITY_HANDLE, &fbb)
+    PRWWindowQuery.add(OBJECT_KEY: OBJECT_KEY, &fbb)
+    PRWWindowQuery.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    PRWWindowQuery.add(OBJECT_ID: OBJECT_ID, &fbb)
+    PRWWindowQuery.add(SOURCE_EPOCH: SOURCE_EPOCH, &fbb)
+    PRWWindowQuery.add(START: START, &fbb)
+    PRWWindowQuery.add(STOP: STOP, &fbb)
+    PRWWindowQuery.add(STEP_SECONDS: STEP_SECONDS, &fbb)
+    return PRWWindowQuery.endPRWWindowQuery(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SEQUENCE, fieldName: "SEQUENCE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SET_INDEX, fieldName: "SET_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ENTITY_HANDLE, fieldName: "ENTITY_HANDLE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_KEY, fieldName: "OBJECT_KEY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NORAD_CAT_ID, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VT.OBJECT_ID, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_EPOCH, fieldName: "SOURCE_EPOCH", required: false, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.START, fieldName: "START", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.STOP, fieldName: "STOP", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.STEP_SECONDS, fieldName: "STEP_SECONDS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  A batch of propagation windows. Existing BATCH_REQUEST propagates every
+///  entity to one EPOCH; a window request propagates each query's source over
+///  its own [START, STOP] at STEP_SECONDS.
+public struct PRWWindowRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWWindowRequest.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let QUERIES: VOffset = 4
+    static let PROPAGATOR_PORT_ID: VOffset = 6
+    static let NEIGHBOUR_SETS: VOffset = 8
+    static let TARGET_FRAME: VOffset = 10
+    static let INSTRUCTIONS: VOffset = 12
+  }
+
+  public var QUERIES: FlatbufferVector<PRWWindowQuery> { return _accessor.vector(at: VT.QUERIES, byteSize: 4) }
+  ///  Port of the propagator expected to answer; empty = the host's default.
+  public var PROPAGATOR_PORT_ID: String? { let o = _accessor.offset(VT.PROPAGATOR_PORT_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROPAGATOR_PORT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_PORT_ID) }
+  ///  Neighbouring source records each window spans on either side (context
+  ///  for the requester's replay); 0 = not stated.
+  public var NEIGHBOUR_SETS: UInt32 { let o = _accessor.offset(VT.NEIGHBOUR_SETS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Frame the answers should be in, as an RFM name (e.g. "TEME", "GCRF");
+  ///  empty = the provider's native frame.
+  public var TARGET_FRAME: String? { let o = _accessor.offset(VT.TARGET_FRAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TARGET_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TARGET_FRAME) }
+  ///  How to answer, human-readable.
+  public var INSTRUCTIONS: String? { let o = _accessor.offset(VT.INSTRUCTIONS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var INSTRUCTIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.INSTRUCTIONS) }
+  public static func startPRWWindowRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func addVectorOf(QUERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUERIES, at: VT.QUERIES) }
+  public static func add(PROPAGATOR_PORT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROPAGATOR_PORT_ID, at: VT.PROPAGATOR_PORT_ID) }
+  public static func add(NEIGHBOUR_SETS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOUR_SETS, def: 0, at: VT.NEIGHBOUR_SETS) }
+  public static func add(TARGET_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_FRAME, at: VT.TARGET_FRAME) }
+  public static func add(INSTRUCTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTRUCTIONS, at: VT.INSTRUCTIONS) }
+  public static func endPRWWindowRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWWindowRequest(
+    _ fbb: inout FlatBufferBuilder,
+    QUERIESVectorOffset QUERIES: Offset = Offset(),
+    PROPAGATOR_PORT_IDOffset PROPAGATOR_PORT_ID: Offset = Offset(),
+    NEIGHBOUR_SETS: UInt32 = 0,
+    TARGET_FRAMEOffset TARGET_FRAME: Offset = Offset(),
+    INSTRUCTIONSOffset INSTRUCTIONS: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWWindowRequest.startPRWWindowRequest(&fbb)
+    PRWWindowRequest.addVectorOf(QUERIES: QUERIES, &fbb)
+    PRWWindowRequest.add(PROPAGATOR_PORT_ID: PROPAGATOR_PORT_ID, &fbb)
+    PRWWindowRequest.add(NEIGHBOUR_SETS: NEIGHBOUR_SETS, &fbb)
+    PRWWindowRequest.add(TARGET_FRAME: TARGET_FRAME, &fbb)
+    PRWWindowRequest.add(INSTRUCTIONS: INSTRUCTIONS, &fbb)
+    return PRWWindowRequest.endPRWWindowRequest(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.QUERIES, fieldName: "QUERIES", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWWindowQuery>, PRWWindowQuery>>.self)
+    try _v.visit(field: VT.PROPAGATOR_PORT_ID, fieldName: "PROPAGATOR_PORT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.NEIGHBOUR_SETS, fieldName: "NEIGHBOUR_SETS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TARGET_FRAME, fieldName: "TARGET_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.INSTRUCTIONS, fieldName: "INSTRUCTIONS", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  A window the provider refused.
+public struct PRWWindowRefusal: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWWindowRefusal.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let SEQUENCE: VOffset = 4
+    static let SET_INDEX: VOffset = 6
+    static let REASON: VOffset = 8
+  }
+
+  ///  The query's SEQUENCE.
+  public var SEQUENCE: UInt32 { let o = _accessor.offset(VT.SEQUENCE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  The query's SET_INDEX.
+  public var SET_INDEX: UInt32 { let o = _accessor.offset(VT.SET_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Reason code, e.g. "set-out-of-range", "mean-element-theory-not-sgp4:X",
+  ///  "invalid-span", "span-too-long", "sgp4-propagate".
+  public var REASON: String? { let o = _accessor.offset(VT.REASON); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REASONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REASON) }
+  public static func startPRWWindowRefusal(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(SEQUENCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE, def: 0, at: VT.SEQUENCE) }
+  public static func add(SET_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SET_INDEX, def: 0, at: VT.SET_INDEX) }
+  public static func add(REASON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REASON, at: VT.REASON) }
+  public static func endPRWWindowRefusal(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWWindowRefusal(
+    _ fbb: inout FlatBufferBuilder,
+    SEQUENCE: UInt32 = 0,
+    SET_INDEX: UInt32 = 0,
+    REASONOffset REASON: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWWindowRefusal.startPRWWindowRefusal(&fbb)
+    PRWWindowRefusal.add(SEQUENCE: SEQUENCE, &fbb)
+    PRWWindowRefusal.add(SET_INDEX: SET_INDEX, &fbb)
+    PRWWindowRefusal.add(REASON: REASON, &fbb)
+    return PRWWindowRefusal.endPRWWindowRefusal(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.SEQUENCE, fieldName: "SEQUENCE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SET_INDEX, fieldName: "SET_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REASON, fieldName: "REASON", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  Summary of the answers to a window request.
+public struct PRWWindowReport: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWWindowReport.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let QUERIES: VOffset = 4
+    static let ANSWERED: VOffset = 6
+    static let REFUSED: VOffset = 8
+    static let SOURCE_RECORDS: VOffset = 10
+    static let REFUSALS: VOffset = 12
+    static let PROVIDER: VOffset = 14
+  }
+
+  ///  Queries received, answered and refused.
+  public var QUERIES: UInt32 { let o = _accessor.offset(VT.QUERIES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var ANSWERED: UInt32 { let o = _accessor.offset(VT.ANSWERED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var REFUSED: UInt32 { let o = _accessor.offset(VT.REFUSED); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Source records received.
+  public var SOURCE_RECORDS: UInt32 { let o = _accessor.offset(VT.SOURCE_RECORDS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public var REFUSALS: FlatbufferVector<PRWWindowRefusal> { return _accessor.vector(at: VT.REFUSALS, byteSize: 4) }
+  ///  The propagator and its configuration, e.g. "SGP4, Vallado, WGS-72,
+  ///  opsmode i; TEME, UTC, km and km/s".
+  public var PROVIDER: String? { let o = _accessor.offset(VT.PROVIDER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROVIDERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROVIDER) }
+  public static func startPRWWindowReport(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(QUERIES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUERIES, def: 0, at: VT.QUERIES) }
+  public static func add(ANSWERED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANSWERED, def: 0, at: VT.ANSWERED) }
+  public static func add(REFUSED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFUSED, def: 0, at: VT.REFUSED) }
+  public static func add(SOURCE_RECORDS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_RECORDS, def: 0, at: VT.SOURCE_RECORDS) }
+  public static func addVectorOf(REFUSALS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFUSALS, at: VT.REFUSALS) }
+  public static func add(PROVIDER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER, at: VT.PROVIDER) }
+  public static func endPRWWindowReport(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPRWWindowReport(
+    _ fbb: inout FlatBufferBuilder,
+    QUERIES: UInt32 = 0,
+    ANSWERED: UInt32 = 0,
+    REFUSED: UInt32 = 0,
+    SOURCE_RECORDS: UInt32 = 0,
+    REFUSALSVectorOffset REFUSALS: Offset = Offset(),
+    PROVIDEROffset PROVIDER: Offset = Offset()
+  ) -> Offset {
+    let __start = PRWWindowReport.startPRWWindowReport(&fbb)
+    PRWWindowReport.add(QUERIES: QUERIES, &fbb)
+    PRWWindowReport.add(ANSWERED: ANSWERED, &fbb)
+    PRWWindowReport.add(REFUSED: REFUSED, &fbb)
+    PRWWindowReport.add(SOURCE_RECORDS: SOURCE_RECORDS, &fbb)
+    PRWWindowReport.addVectorOf(REFUSALS: REFUSALS, &fbb)
+    PRWWindowReport.add(PROVIDER: PROVIDER, &fbb)
+    return PRWWindowReport.endPRWWindowReport(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.QUERIES, fieldName: "QUERIES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ANSWERED, fieldName: "ANSWERED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REFUSED, fieldName: "REFUSED", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SOURCE_RECORDS, fieldName: "SOURCE_RECORDS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REFUSALS, fieldName: "REFUSALS", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWWindowRefusal>, PRWWindowRefusal>>.self)
+    try _v.visit(field: VT.PROVIDER, fieldName: "PROVIDER", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Exactly one arm per envelope. Existing three arms keep their ordinals.
-public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct PRW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
@@ -3474,6 +3780,8 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     static let EARTH_ORIENTATION: VOffset = 40
     static let SPACE_WEATHER: VOffset = 42
     static let JB2008_INDICES: VOffset = 44
+    static let WINDOW_REQUEST: VOffset = 46
+    static let WINDOW_REPORT: VOffset = 48
   }
 
   public var INIT: PRWInit? { let o = _accessor.offset(VT.INIT); return o == 0 ? nil : PRWInit(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -3498,7 +3806,10 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public var EARTH_ORIENTATION: PRWEarthOrientation? { let o = _accessor.offset(VT.EARTH_ORIENTATION); return o == 0 ? nil : PRWEarthOrientation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var SPACE_WEATHER: PRWSpaceWeatherTable? { let o = _accessor.offset(VT.SPACE_WEATHER); return o == 0 ? nil : PRWSpaceWeatherTable(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var JB2008_INDICES: PRWJB2008IndicesTable? { let o = _accessor.offset(VT.JB2008_INDICES); return o == 0 ? nil : PRWJB2008IndicesTable(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPRW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 21) }
+  ///  Propagation over windows: one $OEM block per query answers it.
+  public var WINDOW_REQUEST: PRWWindowRequest? { let o = _accessor.offset(VT.WINDOW_REQUEST); return o == 0 ? nil : PRWWindowRequest(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var WINDOW_REPORT: PRWWindowReport? { let o = _accessor.offset(VT.WINDOW_REPORT); return o == 0 ? nil : PRWWindowReport(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPRW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(INIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INIT, at: VT.INIT) }
   public static func add(BATCH_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_REQUEST, at: VT.BATCH_REQUEST) }
   public static func add(BATCH_RESPONSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BATCH_RESPONSE, at: VT.BATCH_RESPONSE) }
@@ -3521,6 +3832,8 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
   public static func add(EARTH_ORIENTATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EARTH_ORIENTATION, at: VT.EARTH_ORIENTATION) }
   public static func add(SPACE_WEATHER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPACE_WEATHER, at: VT.SPACE_WEATHER) }
   public static func add(JB2008_INDICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: JB2008_INDICES, at: VT.JB2008_INDICES) }
+  public static func add(WINDOW_REQUEST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_REQUEST, at: VT.WINDOW_REQUEST) }
+  public static func add(WINDOW_REPORT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WINDOW_REPORT, at: VT.WINDOW_REPORT) }
   public static func endPRW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPRW(
     _ fbb: inout FlatBufferBuilder,
@@ -3544,7 +3857,9 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     VERSION_RESULTOffset VERSION_RESULT: Offset = Offset(),
     EARTH_ORIENTATIONOffset EARTH_ORIENTATION: Offset = Offset(),
     SPACE_WEATHEROffset SPACE_WEATHER: Offset = Offset(),
-    JB2008_INDICESOffset JB2008_INDICES: Offset = Offset()
+    JB2008_INDICESOffset JB2008_INDICES: Offset = Offset(),
+    WINDOW_REQUESTOffset WINDOW_REQUEST: Offset = Offset(),
+    WINDOW_REPORTOffset WINDOW_REPORT: Offset = Offset()
   ) -> Offset {
     let __start = PRW.startPRW(&fbb)
     PRW.add(INIT: INIT, &fbb)
@@ -3568,6 +3883,8 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     PRW.add(EARTH_ORIENTATION: EARTH_ORIENTATION, &fbb)
     PRW.add(SPACE_WEATHER: SPACE_WEATHER, &fbb)
     PRW.add(JB2008_INDICES: JB2008_INDICES, &fbb)
+    PRW.add(WINDOW_REQUEST: WINDOW_REQUEST, &fbb)
+    PRW.add(WINDOW_REPORT: WINDOW_REPORT, &fbb)
     return PRW.endPRW(&fbb, start: __start)
   }
 
@@ -3594,6 +3911,8 @@ public struct PRW: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
     try _v.visit(field: VT.EARTH_ORIENTATION, fieldName: "EARTH_ORIENTATION", required: false, type: ForwardOffset<PRWEarthOrientation>.self)
     try _v.visit(field: VT.SPACE_WEATHER, fieldName: "SPACE_WEATHER", required: false, type: ForwardOffset<PRWSpaceWeatherTable>.self)
     try _v.visit(field: VT.JB2008_INDICES, fieldName: "JB2008_INDICES", required: false, type: ForwardOffset<PRWJB2008IndicesTable>.self)
+    try _v.visit(field: VT.WINDOW_REQUEST, fieldName: "WINDOW_REQUEST", required: false, type: ForwardOffset<PRWWindowRequest>.self)
+    try _v.visit(field: VT.WINDOW_REPORT, fieldName: "WINDOW_REPORT", required: false, type: ForwardOffset<PRWWindowReport>.self)
     _v.finish()
   }
 }

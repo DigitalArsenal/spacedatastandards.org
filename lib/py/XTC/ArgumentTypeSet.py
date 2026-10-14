@@ -233,7 +233,7 @@ def ArgumentTypeSetCreateINTEGER_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateINTEGER_TYPESVector(builder, data):
-    ArgumentTypeSetCreateINTEGER_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateINTEGER_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddFLOAT_TYPES(builder, FLOAT_TYPES):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(FLOAT_TYPES), 0)
@@ -251,7 +251,7 @@ def ArgumentTypeSetCreateFLOAT_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateFLOAT_TYPESVector(builder, data):
-    ArgumentTypeSetCreateFLOAT_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateFLOAT_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddSTRING_TYPES(builder, STRING_TYPES):
     builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(STRING_TYPES), 0)
@@ -269,7 +269,7 @@ def ArgumentTypeSetCreateSTRING_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateSTRING_TYPESVector(builder, data):
-    ArgumentTypeSetCreateSTRING_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateSTRING_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddBOOLEAN_TYPES(builder, BOOLEAN_TYPES):
     builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BOOLEAN_TYPES), 0)
@@ -287,7 +287,7 @@ def ArgumentTypeSetCreateBOOLEAN_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBOOLEAN_TYPESVector(builder, data):
-    ArgumentTypeSetCreateBOOLEAN_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateBOOLEAN_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddENUMERATED_TYPES(builder, ENUMERATED_TYPES):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENUMERATED_TYPES), 0)
@@ -305,7 +305,7 @@ def ArgumentTypeSetCreateENUMERATED_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENUMERATED_TYPESVector(builder, data):
-    ArgumentTypeSetCreateENUMERATED_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateENUMERATED_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddBINARY_TYPES(builder, BINARY_TYPES):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(BINARY_TYPES), 0)
@@ -323,7 +323,7 @@ def ArgumentTypeSetCreateBINARY_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateBINARY_TYPESVector(builder, data):
-    ArgumentTypeSetCreateBINARY_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateBINARY_TYPESVector(builder, data)
 
 def ArgumentTypeSetAddAGGREGATE_TYPES(builder, AGGREGATE_TYPES):
     builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(AGGREGATE_TYPES), 0)
@@ -341,7 +341,7 @@ def ArgumentTypeSetCreateAGGREGATE_TYPESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAGGREGATE_TYPESVector(builder, data):
-    ArgumentTypeSetCreateAGGREGATE_TYPESVector(builder, data)
+    return ArgumentTypeSetCreateAGGREGATE_TYPESVector(builder, data)
 
 def ArgumentTypeSetEnd(builder):
     return builder.EndObject()

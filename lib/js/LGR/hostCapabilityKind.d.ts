@@ -46,6 +46,26 @@ export declare enum hostCapabilityKind {
      * single record without source attribution. Hosts gate
      * storage.ingest_with_source on this capability specifically.
      */
-    STORAGE_INGEST = 36
+    STORAGE_INGEST = 36,
+    /**
+     * Read the node's view of its peer-to-peer network: known peers, the
+     * publication notices it has received and verified, and the latest
+     * dataset of a lane (p2p.* host operations).
+     */
+    P2P_READ = 37,
+    /**
+     * Read the node's own health: uptime, service state, storage and network
+     * figures (node_status_read.status).
+     */
+    NODE_STATUS_READ = 38,
+    /**
+     * Read the node's event log (node_activity_read.activity).
+     */
+    NODE_ACTIVITY_READ = 39,
+    /**
+     * Read and write operator-held secrets by identifier (credentials for
+     * upstream sources); the secret value is never persisted in a record.
+     */
+    SECRETS = 40
 }
 //# sourceMappingURL=hostCapabilityKind.d.ts.map

@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  On-Orbit Battery
-public struct OOB: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OOB: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

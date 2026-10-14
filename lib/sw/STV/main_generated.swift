@@ -26,7 +26,7 @@ public enum STVReferenceFrame: Int8, FlatbuffersVectorInitializable, Enum, Verif
 
 
 ///  State Vector
-public struct STV: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct STV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

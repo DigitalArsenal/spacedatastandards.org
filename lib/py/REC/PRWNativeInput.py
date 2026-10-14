@@ -100,7 +100,7 @@ def PRWNativeInputCreateCONTENTVector(builder, data):
     return builder.EndVector()
 
 def CreateCONTENTVector(builder, data):
-    PRWNativeInputCreateCONTENTVector(builder, data)
+    return PRWNativeInputCreateCONTENTVector(builder, data)
 
 def PRWNativeInputEnd(builder):
     return builder.EndObject()

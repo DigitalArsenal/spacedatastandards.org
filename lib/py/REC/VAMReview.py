@@ -370,7 +370,7 @@ def VAMReviewCreateREASONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateREASONSVector(builder, data):
-    VAMReviewCreateREASONSVector(builder, data)
+    return VAMReviewCreateREASONSVector(builder, data)
 
 def VAMReviewAddCOMMENT(builder, COMMENT):
     builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
@@ -404,7 +404,7 @@ def VAMReviewCreateSIGNATUREVector(builder, data):
     return builder.EndVector()
 
 def CreateSIGNATUREVector(builder, data):
-    VAMReviewCreateSIGNATUREVector(builder, data)
+    return VAMReviewCreateSIGNATUREVector(builder, data)
 
 def VAMReviewAddSIGNATURE_TYPE(builder, SIGNATURE_TYPE):
     builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNATURE_TYPE), 0)
@@ -482,7 +482,7 @@ def VAMReviewCreateALTERNATE_VARIANT_IDSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateALTERNATE_VARIANT_IDSVector(builder, data):
-    VAMReviewCreateALTERNATE_VARIANT_IDSVector(builder, data)
+    return VAMReviewCreateALTERNATE_VARIANT_IDSVector(builder, data)
 
 def VAMReviewAddANNOTATIONS(builder, ANNOTATIONS):
     builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(ANNOTATIONS), 0)
@@ -500,7 +500,7 @@ def VAMReviewCreateANNOTATIONSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateANNOTATIONSVector(builder, data):
-    VAMReviewCreateANNOTATIONSVector(builder, data)
+    return VAMReviewCreateANNOTATIONSVector(builder, data)
 
 def VAMReviewAddAPPROVED_ALTERNATES(builder, APPROVED_ALTERNATES):
     builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(APPROVED_ALTERNATES), 0)
@@ -518,7 +518,7 @@ def VAMReviewCreateAPPROVED_ALTERNATESVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateAPPROVED_ALTERNATESVector(builder, data):
-    VAMReviewCreateAPPROVED_ALTERNATESVector(builder, data)
+    return VAMReviewCreateAPPROVED_ALTERNATESVector(builder, data)
 
 def VAMReviewEnd(builder):
     return builder.EndObject()

@@ -109,7 +109,7 @@ def DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data):
     return builder.CreateVectorOfTables(data)
 
 def CreateENUMERATION_ALARMSVector(builder, data):
-    DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data)
+    return DefaultAlarmCreateENUMERATION_ALARMSVector(builder, data)
 
 def DefaultAlarmEnd(builder):
     return builder.EndObject()

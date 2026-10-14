@@ -40,7 +40,7 @@ public enum ooiPriority: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
 
 
 ///  Object of Interest
-public struct OOI: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct OOI: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }

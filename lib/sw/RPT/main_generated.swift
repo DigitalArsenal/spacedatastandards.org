@@ -9,7 +9,7 @@ import Common
 import FlatBuffers
 
 ///  Verifiable Report descriptor
-public struct RPT: FlatBufferTable, FlatbuffersVectorInitializable, Verifiable {
+public struct RPT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
   public var __buffer: ByteBuffer! { return _accessor.bb }
