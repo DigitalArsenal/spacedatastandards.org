@@ -33,6 +33,6 @@ describe("npm runtime dependency surface", () => {
   });
 
   it("pins the reviewed wallet runtime exactly", () => {
-    assert.equal(packageJson.dependencies?.["hd-wallet-wasm"], "2.0.28");
+    assert.equal(packageJson.dependencies?.["hd-wallet-wasm"], "2.1.0");
   });
 });

@@ -147,9 +147,9 @@ if (assetPath) {
 const completeAttributes = Object.freeze({
   "data-nav-style-url": `https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.${"1".repeat(64)}.css`,
   "data-nav-style-integrity": `sha384-${"A".repeat(64)}`,
-  "data-wallet-client-url": `https://static.spacedatanetwork.org/assets/hd-wallet-ui/2.0.28/sdn-wallet-public-client.${"2".repeat(64)}.js`,
+  "data-wallet-client-url": `https://static.spacedatanetwork.org/assets/hd-wallet-ui/2.1.0/sdn-wallet-public-client.${"2".repeat(64)}.js`,
   "data-wallet-client-integrity": `sha384-${"B".repeat(64)}`,
-  "data-wallet-style-url": `https://static.spacedatanetwork.org/assets/hd-wallet-ui/2.0.28/sdn-wallet-public-client.${"3".repeat(64)}.css`,
+  "data-wallet-style-url": `https://static.spacedatanetwork.org/assets/hd-wallet-ui/2.1.0/sdn-wallet-public-client.${"3".repeat(64)}.css`,
   "data-wallet-style-integrity": `sha384-${"C".repeat(64)}`,
   "data-wallet-client-id": "sdn-standards-web-v1",
   "data-wallet-callback-uri": "https://spacedatastandards.org/wallet-callback.html",
