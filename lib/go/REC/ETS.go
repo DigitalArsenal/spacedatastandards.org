@@ -12,7 +12,7 @@ type ETS struct {
 	_tab flatbuffers.Table
 }
 
-const ETSIdentifier = "$ETS"
+const ETSFileIdentifier = "$ETS"
 
 func GetRootAsETS(buf []byte, offset flatbuffers.UOffsetT) *ETS {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
@@ -22,12 +22,12 @@ func GetRootAsETS(buf []byte, offset flatbuffers.UOffsetT) *ETS {
 }
 
 func FinishETSBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	identifierBytes := []byte(ETSIdentifier)
+	identifierBytes := []byte(ETSFileIdentifier)
 	builder.FinishWithFileIdentifier(offset, identifierBytes)
 }
 
 func ETSBufferHasIdentifier(buf []byte) bool {
-	return flatbuffers.BufferHasIdentifier(buf, ETSIdentifier)
+	return flatbuffers.BufferHasIdentifier(buf, ETSFileIdentifier)
 }
 
 func GetSizePrefixedRootAsETS(buf []byte, offset flatbuffers.UOffsetT) *ETS {
@@ -38,12 +38,12 @@ func GetSizePrefixedRootAsETS(buf []byte, offset flatbuffers.UOffsetT) *ETS {
 }
 
 func FinishSizePrefixedETSBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	identifierBytes := []byte(ETSIdentifier)
+	identifierBytes := []byte(ETSFileIdentifier)
 	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
 }
 
 func SizePrefixedETSBufferHasIdentifier(buf []byte) bool {
-	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, ETSIdentifier)
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, ETSFileIdentifier)
 }
 
 func (rcv *ETS) Init(buf []byte, i flatbuffers.UOffsetT) {

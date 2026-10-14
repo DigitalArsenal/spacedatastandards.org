@@ -11,7 +11,7 @@ type TMS struct {
 	_tab flatbuffers.Table
 }
 
-const TMSIdentifier = "$TMS"
+const TMSFileIdentifier = "$TMS"
 
 func GetRootAsTMS(buf []byte, offset flatbuffers.UOffsetT) *TMS {
 	n := flatbuffers.GetUOffsetT(buf[offset:])
@@ -21,12 +21,12 @@ func GetRootAsTMS(buf []byte, offset flatbuffers.UOffsetT) *TMS {
 }
 
 func FinishTMSBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	identifierBytes := []byte(TMSIdentifier)
+	identifierBytes := []byte(TMSFileIdentifier)
 	builder.FinishWithFileIdentifier(offset, identifierBytes)
 }
 
 func TMSBufferHasIdentifier(buf []byte) bool {
-	return flatbuffers.BufferHasIdentifier(buf, TMSIdentifier)
+	return flatbuffers.BufferHasIdentifier(buf, TMSFileIdentifier)
 }
 
 func GetSizePrefixedRootAsTMS(buf []byte, offset flatbuffers.UOffsetT) *TMS {
@@ -37,12 +37,12 @@ func GetSizePrefixedRootAsTMS(buf []byte, offset flatbuffers.UOffsetT) *TMS {
 }
 
 func FinishSizePrefixedTMSBuffer(builder *flatbuffers.Builder, offset flatbuffers.UOffsetT) {
-	identifierBytes := []byte(TMSIdentifier)
+	identifierBytes := []byte(TMSFileIdentifier)
 	builder.FinishSizePrefixedWithFileIdentifier(offset, identifierBytes)
 }
 
 func SizePrefixedTMSBufferHasIdentifier(buf []byte) bool {
-	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, TMSIdentifier)
+	return flatbuffers.SizePrefixedBufferHasIdentifier(buf, TMSFileIdentifier)
 }
 
 func (rcv *TMS) Init(buf []byte, i flatbuffers.UOffsetT) {
