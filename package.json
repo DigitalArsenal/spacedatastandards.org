@@ -12,6 +12,11 @@
         "lib/fbjson/",
         "src/js",
         "dist/",
+        "!dist/*/*.go.tar.gz",
+        "!dist/*/*.rs.tar.gz",
+        "!dist/*/*.dart.tar.gz",
+        "!dist/*/*.java.tar.gz",
+        "!dist/*/*.php.tar.gz",
         "wasm/",
         "README",
         "docs/ABA.md"
