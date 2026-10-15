@@ -1,14 +1,15 @@
 name: Publish Packages
 
+# Publishes the v* tag the run starts from (security audit SEC-044). A release
+# event runs on its tag; to re-publish by hand, dispatch ON the tag:
+# `gh workflow run publish.yml --ref v1.249.0 -f packages=npm`. There is no
+# version input: a dispatch from main used to publish main HEAD under any
+# version it was given.
 on:
   release:
     types: [published]
   workflow_dispatch:
     inputs:
-      version:
-        description: 'Version to publish (e.g., 1.65.0)'
-        required: true
-        type: string
       packages:
         description: 'Packages to publish (comma-separated: npm,pypi,cargo,dart,maven,go)'
         required: false
@@ -59,7 +60,7 @@ jobs:
       - name: Check workflow hardening
         run: |
           node ./scripts/check-workflow-hardening.mjs
-          node --test ./scripts/check-workflow-hardening.test.mjs
+          node --test ./scripts/check-workflow-hardening.test.mjs ./scripts/publish-gates.test.mjs
 
   # ============================================
   # Build job - creates all artifacts
@@ -87,7 +88,8 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install Python dependencies
-        run: pip install flatbuffers
+        # Hash-pinned (SEC-042): the build's flatbuffers is the reviewed wheel.
+        run: pip install --require-hashes -r .github/requirements/flatbuffers.txt
 
       - name: Install dependencies
         run: npm ci
@@ -105,17 +107,35 @@ jobs:
           # (security audit SEC-044). Every publish job interpolates this
           # output, so it is validated as a plain semver here, once.
           EVENT_NAME: ${{ github.event_name }}
-          INPUT_VERSION: ${{ inputs.version }}
           RELEASE_TAG: ${{ github.event.release.tag_name }}
+          REF: ${{ github.ref }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            VERSION="$INPUT_VERSION"
-          else
-            # Get version from release tag (strip leading 'v')
-            VERSION="${RELEASE_TAG#v}"
+          # The version is the tag this run builds, never a typed label.
+          case "$REF" in
+            refs/tags/v*) TAG="${REF#refs/tags/}" ;;
+            *) echo "::error::publish runs only on a v* tag (ref $REF); dispatch it on the tag"; exit 1 ;;
+          esac
+          if [ "$EVENT_NAME" = "release" ] && [ "$RELEASE_TAG" != "$TAG" ]; then
+            echo "::error::release tag '$RELEASE_TAG' is not the ref '$TAG'"
+            exit 1
           fi
+          VERSION="${TAG#v}"
           if ! printf '%s' "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
             echo "::error::'$VERSION' is not a release version (MAJOR.MINOR.PATCH[-pre])"
+            exit 1
+          fi
+          # The tagged tree says the same version (read from the commit: the
+          # build may touch the working copy)...
+          PACKAGE_VERSION="$(git show HEAD:package.json | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync(0, 'utf8')).version.split('+')[0])")"
+          if [ "$PACKAGE_VERSION" != "$VERSION" ]; then
+            echo "::error::package.json is $PACKAGE_VERSION at $TAG, not $VERSION"
+            exit 1
+          fi
+          # ...and the tagged commit is on main, not an unreviewed branch.
+          ON_MAIN="$(gh api "repos/${GITHUB_REPOSITORY}/compare/refs/heads/main...${GITHUB_SHA}" --jq .status)" || ON_MAIN=unknown
+          if [ "$ON_MAIN" != identical ] && [ "$ON_MAIN" != behind ]; then
+            echo "::error::$TAG ($GITHUB_SHA) is not on main ($ON_MAIN)"
             exit 1
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
@@ -146,7 +166,7 @@ jobs:
       contents: read
       id-token: write
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'npm') ||
       inputs.packages == 'all'
@@ -194,7 +214,7 @@ jobs:
       contents: read
       packages: write
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'npm') ||
       inputs.packages == 'all'
@@ -252,7 +272,7 @@ jobs:
       contents: read
       id-token: write
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       vars.PYPI_ENABLED == 'true' && (
         github.event_name == 'release' ||
         contains(inputs.packages, 'pypi') ||
@@ -275,8 +295,11 @@ jobs:
           name: lib-artifacts
           path: lib/
 
+      # Hash-pinned (SEC-042), in the job that holds the PyPI id-token. The
+      # build runs --no-isolation so it uses these pins instead of fetching
+      # setuptools/wheel unpinned into an isolated environment.
       - name: Install build tools
-        run: pip install build twine packaging
+        run: pip install --require-hashes -r .github/requirements/publish-pypi.txt
 
       - name: Guard against a version that would not sort as PyPI's newest
         # sds-registry-latest-pointer-poisoned: four v23.3.3.0.3.x releases,
@@ -418,7 +441,7 @@ jobs:
       - name: Build Python package
         run: |
           cd lib/py
-          python -m build
+          python -m build --no-isolation
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
@@ -437,7 +460,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'cargo') ||
       inputs.packages == 'all'
@@ -492,7 +515,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'dart') ||
       inputs.packages == 'all'
@@ -687,7 +710,7 @@ jobs:
     env:
       MAVEN_GROUP_ID: ${{ vars.MAVEN_GROUP_ID }}
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'maven') ||
       inputs.packages == 'all'
@@ -965,12 +988,15 @@ jobs:
   # Go Modules (tag-based)
   # ============================================
   publish-go:
+    # The one job that writes to this repository: in the go-modules
+    # environment, behind the owner's required reviewers.
+    environment: go-modules
     permissions:
       contents: write # pushes the lib/go/v* module tag
     needs: build
     runs-on: ubuntu-latest
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'go') ||
       inputs.packages == 'all'
@@ -1029,11 +1055,23 @@ jobs:
             echo "Commit regenerated lib/go before creating an SDS release."
             exit 1
           }
-          git tag -f "lib/go/${VERSION}"
+          # A module tag is immutable: the Go proxy and checksum database
+          # already hold what it named. Never move one; an existing tag on
+          # this commit is done, on any other commit it is an error.
+          existing="$(git ls-remote --tags origin "refs/tags/lib/go/${VERSION}^{}" "refs/tags/lib/go/${VERSION}" | awk 'NR==1 || /\^\{\}$/ { sha = $1 } END { print sha }')"
+          if [ -n "$existing" ]; then
+            if [ "$existing" = "$(git rev-parse HEAD)" ]; then
+              echo "lib/go/${VERSION} already names this commit"
+              exit 0
+            fi
+            echo "::error::lib/go/${VERSION} already exists on another commit ($existing); refusing to move it"
+            exit 1
+          fi
+          git tag "lib/go/${VERSION}"
           # The checkout persists no credentials; the token authenticates this
           # one push and nothing else.
           auth="$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 | tr -d '\n')"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic ${auth}" push origin "lib/go/${VERSION}" --force
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic ${auth}" push origin "refs/tags/lib/go/${VERSION}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -1050,7 +1088,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     if: |
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')) && (
+      startsWith(github.ref, 'refs/tags/v') && (
       github.event_name == 'release' ||
       contains(inputs.packages, 'php') ||
       inputs.packages == 'all'

@@ -1,0 +1,9 @@
+# Hash-pinned (security audit SEC-042): installed with
+#   pip install --require-hashes -r .github/requirements/flatbuffers.txt
+# Regenerate with uv from the package list in this header:
+#   list: flatbuffers==25.12.19 (the flatc the schemas are generated with)
+#   uv pip compile <list> --generate-hashes --python-version 3.11 \
+#     --python-platform x86_64-unknown-linux-gnu --exclude-newer <date two weeks back>
+flatbuffers==25.12.19 \
+    --hash=sha256:7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4
+    # via .github/requirements/flatbuffers.txt

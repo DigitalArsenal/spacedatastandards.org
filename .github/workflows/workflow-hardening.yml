@@ -1,0 +1,31 @@
+name: Workflow hardening
+
+# The supply-chain gate on the workflows themselves (security audit
+# SEC-042/SEC-044) for every pull request and push to main, so a change that
+# weakens publish.yml is caught in review, not first at publish time.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  workflow-hardening:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # Shallow (default depth-1): the gate reads files at HEAD only, and this
+      # repository's full history is several GB.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '24'
+      - name: Check workflow hardening
+        run: |
+          node ./scripts/check-workflow-hardening.mjs
+          node --test ./scripts/check-workflow-hardening.test.mjs ./scripts/publish-gates.test.mjs

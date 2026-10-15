@@ -97,3 +97,78 @@ test('secret-bearing and id-token jobs must use a deployment environment, gated 
   assert.ok(rules(idToken).includes('environment'));
   assert.ok(!rules(secretJob.replace('DOCKERHUB_TOKEN', 'GITHUB_TOKEN')).includes('environment'));
 });
+
+// ---- Fix round 2: the bypasses the verifier found in round 1's gate. ----
+
+test('a checkout ref taken from a dispatch input is refused (docker-publish ref bypass)', () => {
+  const fromInput = SAFE.replace('          persist-credentials: false', `          ref: \${{ inputs.ref || github.ref }}
+          persist-credentials: false`);
+  assert.ok(rules(fromInput).includes('checkout-ref'));
+  assert.ok(rules(fromInput.replace('inputs.ref', 'github.event.inputs.ref')).includes('checkout-ref'));
+  assert.ok(!rules(SAFE).includes('checkout-ref'));
+});
+
+test('ref gates that admit every tag or every branch are refused', () => {
+  const gated = (cond) => SAFE.replace('    runs-on: ubuntu-latest\n', `    runs-on: ubuntu-latest\n    if: ${cond}\n`);
+  assert.ok(rules(gated("(github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))")).includes('ref-gate'));
+  assert.ok(rules(gated("startsWith(github.ref, \"refs/heads/\")")).includes('ref-gate'));
+  assert.ok(!rules(gated("startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/main'")).includes('ref-gate'));
+});
+
+test('pip installs must be hash-pinned; heredoc text is not a command', () => {
+  for (const cmd of ['pip install flatbuffers', 'pip install build twine packaging', 'python3 -m pip install flatbuffers', 'uv pip install x', 'pip3 install -r requirements.txt']) {
+    assert.ok(rules(SAFE.replace('- run: echo ok', `- run: ${cmd}`)).includes('unpinned-pip'), cmd);
+  }
+  assert.ok(!rules(SAFE.replace('- run: echo ok', '- run: pip install --require-hashes -r .github/requirements/x.txt')).includes('unpinned-pip'));
+  assert.ok(!rules(SAFE.replace('- run: echo ok', '- run: pip install . # hardening: the package under test')).includes('unpinned-pip'));
+  const heredoc = SAFE.replace('- run: echo ok', `- run: |
+          cat > README.md << 'EOF'
+          pip install spacedatastandards
+          npm install -g foo@latest
+          EOF
+          echo done`);
+  assert.deepEqual(rules(heredoc), []);
+});
+
+test('scanner actions that default to a latest image must pin it by digest', () => {
+  const step = (extra) => SAFE.replace('- run: echo ok', `- uses: trufflesecurity/trufflehog@e76dff8a7e57d6df0c60ad8cbf5d5cba505a8fc9 # v3.99.2
+        with:
+          path: ./
+${extra}`);
+  assert.ok(rules(step('')).includes('mutable-source'));
+  assert.ok(rules(step('          version: latest\n')).includes('mutable-source'));
+  assert.ok(rules(step('          version: 3.99.2\n')).includes('mutable-source'));
+  assert.ok(!rules(step(`          version: 3.99.2@sha256:${'a'.repeat(64)}\n`)).includes('mutable-source'));
+});
+
+test('download-and-run variants the line rule missed are refused', () => {
+  const run = (body) => rules(SAFE.replace('- run: echo ok', `- run: |\n${body.split('\n').map((l) => `          ${l}`).join('\n')}`));
+  assert.ok(run('curl -fsSL https://example.com/i.sh \\\n  | sh').includes('pipe-to-shell'), 'continuation');
+  assert.ok(run('bash <(curl -fsSL https://example.com/i.sh)').includes('pipe-to-shell'), 'process substitution');
+  assert.ok(run('source <(wget -qO- https://example.com/env)').includes('pipe-to-shell'));
+  assert.ok(run('eval "$(curl -fsSL https://example.com/env)"').includes('pipe-to-shell'));
+  assert.ok(run('python3 -c "import urllib.request as u; exec(u.urlopen(\'https://example.com/x.py\').read())"').includes('pipe-to-shell'));
+  assert.ok(run('curl -fsSL -o /tmp/i.sh https://example.com/i.sh\nsh /tmp/i.sh').includes('pipe-to-shell'), 'download then sh');
+  assert.ok(run('wget -O "$RUNNER_TEMP/i.sh" https://example.com/i.sh\nchmod +x "$RUNNER_TEMP/i.sh"\n"$RUNNER_TEMP/i.sh"').includes('pipe-to-shell'), 'download then exec');
+  assert.ok(!run('curl -fsSL -o /tmp/i.sh https://example.com/i.sh\necho "abc  /tmp/i.sh" | sha256sum -c -\nsh /tmp/i.sh').includes('pipe-to-shell'), 'checked download');
+  assert.ok(!run('curl -fsSL -o /tmp/x.zip https://example.com/x.zip\nunzip -q /tmp/x.zip').includes('pipe-to-shell'), 'not executed');
+  assert.ok(run('go install golang.org/x/vuln/cmd/govulncheck@latest').includes('mutable-source'));
+  assert.ok(!run('go install golang.org/x/vuln/cmd/govulncheck@v1.8.0').includes('mutable-source'));
+  assert.ok(run('npm install --ignore-scripts').includes('mutable-source'), 'bare npm install');
+  assert.ok(!run('npm ci --ignore-scripts').includes('mutable-source'));
+  assert.ok(!run('npm install -g npm@11.20.0').includes('mutable-source'));
+});
+
+test('every way of naming a secret counts, and secrets never sit in workflow-level env', () => {
+  for (const ref of ["${{ secrets['DOCKERHUB_TOKEN'] }}", '${{ toJSON(secrets) }}', '${{ secrets[format(\'{0}\', \'X\')] }}']) {
+    const job = SAFE.replace('- run: echo ok', `- run: echo ok\n        env:\n          T: ${ref}`);
+    assert.ok(rules(job).includes('environment'), ref);
+  }
+  const workflowEnv = SAFE.replace('permissions: {}\n', 'permissions: {}\nenv:\n  TOKEN: ${{ secrets.NPM_TOKEN }}\n');
+  assert.ok(rules(workflowEnv).includes('environment'));
+  assert.ok(!rules(SAFE.replace('permissions: {}\n', 'permissions: {}\nenv:\n  NODE_VERSION: 24\n')).includes('environment'));
+});
+
+test('an expression with braces inside cannot hide a dispatch input from the injection rule', () => {
+  assert.ok(rules(SAFE.replace('- run: echo ok', "- run: echo \"${{ format('{0}', inputs.version) }}\"")).includes('script-injection'));
+});

@@ -13,3 +13,12 @@ updates:
       actions:
         patterns:
           - "*"
+  # The hash-pinned Python tools in .github/requirements/ (security audit
+  # SEC-042): Dependabot proposes new pins, hashes included, as reviewable PRs.
+  - package-ecosystem: "pip"
+    directory: "/.github"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"

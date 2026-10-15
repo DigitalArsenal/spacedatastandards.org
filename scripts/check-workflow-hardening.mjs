@@ -14,11 +14,27 @@
  *
  *   pinned-uses        a `uses:` that is not a local action or a full 40-hex
  *                      commit SHA (docker:// needs an @sha256 digest)
- *   pipe-to-shell      `curl|wget ... | sh|bash`, `irm ... | iex`
+ *   pipe-to-shell      `curl|wget ... | sh|bash` (also across `\` line
+ *                      continuations), `sh <(curl ...)`, `eval "$(curl ...)"`,
+ *                      `python -c "exec(urlopen(...))"`, `irm ... | iex`, and
+ *                      a file downloaded then run with sh/bash/source in the
+ *                      same step without a checksum or signature check
  *   mutable-source     raw.githubusercontent.com/<repo>/<main|master|HEAD>/,
- *                      `<pkg>@latest` installs, `git clone` without a pinned
+ *                      `<pkg>@latest` installs (npm/npx/pnpm/yarn/bun and
+ *                      `go install|get|run`), `git clone` without a pinned
  *                      40-hex commit in the same step, a checkout of another
- *                      repository without a 40-hex `ref:`
+ *                      repository without a 40-hex `ref:`, an action that
+ *                      runs a scanner image whose version defaults to
+ *                      `latest` (trufflehog) without an @sha256 pin, a bare
+ *                      `npm install` (it resolves and may rewrite the lock;
+ *                      `npm ci` installs exactly the lockfile)
+ *   unpinned-pip       `pip install` without `--require-hashes` (a hashed
+ *                      requirements file); a `# hardening: <reason>` comment
+ *                      on the line exempts it
+ *   checkout-ref       a workflow checkout whose `ref:` comes from a dispatch
+ *                      input (`inputs.*`, `github.event.inputs.*`): whoever
+ *                      dispatches picks the code a gated job builds, and an
+ *                      unqualified name resolves to a BRANCH before a tag
  *   pull-request-target  any pull_request_target trigger
  *   permissions        a workflow without a top-level `permissions:` block, a
  *                      top-level block that grants write, or a job without its
@@ -30,13 +46,19 @@
  *                      `${{ github.head_ref }}` expanded inside a `run:` or
  *                      `script:` body (pass them through `env:` instead)
  *   environment        a job that receives a repository secret (other than
- *                      GITHUB_TOKEN) or mints an OIDC id-token without
- *                      declaring a deployment `environment:`, where the
- *                      owner's required reviewers and branch/tag policy apply
+ *                      GITHUB_TOKEN; `secrets.X`, `secrets['X']` and
+ *                      `toJSON(secrets)` all count) or mints an OIDC id-token
+ *                      without declaring a deployment `environment:`, where
+ *                      the owner's required reviewers and branch/tag policy
+ *                      apply; `toJSON(secrets)` anywhere; secrets in the
+ *                      workflow-level `env:` (every job would get them)
  *   ref-gate           a job with an `environment:` in a manually dispatched
- *                      workflow whose `if:` does not restrict github.ref
+ *                      workflow whose `if:` does not restrict github.ref, or
+ *                      any job `if:` that admits every tag
+ *                      (`startsWith(github.ref, 'refs/tags/')`) or every
+ *                      branch (`'refs/heads/'`) instead of v* tags / main
  *                      (environments named ci-* hold read-only CI credentials
- *                      for every branch and are exempt)
+ *                      for every branch and are exempt from the first part)
  *   dependabot         .github/dependabot.yml does not update github-actions
  *
  * It is deliberately dependency-free and line-oriented (workflows here are
@@ -50,6 +72,15 @@ import { fileURLToPath } from 'node:url';
 
 const SHA40 = /^[0-9a-f]{40}$/;
 const SAFE_REF_GATE = /github\.ref\b/;
+// Any tag / any branch: the prefix closes right after the slash.
+const ANY_TAG_GATE = /refs\/tags\/['"]/;
+const ANY_BRANCH_GATE = /refs\/heads\/['"]/;
+// `${{ ... }}`, lazily, so `format('{0}', inputs.x)` cannot end it early.
+const EXPRESSION = /\$\{\{[\s\S]*?\}\}/g;
+// Actions that run a container image whose `version` input defaults to the
+// moving `latest` tag: the action SHA alone does not pin the code that runs.
+const IMAGE_VERSION_ACTIONS = { 'trufflesecurity/trufflehog': 'version' };
+const CHECKSUM_CHECK = /\b(sha(1|224|256|384|512)sum|shasum|b2sum)\b|\bopenssl\s+dgst\b|\bgpgv?\b[^\n]*--verify|\bgpgv\b|\bcosign\s+verify|\bminisign\b[^\n]*-V|\bsignify\b[^\n]*-V/;
 
 const indentOf = (line) => line.length - line.trimStart().length;
 const isBlank = (line) => line.trim() === '' || line.trim().startsWith('#');
@@ -75,6 +106,41 @@ function blockEnd(lines, start, keyCol) {
   let end = start + 1;
   while (end < lines.length && (lines[end].trim() === '' || indentOf(lines[end]) > keyCol)) end += 1;
   return end;
+}
+
+/**
+ * Line indexes that are heredoc payload inside `run:` bodies (README text,
+ * generated config): data written to a file, not commands the step runs.
+ */
+function heredocLines(lines) {
+  const data = new Set();
+  for (let i = 0; i < lines.length; i += 1) {
+    const m = /<<-?\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1/.exec(lines[i]);
+    if (!m) continue;
+    const terminator = m[2];
+    let j = i + 1;
+    while (j < lines.length && lines[j].trim() !== terminator) {
+      data.add(j);
+      j += 1;
+    }
+    i = j;
+  }
+  return data;
+}
+
+/** Physical lines joined across shell `\` continuations: [{ text, line }]. */
+function logicalLines(lines) {
+  const out = [];
+  for (let i = 0; i < lines.length; i += 1) {
+    let text = lines[i];
+    const line = i + 1;
+    while (/\\\s*$/.test(text) && i + 1 < lines.length) {
+      i += 1;
+      text = `${text.replace(/\\\s*$/, ' ')}${lines[i].trim()}`;
+    }
+    out.push({ text, line });
+  }
+  return out;
 }
 
 /** The body (and first line) of every `run:` / `script:` value. */
@@ -164,38 +230,93 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
     }
   });
 
-  // pipe-to-shell and mutable sources, anywhere in code
-  code.forEach((line, i) => {
+  // pipe-to-shell and mutable sources, in every line a step executes (heredoc
+  // payloads are data and are skipped).
+  const data = heredocLines(code);
+  const exec = code.map((l, i) => (data.has(i) ? '' : l));
+  for (const { text: line, line: at } of logicalLines(exec)) {
     if (/\b(curl|wget)\b[^|]*\|\s*(sudo\s+(-\S+\s+)*)?(env\s+\S+\s+)*(ba|z|da|k)?sh\b/.test(line)) {
-      add(i + 1, 'pipe-to-shell', 'downloads piped into a shell run unverified code; download a pinned release and check its sha256');
+      add(at, 'pipe-to-shell', 'downloads piped into a shell run unverified code; download a pinned release and check its sha256');
+    }
+    if (/(\b(ba|z|da|k)?sh|\bsource|(^|[\s;&|])\.)\s+<\(\s*(curl|wget)\b/.test(line) || /\beval\s+["']?\$\(\s*(curl|wget)\b/.test(line)) {
+      add(at, 'pipe-to-shell', 'a download run through process substitution or eval is unverified code');
+    }
+    if (/\bpython[0-9.]*\s+-c\b/.test(line) && /\bexec\s*\(/.test(line) && /\b(urlopen|urlretrieve|requests\.get|httpx\.get)\b/.test(line)) {
+      add(at, 'pipe-to-shell', 'python -c exec() of a download runs unverified code');
     }
     if (/\b(irm|iwr|Invoke-RestMethod|Invoke-WebRequest)\b[^|]*\|\s*(iex|Invoke-Expression)\b/i.test(line)) {
-      add(i + 1, 'pipe-to-shell', 'downloads piped into Invoke-Expression run unverified code');
+      add(at, 'pipe-to-shell', 'downloads piped into Invoke-Expression run unverified code');
     }
     if (/raw\.githubusercontent\.com\/[^/\s]+\/[^/\s]+\/(main|master|HEAD)\//.test(line)) {
-      add(i + 1, 'mutable-source', 'fetches from a moving branch head; pin a tag or commit and verify a checksum');
+      add(at, 'mutable-source', 'fetches from a moving branch head; pin a tag or commit and verify a checksum');
     }
     if (/\b(npm|npx|pnpm|yarn|bunx?)\b.*@latest\b/.test(line)) {
-      add(i + 1, 'mutable-source', 'installs a moving @latest version; pin an exact version');
+      add(at, 'mutable-source', 'installs a moving @latest version; pin an exact version');
+    }
+    const npmInstall = /\bnpm\s+(install|i|add)\b(.*)$/.exec(line);
+    if (npmInstall && !npmInstall[2].split(/\s+/).some((arg) => arg && !arg.startsWith('-'))) {
+      add(at, 'mutable-source', 'npm install resolves versions afresh; use npm ci (exactly the lockfile)');
+    }
+    if (/\bgo\s+(install|get|run)\b[^\n]*@(latest|master|main|HEAD)\b/.test(line)) {
+      add(at, 'mutable-source', 'go install of a moving version; pin a release (go checks it against sum.golang.org)');
+    }
+    if (/\b(pip[0-9.]*|python[0-9.]*\s+-m\s+pip|uv\s+pip)\s+install\b/.test(line) && !/--require-hashes\b/.test(line)
+      && !/#\s*hardening:\s*\S/.test(lines[at - 1])) {
+      add(at, 'unpinned-pip', 'pip install without --require-hashes runs whatever PyPI serves today; install a hashed requirements file');
     }
     if (/\bpull_request_target\b/.test(line)) {
-      add(i + 1, 'pull-request-target', 'pull_request_target runs with secrets on untrusted pull requests');
+      add(at, 'pull-request-target', 'pull_request_target runs with secrets on untrusted pull requests');
     }
-  });
+  }
 
   const bodies = scriptBodies(code);
   for (const body of bodies) {
     if (/\bgit\s+clone\b/.test(body.text) && !/\b[0-9a-f]{40}\b/.test(body.text)) {
       add(body.line, 'mutable-source', 'git clone without checking out a pinned 40-hex commit in the same step');
     }
+    // Downloaded to a file, then run, with nothing checking what arrived.
+    const runnable = body.lines.filter((_, k) => !data.has(body.offset + k));
+    const joined = logicalLines(runnable).map((l) => l.text);
+    const downloaded = new Set();
+    for (const l of joined) {
+      if (!/\b(curl|wget)\b/.test(l)) continue;
+      for (const m of l.matchAll(/(?:\s-o|\s--output|\s-O|\s--output-document)[=\s]+(['"]?)([^\s'";|&]+)\1/g)) downloaded.add(m[2]);
+    }
+    if (downloaded.size && !CHECKSUM_CHECK.test(joined.join('\n'))) {
+      const runs = (l) => [...downloaded].some((f) => {
+        const q = f.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const viaShell = new RegExp(`(^|[\\s;&|(])((sudo\\s+)?(ba|z|da|k)?sh|source|\\.)\\s+(-\\S+\\s+)*['"]?${q}['"]?(\\s|$|;)`);
+        const direct = new RegExp(`(^|[;&|]|&&|\\|\\|)\\s*(sudo\\s+)?['"]?(\\./)?${q}['"]?(\\s|$|;)`);
+        return viaShell.test(l) || direct.test(l);
+      });
+      const at = joined.findIndex((l) => runs(l));
+      if (at >= 0) add(body.line, 'pipe-to-shell', 'a downloaded file is executed with no checksum or signature check in the same step');
+    }
     body.lines.forEach((l, k) => {
-      const expressions = l.match(/\$\{\{[^}]*\}\}/g) || [];
+      const expressions = l.match(EXPRESSION) || [];
       for (const expr of expressions) {
         const untrusted = /\bgithub\.event\b|\bgithub\.head_ref\b/.test(expr) || (kind === 'workflow' && /\binputs\./.test(expr));
         if (untrusted) add(body.offset + k + 1, 'script-injection', `${expr} is expanded into the script; pass it through env:`);
       }
     });
   }
+
+  // Actions whose container image defaults to `latest`.
+  code.forEach((line, i) => {
+    const m = /^\s*(?:-\s+)?uses:\s*['"]?([\w.-]+\/[\w.-]+)@/.exec(line);
+    if (!m || !IMAGE_VERSION_ACTIONS[m[1]]) return;
+    const input = IMAGE_VERSION_ACTIONS[m[1]];
+    let start = i;
+    while (start >= 0 && !/^\s*-\s/.test(code[start])) start -= 1;
+    const dashCol = indentOf(code[start < 0 ? i : start]);
+    let end = i + 1;
+    while (end < code.length && (isBlank(code[end]) || indentOf(code[end]) > dashCol)) end += 1;
+    const step = code.slice(Math.max(start, 0), end);
+    const version = step.find((l) => new RegExp(`^\\s*${input}:`).test(l));
+    if (!version || !/@sha256:[0-9a-f]{64}\s*['"]?\s*$/.test(version)) {
+      add(i + 1, 'mutable-source', `${m[1]} runs its image at \`${input}\` (default latest); pin ${input}: <version>@sha256:<digest>`);
+    }
+  });
 
   for (const step of checkoutSteps(code)) {
     const at = step.lines.findIndex((l) => /^\s*persist-credentials:/.test(l));
@@ -205,6 +326,10 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
       add(step.line, 'persist-credentials', 'actions/checkout must set persist-credentials: false');
     } else if (!/:\s*false\s*$/.test(persist)) {
       if (!/#\s*hardening:\s*\S/.test(raw)) add(step.line, 'persist-credentials', 'persist-credentials: true needs a "# hardening: <reason>" comment');
+    }
+    const refLine = step.lines.find((l) => /^\s*ref:/.test(l));
+    if (kind === 'workflow' && refLine && /\binputs\.|\bgithub\.event\.inputs\b/.test(refLine)) {
+      add(step.line, 'checkout-ref', 'checkout ref comes from a dispatch input; build github.ref and dispatch the workflow on the tag instead');
     }
     const repo = step.lines.find((l) => /^\s*repository:/.test(l));
     if (repo && !/\$\{\{\s*github\.repository\s*\}\}/.test(repo)) {
@@ -227,13 +352,29 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
     if (/\bwrite\b/.test(block)) add(topIdx + 1, 'permissions', 'top-level permissions grant write; grant writes per job');
   }
 
+  // Workflow-level env reaches every job, environment or not.
+  const envIdx = code.findIndex((l) => /^env:/.test(l));
+  if (envIdx >= 0) {
+    const envBlock = code.slice(envIdx, blockEnd(code, envIdx, 0)).join('\n');
+    if (/\bsecrets\b/.test(envBlock.replace(/secrets\.GITHUB_TOKEN\b/g, ''))) {
+      add(envIdx + 1, 'environment', 'workflow-level env: holds a secret, so every job gets it; set it on the step that needs it, in an environment job');
+    }
+  }
+  code.forEach((line, i) => {
+    if (/\btoJSON\s*\(\s*secrets\s*\)/i.test(line)) add(i + 1, 'environment', 'toJSON(secrets) hands every secret to one place');
+  });
+
   const dispatched = code.some((l) => /\bworkflow_dispatch\b/.test(l));
   for (const job of jobsOf(code)) {
     const perms = jobKey(job, 'permissions');
     if (!perms) add(job.line, 'permissions', `job ${job.name} has no permissions: block`);
     const env = jobKey(job, 'environment');
     const jobText = job.lines.join('\n');
-    const secrets = [...jobText.matchAll(/\$\{\{\s*secrets\.([A-Za-z0-9_]+)/g)].map((m) => m[1]).filter((s) => s !== 'GITHUB_TOKEN');
+    const secrets = [
+      ...[...jobText.matchAll(/\bsecrets\.([A-Za-z0-9_]+)/g)].map((m) => m[1]),
+      ...[...jobText.matchAll(/\bsecrets\s*\[\s*['"]?([A-Za-z0-9_]*)/g)].map((m) => m[1] || '[indexed]'),
+      ...(/\btoJSON\s*\(\s*secrets\s*\)/i.test(jobText) ? ['toJSON(secrets)'] : []),
+    ].filter((s) => s !== 'GITHUB_TOKEN');
     const idToken = perms && /id-token:\s*write/.test(perms.block);
     if ((secrets.length || idToken) && !env) {
       const why = [secrets.length ? `secrets ${[...new Set(secrets)].join(', ')}` : '', idToken ? 'id-token: write' : ''].filter(Boolean).join(' and ');
@@ -242,10 +383,12 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
     // ci-* environments carry read-only CI credentials for every branch and
     // pull request; they are not deployment targets, so they take no ref gate.
     const ciOnly = env && /^\s*environment:\s*['"]?ci-/.test(env.line);
+    const cond = jobKey(job, 'if');
     if (env && dispatched && !ciOnly) {
-      const cond = jobKey(job, 'if');
       if (!cond || !SAFE_REF_GATE.test(cond.block)) add(job.line, 'ref-gate', `job ${job.name} deploys from a dispatchable workflow without an if: on github.ref`);
     }
+    if (cond && ANY_TAG_GATE.test(cond.block)) add(job.line, 'ref-gate', `job ${job.name} admits every tag; gate on 'refs/tags/v'`);
+    if (cond && ANY_BRANCH_GATE.test(cond.block)) add(job.line, 'ref-gate', `job ${job.name} admits every branch; gate on 'refs/heads/main'`);
     if (/secrets:\s*inherit/.test(jobText)) add(job.line, 'environment', `job ${job.name} passes secrets: inherit`);
   }
   return findings;
