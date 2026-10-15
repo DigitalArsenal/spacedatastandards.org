@@ -6,15 +6,16 @@ extern crate alloc;
 pub const ENUM_MIN_PVN_SOURCE_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PVN_SOURCE_KIND: i8 = 3;
+pub const ENUM_MAX_PVN_SOURCE_KIND: i8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PVN_SOURCE_KIND: [pvnSourceKind; 4] = [
+pub const ENUM_VALUES_PVN_SOURCE_KIND: [pvnSourceKind; 5] = [
     pvnSourceKind::Unspecified,
     pvnSourceKind::ElementSet,
     pvnSourceKind::Ephemeris,
     pvnSourceKind::Observation,
+    pvnSourceKind::Reference,
 ];
 
 /// What kind of data a source supplies.
@@ -33,14 +34,17 @@ impl pvnSourceKind {
     /// Observations (ranges, angles, other measurements) that states are
     /// estimated from
     pub const Observation: Self = Self(3);
+    /// Reference registers of sites and facilities (status, dates, identity)
+    pub const Reference: Self = Self(4);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_MAX: i8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::ElementSet,
         Self::Ephemeris,
         Self::Observation,
+        Self::Reference,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -50,6 +54,7 @@ impl pvnSourceKind {
             Self::ElementSet => Some("ElementSet"),
             Self::Ephemeris => Some("Ephemeris"),
             Self::Observation => Some("Observation"),
+            Self::Reference => Some("Reference"),
             _ => None,
         }
     }

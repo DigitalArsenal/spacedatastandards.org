@@ -117,7 +117,11 @@ class PNVEntry extends Table
         return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
-    /// Signature scheme of the notice, e.g. "ed25519", "secp256k1".
+    /// Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+    /// "Secp256k1". The signature is over the notice's signed bytes, hashed
+    /// once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+    /// signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+    /// A signature over SHA-256(SHA-256(bytes)) does not verify.
     public function getSIGNATURE_TYPE()
     {
         $o = $this->__offset(24);

@@ -65,7 +65,8 @@
         "Unspecified",
         "ElementSet",
         "Ephemeris",
-        "Observation"
+        "Observation",
+        "Reference"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -85,6 +86,10 @@
         "Observation": {
           "value": 3,
           "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        },
+        "Reference": {
+          "value": 4,
+          "description": "Reference registers of sites and facilities (status, dates, identity)"
         }
       }
     },
@@ -613,6 +618,10 @@
             "Observation": {
               "value": 3,
               "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            "Reference": {
+              "value": 4,
+              "description": "Reference registers of sites and facilities (status, dates, identity)"
             }
           },
           "x-flatbuffer-default": "Unspecified"

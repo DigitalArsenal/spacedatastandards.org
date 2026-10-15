@@ -146,8 +146,14 @@ class CryptoKey extends Table
     }
 
     /// Signature encoding format produced by this key (e.g., "raw-ed25519",
-    /// "compact"). ABSENT means the canonical encoding of ALGORITHM
-    /// (raw-ed25519 for ed25519, compact for secp256k1)
+    /// "der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+    /// for ed25519 (64 bytes over the content itself); der for secp256k1, a
+    /// strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+    /// content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+    /// content to a hashing signer, or its single SHA-256 to a digest signer,
+    /// never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+    /// does not verify. "compact" (65-byte header||r||s) is a ChainProof
+    /// encoding only, never the EPM signature's
     public function getENCODING()
     {
         $o = $this->__offset(22);

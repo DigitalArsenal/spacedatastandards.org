@@ -129,7 +129,7 @@
         },
         "SIGNATURE_TYPE": {
           "type": "string",
-          "description": "Signature scheme of the notice, e.g. \"ed25519\", \"secp256k1\".",
+          "description": "Signature scheme of the notice, verbatim from the $PNM, e.g. \"Ed25519\",\n\"Secp256k1\". The signature is over the notice's signed bytes, hashed\nonce: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA\nsignature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).\nA signature over SHA-256(SHA-256(bytes)) does not verify.",
           "x-flatbuffer-type": "string"
         },
         "SIGNATURE": {

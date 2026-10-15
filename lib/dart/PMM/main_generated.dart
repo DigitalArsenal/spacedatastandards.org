@@ -161,7 +161,17 @@ class PMMTrustAnchor {
   String? get SIGNING_KEY_PATH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get signingKeyPath => SIGNING_KEY_PATH;
   ///  Signature algorithm identifier, e.g. "ed25519",
-  ///  "secp256k1-compact-ethereum". Empty means "ed25519".
+  ///  "secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one
+  ///  hash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for
+  ///  `$EPM` ChainProof: "ed25519" signs the bytes themselves;
+  ///  "secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash
+  ///  Keccak-256("\x19Ethereum Signed Message:\n" || decimal(len) || bytes),
+  ///  low-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash
+  ///  SHA-256(SHA-256("\x18Bitcoin Signed Message:\n" || CompactSize(len) ||
+  ///  bytes)). The secp256k1 forms are the 65-byte compact recoverable
+  ///  signature header||r||s, verified by recovering the key and comparing it
+  ///  with `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the
+  ///  protocol hash.
   String? get SIGNATURE_ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get signatureAlgorithm => SIGNATURE_ALGORITHM;
   ///  IPFS CID of the provider node's `$EPM`.

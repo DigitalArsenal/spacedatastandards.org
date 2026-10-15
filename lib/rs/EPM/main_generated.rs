@@ -408,8 +408,14 @@ impl<'a> CryptoKey<'a> {
     }
 
     /// Signature encoding format produced by this key (e.g., "raw-ed25519",
-    /// "compact"). ABSENT means the canonical encoding of ALGORITHM
-    /// (raw-ed25519 for ed25519, compact for secp256k1)
+    /// "der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+    /// for ed25519 (64 bytes over the content itself); der for secp256k1, a
+    /// strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+    /// content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+    /// content to a hashing signer, or its single SHA-256 to a digest signer,
+    /// never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+    /// does not verify. "compact" (65-byte header||r||s) is a ChainProof
+    /// encoding only, never the EPM signature's
     #[inline]
     pub fn ENCODING(&self) -> Option<&'a str> {
         // Safety:
@@ -1054,7 +1060,8 @@ impl<'a> ChainProof<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_KEY_PATH, None)}
     }
 
-    /// Signature over the attestation payload (hex-encoded)
+    /// Signature over the attestation payload (hex-encoded), in the chain's
+    /// own signed-message form (see ALGORITHM)
     #[inline]
     pub fn SIGNATURE(&self) -> Option<&'a str> {
         // Safety:
@@ -1072,7 +1079,20 @@ impl<'a> ChainProof<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_SIGNED_PAYLOAD, None)}
     }
 
-    /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+    /// Signature algorithm, which fixes the one hash the signature is over:
+    ///   "secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+    ///     SHA-256(SHA-256("\x18Bitcoin Signed Message:\n" || CompactSize(len)
+    ///     || SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+    ///     double SHA-256 is the protocol's own, applied once);
+    ///   "secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+    ///     Keccak-256("\x19Ethereum Signed Message:\n" || decimal(len) ||
+    ///     SIGNED_PAYLOAD), low-S;
+    ///   "ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+    /// Both secp256k1 forms are the 65-byte compact recoverable signature
+    /// header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+    /// emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+    /// protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+    /// compressed). Nothing hashes the payload before the protocol hash.
     #[inline]
     pub fn ALGORITHM(&self) -> Option<&'a str> {
         // Safety:
@@ -1081,7 +1101,8 @@ impl<'a> ChainProof<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(ChainProof::VT_ALGORITHM, None)}
     }
 
-    /// Signature encoding format (e.g., "compact", "raw-ed25519")
+    /// Signature encoding format: "compact" for the secp256k1 algorithms
+    /// (65-byte header||r||s), "raw-ed25519" for ed25519
     #[inline]
     pub fn ENCODING(&self) -> Option<&'a str> {
         // Safety:

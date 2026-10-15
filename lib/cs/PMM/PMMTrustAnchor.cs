@@ -64,7 +64,17 @@ public struct PMMTrustAnchor : IFlatbufferObject
 #endif
   public byte[] GetSIGNING_KEY_PATHArray() { return __p.__vector_as_array<byte>(12); }
   /// Signature algorithm identifier, e.g. "ed25519",
-  /// "secp256k1-compact-ethereum". Empty means "ed25519".
+  /// "secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one
+  /// hash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for
+  /// `$EPM` ChainProof: "ed25519" signs the bytes themselves;
+  /// "secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash
+  /// Keccak-256("\x19Ethereum Signed Message:\n" || decimal(len) || bytes),
+  /// low-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash
+  /// SHA-256(SHA-256("\x18Bitcoin Signed Message:\n" || CompactSize(len) ||
+  /// bytes)). The secp256k1 forms are the 65-byte compact recoverable
+  /// signature header||r||s, verified by recovering the key and comparing it
+  /// with `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the
+  /// protocol hash.
   public string SIGNATURE_ALGORITHM { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSIGNATURE_ALGORITHMBytes() { return __p.__vector_as_span<byte>(14, 1); }

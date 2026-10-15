@@ -184,7 +184,11 @@ struct PNVEntry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   int64_t RECEIVED_AT_MS() const {
     return GetField<int64_t>(VT_RECEIVED_AT_MS, 0);
   }
-  /// Signature scheme of the notice, e.g. "ed25519", "secp256k1".
+  /// Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+  /// "Secp256k1". The signature is over the notice's signed bytes, hashed
+  /// once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+  /// signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+  /// A signature over SHA-256(SHA-256(bytes)) does not verify.
   const ::flatbuffers::String *SIGNATURE_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SIGNATURE_TYPE);
   }

@@ -123,7 +123,11 @@ public struct PNVEntry: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public var PUBLISHED_AT_MS: Int64 { let o = _accessor.offset(VT.PUBLISHED_AT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  Unix milliseconds the receiving node received the notice.
   public var RECEIVED_AT_MS: Int64 { let o = _accessor.offset(VT.RECEIVED_AT_MS); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  ///  Signature scheme of the notice, e.g. "ed25519", "secp256k1".
+  ///  Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+  ///  "Secp256k1". The signature is over the notice's signed bytes, hashed
+  ///  once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+  ///  signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+  ///  A signature over SHA-256(SHA-256(bytes)) does not verify.
   public var SIGNATURE_TYPE: String? { let o = _accessor.offset(VT.SIGNATURE_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNATURE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE_TYPE) }
   ///  The notice's signature, verbatim.

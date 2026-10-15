@@ -251,22 +251,169 @@ class SIT extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+    /// words (Online, Offline, Testing); this field is the lifecycle.
+    /**
+     * @return sbyte
+     */
+    public function getLIFECYCLE_STATUS()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \siteLifecycleStatus::UNSPECIFIED;
+    }
+
+    /// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+    public function getLIFECYCLE_STATUS_DATE()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// When the status was last checked against its sources, RFC 3339 UTC
+    public function getSTATUS_VERIFIED_AT()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+    /**
+     * @returnVectorOffset
+     */
+    public function getSTATUS_EVIDENCE($j)
+    {
+        $o = $this->__offset(58);
+        $obj = new SITStatusEvidence();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSTATUS_EVIDENCELength()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// What kind of site this is, as its source names the class ("research
+    /// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+    /// SiteType
+    public function getSITE_KIND()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Language of DESCRIPTION, BCP 47
+    public function getDESCRIPTION_LANGUAGE()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+    public function getDESCRIPTION_CITATION()
+    {
+        $obj = new SITCitation();
+        $o = $this->__offset(64);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+    public function getPOSITION_CITATION()
+    {
+        $obj = new SITCitation();
+        $o = $this->__offset(66);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Records about the site in other registers; the RECORD role names the
+    /// site's own record
+    /**
+     * @returnVectorOffset
+     */
+    public function getEXTERNAL_REFERENCES($j)
+    {
+        $o = $this->__offset(68);
+        $obj = new SITReference();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEXTERNAL_REFERENCESLength()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Operators, owners and regulators
+    /**
+     * @returnVectorOffset
+     */
+    public function getPARTIES($j)
+    {
+        $o = $this->__offset(70);
+        $obj = new SITParty();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPARTIESLength()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Stated quantities (capacity, power, units, elevation)
+    /**
+     * @returnVectorOffset
+     */
+    public function getQUANTITIES($j)
+    {
+        $o = $this->__offset(72);
+        $obj = new SITQuantity();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getQUANTITIESLength()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// The record's provider and producer, and the terms of the content the
+    /// record reproduces (each citation carries its own source's terms)
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(74);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSIT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(24);
+        $builder->StartObject(36);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SIT
      */
-    public static function createSIT(FlatBufferBuilder $builder, $ID, $NAME, $ABBREVIATION, $SITE_TYPE, $CATCODE, $NETWORK, $LATITUDE, $LONGITUDE, $ALTITUDE, $GEOMETRY, $CENTER_POINT_GEOMETRY, $CLASSIFICATION, $CTR_ID, $CREATED_BY, $DESCRIPTION, $MODEL_URL, $SOURCE, $TASKABLE, $OPERATIONAL_STATUS, $ESTABLISHMENT_DATE, $CONTACT_INFO, $ENVIRONMENTAL_IMPACT, $ACCESSIBILITY_INFRA, $INTEGRATED_DEVICES)
+    public static function createSIT(FlatBufferBuilder $builder, $ID, $NAME, $ABBREVIATION, $SITE_TYPE, $CATCODE, $NETWORK, $LATITUDE, $LONGITUDE, $ALTITUDE, $GEOMETRY, $CENTER_POINT_GEOMETRY, $CLASSIFICATION, $CTR_ID, $CREATED_BY, $DESCRIPTION, $MODEL_URL, $SOURCE, $TASKABLE, $OPERATIONAL_STATUS, $ESTABLISHMENT_DATE, $CONTACT_INFO, $ENVIRONMENTAL_IMPACT, $ACCESSIBILITY_INFRA, $INTEGRATED_DEVICES, $LIFECYCLE_STATUS, $LIFECYCLE_STATUS_DATE, $STATUS_VERIFIED_AT, $STATUS_EVIDENCE, $SITE_KIND, $DESCRIPTION_LANGUAGE, $DESCRIPTION_CITATION, $POSITION_CITATION, $EXTERNAL_REFERENCES, $PARTIES, $QUANTITIES, $PROVENANCE)
     {
-        $builder->startObject(24);
+        $builder->startObject(36);
         self::addID($builder, $ID);
         self::addNAME($builder, $NAME);
         self::addABBREVIATION($builder, $ABBREVIATION);
@@ -291,6 +438,18 @@ class SIT extends Table
         self::addENVIRONMENTAL_IMPACT($builder, $ENVIRONMENTAL_IMPACT);
         self::addACCESSIBILITY_INFRA($builder, $ACCESSIBILITY_INFRA);
         self::addINTEGRATED_DEVICES($builder, $INTEGRATED_DEVICES);
+        self::addLIFECYCLE_STATUS($builder, $LIFECYCLE_STATUS);
+        self::addLIFECYCLE_STATUS_DATE($builder, $LIFECYCLE_STATUS_DATE);
+        self::addSTATUS_VERIFIED_AT($builder, $STATUS_VERIFIED_AT);
+        self::addSTATUS_EVIDENCE($builder, $STATUS_EVIDENCE);
+        self::addSITE_KIND($builder, $SITE_KIND);
+        self::addDESCRIPTION_LANGUAGE($builder, $DESCRIPTION_LANGUAGE);
+        self::addDESCRIPTION_CITATION($builder, $DESCRIPTION_CITATION);
+        self::addPOSITION_CITATION($builder, $POSITION_CITATION);
+        self::addEXTERNAL_REFERENCES($builder, $EXTERNAL_REFERENCES);
+        self::addPARTIES($builder, $PARTIES);
+        self::addQUANTITIES($builder, $QUANTITIES);
+        self::addPROVENANCE($builder, $PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -581,6 +740,222 @@ class SIT extends Table
     public static function startINTEGRATED_DEVICESVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addLIFECYCLE_STATUS(FlatBufferBuilder $builder, $LIFECYCLE_STATUS)
+    {
+        $builder->addSbyteX(24, $LIFECYCLE_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLIFECYCLE_STATUS_DATE(FlatBufferBuilder $builder, $LIFECYCLE_STATUS_DATE)
+    {
+        $builder->addOffsetX(25, $LIFECYCLE_STATUS_DATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTATUS_VERIFIED_AT(FlatBufferBuilder $builder, $STATUS_VERIFIED_AT)
+    {
+        $builder->addOffsetX(26, $STATUS_VERIFIED_AT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSTATUS_EVIDENCE(FlatBufferBuilder $builder, $STATUS_EVIDENCE)
+    {
+        $builder->addOffsetX(27, $STATUS_EVIDENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSTATUS_EVIDENCEVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSTATUS_EVIDENCEVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSITE_KIND(FlatBufferBuilder $builder, $SITE_KIND)
+    {
+        $builder->addOffsetX(28, $SITE_KIND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION_LANGUAGE(FlatBufferBuilder $builder, $DESCRIPTION_LANGUAGE)
+    {
+        $builder->addOffsetX(29, $DESCRIPTION_LANGUAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDESCRIPTION_CITATION(FlatBufferBuilder $builder, $DESCRIPTION_CITATION)
+    {
+        $builder->addOffsetX(30, $DESCRIPTION_CITATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOSITION_CITATION(FlatBufferBuilder $builder, $POSITION_CITATION)
+    {
+        $builder->addOffsetX(31, $POSITION_CITATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEXTERNAL_REFERENCES(FlatBufferBuilder $builder, $EXTERNAL_REFERENCES)
+    {
+        $builder->addOffsetX(32, $EXTERNAL_REFERENCES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEXTERNAL_REFERENCESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEXTERNAL_REFERENCESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPARTIES(FlatBufferBuilder $builder, $PARTIES)
+    {
+        $builder->addOffsetX(33, $PARTIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPARTIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPARTIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addQUANTITIES(FlatBufferBuilder $builder, $QUANTITIES)
+    {
+        $builder->addOffsetX(34, $QUANTITIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createQUANTITIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startQUANTITIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(35, $PROVENANCE, 0);
     }
 
     /**

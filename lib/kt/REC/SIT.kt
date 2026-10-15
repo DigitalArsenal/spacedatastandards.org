@@ -338,6 +338,175 @@ class SIT : Table() {
         get() {
             val o = __offset(50); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+     * words (Online, Offline, Testing); this field is the lifecycle.
+     */
+    val lifecycleStatus : Byte
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+     */
+    val lifecycleStatusDate : String?
+        get() {
+            val o = __offset(54)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val lifecycleStatusDateAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun lifecycleStatusDateInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * When the status was last checked against its sources, RFC 3339 UTC
+     */
+    val statusVerifiedAt : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val statusVerifiedAtAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun statusVerifiedAtInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+     */
+    fun statusEvidence(j: Int) : SITStatusEvidence? = statusEvidence(SITStatusEvidence(), j)
+    fun statusEvidence(obj: SITStatusEvidence, j: Int) : SITStatusEvidence? {
+        val o = __offset(58)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val statusEvidenceLength : Int
+        get() {
+            val o = __offset(58); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * What kind of site this is, as its source names the class ("research
+     * reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+     * SiteType
+     */
+    val siteKind : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val siteKindAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun siteKindInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Language of DESCRIPTION, BCP 47
+     */
+    val descriptionLanguage : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val descriptionLanguageAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun descriptionLanguageInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+     */
+    val descriptionCitation : SITCitation? get() = descriptionCitation(SITCitation())
+    fun descriptionCitation(obj: SITCitation) : SITCitation? {
+        val o = __offset(64)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+     */
+    val positionCitation : SITCitation? get() = positionCitation(SITCitation())
+    fun positionCitation(obj: SITCitation) : SITCitation? {
+        val o = __offset(66)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Records about the site in other registers; the RECORD role names the
+     * site's own record
+     */
+    fun externalReferences(j: Int) : SITReference? = externalReferences(SITReference(), j)
+    fun externalReferences(obj: SITReference, j: Int) : SITReference? {
+        val o = __offset(68)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val externalReferencesLength : Int
+        get() {
+            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Operators, owners and regulators
+     */
+    fun parties(j: Int) : SITParty? = parties(SITParty(), j)
+    fun parties(obj: SITParty, j: Int) : SITParty? {
+        val o = __offset(70)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val partiesLength : Int
+        get() {
+            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Stated quantities (capacity, power, units, elevation)
+     */
+    fun quantities(j: Int) : SITQuantity? = quantities(SITQuantity(), j)
+    fun quantities(obj: SITQuantity, j: Int) : SITQuantity? {
+        val o = __offset(72)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val quantitiesLength : Int
+        get() {
+            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * The record's provider and producer, and the terms of the content the
+     * record reproduces (each citation carries its own source's terms)
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(74)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSIT(_bb: ByteBuffer): SIT = getRootAsSIT(_bb, SIT())
@@ -346,8 +515,19 @@ class SIT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SITBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SIT")
-        fun createSIT(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, abbreviationOffset: Int, siteType: Byte, catcodeOffset: Int, networkOffset: Int, latitude: Float, longitude: Float, altitude: Float, geometryOffset: Int, centerPointGeometryOffset: Int, classificationOffset: Int, ctrIdOffset: Int, createdByOffset: Int, descriptionOffset: Int, modelUrlOffset: Int, sourceOffset: Int, taskable: Boolean, operationalStatusOffset: Int, establishmentDateOffset: Int, contactInfoOffset: Int, environmentalImpactOffset: Int, accessibilityInfraOffset: Int, integratedDevicesOffset: Int) : Int {
-            builder.startTable(24)
+        fun createSIT(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, abbreviationOffset: Int, siteType: Byte, catcodeOffset: Int, networkOffset: Int, latitude: Float, longitude: Float, altitude: Float, geometryOffset: Int, centerPointGeometryOffset: Int, classificationOffset: Int, ctrIdOffset: Int, createdByOffset: Int, descriptionOffset: Int, modelUrlOffset: Int, sourceOffset: Int, taskable: Boolean, operationalStatusOffset: Int, establishmentDateOffset: Int, contactInfoOffset: Int, environmentalImpactOffset: Int, accessibilityInfraOffset: Int, integratedDevicesOffset: Int, lifecycleStatus: Byte, lifecycleStatusDateOffset: Int, statusVerifiedAtOffset: Int, statusEvidenceOffset: Int, siteKindOffset: Int, descriptionLanguageOffset: Int, descriptionCitationOffset: Int, positionCitationOffset: Int, externalReferencesOffset: Int, partiesOffset: Int, quantitiesOffset: Int, provenanceOffset: Int) : Int {
+            builder.startTable(36)
+            addPROVENANCE(builder, provenanceOffset)
+            addQUANTITIES(builder, quantitiesOffset)
+            addPARTIES(builder, partiesOffset)
+            addEXTERNALREFERENCES(builder, externalReferencesOffset)
+            addPOSITIONCITATION(builder, positionCitationOffset)
+            addDESCRIPTIONCITATION(builder, descriptionCitationOffset)
+            addDESCRIPTIONLANGUAGE(builder, descriptionLanguageOffset)
+            addSITEKIND(builder, siteKindOffset)
+            addSTATUSEVIDENCE(builder, statusEvidenceOffset)
+            addSTATUSVERIFIEDAT(builder, statusVerifiedAtOffset)
+            addLIFECYCLESTATUSDATE(builder, lifecycleStatusDateOffset)
             addINTEGRATEDDEVICES(builder, integratedDevicesOffset)
             addACCESSIBILITYINFRA(builder, accessibilityInfraOffset)
             addENVIRONMENTALIMPACT(builder, environmentalImpactOffset)
@@ -370,11 +550,12 @@ class SIT : Table() {
             addABBREVIATION(builder, abbreviationOffset)
             addNAME(builder, nameOffset)
             addID(builder, idOffset)
+            addLIFECYCLESTATUS(builder, lifecycleStatus)
             addTASKABLE(builder, taskable)
             addSITETYPE(builder, siteType)
             return endSIT(builder)
         }
-        fun startSIT(builder: FlatBufferBuilder) = builder.startTable(24)
+        fun startSIT(builder: FlatBufferBuilder) = builder.startTable(36)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addABBREVIATION(builder: FlatBufferBuilder, abbreviation: Int) = builder.addOffset(2, abbreviation, 0)
@@ -415,6 +596,50 @@ class SIT : Table() {
             return builder.endVector()
         }
         fun startIntegratedDevicesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addLIFECYCLESTATUS(builder: FlatBufferBuilder, lifecycleStatus: Byte) = builder.addByte(24, lifecycleStatus, 0)
+        fun addLIFECYCLESTATUSDATE(builder: FlatBufferBuilder, lifecycleStatusDate: Int) = builder.addOffset(25, lifecycleStatusDate, 0)
+        fun addSTATUSVERIFIEDAT(builder: FlatBufferBuilder, statusVerifiedAt: Int) = builder.addOffset(26, statusVerifiedAt, 0)
+        fun addSTATUSEVIDENCE(builder: FlatBufferBuilder, statusEvidence: Int) = builder.addOffset(27, statusEvidence, 0)
+        fun createStatusEvidenceVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startStatusEvidenceVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSITEKIND(builder: FlatBufferBuilder, siteKind: Int) = builder.addOffset(28, siteKind, 0)
+        fun addDESCRIPTIONLANGUAGE(builder: FlatBufferBuilder, descriptionLanguage: Int) = builder.addOffset(29, descriptionLanguage, 0)
+        fun addDESCRIPTIONCITATION(builder: FlatBufferBuilder, descriptionCitation: Int) = builder.addOffset(30, descriptionCitation, 0)
+        fun addPOSITIONCITATION(builder: FlatBufferBuilder, positionCitation: Int) = builder.addOffset(31, positionCitation, 0)
+        fun addEXTERNALREFERENCES(builder: FlatBufferBuilder, externalReferences: Int) = builder.addOffset(32, externalReferences, 0)
+        fun createExternalReferencesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startExternalReferencesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPARTIES(builder: FlatBufferBuilder, parties: Int) = builder.addOffset(33, parties, 0)
+        fun createPartiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPartiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addQUANTITIES(builder: FlatBufferBuilder, quantities: Int) = builder.addOffset(34, quantities, 0)
+        fun createQuantitiesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startQuantitiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(35, provenance, 0)
         fun endSIT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

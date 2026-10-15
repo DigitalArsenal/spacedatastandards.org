@@ -166,6 +166,86 @@ public final class SIT extends com.google.flatbuffers.Table {
   public int INTEGRATED_DEVICESLength() { int o = __offset(50); return o != 0 ? __vector_len(o) : 0; }
   public IDM.Vector integratedDevicesVector() { return integratedDevicesVector(new IDM.Vector()); }
   public IDM.Vector integratedDevicesVector(IDM.Vector obj) { int o = __offset(50); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+   * words (Online, Offline, Testing); this field is the lifecycle.
+   */
+  public byte LIFECYCLE_STATUS() { int o = __offset(52); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+   */
+  public String LIFECYCLE_STATUS_DATE() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LIFECYCLE_STATUS_DATEAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer LIFECYCLE_STATUS_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * When the status was last checked against its sources, RFC 3339 UTC
+   */
+  public String STATUS_VERIFIED_AT() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STATUS_VERIFIED_ATAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer STATUS_VERIFIED_ATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+   */
+  public SITStatusEvidence STATUS_EVIDENCE(int j) { return STATUS_EVIDENCE(new SITStatusEvidence(), j); }
+  public SITStatusEvidence STATUS_EVIDENCE(SITStatusEvidence obj, int j) { int o = __offset(58); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int STATUS_EVIDENCELength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
+  public SITStatusEvidence.Vector statusEvidenceVector() { return statusEvidenceVector(new SITStatusEvidence.Vector()); }
+  public SITStatusEvidence.Vector statusEvidenceVector(SITStatusEvidence.Vector obj) { int o = __offset(58); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * What kind of site this is, as its source names the class ("research
+   * reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+   * SiteType
+   */
+  public String SITE_KIND() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SITE_KINDAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer SITE_KINDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Language of DESCRIPTION, BCP 47
+   */
+  public String DESCRIPTION_LANGUAGE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTION_LANGUAGEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer DESCRIPTION_LANGUAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+   */
+  public SITCitation DESCRIPTION_CITATION() { return DESCRIPTION_CITATION(new SITCitation()); }
+  public SITCitation DESCRIPTION_CITATION(SITCitation obj) { int o = __offset(64); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+   */
+  public SITCitation POSITION_CITATION() { return POSITION_CITATION(new SITCitation()); }
+  public SITCitation POSITION_CITATION(SITCitation obj) { int o = __offset(66); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Records about the site in other registers; the RECORD role names the
+   * site's own record
+   */
+  public SITReference EXTERNAL_REFERENCES(int j) { return EXTERNAL_REFERENCES(new SITReference(), j); }
+  public SITReference EXTERNAL_REFERENCES(SITReference obj, int j) { int o = __offset(68); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EXTERNAL_REFERENCESLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public SITReference.Vector externalReferencesVector() { return externalReferencesVector(new SITReference.Vector()); }
+  public SITReference.Vector externalReferencesVector(SITReference.Vector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Operators, owners and regulators
+   */
+  public SITParty PARTIES(int j) { return PARTIES(new SITParty(), j); }
+  public SITParty PARTIES(SITParty obj, int j) { int o = __offset(70); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int PARTIESLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public SITParty.Vector partiesVector() { return partiesVector(new SITParty.Vector()); }
+  public SITParty.Vector partiesVector(SITParty.Vector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Stated quantities (capacity, power, units, elevation)
+   */
+  public SITQuantity QUANTITIES(int j) { return QUANTITIES(new SITQuantity(), j); }
+  public SITQuantity QUANTITIES(SITQuantity obj, int j) { int o = __offset(72); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int QUANTITIESLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public SITQuantity.Vector quantitiesVector() { return quantitiesVector(new SITQuantity.Vector()); }
+  public SITQuantity.Vector quantitiesVector(SITQuantity.Vector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * The record's provider and producer, and the terms of the content the
+   * record reproduces (each citation carries its own source's terms)
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(74); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSIT(FlatBufferBuilder builder,
       int IDOffset,
@@ -191,8 +271,31 @@ public final class SIT extends com.google.flatbuffers.Table {
       int CONTACT_INFOOffset,
       int ENVIRONMENTAL_IMPACTOffset,
       int ACCESSIBILITY_INFRAOffset,
-      int INTEGRATED_DEVICESOffset) {
-    builder.startTable(24);
+      int INTEGRATED_DEVICESOffset,
+      byte LIFECYCLE_STATUS,
+      int LIFECYCLE_STATUS_DATEOffset,
+      int STATUS_VERIFIED_ATOffset,
+      int STATUS_EVIDENCEOffset,
+      int SITE_KINDOffset,
+      int DESCRIPTION_LANGUAGEOffset,
+      int DESCRIPTION_CITATIONOffset,
+      int POSITION_CITATIONOffset,
+      int EXTERNAL_REFERENCESOffset,
+      int PARTIESOffset,
+      int QUANTITIESOffset,
+      int PROVENANCEOffset) {
+    builder.startTable(36);
+    SIT.addProvenance(builder, PROVENANCEOffset);
+    SIT.addQuantities(builder, QUANTITIESOffset);
+    SIT.addParties(builder, PARTIESOffset);
+    SIT.addExternalReferences(builder, EXTERNAL_REFERENCESOffset);
+    SIT.addPositionCitation(builder, POSITION_CITATIONOffset);
+    SIT.addDescriptionCitation(builder, DESCRIPTION_CITATIONOffset);
+    SIT.addDescriptionLanguage(builder, DESCRIPTION_LANGUAGEOffset);
+    SIT.addSiteKind(builder, SITE_KINDOffset);
+    SIT.addStatusEvidence(builder, STATUS_EVIDENCEOffset);
+    SIT.addStatusVerifiedAt(builder, STATUS_VERIFIED_ATOffset);
+    SIT.addLifecycleStatusDate(builder, LIFECYCLE_STATUS_DATEOffset);
     SIT.addIntegratedDevices(builder, INTEGRATED_DEVICESOffset);
     SIT.addAccessibilityInfra(builder, ACCESSIBILITY_INFRAOffset);
     SIT.addEnvironmentalImpact(builder, ENVIRONMENTAL_IMPACTOffset);
@@ -215,12 +318,13 @@ public final class SIT extends com.google.flatbuffers.Table {
     SIT.addAbbreviation(builder, ABBREVIATIONOffset);
     SIT.addName(builder, NAMEOffset);
     SIT.addId(builder, IDOffset);
+    SIT.addLifecycleStatus(builder, LIFECYCLE_STATUS);
     SIT.addTaskable(builder, TASKABLE);
     SIT.addSiteType(builder, SITE_TYPE);
     return SIT.endSIT(builder);
   }
 
-  public static void startSIT(FlatBufferBuilder builder) { builder.startTable(24); }
+  public static void startSIT(FlatBufferBuilder builder) { builder.startTable(36); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addAbbreviation(FlatBufferBuilder builder, int ABBREVIATIONOffset) { builder.addOffset(2, ABBREVIATIONOffset, 0); }
@@ -249,6 +353,26 @@ public final class SIT extends com.google.flatbuffers.Table {
   public static void addIntegratedDevices(FlatBufferBuilder builder, int INTEGRATED_DEVICESOffset) { builder.addOffset(23, INTEGRATED_DEVICESOffset, 0); }
   public static int createIntegratedDevicesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startIntegratedDevicesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addLifecycleStatus(FlatBufferBuilder builder, byte LIFECYCLE_STATUS) { builder.addByte(24, LIFECYCLE_STATUS, 0); }
+  public static void addLifecycleStatusDate(FlatBufferBuilder builder, int LIFECYCLE_STATUS_DATEOffset) { builder.addOffset(25, LIFECYCLE_STATUS_DATEOffset, 0); }
+  public static void addStatusVerifiedAt(FlatBufferBuilder builder, int STATUS_VERIFIED_ATOffset) { builder.addOffset(26, STATUS_VERIFIED_ATOffset, 0); }
+  public static void addStatusEvidence(FlatBufferBuilder builder, int STATUS_EVIDENCEOffset) { builder.addOffset(27, STATUS_EVIDENCEOffset, 0); }
+  public static int createStatusEvidenceVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startStatusEvidenceVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSiteKind(FlatBufferBuilder builder, int SITE_KINDOffset) { builder.addOffset(28, SITE_KINDOffset, 0); }
+  public static void addDescriptionLanguage(FlatBufferBuilder builder, int DESCRIPTION_LANGUAGEOffset) { builder.addOffset(29, DESCRIPTION_LANGUAGEOffset, 0); }
+  public static void addDescriptionCitation(FlatBufferBuilder builder, int DESCRIPTION_CITATIONOffset) { builder.addOffset(30, DESCRIPTION_CITATIONOffset, 0); }
+  public static void addPositionCitation(FlatBufferBuilder builder, int POSITION_CITATIONOffset) { builder.addOffset(31, POSITION_CITATIONOffset, 0); }
+  public static void addExternalReferences(FlatBufferBuilder builder, int EXTERNAL_REFERENCESOffset) { builder.addOffset(32, EXTERNAL_REFERENCESOffset, 0); }
+  public static int createExternalReferencesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startExternalReferencesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addParties(FlatBufferBuilder builder, int PARTIESOffset) { builder.addOffset(33, PARTIESOffset, 0); }
+  public static int createPartiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPartiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addQuantities(FlatBufferBuilder builder, int QUANTITIESOffset) { builder.addOffset(34, QUANTITIESOffset, 0); }
+  public static int createQuantitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startQuantitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(35, PROVENANCEOffset, 0); }
   public static int endSIT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -1,5 +1,5 @@
-// Hash: 904856f84e3767926806d10f5fa47a3f53767bfc054793da697428e1ecfc9e3a
-// Version: 1.245.0
+// Hash: 24c3b94092c29d2012cc1c916d21382b645293692fa4b576c0351988d2a38d32
+// Version: 1.245.1
 // -----------------------------------END_HEADER
 // Product Provenance (PVN)
 //
@@ -22,7 +22,9 @@ enum pvnSourceKind : byte {
   Ephemeris,
   /// Observations (ranges, angles, other measurements) that states are
   /// estimated from
-  Observation
+  Observation,
+  /// Reference registers of sites and facilities (status, dates, identity)
+  Reference
 }
 
 /// What the terms of a product's source permit.

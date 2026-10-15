@@ -6,7 +6,14 @@ import * as flatbuffers from 'flatbuffers';
 
 import { Geometry, GeometryT } from './Geometry.js';
 import { IDM, IDMT } from './IDM.js';
+import { PVN, PVNT } from './PVN.js';
+import { SITCitation, SITCitationT } from './SITCitation.js';
+import { SITParty, SITPartyT } from './SITParty.js';
+import { SITQuantity, SITQuantityT } from './SITQuantity.js';
+import { SITReference, SITReferenceT } from './SITReference.js';
+import { SITStatusEvidence, SITStatusEvidenceT } from './SITStatusEvidence.js';
 import { SiteType } from './SiteType.js';
+import { siteLifecycleStatus } from './siteLifecycleStatus.js';
 
 
 /**
@@ -273,8 +280,137 @@ integratedDevicesLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+ * words (Online, Offline, Testing); this field is the lifecycle.
+ */
+LIFECYCLE_STATUS():siteLifecycleStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : siteLifecycleStatus.UNSPECIFIED;
+}
+
+/**
+ * When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+ */
+LIFECYCLE_STATUS_DATE():string|null
+LIFECYCLE_STATUS_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LIFECYCLE_STATUS_DATE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * When the status was last checked against its sources, RFC 3339 UTC
+ */
+STATUS_VERIFIED_AT():string|null
+STATUS_VERIFIED_AT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STATUS_VERIFIED_AT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+ */
+STATUS_EVIDENCE(index: number, obj?:SITStatusEvidence):SITStatusEvidence|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? (obj || new SITStatusEvidence()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+statusEvidenceLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * What kind of site this is, as its source names the class ("research
+ * reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+ * SiteType
+ */
+SITE_KIND():string|null
+SITE_KIND(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SITE_KIND(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Language of DESCRIPTION, BCP 47
+ */
+DESCRIPTION_LANGUAGE():string|null
+DESCRIPTION_LANGUAGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION_LANGUAGE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+ */
+DESCRIPTION_CITATION(obj?:SITCitation):SITCitation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? (obj || new SITCitation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+ */
+POSITION_CITATION(obj?:SITCitation):SITCitation|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? (obj || new SITCitation()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Records about the site in other registers; the RECORD role names the
+ * site's own record
+ */
+EXTERNAL_REFERENCES(index: number, obj?:SITReference):SITReference|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? (obj || new SITReference()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+externalReferencesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Operators, owners and regulators
+ */
+PARTIES(index: number, obj?:SITParty):SITParty|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? (obj || new SITParty()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+partiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Stated quantities (capacity, power, units, elevation)
+ */
+QUANTITIES(index: number, obj?:SITQuantity):SITQuantity|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? (obj || new SITQuantity()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+quantitiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * The record's provider and producer, and the terms of the content the
+ * record reproduces (each citation carries its own source's terms)
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSIT(builder:flatbuffers.Builder) {
-  builder.startObject(24);
+  builder.startObject(36);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -402,6 +538,102 @@ static startIntegratedDevicesVector(builder:flatbuffers.Builder, numElems:number
   builder.startVector(4, numElems, 4);
 }
 
+static addLifecycleStatus(builder:flatbuffers.Builder, LIFECYCLE_STATUS:siteLifecycleStatus) {
+  builder.addFieldInt8(24, LIFECYCLE_STATUS, siteLifecycleStatus.UNSPECIFIED);
+}
+
+static addLifecycleStatusDate(builder:flatbuffers.Builder, LIFECYCLE_STATUS_DATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, LIFECYCLE_STATUS_DATEOffset, 0);
+}
+
+static addStatusVerifiedAt(builder:flatbuffers.Builder, STATUS_VERIFIED_ATOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, STATUS_VERIFIED_ATOffset, 0);
+}
+
+static addStatusEvidence(builder:flatbuffers.Builder, STATUS_EVIDENCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, STATUS_EVIDENCEOffset, 0);
+}
+
+static createStatusEvidenceVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startStatusEvidenceVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSiteKind(builder:flatbuffers.Builder, SITE_KINDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, SITE_KINDOffset, 0);
+}
+
+static addDescriptionLanguage(builder:flatbuffers.Builder, DESCRIPTION_LANGUAGEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, DESCRIPTION_LANGUAGEOffset, 0);
+}
+
+static addDescriptionCitation(builder:flatbuffers.Builder, DESCRIPTION_CITATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, DESCRIPTION_CITATIONOffset, 0);
+}
+
+static addPositionCitation(builder:flatbuffers.Builder, POSITION_CITATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, POSITION_CITATIONOffset, 0);
+}
+
+static addExternalReferences(builder:flatbuffers.Builder, EXTERNAL_REFERENCESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, EXTERNAL_REFERENCESOffset, 0);
+}
+
+static createExternalReferencesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startExternalReferencesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addParties(builder:flatbuffers.Builder, PARTIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, PARTIESOffset, 0);
+}
+
+static createPartiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPartiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addQuantities(builder:flatbuffers.Builder, QUANTITIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, QUANTITIESOffset, 0);
+}
+
+static createQuantitiesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startQuantitiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, PROVENANCEOffset, 0);
+}
+
 static endSIT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -441,7 +673,19 @@ unpack(): SITT {
     this.CONTACT_INFO(),
     this.ENVIRONMENTAL_IMPACT(),
     this.ACCESSIBILITY_INFRA(),
-    this.bb!.createObjList<IDM, IDMT>(this.INTEGRATED_DEVICES.bind(this), this.integratedDevicesLength())
+    this.bb!.createObjList<IDM, IDMT>(this.INTEGRATED_DEVICES.bind(this), this.integratedDevicesLength()),
+    this.LIFECYCLE_STATUS(),
+    this.LIFECYCLE_STATUS_DATE(),
+    this.STATUS_VERIFIED_AT(),
+    this.bb!.createObjList<SITStatusEvidence, SITStatusEvidenceT>(this.STATUS_EVIDENCE.bind(this), this.statusEvidenceLength()),
+    this.SITE_KIND(),
+    this.DESCRIPTION_LANGUAGE(),
+    (this.DESCRIPTION_CITATION() !== null ? this.DESCRIPTION_CITATION()!.unpack() : null),
+    (this.POSITION_CITATION() !== null ? this.POSITION_CITATION()!.unpack() : null),
+    this.bb!.createObjList<SITReference, SITReferenceT>(this.EXTERNAL_REFERENCES.bind(this), this.externalReferencesLength()),
+    this.bb!.createObjList<SITParty, SITPartyT>(this.PARTIES.bind(this), this.partiesLength()),
+    this.bb!.createObjList<SITQuantity, SITQuantityT>(this.QUANTITIES.bind(this), this.quantitiesLength()),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
   );
 }
 
@@ -471,6 +715,18 @@ unpackTo(_o: SITT): void {
   _o.ENVIRONMENTAL_IMPACT = this.ENVIRONMENTAL_IMPACT();
   _o.ACCESSIBILITY_INFRA = this.ACCESSIBILITY_INFRA();
   _o.INTEGRATED_DEVICES = this.bb!.createObjList<IDM, IDMT>(this.INTEGRATED_DEVICES.bind(this), this.integratedDevicesLength());
+  _o.LIFECYCLE_STATUS = this.LIFECYCLE_STATUS();
+  _o.LIFECYCLE_STATUS_DATE = this.LIFECYCLE_STATUS_DATE();
+  _o.STATUS_VERIFIED_AT = this.STATUS_VERIFIED_AT();
+  _o.STATUS_EVIDENCE = this.bb!.createObjList<SITStatusEvidence, SITStatusEvidenceT>(this.STATUS_EVIDENCE.bind(this), this.statusEvidenceLength());
+  _o.SITE_KIND = this.SITE_KIND();
+  _o.DESCRIPTION_LANGUAGE = this.DESCRIPTION_LANGUAGE();
+  _o.DESCRIPTION_CITATION = (this.DESCRIPTION_CITATION() !== null ? this.DESCRIPTION_CITATION()!.unpack() : null);
+  _o.POSITION_CITATION = (this.POSITION_CITATION() !== null ? this.POSITION_CITATION()!.unpack() : null);
+  _o.EXTERNAL_REFERENCES = this.bb!.createObjList<SITReference, SITReferenceT>(this.EXTERNAL_REFERENCES.bind(this), this.externalReferencesLength());
+  _o.PARTIES = this.bb!.createObjList<SITParty, SITPartyT>(this.PARTIES.bind(this), this.partiesLength());
+  _o.QUANTITIES = this.bb!.createObjList<SITQuantity, SITQuantityT>(this.QUANTITIES.bind(this), this.quantitiesLength());
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
 }
 }
 
@@ -499,7 +755,19 @@ constructor(
   public CONTACT_INFO: string|Uint8Array|null = null,
   public ENVIRONMENTAL_IMPACT: string|Uint8Array|null = null,
   public ACCESSIBILITY_INFRA: string|Uint8Array|null = null,
-  public INTEGRATED_DEVICES: (IDMT)[] = []
+  public INTEGRATED_DEVICES: (IDMT)[] = [],
+  public LIFECYCLE_STATUS: siteLifecycleStatus = siteLifecycleStatus.UNSPECIFIED,
+  public LIFECYCLE_STATUS_DATE: string|Uint8Array|null = null,
+  public STATUS_VERIFIED_AT: string|Uint8Array|null = null,
+  public STATUS_EVIDENCE: (SITStatusEvidenceT)[] = [],
+  public SITE_KIND: string|Uint8Array|null = null,
+  public DESCRIPTION_LANGUAGE: string|Uint8Array|null = null,
+  public DESCRIPTION_CITATION: SITCitationT|null = null,
+  public POSITION_CITATION: SITCitationT|null = null,
+  public EXTERNAL_REFERENCES: (SITReferenceT)[] = [],
+  public PARTIES: (SITPartyT)[] = [],
+  public QUANTITIES: (SITQuantityT)[] = [],
+  public PROVENANCE: PVNT|null = null
 ){}
 
 
@@ -523,6 +791,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ENVIRONMENTAL_IMPACT = (this.ENVIRONMENTAL_IMPACT !== null ? builder.createString(this.ENVIRONMENTAL_IMPACT!) : 0);
   const ACCESSIBILITY_INFRA = (this.ACCESSIBILITY_INFRA !== null ? builder.createString(this.ACCESSIBILITY_INFRA!) : 0);
   const INTEGRATED_DEVICES = SIT.createIntegratedDevicesVector(builder, builder.createObjectOffsetList(this.INTEGRATED_DEVICES));
+  const LIFECYCLE_STATUS_DATE = (this.LIFECYCLE_STATUS_DATE !== null ? builder.createString(this.LIFECYCLE_STATUS_DATE!) : 0);
+  const STATUS_VERIFIED_AT = (this.STATUS_VERIFIED_AT !== null ? builder.createString(this.STATUS_VERIFIED_AT!) : 0);
+  const STATUS_EVIDENCE = SIT.createStatusEvidenceVector(builder, builder.createObjectOffsetList(this.STATUS_EVIDENCE));
+  const SITE_KIND = (this.SITE_KIND !== null ? builder.createString(this.SITE_KIND!) : 0);
+  const DESCRIPTION_LANGUAGE = (this.DESCRIPTION_LANGUAGE !== null ? builder.createString(this.DESCRIPTION_LANGUAGE!) : 0);
+  const DESCRIPTION_CITATION = (this.DESCRIPTION_CITATION !== null ? this.DESCRIPTION_CITATION!.pack(builder) : 0);
+  const POSITION_CITATION = (this.POSITION_CITATION !== null ? this.POSITION_CITATION!.pack(builder) : 0);
+  const EXTERNAL_REFERENCES = SIT.createExternalReferencesVector(builder, builder.createObjectOffsetList(this.EXTERNAL_REFERENCES));
+  const PARTIES = SIT.createPartiesVector(builder, builder.createObjectOffsetList(this.PARTIES));
+  const QUANTITIES = SIT.createQuantitiesVector(builder, builder.createObjectOffsetList(this.QUANTITIES));
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
 
   SIT.startSIT(builder);
   SIT.addId(builder, ID);
@@ -549,6 +828,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SIT.addEnvironmentalImpact(builder, ENVIRONMENTAL_IMPACT);
   SIT.addAccessibilityInfra(builder, ACCESSIBILITY_INFRA);
   SIT.addIntegratedDevices(builder, INTEGRATED_DEVICES);
+  SIT.addLifecycleStatus(builder, this.LIFECYCLE_STATUS);
+  SIT.addLifecycleStatusDate(builder, LIFECYCLE_STATUS_DATE);
+  SIT.addStatusVerifiedAt(builder, STATUS_VERIFIED_AT);
+  SIT.addStatusEvidence(builder, STATUS_EVIDENCE);
+  SIT.addSiteKind(builder, SITE_KIND);
+  SIT.addDescriptionLanguage(builder, DESCRIPTION_LANGUAGE);
+  SIT.addDescriptionCitation(builder, DESCRIPTION_CITATION);
+  SIT.addPositionCitation(builder, POSITION_CITATION);
+  SIT.addExternalReferences(builder, EXTERNAL_REFERENCES);
+  SIT.addParties(builder, PARTIES);
+  SIT.addQuantities(builder, QUANTITIES);
+  SIT.addProvenance(builder, PROVENANCE);
 
   return SIT.endSIT(builder);
 }

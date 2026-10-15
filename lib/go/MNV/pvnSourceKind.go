@@ -17,6 +17,8 @@ const (
 	/// Observations (ranges, angles, other measurements) that states are
 	/// estimated from
 	pvnSourceKindObservation pvnSourceKind = 3
+	/// Reference registers of sites and facilities (status, dates, identity)
+	pvnSourceKindReference   pvnSourceKind = 4
 )
 
 var EnumNamespvnSourceKind = map[pvnSourceKind]string{
@@ -24,6 +26,7 @@ var EnumNamespvnSourceKind = map[pvnSourceKind]string{
 	pvnSourceKindElementSet:  "ElementSet",
 	pvnSourceKindEphemeris:   "Ephemeris",
 	pvnSourceKindObservation: "Observation",
+	pvnSourceKindReference:   "Reference",
 }
 
 var EnumValuespvnSourceKind = map[string]pvnSourceKind{
@@ -31,6 +34,7 @@ var EnumValuespvnSourceKind = map[string]pvnSourceKind{
 	"ElementSet":  pvnSourceKindElementSet,
 	"Ephemeris":   pvnSourceKindEphemeris,
 	"Observation": pvnSourceKindObservation,
+	"Reference":   pvnSourceKindReference,
 }
 
 func (v pvnSourceKind) String() string {

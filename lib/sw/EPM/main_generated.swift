@@ -122,8 +122,14 @@ public struct CryptoKey: FlatBufferVerifiableTable, FlatbuffersVectorInitializab
   public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
   public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
   ///  Signature encoding format produced by this key (e.g., "raw-ed25519",
-  ///  "compact"). ABSENT means the canonical encoding of ALGORITHM
-  ///  (raw-ed25519 for ed25519, compact for secp256k1)
+  ///  "der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+  ///  for ed25519 (64 bytes over the content itself); der for secp256k1, a
+  ///  strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+  ///  content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+  ///  content to a hashing signer, or its single SHA-256 to a digest signer,
+  ///  never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+  ///  does not verify. "compact" (65-byte header||r||s) is a ChainProof
+  ///  encoding only, never the EPM signature's
   public var ENCODING: String? { let o = _accessor.offset(VT.ENCODING); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCODING) }
   public static func startCryptoKey(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
@@ -294,16 +300,31 @@ public struct ChainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   ///  BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
   public var KEY_PATH: String? { let o = _accessor.offset(VT.KEY_PATH); return o == 0 ? nil : _accessor.string(at: o) }
   public var KEY_PATHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.KEY_PATH) }
-  ///  Signature over the attestation payload (hex-encoded)
+  ///  Signature over the attestation payload (hex-encoded), in the chain's
+  ///  own signed-message form (see ALGORITHM)
   public var SIGNATURE: String? { let o = _accessor.offset(VT.SIGNATURE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNATURESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNATURE) }
   ///  The canonical payload that was signed (hex-encoded)
   public var SIGNED_PAYLOAD: String? { let o = _accessor.offset(VT.SIGNED_PAYLOAD); return o == 0 ? nil : _accessor.string(at: o) }
   public var SIGNED_PAYLOADSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNED_PAYLOAD) }
-  ///  Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  ///  Signature algorithm, which fixes the one hash the signature is over:
+  ///    "secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+  ///      SHA-256(SHA-256("\x18Bitcoin Signed Message:\n" || CompactSize(len)
+  ///      || SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+  ///      double SHA-256 is the protocol's own, applied once);
+  ///    "secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+  ///      Keccak-256("\x19Ethereum Signed Message:\n" || decimal(len) ||
+  ///      SIGNED_PAYLOAD), low-S;
+  ///    "ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+  ///  Both secp256k1 forms are the 65-byte compact recoverable signature
+  ///  header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+  ///  emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+  ///  protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+  ///  compressed). Nothing hashes the payload before the protocol hash.
   public var ALGORITHM: String? { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? nil : _accessor.string(at: o) }
   public var ALGORITHMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ALGORITHM) }
-  ///  Signature encoding format (e.g., "compact", "raw-ed25519")
+  ///  Signature encoding format: "compact" for the secp256k1 algorithms
+  ///  (65-byte header||r||s), "raw-ed25519" for ed25519
   public var ENCODING: String? { let o = _accessor.offset(VT.ENCODING); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCODING) }
   public static func startChainProof(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }

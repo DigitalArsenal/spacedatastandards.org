@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.249.0+1792003589633",
+  version: "1.250.0+1792097955998",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -4582,8 +4582,8 @@ file_identifier "$OPM";`,
       ]
     },
     EPM: {
-      IDL: `// Hash: 247afa121b8c04b94d748435687e2ebeb0b500cdf71c1690dfbed7cfa48e500f
-// Version: 1.0.8
+      IDL: `// Hash: 86662db87a157d42d8af0968b31a3b3cac08de3dace2eadbd4415b198d62bd3f
+// Version: 1.0.9
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -4654,8 +4654,14 @@ table CryptoKey {
   /// on ADDRESS_TYPE, which is an address-format tag only).
   ALGORITHM: string;
   /// Signature encoding format produced by this key (e.g., "raw-ed25519",
-  /// "compact"). ABSENT means the canonical encoding of ALGORITHM
-  /// (raw-ed25519 for ed25519, compact for secp256k1)
+  /// "der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+  /// for ed25519 (64 bytes over the content itself); der for secp256k1, a
+  /// strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+  /// content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+  /// content to a hashing signer, or its single SHA-256 to a digest signer,
+  /// never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+  /// does not verify. "compact" (65-byte header||r||s) is a ChainProof
+  /// encoding only, never the EPM signature's
   ENCODING: string;
 }
 
@@ -4685,13 +4691,28 @@ table ChainProof {
   PUBLIC_KEY: string;
   /// BIP-44 derivation path (e.g., "m/44'/0'/0'/0/0")
   KEY_PATH: string;
-  /// Signature over the attestation payload (hex-encoded)
+  /// Signature over the attestation payload (hex-encoded), in the chain's
+  /// own signed-message form (see ALGORITHM)
   SIGNATURE: string;
   /// The canonical payload that was signed (hex-encoded)
   SIGNED_PAYLOAD: string;
-  /// Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")
+  /// Signature algorithm, which fixes the one hash the signature is over:
+  ///   "secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+  ///     SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+  ///     || SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+  ///     double SHA-256 is the protocol's own, applied once);
+  ///   "secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+  ///     Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+  ///     SIGNED_PAYLOAD), low-S;
+  ///   "ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+  /// Both secp256k1 forms are the 65-byte compact recoverable signature
+  /// header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+  /// emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+  /// protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+  /// compressed). Nothing hashes the payload before the protocol hash.
   ALGORITHM: string;
-  /// Signature encoding format (e.g., "compact", "raw-ed25519")
+  /// Signature encoding format: "compact" for the secp256k1 algorithms
+  /// (65-byte header||r||s), "raw-ed25519" for ed25519
   ENCODING: string;
 }
 
@@ -7187,7 +7208,270 @@ file_identifier "$PPE";`,
       ]
     },
     SIT: {
-      IDL: '// Hash: 6f282637e3795d2d62105c0454bf0837ef252daa6109b006f74852a2b0ee8015\n// Version: 1.0.1\n// -----------------------------------END_HEADER\ninclude "../IDM/main.fbs";\n\n/// Enum for the type of site\nenum SiteType: byte {\n  LAUNCH_SITE,\n  OBSERVATION_STATION,\n  HOBBYIST_OBSERVER,\n  RESEARCH_FACILITY,\n  SATELLITE_GROUND_STATION,\n  SPACEPORT,\n  MILITARY_BASE,\n  WEATHER_STATION,\n  ASTRONOMICAL_OBSERVATORY,\n  EDUCATIONAL_INSTITUTE,\n  COMMUNICATION_HUB,\n  POWER_PLANT,\n  INDUSTRIAL_COMPLEX,\n  TRANSPORTATION_HUB,\n  URBAN_AREA,\n  NATIONAL_PARK,\n  HISTORICAL_SITE,\n  OTHER\n}\n\n/// Geometry table with information about geometric properties\ntable Geometry {\n  /// Type of geometry\n  GEOMETRY_TYPE: string;\n  /// Coordinates of the geometry\n  COORDINATES: [float];\n}\n\n/// Site Information Message\ntable SIT {\n  /// Unique identifier for the site, BE_NUMBER\n  ID: string;\n  /// Name of the site\n  NAME: string;\n  /// Abbreviation\n  ABBREVIATION: string;\n  /// Site type as defined in SiteType enum\n  SITE_TYPE: SiteType;\n  /// Site type CATCODE\n  CATCODE: string;\n  /// Network identifier\n  NETWORK: string;\n  /// Latitude of the site\n  LATITUDE: float;\n  /// Longitude of the site\n  LONGITUDE: float;\n  /// Altitude of the site\n  ALTITUDE: float;\n  /// Geometry of the site\n  GEOMETRY: Geometry;\n  /// Center point geometry coordinates\n  CENTER_POINT_GEOMETRY: [float];\n  /// Classification marking of the site\n  CLASSIFICATION: string;\n  /// CTR ISO 3166 Numeric code as string\n  CTR_ID: string;\n  /// Identifier of the user who created the site data\n  CREATED_BY: string;\n  /// Description of the site\n  DESCRIPTION: string;\n  /// URL for the 3D model of the site\n  MODEL_URL: string;\n  /// Source of the site data\n  SOURCE: string;\n  /// Indicates if the site is taskable\n  TASKABLE: bool;\n  /// Operational status of the site (e.g., active, inactive, under construction)\n  OPERATIONAL_STATUS: string;\n  /// Date of establishment\n  ESTABLISHMENT_DATE: string;\n  /// Contact information for the site\n  CONTACT_INFO: string;\n  /// Environmental impact or considerations\n  ENVIRONMENTAL_IMPACT: string;\n  /// Accessibility and infrastructure details\n  ACCESSIBILITY_INFRA: string;\n  /// Vector of Integrated Devices (IDM)\n  INTEGRATED_DEVICES: [IDM];\n}\n\nroot_type SIT;\nfile_identifier "$SIT";',
+      IDL: `// Hash: 9e83c8b84fa57192eb7ca02fd78eef64b869bbaf223078dc0bcb33534acadfc9
+// Version: 1.1.0
+// -----------------------------------END_HEADER
+include "../IDM/main.fbs";
+include "../PVN/main.fbs";
+
+/// Enum for the type of site
+enum SiteType: byte {
+  LAUNCH_SITE,
+  OBSERVATION_STATION,
+  HOBBYIST_OBSERVER,
+  RESEARCH_FACILITY,
+  SATELLITE_GROUND_STATION,
+  SPACEPORT,
+  MILITARY_BASE,
+  WEATHER_STATION,
+  ASTRONOMICAL_OBSERVATORY,
+  EDUCATIONAL_INSTITUTE,
+  COMMUNICATION_HUB,
+  POWER_PLANT,
+  INDUSTRIAL_COMPLEX,
+  TRANSPORTATION_HUB,
+  URBAN_AREA,
+  NATIONAL_PARK,
+  HISTORICAL_SITE,
+  OTHER
+}
+
+/// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
+/// EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
+enum siteLifecycleStatus : byte {
+  /// No source states a status
+  UNSPECIFIED,
+  /// Proposed, announced or in study; construction not begun
+  PLANNED,
+  /// Under construction
+  UNDER_CONSTRUCTION,
+  /// Construction begun, then halted with no restart date (PRIS suspended construction)
+  CONSTRUCTION_SUSPENDED,
+  /// In operation
+  OPERATING,
+  /// Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)
+  LONG_TERM_SHUTDOWN,
+  /// Permanently shut down; not yet in decommissioning
+  PERMANENT_SHUTDOWN,
+  /// Decommissioning or dismantling under way
+  DECOMMISSIONING,
+  /// Dismantled, remediated or released from regulatory control
+  DECOMMISSIONED,
+  /// Never completed or never operated
+  CANCELLED,
+  /// Every licence-OK source was read and none states a status
+  UNVERIFIED
+}
+
+/// Where one statement about a site was read: the source, the record, the
+/// version of the record and the field the statement came from.
+table SITCitation {
+  /// The source, its originator and the terms the statement travels under
+  PROVENANCE: PVN;
+  /// The source's own identifier of the record (Wikidata QID, "de:Article
+  /// title", tracker unit ids, ROR id, docket number, register row)
+  SOURCE_RECORD_ID: string;
+  /// Where the record can be read
+  SOURCE_URL: string;
+  /// The source's version of the record (revision id, release name)
+  SOURCE_VERSION: string;
+  /// The field of the record the statement was read from, from a closed
+  /// vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+  /// "description", "class:<QID>", "status" (a registry's status column),
+  /// "units" (a tracker's unit statuses), "register:<id>" (a row of the
+  /// provider's reviewed register). Never free text.
+  SOURCE_FIELD: string;
+  /// When the record was read, RFC 3339 UTC
+  RETRIEVED_AT: string;
+}
+
+/// One source's assertion of one lifecycle step of a site.
+table SITStatusEvidence {
+  /// The status the source states
+  STATUS: siteLifecycleStatus = UNSPECIFIED;
+  /// When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)
+  STATUS_DATE: string;
+  /// Where the statement was read
+  CITATION: SITCitation;
+}
+
+/// What a reference to another record about the site is.
+enum sitReferenceRole : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// The site's own record in the register the site record was made from
+  RECORD,
+  /// The site's or its operator's official website
+  OFFICIAL_WEBSITE,
+  /// An encyclopedia article about the site (title and URL only)
+  ENCYCLOPEDIA_ARTICLE,
+  /// The site's record in another registry (a tracker, an organisation registry)
+  REGISTRY_RECORD,
+  /// A regulator's docket or licence record for the site
+  REGULATORY_DOCKET
+}
+
+/// A reference to another record about the site or a party.
+table SITReference {
+  /// What the referenced record is
+  ROLE: sitReferenceRole = UNSPECIFIED;
+  /// Publisher-stable, lowercase identifier of the registry in the provider's
+  /// register of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)
+  REGISTRY: string;
+  /// The registry's identifier of the record
+  RECORD_ID: string;
+  /// Where the record can be read
+  URL: string;
+  /// The record's title as the registry states it (for an encyclopedia, the
+  /// article title only, never its text)
+  TITLE: string;
+  /// Language of the record, BCP 47
+  LANGUAGE: string;
+}
+
+/// What part a party plays at a site.
+enum sitPartyRole : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// Runs the site
+  OPERATOR,
+  /// Owns the site
+  OWNER,
+  /// Licenses and inspects the site
+  REGULATOR
+}
+
+/// An organisation with a part at the site.
+table SITParty {
+  /// The part it plays
+  ROLE: sitPartyRole = UNSPECIFIED;
+  /// Its name, as the source states it
+  NAME: string;
+  /// Records about the party (its registry record, its official website)
+  EXTERNAL_REFERENCES: [SITReference];
+  /// Where the statement that it plays this part was read
+  CITATION: SITCitation;
+}
+
+/// What a quantity of a site measures. Ordinals are wire values: append only.
+enum sitQuantityKind : byte {
+  /// Not stated
+  UNSPECIFIED,
+  /// Electrical generating capacity, MW
+  ELECTRICAL_CAPACITY,
+  /// Thermal power, MW
+  THERMAL_POWER,
+  /// Number of reactor or generating units (UNITS empty)
+  REACTOR_UNITS,
+  /// Height above mean sea level, m
+  ELEVATION
+}
+
+/// One stated quantity of a site.
+table SITQuantity {
+  /// What it measures
+  KIND: sitQuantityKind = UNSPECIFIED;
+  /// Its value
+  VALUE: double;
+  /// Units, CCSDS NDM spelling (MW, m); empty for a count
+  UNITS: string;
+  /// When the value applies, ISO 8601 at the source's precision; empty when the source states none
+  DATE: string;
+  /// Where it was read
+  CITATION: SITCitation;
+}
+
+/// Geometry table with information about geometric properties
+table Geometry {
+  /// Type of geometry
+  GEOMETRY_TYPE: string;
+  /// Coordinates of the geometry
+  COORDINATES: [float];
+}
+
+/// Site Information Message
+table SIT {
+  /// Unique identifier for the site, BE_NUMBER
+  ID: string;
+  /// Name of the site
+  NAME: string;
+  /// Abbreviation
+  ABBREVIATION: string;
+  /// Site type as defined in SiteType enum
+  SITE_TYPE: SiteType;
+  /// Site type CATCODE
+  CATCODE: string;
+  /// Network identifier
+  NETWORK: string;
+  /// Latitude of the site
+  LATITUDE: float;
+  /// Longitude of the site
+  LONGITUDE: float;
+  /// Altitude of the site
+  ALTITUDE: float;
+  /// Geometry of the site
+  GEOMETRY: Geometry;
+  /// Center point geometry coordinates
+  CENTER_POINT_GEOMETRY: [float];
+  /// Classification marking of the site
+  CLASSIFICATION: string;
+  /// CTR ISO 3166 Numeric code as string
+  CTR_ID: string;
+  /// Identifier of the user who created the site data
+  CREATED_BY: string;
+  /// Description of the site
+  DESCRIPTION: string;
+  /// URL for the 3D model of the site
+  MODEL_URL: string;
+  /// Source of the site data
+  SOURCE: string;
+  /// Indicates if the site is taskable
+  TASKABLE: bool;
+  /// Operational status of the site (e.g., active, inactive, under construction)
+  OPERATIONAL_STATUS: string;
+  /// Date of establishment
+  ESTABLISHMENT_DATE: string;
+  /// Contact information for the site
+  CONTACT_INFO: string;
+  /// Environmental impact or considerations
+  ENVIRONMENTAL_IMPACT: string;
+  /// Accessibility and infrastructure details
+  ACCESSIBILITY_INFRA: string;
+  /// Vector of Integrated Devices (IDM)
+  INTEGRATED_DEVICES: [IDM];
+  /// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+  /// words (Online, Offline, Testing); this field is the lifecycle.
+  LIFECYCLE_STATUS: siteLifecycleStatus = UNSPECIFIED;
+  /// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+  LIFECYCLE_STATUS_DATE: string;
+  /// When the status was last checked against its sources, RFC 3339 UTC
+  STATUS_VERIFIED_AT: string;
+  /// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+  STATUS_EVIDENCE: [SITStatusEvidence];
+  /// What kind of site this is, as its source names the class ("research
+  /// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+  /// SiteType
+  SITE_KIND: string;
+  /// Language of DESCRIPTION, BCP 47
+  DESCRIPTION_LANGUAGE: string;
+  /// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+  DESCRIPTION_CITATION: SITCitation;
+  /// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+  POSITION_CITATION: SITCitation;
+  /// Records about the site in other registers; the RECORD role names the
+  /// site's own record
+  EXTERNAL_REFERENCES: [SITReference];
+  /// Operators, owners and regulators
+  PARTIES: [SITParty];
+  /// Stated quantities (capacity, power, units, elevation)
+  QUANTITIES: [SITQuantity];
+  /// The record's provider and producer, and the terms of the content the
+  /// record reproduces (each citation carries its own source's terms)
+  PROVENANCE: PVN;
+}
+
+root_type SIT;
+file_identifier "$SIT";`,
       files: [
         "./dist/SIT/SIT.sw.tar.gz",
         "./dist/SIT/SIT.py.tar.gz",
@@ -7727,8 +8011,8 @@ file_identifier "$NHS";`,
       ]
     },
     PVN: {
-      IDL: `// Hash: 904856f84e3767926806d10f5fa47a3f53767bfc054793da697428e1ecfc9e3a
-// Version: 1.245.0
+      IDL: `// Hash: 24c3b94092c29d2012cc1c916d21382b645293692fa4b576c0351988d2a38d32
+// Version: 1.245.1
 // -----------------------------------END_HEADER
 // Product Provenance (PVN)
 //
@@ -7751,7 +8035,9 @@ enum pvnSourceKind : byte {
   Ephemeris,
   /// Observations (ranges, angles, other measurements) that states are
   /// estimated from
-  Observation
+  Observation,
+  /// Reference registers of sites and facilities (status, dates, identity)
+  Reference
 }
 
 /// What the terms of a product's source permit.
@@ -26726,7 +27012,7 @@ file_identifier "$TDM";`,
       ]
     },
     PMM: {
-      IDL: '// Hash: 744d3f6e56d5fcad680f066862ec3799bfa489734a3ecc79ef7b573b1fd04540\n// Version: 1.170.3\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\ninclude "../PLG/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519".\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\n  /// is the ONLY sanctioned way to group an offering: a client grouping a\n  /// catalogue MUST read this field and MUST NOT infer family from the shape\n  /// of `MODULE_ID`, which carries no normative structure. Defaults to\n  /// `Unspecified`, which a client MUST render as ungrouped \u2014 never silently\n  /// as `Sensor`. Present here, rather than only on\n  /// the linked `$PLG`, so an anonymous client can section the catalogue at\n  /// boot without fetching one `$PLG` per module.\n  PLUGIN_TYPE: pluginCategory = Unspecified;\n  /// The one ratified `$CCT` category this module is shelved under. Mirrors\n  /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\n  /// sanctioned way to group an offering: `pluginCategory` is single-valued,\n  /// holds a real family at ordinal 0, mixes capability families with\n  /// node-internal plumbing, and carries a deprecated vendor-derived member.\n  /// Present here, rather than only on the linked `$PLG`, so an anonymous\n  /// client can section the catalogue at boot without fetching one `$PLG` per\n  /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n  ///\n  /// SIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\n  /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n  /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\n  /// resting on a signed content hash. A consumer that shelves, filters or\n  /// counts by this field MUST NOT present the resulting grouping as\n  /// authenticated, and MUST keep the verified identity (`MODULE_ID`,\n  /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\n  /// from provider-supplied presentation. Extending the canonical statement to\n  /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\n  /// every verifier in lockstep and is not made implicitly by adopting this\n  /// field.\n  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;\n  /// Every ratified `$CCT` category this module belongs to, for browse, filter\n  /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\n  /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\n  /// PRIMARY_CATEGORY.\n  CATEGORIES: [capabilityClass];\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
+      IDL: '// Hash: ac9bcd64e8aa7f9d1ade9c2e1897b6a2906893dcaefc7b5eede27d6be4e02a39\n// Version: 1.170.4\n// -----------------------------------END_HEADER\n// Provider Module Manifest (PMM)\n// Description\n// The signed, anonymously-fetchable list of WASM modules a single provider\n// (one SDN node, identified by one domain and one node key) offers to client\n// applications. A client application loads this record AT BOOT, before any\n// user session exists, to learn which modules the provider serves, which of\n// them the provider declares CORE (loadable with no session), and how to\n// verify every artifact byte-for-byte.\n//\n// Relationship to the neighbouring standards:\n//   `$PLG` is the per-module listing (full invoke surface, storefront and\n//   protected-delivery detail). `$STF` is the per-dataset listing. `$STO` is a\n//   commerce storefront identity (commission terms, settlement chains, IPFS\n//   catalog root). `$APP` is the per-application manifest naming the modules\n//   ONE app composes. None of them answers "what does this provider node\n//   serve, under which key, and what may an anonymous client load" \u2014 that is\n//   `$PMM`. PMM is deliberately slim: an entry carries the identity, integrity\n//   and trust fields a boot-time verifier needs and refers to `$PLG` by\n//   `PLUGIN_ID`/`PLG_CID` for everything else.\n//\n// Trust chain (verify in this order, fail closed at any step):\n//   1. artifact bytes  -> `PMMModuleEntry.CONTENT_HASH`\n//   2. `CONTENT_HASH`  -> `PMMModuleEntry.ARTIFACT_SIGNATURE` (provider node key)\n//   3. manifest        -> `PMM.SIGNATURE` over the canonical statement below\n//                         (provider node key)\n//   4. node key        -> domain, via the DNS proof named in\n//                         `PMMTrustAnchor.DNS_PROOF_RECORD_NAME`\n//   5. domain          -> economic weight, via the Adversarial-Security bond\n//                         held by `PMMTrustAnchor.BOND_ADDRESSES`\n// Steps 1-3 are self-contained in this record. Steps 4-5 are references, so\n// this standard does not restate another standard\'s proof format.\n//\n// CANONICAL SIGNED STATEMENT (`PMM.SIGNATURE` covers exactly these bytes):\n//   UTF-8, LF line endings, no CR, no trailing whitespace, every line\n//   LF-terminated including the last. Enum values appear as their IDL symbol\n//   names. Booleans appear as `1` or `0`.\n//\n//     SDN-MODULE-MANIFEST-V1\n//     domain:<PROVIDER_DOMAIN>\n//     peer:<TRUST.NODE_PEER_ID>\n//     key:<TRUST.SIGNING_PUBLIC_KEY>\n//     epoch:<EPOCH>\n//     expires:<EXPIRES_AT>\n//     module:<MODULE_ID> <VERSION> <CONTENT_HASH> <TRUST_TIER> <ACCESS_POLICY> <DEFAULT_ENABLED> <ENTRY_STATE>\n//     ...\n//\n//   One `module:` line per entry in `MODULES`, sorted bytewise ascending by\n//   `MODULE_ID`, single ASCII space between fields. A verifier MUST rebuild\n//   this statement from the record\'s own fields and MUST reject the manifest\n//   if the rebuilt bytes differ from `SIGNED_STATEMENT` when that field is\n//   present, so the carried copy can never become a second source of truth.\n//\n// ANONYMOUS CORE LOAD (the whole point of the record): an entry is loadable\n// with no user session only when `TRUST_TIER == CORE`, `ACCESS_POLICY ==\n// ANONYMOUS`, `DEFAULT_ENABLED == true`, `ENTRY_STATE == ACTIVE`, the\n// manifest has not expired, and steps 1-4 above verify. On the user\'s first\n// authenticated session such entries are presented already selected; a\n// recorded user choice always overrides `DEFAULT_ENABLED` from then on.\n// `EPOCH` is monotonic per provider: a client MUST reject a manifest whose\n// `EPOCH` is lower than the highest it has already verified for that\n// `PROVIDER_DOMAIN` (rollback protection).\n\ninclude "../EPM/main.fbs";\ninclude "../PLG/main.fbs";\n\n/// Provider-declared standing of a module in its own offering. Append new\n/// values only; never reorder or reuse existing values.\nenum pmmTrustTier : ubyte {\n  /// Not stated. Treated as OPTIONAL by verifiers.\n  UNSPECIFIED = 0,\n  /// The provider declares this module part of its baseline service. Only a\n  /// CORE entry may ever be loaded before a user session exists, and only a\n  /// CORE entry is presented pre-selected at first sign-in.\n  CORE = 1,\n  /// Offered and endorsed by the provider, but never loaded without an\n  /// explicit user selection.\n  RECOMMENDED = 2,\n  /// Offered only.\n  OPTIONAL = 3\n}\n\n/// What a client must hold before the artifact may be fetched and\n/// instantiated. Append new values only; never reorder or reuse existing\n/// values.\nenum pmmAccessPolicy : ubyte {\n  /// No session, no grant: an unauthenticated client may fetch and run it.\n  ANONYMOUS = 0,\n  /// An authenticated session is required.\n  AUTHENTICATED = 1,\n  /// An entitlement or license grant is required (see `$ENT`, `$PLK`).\n  ENTITLED = 2\n}\n\n/// Lifecycle of one manifest entry. Append new values only; never reorder or\n/// reuse existing values.\nenum pmmEntryState : ubyte {\n  /// Served and loadable.\n  ACTIVE = 0,\n  /// Still served, superseded by another entry. Clients SHOULD migrate.\n  DEPRECATED = 1,\n  /// No longer served. Clients MUST NOT fetch it.\n  WITHDRAWN = 2,\n  /// Actively distrusted by the provider (compromise, bad build). Clients\n  /// MUST refuse this CONTENT_HASH even if they already hold the bytes.\n  REVOKED = 3\n}\n\n/// The single key identity every signature in this manifest resolves to, and\n/// the two external anchors that give that key its weight: the DNS proof that\n/// binds it to the domain, and the Adversarial-Security bond that prices\n/// trust in it.\ntable PMMTrustAnchor {\n  /// Domain the node key is bound to. MUST equal `PMM.PROVIDER_DOMAIN` and\n  /// MUST equal the origin the manifest was fetched from.\n  PROVIDER_DOMAIN: string;\n  /// libp2p peer id of the provider node.\n  NODE_PEER_ID: string;\n  /// BIP-32 account xpub of the node identity, verbatim as advertised in the\n  /// node\'s `$EPM`.\n  NODE_XPUB: string;\n  /// Hex-encoded public key that verifies `PMM.SIGNATURE` and every\n  /// `PMMModuleEntry.ARTIFACT_SIGNATURE`, derived from the node key.\n  SIGNING_PUBLIC_KEY: string;\n  /// HD derivation path of `SIGNING_PUBLIC_KEY` under `NODE_XPUB`.\n  SIGNING_KEY_PATH: string;\n  /// Signature algorithm identifier, e.g. "ed25519",\n  /// "secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one\n  /// hash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for\n  /// `$EPM` ChainProof: "ed25519" signs the bytes themselves;\n  /// "secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash\n  /// Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) || bytes),\n  /// low-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash\n  /// SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len) ||\n  /// bytes)). The secp256k1 forms are the 65-byte compact recoverable\n  /// signature header||r||s, verified by recovering the key and comparing it\n  /// with `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the\n  /// protocol hash.\n  SIGNATURE_ALGORITHM: string;\n  /// IPFS CID of the provider node\'s `$EPM`.\n  EPM_CID: string;\n  /// Fully-qualified DNS name of the TXT record carrying the signed\n  /// domain-to-nodekey proof, e.g. "_sdnkey.example.org". A verifying client\n  /// resolves this itself (DNS-over-HTTPS) rather than trusting the copy\n  /// below.\n  DNS_PROOF_RECORD_NAME: string;\n  /// Verbatim TXT value of that proof, carried only so a client can detect\n  /// disagreement with what DNS returns. The resolved record always wins.\n  DNS_PROOF_TXT: string;\n  /// The canonical statement the DNS proof signs, verbatim, when the proof\n  /// format keeps it out of the TXT value.\n  DNS_PROOF_STATEMENT: string;\n  /// Chain addresses derived from this same node key that hold the provider\'s\n  /// Adversarial-Security bond. Each entry proves, through `ChainProof`, that\n  /// the address derives from the key that signed this manifest.\n  BOND_ADDRESSES: [ChainProof];\n  /// Optional URL of a machine-readable bond attestation (bonded value,\n  /// duration unspent) for clients that price trust rather than gate on it.\n  BOND_ATTESTATION_URL: string;\n}\n\n/// One module the provider offers.\ntable PMMModuleEntry {\n  /// Reverse-DNS module identity, e.g. "com.orbpro.sgp4-propagator". Stable\n  /// across versions. Required and unique within the manifest.\n  MODULE_ID: string (required, key);\n  /// `$PLG.PLUGIN_ID` of the full listing for this module, when one is\n  /// published.\n  PLUGIN_ID: string;\n  /// IPFS CID of that `$PLG` record.\n  PLG_CID: string;\n  /// Display name.\n  NAME: string;\n  /// Human-readable summary.\n  DESCRIPTION: string;\n  /// SemVer 2.0.0 version of the offered artifact.\n  VERSION: string;\n  /// Monotonic publication counter for this MODULE_ID. Increases on every\n  /// re-publication, including a rebuild at the same VERSION.\n  EPOCH: uint64;\n  /// 64 lowercase hexadecimal characters encoding SHA-256 of the module\'s\n  /// portable (pre-AOT, publication-trailer-stripped) WASM bytes. Identical\n  /// in meaning to `$APP.APPModuleRef.CONTENT_HASH`: this is the identity\n  /// capability and signature policies key on.\n  CONTENT_HASH: string;\n  /// Size of those portable WASM bytes.\n  ARTIFACT_SIZE_BYTES: uint64;\n  /// Path, relative to the provider origin, from which the artifact is\n  /// fetched. Relative on purpose: the bytes must come from the same origin\n  /// whose domain the DNS proof binds.\n  ARTIFACT_PATH: string;\n  /// IPFS CID of the artifact, for content-addressed retrieval.\n  ARTIFACT_CID: string;\n  /// Detached signature by the key in `PMMTrustAnchor.SIGNING_PUBLIC_KEY`\n  /// over the 32 raw bytes of `CONTENT_HASH`. Lets a client reject an entry\n  /// before spending a byte of bandwidth. The artifact\'s own publication\n  /// trailer remains authoritative after download.\n  ARTIFACT_SIGNATURE: [ubyte];\n  /// Provider-declared standing. Gates anonymous loading.\n  TRUST_TIER: pmmTrustTier = UNSPECIFIED;\n  /// True when the provider ships this module enabled by default. A recorded\n  /// user choice overrides it permanently.\n  DEFAULT_ENABLED: bool = false;\n  /// What the client must hold to fetch and run it.\n  ACCESS_POLICY: pmmAccessPolicy = AUTHENTICATED;\n  /// Entry lifecycle.\n  ENTRY_STATE: pmmEntryState = ACTIVE;\n  /// Opaque runtime-target tags this artifact is built for, e.g. "browser",\n  /// "wasmedge". Same vocabulary as `$PLG.RUNTIME_TARGETS`.\n  RUNTIME_TARGETS: [string];\n  /// SDS schema codes at this module\'s invoke surface, e.g. "OMM", "OEM".\n  REQUIRED_SCHEMAS: [string];\n  /// Minimum host permissions the module needs, same vocabulary as\n  /// `$PLG.MIN_PERMISSIONS`. Surfaced so a client can show what an\n  /// anonymously-loaded CORE module is allowed to do.\n  MIN_PERMISSIONS: [string];\n  /// SPDX license identifier of the module.\n  LICENSE: string;\n  /// URL to the module\'s documentation.\n  DOCUMENTATION_URL: string;\n  /// URL to the module\'s icon.\n  ICON_URL: string;\n  /// `CONTENT_HASH` this entry replaces, when it supersedes an earlier build.\n  SUPERSEDES_CONTENT_HASH: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ) of\n  /// the last change to this entry.\n  UPDATED_AT: string;\n  /// Family this module belongs to. Mirrors `$PLG.PLUGIN_TYPE` verbatim and\n  /// is the ONLY sanctioned way to group an offering: a client grouping a\n  /// catalogue MUST read this field and MUST NOT infer family from the shape\n  /// of `MODULE_ID`, which carries no normative structure. Defaults to\n  /// `Unspecified`, which a client MUST render as ungrouped \u2014 never silently\n  /// as `Sensor`. Present here, rather than only on\n  /// the linked `$PLG`, so an anonymous client can section the catalogue at\n  /// boot without fetching one `$PLG` per module.\n  PLUGIN_TYPE: pluginCategory = Unspecified;\n  /// The one ratified `$CCT` category this module is shelved under. Mirrors\n  /// `$PLG.PRIMARY_CATEGORY` verbatim and SUPERSEDES `PLUGIN_TYPE` as the\n  /// sanctioned way to group an offering: `pluginCategory` is single-valued,\n  /// holds a real family at ordinal 0, mixes capability families with\n  /// node-internal plumbing, and carries a deprecated vendor-derived member.\n  /// Present here, rather than only on the linked `$PLG`, so an anonymous\n  /// client can section the catalogue at boot without fetching one `$PLG` per\n  /// module. `UNSPECIFIED` MUST render as ungrouped, never as a real category.\n  ///\n  /// SIGNATURE SEAM \u2014 normative. Under the `SDN-MODULE-MANIFEST-V1` canonical\n  /// statement this field is NOT covered by `PMM.SIGNATURE`, exactly like\n  /// `NAME`, `DESCRIPTION` and `ICON_URL`. It is an UNVERIFIED PROVIDER CLAIM\n  /// resting on a signed content hash. A consumer that shelves, filters or\n  /// counts by this field MUST NOT present the resulting grouping as\n  /// authenticated, and MUST keep the verified identity (`MODULE_ID`,\n  /// `CONTENT_HASH`, `ARTIFACT_SIGNATURE`, `TRUST_TIER`) visually separable\n  /// from provider-supplied presentation. Extending the canonical statement to\n  /// cover presentation fields is a `SDN-MODULE-MANIFEST-V2` change that moves\n  /// every verifier in lockstep and is not made implicitly by adopting this\n  /// field.\n  PRIMARY_CATEGORY: capabilityClass = UNSPECIFIED;\n  /// Every ratified `$CCT` category this module belongs to, for browse, filter\n  /// and per-category counting. Mirrors `$PLG.CATEGORIES`. If nonempty it MUST\n  /// include PRIMARY_CATEGORY. Carries the same unsigned-claim caveat as\n  /// PRIMARY_CATEGORY.\n  CATEGORIES: [capabilityClass];\n}\n\n/// Provider Module Manifest \u2014 what one provider node offers, signed by that\n/// node\'s key.\ntable PMM {\n  /// Domain of the provider, e.g. "node.example.org". Required. MUST equal\n  /// the origin the manifest was served from.\n  PROVIDER_DOMAIN: string (required);\n  /// Display name of the provider.\n  PROVIDER_NAME: string;\n  /// Human-readable summary of what the provider serves.\n  DESCRIPTION: string;\n  /// Monotonic manifest epoch. A client MUST reject an epoch lower than the\n  /// highest it has already verified for `PROVIDER_DOMAIN`.\n  EPOCH: uint64;\n  /// The key identity and its external anchors.\n  TRUST: PMMTrustAnchor;\n  /// The offered modules.\n  MODULES: [PMMModuleEntry];\n  /// Canonical absolute URL this manifest is served from.\n  CANONICAL_URL: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was created.\n  CREATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// when the manifest was last signed.\n  UPDATED_AT: string;\n  /// RFC 3339 UTC fixed-millisecond timestamp (YYYY-MM-DDTHH:mm:ss.sssZ)\n  /// after which a verifier MUST refuse anonymous CORE loading from this\n  /// manifest and re-fetch. Required in practice for anonymous trust: an\n  /// unexpiring signed manifest cannot be withdrawn.\n  EXPIRES_AT: string;\n  /// Signature by `TRUST.SIGNING_PUBLIC_KEY` over the canonical statement\n  /// defined in this file\'s header.\n  SIGNATURE: [ubyte];\n  /// The canonical statement, verbatim. A verifier MUST rebuild it from this\n  /// record and reject any difference.\n  SIGNED_STATEMENT: string;\n}\n\nroot_type PMM;\nfile_identifier "$PMM";',
       files: [
         "./dist/PMM/PMM.sw.tar.gz",
         "./dist/PMM/PMM.py.tar.gz",
@@ -29647,8 +29933,8 @@ file_identifier "$MEM";`,
       ]
     },
     PNV: {
-      IDL: `// Hash: 550c24cc7263cd7815dd61c2769b33f181e8122ee617123cb0b31187551af8e7
-// Version: 1.248.0
+      IDL: `// Hash: fb840b05a3245c0665f11434c917b9400af4412487b8725c03644aa37d7aa23e
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 /// Publication Verification (PNV)
 /// Description
@@ -29710,7 +29996,11 @@ table PNVEntry {
   PUBLISHED_AT_MS: int64;
   /// Unix milliseconds the receiving node received the notice.
   RECEIVED_AT_MS: int64;
-  /// Signature scheme of the notice, e.g. "ed25519", "secp256k1".
+  /// Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+  /// "Secp256k1". The signature is over the notice's signed bytes, hashed
+  /// once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+  /// signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+  /// A signature over SHA-256(SHA-256(bytes)) does not verify.
   SIGNATURE_TYPE: string;
   /// The notice's signature, verbatim.
   SIGNATURE: [ubyte];
@@ -37615,7 +37905,8 @@ var json_default = {
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -39110,7 +39401,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -39168,7 +39467,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -39176,11 +39475,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -41799,7 +42111,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -44950,7 +45263,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -45441,7 +45755,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -47537,7 +47852,8 @@ Decoding applies the inverses from the last back.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -53397,7 +53713,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -53455,7 +53779,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -53463,11 +53787,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -58244,7 +58581,8 @@ turned into a number.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -65974,7 +66312,8 @@ verbatim what that source states about itself.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -76951,6 +77290,26 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "HF_RADIO_COMMUNICATIONS"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -76972,6 +77331,52 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         FrequencyRange: {
@@ -77153,6 +77558,184 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -77276,6 +77859,66 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -77876,7 +78519,8 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -77966,6 +78610,52 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         KeyType: {
@@ -81442,6 +82132,145 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -81565,6 +82394,66 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -81614,7 +82503,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -81672,7 +82569,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -81680,11 +82577,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -84205,7 +85115,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -86131,7 +87042,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -86214,6 +87126,52 @@ to the wallet, not to a published record. ABSENT from published records.`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         sensorStatus: {
@@ -88456,6 +89414,145 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -88579,6 +89676,66 @@ to the wallet, not to a published record. ABSENT from published records.`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -98663,7 +99820,8 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -100825,7 +101983,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -100883,7 +102049,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -100891,11 +102057,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -112926,7 +114105,8 @@ format class are named by $NCD's container format.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -123122,7 +124302,8 @@ format class are named by $NCD's container format.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -125362,6 +126543,52 @@ format class are named by $NCD's container format.`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         ENGINE_TYPE: {
@@ -138884,7 +140111,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -138942,7 +140177,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -138950,11 +140185,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -166892,6 +168140,145 @@ Decoding applies the inverses from the last back.`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -167015,6 +168402,66 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -177897,7 +179344,7 @@ turned into a number.`
             },
             SIGNATURE_ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519".'
+              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one\nhash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for\n`$EPM` ChainProof: "ed25519" signs the bytes themselves;\n"secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash\nKeccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) || bytes),\nlow-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash\nSHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len) ||\nbytes)). The secp256k1 forms are the 65-byte compact recoverable\nsignature header||r||s, verified by recovering the key and comparing it\nwith `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the\nprotocol hash.'
             },
             EPM_CID: {
               type: "string",
@@ -178294,7 +179741,11 @@ turned into a number.`
             },
             SIGNATURE_TYPE: {
               type: "string",
-              description: 'Signature scheme of the notice, e.g. "ed25519", "secp256k1".'
+              description: `Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+"Secp256k1". The signature is over the notice's signed bytes, hashed
+once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             SIGNATURE: {
               type: "array",
@@ -207597,7 +209048,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -230041,7 +231493,8 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -232134,7 +233587,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -232192,7 +233653,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -232200,11 +233661,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -248555,6 +250029,26 @@ to the wallet, not to a published record. ABSENT from published records.`
             "HF_RADIO_COMMUNICATIONS"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -248576,6 +250070,52 @@ to the wallet, not to a published record. ABSENT from published records.`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         KeyType: {
@@ -248985,6 +250525,184 @@ to the wallet, not to a published record. ABSENT from published records.`
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -249108,6 +250826,66 @@ to the wallet, not to a published record. ABSENT from published records.`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -249157,7 +250935,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -249215,7 +251001,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -249223,11 +251009,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -251396,7 +253195,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -258049,7 +259849,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -258107,7 +259915,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -258115,11 +259923,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -259804,7 +261625,8 @@ assumptions".`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -264829,7 +266651,8 @@ assumptions".`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -264912,6 +266735,52 @@ assumptions".`
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
             "OTHER"
+          ]
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ]
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ]
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ]
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
           ]
         },
         sensorStatus: {
@@ -267183,6 +269052,145 @@ assumptions".`
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -267306,6 +269314,66 @@ assumptions".`
                 $ref: "#/definitions/IDM"
               },
               description: "Vector of Integrated Devices (IDM)"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle."
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType'
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
             }
           },
           additionalProperties: false
@@ -273985,7 +276053,15 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)'
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`
             }
           },
           additionalProperties: false
@@ -274043,7 +276119,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)"
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
             },
             SIGNED_PAYLOAD: {
               type: "string",
@@ -274051,11 +276127,24 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")'
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")'
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519'
             }
           },
           additionalProperties: false
@@ -275301,7 +277390,7 @@ to the wallet, not to a published record. ABSENT from published records.`
             },
             SIGNATURE_ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519".'
+              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one\nhash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for\n`$EPM` ChainProof: "ed25519" signs the bytes themselves;\n"secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash\nKeccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) || bytes),\nlow-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash\nSHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len) ||\nbytes)). The secp256k1 forms are the 65-byte compact recoverable\nsignature header||r||s, verified by recovering the key and comparing it\nwith `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the\nprotocol hash.'
             },
             EPM_CID: {
               type: "string",
@@ -277617,7 +279706,8 @@ to the wallet, not to a published record. ABSENT from published records.`
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -289003,7 +291093,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIGNATURE_TYPE: {
               type: "string",
-              description: 'Signature scheme of the notice, e.g. "ed25519", "secp256k1".'
+              description: `Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+"Secp256k1". The signature is over the notice's signed bytes, hashed
+once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             SIGNATURE: {
               type: "array",
@@ -290708,7 +292802,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ]
         },
         pvnLicenseClass: {
@@ -319678,7 +321773,8 @@ var fbjson_default = {
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -319698,6 +321794,10 @@ var fbjson_default = {
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -319851,6 +321951,10 @@ var fbjson_default = {
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -324635,7 +326739,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -324704,7 +326816,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -324714,12 +326826,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -330669,7 +332794,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -330689,6 +332815,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -330978,6 +333108,10 @@ Decoding applies the inverses from the last back.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -335728,7 +337862,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -335748,6 +337883,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -335934,6 +338073,10 @@ Decoding applies the inverses from the last back.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -337318,7 +339461,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -337338,6 +339482,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -339127,6 +341275,10 @@ Decoding applies the inverses from the last back.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -343116,7 +345268,8 @@ Decoding applies the inverses from the last back.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -343136,6 +345289,10 @@ Decoding applies the inverses from the last back.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -347621,6 +349778,10 @@ Decoding applies the inverses from the last back.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -355518,7 +357679,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -355587,7 +357756,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -355597,12 +357766,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -366405,7 +368587,8 @@ turned into a number.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -366425,6 +368608,10 @@ turned into a number.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -371326,6 +373513,10 @@ turned into a number.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -385269,7 +387460,8 @@ verbatim what that source states about itself.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -385289,6 +387481,10 @@ verbatim what that source states about itself.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -397762,6 +399958,10 @@ empty = the provider's native frame.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -420695,6 +422895,74 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -420773,6 +423041,172 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -421228,6 +423662,384 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -421434,6 +424246,126 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -423845,7 +426777,8 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -423865,6 +426798,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -424169,6 +427106,172 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -429267,6 +432370,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -431671,6 +434778,289 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -431877,6 +435267,126 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -431944,7 +435454,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -432013,7 +435531,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -432023,12 +435541,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -435962,7 +439493,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -435982,6 +439514,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -436049,6 +439585,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -440147,7 +443687,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -440167,6 +443708,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -440439,6 +443984,172 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -444101,6 +447812,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -445048,6 +448763,289 @@ to the wallet, not to a published record. ABSENT from published records.`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -445254,6 +449252,126 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -465089,7 +469207,8 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -465109,6 +469228,10 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -470455,6 +474578,10 @@ SOURCE "pinned" the operator's own note. Never a manufactured label.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -471076,7 +475203,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -471145,7 +475280,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -471155,12 +475290,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -497858,7 +502006,8 @@ format class are named by $NCD's container format.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -497878,6 +502027,10 @@ format class are named by $NCD's container format.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -502924,6 +507077,10 @@ format class are named by $NCD's container format.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -522758,7 +526915,8 @@ format class are named by $NCD's container format.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -522778,6 +526936,10 @@ format class are named by $NCD's container format.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -529937,6 +534099,172 @@ format class are named by $NCD's container format.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -559091,7 +563419,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -559160,7 +563496,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -559170,12 +563506,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -571544,6 +575893,10 @@ empty = the provider's native frame.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -605666,6 +610019,289 @@ Decoding applies the inverses from the last back.`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -605872,6 +610508,126 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -621523,7 +626279,7 @@ turned into a number.`,
             },
             SIGNATURE_ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519".',
+              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one\nhash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for\n`$EPM` ChainProof: "ed25519" signs the bytes themselves;\n"secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash\nKeccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) || bytes),\nlow-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash\nSHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len) ||\nbytes)). The secp256k1 forms are the 65-byte compact recoverable\nsignature header||r||s, verified by recovering the key and comparing it\nwith `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the\nprotocol hash.',
               "x-flatbuffer-type": "string"
             },
             EPM_CID: {
@@ -622281,7 +627037,11 @@ turned into a number.`,
             },
             SIGNATURE_TYPE: {
               type: "string",
-              description: 'Signature scheme of the notice, e.g. "ed25519", "secp256k1".',
+              description: `Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+"Secp256k1". The signature is over the notice's signed bytes, hashed
+once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               "x-flatbuffer-type": "string"
             },
             SIGNATURE: {
@@ -678121,7 +682881,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -678141,6 +682902,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -679882,6 +684647,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -735609,7 +740378,8 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -735629,6 +740399,10 @@ serves the request, e.g. "bulk", "query", "status", "activity",
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -740733,6 +745507,10 @@ serves the request, e.g. "bulk", "query", "status", "activity",
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -741354,7 +746132,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -741423,7 +746209,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -741433,12 +746219,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -774065,6 +778864,74 @@ to the wallet, not to a published record. ABSENT from published records.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -774143,6 +779010,172 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -775566,6 +780599,384 @@ to the wallet, not to a published record. ABSENT from published records.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -775772,6 +781183,126 @@ to the wallet, not to a published record. ABSENT from published records.`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -775839,7 +781370,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -775908,7 +781447,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -775918,12 +781457,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -783022,7 +788574,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -783042,6 +788595,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -795954,6 +801511,10 @@ empty = the provider's native frame.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -799076,7 +804637,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -799145,7 +804714,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -799155,12 +804724,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -801723,7 +807305,8 @@ assumptions".`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -801743,6 +807326,10 @@ assumptions".`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -802271,6 +807858,10 @@ assumptions".`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -809908,7 +815499,8 @@ assumptions".`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -809928,6 +815520,10 @@ assumptions".`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -810200,6 +815796,172 @@ assumptions".`,
             },
             OTHER: {
               value: 17
+            }
+          }
+        },
+        siteLifecycleStatus: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "PLANNED",
+            "UNDER_CONSTRUCTION",
+            "CONSTRUCTION_SUSPENDED",
+            "OPERATING",
+            "LONG_TERM_SHUTDOWN",
+            "PERMANENT_SHUTDOWN",
+            "DECOMMISSIONING",
+            "DECOMMISSIONED",
+            "CANCELLED",
+            "UNVERIFIED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No source states a status"
+            },
+            PLANNED: {
+              value: 1,
+              description: "Proposed, announced or in study; construction not begun"
+            },
+            UNDER_CONSTRUCTION: {
+              value: 2,
+              description: "Under construction"
+            },
+            CONSTRUCTION_SUSPENDED: {
+              value: 3,
+              description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+            },
+            OPERATING: {
+              value: 4,
+              description: "In operation"
+            },
+            LONG_TERM_SHUTDOWN: {
+              value: 5,
+              description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+            },
+            PERMANENT_SHUTDOWN: {
+              value: 6,
+              description: "Permanently shut down; not yet in decommissioning"
+            },
+            DECOMMISSIONING: {
+              value: 7,
+              description: "Decommissioning or dismantling under way"
+            },
+            DECOMMISSIONED: {
+              value: 8,
+              description: "Dismantled, remediated or released from regulatory control"
+            },
+            CANCELLED: {
+              value: 9,
+              description: "Never completed or never operated"
+            },
+            UNVERIFIED: {
+              value: 10,
+              description: "Every licence-OK source was read and none states a status"
+            }
+          }
+        },
+        sitReferenceRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RECORD",
+            "OFFICIAL_WEBSITE",
+            "ENCYCLOPEDIA_ARTICLE",
+            "REGISTRY_RECORD",
+            "REGULATORY_DOCKET"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            RECORD: {
+              value: 1,
+              description: "The site's own record in the register the site record was made from"
+            },
+            OFFICIAL_WEBSITE: {
+              value: 2,
+              description: "The site's or its operator's official website"
+            },
+            ENCYCLOPEDIA_ARTICLE: {
+              value: 3,
+              description: "An encyclopedia article about the site (title and URL only)"
+            },
+            REGISTRY_RECORD: {
+              value: 4,
+              description: "The site's record in another registry (a tracker, an organisation registry)"
+            },
+            REGULATORY_DOCKET: {
+              value: 5,
+              description: "A regulator's docket or licence record for the site"
+            }
+          }
+        },
+        sitPartyRole: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "OPERATOR",
+            "OWNER",
+            "REGULATOR"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            OPERATOR: {
+              value: 1,
+              description: "Runs the site"
+            },
+            OWNER: {
+              value: 2,
+              description: "Owns the site"
+            },
+            REGULATOR: {
+              value: 3,
+              description: "Licenses and inspects the site"
+            }
+          }
+        },
+        sitQuantityKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELECTRICAL_CAPACITY",
+            "THERMAL_POWER",
+            "REACTOR_UNITS",
+            "ELEVATION"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated"
+            },
+            ELECTRICAL_CAPACITY: {
+              value: 1,
+              description: "Electrical generating capacity, MW"
+            },
+            THERMAL_POWER: {
+              value: 2,
+              description: "Thermal power, MW"
+            },
+            REACTOR_UNITS: {
+              value: 3,
+              description: "Number of reactor or generating units (UNITS empty)"
+            },
+            ELEVATION: {
+              value: 4,
+              description: "Height above mean sea level, m"
             }
           }
         },
@@ -813945,6 +819707,10 @@ assumptions".`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -814892,6 +820658,289 @@ assumptions".`,
           },
           additionalProperties: false
         },
+        SITCitation: {
+          type: "object",
+          description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
+          properties: {
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The source, its originator and the terms the statement travels under",
+              "x-flatbuffer-type": "PVN"
+            },
+            SOURCE_RECORD_ID: {
+              type: "string",
+              description: `The source's own identifier of the record (Wikidata QID, "de:Article
+title", tracker unit ids, ROR id, docket number, register row)`,
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_VERSION: {
+              type: "string",
+              description: "The source's version of the record (revision id, release name)",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_FIELD: {
+              type: "string",
+              description: `The field of the record the statement was read from, from a closed
+vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+"description", "class:<QID>", "status" (a registry's status column),
+"units" (a tracker's unit statuses), "register:<id>" (a row of the
+provider's reviewed register). Never free text.`,
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the record was read, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITStatusEvidence: {
+          type: "object",
+          description: "One source's assertion of one lifecycle step of a site.",
+          properties: {
+            STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "The status the source states",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            STATUS_DATE: {
+              type: "string",
+              description: "When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITReference: {
+          type: "object",
+          description: "A reference to another record about the site or a party.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitReferenceRole",
+              description: "What the referenced record is",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                RECORD: {
+                  value: 1,
+                  description: "The site's own record in the register the site record was made from"
+                },
+                OFFICIAL_WEBSITE: {
+                  value: 2,
+                  description: "The site's or its operator's official website"
+                },
+                ENCYCLOPEDIA_ARTICLE: {
+                  value: 3,
+                  description: "An encyclopedia article about the site (title and URL only)"
+                },
+                REGISTRY_RECORD: {
+                  value: 4,
+                  description: "The site's record in another registry (a tracker, an organisation registry)"
+                },
+                REGULATORY_DOCKET: {
+                  value: 5,
+                  description: "A regulator's docket or licence record for the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            REGISTRY: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the registry in the provider's\nregister of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)",
+              "x-flatbuffer-type": "string"
+            },
+            RECORD_ID: {
+              type: "string",
+              description: "The registry's identifier of the record",
+              "x-flatbuffer-type": "string"
+            },
+            URL: {
+              type: "string",
+              description: "Where the record can be read",
+              "x-flatbuffer-type": "string"
+            },
+            TITLE: {
+              type: "string",
+              description: "The record's title as the registry states it (for an encyclopedia, the\narticle title only, never its text)",
+              "x-flatbuffer-type": "string"
+            },
+            LANGUAGE: {
+              type: "string",
+              description: "Language of the record, BCP 47",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SITParty: {
+          type: "object",
+          description: "An organisation with a part at the site.",
+          properties: {
+            ROLE: {
+              $ref: "#/definitions/sitPartyRole",
+              description: "The part it plays",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                OPERATOR: {
+                  value: 1,
+                  description: "Runs the site"
+                },
+                OWNER: {
+                  value: 2,
+                  description: "Owns the site"
+                },
+                REGULATOR: {
+                  value: 3,
+                  description: "Licenses and inspects the site"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            NAME: {
+              type: "string",
+              description: "Its name, as the source states it",
+              "x-flatbuffer-type": "string"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the party (its registry record, its official website)",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where the statement that it plays this part was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
+        SITQuantity: {
+          type: "object",
+          description: "One stated quantity of a site.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/sitQuantityKind",
+              description: "What it measures",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ELECTRICAL_CAPACITY: {
+                  value: 1,
+                  description: "Electrical generating capacity, MW"
+                },
+                THERMAL_POWER: {
+                  value: 2,
+                  description: "Thermal power, MW"
+                },
+                REACTOR_UNITS: {
+                  value: 3,
+                  description: "Number of reactor or generating units (UNITS empty)"
+                },
+                ELEVATION: {
+                  value: 4,
+                  description: "Height above mean sea level, m"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VALUE: {
+              type: "number",
+              description: "Its value",
+              "x-flatbuffer-type": "double"
+            },
+            UNITS: {
+              type: "string",
+              description: "Units, CCSDS NDM spelling (MW, m); empty for a count",
+              "x-flatbuffer-type": "string"
+            },
+            DATE: {
+              type: "string",
+              description: "When the value applies, ISO 8601 at the source's precision; empty when the source states none",
+              "x-flatbuffer-type": "string"
+            },
+            CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where it was read",
+              "x-flatbuffer-type": "SITCitation"
+            }
+          },
+          additionalProperties: false
+        },
         Geometry: {
           type: "object",
           description: "Geometry table with information about geometric properties",
@@ -815098,6 +821147,126 @@ assumptions".`,
               },
               description: "Vector of Integrated Devices (IDM)",
               "x-flatbuffer-type": "[IDM]"
+            },
+            LIFECYCLE_STATUS: {
+              $ref: "#/definitions/siteLifecycleStatus",
+              description: "Where the site stands in its life. OPERATIONAL_STATUS keeps availability\nwords (Online, Offline, Testing); this field is the lifecycle.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No source states a status"
+                },
+                PLANNED: {
+                  value: 1,
+                  description: "Proposed, announced or in study; construction not begun"
+                },
+                UNDER_CONSTRUCTION: {
+                  value: 2,
+                  description: "Under construction"
+                },
+                CONSTRUCTION_SUSPENDED: {
+                  value: 3,
+                  description: "Construction begun, then halted with no restart date (PRIS suspended construction)"
+                },
+                OPERATING: {
+                  value: 4,
+                  description: "In operation"
+                },
+                LONG_TERM_SHUTDOWN: {
+                  value: 5,
+                  description: "Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)"
+                },
+                PERMANENT_SHUTDOWN: {
+                  value: 6,
+                  description: "Permanently shut down; not yet in decommissioning"
+                },
+                DECOMMISSIONING: {
+                  value: 7,
+                  description: "Decommissioning or dismantling under way"
+                },
+                DECOMMISSIONED: {
+                  value: 8,
+                  description: "Dismantled, remediated or released from regulatory control"
+                },
+                CANCELLED: {
+                  value: 9,
+                  description: "Never completed or never operated"
+                },
+                UNVERIFIED: {
+                  value: 10,
+                  description: "Every licence-OK source was read and none states a status"
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIFECYCLE_STATUS_DATE: {
+              type: "string",
+              description: "When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_VERIFIED_AT: {
+              type: "string",
+              description: "When the status was last checked against its sources, RFC 3339 UTC",
+              "x-flatbuffer-type": "string"
+            },
+            STATUS_EVIDENCE: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITStatusEvidence"
+              },
+              description: "Each source's assertion behind LIFECYCLE_STATUS, one per source and step",
+              "x-flatbuffer-type": "[SITStatusEvidence]"
+            },
+            SITE_KIND: {
+              type: "string",
+              description: 'What kind of site this is, as its source names the class ("research\nreactor", "radioactive waste repository"); SITE_TYPE is the nearest\nSiteType',
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_LANGUAGE: {
+              type: "string",
+              description: "Language of DESCRIPTION, BCP 47",
+              "x-flatbuffer-type": "string"
+            },
+            DESCRIPTION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            POSITION_CITATION: {
+              $ref: "#/definitions/SITCitation",
+              description: "Where LATITUDE, LONGITUDE (and ALTITUDE) were read",
+              "x-flatbuffer-type": "SITCitation"
+            },
+            EXTERNAL_REFERENCES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITReference"
+              },
+              description: "Records about the site in other registers; the RECORD role names the\nsite's own record",
+              "x-flatbuffer-type": "[SITReference]"
+            },
+            PARTIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITParty"
+              },
+              description: "Operators, owners and regulators",
+              "x-flatbuffer-type": "[SITParty]"
+            },
+            QUANTITIES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SITQuantity"
+              },
+              description: "Stated quantities (capacity, power, units, elevation)",
+              "x-flatbuffer-type": "[SITQuantity]"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -828508,7 +834677,15 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format produced by this key (e.g., "raw-ed25519",\n"compact"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)',
+              description: `Signature encoding format produced by this key (e.g., "raw-ed25519",
+"der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+for ed25519 (64 bytes over the content itself); der for secp256k1, a
+strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+content to a hashing signer, or its single SHA-256 to a digest signer,
+never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+does not verify. "compact" (65-byte header||r||s) is a ChainProof
+encoding only, never the EPM signature's`,
               "x-flatbuffer-type": "string"
             }
           },
@@ -828577,7 +834754,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE: {
               type: "string",
-              description: "Signature over the attestation payload (hex-encoded)",
+              description: "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)",
               "x-flatbuffer-type": "string"
             },
             SIGNED_PAYLOAD: {
@@ -828587,12 +834764,25 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm (e.g., "secp256k1-compact-bitcoin", "secp256k1-compact-ethereum", "ed25519")',
+              description: `Signature algorithm, which fixes the one hash the signature is over:
+"secp256k1-compact-bitcoin": the Bitcoin signed-message hash
+SHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len)
+|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the
+double SHA-256 is the protocol's own, applied once);
+"secp256k1-compact-ethereum": the EIP-191 personal_sign hash
+Keccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) ||
+SIGNED_PAYLOAD), low-S;
+"ed25519": raw Ed25519 over SIGNED_PAYLOAD itself.
+Both secp256k1 forms are the 65-byte compact recoverable signature
+header||r||s (header 27 + recovery id, +4 for a compressed key; signers
+emit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's
+protocol, recovers the key and compares it with PUBLIC_KEY (33-byte
+compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-type": "string"
             },
             ENCODING: {
               type: "string",
-              description: 'Signature encoding format (e.g., "compact", "raw-ed25519")',
+              description: 'Signature encoding format: "compact" for the secp256k1 algorithms\n(65-byte header||r||s), "raw-ed25519" for ed25519',
               "x-flatbuffer-type": "string"
             }
           },
@@ -830857,7 +837047,7 @@ to the wallet, not to a published record. ABSENT from published records.`,
             },
             SIGNATURE_ALGORITHM: {
               type: "string",
-              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519".',
+              description: 'Signature algorithm identifier, e.g. "ed25519",\n"secp256k1-compact-ethereum". Empty means "ed25519". It fixes the one\nhash `PMM.SIGNATURE` and every `ARTIFACT_SIGNATURE` are over, as for\n`$EPM` ChainProof: "ed25519" signs the bytes themselves;\n"secp256k1-compact-ethereum" signs the EIP-191 personal_sign hash\nKeccak-256("\\x19Ethereum Signed Message:\\n" || decimal(len) || bytes),\nlow-S; "secp256k1-compact-bitcoin" signs the Bitcoin signed-message hash\nSHA-256(SHA-256("\\x18Bitcoin Signed Message:\\n" || CompactSize(len) ||\nbytes)). The secp256k1 forms are the 65-byte compact recoverable\nsignature header||r||s, verified by recovering the key and comparing it\nwith `SIGNING_PUBLIC_KEY`. The bytes are never hashed before the\nprotocol hash.',
               "x-flatbuffer-type": "string"
             },
             EPM_CID: {
@@ -836907,7 +843097,8 @@ to the wallet, not to a published record. ABSENT from published records.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -836927,6 +843118,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -841267,6 +847462,10 @@ to the wallet, not to a published record. ABSENT from published records.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"
@@ -860341,7 +866540,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             SIGNATURE_TYPE: {
               type: "string",
-              description: 'Signature scheme of the notice, e.g. "ed25519", "secp256k1".',
+              description: `Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+"Secp256k1". The signature is over the notice's signed bytes, hashed
+once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               "x-flatbuffer-type": "string"
             },
             SIGNATURE: {
@@ -862885,7 +869088,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "Unspecified",
             "ElementSet",
             "Ephemeris",
-            "Observation"
+            "Observation",
+            "Reference"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -862905,6 +869109,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             Observation: {
               value: 3,
               description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
             }
           }
         },
@@ -868370,6 +874578,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 Observation: {
                   value: 3,
                   description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
                 }
               },
               "x-flatbuffer-default": "Unspecified"

@@ -570,7 +570,7 @@
               },
         "ENCODING" : {
                 "type" : "string",
-                "description" : "Signature encoding format produced by this key (e.g., \"raw-ed25519\",\n\"compact\"). ABSENT means the canonical encoding of ALGORITHM\n(raw-ed25519 for ed25519, compact for secp256k1)"
+                "description" : "Signature encoding format produced by this key (e.g., \"raw-ed25519\",\n\"der\"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519\nfor ed25519 (64 bytes over the content itself); der for secp256k1, a\nstrict DER ECDSA signature over ONE SHA-256 of the canonical signing\ncontent (CANONICAL_SERIALIZATION.md section 4). The signer passes the\ncontent to a hashing signer, or its single SHA-256 to a digest signer,\nnever a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))\ndoes not verify. \"compact\" (65-byte header||r||s) is a ChainProof\nencoding only, never the EPM signature's"
               }
       },
       "additionalProperties" : false
@@ -628,7 +628,7 @@
               },
         "SIGNATURE" : {
                 "type" : "string",
-                "description" : "Signature over the attestation payload (hex-encoded)"
+                "description" : "Signature over the attestation payload (hex-encoded), in the chain's\nown signed-message form (see ALGORITHM)"
               },
         "SIGNED_PAYLOAD" : {
                 "type" : "string",
@@ -636,11 +636,11 @@
               },
         "ALGORITHM" : {
                 "type" : "string",
-                "description" : "Signature algorithm (e.g., \"secp256k1-compact-bitcoin\", \"secp256k1-compact-ethereum\", \"ed25519\")"
+                "description" : "Signature algorithm, which fixes the one hash the signature is over:\n\"secp256k1-compact-bitcoin\": the Bitcoin signed-message hash\nSHA-256(SHA-256(\"\\x18Bitcoin Signed Message:\\n\" || CompactSize(len)\n|| SIGNED_PAYLOAD)), as Bitcoin Core's signmessage signs it (the\ndouble SHA-256 is the protocol's own, applied once);\n\"secp256k1-compact-ethereum\": the EIP-191 personal_sign hash\nKeccak-256(\"\\x19Ethereum Signed Message:\\n\" || decimal(len) ||\nSIGNED_PAYLOAD), low-S;\n\"ed25519\": raw Ed25519 over SIGNED_PAYLOAD itself.\nBoth secp256k1 forms are the 65-byte compact recoverable signature\nheader||r||s (header 27 + recovery id, +4 for a compressed key; signers\nemit 31 + recovery id). A verifier hashes SIGNED_PAYLOAD with the chain's\nprotocol, recovers the key and compares it with PUBLIC_KEY (33-byte\ncompressed). Nothing hashes the payload before the protocol hash."
               },
         "ENCODING" : {
                 "type" : "string",
-                "description" : "Signature encoding format (e.g., \"compact\", \"raw-ed25519\")"
+                "description" : "Signature encoding format: \"compact\" for the secp256k1 algorithms\n(65-byte header||r||s), \"raw-ed25519\" for ed25519"
               }
       },
       "additionalProperties" : false

@@ -12,6 +12,8 @@ enum pvnSourceKind:
     /// Observations (ranges, angles, other measurements) that states are
     /// estimated from
     pvnSourceKind_Observation = 3
+    /// Reference registers of sites and facilities (status, dates, identity)
+    pvnSourceKind_Reference = 4
 
 /// What the terms of a product's source permit.
 enum pvnLicenseClass:

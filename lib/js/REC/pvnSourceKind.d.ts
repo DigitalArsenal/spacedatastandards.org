@@ -18,6 +18,10 @@ export declare enum pvnSourceKind {
      * Observations (ranges, angles, other measurements) that states are
      * estimated from
      */
-    Observation = 3
+    Observation = 3,
+    /**
+     * Reference registers of sites and facilities (status, dates, identity)
+     */
+    Reference = 4
 }
 //# sourceMappingURL=pvnSourceKind.d.ts.map

@@ -263,8 +263,193 @@ class SIT(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         return o == 0
 
+    # Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+    # words (Online, Offline, Testing); this field is the lifecycle.
+    # SIT
+    def LIFECYCLE_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+    # SIT
+    def LIFECYCLE_STATUS_DATE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # When the status was last checked against its sources, RFC 3339 UTC
+    # SIT
+    def STATUS_VERIFIED_AT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+    # SIT
+    def STATUS_EVIDENCE(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SITStatusEvidence import SITStatusEvidence
+            obj = SITStatusEvidence()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SIT
+    def STATUS_EVIDENCELength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SIT
+    def STATUS_EVIDENCEIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        return o == 0
+
+    # What kind of site this is, as its source names the class ("research
+    # reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+    # SiteType
+    # SIT
+    def SITE_KIND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Language of DESCRIPTION, BCP 47
+    # SIT
+    def DESCRIPTION_LANGUAGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+    # SIT
+    def DESCRIPTION_CITATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SITCitation import SITCitation
+            obj = SITCitation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+    # SIT
+    def POSITION_CITATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from SITCitation import SITCitation
+            obj = SITCitation()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Records about the site in other registers; the RECORD role names the
+    # site's own record
+    # SIT
+    def EXTERNAL_REFERENCES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SITReference import SITReference
+            obj = SITReference()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SIT
+    def EXTERNAL_REFERENCESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SIT
+    def EXTERNAL_REFERENCESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        return o == 0
+
+    # Operators, owners and regulators
+    # SIT
+    def PARTIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SITParty import SITParty
+            obj = SITParty()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SIT
+    def PARTIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SIT
+    def PARTIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        return o == 0
+
+    # Stated quantities (capacity, power, units, elevation)
+    # SIT
+    def QUANTITIES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from SITQuantity import SITQuantity
+            obj = SITQuantity()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SIT
+    def QUANTITIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SIT
+    def QUANTITIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
+
+    # The record's provider and producer, and the terms of the content the
+    # record reproduces (each citation carries its own source's terms)
+    # SIT
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SITStart(builder):
-    builder.StartObject(24)
+    builder.StartObject(36)
 
 def Start(builder):
     SITStart(builder)
@@ -441,6 +626,126 @@ def SITCreateINTEGRATED_DEVICESVector(builder, data):
 def CreateINTEGRATED_DEVICESVector(builder, data):
     return SITCreateINTEGRATED_DEVICESVector(builder, data)
 
+def SITAddLIFECYCLE_STATUS(builder, LIFECYCLE_STATUS):
+    builder.PrependInt8Slot(24, LIFECYCLE_STATUS, 0)
+
+def AddLIFECYCLE_STATUS(builder, LIFECYCLE_STATUS):
+    SITAddLIFECYCLE_STATUS(builder, LIFECYCLE_STATUS)
+
+def SITAddLIFECYCLE_STATUS_DATE(builder, LIFECYCLE_STATUS_DATE):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(LIFECYCLE_STATUS_DATE), 0)
+
+def AddLIFECYCLE_STATUS_DATE(builder, LIFECYCLE_STATUS_DATE):
+    SITAddLIFECYCLE_STATUS_DATE(builder, LIFECYCLE_STATUS_DATE)
+
+def SITAddSTATUS_VERIFIED_AT(builder, STATUS_VERIFIED_AT):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS_VERIFIED_AT), 0)
+
+def AddSTATUS_VERIFIED_AT(builder, STATUS_VERIFIED_AT):
+    SITAddSTATUS_VERIFIED_AT(builder, STATUS_VERIFIED_AT)
+
+def SITAddSTATUS_EVIDENCE(builder, STATUS_EVIDENCE):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS_EVIDENCE), 0)
+
+def AddSTATUS_EVIDENCE(builder, STATUS_EVIDENCE):
+    SITAddSTATUS_EVIDENCE(builder, STATUS_EVIDENCE)
+
+def SITStartSTATUS_EVIDENCEVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSTATUS_EVIDENCEVector(builder, numElems):
+    return SITStartSTATUS_EVIDENCEVector(builder, numElems)
+
+def SITCreateSTATUS_EVIDENCEVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSTATUS_EVIDENCEVector(builder, data):
+    return SITCreateSTATUS_EVIDENCEVector(builder, data)
+
+def SITAddSITE_KIND(builder, SITE_KIND):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SITE_KIND), 0)
+
+def AddSITE_KIND(builder, SITE_KIND):
+    SITAddSITE_KIND(builder, SITE_KIND)
+
+def SITAddDESCRIPTION_LANGUAGE(builder, DESCRIPTION_LANGUAGE):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION_LANGUAGE), 0)
+
+def AddDESCRIPTION_LANGUAGE(builder, DESCRIPTION_LANGUAGE):
+    SITAddDESCRIPTION_LANGUAGE(builder, DESCRIPTION_LANGUAGE)
+
+def SITAddDESCRIPTION_CITATION(builder, DESCRIPTION_CITATION):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION_CITATION), 0)
+
+def AddDESCRIPTION_CITATION(builder, DESCRIPTION_CITATION):
+    SITAddDESCRIPTION_CITATION(builder, DESCRIPTION_CITATION)
+
+def SITAddPOSITION_CITATION(builder, POSITION_CITATION):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(POSITION_CITATION), 0)
+
+def AddPOSITION_CITATION(builder, POSITION_CITATION):
+    SITAddPOSITION_CITATION(builder, POSITION_CITATION)
+
+def SITAddEXTERNAL_REFERENCES(builder, EXTERNAL_REFERENCES):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(EXTERNAL_REFERENCES), 0)
+
+def AddEXTERNAL_REFERENCES(builder, EXTERNAL_REFERENCES):
+    SITAddEXTERNAL_REFERENCES(builder, EXTERNAL_REFERENCES)
+
+def SITStartEXTERNAL_REFERENCESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEXTERNAL_REFERENCESVector(builder, numElems):
+    return SITStartEXTERNAL_REFERENCESVector(builder, numElems)
+
+def SITCreateEXTERNAL_REFERENCESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEXTERNAL_REFERENCESVector(builder, data):
+    return SITCreateEXTERNAL_REFERENCESVector(builder, data)
+
+def SITAddPARTIES(builder, PARTIES):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(PARTIES), 0)
+
+def AddPARTIES(builder, PARTIES):
+    SITAddPARTIES(builder, PARTIES)
+
+def SITStartPARTIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPARTIESVector(builder, numElems):
+    return SITStartPARTIESVector(builder, numElems)
+
+def SITCreatePARTIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePARTIESVector(builder, data):
+    return SITCreatePARTIESVector(builder, data)
+
+def SITAddQUANTITIES(builder, QUANTITIES):
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(QUANTITIES), 0)
+
+def AddQUANTITIES(builder, QUANTITIES):
+    SITAddQUANTITIES(builder, QUANTITIES)
+
+def SITStartQUANTITIESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartQUANTITIESVector(builder, numElems):
+    return SITStartQUANTITIESVector(builder, numElems)
+
+def SITCreateQUANTITIESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateQUANTITIESVector(builder, data):
+    return SITCreateQUANTITIESVector(builder, data)
+
+def SITAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    SITAddPROVENANCE(builder, PROVENANCE)
+
 def SITEnd(builder):
     return builder.EndObject()
 
@@ -449,6 +754,12 @@ def End(builder):
 
 import Geometry
 import IDM
+import PVN
+import SITCitation
+import SITParty
+import SITQuantity
+import SITReference
+import SITStatusEvidence
 try:
     from typing import List, Optional
 except:
@@ -483,6 +794,18 @@ class SITT(object):
         ENVIRONMENTAL_IMPACT = None,
         ACCESSIBILITY_INFRA = None,
         INTEGRATED_DEVICES = None,
+        LIFECYCLE_STATUS = 0,
+        LIFECYCLE_STATUS_DATE = None,
+        STATUS_VERIFIED_AT = None,
+        STATUS_EVIDENCE = None,
+        SITE_KIND = None,
+        DESCRIPTION_LANGUAGE = None,
+        DESCRIPTION_CITATION = None,
+        POSITION_CITATION = None,
+        EXTERNAL_REFERENCES = None,
+        PARTIES = None,
+        QUANTITIES = None,
+        PROVENANCE = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -508,6 +831,18 @@ class SITT(object):
         self.ENVIRONMENTAL_IMPACT = ENVIRONMENTAL_IMPACT  # type: Optional[str]
         self.ACCESSIBILITY_INFRA = ACCESSIBILITY_INFRA  # type: Optional[str]
         self.INTEGRATED_DEVICES = INTEGRATED_DEVICES  # type: Optional[List[IDM.IDMT]]
+        self.LIFECYCLE_STATUS = LIFECYCLE_STATUS  # type: int
+        self.LIFECYCLE_STATUS_DATE = LIFECYCLE_STATUS_DATE  # type: Optional[str]
+        self.STATUS_VERIFIED_AT = STATUS_VERIFIED_AT  # type: Optional[str]
+        self.STATUS_EVIDENCE = STATUS_EVIDENCE  # type: Optional[List[SITStatusEvidence.SITStatusEvidenceT]]
+        self.SITE_KIND = SITE_KIND  # type: Optional[str]
+        self.DESCRIPTION_LANGUAGE = DESCRIPTION_LANGUAGE  # type: Optional[str]
+        self.DESCRIPTION_CITATION = DESCRIPTION_CITATION  # type: Optional[SITCitation.SITCitationT]
+        self.POSITION_CITATION = POSITION_CITATION  # type: Optional[SITCitation.SITCitationT]
+        self.EXTERNAL_REFERENCES = EXTERNAL_REFERENCES  # type: Optional[List[SITReference.SITReferenceT]]
+        self.PARTIES = PARTIES  # type: Optional[List[SITParty.SITPartyT]]
+        self.QUANTITIES = QUANTITIES  # type: Optional[List[SITQuantity.SITQuantityT]]
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -568,6 +903,49 @@ class SITT(object):
                 else:
                     iDM_ = IDM.IDMT.InitFromObj(SIT.INTEGRATED_DEVICES(i))
                     self.INTEGRATED_DEVICES.append(iDM_)
+        self.LIFECYCLE_STATUS = SIT.LIFECYCLE_STATUS()
+        self.LIFECYCLE_STATUS_DATE = SIT.LIFECYCLE_STATUS_DATE()
+        self.STATUS_VERIFIED_AT = SIT.STATUS_VERIFIED_AT()
+        if not SIT.STATUS_EVIDENCEIsNone():
+            self.STATUS_EVIDENCE = []
+            for i in range(SIT.STATUS_EVIDENCELength()):
+                if SIT.STATUS_EVIDENCE(i) is None:
+                    self.STATUS_EVIDENCE.append(None)
+                else:
+                    sITStatusEvidence_ = SITStatusEvidence.SITStatusEvidenceT.InitFromObj(SIT.STATUS_EVIDENCE(i))
+                    self.STATUS_EVIDENCE.append(sITStatusEvidence_)
+        self.SITE_KIND = SIT.SITE_KIND()
+        self.DESCRIPTION_LANGUAGE = SIT.DESCRIPTION_LANGUAGE()
+        if SIT.DESCRIPTION_CITATION() is not None:
+            self.DESCRIPTION_CITATION = SITCitation.SITCitationT.InitFromObj(SIT.DESCRIPTION_CITATION())
+        if SIT.POSITION_CITATION() is not None:
+            self.POSITION_CITATION = SITCitation.SITCitationT.InitFromObj(SIT.POSITION_CITATION())
+        if not SIT.EXTERNAL_REFERENCESIsNone():
+            self.EXTERNAL_REFERENCES = []
+            for i in range(SIT.EXTERNAL_REFERENCESLength()):
+                if SIT.EXTERNAL_REFERENCES(i) is None:
+                    self.EXTERNAL_REFERENCES.append(None)
+                else:
+                    sITReference_ = SITReference.SITReferenceT.InitFromObj(SIT.EXTERNAL_REFERENCES(i))
+                    self.EXTERNAL_REFERENCES.append(sITReference_)
+        if not SIT.PARTIESIsNone():
+            self.PARTIES = []
+            for i in range(SIT.PARTIESLength()):
+                if SIT.PARTIES(i) is None:
+                    self.PARTIES.append(None)
+                else:
+                    sITParty_ = SITParty.SITPartyT.InitFromObj(SIT.PARTIES(i))
+                    self.PARTIES.append(sITParty_)
+        if not SIT.QUANTITIESIsNone():
+            self.QUANTITIES = []
+            for i in range(SIT.QUANTITIESLength()):
+                if SIT.QUANTITIES(i) is None:
+                    self.QUANTITIES.append(None)
+                else:
+                    sITQuantity_ = SITQuantity.SITQuantityT.InitFromObj(SIT.QUANTITIES(i))
+                    self.QUANTITIES.append(sITQuantity_)
+        if SIT.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(SIT.PROVENANCE())
 
     # SITT
     def Pack(self, builder):
@@ -621,6 +999,52 @@ class SITT(object):
             for i in reversed(range(len(self.INTEGRATED_DEVICES))):
                 builder.PrependUOffsetTRelative(INTEGRATED_DEVICESlist[i])
             INTEGRATED_DEVICES = builder.EndVector()
+        if self.LIFECYCLE_STATUS_DATE is not None:
+            LIFECYCLE_STATUS_DATE = builder.CreateString(self.LIFECYCLE_STATUS_DATE)
+        if self.STATUS_VERIFIED_AT is not None:
+            STATUS_VERIFIED_AT = builder.CreateString(self.STATUS_VERIFIED_AT)
+        if self.STATUS_EVIDENCE is not None:
+            STATUS_EVIDENCElist = []
+            for i in range(len(self.STATUS_EVIDENCE)):
+                STATUS_EVIDENCElist.append(self.STATUS_EVIDENCE[i].Pack(builder))
+            SITStartSTATUS_EVIDENCEVector(builder, len(self.STATUS_EVIDENCE))
+            for i in reversed(range(len(self.STATUS_EVIDENCE))):
+                builder.PrependUOffsetTRelative(STATUS_EVIDENCElist[i])
+            STATUS_EVIDENCE = builder.EndVector()
+        if self.SITE_KIND is not None:
+            SITE_KIND = builder.CreateString(self.SITE_KIND)
+        if self.DESCRIPTION_LANGUAGE is not None:
+            DESCRIPTION_LANGUAGE = builder.CreateString(self.DESCRIPTION_LANGUAGE)
+        if self.DESCRIPTION_CITATION is not None:
+            DESCRIPTION_CITATION = self.DESCRIPTION_CITATION.Pack(builder)
+        if self.POSITION_CITATION is not None:
+            POSITION_CITATION = self.POSITION_CITATION.Pack(builder)
+        if self.EXTERNAL_REFERENCES is not None:
+            EXTERNAL_REFERENCESlist = []
+            for i in range(len(self.EXTERNAL_REFERENCES)):
+                EXTERNAL_REFERENCESlist.append(self.EXTERNAL_REFERENCES[i].Pack(builder))
+            SITStartEXTERNAL_REFERENCESVector(builder, len(self.EXTERNAL_REFERENCES))
+            for i in reversed(range(len(self.EXTERNAL_REFERENCES))):
+                builder.PrependUOffsetTRelative(EXTERNAL_REFERENCESlist[i])
+            EXTERNAL_REFERENCES = builder.EndVector()
+        if self.PARTIES is not None:
+            PARTIESlist = []
+            for i in range(len(self.PARTIES)):
+                PARTIESlist.append(self.PARTIES[i].Pack(builder))
+            SITStartPARTIESVector(builder, len(self.PARTIES))
+            for i in reversed(range(len(self.PARTIES))):
+                builder.PrependUOffsetTRelative(PARTIESlist[i])
+            PARTIES = builder.EndVector()
+        if self.QUANTITIES is not None:
+            QUANTITIESlist = []
+            for i in range(len(self.QUANTITIES)):
+                QUANTITIESlist.append(self.QUANTITIES[i].Pack(builder))
+            SITStartQUANTITIESVector(builder, len(self.QUANTITIES))
+            for i in reversed(range(len(self.QUANTITIES))):
+                builder.PrependUOffsetTRelative(QUANTITIESlist[i])
+            QUANTITIES = builder.EndVector()
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
         SITStart(builder)
         if self.ID is not None:
             SITAddID(builder, ID)
@@ -665,5 +1089,28 @@ class SITT(object):
             SITAddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRA)
         if self.INTEGRATED_DEVICES is not None:
             SITAddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICES)
+        SITAddLIFECYCLE_STATUS(builder, self.LIFECYCLE_STATUS)
+        if self.LIFECYCLE_STATUS_DATE is not None:
+            SITAddLIFECYCLE_STATUS_DATE(builder, LIFECYCLE_STATUS_DATE)
+        if self.STATUS_VERIFIED_AT is not None:
+            SITAddSTATUS_VERIFIED_AT(builder, STATUS_VERIFIED_AT)
+        if self.STATUS_EVIDENCE is not None:
+            SITAddSTATUS_EVIDENCE(builder, STATUS_EVIDENCE)
+        if self.SITE_KIND is not None:
+            SITAddSITE_KIND(builder, SITE_KIND)
+        if self.DESCRIPTION_LANGUAGE is not None:
+            SITAddDESCRIPTION_LANGUAGE(builder, DESCRIPTION_LANGUAGE)
+        if self.DESCRIPTION_CITATION is not None:
+            SITAddDESCRIPTION_CITATION(builder, DESCRIPTION_CITATION)
+        if self.POSITION_CITATION is not None:
+            SITAddPOSITION_CITATION(builder, POSITION_CITATION)
+        if self.EXTERNAL_REFERENCES is not None:
+            SITAddEXTERNAL_REFERENCES(builder, EXTERNAL_REFERENCES)
+        if self.PARTIES is not None:
+            SITAddPARTIES(builder, PARTIES)
+        if self.QUANTITIES is not None:
+            SITAddQUANTITIES(builder, QUANTITIES)
+        if self.PROVENANCE is not None:
+            SITAddPROVENANCE(builder, PROVENANCE)
         SIT = SITEnd(builder)
         return SIT

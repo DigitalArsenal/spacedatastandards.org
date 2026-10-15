@@ -22,9 +22,314 @@ enum SiteType:
     SiteType_HISTORICAL_SITE = 16
     SiteType_OTHER = 17
 
+/// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
+/// EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
+enum siteLifecycleStatus:
+    /// No source states a status
+    siteLifecycleStatus_UNSPECIFIED = 0
+    /// Proposed, announced or in study; construction not begun
+    siteLifecycleStatus_PLANNED = 1
+    /// Under construction
+    siteLifecycleStatus_UNDER_CONSTRUCTION = 2
+    /// Construction begun, then halted with no restart date (PRIS suspended construction)
+    siteLifecycleStatus_CONSTRUCTION_SUSPENDED = 3
+    /// In operation
+    siteLifecycleStatus_OPERATING = 4
+    /// Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)
+    siteLifecycleStatus_LONG_TERM_SHUTDOWN = 5
+    /// Permanently shut down; not yet in decommissioning
+    siteLifecycleStatus_PERMANENT_SHUTDOWN = 6
+    /// Decommissioning or dismantling under way
+    siteLifecycleStatus_DECOMMISSIONING = 7
+    /// Dismantled, remediated or released from regulatory control
+    siteLifecycleStatus_DECOMMISSIONED = 8
+    /// Never completed or never operated
+    siteLifecycleStatus_CANCELLED = 9
+    /// Every licence-OK source was read and none states a status
+    siteLifecycleStatus_UNVERIFIED = 10
+
+/// What a reference to another record about the site is.
+enum sitReferenceRole:
+    /// Not stated
+    sitReferenceRole_UNSPECIFIED = 0
+    /// The site's own record in the register the site record was made from
+    sitReferenceRole_RECORD = 1
+    /// The site's or its operator's official website
+    sitReferenceRole_OFFICIAL_WEBSITE = 2
+    /// An encyclopedia article about the site (title and URL only)
+    sitReferenceRole_ENCYCLOPEDIA_ARTICLE = 3
+    /// The site's record in another registry (a tracker, an organisation registry)
+    sitReferenceRole_REGISTRY_RECORD = 4
+    /// A regulator's docket or licence record for the site
+    sitReferenceRole_REGULATORY_DOCKET = 5
+
+/// What part a party plays at a site.
+enum sitPartyRole:
+    /// Not stated
+    sitPartyRole_UNSPECIFIED = 0
+    /// Runs the site
+    sitPartyRole_OPERATOR = 1
+    /// Owns the site
+    sitPartyRole_OWNER = 2
+    /// Licenses and inspects the site
+    sitPartyRole_REGULATOR = 3
+
+/// What a quantity of a site measures. Ordinals are wire values: append only.
+enum sitQuantityKind:
+    /// Not stated
+    sitQuantityKind_UNSPECIFIED = 0
+    /// Electrical generating capacity, MW
+    sitQuantityKind_ELECTRICAL_CAPACITY = 1
+    /// Thermal power, MW
+    sitQuantityKind_THERMAL_POWER = 2
+    /// Number of reactor or generating units (UNITS empty)
+    sitQuantityKind_REACTOR_UNITS = 3
+    /// Height above mean sea level, m
+    sitQuantityKind_ELEVATION = 4
+
+class SITCitation
+
+class SITStatusEvidence
+
+class SITReference
+
+class SITParty
+
+class SITQuantity
+
 class Geometry
 
 class SIT
+
+/// Where one statement about a site was read: the source, the record, the
+/// version of the record and the field the statement came from.
+class SITCitation : flatbuffers.handle
+    /// The source, its originator and the terms the statement travels under
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 4)
+        return if o: PVN { buf_, o } else: nil
+    /// The source's own identifier of the record (Wikidata QID, "de:Article
+    /// title", tracker unit ids, ROR id, docket number, register row)
+    def SOURCE_RECORD_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Where the record can be read
+    def SOURCE_URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// The source's version of the record (revision id, release name)
+    def SOURCE_VERSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// The field of the record the statement was read from, from a closed
+    /// vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+    /// "description", "class:<QID>", "status" (a registry's status column),
+    /// "units" (a tracker's unit statuses), "register:<id>" (a row of the
+    /// provider's reviewed register). Never free text.
+    def SOURCE_FIELD() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// When the record was read, RFC 3339 UTC
+    def RETRIEVED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+
+def GetRootAsSITCitation(buf:string): return SITCitation { buf, flatbuffers.indirect(buf, 0) }
+
+struct SITCitationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, PROVENANCE)
+        return this
+    def add_SOURCE_RECORD_ID(SOURCE_RECORD_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, SOURCE_RECORD_ID)
+        return this
+    def add_SOURCE_URL(SOURCE_URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, SOURCE_URL)
+        return this
+    def add_SOURCE_VERSION(SOURCE_VERSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, SOURCE_VERSION)
+        return this
+    def add_SOURCE_FIELD(SOURCE_FIELD:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, SOURCE_FIELD)
+        return this
+    def add_RETRIEVED_AT(RETRIEVED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, RETRIEVED_AT)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// One source's assertion of one lifecycle step of a site.
+class SITStatusEvidence : flatbuffers.handle
+    /// The status the source states
+    def STATUS() -> siteLifecycleStatus:
+        return siteLifecycleStatus(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)
+    def STATUS_DATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Where the statement was read
+    def CITATION() -> SITCitation?:
+        let o = flatbuffers.field_table(buf_, pos_, 8)
+        return if o: SITCitation { buf_, o } else: nil
+
+def GetRootAsSITStatusEvidence(buf:string): return SITStatusEvidence { buf, flatbuffers.indirect(buf, 0) }
+
+struct SITStatusEvidenceBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_STATUS(STATUS:siteLifecycleStatus):
+        b_.PrependInt8Slot(0, STATUS, 0)
+        return this
+    def add_STATUS_DATE(STATUS_DATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, STATUS_DATE)
+        return this
+    def add_CITATION(CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, CITATION)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// A reference to another record about the site or a party.
+class SITReference : flatbuffers.handle
+    /// What the referenced record is
+    def ROLE() -> sitReferenceRole:
+        return sitReferenceRole(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Publisher-stable, lowercase identifier of the registry in the provider's
+    /// register of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)
+    def REGISTRY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// The registry's identifier of the record
+    def RECORD_ID() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Where the record can be read
+    def URL() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// The record's title as the registry states it (for an encyclopedia, the
+    /// article title only, never its text)
+    def TITLE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Language of the record, BCP 47
+    def LANGUAGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 14)
+
+def GetRootAsSITReference(buf:string): return SITReference { buf, flatbuffers.indirect(buf, 0) }
+
+struct SITReferenceBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_ROLE(ROLE:sitReferenceRole):
+        b_.PrependInt8Slot(0, ROLE, 0)
+        return this
+    def add_REGISTRY(REGISTRY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, REGISTRY)
+        return this
+    def add_RECORD_ID(RECORD_ID:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, RECORD_ID)
+        return this
+    def add_URL(URL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, URL)
+        return this
+    def add_TITLE(TITLE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TITLE)
+        return this
+    def add_LANGUAGE(LANGUAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, LANGUAGE)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// An organisation with a part at the site.
+class SITParty : flatbuffers.handle
+    /// The part it plays
+    def ROLE() -> sitPartyRole:
+        return sitPartyRole(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Its name, as the source states it
+    def NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 6)
+    /// Records about the party (its registry record, its official website)
+    def EXTERNAL_REFERENCES(i:int) -> SITReference:
+        return SITReference { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
+    def EXTERNAL_REFERENCES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 8)
+    /// Where the statement that it plays this part was read
+    def CITATION() -> SITCitation?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: SITCitation { buf_, o } else: nil
+
+def GetRootAsSITParty(buf:string): return SITParty { buf, flatbuffers.indirect(buf, 0) }
+
+struct SITPartyBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(4)
+        return this
+    def add_ROLE(ROLE:sitPartyRole):
+        b_.PrependInt8Slot(0, ROLE, 0)
+        return this
+    def add_NAME(NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(1, NAME)
+        return this
+    def add_EXTERNAL_REFERENCES(EXTERNAL_REFERENCES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, EXTERNAL_REFERENCES)
+        return this
+    def add_CITATION(CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, CITATION)
+        return this
+    def end():
+        return b_.EndObject()
+
+def SITPartyStartEXTERNALREFERENCESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SITPartyCreateEXTERNALREFERENCESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One stated quantity of a site.
+class SITQuantity : flatbuffers.handle
+    /// What it measures
+    def KIND() -> sitQuantityKind:
+        return sitQuantityKind(flatbuffers.field_int8(buf_, pos_, 4, 0))
+    /// Its value
+    def VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// Units, CCSDS NDM spelling (MW, m); empty for a count
+    def UNITS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// When the value applies, ISO 8601 at the source's precision; empty when the source states none
+    def DATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 10)
+    /// Where it was read
+    def CITATION() -> SITCitation?:
+        let o = flatbuffers.field_table(buf_, pos_, 12)
+        return if o: SITCitation { buf_, o } else: nil
+
+def GetRootAsSITQuantity(buf:string): return SITQuantity { buf, flatbuffers.indirect(buf, 0) }
+
+struct SITQuantityBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(5)
+        return this
+    def add_KIND(KIND:sitQuantityKind):
+        b_.PrependInt8Slot(0, KIND, 0)
+        return this
+    def add_VALUE(VALUE:float):
+        b_.PrependFloat64Slot(1, VALUE, 0.0)
+        return this
+    def add_UNITS(UNITS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(2, UNITS)
+        return this
+    def add_DATE(DATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, DATE)
+        return this
+    def add_CITATION(CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, CITATION)
+        return this
+    def end():
+        return b_.EndObject()
 
 /// Geometry table with information about geometric properties
 class Geometry : flatbuffers.handle
@@ -139,13 +444,65 @@ class SIT : flatbuffers.handle
         return IDM { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 50) + i * 4) }
     def INTEGRATED_DEVICES_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 50)
+    /// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+    /// words (Online, Offline, Testing); this field is the lifecycle.
+    def LIFECYCLE_STATUS() -> siteLifecycleStatus:
+        return siteLifecycleStatus(flatbuffers.field_int8(buf_, pos_, 52, 0))
+    /// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+    def LIFECYCLE_STATUS_DATE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
+    /// When the status was last checked against its sources, RFC 3339 UTC
+    def STATUS_VERIFIED_AT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
+    /// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+    def STATUS_EVIDENCE(i:int) -> SITStatusEvidence:
+        return SITStatusEvidence { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 58) + i * 4) }
+    def STATUS_EVIDENCE_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 58)
+    /// What kind of site this is, as its source names the class ("research
+    /// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+    /// SiteType
+    def SITE_KIND() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// Language of DESCRIPTION, BCP 47
+    def DESCRIPTION_LANGUAGE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+    def DESCRIPTION_CITATION() -> SITCitation?:
+        let o = flatbuffers.field_table(buf_, pos_, 64)
+        return if o: SITCitation { buf_, o } else: nil
+    /// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+    def POSITION_CITATION() -> SITCitation?:
+        let o = flatbuffers.field_table(buf_, pos_, 66)
+        return if o: SITCitation { buf_, o } else: nil
+    /// Records about the site in other registers; the RECORD role names the
+    /// site's own record
+    def EXTERNAL_REFERENCES(i:int) -> SITReference:
+        return SITReference { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 68) + i * 4) }
+    def EXTERNAL_REFERENCES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 68)
+    /// Operators, owners and regulators
+    def PARTIES(i:int) -> SITParty:
+        return SITParty { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 70) + i * 4) }
+    def PARTIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 70)
+    /// Stated quantities (capacity, power, units, elevation)
+    def QUANTITIES(i:int) -> SITQuantity:
+        return SITQuantity { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 72) + i * 4) }
+    def QUANTITIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 72)
+    /// The record's provider and producer, and the terms of the content the
+    /// record reproduces (each citation carries its own source's terms)
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 74)
+        return if o: PVN { buf_, o } else: nil
 
 def GetRootAsSIT(buf:string): return SIT { buf, flatbuffers.indirect(buf, 0) }
 
 struct SITBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(24)
+        b_.StartObject(36)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -219,6 +576,42 @@ struct SITBuilder:
     def add_INTEGRATED_DEVICES(INTEGRATED_DEVICES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(23, INTEGRATED_DEVICES)
         return this
+    def add_LIFECYCLE_STATUS(LIFECYCLE_STATUS:siteLifecycleStatus):
+        b_.PrependInt8Slot(24, LIFECYCLE_STATUS, 0)
+        return this
+    def add_LIFECYCLE_STATUS_DATE(LIFECYCLE_STATUS_DATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, LIFECYCLE_STATUS_DATE)
+        return this
+    def add_STATUS_VERIFIED_AT(STATUS_VERIFIED_AT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, STATUS_VERIFIED_AT)
+        return this
+    def add_STATUS_EVIDENCE(STATUS_EVIDENCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, STATUS_EVIDENCE)
+        return this
+    def add_SITE_KIND(SITE_KIND:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, SITE_KIND)
+        return this
+    def add_DESCRIPTION_LANGUAGE(DESCRIPTION_LANGUAGE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, DESCRIPTION_LANGUAGE)
+        return this
+    def add_DESCRIPTION_CITATION(DESCRIPTION_CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, DESCRIPTION_CITATION)
+        return this
+    def add_POSITION_CITATION(POSITION_CITATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, POSITION_CITATION)
+        return this
+    def add_EXTERNAL_REFERENCES(EXTERNAL_REFERENCES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, EXTERNAL_REFERENCES)
+        return this
+    def add_PARTIES(PARTIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(33, PARTIES)
+        return this
+    def add_QUANTITIES(QUANTITIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(34, QUANTITIES)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(35, PROVENANCE)
+        return this
     def end():
         return b_.EndObject()
 
@@ -232,6 +625,34 @@ def SITCreateCENTERPOINTGEOMETRYVector(b_:flatbuffers.builder, v_:[float]):
 def SITStartINTEGRATEDDEVICESVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def SITCreateINTEGRATEDDEVICESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SITStartSTATUSEVIDENCEVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SITCreateSTATUSEVIDENCEVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SITStartEXTERNALREFERENCESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SITCreateEXTERNALREFERENCESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SITStartPARTIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SITCreatePARTIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def SITStartQUANTITIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def SITCreateQUANTITIESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

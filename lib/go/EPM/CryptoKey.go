@@ -233,8 +233,14 @@ func (rcv *CryptoKey) Algorithm() []byte {
 /// unchanged under that default. The verifier dispatches on ALGORITHM (not
 /// on ADDRESS_TYPE, which is an address-format tag only).
 /// Signature encoding format produced by this key (e.g., "raw-ed25519",
-/// "compact"). ABSENT means the canonical encoding of ALGORITHM
-/// (raw-ed25519 for ed25519, compact for secp256k1)
+/// "der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+/// for ed25519 (64 bytes over the content itself); der for secp256k1, a
+/// strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+/// content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+/// content to a hashing signer, or its single SHA-256 to a digest signer,
+/// never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+/// does not verify. "compact" (65-byte header||r||s) is a ChainProof
+/// encoding only, never the EPM signature's
 func (rcv *CryptoKey) ENCODING() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -248,8 +254,14 @@ func (rcv *CryptoKey) Encoding() []byte {
 }
 
 /// Signature encoding format produced by this key (e.g., "raw-ed25519",
-/// "compact"). ABSENT means the canonical encoding of ALGORITHM
-/// (raw-ed25519 for ed25519, compact for secp256k1)
+/// "der"). ABSENT means the canonical encoding of ALGORITHM: raw-ed25519
+/// for ed25519 (64 bytes over the content itself); der for secp256k1, a
+/// strict DER ECDSA signature over ONE SHA-256 of the canonical signing
+/// content (CANONICAL_SERIALIZATION.md section 4). The signer passes the
+/// content to a hashing signer, or its single SHA-256 to a digest signer,
+/// never a digest to a hashing signer: ECDSA over SHA-256(SHA-256(content))
+/// does not verify. "compact" (65-byte header||r||s) is a ChainProof
+/// encoding only, never the EPM signature's
 func CryptoKeyStart(builder *flatbuffers.Builder) {
 	builder.StartObject(10)
 }

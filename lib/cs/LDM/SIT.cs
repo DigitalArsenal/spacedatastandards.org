@@ -171,6 +171,63 @@ public struct SIT : IFlatbufferObject
   /// Vector of Integrated Devices (IDM)
   public IDM? INTEGRATED_DEVICES(int j) { int o = __p.__offset(50); return o != 0 ? (IDM?)(new IDM()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int INTEGRATED_DEVICESLength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+  /// words (Online, Offline, Testing); this field is the lifecycle.
+  public siteLifecycleStatus LIFECYCLE_STATUS { get { int o = __p.__offset(52); return o != 0 ? (siteLifecycleStatus)__p.bb.GetSbyte(o + __p.bb_pos) : siteLifecycleStatus.UNSPECIFIED; } }
+  /// When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+  public string LIFECYCLE_STATUS_DATE { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLIFECYCLE_STATUS_DATEBytes() { return __p.__vector_as_span<byte>(54, 1); }
+#else
+  public ArraySegment<byte>? GetLIFECYCLE_STATUS_DATEBytes() { return __p.__vector_as_arraysegment(54); }
+#endif
+  public byte[] GetLIFECYCLE_STATUS_DATEArray() { return __p.__vector_as_array<byte>(54); }
+  /// When the status was last checked against its sources, RFC 3339 UTC
+  public string STATUS_VERIFIED_AT { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTATUS_VERIFIED_ATBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetSTATUS_VERIFIED_ATBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetSTATUS_VERIFIED_ATArray() { return __p.__vector_as_array<byte>(56); }
+  /// Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+  public SITStatusEvidence? STATUS_EVIDENCE(int j) { int o = __p.__offset(58); return o != 0 ? (SITStatusEvidence?)(new SITStatusEvidence()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int STATUS_EVIDENCELength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// What kind of site this is, as its source names the class ("research
+  /// reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+  /// SiteType
+  public string SITE_KIND { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSITE_KINDBytes() { return __p.__vector_as_span<byte>(60, 1); }
+#else
+  public ArraySegment<byte>? GetSITE_KINDBytes() { return __p.__vector_as_arraysegment(60); }
+#endif
+  public byte[] GetSITE_KINDArray() { return __p.__vector_as_array<byte>(60); }
+  /// Language of DESCRIPTION, BCP 47
+  public string DESCRIPTION_LANGUAGE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTION_LANGUAGEBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTION_LANGUAGEBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetDESCRIPTION_LANGUAGEArray() { return __p.__vector_as_array<byte>(62); }
+  /// Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+  public SITCitation? DESCRIPTION_CITATION { get { int o = __p.__offset(64); return o != 0 ? (SITCitation?)(new SITCitation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+  public SITCitation? POSITION_CITATION { get { int o = __p.__offset(66); return o != 0 ? (SITCitation?)(new SITCitation()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Records about the site in other registers; the RECORD role names the
+  /// site's own record
+  public SITReference? EXTERNAL_REFERENCES(int j) { int o = __p.__offset(68); return o != 0 ? (SITReference?)(new SITReference()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EXTERNAL_REFERENCESLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Operators, owners and regulators
+  public SITParty? PARTIES(int j) { int o = __p.__offset(70); return o != 0 ? (SITParty?)(new SITParty()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int PARTIESLength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Stated quantities (capacity, power, units, elevation)
+  public SITQuantity? QUANTITIES(int j) { int o = __p.__offset(72); return o != 0 ? (SITQuantity?)(new SITQuantity()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int QUANTITIESLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// The record's provider and producer, and the terms of the content the
+  /// record reproduces (each citation carries its own source's terms)
+  public PVN? PROVENANCE { get { int o = __p.__offset(74); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SIT> CreateSIT(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -196,8 +253,31 @@ public struct SIT : IFlatbufferObject
       StringOffset CONTACT_INFOOffset = default(StringOffset),
       StringOffset ENVIRONMENTAL_IMPACTOffset = default(StringOffset),
       StringOffset ACCESSIBILITY_INFRAOffset = default(StringOffset),
-      VectorOffset INTEGRATED_DEVICESOffset = default(VectorOffset)) {
-    builder.StartTable(24);
+      VectorOffset INTEGRATED_DEVICESOffset = default(VectorOffset),
+      siteLifecycleStatus LIFECYCLE_STATUS = siteLifecycleStatus.UNSPECIFIED,
+      StringOffset LIFECYCLE_STATUS_DATEOffset = default(StringOffset),
+      StringOffset STATUS_VERIFIED_ATOffset = default(StringOffset),
+      VectorOffset STATUS_EVIDENCEOffset = default(VectorOffset),
+      StringOffset SITE_KINDOffset = default(StringOffset),
+      StringOffset DESCRIPTION_LANGUAGEOffset = default(StringOffset),
+      Offset<SITCitation> DESCRIPTION_CITATIONOffset = default(Offset<SITCitation>),
+      Offset<SITCitation> POSITION_CITATIONOffset = default(Offset<SITCitation>),
+      VectorOffset EXTERNAL_REFERENCESOffset = default(VectorOffset),
+      VectorOffset PARTIESOffset = default(VectorOffset),
+      VectorOffset QUANTITIESOffset = default(VectorOffset),
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
+    builder.StartTable(36);
+    SIT.AddPROVENANCE(builder, PROVENANCEOffset);
+    SIT.AddQUANTITIES(builder, QUANTITIESOffset);
+    SIT.AddPARTIES(builder, PARTIESOffset);
+    SIT.AddEXTERNAL_REFERENCES(builder, EXTERNAL_REFERENCESOffset);
+    SIT.AddPOSITION_CITATION(builder, POSITION_CITATIONOffset);
+    SIT.AddDESCRIPTION_CITATION(builder, DESCRIPTION_CITATIONOffset);
+    SIT.AddDESCRIPTION_LANGUAGE(builder, DESCRIPTION_LANGUAGEOffset);
+    SIT.AddSITE_KIND(builder, SITE_KINDOffset);
+    SIT.AddSTATUS_EVIDENCE(builder, STATUS_EVIDENCEOffset);
+    SIT.AddSTATUS_VERIFIED_AT(builder, STATUS_VERIFIED_ATOffset);
+    SIT.AddLIFECYCLE_STATUS_DATE(builder, LIFECYCLE_STATUS_DATEOffset);
     SIT.AddINTEGRATED_DEVICES(builder, INTEGRATED_DEVICESOffset);
     SIT.AddACCESSIBILITY_INFRA(builder, ACCESSIBILITY_INFRAOffset);
     SIT.AddENVIRONMENTAL_IMPACT(builder, ENVIRONMENTAL_IMPACTOffset);
@@ -220,12 +300,13 @@ public struct SIT : IFlatbufferObject
     SIT.AddABBREVIATION(builder, ABBREVIATIONOffset);
     SIT.AddNAME(builder, NAMEOffset);
     SIT.AddID(builder, IDOffset);
+    SIT.AddLIFECYCLE_STATUS(builder, LIFECYCLE_STATUS);
     SIT.AddTASKABLE(builder, TASKABLE);
     SIT.AddSITE_TYPE(builder, SITE_TYPE);
     return SIT.EndSIT(builder);
   }
 
-  public static void StartSIT(FlatBufferBuilder builder) { builder.StartTable(24); }
+  public static void StartSIT(FlatBufferBuilder builder) { builder.StartTable(36); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddABBREVIATION(FlatBufferBuilder builder, StringOffset ABBREVIATIONOffset) { builder.AddOffset(2, ABBREVIATIONOffset.Value, 0); }
@@ -260,6 +341,38 @@ public struct SIT : IFlatbufferObject
   public static VectorOffset CreateINTEGRATED_DEVICESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<IDM>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateINTEGRATED_DEVICESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<IDM>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartINTEGRATED_DEVICESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddLIFECYCLE_STATUS(FlatBufferBuilder builder, siteLifecycleStatus LIFECYCLE_STATUS) { builder.AddSbyte(24, (sbyte)LIFECYCLE_STATUS, 0); }
+  public static void AddLIFECYCLE_STATUS_DATE(FlatBufferBuilder builder, StringOffset LIFECYCLE_STATUS_DATEOffset) { builder.AddOffset(25, LIFECYCLE_STATUS_DATEOffset.Value, 0); }
+  public static void AddSTATUS_VERIFIED_AT(FlatBufferBuilder builder, StringOffset STATUS_VERIFIED_ATOffset) { builder.AddOffset(26, STATUS_VERIFIED_ATOffset.Value, 0); }
+  public static void AddSTATUS_EVIDENCE(FlatBufferBuilder builder, VectorOffset STATUS_EVIDENCEOffset) { builder.AddOffset(27, STATUS_EVIDENCEOffset.Value, 0); }
+  public static VectorOffset CreateSTATUS_EVIDENCEVector(FlatBufferBuilder builder, Offset<SITStatusEvidence>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSTATUS_EVIDENCEVectorBlock(FlatBufferBuilder builder, Offset<SITStatusEvidence>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATUS_EVIDENCEVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SITStatusEvidence>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSTATUS_EVIDENCEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SITStatusEvidence>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSTATUS_EVIDENCEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSITE_KIND(FlatBufferBuilder builder, StringOffset SITE_KINDOffset) { builder.AddOffset(28, SITE_KINDOffset.Value, 0); }
+  public static void AddDESCRIPTION_LANGUAGE(FlatBufferBuilder builder, StringOffset DESCRIPTION_LANGUAGEOffset) { builder.AddOffset(29, DESCRIPTION_LANGUAGEOffset.Value, 0); }
+  public static void AddDESCRIPTION_CITATION(FlatBufferBuilder builder, Offset<SITCitation> DESCRIPTION_CITATIONOffset) { builder.AddOffset(30, DESCRIPTION_CITATIONOffset.Value, 0); }
+  public static void AddPOSITION_CITATION(FlatBufferBuilder builder, Offset<SITCitation> POSITION_CITATIONOffset) { builder.AddOffset(31, POSITION_CITATIONOffset.Value, 0); }
+  public static void AddEXTERNAL_REFERENCES(FlatBufferBuilder builder, VectorOffset EXTERNAL_REFERENCESOffset) { builder.AddOffset(32, EXTERNAL_REFERENCESOffset.Value, 0); }
+  public static VectorOffset CreateEXTERNAL_REFERENCESVector(FlatBufferBuilder builder, Offset<SITReference>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEXTERNAL_REFERENCESVectorBlock(FlatBufferBuilder builder, Offset<SITReference>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEXTERNAL_REFERENCESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SITReference>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEXTERNAL_REFERENCESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SITReference>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEXTERNAL_REFERENCESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPARTIES(FlatBufferBuilder builder, VectorOffset PARTIESOffset) { builder.AddOffset(33, PARTIESOffset.Value, 0); }
+  public static VectorOffset CreatePARTIESVector(FlatBufferBuilder builder, Offset<SITParty>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreatePARTIESVectorBlock(FlatBufferBuilder builder, Offset<SITParty>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePARTIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SITParty>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreatePARTIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SITParty>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartPARTIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddQUANTITIES(FlatBufferBuilder builder, VectorOffset QUANTITIESOffset) { builder.AddOffset(34, QUANTITIESOffset.Value, 0); }
+  public static VectorOffset CreateQUANTITIESVector(FlatBufferBuilder builder, Offset<SITQuantity>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTITIESVectorBlock(FlatBufferBuilder builder, Offset<SITQuantity>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTITIESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<SITQuantity>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateQUANTITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SITQuantity>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartQUANTITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(35, PROVENANCEOffset.Value, 0); }
   public static Offset<SIT> EndSIT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SIT>(o);
@@ -298,6 +411,22 @@ public struct SIT : IFlatbufferObject
     _o.ACCESSIBILITY_INFRA = this.ACCESSIBILITY_INFRA;
     _o.INTEGRATED_DEVICES = new List<IDMT>();
     for (var _j = 0; _j < this.INTEGRATED_DEVICESLength; ++_j) {_o.INTEGRATED_DEVICES.Add(this.INTEGRATED_DEVICES(_j).HasValue ? this.INTEGRATED_DEVICES(_j).Value.UnPack() : null);}
+    _o.LIFECYCLE_STATUS = this.LIFECYCLE_STATUS;
+    _o.LIFECYCLE_STATUS_DATE = this.LIFECYCLE_STATUS_DATE;
+    _o.STATUS_VERIFIED_AT = this.STATUS_VERIFIED_AT;
+    _o.STATUS_EVIDENCE = new List<SITStatusEvidenceT>();
+    for (var _j = 0; _j < this.STATUS_EVIDENCELength; ++_j) {_o.STATUS_EVIDENCE.Add(this.STATUS_EVIDENCE(_j).HasValue ? this.STATUS_EVIDENCE(_j).Value.UnPack() : null);}
+    _o.SITE_KIND = this.SITE_KIND;
+    _o.DESCRIPTION_LANGUAGE = this.DESCRIPTION_LANGUAGE;
+    _o.DESCRIPTION_CITATION = this.DESCRIPTION_CITATION.HasValue ? this.DESCRIPTION_CITATION.Value.UnPack() : null;
+    _o.POSITION_CITATION = this.POSITION_CITATION.HasValue ? this.POSITION_CITATION.Value.UnPack() : null;
+    _o.EXTERNAL_REFERENCES = new List<SITReferenceT>();
+    for (var _j = 0; _j < this.EXTERNAL_REFERENCESLength; ++_j) {_o.EXTERNAL_REFERENCES.Add(this.EXTERNAL_REFERENCES(_j).HasValue ? this.EXTERNAL_REFERENCES(_j).Value.UnPack() : null);}
+    _o.PARTIES = new List<SITPartyT>();
+    for (var _j = 0; _j < this.PARTIESLength; ++_j) {_o.PARTIES.Add(this.PARTIES(_j).HasValue ? this.PARTIES(_j).Value.UnPack() : null);}
+    _o.QUANTITIES = new List<SITQuantityT>();
+    for (var _j = 0; _j < this.QUANTITIESLength; ++_j) {_o.QUANTITIES.Add(this.QUANTITIES(_j).HasValue ? this.QUANTITIES(_j).Value.UnPack() : null);}
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
   }
   public static Offset<SIT> Pack(FlatBufferBuilder builder, SITT _o) {
     if (_o == null) return default(Offset<SIT>);
@@ -329,6 +458,37 @@ public struct SIT : IFlatbufferObject
       for (var _j = 0; _j < __INTEGRATED_DEVICES.Length; ++_j) { __INTEGRATED_DEVICES[_j] = IDM.Pack(builder, _o.INTEGRATED_DEVICES[_j]); }
       _INTEGRATED_DEVICES = CreateINTEGRATED_DEVICESVector(builder, __INTEGRATED_DEVICES);
     }
+    var _LIFECYCLE_STATUS_DATE = _o.LIFECYCLE_STATUS_DATE == null ? default(StringOffset) : builder.CreateString(_o.LIFECYCLE_STATUS_DATE);
+    var _STATUS_VERIFIED_AT = _o.STATUS_VERIFIED_AT == null ? default(StringOffset) : builder.CreateString(_o.STATUS_VERIFIED_AT);
+    var _STATUS_EVIDENCE = default(VectorOffset);
+    if (_o.STATUS_EVIDENCE != null) {
+      var __STATUS_EVIDENCE = new Offset<SITStatusEvidence>[_o.STATUS_EVIDENCE.Count];
+      for (var _j = 0; _j < __STATUS_EVIDENCE.Length; ++_j) { __STATUS_EVIDENCE[_j] = SITStatusEvidence.Pack(builder, _o.STATUS_EVIDENCE[_j]); }
+      _STATUS_EVIDENCE = CreateSTATUS_EVIDENCEVector(builder, __STATUS_EVIDENCE);
+    }
+    var _SITE_KIND = _o.SITE_KIND == null ? default(StringOffset) : builder.CreateString(_o.SITE_KIND);
+    var _DESCRIPTION_LANGUAGE = _o.DESCRIPTION_LANGUAGE == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION_LANGUAGE);
+    var _DESCRIPTION_CITATION = _o.DESCRIPTION_CITATION == null ? default(Offset<SITCitation>) : SITCitation.Pack(builder, _o.DESCRIPTION_CITATION);
+    var _POSITION_CITATION = _o.POSITION_CITATION == null ? default(Offset<SITCitation>) : SITCitation.Pack(builder, _o.POSITION_CITATION);
+    var _EXTERNAL_REFERENCES = default(VectorOffset);
+    if (_o.EXTERNAL_REFERENCES != null) {
+      var __EXTERNAL_REFERENCES = new Offset<SITReference>[_o.EXTERNAL_REFERENCES.Count];
+      for (var _j = 0; _j < __EXTERNAL_REFERENCES.Length; ++_j) { __EXTERNAL_REFERENCES[_j] = SITReference.Pack(builder, _o.EXTERNAL_REFERENCES[_j]); }
+      _EXTERNAL_REFERENCES = CreateEXTERNAL_REFERENCESVector(builder, __EXTERNAL_REFERENCES);
+    }
+    var _PARTIES = default(VectorOffset);
+    if (_o.PARTIES != null) {
+      var __PARTIES = new Offset<SITParty>[_o.PARTIES.Count];
+      for (var _j = 0; _j < __PARTIES.Length; ++_j) { __PARTIES[_j] = SITParty.Pack(builder, _o.PARTIES[_j]); }
+      _PARTIES = CreatePARTIESVector(builder, __PARTIES);
+    }
+    var _QUANTITIES = default(VectorOffset);
+    if (_o.QUANTITIES != null) {
+      var __QUANTITIES = new Offset<SITQuantity>[_o.QUANTITIES.Count];
+      for (var _j = 0; _j < __QUANTITIES.Length; ++_j) { __QUANTITIES[_j] = SITQuantity.Pack(builder, _o.QUANTITIES[_j]); }
+      _QUANTITIES = CreateQUANTITIESVector(builder, __QUANTITIES);
+    }
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
     return CreateSIT(
       builder,
       _ID,
@@ -354,7 +514,19 @@ public struct SIT : IFlatbufferObject
       _CONTACT_INFO,
       _ENVIRONMENTAL_IMPACT,
       _ACCESSIBILITY_INFRA,
-      _INTEGRATED_DEVICES);
+      _INTEGRATED_DEVICES,
+      _o.LIFECYCLE_STATUS,
+      _LIFECYCLE_STATUS_DATE,
+      _STATUS_VERIFIED_AT,
+      _STATUS_EVIDENCE,
+      _SITE_KIND,
+      _DESCRIPTION_LANGUAGE,
+      _DESCRIPTION_CITATION,
+      _POSITION_CITATION,
+      _EXTERNAL_REFERENCES,
+      _PARTIES,
+      _QUANTITIES,
+      _PROVENANCE);
   }
 }
 
@@ -384,6 +556,18 @@ public class SITT
   public string ENVIRONMENTAL_IMPACT { get; set; }
   public string ACCESSIBILITY_INFRA { get; set; }
   public List<IDMT> INTEGRATED_DEVICES { get; set; }
+  public siteLifecycleStatus LIFECYCLE_STATUS { get; set; }
+  public string LIFECYCLE_STATUS_DATE { get; set; }
+  public string STATUS_VERIFIED_AT { get; set; }
+  public List<SITStatusEvidenceT> STATUS_EVIDENCE { get; set; }
+  public string SITE_KIND { get; set; }
+  public string DESCRIPTION_LANGUAGE { get; set; }
+  public SITCitationT DESCRIPTION_CITATION { get; set; }
+  public SITCitationT POSITION_CITATION { get; set; }
+  public List<SITReferenceT> EXTERNAL_REFERENCES { get; set; }
+  public List<SITPartyT> PARTIES { get; set; }
+  public List<SITQuantityT> QUANTITIES { get; set; }
+  public PVNT PROVENANCE { get; set; }
 
   public SITT() {
     this.ID = null;
@@ -410,6 +594,18 @@ public class SITT
     this.ENVIRONMENTAL_IMPACT = null;
     this.ACCESSIBILITY_INFRA = null;
     this.INTEGRATED_DEVICES = null;
+    this.LIFECYCLE_STATUS = siteLifecycleStatus.UNSPECIFIED;
+    this.LIFECYCLE_STATUS_DATE = null;
+    this.STATUS_VERIFIED_AT = null;
+    this.STATUS_EVIDENCE = null;
+    this.SITE_KIND = null;
+    this.DESCRIPTION_LANGUAGE = null;
+    this.DESCRIPTION_CITATION = null;
+    this.POSITION_CITATION = null;
+    this.EXTERNAL_REFERENCES = null;
+    this.PARTIES = null;
+    this.QUANTITIES = null;
+    this.PROVENANCE = null;
   }
   public static SITT DeserializeFromBinary(byte[] fbBuffer) {
     return SIT.GetRootAsSIT(new ByteBuffer(fbBuffer)).UnPack();
@@ -451,6 +647,18 @@ static public class SITVerify
       && verifier.VerifyString(tablePos, 46 /*ENVIRONMENTAL_IMPACT*/, false)
       && verifier.VerifyString(tablePos, 48 /*ACCESSIBILITY_INFRA*/, false)
       && verifier.VerifyVectorOfTables(tablePos, 50 /*INTEGRATED_DEVICES*/, IDMVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 52 /*LIFECYCLE_STATUS*/, 1 /*siteLifecycleStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 54 /*LIFECYCLE_STATUS_DATE*/, false)
+      && verifier.VerifyString(tablePos, 56 /*STATUS_VERIFIED_AT*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 58 /*STATUS_EVIDENCE*/, SITStatusEvidenceVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 60 /*SITE_KIND*/, false)
+      && verifier.VerifyString(tablePos, 62 /*DESCRIPTION_LANGUAGE*/, false)
+      && verifier.VerifyTable(tablePos, 64 /*DESCRIPTION_CITATION*/, SITCitationVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 66 /*POSITION_CITATION*/, SITCitationVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 68 /*EXTERNAL_REFERENCES*/, SITReferenceVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 70 /*PARTIES*/, SITPartyVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 72 /*QUANTITIES*/, SITQuantityVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 74 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

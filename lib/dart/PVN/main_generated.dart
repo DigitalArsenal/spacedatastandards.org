@@ -11,7 +11,8 @@ enum pvnSourceKind {
   Unspecified(0),
   ElementSet(1),
   Ephemeris(2),
-  Observation(3);
+  Observation(3),
+  Reference(4);
 
   final int value;
   const pvnSourceKind(this.value);
@@ -22,6 +23,7 @@ enum pvnSourceKind {
       case 1: return pvnSourceKind.ElementSet;
       case 2: return pvnSourceKind.Ephemeris;
       case 3: return pvnSourceKind.Observation;
+      case 4: return pvnSourceKind.Reference;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -30,7 +32,7 @@ enum pvnSourceKind {
       value == null ? null : pvnSourceKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
+  static const int maxValue = 4;
   static const fb.Reader<pvnSourceKind> reader = _pvnSourceKindReader();
 }
 

@@ -198,7 +198,11 @@ func (rcv *PNVEntry) MutateReceivedAtMs(n int64) bool {
 	return rcv.MutateRECEIVED_AT_MS(n)
 }
 
-/// Signature scheme of the notice, e.g. "ed25519", "secp256k1".
+/// Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+/// "Secp256k1". The signature is over the notice's signed bytes, hashed
+/// once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+/// signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+/// A signature over SHA-256(SHA-256(bytes)) does not verify.
 func (rcv *PNVEntry) SIGNATURE_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -211,7 +215,11 @@ func (rcv *PNVEntry) SignatureType() []byte {
 	return rcv.SIGNATURE_TYPE()
 }
 
-/// Signature scheme of the notice, e.g. "ed25519", "secp256k1".
+/// Signature scheme of the notice, verbatim from the $PNM, e.g. "Ed25519",
+/// "Secp256k1". The signature is over the notice's signed bytes, hashed
+/// once: Ed25519 signs the bytes themselves; Secp256k1 is a DER ECDSA
+/// signature over ONE SHA-256 of the bytes (the libp2p secp256k1 key form).
+/// A signature over SHA-256(SHA-256(bytes)) does not verify.
 /// The notice's signature, verbatim.
 func (rcv *PNVEntry) SIGNATURE(j int) byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))

@@ -74,6 +74,796 @@ class _SiteTypeReader extends fb.Reader<SiteType> {
       SiteType.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
+///  Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
+///  EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
+enum siteLifecycleStatus {
+  UNSPECIFIED(0),
+  PLANNED(1),
+  UNDER_CONSTRUCTION(2),
+  CONSTRUCTION_SUSPENDED(3),
+  OPERATING(4),
+  LONG_TERM_SHUTDOWN(5),
+  PERMANENT_SHUTDOWN(6),
+  DECOMMISSIONING(7),
+  DECOMMISSIONED(8),
+  CANCELLED(9),
+  UNVERIFIED(10);
+
+  final int value;
+  const siteLifecycleStatus(this.value);
+
+  factory siteLifecycleStatus.fromValue(int value) {
+    switch (value) {
+      case 0: return siteLifecycleStatus.UNSPECIFIED;
+      case 1: return siteLifecycleStatus.PLANNED;
+      case 2: return siteLifecycleStatus.UNDER_CONSTRUCTION;
+      case 3: return siteLifecycleStatus.CONSTRUCTION_SUSPENDED;
+      case 4: return siteLifecycleStatus.OPERATING;
+      case 5: return siteLifecycleStatus.LONG_TERM_SHUTDOWN;
+      case 6: return siteLifecycleStatus.PERMANENT_SHUTDOWN;
+      case 7: return siteLifecycleStatus.DECOMMISSIONING;
+      case 8: return siteLifecycleStatus.DECOMMISSIONED;
+      case 9: return siteLifecycleStatus.CANCELLED;
+      case 10: return siteLifecycleStatus.UNVERIFIED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static siteLifecycleStatus? _createOrNull(int? value) =>
+      value == null ? null : siteLifecycleStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 10;
+  static const fb.Reader<siteLifecycleStatus> reader = _siteLifecycleStatusReader();
+}
+
+class _siteLifecycleStatusReader extends fb.Reader<siteLifecycleStatus> {
+  const _siteLifecycleStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  siteLifecycleStatus read(fb.BufferContext bc, int offset) =>
+      siteLifecycleStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  What a reference to another record about the site is.
+enum sitReferenceRole {
+  UNSPECIFIED(0),
+  RECORD(1),
+  OFFICIAL_WEBSITE(2),
+  ENCYCLOPEDIA_ARTICLE(3),
+  REGISTRY_RECORD(4),
+  REGULATORY_DOCKET(5);
+
+  final int value;
+  const sitReferenceRole(this.value);
+
+  factory sitReferenceRole.fromValue(int value) {
+    switch (value) {
+      case 0: return sitReferenceRole.UNSPECIFIED;
+      case 1: return sitReferenceRole.RECORD;
+      case 2: return sitReferenceRole.OFFICIAL_WEBSITE;
+      case 3: return sitReferenceRole.ENCYCLOPEDIA_ARTICLE;
+      case 4: return sitReferenceRole.REGISTRY_RECORD;
+      case 5: return sitReferenceRole.REGULATORY_DOCKET;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static sitReferenceRole? _createOrNull(int? value) =>
+      value == null ? null : sitReferenceRole.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static const fb.Reader<sitReferenceRole> reader = _sitReferenceRoleReader();
+}
+
+class _sitReferenceRoleReader extends fb.Reader<sitReferenceRole> {
+  const _sitReferenceRoleReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  sitReferenceRole read(fb.BufferContext bc, int offset) =>
+      sitReferenceRole.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  What part a party plays at a site.
+enum sitPartyRole {
+  UNSPECIFIED(0),
+  OPERATOR(1),
+  OWNER(2),
+  REGULATOR(3);
+
+  final int value;
+  const sitPartyRole(this.value);
+
+  factory sitPartyRole.fromValue(int value) {
+    switch (value) {
+      case 0: return sitPartyRole.UNSPECIFIED;
+      case 1: return sitPartyRole.OPERATOR;
+      case 2: return sitPartyRole.OWNER;
+      case 3: return sitPartyRole.REGULATOR;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static sitPartyRole? _createOrNull(int? value) =>
+      value == null ? null : sitPartyRole.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<sitPartyRole> reader = _sitPartyRoleReader();
+}
+
+class _sitPartyRoleReader extends fb.Reader<sitPartyRole> {
+  const _sitPartyRoleReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  sitPartyRole read(fb.BufferContext bc, int offset) =>
+      sitPartyRole.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  What a quantity of a site measures. Ordinals are wire values: append only.
+enum sitQuantityKind {
+  UNSPECIFIED(0),
+  ELECTRICAL_CAPACITY(1),
+  THERMAL_POWER(2),
+  REACTOR_UNITS(3),
+  ELEVATION(4);
+
+  final int value;
+  const sitQuantityKind(this.value);
+
+  factory sitQuantityKind.fromValue(int value) {
+    switch (value) {
+      case 0: return sitQuantityKind.UNSPECIFIED;
+      case 1: return sitQuantityKind.ELECTRICAL_CAPACITY;
+      case 2: return sitQuantityKind.THERMAL_POWER;
+      case 3: return sitQuantityKind.REACTOR_UNITS;
+      case 4: return sitQuantityKind.ELEVATION;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static sitQuantityKind? _createOrNull(int? value) =>
+      value == null ? null : sitQuantityKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<sitQuantityKind> reader = _sitQuantityKindReader();
+}
+
+class _sitQuantityKindReader extends fb.Reader<sitQuantityKind> {
+  const _sitQuantityKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  sitQuantityKind read(fb.BufferContext bc, int offset) =>
+      sitQuantityKind.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Where one statement about a site was read: the source, the record, the
+///  version of the record and the field the statement came from.
+class SITCitation {
+  SITCitation._(this._bc, this._bcOffset);
+  factory SITCitation(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SITCitation> reader = _SITCitationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The source, its originator and the terms the statement travels under
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  The source's own identifier of the record (Wikidata QID, "de:Article
+  ///  title", tracker unit ids, ROR id, docket number, register row)
+  String? get SOURCE_RECORD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get sourceRecordId => SOURCE_RECORD_ID;
+  ///  Where the record can be read
+  String? get SOURCE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get sourceUrl => SOURCE_URL;
+  ///  The source's version of the record (revision id, release name)
+  String? get SOURCE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  String? get sourceVersion => SOURCE_VERSION;
+  ///  The field of the record the statement was read from, from a closed
+  ///  vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+  ///  "description", "class:<QID>", "status" (a registry's status column),
+  ///  "units" (a tracker's unit statuses), "register:<id>" (a row of the
+  ///  provider's reviewed register). Never free text.
+  String? get SOURCE_FIELD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  String? get sourceField => SOURCE_FIELD;
+  ///  When the record was read, RFC 3339 UTC
+  String? get RETRIEVED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  String? get retrievedAt => RETRIEVED_AT;
+
+  @override
+  String toString() {
+    return 'SITCitation{PROVENANCE: ${PROVENANCE}, sourceRecordId: ${sourceRecordId}, sourceUrl: ${sourceUrl}, sourceVersion: ${sourceVersion}, sourceField: ${sourceField}, retrievedAt: ${retrievedAt}}';
+  }
+}
+
+class _SITCitationReader extends fb.TableReader<SITCitation> {
+  const _SITCitationReader();
+
+  @override
+  SITCitation createObject(fb.BufferContext bc, int offset) =>
+    SITCitation._(bc, offset);
+}
+
+class SITCitationBuilder {
+  SITCitationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceRecordIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceUrlOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceVersionOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceFieldOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRetrievedAtOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SITCitationObjectBuilder extends fb.ObjectBuilder {
+  final PVNObjectBuilder? _PROVENANCE;
+  final String? _SOURCE_RECORD_ID;
+  final String? _SOURCE_URL;
+  final String? _SOURCE_VERSION;
+  final String? _SOURCE_FIELD;
+  final String? _RETRIEVED_AT;
+
+  SITCitationObjectBuilder({
+    PVNObjectBuilder? PROVENANCE,
+    String? SOURCE_RECORD_ID,
+    String? sourceRecordId,
+    String? SOURCE_URL,
+    String? sourceUrl,
+    String? SOURCE_VERSION,
+    String? sourceVersion,
+    String? SOURCE_FIELD,
+    String? sourceField,
+    String? RETRIEVED_AT,
+    String? retrievedAt,
+  })
+      : _PROVENANCE = PROVENANCE,
+        _SOURCE_RECORD_ID = sourceRecordId ?? SOURCE_RECORD_ID,
+        _SOURCE_URL = sourceUrl ?? SOURCE_URL,
+        _SOURCE_VERSION = sourceVersion ?? SOURCE_VERSION,
+        _SOURCE_FIELD = sourceField ?? SOURCE_FIELD,
+        _RETRIEVED_AT = retrievedAt ?? RETRIEVED_AT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    final int? SOURCE_RECORD_IDOffset = _SOURCE_RECORD_ID == null ? null
+        : fbBuilder.writeString(_SOURCE_RECORD_ID!);
+    final int? SOURCE_URLOffset = _SOURCE_URL == null ? null
+        : fbBuilder.writeString(_SOURCE_URL!);
+    final int? SOURCE_VERSIONOffset = _SOURCE_VERSION == null ? null
+        : fbBuilder.writeString(_SOURCE_VERSION!);
+    final int? SOURCE_FIELDOffset = _SOURCE_FIELD == null ? null
+        : fbBuilder.writeString(_SOURCE_FIELD!);
+    final int? RETRIEVED_ATOffset = _RETRIEVED_AT == null ? null
+        : fbBuilder.writeString(_RETRIEVED_AT!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, PROVENANCEOffset);
+    fbBuilder.addOffset(1, SOURCE_RECORD_IDOffset);
+    fbBuilder.addOffset(2, SOURCE_URLOffset);
+    fbBuilder.addOffset(3, SOURCE_VERSIONOffset);
+    fbBuilder.addOffset(4, SOURCE_FIELDOffset);
+    fbBuilder.addOffset(5, RETRIEVED_ATOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One source's assertion of one lifecycle step of a site.
+class SITStatusEvidence {
+  SITStatusEvidence._(this._bc, this._bcOffset);
+  factory SITStatusEvidence(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SITStatusEvidence> reader = _SITStatusEvidenceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The status the source states
+  siteLifecycleStatus get STATUS => siteLifecycleStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)
+  String? get STATUS_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  String? get statusDate => STATUS_DATE;
+  ///  Where the statement was read
+  SITCitation? get CITATION => SITCitation.reader.vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'SITStatusEvidence{STATUS: ${STATUS}, statusDate: ${statusDate}, CITATION: ${CITATION}}';
+  }
+}
+
+class _SITStatusEvidenceReader extends fb.TableReader<SITStatusEvidence> {
+  const _SITStatusEvidenceReader();
+
+  @override
+  SITStatusEvidence createObject(fb.BufferContext bc, int offset) =>
+    SITStatusEvidence._(bc, offset);
+}
+
+class SITStatusEvidenceBuilder {
+  SITStatusEvidenceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addStatus(siteLifecycleStatus? STATUS) {
+    fbBuilder.addInt8(0, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addStatusDateOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SITStatusEvidenceObjectBuilder extends fb.ObjectBuilder {
+  final siteLifecycleStatus? _STATUS;
+  final String? _STATUS_DATE;
+  final SITCitationObjectBuilder? _CITATION;
+
+  SITStatusEvidenceObjectBuilder({
+    siteLifecycleStatus? STATUS,
+    String? STATUS_DATE,
+    String? statusDate,
+    SITCitationObjectBuilder? CITATION,
+  })
+      : _STATUS = STATUS,
+        _STATUS_DATE = statusDate ?? STATUS_DATE,
+        _CITATION = CITATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? STATUS_DATEOffset = _STATUS_DATE == null ? null
+        : fbBuilder.writeString(_STATUS_DATE!);
+    final int? CITATIONOffset = _CITATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(3);
+    fbBuilder.addInt8(0, _STATUS?.value);
+    fbBuilder.addOffset(1, STATUS_DATEOffset);
+    fbBuilder.addOffset(2, CITATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A reference to another record about the site or a party.
+class SITReference {
+  SITReference._(this._bc, this._bcOffset);
+  factory SITReference(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SITReference> reader = _SITReferenceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  What the referenced record is
+  sitReferenceRole get ROLE => sitReferenceRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Publisher-stable, lowercase identifier of the registry in the provider's
+  ///  register of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)
+  String? get REGISTRY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  The registry's identifier of the record
+  String? get RECORD_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  String? get recordId => RECORD_ID;
+  ///  Where the record can be read
+  String? get URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  The record's title as the registry states it (for an encyclopedia, the
+  ///  article title only, never its text)
+  String? get TITLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Language of the record, BCP 47
+  String? get LANGUAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'SITReference{ROLE: ${ROLE}, REGISTRY: ${REGISTRY}, recordId: ${recordId}, URL: ${URL}, TITLE: ${TITLE}, LANGUAGE: ${LANGUAGE}}';
+  }
+}
+
+class _SITReferenceReader extends fb.TableReader<SITReference> {
+  const _SITReferenceReader();
+
+  @override
+  SITReference createObject(fb.BufferContext bc, int offset) =>
+    SITReference._(bc, offset);
+}
+
+class SITReferenceBuilder {
+  SITReferenceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addRole(sitReferenceRole? ROLE) {
+    fbBuilder.addInt8(0, ROLE?.value);
+    return fbBuilder.offset;
+  }
+  int addRegistryOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRecordIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addUrlOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTitleOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addLanguageOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SITReferenceObjectBuilder extends fb.ObjectBuilder {
+  final sitReferenceRole? _ROLE;
+  final String? _REGISTRY;
+  final String? _RECORD_ID;
+  final String? _URL;
+  final String? _TITLE;
+  final String? _LANGUAGE;
+
+  SITReferenceObjectBuilder({
+    sitReferenceRole? ROLE,
+    String? REGISTRY,
+    String? RECORD_ID,
+    String? recordId,
+    String? URL,
+    String? TITLE,
+    String? LANGUAGE,
+  })
+      : _ROLE = ROLE,
+        _REGISTRY = REGISTRY,
+        _RECORD_ID = recordId ?? RECORD_ID,
+        _URL = URL,
+        _TITLE = TITLE,
+        _LANGUAGE = LANGUAGE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REGISTRYOffset = _REGISTRY == null ? null
+        : fbBuilder.writeString(_REGISTRY!);
+    final int? RECORD_IDOffset = _RECORD_ID == null ? null
+        : fbBuilder.writeString(_RECORD_ID!);
+    final int? URLOffset = _URL == null ? null
+        : fbBuilder.writeString(_URL!);
+    final int? TITLEOffset = _TITLE == null ? null
+        : fbBuilder.writeString(_TITLE!);
+    final int? LANGUAGEOffset = _LANGUAGE == null ? null
+        : fbBuilder.writeString(_LANGUAGE!);
+    fbBuilder.startTable(6);
+    fbBuilder.addInt8(0, _ROLE?.value);
+    fbBuilder.addOffset(1, REGISTRYOffset);
+    fbBuilder.addOffset(2, RECORD_IDOffset);
+    fbBuilder.addOffset(3, URLOffset);
+    fbBuilder.addOffset(4, TITLEOffset);
+    fbBuilder.addOffset(5, LANGUAGEOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  An organisation with a part at the site.
+class SITParty {
+  SITParty._(this._bc, this._bcOffset);
+  factory SITParty(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SITParty> reader = _SITPartyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The part it plays
+  sitPartyRole get ROLE => sitPartyRole.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Its name, as the source states it
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Records about the party (its registry record, its official website)
+  List<SITReference>? get EXTERNAL_REFERENCES => const fb.ListReader<SITReference>(SITReference.reader).vTableGetNullable(_bc, _bcOffset, 8);
+  List<SITReference>? get externalReferences => EXTERNAL_REFERENCES;
+  ///  Where the statement that it plays this part was read
+  SITCitation? get CITATION => SITCitation.reader.vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'SITParty{ROLE: ${ROLE}, NAME: ${NAME}, externalReferences: ${externalReferences}, CITATION: ${CITATION}}';
+  }
+}
+
+class _SITPartyReader extends fb.TableReader<SITParty> {
+  const _SITPartyReader();
+
+  @override
+  SITParty createObject(fb.BufferContext bc, int offset) =>
+    SITParty._(bc, offset);
+}
+
+class SITPartyBuilder {
+  SITPartyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addRole(sitPartyRole? ROLE) {
+    fbBuilder.addInt8(0, ROLE?.value);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addExternalReferencesOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SITPartyObjectBuilder extends fb.ObjectBuilder {
+  final sitPartyRole? _ROLE;
+  final String? _NAME;
+  final List<SITReferenceObjectBuilder>? _EXTERNAL_REFERENCES;
+  final SITCitationObjectBuilder? _CITATION;
+
+  SITPartyObjectBuilder({
+    sitPartyRole? ROLE,
+    String? NAME,
+    List<SITReferenceObjectBuilder>? EXTERNAL_REFERENCES,
+    List<SITReferenceObjectBuilder>? externalReferences,
+    SITCitationObjectBuilder? CITATION,
+  })
+      : _ROLE = ROLE,
+        _NAME = NAME,
+        _EXTERNAL_REFERENCES = externalReferences ?? EXTERNAL_REFERENCES,
+        _CITATION = CITATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? EXTERNAL_REFERENCESOffset = _EXTERNAL_REFERENCES == null ? null
+        : fbBuilder.writeList(_EXTERNAL_REFERENCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CITATIONOffset = _CITATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
+    fbBuilder.addInt8(0, _ROLE?.value);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, EXTERNAL_REFERENCESOffset);
+    fbBuilder.addOffset(3, CITATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One stated quantity of a site.
+class SITQuantity {
+  SITQuantity._(this._bc, this._bcOffset);
+  factory SITQuantity(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SITQuantity> reader = _SITQuantityReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  What it measures
+  sitQuantityKind get KIND => sitQuantityKind.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Its value
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Units, CCSDS NDM spelling (MW, m); empty for a count
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  When the value applies, ISO 8601 at the source's precision; empty when the source states none
+  String? get DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Where it was read
+  SITCitation? get CITATION => SITCitation.reader.vTableGetNullable(_bc, _bcOffset, 12);
+
+  @override
+  String toString() {
+    return 'SITQuantity{KIND: ${KIND}, VALUE: ${VALUE}, UNITS: ${UNITS}, DATE: ${DATE}, CITATION: ${CITATION}}';
+  }
+}
+
+class _SITQuantityReader extends fb.TableReader<SITQuantity> {
+  const _SITQuantityReader();
+
+  @override
+  SITQuantity createObject(fb.BufferContext bc, int offset) =>
+    SITQuantity._(bc, offset);
+}
+
+class SITQuantityBuilder {
+  SITQuantityBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addKind(sitQuantityKind? KIND) {
+    fbBuilder.addInt8(0, KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(1, VALUE);
+    return fbBuilder.offset;
+  }
+  int addUnitsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDateOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCitationOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SITQuantityObjectBuilder extends fb.ObjectBuilder {
+  final sitQuantityKind? _KIND;
+  final double? _VALUE;
+  final String? _UNITS;
+  final String? _DATE;
+  final SITCitationObjectBuilder? _CITATION;
+
+  SITQuantityObjectBuilder({
+    sitQuantityKind? KIND,
+    double? VALUE,
+    String? UNITS,
+    String? DATE,
+    SITCitationObjectBuilder? CITATION,
+  })
+      : _KIND = KIND,
+        _VALUE = VALUE,
+        _UNITS = UNITS,
+        _DATE = DATE,
+        _CITATION = CITATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
+    final int? DATEOffset = _DATE == null ? null
+        : fbBuilder.writeString(_DATE!);
+    final int? CITATIONOffset = _CITATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addInt8(0, _KIND?.value);
+    fbBuilder.addFloat64(1, _VALUE);
+    fbBuilder.addOffset(2, UNITSOffset);
+    fbBuilder.addOffset(3, DATEOffset);
+    fbBuilder.addOffset(4, CITATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Geometry table with information about geometric properties
 class Geometry {
   Geometry._(this._bc, this._bcOffset);
@@ -235,10 +1025,48 @@ class SIT {
   ///  Vector of Integrated Devices (IDM)
   List<IDM>? get INTEGRATED_DEVICES => const fb.ListReader<IDM>(IDM.reader).vTableGetNullable(_bc, _bcOffset, 50);
   List<IDM>? get integratedDevices => INTEGRATED_DEVICES;
+  ///  Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+  ///  words (Online, Offline, Testing); this field is the lifecycle.
+  siteLifecycleStatus get LIFECYCLE_STATUS => siteLifecycleStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 52, 0));
+  siteLifecycleStatus get lifecycleStatus => LIFECYCLE_STATUS;
+  ///  When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+  String? get LIFECYCLE_STATUS_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get lifecycleStatusDate => LIFECYCLE_STATUS_DATE;
+  ///  When the status was last checked against its sources, RFC 3339 UTC
+  String? get STATUS_VERIFIED_AT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get statusVerifiedAt => STATUS_VERIFIED_AT;
+  ///  Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+  List<SITStatusEvidence>? get STATUS_EVIDENCE => const fb.ListReader<SITStatusEvidence>(SITStatusEvidence.reader).vTableGetNullable(_bc, _bcOffset, 58);
+  List<SITStatusEvidence>? get statusEvidence => STATUS_EVIDENCE;
+  ///  What kind of site this is, as its source names the class ("research
+  ///  reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+  ///  SiteType
+  String? get SITE_KIND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  String? get siteKind => SITE_KIND;
+  ///  Language of DESCRIPTION, BCP 47
+  String? get DESCRIPTION_LANGUAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  String? get descriptionLanguage => DESCRIPTION_LANGUAGE;
+  ///  Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+  SITCitation? get DESCRIPTION_CITATION => SITCitation.reader.vTableGetNullable(_bc, _bcOffset, 64);
+  SITCitation? get descriptionCitation => DESCRIPTION_CITATION;
+  ///  Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+  SITCitation? get POSITION_CITATION => SITCitation.reader.vTableGetNullable(_bc, _bcOffset, 66);
+  SITCitation? get positionCitation => POSITION_CITATION;
+  ///  Records about the site in other registers; the RECORD role names the
+  ///  site's own record
+  List<SITReference>? get EXTERNAL_REFERENCES => const fb.ListReader<SITReference>(SITReference.reader).vTableGetNullable(_bc, _bcOffset, 68);
+  List<SITReference>? get externalReferences => EXTERNAL_REFERENCES;
+  ///  Operators, owners and regulators
+  List<SITParty>? get PARTIES => const fb.ListReader<SITParty>(SITParty.reader).vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Stated quantities (capacity, power, units, elevation)
+  List<SITQuantity>? get QUANTITIES => const fb.ListReader<SITQuantity>(SITQuantity.reader).vTableGetNullable(_bc, _bcOffset, 72);
+  ///  The record's provider and producer, and the terms of the content the
+  ///  record reproduces (each citation carries its own source's terms)
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 74);
 
   @override
   String toString() {
-    return 'SIT{ID: ${ID}, NAME: ${NAME}, ABBREVIATION: ${ABBREVIATION}, siteType: ${siteType}, CATCODE: ${CATCODE}, NETWORK: ${NETWORK}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, GEOMETRY: ${GEOMETRY}, centerPointGeometry: ${centerPointGeometry}, CLASSIFICATION: ${CLASSIFICATION}, ctrId: ${ctrId}, createdBy: ${createdBy}, DESCRIPTION: ${DESCRIPTION}, modelUrl: ${modelUrl}, SOURCE: ${SOURCE}, TASKABLE: ${TASKABLE}, operationalStatus: ${operationalStatus}, establishmentDate: ${establishmentDate}, contactInfo: ${contactInfo}, environmentalImpact: ${environmentalImpact}, accessibilityInfra: ${accessibilityInfra}, integratedDevices: ${integratedDevices}}';
+    return 'SIT{ID: ${ID}, NAME: ${NAME}, ABBREVIATION: ${ABBREVIATION}, siteType: ${siteType}, CATCODE: ${CATCODE}, NETWORK: ${NETWORK}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, GEOMETRY: ${GEOMETRY}, centerPointGeometry: ${centerPointGeometry}, CLASSIFICATION: ${CLASSIFICATION}, ctrId: ${ctrId}, createdBy: ${createdBy}, DESCRIPTION: ${DESCRIPTION}, modelUrl: ${modelUrl}, SOURCE: ${SOURCE}, TASKABLE: ${TASKABLE}, operationalStatus: ${operationalStatus}, establishmentDate: ${establishmentDate}, contactInfo: ${contactInfo}, environmentalImpact: ${environmentalImpact}, accessibilityInfra: ${accessibilityInfra}, integratedDevices: ${integratedDevices}, lifecycleStatus: ${lifecycleStatus}, lifecycleStatusDate: ${lifecycleStatusDate}, statusVerifiedAt: ${statusVerifiedAt}, statusEvidence: ${statusEvidence}, siteKind: ${siteKind}, descriptionLanguage: ${descriptionLanguage}, descriptionCitation: ${descriptionCitation}, positionCitation: ${positionCitation}, externalReferences: ${externalReferences}, PARTIES: ${PARTIES}, QUANTITIES: ${QUANTITIES}, PROVENANCE: ${PROVENANCE}}';
   }
 }
 
@@ -256,7 +1084,7 @@ class SITBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(24);
+    fbBuilder.startTable(36);
   }
 
   int addIdOffset(int? offset) {
@@ -355,6 +1183,54 @@ class SITBuilder {
     fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
+  int addLifecycleStatus(siteLifecycleStatus? LIFECYCLE_STATUS) {
+    fbBuilder.addInt8(24, LIFECYCLE_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addLifecycleStatusDateOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addStatusVerifiedAtOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addStatusEvidenceOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addSiteKindOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionLanguageOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionCitationOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionCitationOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addExternalReferencesOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addPartiesOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addQuantitiesOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -386,6 +1262,18 @@ class SITObjectBuilder extends fb.ObjectBuilder {
   final String? _ENVIRONMENTAL_IMPACT;
   final String? _ACCESSIBILITY_INFRA;
   final List<IDMObjectBuilder>? _INTEGRATED_DEVICES;
+  final siteLifecycleStatus? _LIFECYCLE_STATUS;
+  final String? _LIFECYCLE_STATUS_DATE;
+  final String? _STATUS_VERIFIED_AT;
+  final List<SITStatusEvidenceObjectBuilder>? _STATUS_EVIDENCE;
+  final String? _SITE_KIND;
+  final String? _DESCRIPTION_LANGUAGE;
+  final SITCitationObjectBuilder? _DESCRIPTION_CITATION;
+  final SITCitationObjectBuilder? _POSITION_CITATION;
+  final List<SITReferenceObjectBuilder>? _EXTERNAL_REFERENCES;
+  final List<SITPartyObjectBuilder>? _PARTIES;
+  final List<SITQuantityObjectBuilder>? _QUANTITIES;
+  final PVNObjectBuilder? _PROVENANCE;
 
   SITObjectBuilder({
     String? ID,
@@ -423,6 +1311,27 @@ class SITObjectBuilder extends fb.ObjectBuilder {
     String? accessibilityInfra,
     List<IDMObjectBuilder>? INTEGRATED_DEVICES,
     List<IDMObjectBuilder>? integratedDevices,
+    siteLifecycleStatus? LIFECYCLE_STATUS,
+    siteLifecycleStatus? lifecycleStatus,
+    String? LIFECYCLE_STATUS_DATE,
+    String? lifecycleStatusDate,
+    String? STATUS_VERIFIED_AT,
+    String? statusVerifiedAt,
+    List<SITStatusEvidenceObjectBuilder>? STATUS_EVIDENCE,
+    List<SITStatusEvidenceObjectBuilder>? statusEvidence,
+    String? SITE_KIND,
+    String? siteKind,
+    String? DESCRIPTION_LANGUAGE,
+    String? descriptionLanguage,
+    SITCitationObjectBuilder? DESCRIPTION_CITATION,
+    SITCitationObjectBuilder? descriptionCitation,
+    SITCitationObjectBuilder? POSITION_CITATION,
+    SITCitationObjectBuilder? positionCitation,
+    List<SITReferenceObjectBuilder>? EXTERNAL_REFERENCES,
+    List<SITReferenceObjectBuilder>? externalReferences,
+    List<SITPartyObjectBuilder>? PARTIES,
+    List<SITQuantityObjectBuilder>? QUANTITIES,
+    PVNObjectBuilder? PROVENANCE,
   })
       : _ID = ID,
         _NAME = NAME,
@@ -447,7 +1356,19 @@ class SITObjectBuilder extends fb.ObjectBuilder {
         _CONTACT_INFO = contactInfo ?? CONTACT_INFO,
         _ENVIRONMENTAL_IMPACT = environmentalImpact ?? ENVIRONMENTAL_IMPACT,
         _ACCESSIBILITY_INFRA = accessibilityInfra ?? ACCESSIBILITY_INFRA,
-        _INTEGRATED_DEVICES = integratedDevices ?? INTEGRATED_DEVICES;
+        _INTEGRATED_DEVICES = integratedDevices ?? INTEGRATED_DEVICES,
+        _LIFECYCLE_STATUS = lifecycleStatus ?? LIFECYCLE_STATUS,
+        _LIFECYCLE_STATUS_DATE = lifecycleStatusDate ?? LIFECYCLE_STATUS_DATE,
+        _STATUS_VERIFIED_AT = statusVerifiedAt ?? STATUS_VERIFIED_AT,
+        _STATUS_EVIDENCE = statusEvidence ?? STATUS_EVIDENCE,
+        _SITE_KIND = siteKind ?? SITE_KIND,
+        _DESCRIPTION_LANGUAGE = descriptionLanguage ?? DESCRIPTION_LANGUAGE,
+        _DESCRIPTION_CITATION = descriptionCitation ?? DESCRIPTION_CITATION,
+        _POSITION_CITATION = positionCitation ?? POSITION_CITATION,
+        _EXTERNAL_REFERENCES = externalReferences ?? EXTERNAL_REFERENCES,
+        _PARTIES = PARTIES,
+        _QUANTITIES = QUANTITIES,
+        _PROVENANCE = PROVENANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -489,7 +1410,26 @@ class SITObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ACCESSIBILITY_INFRA!);
     final int? INTEGRATED_DEVICESOffset = _INTEGRATED_DEVICES == null ? null
         : fbBuilder.writeList(_INTEGRATED_DEVICES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(24);
+    final int? LIFECYCLE_STATUS_DATEOffset = _LIFECYCLE_STATUS_DATE == null ? null
+        : fbBuilder.writeString(_LIFECYCLE_STATUS_DATE!);
+    final int? STATUS_VERIFIED_ATOffset = _STATUS_VERIFIED_AT == null ? null
+        : fbBuilder.writeString(_STATUS_VERIFIED_AT!);
+    final int? STATUS_EVIDENCEOffset = _STATUS_EVIDENCE == null ? null
+        : fbBuilder.writeList(_STATUS_EVIDENCE!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SITE_KINDOffset = _SITE_KIND == null ? null
+        : fbBuilder.writeString(_SITE_KIND!);
+    final int? DESCRIPTION_LANGUAGEOffset = _DESCRIPTION_LANGUAGE == null ? null
+        : fbBuilder.writeString(_DESCRIPTION_LANGUAGE!);
+    final int? DESCRIPTION_CITATIONOffset = _DESCRIPTION_CITATION?.getOrCreateOffset(fbBuilder);
+    final int? POSITION_CITATIONOffset = _POSITION_CITATION?.getOrCreateOffset(fbBuilder);
+    final int? EXTERNAL_REFERENCESOffset = _EXTERNAL_REFERENCES == null ? null
+        : fbBuilder.writeList(_EXTERNAL_REFERENCES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PARTIESOffset = _PARTIES == null ? null
+        : fbBuilder.writeList(_PARTIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? QUANTITIESOffset = _QUANTITIES == null ? null
+        : fbBuilder.writeList(_QUANTITIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(36);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, ABBREVIATIONOffset);
@@ -514,6 +1454,18 @@ class SITObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(21, ENVIRONMENTAL_IMPACTOffset);
     fbBuilder.addOffset(22, ACCESSIBILITY_INFRAOffset);
     fbBuilder.addOffset(23, INTEGRATED_DEVICESOffset);
+    fbBuilder.addInt8(24, _LIFECYCLE_STATUS?.value);
+    fbBuilder.addOffset(25, LIFECYCLE_STATUS_DATEOffset);
+    fbBuilder.addOffset(26, STATUS_VERIFIED_ATOffset);
+    fbBuilder.addOffset(27, STATUS_EVIDENCEOffset);
+    fbBuilder.addOffset(28, SITE_KINDOffset);
+    fbBuilder.addOffset(29, DESCRIPTION_LANGUAGEOffset);
+    fbBuilder.addOffset(30, DESCRIPTION_CITATIONOffset);
+    fbBuilder.addOffset(31, POSITION_CITATIONOffset);
+    fbBuilder.addOffset(32, EXTERNAL_REFERENCESOffset);
+    fbBuilder.addOffset(33, PARTIESOffset);
+    fbBuilder.addOffset(34, QUANTITIESOffset);
+    fbBuilder.addOffset(35, PROVENANCEOffset);
     return fbBuilder.endTable();
   }
 

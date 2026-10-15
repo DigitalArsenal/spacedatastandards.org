@@ -37,6 +37,443 @@ public enum SiteType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
 }
 
 
+///  Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
+///  EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
+public enum siteLifecycleStatus: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  No source states a status
+  case unspecified = 0
+  ///  Proposed, announced or in study; construction not begun
+  case planned = 1
+  ///  Under construction
+  case underConstruction = 2
+  ///  Construction begun, then halted with no restart date (PRIS suspended construction)
+  case constructionSuspended = 3
+  ///  In operation
+  case operating = 4
+  ///  Not operating, with a stated intent to restart (PRIS suspended operation; RRDB 1T, 7X)
+  case longTermShutdown = 5
+  ///  Permanently shut down; not yet in decommissioning
+  case permanentShutdown = 6
+  ///  Decommissioning or dismantling under way
+  case decommissioning = 7
+  ///  Dismantled, remediated or released from regulatory control
+  case decommissioned = 8
+  ///  Never completed or never operated
+  case cancelled = 9
+  ///  Every licence-OK source was read and none states a status
+  case unverified = 10
+
+  public static var max: siteLifecycleStatus { return .unverified }
+  public static var min: siteLifecycleStatus { return .unspecified }
+}
+
+
+///  What a reference to another record about the site is.
+public enum sitReferenceRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Not stated
+  case unspecified = 0
+  ///  The site's own record in the register the site record was made from
+  case record = 1
+  ///  The site's or its operator's official website
+  case officialWebsite = 2
+  ///  An encyclopedia article about the site (title and URL only)
+  case encyclopediaArticle = 3
+  ///  The site's record in another registry (a tracker, an organisation registry)
+  case registryRecord = 4
+  ///  A regulator's docket or licence record for the site
+  case regulatoryDocket = 5
+
+  public static var max: sitReferenceRole { return .regulatoryDocket }
+  public static var min: sitReferenceRole { return .unspecified }
+}
+
+
+///  What part a party plays at a site.
+public enum sitPartyRole: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Not stated
+  case unspecified = 0
+  ///  Runs the site
+  case operator_ = 1
+  ///  Owns the site
+  case owner = 2
+  ///  Licenses and inspects the site
+  case regulator = 3
+
+  public static var max: sitPartyRole { return .regulator }
+  public static var min: sitPartyRole { return .unspecified }
+}
+
+
+///  What a quantity of a site measures. Ordinals are wire values: append only.
+public enum sitQuantityKind: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  ///  Not stated
+  case unspecified = 0
+  ///  Electrical generating capacity, MW
+  case electricalCapacity = 1
+  ///  Thermal power, MW
+  case thermalPower = 2
+  ///  Number of reactor or generating units (UNITS empty)
+  case reactorUnits = 3
+  ///  Height above mean sea level, m
+  case elevation = 4
+
+  public static var max: sitQuantityKind { return .elevation }
+  public static var min: sitQuantityKind { return .unspecified }
+}
+
+
+///  Where one statement about a site was read: the source, the record, the
+///  version of the record and the field the statement came from.
+public struct SITCitation: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SIT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SITCitation.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let PROVENANCE: VOffset = 4
+    static let SOURCE_RECORD_ID: VOffset = 6
+    static let SOURCE_URL: VOffset = 8
+    static let SOURCE_VERSION: VOffset = 10
+    static let SOURCE_FIELD: VOffset = 12
+    static let RETRIEVED_AT: VOffset = 14
+  }
+
+  ///  The source, its originator and the terms the statement travels under
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The source's own identifier of the record (Wikidata QID, "de:Article
+  ///  title", tracker unit ids, ROR id, docket number, register row)
+  public var SOURCE_RECORD_ID: String? { let o = _accessor.offset(VT.SOURCE_RECORD_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_RECORD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_RECORD_ID) }
+  ///  Where the record can be read
+  public var SOURCE_URL: String? { let o = _accessor.offset(VT.SOURCE_URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_URL) }
+  ///  The source's version of the record (revision id, release name)
+  public var SOURCE_VERSION: String? { let o = _accessor.offset(VT.SOURCE_VERSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_VERSION) }
+  ///  The field of the record the statement was read from, from a closed
+  ///  vocabulary: a Wikidata property ("P5817", "P576"), "infobox:<parameter>",
+  ///  "description", "class:<QID>", "status" (a registry's status column),
+  ///  "units" (a tracker's unit statuses), "register:<id>" (a row of the
+  ///  provider's reviewed register). Never free text.
+  public var SOURCE_FIELD: String? { let o = _accessor.offset(VT.SOURCE_FIELD); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCE_FIELDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_FIELD) }
+  ///  When the record was read, RFC 3339 UTC
+  public var RETRIEVED_AT: String? { let o = _accessor.offset(VT.RETRIEVED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RETRIEVED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RETRIEVED_AT) }
+  public static func startSITCitation(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(SOURCE_RECORD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_RECORD_ID, at: VT.SOURCE_RECORD_ID) }
+  public static func add(SOURCE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_URL, at: VT.SOURCE_URL) }
+  public static func add(SOURCE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_VERSION, at: VT.SOURCE_VERSION) }
+  public static func add(SOURCE_FIELD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_FIELD, at: VT.SOURCE_FIELD) }
+  public static func add(RETRIEVED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RETRIEVED_AT, at: VT.RETRIEVED_AT) }
+  public static func endSITCitation(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSITCitation(
+    _ fbb: inout FlatBufferBuilder,
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    SOURCE_RECORD_IDOffset SOURCE_RECORD_ID: Offset = Offset(),
+    SOURCE_URLOffset SOURCE_URL: Offset = Offset(),
+    SOURCE_VERSIONOffset SOURCE_VERSION: Offset = Offset(),
+    SOURCE_FIELDOffset SOURCE_FIELD: Offset = Offset(),
+    RETRIEVED_ATOffset RETRIEVED_AT: Offset = Offset()
+  ) -> Offset {
+    let __start = SITCitation.startSITCitation(&fbb)
+    SITCitation.add(PROVENANCE: PROVENANCE, &fbb)
+    SITCitation.add(SOURCE_RECORD_ID: SOURCE_RECORD_ID, &fbb)
+    SITCitation.add(SOURCE_URL: SOURCE_URL, &fbb)
+    SITCitation.add(SOURCE_VERSION: SOURCE_VERSION, &fbb)
+    SITCitation.add(SOURCE_FIELD: SOURCE_FIELD, &fbb)
+    SITCitation.add(RETRIEVED_AT: RETRIEVED_AT, &fbb)
+    return SITCitation.endSITCitation(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
+    try _v.visit(field: VT.SOURCE_RECORD_ID, fieldName: "SOURCE_RECORD_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_URL, fieldName: "SOURCE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_VERSION, fieldName: "SOURCE_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOURCE_FIELD, fieldName: "SOURCE_FIELD", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RETRIEVED_AT, fieldName: "RETRIEVED_AT", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  One source's assertion of one lifecycle step of a site.
+public struct SITStatusEvidence: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SIT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SITStatusEvidence.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let STATUS: VOffset = 4
+    static let STATUS_DATE: VOffset = 6
+    static let CITATION: VOffset = 8
+  }
+
+  ///  The status the source states
+  public var STATUS: siteLifecycleStatus { let o = _accessor.offset(VT.STATUS); return o == 0 ? .unspecified : siteLifecycleStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  When that status took effect, ISO 8601 at the source's precision (YYYY, YYYY-MM or YYYY-MM-DD)
+  public var STATUS_DATE: String? { let o = _accessor.offset(VT.STATUS_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATUS_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS_DATE) }
+  ///  Where the statement was read
+  public var CITATION: SITCitation? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : SITCitation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSITStatusEvidence(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(STATUS: siteLifecycleStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
+  public static func add(STATUS_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_DATE, at: VT.STATUS_DATE) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func endSITStatusEvidence(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSITStatusEvidence(
+    _ fbb: inout FlatBufferBuilder,
+    STATUS: siteLifecycleStatus = .unspecified,
+    STATUS_DATEOffset STATUS_DATE: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset()
+  ) -> Offset {
+    let __start = SITStatusEvidence.startSITStatusEvidence(&fbb)
+    SITStatusEvidence.add(STATUS: STATUS, &fbb)
+    SITStatusEvidence.add(STATUS_DATE: STATUS_DATE, &fbb)
+    SITStatusEvidence.add(CITATION: CITATION, &fbb)
+    return SITStatusEvidence.endSITStatusEvidence(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.STATUS, fieldName: "STATUS", required: false, type: siteLifecycleStatus.self)
+    try _v.visit(field: VT.STATUS_DATE, fieldName: "STATUS_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<SITCitation>.self)
+    _v.finish()
+  }
+}
+
+///  A reference to another record about the site or a party.
+public struct SITReference: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SIT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SITReference.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ROLE: VOffset = 4
+    static let REGISTRY: VOffset = 6
+    static let RECORD_ID: VOffset = 8
+    static let URL: VOffset = 10
+    static let TITLE: VOffset = 12
+    static let LANGUAGE: VOffset = 14
+  }
+
+  ///  What the referenced record is
+  public var ROLE: sitReferenceRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .unspecified : sitReferenceRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Publisher-stable, lowercase identifier of the registry in the provider's
+  ///  register of sources (wikidata, geonames, enwiki, gem-gnpt, ror, us-nrc)
+  public var REGISTRY: String? { let o = _accessor.offset(VT.REGISTRY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGISTRYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REGISTRY) }
+  ///  The registry's identifier of the record
+  public var RECORD_ID: String? { let o = _accessor.offset(VT.RECORD_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RECORD_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RECORD_ID) }
+  ///  Where the record can be read
+  public var URL: String? { let o = _accessor.offset(VT.URL); return o == 0 ? nil : _accessor.string(at: o) }
+  public var URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.URL) }
+  ///  The record's title as the registry states it (for an encyclopedia, the
+  ///  article title only, never its text)
+  public var TITLE: String? { let o = _accessor.offset(VT.TITLE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TITLESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TITLE) }
+  ///  Language of the record, BCP 47
+  public var LANGUAGE: String? { let o = _accessor.offset(VT.LANGUAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LANGUAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LANGUAGE) }
+  public static func startSITReference(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(ROLE: sitReferenceRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
+  public static func add(REGISTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGISTRY, at: VT.REGISTRY) }
+  public static func add(RECORD_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECORD_ID, at: VT.RECORD_ID) }
+  public static func add(URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: URL, at: VT.URL) }
+  public static func add(TITLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TITLE, at: VT.TITLE) }
+  public static func add(LANGUAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LANGUAGE, at: VT.LANGUAGE) }
+  public static func endSITReference(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSITReference(
+    _ fbb: inout FlatBufferBuilder,
+    ROLE: sitReferenceRole = .unspecified,
+    REGISTRYOffset REGISTRY: Offset = Offset(),
+    RECORD_IDOffset RECORD_ID: Offset = Offset(),
+    URLOffset URL: Offset = Offset(),
+    TITLEOffset TITLE: Offset = Offset(),
+    LANGUAGEOffset LANGUAGE: Offset = Offset()
+  ) -> Offset {
+    let __start = SITReference.startSITReference(&fbb)
+    SITReference.add(ROLE: ROLE, &fbb)
+    SITReference.add(REGISTRY: REGISTRY, &fbb)
+    SITReference.add(RECORD_ID: RECORD_ID, &fbb)
+    SITReference.add(URL: URL, &fbb)
+    SITReference.add(TITLE: TITLE, &fbb)
+    SITReference.add(LANGUAGE: LANGUAGE, &fbb)
+    return SITReference.endSITReference(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: sitReferenceRole.self)
+    try _v.visit(field: VT.REGISTRY, fieldName: "REGISTRY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.RECORD_ID, fieldName: "RECORD_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.URL, fieldName: "URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TITLE, fieldName: "TITLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LANGUAGE, fieldName: "LANGUAGE", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
+///  An organisation with a part at the site.
+public struct SITParty: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SIT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SITParty.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ROLE: VOffset = 4
+    static let NAME: VOffset = 6
+    static let EXTERNAL_REFERENCES: VOffset = 8
+    static let CITATION: VOffset = 10
+  }
+
+  ///  The part it plays
+  public var ROLE: sitPartyRole { let o = _accessor.offset(VT.ROLE); return o == 0 ? .unspecified : sitPartyRole(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Its name, as the source states it
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Records about the party (its registry record, its official website)
+  public var EXTERNAL_REFERENCES: FlatbufferVector<SITReference> { return _accessor.vector(at: VT.EXTERNAL_REFERENCES, byteSize: 4) }
+  ///  Where the statement that it plays this part was read
+  public var CITATION: SITCitation? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : SITCitation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSITParty(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public static func add(ROLE: sitPartyRole, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLE.rawValue, def: 0, at: VT.ROLE) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func addVectorOf(EXTERNAL_REFERENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_REFERENCES, at: VT.EXTERNAL_REFERENCES) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func endSITParty(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSITParty(
+    _ fbb: inout FlatBufferBuilder,
+    ROLE: sitPartyRole = .unspecified,
+    NAMEOffset NAME: Offset = Offset(),
+    EXTERNAL_REFERENCESVectorOffset EXTERNAL_REFERENCES: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset()
+  ) -> Offset {
+    let __start = SITParty.startSITParty(&fbb)
+    SITParty.add(ROLE: ROLE, &fbb)
+    SITParty.add(NAME: NAME, &fbb)
+    SITParty.addVectorOf(EXTERNAL_REFERENCES: EXTERNAL_REFERENCES, &fbb)
+    SITParty.add(CITATION: CITATION, &fbb)
+    return SITParty.endSITParty(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ROLE, fieldName: "ROLE", required: false, type: sitPartyRole.self)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXTERNAL_REFERENCES, fieldName: "EXTERNAL_REFERENCES", required: false, type: ForwardOffset<Vector<ForwardOffset<SITReference>, SITReference>>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<SITCitation>.self)
+    _v.finish()
+  }
+}
+
+///  One stated quantity of a site.
+public struct SITQuantity: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$SIT" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: SITQuantity.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let KIND: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let UNITS: VOffset = 8
+    static let DATE: VOffset = 10
+    static let CITATION: VOffset = 12
+  }
+
+  ///  What it measures
+  public var KIND: sitQuantityKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : sitQuantityKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  Its value
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Units, CCSDS NDM spelling (MW, m); empty for a count
+  public var UNITS: String? { let o = _accessor.offset(VT.UNITS); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.UNITS) }
+  ///  When the value applies, ISO 8601 at the source's precision; empty when the source states none
+  public var DATE: String? { let o = _accessor.offset(VT.DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DATE) }
+  ///  Where it was read
+  public var CITATION: SITCitation? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : SITCitation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSITQuantity(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(KIND: sitQuantityKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VT.UNITS) }
+  public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
+  public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
+  public static func endSITQuantity(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createSITQuantity(
+    _ fbb: inout FlatBufferBuilder,
+    KIND: sitQuantityKind = .unspecified,
+    VALUE: Double = 0.0,
+    UNITSOffset UNITS: Offset = Offset(),
+    DATEOffset DATE: Offset = Offset(),
+    CITATIONOffset CITATION: Offset = Offset()
+  ) -> Offset {
+    let __start = SITQuantity.startSITQuantity(&fbb)
+    SITQuantity.add(KIND: KIND, &fbb)
+    SITQuantity.add(VALUE: VALUE, &fbb)
+    SITQuantity.add(UNITS: UNITS, &fbb)
+    SITQuantity.add(DATE: DATE, &fbb)
+    SITQuantity.add(CITATION: CITATION, &fbb)
+    return SITQuantity.endSITQuantity(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: sitQuantityKind.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.UNITS, fieldName: "UNITS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DATE, fieldName: "DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<SITCitation>.self)
+    _v.finish()
+  }
+}
+
 ///  Geometry table with information about geometric properties
 public struct Geometry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -120,6 +557,18 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ENVIRONMENTAL_IMPACT: VOffset = 46
     static let ACCESSIBILITY_INFRA: VOffset = 48
     static let INTEGRATED_DEVICES: VOffset = 50
+    static let LIFECYCLE_STATUS: VOffset = 52
+    static let LIFECYCLE_STATUS_DATE: VOffset = 54
+    static let STATUS_VERIFIED_AT: VOffset = 56
+    static let STATUS_EVIDENCE: VOffset = 58
+    static let SITE_KIND: VOffset = 60
+    static let DESCRIPTION_LANGUAGE: VOffset = 62
+    static let DESCRIPTION_CITATION: VOffset = 64
+    static let POSITION_CITATION: VOffset = 66
+    static let EXTERNAL_REFERENCES: VOffset = 68
+    static let PARTIES: VOffset = 70
+    static let QUANTITIES: VOffset = 72
+    static let PROVENANCE: VOffset = 74
   }
 
   ///  Unique identifier for the site, BE_NUMBER
@@ -187,7 +636,40 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ACCESSIBILITY_INFRASegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ACCESSIBILITY_INFRA) }
   ///  Vector of Integrated Devices (IDM)
   public var INTEGRATED_DEVICES: FlatbufferVector<IDM> { return _accessor.vector(at: VT.INTEGRATED_DEVICES, byteSize: 4) }
-  public static func startSIT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
+  ///  Where the site stands in its life. OPERATIONAL_STATUS keeps availability
+  ///  words (Online, Offline, Testing); this field is the lifecycle.
+  public var LIFECYCLE_STATUS: siteLifecycleStatus { let o = _accessor.offset(VT.LIFECYCLE_STATUS); return o == 0 ? .unspecified : siteLifecycleStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
+  ///  When LIFECYCLE_STATUS took effect, ISO 8601 at the source's precision
+  public var LIFECYCLE_STATUS_DATE: String? { let o = _accessor.offset(VT.LIFECYCLE_STATUS_DATE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LIFECYCLE_STATUS_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LIFECYCLE_STATUS_DATE) }
+  ///  When the status was last checked against its sources, RFC 3339 UTC
+  public var STATUS_VERIFIED_AT: String? { let o = _accessor.offset(VT.STATUS_VERIFIED_AT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STATUS_VERIFIED_ATSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.STATUS_VERIFIED_AT) }
+  ///  Each source's assertion behind LIFECYCLE_STATUS, one per source and step
+  public var STATUS_EVIDENCE: FlatbufferVector<SITStatusEvidence> { return _accessor.vector(at: VT.STATUS_EVIDENCE, byteSize: 4) }
+  ///  What kind of site this is, as its source names the class ("research
+  ///  reactor", "radioactive waste repository"); SITE_TYPE is the nearest
+  ///  SiteType
+  public var SITE_KIND: String? { let o = _accessor.offset(VT.SITE_KIND); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SITE_KINDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SITE_KIND) }
+  ///  Language of DESCRIPTION, BCP 47
+  public var DESCRIPTION_LANGUAGE: String? { let o = _accessor.offset(VT.DESCRIPTION_LANGUAGE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTION_LANGUAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DESCRIPTION_LANGUAGE) }
+  ///  Where DESCRIPTION was read; a DESCRIPTION without one is the publisher's own
+  public var DESCRIPTION_CITATION: SITCitation? { let o = _accessor.offset(VT.DESCRIPTION_CITATION); return o == 0 ? nil : SITCitation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Where LATITUDE, LONGITUDE (and ALTITUDE) were read
+  public var POSITION_CITATION: SITCitation? { let o = _accessor.offset(VT.POSITION_CITATION); return o == 0 ? nil : SITCitation(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Records about the site in other registers; the RECORD role names the
+  ///  site's own record
+  public var EXTERNAL_REFERENCES: FlatbufferVector<SITReference> { return _accessor.vector(at: VT.EXTERNAL_REFERENCES, byteSize: 4) }
+  ///  Operators, owners and regulators
+  public var PARTIES: FlatbufferVector<SITParty> { return _accessor.vector(at: VT.PARTIES, byteSize: 4) }
+  ///  Stated quantities (capacity, power, units, elevation)
+  public var QUANTITIES: FlatbufferVector<SITQuantity> { return _accessor.vector(at: VT.QUANTITIES, byteSize: 4) }
+  ///  The record's provider and producer, and the terms of the content the
+  ///  record reproduces (each citation carries its own source's terms)
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSIT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 36) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(ABBREVIATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABBREVIATION, at: VT.ABBREVIATION) }
@@ -213,6 +695,18 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ENVIRONMENTAL_IMPACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENTAL_IMPACT, at: VT.ENVIRONMENTAL_IMPACT) }
   public static func add(ACCESSIBILITY_INFRA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCESSIBILITY_INFRA, at: VT.ACCESSIBILITY_INFRA) }
   public static func addVectorOf(INTEGRATED_DEVICES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATED_DEVICES, at: VT.INTEGRATED_DEVICES) }
+  public static func add(LIFECYCLE_STATUS: siteLifecycleStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFECYCLE_STATUS.rawValue, def: 0, at: VT.LIFECYCLE_STATUS) }
+  public static func add(LIFECYCLE_STATUS_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LIFECYCLE_STATUS_DATE, at: VT.LIFECYCLE_STATUS_DATE) }
+  public static func add(STATUS_VERIFIED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_VERIFIED_AT, at: VT.STATUS_VERIFIED_AT) }
+  public static func addVectorOf(STATUS_EVIDENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS_EVIDENCE, at: VT.STATUS_EVIDENCE) }
+  public static func add(SITE_KIND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SITE_KIND, at: VT.SITE_KIND) }
+  public static func add(DESCRIPTION_LANGUAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION_LANGUAGE, at: VT.DESCRIPTION_LANGUAGE) }
+  public static func add(DESCRIPTION_CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION_CITATION, at: VT.DESCRIPTION_CITATION) }
+  public static func add(POSITION_CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POSITION_CITATION, at: VT.POSITION_CITATION) }
+  public static func addVectorOf(EXTERNAL_REFERENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_REFERENCES, at: VT.EXTERNAL_REFERENCES) }
+  public static func addVectorOf(PARTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTIES, at: VT.PARTIES) }
+  public static func addVectorOf(QUANTITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUANTITIES, at: VT.QUANTITIES) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func endSIT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSIT(
     _ fbb: inout FlatBufferBuilder,
@@ -239,7 +733,19 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CONTACT_INFOOffset CONTACT_INFO: Offset = Offset(),
     ENVIRONMENTAL_IMPACTOffset ENVIRONMENTAL_IMPACT: Offset = Offset(),
     ACCESSIBILITY_INFRAOffset ACCESSIBILITY_INFRA: Offset = Offset(),
-    INTEGRATED_DEVICESVectorOffset INTEGRATED_DEVICES: Offset = Offset()
+    INTEGRATED_DEVICESVectorOffset INTEGRATED_DEVICES: Offset = Offset(),
+    LIFECYCLE_STATUS: siteLifecycleStatus = .unspecified,
+    LIFECYCLE_STATUS_DATEOffset LIFECYCLE_STATUS_DATE: Offset = Offset(),
+    STATUS_VERIFIED_ATOffset STATUS_VERIFIED_AT: Offset = Offset(),
+    STATUS_EVIDENCEVectorOffset STATUS_EVIDENCE: Offset = Offset(),
+    SITE_KINDOffset SITE_KIND: Offset = Offset(),
+    DESCRIPTION_LANGUAGEOffset DESCRIPTION_LANGUAGE: Offset = Offset(),
+    DESCRIPTION_CITATIONOffset DESCRIPTION_CITATION: Offset = Offset(),
+    POSITION_CITATIONOffset POSITION_CITATION: Offset = Offset(),
+    EXTERNAL_REFERENCESVectorOffset EXTERNAL_REFERENCES: Offset = Offset(),
+    PARTIESVectorOffset PARTIES: Offset = Offset(),
+    QUANTITIESVectorOffset QUANTITIES: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = SIT.startSIT(&fbb)
     SIT.add(ID: ID, &fbb)
@@ -266,6 +772,18 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SIT.add(ENVIRONMENTAL_IMPACT: ENVIRONMENTAL_IMPACT, &fbb)
     SIT.add(ACCESSIBILITY_INFRA: ACCESSIBILITY_INFRA, &fbb)
     SIT.addVectorOf(INTEGRATED_DEVICES: INTEGRATED_DEVICES, &fbb)
+    SIT.add(LIFECYCLE_STATUS: LIFECYCLE_STATUS, &fbb)
+    SIT.add(LIFECYCLE_STATUS_DATE: LIFECYCLE_STATUS_DATE, &fbb)
+    SIT.add(STATUS_VERIFIED_AT: STATUS_VERIFIED_AT, &fbb)
+    SIT.addVectorOf(STATUS_EVIDENCE: STATUS_EVIDENCE, &fbb)
+    SIT.add(SITE_KIND: SITE_KIND, &fbb)
+    SIT.add(DESCRIPTION_LANGUAGE: DESCRIPTION_LANGUAGE, &fbb)
+    SIT.add(DESCRIPTION_CITATION: DESCRIPTION_CITATION, &fbb)
+    SIT.add(POSITION_CITATION: POSITION_CITATION, &fbb)
+    SIT.addVectorOf(EXTERNAL_REFERENCES: EXTERNAL_REFERENCES, &fbb)
+    SIT.addVectorOf(PARTIES: PARTIES, &fbb)
+    SIT.addVectorOf(QUANTITIES: QUANTITIES, &fbb)
+    SIT.add(PROVENANCE: PROVENANCE, &fbb)
     return SIT.endSIT(&fbb, start: __start)
   }
 
@@ -295,6 +813,18 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ENVIRONMENTAL_IMPACT, fieldName: "ENVIRONMENTAL_IMPACT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ACCESSIBILITY_INFRA, fieldName: "ACCESSIBILITY_INFRA", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.INTEGRATED_DEVICES, fieldName: "INTEGRATED_DEVICES", required: false, type: ForwardOffset<Vector<ForwardOffset<IDM>, IDM>>.self)
+    try _v.visit(field: VT.LIFECYCLE_STATUS, fieldName: "LIFECYCLE_STATUS", required: false, type: siteLifecycleStatus.self)
+    try _v.visit(field: VT.LIFECYCLE_STATUS_DATE, fieldName: "LIFECYCLE_STATUS_DATE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS_VERIFIED_AT, fieldName: "STATUS_VERIFIED_AT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.STATUS_EVIDENCE, fieldName: "STATUS_EVIDENCE", required: false, type: ForwardOffset<Vector<ForwardOffset<SITStatusEvidence>, SITStatusEvidence>>.self)
+    try _v.visit(field: VT.SITE_KIND, fieldName: "SITE_KIND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION_LANGUAGE, fieldName: "DESCRIPTION_LANGUAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DESCRIPTION_CITATION, fieldName: "DESCRIPTION_CITATION", required: false, type: ForwardOffset<SITCitation>.self)
+    try _v.visit(field: VT.POSITION_CITATION, fieldName: "POSITION_CITATION", required: false, type: ForwardOffset<SITCitation>.self)
+    try _v.visit(field: VT.EXTERNAL_REFERENCES, fieldName: "EXTERNAL_REFERENCES", required: false, type: ForwardOffset<Vector<ForwardOffset<SITReference>, SITReference>>.self)
+    try _v.visit(field: VT.PARTIES, fieldName: "PARTIES", required: false, type: ForwardOffset<Vector<ForwardOffset<SITParty>, SITParty>>.self)
+    try _v.visit(field: VT.QUANTITIES, fieldName: "QUANTITIES", required: false, type: ForwardOffset<Vector<ForwardOffset<SITQuantity>, SITQuantity>>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     _v.finish()
   }
 }

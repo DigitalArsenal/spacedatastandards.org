@@ -23,8 +23,12 @@ public final class pvnSourceKind {
    * estimated from
    */
   public static final byte Observation = 3;
+  /**
+   * Reference registers of sites and facilities (status, dates, identity)
+   */
+  public static final byte Reference = 4;
 
-  public static final String[] names = { "Unspecified", "ElementSet", "Ephemeris", "Observation", };
+  public static final String[] names = { "Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference", };
 
   public static String name(int e) { return names[e]; }
 }
