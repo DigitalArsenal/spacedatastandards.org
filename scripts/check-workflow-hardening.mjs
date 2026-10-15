@@ -34,7 +34,17 @@
  *   checkout-ref       a workflow checkout whose `ref:` comes from a dispatch
  *                      input (`inputs.*`, `github.event.inputs.*`): whoever
  *                      dispatches picks the code a gated job builds, and an
- *                      unqualified name resolves to a BRANCH before a tag
+ *                      unqualified name resolves to a BRANCH before a tag;
+ *                      also a `ref:` or `repository:` taken from any event
+ *                      field or `github.head_ref` (a workflow_run or
+ *                      issue_comment job checking out a fork's head runs the
+ *                      fork's code with this repository's token and secrets)
+ *   latest-image       a container run or pulled (`docker run|pull|create`)
+ *                      at the moving `:latest` tag
+ *   unpinned-image     a job `container:` or `services.*.image:` (matrix
+ *                      entries included) not pinned to an @sha256 digest: a
+ *                      tag is mutable, and the job's steps run inside it; a
+ *                      `# hardening: <reason>` comment on the line exempts it
  *   pull-request-target  any pull_request_target trigger
  *   permissions        a workflow without a top-level `permissions:` block, a
  *                      top-level block that grants write, or a job without its
@@ -264,6 +274,9 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
       && !/#\s*hardening:\s*\S/.test(lines[at - 1])) {
       add(at, 'unpinned-pip', 'pip install without --require-hashes runs whatever PyPI serves today; install a hashed requirements file');
     }
+    if (/\bdocker\s+(run|pull|create)\b/.test(line) && /\S:latest\b/.test(line)) {
+      add(at, 'latest-image', 'runs a container at the moving :latest tag; pin <version>@sha256:<digest>');
+    }
     if (/\bpull_request_target\b/.test(line)) {
       add(at, 'pull-request-target', 'pull_request_target runs with secrets on untrusted pull requests');
     }
@@ -330,6 +343,8 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
     const refLine = step.lines.find((l) => /^\s*ref:/.test(l));
     if (kind === 'workflow' && refLine && /\binputs\.|\bgithub\.event\.inputs\b/.test(refLine)) {
       add(step.line, 'checkout-ref', 'checkout ref comes from a dispatch input; build github.ref and dispatch the workflow on the tag instead');
+    } else if (step.lines.some((l) => /^\s*(ref|repository):/.test(l) && /\bgithub\.event\b|\bgithub\.head_ref\b/.test(l))) {
+      add(step.line, 'checkout-ref', 'checkout ref or repository comes from the triggering event; check out the commit the run itself is for (the default)');
     }
     const repo = step.lines.find((l) => /^\s*repository:/.test(l));
     if (repo && !/\$\{\{\s*github\.repository\s*\}\}/.test(repo)) {
@@ -339,6 +354,18 @@ export function checkWorkflowText(text, { file = '<workflow>', kind = 'workflow'
       }
     }
   }
+
+  // Job and service containers: the steps run inside them, so a tag the
+  // registry can repoint is unreviewed code.
+  code.forEach((line, i) => {
+    const m = /^\s*(?:-\s+)?(container|image):\s*(\S.*?)\s*$/.exec(line);
+    if (!m) return;
+    const value = unquote(m[2]);
+    if (!value || value.startsWith('${{') || value === '|' || value === '>') return;
+    if (/@sha256:[0-9a-f]{64}$/.test(value)) return;
+    if (/#\s*hardening:\s*\S/.test(lines[i])) return;
+    add(i + 1, 'unpinned-image', `${m[1]} ${value} is a mutable tag; pin <image>:<tag>@sha256:<digest>`);
+  });
 
   if (kind !== 'workflow') return findings;
 

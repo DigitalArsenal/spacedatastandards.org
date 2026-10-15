@@ -172,3 +172,29 @@ test('every way of naming a secret counts, and secrets never sit in workflow-lev
 test('an expression with braces inside cannot hide a dispatch input from the injection rule', () => {
   assert.ok(rules(SAFE.replace('- run: echo ok', "- run: echo \"${{ format('{0}', inputs.version) }}\"")).includes('script-injection'));
 });
+
+test('a checkout of the triggering event\'s head (workflow_run, issue_comment) is refused', () => {
+  const withRef = (line) => SAFE.replace('          persist-credentials: false', `          ${line}
+          persist-credentials: false`);
+  assert.ok(rules(withRef('ref: ${{ github.event.workflow_run.head_sha }}')).includes('checkout-ref'));
+  assert.ok(rules(withRef('ref: ${{ github.event.pull_request.head.ref }}')).includes('checkout-ref'));
+  assert.ok(rules(withRef('ref: ${{ github.head_ref }}')).includes('checkout-ref'));
+  assert.ok(rules(withRef('repository: ${{ github.event.pull_request.head.repo.full_name }}')).includes('checkout-ref'));
+  assert.ok(rules(withRef('ref: ${{ github.event.workflow_run.head_sha }}'), 'action').includes('checkout-ref'));
+  assert.ok(!rules(withRef('ref: ${{ github.sha }}')).includes('checkout-ref'));
+});
+
+test('job and service containers are pinned by digest; nothing runs at :latest', () => {
+  const inJob = (extra) => SAFE.replace('    runs-on: ubuntu-latest\n', `    runs-on: ubuntu-latest\n${extra}`);
+  assert.ok(rules(inJob('    container: ubuntu:20.04\n')).includes('unpinned-image'));
+  assert.ok(rules(inJob('    services:\n      docker:\n        image: docker:dind\n')).includes('unpinned-image'));
+  assert.ok(rules(inJob('    strategy:\n      matrix:\n        include:\n          - container: ubuntu:20.04\n')).includes('unpinned-image'));
+  const digest = 'sha256:8feb4d8ca5354def3d8fce243717141ce31e2c428701f6682bd2fafe15388214';
+  assert.ok(!rules(inJob(`    container: ubuntu:20.04@${digest}\n`)).includes('unpinned-image'));
+  assert.ok(!rules(inJob('    container: ${{ matrix.container }}\n')).includes('unpinned-image'));
+  assert.ok(!rules(inJob('    container: ubuntu:20.04 # hardening: throwaway lint job\n')).includes('unpinned-image'));
+  for (const cmd of ['docker run --rm ghcr.io/x/y:latest scan', 'docker pull alpine:latest']) {
+    assert.ok(rules(SAFE.replace('- run: echo ok', `- run: ${cmd}`)).includes('latest-image'), cmd);
+  }
+  assert.ok(!rules(SAFE.replace('- run: echo ok', '- run: docker run --rm alpine:3.20@' + digest)).includes('latest-image'));
+});
