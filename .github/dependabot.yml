@@ -1,0 +1,15 @@
+version: 2
+updates:
+  # The workflows' actions are pinned to full commit SHAs (security audit
+  # SEC-042); Dependabot keeps those pins current with reviewable PRs.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+    groups:
+      actions:
+        patterns:
+          - "*"
