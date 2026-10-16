@@ -14,7 +14,7 @@ pub const ENUM_VALUES_PROPAGATOR_METHOD: [PropagatorMethod; 11] = [
     PropagatorMethod::KEPLER,
     PropagatorMethod::SGP4,
     PropagatorMethod::SDP4,
-    PropagatorMethod::HPOP,
+    PropagatorMethod::FFM,
     PropagatorMethod::COWELL,
     PropagatorMethod::ENCKE,
     PropagatorMethod::GAUSS_JACKSON,
@@ -33,7 +33,7 @@ impl PropagatorMethod {
     pub const KEPLER: Self = Self(0);
     pub const SGP4: Self = Self(1);
     pub const SDP4: Self = Self(2);
-    pub const HPOP: Self = Self(3);
+    pub const FFM: Self = Self(3);
     pub const COWELL: Self = Self(4);
     pub const ENCKE: Self = Self(5);
     pub const GAUSS_JACKSON: Self = Self(6);
@@ -48,7 +48,7 @@ impl PropagatorMethod {
         Self::KEPLER,
         Self::SGP4,
         Self::SDP4,
-        Self::HPOP,
+        Self::FFM,
         Self::COWELL,
         Self::ENCKE,
         Self::GAUSS_JACKSON,
@@ -64,7 +64,7 @@ impl PropagatorMethod {
             Self::KEPLER => Some("KEPLER"),
             Self::SGP4 => Some("SGP4"),
             Self::SDP4 => Some("SDP4"),
-            Self::HPOP => Some("HPOP"),
+            Self::FFM => Some("FFM"),
             Self::COWELL => Some("COWELL"),
             Self::ENCKE => Some("ENCKE"),
             Self::GAUSS_JACKSON => Some("GAUSS_JACKSON"),

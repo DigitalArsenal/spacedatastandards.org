@@ -1,5 +1,5 @@
-// Hash: a6bad40b23434fcc5a7e2faaf8494ed5e082b8f18716d20b84ac11259e1c5146
-// Version: 1.248.0
+// Hash: aa227514e012b4dc378ac2223781f3761fe523ae20d8d57aff4e06fd9ee87223
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 /// Catalog Cross-Match (XMT)
 /// Description
@@ -592,7 +592,7 @@ table XMTIntegrateReport {
 /// Policy of an epoch-state fit to a provider ephemeris, validated on
 /// held-out samples.
 table XMTEpochFitPolicy {
-  /// Propagator module identifier, e.g. "com.orbpro.hpop".
+  /// Propagator module identifier, e.g. "com.orbpro.ffm".
   PROPAGATOR_ID: string;
   /// SHA-256 hex digest of the propagator artifact.
   PROPAGATOR_ARTIFACT_SHA256: string;

@@ -1360,7 +1360,7 @@ class LFV {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+  ///  Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
   ///  (from propagated ephemeris).
   String? get VIEW => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   ///  Feature names, in the order of every row's VALUES.

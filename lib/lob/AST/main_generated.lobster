@@ -5,7 +5,7 @@ enum PropagatorMethod:
     PropagatorMethod_KEPLER = 0
     PropagatorMethod_SGP4 = 1
     PropagatorMethod_SDP4 = 2
-    PropagatorMethod_HPOP = 3
+    PropagatorMethod_FFM = 3
     PropagatorMethod_COWELL = 4
     PropagatorMethod_ENCKE = 5
     PropagatorMethod_GAUSS_JACKSON = 6

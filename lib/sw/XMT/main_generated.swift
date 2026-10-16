@@ -2274,7 +2274,7 @@ public struct XMTEpochFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorIni
     static let VELOCITY_REGULARIZATION_KM_S: VOffset = 30
   }
 
-  ///  Propagator module identifier, e.g. "com.orbpro.hpop".
+  ///  Propagator module identifier, e.g. "com.orbpro.ffm".
   public var PROPAGATOR_ID: String? { let o = _accessor.offset(VT.PROPAGATOR_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var PROPAGATOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_ID) }
   ///  SHA-256 hex digest of the propagator artifact.

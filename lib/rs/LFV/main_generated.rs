@@ -2938,7 +2938,7 @@ impl<'a> LFV<'a> {
         }
     }
 
-    /// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+    /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
     /// (from propagated ephemeris).
     #[inline]
     pub fn VIEW(&self) -> Option<&'a str> {

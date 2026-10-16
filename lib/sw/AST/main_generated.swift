@@ -15,7 +15,7 @@ public enum PropagatorMethod: Int8, FlatbuffersVectorInitializable, Enum, Verifi
   case kepler = 0
   case sgp4 = 1
   case sdp4 = 2
-  case hpop = 3
+  case ffm = 3
   case cowell = 4
   case encke = 5
   case gaussJackson = 6

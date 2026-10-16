@@ -35,7 +35,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 }
 
 /**
- * Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+ * Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
  * (from propagated ephemeris).
  */
 VIEW():string|null

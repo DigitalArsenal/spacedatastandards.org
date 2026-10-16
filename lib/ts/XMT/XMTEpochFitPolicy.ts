@@ -31,7 +31,7 @@ static getSizePrefixedRootAsXMTEpochFitPolicy(bb:flatbuffers.ByteBuffer, obj?:XM
 }
 
 /**
- * Propagator module identifier, e.g. "com.orbpro.hpop".
+ * Propagator module identifier, e.g. "com.orbpro.ffm".
  */
 PROPAGATOR_ID():string|null
 PROPAGATOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

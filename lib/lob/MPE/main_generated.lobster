@@ -77,7 +77,7 @@ class MPETargeterSolution : flatbuffers.handle
     /// Solver used, e.g. "differential-corrector"
     def SOLVER() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
-    /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+    /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
     def DYNAMICS() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// Whether the corrector converged within tolerance

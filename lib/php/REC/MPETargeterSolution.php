@@ -50,7 +50,7 @@ class MPETargeterSolution extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+    /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
     public function getDYNAMICS()
     {
         $o = $this->__offset(6);

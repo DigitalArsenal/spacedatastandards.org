@@ -1,5 +1,5 @@
-// Hash: 737185ea0a1b317e58324a591c7230551d3d1ef469cdde981e3420cff2a0137a
-// Version: 1.219.5
+// Hash: 4a0bf99ffff424b8ec0cb31f8572df40cc1a4a798afe3b516397a0d8dbdfa63f
+// Version: 1.219.6
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -337,7 +337,7 @@ table PRWSpaceWeather {
   KP_INDEX:double = 3;
 }
 
-/// Executable subset currently reachable through HPOP invoke. No implied
+/// Executable subset currently reachable through the FFM module's invoke. No implied
 /// support for coefficients, drag models or bodies the provider cannot supply.
 table PRWForceConfiguration {
   GRAVITY_CHOICE:prwGravitySelection = INFER_FLAGS;

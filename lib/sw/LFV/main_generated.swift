@@ -784,7 +784,7 @@ public struct LFV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let REPORT: VOffset = 26
   }
 
-  ///  Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+  ///  Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
   ///  (from propagated ephemeris).
   public var VIEW: String? { let o = _accessor.offset(VT.VIEW); return o == 0 ? nil : _accessor.string(at: o) }
   public var VIEWSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.VIEW) }

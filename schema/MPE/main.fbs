@@ -1,5 +1,5 @@
-// Hash: a0c9f881d7cea39fabf256989601c2c691e0780676c9fa7ef242e2119091ee5d
-// Version: 1.0.5
+// Hash: 2d741ad6a30d622f737e6bd8113d7ab9deab450b2ba546f70a2460031f2232f5
+// Version: 1.0.6
 // -----------------------------------END_HEADER
 include "../MET/main.fbs";
 
@@ -37,7 +37,7 @@ table MPETargeterConstraint {
 table MPETargeterSolution {
   /// Solver used, e.g. "differential-corrector"
   SOLVER: string;
-  /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
   DYNAMICS: string;
   /// Whether the corrector converged within tolerance
   CONVERGED: bool;

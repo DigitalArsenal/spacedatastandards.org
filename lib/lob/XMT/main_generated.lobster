@@ -1789,7 +1789,7 @@ def XMTIntegrateReportCreateREFUSEDVector(b_:flatbuffers.builder, v_:[flatbuffer
 /// Policy of an epoch-state fit to a provider ephemeris, validated on
 /// held-out samples.
 class XMTEpochFitPolicy : flatbuffers.handle
-    /// Propagator module identifier, e.g. "com.orbpro.hpop".
+    /// Propagator module identifier, e.g. "com.orbpro.ffm".
     def PROPAGATOR_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// SHA-256 hex digest of the propagator artifact.

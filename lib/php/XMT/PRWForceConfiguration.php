@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Executable subset currently reachable through HPOP invoke. No implied
+/// Executable subset currently reachable through the FFM module's invoke. No implied
 /// support for coefficients, drag models or bodies the provider cannot supply.
 class PRWForceConfiguration extends Table
 {

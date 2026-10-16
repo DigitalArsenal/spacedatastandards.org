@@ -644,7 +644,7 @@ def LFVTestReportCreateFEATURESVector(b_:flatbuffers.builder, v_:[flatbuffers.of
 /// Labelled Feature Vectors - labelled rows and, optionally, the report of a
 /// test that distinguishes their classes.
 class LFV : flatbuffers.handle
-    /// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+    /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
     /// (from propagated ephemeris).
     def VIEW() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)

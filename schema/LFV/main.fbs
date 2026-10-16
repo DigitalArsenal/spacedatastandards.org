@@ -1,5 +1,5 @@
-// Hash: 561bbd8c998afc804d58a22bc110dd85da07fd81918a88d0d152a0d1be977ac1
-// Version: 1.248.0
+// Hash: 78db0467677875df16aacb460d4a002d5697788ee54e3158626fa8e0dd01a421
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 include "../OMM/main.fbs";
 
@@ -210,7 +210,7 @@ table LFVTestReport {
 /// Labelled Feature Vectors - labelled rows and, optionally, the report of a
 /// test that distinguishes their classes.
 table LFV {
-  /// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+  /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
   /// (from propagated ephemeris).
   VIEW: string;
   /// Feature names, in the order of every row's VALUES.

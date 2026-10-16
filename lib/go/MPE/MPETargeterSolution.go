@@ -58,7 +58,7 @@ func (rcv *MPETargeterSolution) Solver() []byte {
 }
 
 /// Solver used, e.g. "differential-corrector"
-/// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+/// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
 func (rcv *MPETargeterSolution) DYNAMICS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -71,7 +71,7 @@ func (rcv *MPETargeterSolution) Dynamics() []byte {
 	return rcv.DYNAMICS()
 }
 
-/// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+/// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
 /// Whether the corrector converged within tolerance
 func (rcv *MPETargeterSolution) CONVERGED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))

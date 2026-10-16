@@ -118,7 +118,7 @@
         },
         "DYNAMICS": {
           "type": "string",
-          "description": "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP",
+          "description": "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP",
           "x-flatbuffer-type": "string"
         },
         "CONVERGED": {

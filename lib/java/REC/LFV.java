@@ -30,7 +30,7 @@ public final class LFV extends com.google.flatbuffers.Table {
   public LFV __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+   * Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
    * (from propagated ephemeris).
    */
   public String VIEW() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }

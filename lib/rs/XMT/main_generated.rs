@@ -9016,7 +9016,7 @@ impl<'a> XMTEpochFitPolicy<'a> {
         }
     }
 
-    /// Propagator module identifier, e.g. "com.orbpro.hpop".
+    /// Propagator module identifier, e.g. "com.orbpro.ffm".
     #[inline]
     pub fn PROPAGATOR_ID(&self) -> Option<&'a str> {
         // Safety:

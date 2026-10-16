@@ -27,7 +27,7 @@ public struct MPETargeterSolution : IFlatbufferObject
   public ArraySegment<byte>? GetSOLVERBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetSOLVERArray() { return __p.__vector_as_array<byte>(4); }
-  /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
   public string DYNAMICS { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDYNAMICSBytes() { return __p.__vector_as_span<byte>(6, 1); }

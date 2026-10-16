@@ -6,7 +6,7 @@ public final class PropagatorMethod {
   public static final byte KEPLER = 0;
   public static final byte SGP4 = 1;
   public static final byte SDP4 = 2;
-  public static final byte HPOP = 3;
+  public static final byte FFM = 3;
   public static final byte COWELL = 4;
   public static final byte ENCKE = 5;
   public static final byte GAUSS_JACKSON = 6;
@@ -15,7 +15,7 @@ public final class PropagatorMethod {
   public static final byte KOZAI = 9;
   public static final byte DSST = 10;
 
-  public static final String[] names = { "KEPLER", "SGP4", "SDP4", "HPOP", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST", };
+  public static final String[] names = { "KEPLER", "SGP4", "SDP4", "FFM", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST", };
 
   public static String name(int e) { return names[e]; }
 }

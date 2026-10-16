@@ -2165,7 +2165,7 @@ inline ::flatbuffers::Offset<PRWSpaceWeather> CreatePRWSpaceWeather(
   return builder_.Finish();
 }
 
-/// Executable subset currently reachable through HPOP invoke. No implied
+/// Executable subset currently reachable through the FFM module's invoke. No implied
 /// support for coefficients, drag models or bodies the provider cannot supply.
 struct PRWForceConfiguration FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PRWForceConfigurationBuilder Builder;

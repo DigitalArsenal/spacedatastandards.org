@@ -42,7 +42,7 @@ class LFV extends Table
         return $this;
     }
 
-    /// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+    /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
     /// (from propagated ephemeris).
     public function getVIEW()
     {

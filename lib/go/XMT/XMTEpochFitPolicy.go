@@ -44,7 +44,7 @@ func (rcv *XMTEpochFitPolicy) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Propagator module identifier, e.g. "com.orbpro.hpop".
+/// Propagator module identifier, e.g. "com.orbpro.ffm".
 func (rcv *XMTEpochFitPolicy) PROPAGATOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -57,7 +57,7 @@ func (rcv *XMTEpochFitPolicy) PropagatorId() []byte {
 	return rcv.PROPAGATOR_ID()
 }
 
-/// Propagator module identifier, e.g. "com.orbpro.hpop".
+/// Propagator module identifier, e.g. "com.orbpro.ffm".
 /// SHA-256 hex digest of the propagator artifact.
 func (rcv *XMTEpochFitPolicy) PROPAGATOR_ARTIFACT_SHA256() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))

@@ -3953,7 +3953,7 @@ struct XMTEpochFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     VT_POSITION_REGULARIZATION_KM = 28,
     VT_VELOCITY_REGULARIZATION_KM_S = 30
   };
-  /// Propagator module identifier, e.g. "com.orbpro.hpop".
+  /// Propagator module identifier, e.g. "com.orbpro.ffm".
   const ::flatbuffers::String *PROPAGATOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PROPAGATOR_ID);
   }

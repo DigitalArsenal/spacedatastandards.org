@@ -42,7 +42,7 @@ class XMTEpochFitPolicy extends Table
         return $this;
     }
 
-    /// Propagator module identifier, e.g. "com.orbpro.hpop".
+    /// Propagator module identifier, e.g. "com.orbpro.ffm".
     public function getPROPAGATOR_ID()
     {
         $o = $this->__offset(4);

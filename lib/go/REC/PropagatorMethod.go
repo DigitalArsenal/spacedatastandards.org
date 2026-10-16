@@ -10,7 +10,7 @@ const (
 	PropagatorMethodKEPLER        PropagatorMethod = 0
 	PropagatorMethodSGP4          PropagatorMethod = 1
 	PropagatorMethodSDP4          PropagatorMethod = 2
-	PropagatorMethodHPOP          PropagatorMethod = 3
+	PropagatorMethodFFM           PropagatorMethod = 3
 	PropagatorMethodCOWELL        PropagatorMethod = 4
 	PropagatorMethodENCKE         PropagatorMethod = 5
 	PropagatorMethodGAUSS_JACKSON PropagatorMethod = 6
@@ -24,7 +24,7 @@ var EnumNamesPropagatorMethod = map[PropagatorMethod]string{
 	PropagatorMethodKEPLER:        "KEPLER",
 	PropagatorMethodSGP4:          "SGP4",
 	PropagatorMethodSDP4:          "SDP4",
-	PropagatorMethodHPOP:          "HPOP",
+	PropagatorMethodFFM:           "FFM",
 	PropagatorMethodCOWELL:        "COWELL",
 	PropagatorMethodENCKE:         "ENCKE",
 	PropagatorMethodGAUSS_JACKSON: "GAUSS_JACKSON",
@@ -38,7 +38,7 @@ var EnumValuesPropagatorMethod = map[string]PropagatorMethod{
 	"KEPLER":        PropagatorMethodKEPLER,
 	"SGP4":          PropagatorMethodSGP4,
 	"SDP4":          PropagatorMethodSDP4,
-	"HPOP":          PropagatorMethodHPOP,
+	"FFM":           PropagatorMethodFFM,
 	"COWELL":        PropagatorMethodCOWELL,
 	"ENCKE":         PropagatorMethodENCKE,
 	"GAUSS_JACKSON": PropagatorMethodGAUSS_JACKSON,

@@ -4157,7 +4157,7 @@ class XMTEpochFitPolicy {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Propagator module identifier, e.g. "com.orbpro.hpop".
+  ///  Propagator module identifier, e.g. "com.orbpro.ffm".
   String? get PROPAGATOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get propagatorId => PROPAGATOR_ID;
   ///  SHA-256 hex digest of the propagator artifact.

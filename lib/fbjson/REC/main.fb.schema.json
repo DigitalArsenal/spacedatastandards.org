@@ -2809,7 +2809,7 @@
         "KEPLER",
         "SGP4",
         "SDP4",
-        "HPOP",
+        "FFM",
         "COWELL",
         "ENCKE",
         "GAUSS_JACKSON",
@@ -2830,7 +2830,7 @@
         "SDP4": {
           "value": 2
         },
-        "HPOP": {
+        "FFM": {
           "value": 3
         },
         "COWELL": {
@@ -56889,7 +56889,7 @@
     },
     "PRWForceConfiguration": {
       "type": "object",
-      "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+      "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
       "properties": {
         "GRAVITY_CHOICE": {
           "$ref": "#/definitions/prwGravitySelection",
@@ -96252,7 +96252,7 @@
       "properties": {
         "VIEW": {
           "type": "string",
-          "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"hpop\"\n(from propagated ephemeris).",
+          "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"ffm\"\n(from propagated ephemeris).",
           "x-flatbuffer-type": "string"
         },
         "FEATURE_NAMES": {
@@ -100179,7 +100179,7 @@
         },
         "DYNAMICS": {
           "type": "string",
-          "description": "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP",
+          "description": "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP",
           "x-flatbuffer-type": "string"
         },
         "CONVERGED": {
@@ -140978,7 +140978,7 @@
       "properties": {
         "PROPAGATOR_ID": {
           "type": "string",
-          "description": "Propagator module identifier, e.g. \"com.orbpro.hpop\".",
+          "description": "Propagator module identifier, e.g. \"com.orbpro.ffm\".",
           "x-flatbuffer-type": "string"
         },
         "PROPAGATOR_ARTIFACT_SHA256": {

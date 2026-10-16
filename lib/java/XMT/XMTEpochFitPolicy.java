@@ -29,7 +29,7 @@ public final class XMTEpochFitPolicy extends com.google.flatbuffers.Table {
   public XMTEpochFitPolicy __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Propagator module identifier, e.g. "com.orbpro.hpop".
+   * Propagator module identifier, e.g. "com.orbpro.ffm".
    */
   public String PROPAGATOR_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PROPAGATOR_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }

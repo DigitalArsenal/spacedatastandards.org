@@ -20,7 +20,7 @@ public struct LFV : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LFV __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+  /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
   /// (from propagated ephemeris).
   public string VIEW { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T

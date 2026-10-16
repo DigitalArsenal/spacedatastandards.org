@@ -6,7 +6,7 @@ class PropagatorMethod private constructor() {
         const val KEPLER: Byte = 0
         const val SGP4: Byte = 1
         const val SDP4: Byte = 2
-        const val HPOP: Byte = 3
+        const val FFM: Byte = 3
         const val COWELL: Byte = 4
         const val ENCKE: Byte = 5
         const val GAUSS_JACKSON: Byte = 6

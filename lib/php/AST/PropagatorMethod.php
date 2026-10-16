@@ -6,7 +6,7 @@ class PropagatorMethod
     const KEPLER = 0;
     const SGP4 = 1;
     const SDP4 = 2;
-    const HPOP = 3;
+    const FFM = 3;
     const COWELL = 4;
     const ENCKE = 5;
     const GAUSS_JACKSON = 6;
@@ -19,7 +19,7 @@ class PropagatorMethod
         PropagatorMethod::KEPLER=>"KEPLER",
         PropagatorMethod::SGP4=>"SGP4",
         PropagatorMethod::SDP4=>"SDP4",
-        PropagatorMethod::HPOP=>"HPOP",
+        PropagatorMethod::FFM=>"FFM",
         PropagatorMethod::COWELL=>"COWELL",
         PropagatorMethod::ENCKE=>"ENCKE",
         PropagatorMethod::GAUSS_JACKSON=>"GAUSS_JACKSON",

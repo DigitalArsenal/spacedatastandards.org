@@ -31,7 +31,7 @@ class XMTEpochFitPolicy : Table() {
         return this
     }
     /**
-     * Propagator module identifier, e.g. "com.orbpro.hpop".
+     * Propagator module identifier, e.g. "com.orbpro.ffm".
      */
     val propagatorId : String?
         get() {

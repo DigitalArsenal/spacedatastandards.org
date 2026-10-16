@@ -1,5 +1,5 @@
-// Hash: 036289aeca3015e926e02c42655f7ce693decec4cdc7d580647d6b201acf67a0
-// Version: 1.1.5
+// Hash: df414bec815b6db6660f9454afd9bde3a6268b8afeef31cfa973ceb6aa094943
+// Version: 1.1.6
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -288,7 +288,7 @@ table ephemerisDataBlock {
   //
   // This is an alternative to interpolating across discrete state vectors and
   // is especially useful for high-precision applications where the generating
-  // ephemeris was produced by numerical integration (e.g., HPOP).
+  // ephemeris was produced by numerical integration (e.g., FFM).
   // ─────────────────────────────────────────────────────────────────────────────
 
   /// Optional polynomial position records for high-fidelity interpolation.

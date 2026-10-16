@@ -7,7 +7,7 @@ public enum PropagatorMethod : sbyte
   KEPLER = 0,
   SGP4 = 1,
   SDP4 = 2,
-  HPOP = 3,
+  FFM = 3,
   COWELL = 4,
   ENCKE = 5,
   GAUSS_JACKSON = 6,

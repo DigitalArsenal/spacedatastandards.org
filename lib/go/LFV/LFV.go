@@ -55,7 +55,7 @@ func (rcv *LFV) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+/// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
 /// (from propagated ephemeris).
 func (rcv *LFV) VIEW() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
@@ -69,7 +69,7 @@ func (rcv *LFV) View() []byte {
 	return rcv.VIEW()
 }
 
-/// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+/// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
 /// (from propagated ephemeris).
 /// Feature names, in the order of every row's VALUES.
 func (rcv *LFV) FEATURE_NAMES(j int) []byte {

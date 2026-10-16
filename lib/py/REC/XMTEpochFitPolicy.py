@@ -30,7 +30,7 @@ class XMTEpochFitPolicy(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Propagator module identifier, e.g. "com.orbpro.hpop".
+    # Propagator module identifier, e.g. "com.orbpro.ffm".
     # XMTEpochFitPolicy
     def PROPAGATOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))

@@ -30,7 +30,7 @@ class LFV(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+    # Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
     # (from propagated ephemeris).
     # LFV
     def VIEW(self):

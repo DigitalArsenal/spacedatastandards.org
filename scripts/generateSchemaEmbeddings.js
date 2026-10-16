@@ -121,7 +121,7 @@ const keywordsMap = {
   "OBT": ["orbit", "track", "lat", "lon", "altitude", "identity", "AOU"],
   "OBD": ["orbit determination", "Kalman", "batch least squares", "residuals", "sensor"],
   "OSM": ["observation", "stability", "pass", "duration", "sensor"],
-  "AST": ["astrodynamics", "propagator", "SGP4", "HPOP", "force model", "orbital regime"],
+  "AST": ["astrodynamics", "propagator", "SGP4", "FFM", "force model", "orbital regime"],
   "PCF": ["propagator", "configuration", "integrator", "RK4", "gravity", "force model"],
   "VCM": ["vector", "covariance", "osculating", "mean elements", "perturbation"],
   "AEM": ["attitude", "ephemeris", "quaternion", "angular rate", "rotation", "CCSDS"],

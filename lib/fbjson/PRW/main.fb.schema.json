@@ -14658,7 +14658,7 @@
     },
     "PRWForceConfiguration": {
       "type": "object",
-      "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+      "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
       "properties": {
         "GRAVITY_CHOICE": {
           "$ref": "#/definitions/prwGravitySelection",

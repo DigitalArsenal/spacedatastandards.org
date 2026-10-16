@@ -1087,7 +1087,7 @@
       "properties" : {
         "VIEW" : {
                 "type" : "string",
-                "description" : "Name of the feature set or view, e.g. \"gp\" (from element sets), \"hpop\"\n(from propagated ephemeris)."
+                "description" : "Name of the feature set or view, e.g. \"gp\" (from element sets), \"ffm\"\n(from propagated ephemeris)."
               },
         "FEATURE_NAMES" : {
                 "type" : "array", "items" : {"type" : "string"},

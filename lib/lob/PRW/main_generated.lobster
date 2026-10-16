@@ -851,7 +851,7 @@ struct PRWSpaceWeatherBuilder:
     def end():
         return b_.EndObject()
 
-/// Executable subset currently reachable through HPOP invoke. No implied
+/// Executable subset currently reachable through the FFM module's invoke. No implied
 /// support for coefficients, drag models or bodies the provider cannot supply.
 class PRWForceConfiguration : flatbuffers.handle
     def GRAVITY_CHOICE() -> prwGravitySelection:

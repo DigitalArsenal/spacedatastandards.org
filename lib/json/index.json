@@ -15352,7 +15352,7 @@
                     "properties": {
                         "VIEW": {
                             "type": "string",
-                            "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"hpop\"\n(from propagated ephemeris)."
+                            "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"ffm\"\n(from propagated ephemeris)."
                         },
                         "FEATURE_NAMES": {
                             "type": "array",
@@ -37593,7 +37593,7 @@
                 },
                 "PRWForceConfiguration": {
                     "type": "object",
-                    "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+                    "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
                     "properties": {
                         "GRAVITY_CHOICE": {
                             "$ref": "#/definitions/prwGravitySelection"
@@ -91048,7 +91048,7 @@
                         "KEPLER",
                         "SGP4",
                         "SDP4",
-                        "HPOP",
+                        "FFM",
                         "COWELL",
                         "ENCKE",
                         "GAUSS_JACKSON",
@@ -113013,7 +113013,7 @@
                 },
                 "PRWForceConfiguration": {
                     "type": "object",
-                    "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+                    "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
                     "properties": {
                         "GRAVITY_CHOICE": {
                             "$ref": "#/definitions/prwGravitySelection"
@@ -139015,7 +139015,7 @@
                     "properties": {
                         "VIEW": {
                             "type": "string",
-                            "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"hpop\"\n(from propagated ephemeris)."
+                            "description": "Name of the feature set or view, e.g. \"gp\" (from element sets), \"ffm\"\n(from propagated ephemeris)."
                         },
                         "FEATURE_NAMES": {
                             "type": "array",
@@ -141869,7 +141869,7 @@
                         },
                         "DYNAMICS": {
                             "type": "string",
-                            "description": "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP"
+                            "description": "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP"
                         },
                         "CONVERGED": {
                             "type": "boolean",
@@ -166843,7 +166843,7 @@
                     "properties": {
                         "PROPAGATOR_ID": {
                             "type": "string",
-                            "description": "Propagator module identifier, e.g. \"com.orbpro.hpop\"."
+                            "description": "Propagator module identifier, e.g. \"com.orbpro.ffm\"."
                         },
                         "PROPAGATOR_ARTIFACT_SHA256": {
                             "type": "string",
@@ -192035,7 +192035,7 @@
                 },
                 "PRWForceConfiguration": {
                     "type": "object",
-                    "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+                    "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
                     "properties": {
                         "GRAVITY_CHOICE": {
                             "$ref": "#/definitions/prwGravitySelection"
@@ -207794,7 +207794,7 @@
                         "KEPLER",
                         "SGP4",
                         "SDP4",
-                        "HPOP",
+                        "FFM",
                         "COWELL",
                         "ENCKE",
                         "GAUSS_JACKSON",
@@ -208120,7 +208120,7 @@
                         },
                         "DYNAMICS": {
                             "type": "string",
-                            "description": "Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP"
+                            "description": "Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP"
                         },
                         "CONVERGED": {
                             "type": "boolean",
@@ -225408,7 +225408,7 @@
                 },
                 "PRWForceConfiguration": {
                     "type": "object",
-                    "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+                    "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
                     "properties": {
                         "GRAVITY_CHOICE": {
                             "$ref": "#/definitions/prwGravitySelection"
@@ -266752,7 +266752,7 @@
                 },
                 "PRWForceConfiguration": {
                     "type": "object",
-                    "description": "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+                    "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
                     "properties": {
                         "GRAVITY_CHOICE": {
                             "$ref": "#/definitions/prwGravitySelection"
@@ -269053,7 +269053,7 @@
                     "properties": {
                         "PROPAGATOR_ID": {
                             "type": "string",
-                            "description": "Propagator module identifier, e.g. \"com.orbpro.hpop\"."
+                            "description": "Propagator module identifier, e.g. \"com.orbpro.ffm\"."
                         },
                         "PROPAGATOR_ARTIFACT_SHA256": {
                             "type": "string",

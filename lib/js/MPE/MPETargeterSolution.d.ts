@@ -17,7 +17,7 @@ export declare class MPETargeterSolution implements flatbuffers.IUnpackableObjec
     SOLVER(): string | null;
     SOLVER(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+     * Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
      */
     DYNAMICS(): string | null;
     DYNAMICS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

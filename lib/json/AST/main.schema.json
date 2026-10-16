@@ -3,7 +3,7 @@
   "definitions": {
     "PropagatorMethod" : {
       "type" : "string",
-      "enum": ["KEPLER", "SGP4", "SDP4", "HPOP", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST"]
+      "enum": ["KEPLER", "SGP4", "SDP4", "FFM", "COWELL", "ENCKE", "GAUSS_JACKSON", "RK78", "BROUWER", "KOZAI", "DSST"]
     },
     "ForceModel" : {
       "type" : "string",

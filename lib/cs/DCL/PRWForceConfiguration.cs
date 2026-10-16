@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Executable subset currently reachable through HPOP invoke. No implied
+/// Executable subset currently reachable through the FFM module's invoke. No implied
 /// support for coefficients, drag models or bodies the provider cannot supply.
 public struct PRWForceConfiguration : IFlatbufferObject
 {

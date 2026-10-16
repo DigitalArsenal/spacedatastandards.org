@@ -430,7 +430,7 @@ impl<'a> MPETargeterSolution<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(MPETargeterSolution::VT_SOLVER, None)}
     }
 
-    /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+    /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
     #[inline]
     pub fn DYNAMICS(&self) -> Option<&'a str> {
         // Safety:

@@ -18,7 +18,7 @@ public struct XMTEpochFitPolicy : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public XMTEpochFitPolicy __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Propagator module identifier, e.g. "com.orbpro.hpop".
+  /// Propagator module identifier, e.g. "com.orbpro.ffm".
   public string PROPAGATOR_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPROPAGATOR_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }

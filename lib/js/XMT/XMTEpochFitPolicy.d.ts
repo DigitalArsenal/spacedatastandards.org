@@ -12,7 +12,7 @@ export declare class XMTEpochFitPolicy implements flatbuffers.IUnpackableObject<
     static getRootAsXMTEpochFitPolicy(bb: flatbuffers.ByteBuffer, obj?: XMTEpochFitPolicy): XMTEpochFitPolicy;
     static getSizePrefixedRootAsXMTEpochFitPolicy(bb: flatbuffers.ByteBuffer, obj?: XMTEpochFitPolicy): XMTEpochFitPolicy;
     /**
-     * Propagator module identifier, e.g. "com.orbpro.hpop".
+     * Propagator module identifier, e.g. "com.orbpro.ffm".
      */
     PROPAGATOR_ID(): string | null;
     PROPAGATOR_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

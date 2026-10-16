@@ -1,11 +1,11 @@
-// Hash: 505551bb2beca681fbb8896726941ee78afdb57a7574427345c58b8879bdcb57
-// Version: 0.0.3
+// Hash: 4db55e22a594b3aed6cc5f2de39ae5ba4ced2d69cafd796a322540b3016b6e07
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 enum PropagatorMethod : byte {
   KEPLER,                 // Two-body analytical
   SGP4,                   // Simplified General Perturbations
   SDP4,                   // Simplified Deep-space Perturbations
-  HPOP,                   // High-Precision Orbit Propagator
+  FFM,                    // Full Force Model: numerical integration under the full force model (profile FFM-1)
   COWELL,                 // Cowell's method (numerical)
   ENCKE,                  // Encke's method
   GAUSS_JACKSON,          // Gauss-Jackson 8th order

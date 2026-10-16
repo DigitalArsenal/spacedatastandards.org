@@ -179,7 +179,7 @@ class MPETargeterSolution {
 
   ///  Solver used, e.g. "differential-corrector"
   String? get SOLVER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  ///  Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
   String? get DYNAMICS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   ///  Whether the corrector converged within tolerance
   bool get CONVERGED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);

@@ -3417,7 +3417,7 @@
     },
     "PRWForceConfiguration" : {
       "type" : "object",
-      "description" : "Executable subset currently reachable through HPOP invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
+      "description" : "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
       "properties" : {
         "GRAVITY_CHOICE" : {
                 "$ref" : "#/definitions/prwGravitySelection"
@@ -5354,7 +5354,7 @@
       "properties" : {
         "PROPAGATOR_ID" : {
                 "type" : "string",
-                "description" : "Propagator module identifier, e.g. \"com.orbpro.hpop\"."
+                "description" : "Propagator module identifier, e.g. \"com.orbpro.ffm\"."
               },
         "PROPAGATOR_ARTIFACT_SHA256" : {
                 "type" : "string",

@@ -195,7 +195,7 @@ struct MPETargeterSolution FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::String *SOLVER() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOLVER);
   }
-  /// Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  /// Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
   const ::flatbuffers::String *DYNAMICS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DYNAMICS);
   }

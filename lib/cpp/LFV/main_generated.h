@@ -1294,7 +1294,7 @@ struct LFV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_GENERATED_AT_MS = 24,
     VT_REPORT = 26
   };
-  /// Name of the feature set or view, e.g. "gp" (from element sets), "hpop"
+  /// Name of the feature set or view, e.g. "gp" (from element sets), "ffm"
   /// (from propagated ephemeris).
   const ::flatbuffers::String *VIEW() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VIEW);

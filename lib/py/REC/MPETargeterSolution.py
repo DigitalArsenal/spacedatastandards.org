@@ -39,7 +39,7 @@ class MPETargeterSolution(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+    # Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
     # MPETargeterSolution
     def DYNAMICS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))

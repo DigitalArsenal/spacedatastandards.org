@@ -7,7 +7,7 @@
         "KEPLER",
         "SGP4",
         "SDP4",
-        "HPOP",
+        "FFM",
         "COWELL",
         "ENCKE",
         "GAUSS_JACKSON",
@@ -28,7 +28,7 @@
         "SDP4": {
           "value": 2
         },
-        "HPOP": {
+        "FFM": {
           "value": 3
         },
         "COWELL": {

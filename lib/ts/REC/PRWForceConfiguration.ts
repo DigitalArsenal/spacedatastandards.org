@@ -17,7 +17,7 @@ import { prwSolidTideModel } from './prwSolidTideModel.js';
 
 
 /**
- * Executable subset currently reachable through HPOP invoke. No implied
+ * Executable subset currently reachable through the FFM module's invoke. No implied
  * support for coefficients, drag models or bodies the provider cannot supply.
  */
 export class PRWForceConfiguration implements flatbuffers.IUnpackableObject<PRWForceConfigurationT> {

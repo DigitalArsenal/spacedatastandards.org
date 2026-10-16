@@ -10,7 +10,7 @@ enum PropagatorMethod {
   KEPLER(0),
   SGP4(1),
   SDP4(2),
-  HPOP(3),
+  FFM(3),
   COWELL(4),
   ENCKE(5),
   GAUSS_JACKSON(6),
@@ -27,7 +27,7 @@ enum PropagatorMethod {
       case 0: return PropagatorMethod.KEPLER;
       case 1: return PropagatorMethod.SGP4;
       case 2: return PropagatorMethod.SDP4;
-      case 3: return PropagatorMethod.HPOP;
+      case 3: return PropagatorMethod.FFM;
       case 4: return PropagatorMethod.COWELL;
       case 5: return PropagatorMethod.ENCKE;
       case 6: return PropagatorMethod.GAUSS_JACKSON;

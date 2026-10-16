@@ -128,7 +128,7 @@ public struct MPETargeterSolution: FlatBufferVerifiableTable, FlatbuffersVectorI
   ///  Solver used, e.g. "differential-corrector"
   public var SOLVER: String? { let o = _accessor.offset(VT.SOLVER); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOLVERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOLVER) }
-  ///  Dynamics contract the solution was targeted under: SGP4, HPOP, CR3BP
+  ///  Dynamics contract the solution was targeted under: SGP4, FFM, CR3BP
   public var DYNAMICS: String? { let o = _accessor.offset(VT.DYNAMICS); return o == 0 ? nil : _accessor.string(at: o) }
   public var DYNAMICSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DYNAMICS) }
   ///  Whether the corrector converged within tolerance
