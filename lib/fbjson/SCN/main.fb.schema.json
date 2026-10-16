@@ -1683,7 +1683,11 @@
         "URBAN_AREA",
         "NATIONAL_PARK",
         "HISTORICAL_SITE",
-        "OTHER"
+        "OTHER",
+        "LANDING_SITE",
+        "IMPACT_SITE",
+        "CANDIDATE_REGION",
+        "SURFACE_FEATURE"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -1741,6 +1745,22 @@
         },
         "OTHER": {
           "value": 17
+        },
+        "LANDING_SITE": {
+          "value": 18,
+          "description": "A place a spacecraft touched down or is to touch down on a body surface"
+        },
+        "IMPACT_SITE": {
+          "value": 19,
+          "description": "A place a spacecraft or stage struck a body surface"
+        },
+        "CANDIDATE_REGION": {
+          "value": 20,
+          "description": "A surface region under study as a landing or exploration target"
+        },
+        "SURFACE_FEATURE": {
+          "value": 21,
+          "description": "A named natural feature of a body surface (crater, mare, rille, mons)"
         }
       }
     },
@@ -6896,6 +6916,22 @@
             },
             "OTHER": {
               "value": 17
+            },
+            "LANDING_SITE": {
+              "value": 18,
+              "description": "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            "IMPACT_SITE": {
+              "value": 19,
+              "description": "A place a spacecraft or stage struck a body surface"
+            },
+            "CANDIDATE_REGION": {
+              "value": 20,
+              "description": "A surface region under study as a landing or exploration target"
+            },
+            "SURFACE_FEATURE": {
+              "value": 21,
+              "description": "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -6911,17 +6947,17 @@
         },
         "LATITUDE": {
           "type": "number",
-          "description": "Latitude of the site",
+          "description": "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
           "x-flatbuffer-type": "float"
         },
         "LONGITUDE": {
           "type": "number",
-          "description": "Longitude of the site",
+          "description": "Longitude of the site, degrees, east positive",
           "x-flatbuffer-type": "float"
         },
         "ALTITUDE": {
           "type": "number",
-          "description": "Altitude of the site",
+          "description": "Altitude of the site above CENTER_NAME's reference surface",
           "x-flatbuffer-type": "float"
         },
         "GEOMETRY": {
@@ -7124,6 +7160,26 @@
           "$ref": "#/definitions/PVN",
           "description": "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
           "x-flatbuffer-type": "PVN"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_FRAME": {
+          "$ref": "#/definitions/RFM",
+          "description": "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+          "x-flatbuffer-type": "RFM"
+        },
+        "MISSION": {
+          "type": "string",
+          "description": "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_EPOCH": {
+          "type": "string",
+          "description": "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

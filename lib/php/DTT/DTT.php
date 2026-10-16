@@ -21,7 +21,9 @@ use \Google\FlatBuffers\FlatBufferBuilder;
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 class DTT extends Table
 {
@@ -124,7 +126,8 @@ class DTT extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Western extent of the tile, decimal degrees on WGS 84.
+    /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (WGS 84 for EARTH; planetocentric for any other body).
     /**
      * @return double
      */
@@ -134,7 +137,8 @@ class DTT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Southern extent of the tile, decimal degrees on WGS 84.
+    /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH).
     /**
      * @return double
      */
@@ -144,7 +148,8 @@ class DTT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Eastern extent of the tile, decimal degrees on WGS 84.
+    /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH), east positive.
     /**
      * @return double
      */
@@ -154,7 +159,8 @@ class DTT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Northern extent of the tile, decimal degrees on WGS 84.
+    /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH).
     /**
      * @return double
      */
@@ -473,22 +479,79 @@ class DTT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+    /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    /// EARTH, so every tile published before 1.191.0 reads unchanged.
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+    /// two are equatorial then polar (a spheroid); three are the semi-axes a
+    /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+    /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+    /// datum, which reads the first value.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getREFERENCE_RADII_M($j)
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getREFERENCE_RADII_MLength()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Horizon elevation angles the publisher precomputed for the tile's posts,
+    /// for lighting and visibility without a height search. One unsigned byte
+    /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+    /// the north-west post), sector the fastest index. Sector k is centred on
+    /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+    /// the elevation angle of the terrain horizon above the local horizontal at
+    /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+    public function getHORIZON_ELEVATIONS()
+    {
+        $obj = new DTTPayloadRef();
+        $o = $this->__offset(94);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+    /**
+     * @return byte
+     */
+    public function getHORIZON_SECTORS()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDTT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(43);
+        $builder->StartObject(47);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DTT
      */
-    public static function createDTT(FlatBufferBuilder $builder, $TILESET_ID, $TILESET_NAME, $TILING_SCHEME, $LEVEL, $X, $Y, $ROW_ORIGIN_NORTH, $WEST_DEG, $SOUTH_DEG, $EAST_DEG, $NORTH_DEG, $MIN_HEIGHT_M, $MAX_HEIGHT_M, $PAYLOAD_FORMAT, $PAYLOAD_FORMAT_VERSION, $PAYLOAD, $GRID_WIDTH, $GRID_HEIGHT, $POST_SPACING_M, $SOURCE_POST_SPACING_M, $VERTICAL_DATUM, $VERTICAL_DATUM_NAME, $HORIZONTAL_DATUM_NAME, $VERTICAL_ACCURACY_M, $ACCURACY_CONFIDENCE, $HORIZONTAL_ACCURACY_M, $DATA_COVERAGE_FRACTION, $NO_DATA_VALUE, $WATER_MASK_KIND, $WATER_MASK, $WATER_MASK_WIDTH, $WATER_MASK_HEIGHT, $WATER_MASK_PROVENANCE, $VERTEX_NORMALS, $LAND_COVER, $CHILD_AVAILABILITY, $MAX_LEVEL, $SOURCE_CLASS, $PROVENANCE, $EPOCH, $ETAG, $EXPIRES, $REMARKS)
+    public static function createDTT(FlatBufferBuilder $builder, $TILESET_ID, $TILESET_NAME, $TILING_SCHEME, $LEVEL, $X, $Y, $ROW_ORIGIN_NORTH, $WEST_DEG, $SOUTH_DEG, $EAST_DEG, $NORTH_DEG, $MIN_HEIGHT_M, $MAX_HEIGHT_M, $PAYLOAD_FORMAT, $PAYLOAD_FORMAT_VERSION, $PAYLOAD, $GRID_WIDTH, $GRID_HEIGHT, $POST_SPACING_M, $SOURCE_POST_SPACING_M, $VERTICAL_DATUM, $VERTICAL_DATUM_NAME, $HORIZONTAL_DATUM_NAME, $VERTICAL_ACCURACY_M, $ACCURACY_CONFIDENCE, $HORIZONTAL_ACCURACY_M, $DATA_COVERAGE_FRACTION, $NO_DATA_VALUE, $WATER_MASK_KIND, $WATER_MASK, $WATER_MASK_WIDTH, $WATER_MASK_HEIGHT, $WATER_MASK_PROVENANCE, $VERTEX_NORMALS, $LAND_COVER, $CHILD_AVAILABILITY, $MAX_LEVEL, $SOURCE_CLASS, $PROVENANCE, $EPOCH, $ETAG, $EXPIRES, $REMARKS, $CENTER_NAME, $REFERENCE_RADII_M, $HORIZON_ELEVATIONS, $HORIZON_SECTORS)
     {
-        $builder->startObject(43);
+        $builder->startObject(47);
         self::addTILESET_ID($builder, $TILESET_ID);
         self::addTILESET_NAME($builder, $TILESET_NAME);
         self::addTILING_SCHEME($builder, $TILING_SCHEME);
@@ -532,6 +595,10 @@ class DTT extends Table
         self::addETAG($builder, $ETAG);
         self::addEXPIRES($builder, $EXPIRES);
         self::addREMARKS($builder, $REMARKS);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addREFERENCE_RADII_M($builder, $REFERENCE_RADII_M);
+        self::addHORIZON_ELEVATIONS($builder, $HORIZON_ELEVATIONS);
+        self::addHORIZON_SECTORS($builder, $HORIZON_SECTORS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // TILESET_ID
         $builder->required($o, 34);  // PAYLOAD
@@ -967,6 +1034,70 @@ class DTT extends Table
     public static function addREMARKS(FlatBufferBuilder $builder, $REMARKS)
     {
         $builder->addOffsetX(42, $REMARKS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(43, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREFERENCE_RADII_M(FlatBufferBuilder $builder, $REFERENCE_RADII_M)
+    {
+        $builder->addOffsetX(44, $REFERENCE_RADII_M, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createREFERENCE_RADII_MVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startREFERENCE_RADII_MVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addHORIZON_ELEVATIONS(FlatBufferBuilder $builder, $HORIZON_ELEVATIONS)
+    {
+        $builder->addOffsetX(45, $HORIZON_ELEVATIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addHORIZON_SECTORS(FlatBufferBuilder $builder, $HORIZON_SECTORS)
+    {
+        $builder->addByteX(46, $HORIZON_SECTORS, 0);
     }
 
     /**

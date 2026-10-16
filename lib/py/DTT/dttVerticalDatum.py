@@ -20,3 +20,7 @@ class dttVerticalDatum(object):
     REGIONAL_DATUM = 4
     # A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
     CUSTOM = 5
+    # Heights above the reference sphere of CENTER_NAME's body, whose radius is
+    # REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+    # against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+    REFERENCE_SPHERE = 6

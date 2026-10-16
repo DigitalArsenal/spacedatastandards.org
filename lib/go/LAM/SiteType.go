@@ -26,6 +26,14 @@ const (
 	SiteTypeNATIONAL_PARK            SiteType = 15
 	SiteTypeHISTORICAL_SITE          SiteType = 16
 	SiteTypeOTHER                    SiteType = 17
+	/// A place a spacecraft touched down or is to touch down on a body surface
+	SiteTypeLANDING_SITE             SiteType = 18
+	/// A place a spacecraft or stage struck a body surface
+	SiteTypeIMPACT_SITE              SiteType = 19
+	/// A surface region under study as a landing or exploration target
+	SiteTypeCANDIDATE_REGION         SiteType = 20
+	/// A named natural feature of a body surface (crater, mare, rille, mons)
+	SiteTypeSURFACE_FEATURE          SiteType = 21
 )
 
 var EnumNamesSiteType = map[SiteType]string{
@@ -47,6 +55,10 @@ var EnumNamesSiteType = map[SiteType]string{
 	SiteTypeNATIONAL_PARK:            "NATIONAL_PARK",
 	SiteTypeHISTORICAL_SITE:          "HISTORICAL_SITE",
 	SiteTypeOTHER:                    "OTHER",
+	SiteTypeLANDING_SITE:             "LANDING_SITE",
+	SiteTypeIMPACT_SITE:              "IMPACT_SITE",
+	SiteTypeCANDIDATE_REGION:         "CANDIDATE_REGION",
+	SiteTypeSURFACE_FEATURE:          "SURFACE_FEATURE",
 }
 
 var EnumValuesSiteType = map[string]SiteType{
@@ -68,6 +80,10 @@ var EnumValuesSiteType = map[string]SiteType{
 	"NATIONAL_PARK":            SiteTypeNATIONAL_PARK,
 	"HISTORICAL_SITE":          SiteTypeHISTORICAL_SITE,
 	"OTHER":                    SiteTypeOTHER,
+	"LANDING_SITE":             SiteTypeLANDING_SITE,
+	"IMPACT_SITE":              SiteTypeIMPACT_SITE,
+	"CANDIDATE_REGION":         SiteTypeCANDIDATE_REGION,
+	"SURFACE_FEATURE":          SiteTypeSURFACE_FEATURE,
 }
 
 func (v SiteType) String() string {

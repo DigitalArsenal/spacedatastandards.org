@@ -137,7 +137,7 @@ describe("SIT 1.1.0 site lifecycle, citations, references, parties and quantitie
     const table = source.match(/table SIT \{([\s\S]*?)\n\}/)[1];
     const fields = [...table.matchAll(/^\s*([A-Z_]+)\s*:/gm)].map((m) => m[1]);
     assert.equal(fields.indexOf("INTEGRATED_DEVICES"), 23);
-    assert.deepEqual(fields.slice(24), [
+    assert.deepEqual(fields.slice(24, 36), [
       "LIFECYCLE_STATUS", "LIFECYCLE_STATUS_DATE", "STATUS_VERIFIED_AT", "STATUS_EVIDENCE", "SITE_KIND", "DESCRIPTION_LANGUAGE",
       "DESCRIPTION_CITATION", "POSITION_CITATION", "EXTERNAL_REFERENCES", "PARTIES", "QUANTITIES", "PROVENANCE",
     ]);

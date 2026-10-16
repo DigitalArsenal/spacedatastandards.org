@@ -108,7 +108,8 @@ class SIT : Table() {
     val networkAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(14, 1)
     fun networkInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 14, 1)
     /**
-     * Latitude of the site
+     * Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+     * body when that is not EARTH
      */
     val latitude : Float
         get() {
@@ -116,7 +117,7 @@ class SIT : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Longitude of the site
+     * Longitude of the site, degrees, east positive
      */
     val longitude : Float
         get() {
@@ -124,7 +125,7 @@ class SIT : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
     /**
-     * Altitude of the site
+     * Altitude of the site above CENTER_NAME's reference surface
      */
     val altitude : Float
         get() {
@@ -507,6 +508,67 @@ class SIT : Table() {
             null
         }
     }
+    /**
+     * The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+     * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+     * EARTH, so every site published before 1.2.0 reads unchanged.
+     */
+    val centerName : String?
+        get() {
+            val o = __offset(76)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(76, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+     * RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+     * KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+     * means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+     */
+    val referenceFrame : RFM? get() = referenceFrame(RFM())
+    fun referenceFrame(obj: RFM) : RFM? {
+        val o = __offset(78)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+     * source names it. Empty for a site of no mission.
+     */
+    val mission : String?
+        get() {
+            val o = __offset(80)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val missionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(80, 1)
+    fun missionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 80, 1)
+    /**
+     * When the landing or impact took place, RFC 3339 UTC; for a
+     * LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+     */
+    val eventEpoch : String?
+        get() {
+            val o = __offset(82)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val eventEpochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(82, 1)
+    fun eventEpochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 82, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSIT(_bb: ByteBuffer): SIT = getRootAsSIT(_bb, SIT())
@@ -515,8 +577,12 @@ class SIT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SITBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SIT")
-        fun createSIT(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, abbreviationOffset: Int, siteType: Byte, catcodeOffset: Int, networkOffset: Int, latitude: Float, longitude: Float, altitude: Float, geometryOffset: Int, centerPointGeometryOffset: Int, classificationOffset: Int, ctrIdOffset: Int, createdByOffset: Int, descriptionOffset: Int, modelUrlOffset: Int, sourceOffset: Int, taskable: Boolean, operationalStatusOffset: Int, establishmentDateOffset: Int, contactInfoOffset: Int, environmentalImpactOffset: Int, accessibilityInfraOffset: Int, integratedDevicesOffset: Int, lifecycleStatus: Byte, lifecycleStatusDateOffset: Int, statusVerifiedAtOffset: Int, statusEvidenceOffset: Int, siteKindOffset: Int, descriptionLanguageOffset: Int, descriptionCitationOffset: Int, positionCitationOffset: Int, externalReferencesOffset: Int, partiesOffset: Int, quantitiesOffset: Int, provenanceOffset: Int) : Int {
-            builder.startTable(36)
+        fun createSIT(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, abbreviationOffset: Int, siteType: Byte, catcodeOffset: Int, networkOffset: Int, latitude: Float, longitude: Float, altitude: Float, geometryOffset: Int, centerPointGeometryOffset: Int, classificationOffset: Int, ctrIdOffset: Int, createdByOffset: Int, descriptionOffset: Int, modelUrlOffset: Int, sourceOffset: Int, taskable: Boolean, operationalStatusOffset: Int, establishmentDateOffset: Int, contactInfoOffset: Int, environmentalImpactOffset: Int, accessibilityInfraOffset: Int, integratedDevicesOffset: Int, lifecycleStatus: Byte, lifecycleStatusDateOffset: Int, statusVerifiedAtOffset: Int, statusEvidenceOffset: Int, siteKindOffset: Int, descriptionLanguageOffset: Int, descriptionCitationOffset: Int, positionCitationOffset: Int, externalReferencesOffset: Int, partiesOffset: Int, quantitiesOffset: Int, provenanceOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, missionOffset: Int, eventEpochOffset: Int) : Int {
+            builder.startTable(40)
+            addEVENTEPOCH(builder, eventEpochOffset)
+            addMISSION(builder, missionOffset)
+            addREFERENCEFRAME(builder, referenceFrameOffset)
+            addCENTERNAME(builder, centerNameOffset)
             addPROVENANCE(builder, provenanceOffset)
             addQUANTITIES(builder, quantitiesOffset)
             addPARTIES(builder, partiesOffset)
@@ -555,7 +621,7 @@ class SIT : Table() {
             addSITETYPE(builder, siteType)
             return endSIT(builder)
         }
-        fun startSIT(builder: FlatBufferBuilder) = builder.startTable(36)
+        fun startSIT(builder: FlatBufferBuilder) = builder.startTable(40)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
         fun addABBREVIATION(builder: FlatBufferBuilder, abbreviation: Int) = builder.addOffset(2, abbreviation, 0)
@@ -640,6 +706,10 @@ class SIT : Table() {
         }
         fun startQuantitiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(35, provenance, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(36, centerName, 0)
+        fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(37, referenceFrame, 0)
+        fun addMISSION(builder: FlatBufferBuilder, mission: Int) = builder.addOffset(38, mission, 0)
+        fun addEVENTEPOCH(builder: FlatBufferBuilder, eventEpoch: Int) = builder.addOffset(39, eventEpoch, 0)
         fun endSIT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

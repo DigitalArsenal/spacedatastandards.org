@@ -12,33 +12,40 @@ type dttTilingScheme int8
 const (
 	/// The scheme this tile is addressed in is not stated. Ordinal 0 so an
 	/// unset field can never be read as a real scheme.
-	dttTilingSchemeUNSPECIFIED            dttTilingScheme = 0
+	dttTilingSchemeUNSPECIFIED              dttTilingScheme = 0
 	/// Equirectangular geographic scheme on WGS 84, two root tiles at level 0
 	/// covering [-180,0] and [0,180] degrees of longitude.
-	dttTilingSchemeGEOGRAPHIC_WGS84       dttTilingScheme = 1
+	dttTilingSchemeGEOGRAPHIC_WGS84         dttTilingScheme = 1
 	/// Single-root equirectangular geographic scheme, one root tile at level 0.
-	dttTilingSchemeGEOGRAPHIC_SINGLE_ROOT dttTilingScheme = 2
+	dttTilingSchemeGEOGRAPHIC_SINGLE_ROOT   dttTilingScheme = 2
 	/// Spherical Mercator scheme, one square root tile at level 0.
-	dttTilingSchemeWEB_MERCATOR           dttTilingScheme = 3
+	dttTilingSchemeWEB_MERCATOR             dttTilingScheme = 3
 	/// A scheme this enum does not model; the publisher states it out of band
 	/// and the tile is not addressable by a consumer that does not know it.
-	dttTilingSchemeCUSTOM                 dttTilingScheme = 4
+	dttTilingSchemeCUSTOM                   dttTilingScheme = 4
+	/// Equirectangular geographic scheme on the reference body named by
+	/// CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+	/// degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+	/// body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+	dttTilingSchemeGEOGRAPHIC_TWO_ROOT_BODY dttTilingScheme = 5
 )
 
 var EnumNamesdttTilingScheme = map[dttTilingScheme]string{
-	dttTilingSchemeUNSPECIFIED:            "UNSPECIFIED",
-	dttTilingSchemeGEOGRAPHIC_WGS84:       "GEOGRAPHIC_WGS84",
-	dttTilingSchemeGEOGRAPHIC_SINGLE_ROOT: "GEOGRAPHIC_SINGLE_ROOT",
-	dttTilingSchemeWEB_MERCATOR:           "WEB_MERCATOR",
-	dttTilingSchemeCUSTOM:                 "CUSTOM",
+	dttTilingSchemeUNSPECIFIED:              "UNSPECIFIED",
+	dttTilingSchemeGEOGRAPHIC_WGS84:         "GEOGRAPHIC_WGS84",
+	dttTilingSchemeGEOGRAPHIC_SINGLE_ROOT:   "GEOGRAPHIC_SINGLE_ROOT",
+	dttTilingSchemeWEB_MERCATOR:             "WEB_MERCATOR",
+	dttTilingSchemeCUSTOM:                   "CUSTOM",
+	dttTilingSchemeGEOGRAPHIC_TWO_ROOT_BODY: "GEOGRAPHIC_TWO_ROOT_BODY",
 }
 
 var EnumValuesdttTilingScheme = map[string]dttTilingScheme{
-	"UNSPECIFIED":            dttTilingSchemeUNSPECIFIED,
-	"GEOGRAPHIC_WGS84":       dttTilingSchemeGEOGRAPHIC_WGS84,
-	"GEOGRAPHIC_SINGLE_ROOT": dttTilingSchemeGEOGRAPHIC_SINGLE_ROOT,
-	"WEB_MERCATOR":           dttTilingSchemeWEB_MERCATOR,
-	"CUSTOM":                 dttTilingSchemeCUSTOM,
+	"UNSPECIFIED":              dttTilingSchemeUNSPECIFIED,
+	"GEOGRAPHIC_WGS84":         dttTilingSchemeGEOGRAPHIC_WGS84,
+	"GEOGRAPHIC_SINGLE_ROOT":   dttTilingSchemeGEOGRAPHIC_SINGLE_ROOT,
+	"WEB_MERCATOR":             dttTilingSchemeWEB_MERCATOR,
+	"CUSTOM":                   dttTilingSchemeCUSTOM,
+	"GEOGRAPHIC_TWO_ROOT_BODY": dttTilingSchemeGEOGRAPHIC_TWO_ROOT_BODY,
 }
 
 func (v dttTilingScheme) String() string {

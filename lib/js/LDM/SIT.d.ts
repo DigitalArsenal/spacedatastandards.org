@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { Geometry, GeometryT } from './Geometry.js';
 import { IDM, IDMT } from './IDM.js';
 import { PVN, PVNT } from './PVN.js';
+import { RFM, RFMT } from './RFM.js';
 import { SITCitation, SITCitationT } from './SITCitation.js';
 import { SITParty, SITPartyT } from './SITParty.js';
 import { SITQuantity, SITQuantityT } from './SITQuantity.js';
@@ -49,15 +50,16 @@ export declare class SIT implements flatbuffers.IUnpackableObject<SITT> {
     NETWORK(): string | null;
     NETWORK(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Latitude of the site
+     * Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+     * body when that is not EARTH
      */
     LATITUDE(): number;
     /**
-     * Longitude of the site
+     * Longitude of the site, degrees, east positive
      */
     LONGITUDE(): number;
     /**
-     * Altitude of the site
+     * Altitude of the site above CENTER_NAME's reference surface
      */
     ALTITUDE(): number;
     /**
@@ -195,6 +197,32 @@ export declare class SIT implements flatbuffers.IUnpackableObject<SITT> {
      * record reproduces (each citation carries its own source's terms)
      */
     PROVENANCE(obj?: PVN): PVN | null;
+    /**
+     * The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+     * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+     * EARTH, so every site published before 1.2.0 reads unchanged.
+     */
+    CENTER_NAME(): string | null;
+    CENTER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+     * RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+     * KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+     * means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+     */
+    REFERENCE_FRAME(obj?: RFM): RFM | null;
+    /**
+     * The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+     * source names it. Empty for a site of no mission.
+     */
+    MISSION(): string | null;
+    MISSION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * When the landing or impact took place, RFC 3339 UTC; for a
+     * LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+     */
+    EVENT_EPOCH(): string | null;
+    EVENT_EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSIT(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
@@ -248,6 +276,10 @@ export declare class SIT implements flatbuffers.IUnpackableObject<SITT> {
     static createQuantitiesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startQuantitiesVector(builder: flatbuffers.Builder, numElems: number): void;
     static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
+    static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
+    static addReferenceFrame(builder: flatbuffers.Builder, REFERENCE_FRAMEOffset: flatbuffers.Offset): void;
+    static addMission(builder: flatbuffers.Builder, MISSIONOffset: flatbuffers.Offset): void;
+    static addEventEpoch(builder: flatbuffers.Builder, EVENT_EPOCHOffset: flatbuffers.Offset): void;
     static endSIT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSITBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSITBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -291,7 +323,11 @@ export declare class SITT implements flatbuffers.IGeneratedObject {
     PARTIES: (SITPartyT)[];
     QUANTITIES: (SITQuantityT)[];
     PROVENANCE: PVNT | null;
-    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, ABBREVIATION?: string | Uint8Array | null, SITE_TYPE?: SiteType, CATCODE?: string | Uint8Array | null, NETWORK?: string | Uint8Array | null, LATITUDE?: number, LONGITUDE?: number, ALTITUDE?: number, GEOMETRY?: GeometryT | null, CENTER_POINT_GEOMETRY?: (number)[], CLASSIFICATION?: string | Uint8Array | null, CTR_ID?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODEL_URL?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, TASKABLE?: boolean, OPERATIONAL_STATUS?: string | Uint8Array | null, ESTABLISHMENT_DATE?: string | Uint8Array | null, CONTACT_INFO?: string | Uint8Array | null, ENVIRONMENTAL_IMPACT?: string | Uint8Array | null, ACCESSIBILITY_INFRA?: string | Uint8Array | null, INTEGRATED_DEVICES?: (IDMT)[], LIFECYCLE_STATUS?: siteLifecycleStatus, LIFECYCLE_STATUS_DATE?: string | Uint8Array | null, STATUS_VERIFIED_AT?: string | Uint8Array | null, STATUS_EVIDENCE?: (SITStatusEvidenceT)[], SITE_KIND?: string | Uint8Array | null, DESCRIPTION_LANGUAGE?: string | Uint8Array | null, DESCRIPTION_CITATION?: SITCitationT | null, POSITION_CITATION?: SITCitationT | null, EXTERNAL_REFERENCES?: (SITReferenceT)[], PARTIES?: (SITPartyT)[], QUANTITIES?: (SITQuantityT)[], PROVENANCE?: PVNT | null);
+    CENTER_NAME: string | Uint8Array | null;
+    REFERENCE_FRAME: RFMT | null;
+    MISSION: string | Uint8Array | null;
+    EVENT_EPOCH: string | Uint8Array | null;
+    constructor(ID?: string | Uint8Array | null, NAME?: string | Uint8Array | null, ABBREVIATION?: string | Uint8Array | null, SITE_TYPE?: SiteType, CATCODE?: string | Uint8Array | null, NETWORK?: string | Uint8Array | null, LATITUDE?: number, LONGITUDE?: number, ALTITUDE?: number, GEOMETRY?: GeometryT | null, CENTER_POINT_GEOMETRY?: (number)[], CLASSIFICATION?: string | Uint8Array | null, CTR_ID?: string | Uint8Array | null, CREATED_BY?: string | Uint8Array | null, DESCRIPTION?: string | Uint8Array | null, MODEL_URL?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, TASKABLE?: boolean, OPERATIONAL_STATUS?: string | Uint8Array | null, ESTABLISHMENT_DATE?: string | Uint8Array | null, CONTACT_INFO?: string | Uint8Array | null, ENVIRONMENTAL_IMPACT?: string | Uint8Array | null, ACCESSIBILITY_INFRA?: string | Uint8Array | null, INTEGRATED_DEVICES?: (IDMT)[], LIFECYCLE_STATUS?: siteLifecycleStatus, LIFECYCLE_STATUS_DATE?: string | Uint8Array | null, STATUS_VERIFIED_AT?: string | Uint8Array | null, STATUS_EVIDENCE?: (SITStatusEvidenceT)[], SITE_KIND?: string | Uint8Array | null, DESCRIPTION_LANGUAGE?: string | Uint8Array | null, DESCRIPTION_CITATION?: SITCitationT | null, POSITION_CITATION?: SITCitationT | null, EXTERNAL_REFERENCES?: (SITReferenceT)[], PARTIES?: (SITPartyT)[], QUANTITIES?: (SITQuantityT)[], PROVENANCE?: PVNT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, MISSION?: string | Uint8Array | null, EVENT_EPOCH?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SIT.d.ts.map

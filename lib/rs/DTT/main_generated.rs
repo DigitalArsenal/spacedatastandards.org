@@ -6,16 +6,17 @@ extern crate alloc;
 pub const ENUM_MIN_DTT_TILING_SCHEME: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DTT_TILING_SCHEME: i8 = 4;
+pub const ENUM_MAX_DTT_TILING_SCHEME: i8 = 5;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DTT_TILING_SCHEME: [dttTilingScheme; 5] = [
+pub const ENUM_VALUES_DTT_TILING_SCHEME: [dttTilingScheme; 6] = [
     dttTilingScheme::UNSPECIFIED,
     dttTilingScheme::GEOGRAPHIC_WGS84,
     dttTilingScheme::GEOGRAPHIC_SINGLE_ROOT,
     dttTilingScheme::WEB_MERCATOR,
     dttTilingScheme::CUSTOM,
+    dttTilingScheme::GEOGRAPHIC_TWO_ROOT_BODY,
 ];
 
 /// Scheme that maps a LEVEL/X/Y address to a region of the ellipsoid. The
@@ -40,15 +41,21 @@ impl dttTilingScheme {
     /// A scheme this enum does not model; the publisher states it out of band
     /// and the tile is not addressable by a consumer that does not know it.
     pub const CUSTOM: Self = Self(4);
+    /// Equirectangular geographic scheme on the reference body named by
+    /// CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+    /// degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+    /// body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+    pub const GEOGRAPHIC_TWO_ROOT_BODY: Self = Self(5);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 4;
+    pub const ENUM_MAX: i8 = 5;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::GEOGRAPHIC_WGS84,
         Self::GEOGRAPHIC_SINGLE_ROOT,
         Self::WEB_MERCATOR,
         Self::CUSTOM,
+        Self::GEOGRAPHIC_TWO_ROOT_BODY,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -59,6 +66,7 @@ impl dttTilingScheme {
             Self::GEOGRAPHIC_SINGLE_ROOT => Some("GEOGRAPHIC_SINGLE_ROOT"),
             Self::WEB_MERCATOR => Some("WEB_MERCATOR"),
             Self::CUSTOM => Some("CUSTOM"),
+            Self::GEOGRAPHIC_TWO_ROOT_BODY => Some("GEOGRAPHIC_TWO_ROOT_BODY"),
             _ => None,
         }
     }
@@ -251,17 +259,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for dttPayloadFormat {}
 pub const ENUM_MIN_DTT_VERTICAL_DATUM: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DTT_VERTICAL_DATUM: i8 = 5;
+pub const ENUM_MAX_DTT_VERTICAL_DATUM: i8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DTT_VERTICAL_DATUM: [dttVerticalDatum; 6] = [
+pub const ENUM_VALUES_DTT_VERTICAL_DATUM: [dttVerticalDatum; 7] = [
     dttVerticalDatum::UNSPECIFIED,
     dttVerticalDatum::ELLIPSOIDAL_WGS84,
     dttVerticalDatum::GEOID,
     dttVerticalDatum::MEAN_SEA_LEVEL,
     dttVerticalDatum::REGIONAL_DATUM,
     dttVerticalDatum::CUSTOM,
+    dttVerticalDatum::REFERENCE_SPHERE,
 ];
 
 /// Surface the tile's heights are measured from. A DEM whose datum is unstated
@@ -287,9 +296,13 @@ impl dttVerticalDatum {
     pub const REGIONAL_DATUM: Self = Self(4);
     /// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
     pub const CUSTOM: Self = Self(5);
+    /// Heights above the reference sphere of CENTER_NAME's body, whose radius is
+    /// REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+    /// against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+    pub const REFERENCE_SPHERE: Self = Self(6);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 5;
+    pub const ENUM_MAX: i8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::ELLIPSOIDAL_WGS84,
@@ -297,6 +310,7 @@ impl dttVerticalDatum {
         Self::MEAN_SEA_LEVEL,
         Self::REGIONAL_DATUM,
         Self::CUSTOM,
+        Self::REFERENCE_SPHERE,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -308,6 +322,7 @@ impl dttVerticalDatum {
             Self::MEAN_SEA_LEVEL => Some("MEAN_SEA_LEVEL"),
             Self::REGIONAL_DATUM => Some("REGIONAL_DATUM"),
             Self::CUSTOM => Some("CUSTOM"),
+            Self::REFERENCE_SPHERE => Some("REFERENCE_SPHERE"),
             _ => None,
         }
     }
@@ -1562,7 +1577,9 @@ pub enum DTTOffset {}
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 #[derive(Copy, Clone, PartialEq)]
 pub struct DTT<'a> {
@@ -1622,6 +1639,10 @@ impl<'a> DTT<'a> {
     pub const VT_ETAG: ::flatbuffers::VOffsetT = 84;
     pub const VT_EXPIRES: ::flatbuffers::VOffsetT = 86;
     pub const VT_REMARKS: ::flatbuffers::VOffsetT = 88;
+    pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 90;
+    pub const VT_REFERENCE_RADII_M: ::flatbuffers::VOffsetT = 92;
+    pub const VT_HORIZON_ELEVATIONS: ::flatbuffers::VOffsetT = 94;
+    pub const VT_HORIZON_SECTORS: ::flatbuffers::VOffsetT = 96;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1647,6 +1668,9 @@ impl<'a> DTT<'a> {
         builder.add_EAST_DEG(args.EAST_DEG);
         builder.add_SOUTH_DEG(args.SOUTH_DEG);
         builder.add_WEST_DEG(args.WEST_DEG);
+        if let Some(x) = args.HORIZON_ELEVATIONS { builder.add_HORIZON_ELEVATIONS(x); }
+        if let Some(x) = args.REFERENCE_RADII_M { builder.add_REFERENCE_RADII_M(x); }
+        if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
         if let Some(x) = args.REMARKS { builder.add_REMARKS(x); }
         if let Some(x) = args.EXPIRES { builder.add_EXPIRES(x); }
         if let Some(x) = args.ETAG { builder.add_ETAG(x); }
@@ -1670,6 +1694,7 @@ impl<'a> DTT<'a> {
         builder.add_LEVEL(args.LEVEL);
         if let Some(x) = args.TILESET_NAME { builder.add_TILESET_NAME(x); }
         if let Some(x) = args.TILESET_ID { builder.add_TILESET_ID(x); }
+        builder.add_HORIZON_SECTORS(args.HORIZON_SECTORS);
         builder.add_SOURCE_CLASS(args.SOURCE_CLASS);
         builder.add_CHILD_AVAILABILITY(args.CHILD_AVAILABILITY);
         builder.add_WATER_MASK_KIND(args.WATER_MASK_KIND);
@@ -1757,6 +1782,16 @@ impl<'a> DTT<'a> {
         let REMARKS = self.REMARKS().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let CENTER_NAME = self.CENTER_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REFERENCE_RADII_M = self.REFERENCE_RADII_M().map(|x| {
+            x.into_iter().collect()
+        });
+        let HORIZON_ELEVATIONS = self.HORIZON_ELEVATIONS().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let HORIZON_SECTORS = self.HORIZON_SECTORS();
         DTTT {
             TILESET_ID,
             TILESET_NAME,
@@ -1801,6 +1836,10 @@ impl<'a> DTT<'a> {
             ETAG,
             EXPIRES,
             REMARKS,
+            CENTER_NAME,
+            REFERENCE_RADII_M,
+            HORIZON_ELEVATIONS,
+            HORIZON_SECTORS,
         }
     }
 
@@ -1870,7 +1909,8 @@ impl<'a> DTT<'a> {
         unsafe { self._tab.get::<bool>(DTT::VT_ROW_ORIGIN_NORTH, Some(false)).unwrap()}
     }
 
-    /// Western extent of the tile, decimal degrees on WGS 84.
+    /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (WGS 84 for EARTH; planetocentric for any other body).
     #[inline]
     pub fn WEST_DEG(&self) -> f64 {
         // Safety:
@@ -1879,7 +1919,8 @@ impl<'a> DTT<'a> {
         unsafe { self._tab.get::<f64>(DTT::VT_WEST_DEG, Some(0.0)).unwrap()}
     }
 
-    /// Southern extent of the tile, decimal degrees on WGS 84.
+    /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH).
     #[inline]
     pub fn SOUTH_DEG(&self) -> f64 {
         // Safety:
@@ -1888,7 +1929,8 @@ impl<'a> DTT<'a> {
         unsafe { self._tab.get::<f64>(DTT::VT_SOUTH_DEG, Some(0.0)).unwrap()}
     }
 
-    /// Eastern extent of the tile, decimal degrees on WGS 84.
+    /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH), east positive.
     #[inline]
     pub fn EAST_DEG(&self) -> f64 {
         // Safety:
@@ -1897,7 +1939,8 @@ impl<'a> DTT<'a> {
         unsafe { self._tab.get::<f64>(DTT::VT_EAST_DEG, Some(0.0)).unwrap()}
     }
 
-    /// Northern extent of the tile, decimal degrees on WGS 84.
+    /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH).
     #[inline]
     pub fn NORTH_DEG(&self) -> f64 {
         // Safety:
@@ -2215,6 +2258,54 @@ impl<'a> DTT<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DTT::VT_REMARKS, None)}
     }
+
+    /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+    /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    /// EARTH, so every tile published before 1.191.0 reads unchanged.
+    #[inline]
+    pub fn CENTER_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DTT::VT_CENTER_NAME, None)}
+    }
+
+    /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+    /// two are equatorial then polar (a spheroid); three are the semi-axes a
+    /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+    /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+    /// datum, which reads the first value.
+    #[inline]
+    pub fn REFERENCE_RADII_M(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(DTT::VT_REFERENCE_RADII_M, None)}
+    }
+
+    /// Horizon elevation angles the publisher precomputed for the tile's posts,
+    /// for lighting and visibility without a height search. One unsigned byte
+    /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+    /// the north-west post), sector the fastest index. Sector k is centred on
+    /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+    /// the elevation angle of the terrain horizon above the local horizontal at
+    /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+    #[inline]
+    pub fn HORIZON_ELEVATIONS(&self) -> Option<DTTPayloadRef<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<DTTPayloadRef>>(DTT::VT_HORIZON_ELEVATIONS, None)}
+    }
+
+    /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+    #[inline]
+    pub fn HORIZON_SECTORS(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(DTT::VT_HORIZON_SECTORS, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for DTT<'_> {
@@ -2266,6 +2357,10 @@ impl ::flatbuffers::Verifiable for DTT<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ETAG", Self::VT_ETAG, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EXPIRES", Self::VT_EXPIRES, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REMARKS", Self::VT_REMARKS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("REFERENCE_RADII_M", Self::VT_REFERENCE_RADII_M, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<DTTPayloadRef>>("HORIZON_ELEVATIONS", Self::VT_HORIZON_ELEVATIONS, false)?
+            .visit_field::<u8>("HORIZON_SECTORS", Self::VT_HORIZON_SECTORS, false)?
             .finish();
         Ok(())
     }
@@ -2315,6 +2410,10 @@ pub struct DTTArgs<'a> {
     pub ETAG: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub EXPIRES: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub REMARKS: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_RADII_M: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub HORIZON_ELEVATIONS: Option<::flatbuffers::WIPOffset<DTTPayloadRef<'a>>>,
+    pub HORIZON_SECTORS: u8,
 }
 
 impl<'a> Default for DTTArgs<'a> {
@@ -2364,6 +2463,10 @@ impl<'a> Default for DTTArgs<'a> {
             ETAG: None,
             EXPIRES: None,
             REMARKS: None,
+            CENTER_NAME: None,
+            REFERENCE_RADII_M: None,
+            HORIZON_ELEVATIONS: None,
+            HORIZON_SECTORS: 0,
         }
     }
 }
@@ -2590,6 +2693,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DTTBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DTT::VT_CENTER_NAME, CENTER_NAME);
+    }
+
+    #[inline]
+    pub fn add_REFERENCE_RADII_M(&mut self, REFERENCE_RADII_M: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DTT::VT_REFERENCE_RADII_M, REFERENCE_RADII_M);
+    }
+
+    #[inline]
+    pub fn add_HORIZON_ELEVATIONS(&mut self, HORIZON_ELEVATIONS: ::flatbuffers::WIPOffset<DTTPayloadRef<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<DTTPayloadRef>>(DTT::VT_HORIZON_ELEVATIONS, HORIZON_ELEVATIONS);
+    }
+
+    #[inline]
+    pub fn add_HORIZON_SECTORS(&mut self, HORIZON_SECTORS: u8) {
+        self.fbb_.push_slot::<u8>(DTT::VT_HORIZON_SECTORS, HORIZON_SECTORS, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DTTBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         DTTBuilder {
@@ -2654,6 +2777,10 @@ impl ::core::fmt::Debug for DTT<'_> {
         ds.field("ETAG", &self.ETAG());
         ds.field("EXPIRES", &self.EXPIRES());
         ds.field("REMARKS", &self.REMARKS());
+        ds.field("CENTER_NAME", &self.CENTER_NAME());
+        ds.field("REFERENCE_RADII_M", &self.REFERENCE_RADII_M());
+        ds.field("HORIZON_ELEVATIONS", &self.HORIZON_ELEVATIONS());
+        ds.field("HORIZON_SECTORS", &self.HORIZON_SECTORS());
         ds.finish()
     }
 }
@@ -2704,6 +2831,10 @@ pub struct DTTT {
     pub ETAG: Option<alloc::string::String>,
     pub EXPIRES: Option<alloc::string::String>,
     pub REMARKS: Option<alloc::string::String>,
+    pub CENTER_NAME: Option<alloc::string::String>,
+    pub REFERENCE_RADII_M: Option<alloc::vec::Vec<f64>>,
+    pub HORIZON_ELEVATIONS: Option<alloc::boxed::Box<DTTPayloadRefT>>,
+    pub HORIZON_SECTORS: u8,
 }
 
 impl Default for DTTT {
@@ -2752,6 +2883,10 @@ impl Default for DTTT {
             ETAG: None,
             EXPIRES: None,
             REMARKS: None,
+            CENTER_NAME: None,
+            REFERENCE_RADII_M: None,
+            HORIZON_ELEVATIONS: None,
+            HORIZON_SECTORS: 0,
         }
     }
 }
@@ -2837,6 +2972,16 @@ impl DTTT {
         let REMARKS = self.REMARKS.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REFERENCE_RADII_M = self.REFERENCE_RADII_M.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let HORIZON_ELEVATIONS = self.HORIZON_ELEVATIONS.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let HORIZON_SECTORS = self.HORIZON_SECTORS;
         DTT::create(_fbb, &DTTArgs{
             TILESET_ID,
             TILESET_NAME,
@@ -2881,6 +3026,10 @@ impl DTTT {
             ETAG,
             EXPIRES,
             REMARKS,
+            CENTER_NAME,
+            REFERENCE_RADII_M,
+            HORIZON_ELEVATIONS,
+            HORIZON_SECTORS,
         })
     }
 }

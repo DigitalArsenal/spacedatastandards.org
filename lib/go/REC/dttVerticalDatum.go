@@ -24,6 +24,10 @@ const (
 	dttVerticalDatumREGIONAL_DATUM    dttVerticalDatum = 4
 	/// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
 	dttVerticalDatumCUSTOM            dttVerticalDatum = 5
+	/// Heights above the reference sphere of CENTER_NAME's body, whose radius is
+	/// REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+	/// against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+	dttVerticalDatumREFERENCE_SPHERE  dttVerticalDatum = 6
 )
 
 var EnumNamesdttVerticalDatum = map[dttVerticalDatum]string{
@@ -33,6 +37,7 @@ var EnumNamesdttVerticalDatum = map[dttVerticalDatum]string{
 	dttVerticalDatumMEAN_SEA_LEVEL:    "MEAN_SEA_LEVEL",
 	dttVerticalDatumREGIONAL_DATUM:    "REGIONAL_DATUM",
 	dttVerticalDatumCUSTOM:            "CUSTOM",
+	dttVerticalDatumREFERENCE_SPHERE:  "REFERENCE_SPHERE",
 }
 
 var EnumValuesdttVerticalDatum = map[string]dttVerticalDatum{
@@ -42,6 +47,7 @@ var EnumValuesdttVerticalDatum = map[string]dttVerticalDatum{
 	"MEAN_SEA_LEVEL":    dttVerticalDatumMEAN_SEA_LEVEL,
 	"REGIONAL_DATUM":    dttVerticalDatumREGIONAL_DATUM,
 	"CUSTOM":            dttVerticalDatumCUSTOM,
+	"REFERENCE_SPHERE":  dttVerticalDatumREFERENCE_SPHERE,
 }
 
 func (v dttVerticalDatum) String() string {

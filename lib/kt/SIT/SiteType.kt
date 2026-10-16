@@ -24,5 +24,21 @@ class SiteType private constructor() {
         const val NATIONAL_PARK: Byte = 15
         const val HISTORICAL_SITE: Byte = 16
         const val OTHER: Byte = 17
+        /**
+         * A place a spacecraft touched down or is to touch down on a body surface
+         */
+        const val LANDING_SITE: Byte = 18
+        /**
+         * A place a spacecraft or stage struck a body surface
+         */
+        const val IMPACT_SITE: Byte = 19
+        /**
+         * A surface region under study as a landing or exploration target
+         */
+        const val CANDIDATE_REGION: Byte = 20
+        /**
+         * A named natural feature of a body surface (crater, mare, rille, mons)
+         */
+        const val SURFACE_FEATURE: Byte = 21
     }
 }

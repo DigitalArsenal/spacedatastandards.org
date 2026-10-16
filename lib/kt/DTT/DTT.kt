@@ -32,7 +32,9 @@ import kotlin.math.sign
  * $DTT records, is configured by $TRN, and its heights may be consumed by
  * $TRS.
  *
- * Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+ * Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+ * another body names it in CENTER_NAME; its angles are then planetocentric
+ * degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
  * referenced by content identifier by default; see DTTPayloadRef.
  */
 @Suppress("unused")
@@ -117,7 +119,8 @@ class DTT : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Western extent of the tile, decimal degrees on WGS 84.
+     * Western extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (WGS 84 for EARTH; planetocentric for any other body).
      */
     val westDeg : Double
         get() {
@@ -125,7 +128,8 @@ class DTT : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Southern extent of the tile, decimal degrees on WGS 84.
+     * Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (planetocentric for any body other than EARTH).
      */
     val southDeg : Double
         get() {
@@ -133,7 +137,8 @@ class DTT : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Eastern extent of the tile, decimal degrees on WGS 84.
+     * Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (planetocentric for any body other than EARTH), east positive.
      */
     val eastDeg : Double
         get() {
@@ -141,7 +146,8 @@ class DTT : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Northern extent of the tile, decimal degrees on WGS 84.
+     * Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (planetocentric for any body other than EARTH).
      */
     val northDeg : Double
         get() {
@@ -490,6 +496,69 @@ class DTT : Table() {
         }
     val remarksAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
     fun remarksInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+     * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+     * EARTH, so every tile published before 1.191.0 reads unchanged.
+     */
+    val centerName : String?
+        get() {
+            val o = __offset(90)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val centerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
+    fun centerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+     * two are equatorial then polar (a spheroid); three are the semi-axes a
+     * (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+     * Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+     * datum, which reads the first value.
+     */
+    fun referenceRadiiM(j: Int) : Double {
+        val o = __offset(92)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val referenceRadiiMLength : Int
+        get() {
+            val o = __offset(92); return if (o != 0) __vector_len(o) else 0
+        }
+    val referenceRadiiMAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(92, 8)
+    fun referenceRadiiMInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 92, 8)
+    /**
+     * Horizon elevation angles the publisher precomputed for the tile's posts,
+     * for lighting and visibility without a height search. One unsigned byte
+     * per post and sector: posts in the order of PAYLOAD's grid (row-major from
+     * the north-west post), sector the fastest index. Sector k is centred on
+     * azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+     * the elevation angle of the terrain horizon above the local horizontal at
+     * the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+     */
+    val horizonElevations : DTTPayloadRef? get() = horizonElevations(DTTPayloadRef())
+    fun horizonElevations(obj: DTTPayloadRef) : DTTPayloadRef? {
+        val o = __offset(94)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+     */
+    val horizonSectors : UByte
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDTT(_bb: ByteBuffer): DTT = getRootAsDTT(_bb, DTT())
@@ -498,8 +567,8 @@ class DTT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DTTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DTT")
-        fun createDTT(builder: FlatBufferBuilder, tilesetIdOffset: Int, tilesetNameOffset: Int, tilingScheme: Byte, level: UInt, x: UInt, y: UInt, rowOriginNorth: Boolean, westDeg: Double, southDeg: Double, eastDeg: Double, northDeg: Double, minHeightM: Double, maxHeightM: Double, payloadFormat: Byte, payloadFormatVersionOffset: Int, payloadOffset: Int, gridWidth: UInt, gridHeight: UInt, postSpacingM: Double, sourcePostSpacingM: Double, verticalDatum: Byte, verticalDatumNameOffset: Int, horizontalDatumNameOffset: Int, verticalAccuracyM: Double, accuracyConfidence: Double, horizontalAccuracyM: Double, dataCoverageFraction: Double, noDataValue: Double, waterMaskKind: Byte, waterMaskOffset: Int, waterMaskWidth: UInt, waterMaskHeight: UInt, waterMaskProvenanceOffset: Int, vertexNormalsOffset: Int, landCoverOffset: Int, childAvailability: UByte, maxLevel: UInt, sourceClass: Byte, provenanceOffset: Int, epochOffset: Int, etagOffset: Int, expiresOffset: Int, remarksOffset: Int) : Int {
-            builder.startTable(43)
+        fun createDTT(builder: FlatBufferBuilder, tilesetIdOffset: Int, tilesetNameOffset: Int, tilingScheme: Byte, level: UInt, x: UInt, y: UInt, rowOriginNorth: Boolean, westDeg: Double, southDeg: Double, eastDeg: Double, northDeg: Double, minHeightM: Double, maxHeightM: Double, payloadFormat: Byte, payloadFormatVersionOffset: Int, payloadOffset: Int, gridWidth: UInt, gridHeight: UInt, postSpacingM: Double, sourcePostSpacingM: Double, verticalDatum: Byte, verticalDatumNameOffset: Int, horizontalDatumNameOffset: Int, verticalAccuracyM: Double, accuracyConfidence: Double, horizontalAccuracyM: Double, dataCoverageFraction: Double, noDataValue: Double, waterMaskKind: Byte, waterMaskOffset: Int, waterMaskWidth: UInt, waterMaskHeight: UInt, waterMaskProvenanceOffset: Int, vertexNormalsOffset: Int, landCoverOffset: Int, childAvailability: UByte, maxLevel: UInt, sourceClass: Byte, provenanceOffset: Int, epochOffset: Int, etagOffset: Int, expiresOffset: Int, remarksOffset: Int, centerNameOffset: Int, referenceRadiiMOffset: Int, horizonElevationsOffset: Int, horizonSectors: UByte) : Int {
+            builder.startTable(47)
             addNODATAVALUE(builder, noDataValue)
             addDATACOVERAGEFRACTION(builder, dataCoverageFraction)
             addHORIZONTALACCURACYM(builder, horizontalAccuracyM)
@@ -513,6 +582,9 @@ class DTT : Table() {
             addEASTDEG(builder, eastDeg)
             addSOUTHDEG(builder, southDeg)
             addWESTDEG(builder, westDeg)
+            addHORIZONELEVATIONS(builder, horizonElevationsOffset)
+            addREFERENCERADIIM(builder, referenceRadiiMOffset)
+            addCENTERNAME(builder, centerNameOffset)
             addREMARKS(builder, remarksOffset)
             addEXPIRES(builder, expiresOffset)
             addETAG(builder, etagOffset)
@@ -536,6 +608,7 @@ class DTT : Table() {
             addLEVEL(builder, level)
             addTILESETNAME(builder, tilesetNameOffset)
             addTILESETID(builder, tilesetIdOffset)
+            addHORIZONSECTORS(builder, horizonSectors)
             addSOURCECLASS(builder, sourceClass)
             addCHILDAVAILABILITY(builder, childAvailability)
             addWATERMASKKIND(builder, waterMaskKind)
@@ -545,7 +618,7 @@ class DTT : Table() {
             addTILINGSCHEME(builder, tilingScheme)
             return endDTT(builder)
         }
-        fun startDTT(builder: FlatBufferBuilder) = builder.startTable(43)
+        fun startDTT(builder: FlatBufferBuilder) = builder.startTable(47)
         fun addTILESETID(builder: FlatBufferBuilder, tilesetId: Int) = builder.addOffset(0, tilesetId, 0)
         fun addTILESETNAME(builder: FlatBufferBuilder, tilesetName: Int) = builder.addOffset(1, tilesetName, 0)
         fun addTILINGSCHEME(builder: FlatBufferBuilder, tilingScheme: Byte) = builder.addByte(2, tilingScheme, 0)
@@ -589,6 +662,18 @@ class DTT : Table() {
         fun addETAG(builder: FlatBufferBuilder, etag: Int) = builder.addOffset(40, etag, 0)
         fun addEXPIRES(builder: FlatBufferBuilder, expires: Int) = builder.addOffset(41, expires, 0)
         fun addREMARKS(builder: FlatBufferBuilder, remarks: Int) = builder.addOffset(42, remarks, 0)
+        fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(43, centerName, 0)
+        fun addREFERENCERADIIM(builder: FlatBufferBuilder, referenceRadiiM: Int) = builder.addOffset(44, referenceRadiiM, 0)
+        fun createReferenceRadiiMVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startReferenceRadiiMVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addHORIZONELEVATIONS(builder: FlatBufferBuilder, horizonElevations: Int) = builder.addOffset(45, horizonElevations, 0)
+        fun addHORIZONSECTORS(builder: FlatBufferBuilder, horizonSectors: UByte) = builder.addByte(46, horizonSectors.toByte(), 0)
         fun endDTT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

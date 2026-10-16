@@ -32,7 +32,9 @@ import java.nio.ByteOrder;
  * $DTT records, is configured by $TRN, and its heights may be consumed by
  * $TRS.
  *
- * Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+ * Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+ * another body names it in CENTER_NAME; its angles are then planetocentric
+ * degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
  * referenced by content identifier by default; see DTTPayloadRef.
  */
 @SuppressWarnings("unused")
@@ -80,19 +82,23 @@ public final class DTT extends com.google.flatbuffers.Table {
    */
   public boolean ROW_ORIGIN_NORTH() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Western extent of the tile, decimal degrees on WGS 84.
+   * Western extent of the tile, decimal degrees on CENTER_NAME's reference
+   * body (WGS 84 for EARTH; planetocentric for any other body).
    */
   public double WEST_DEG() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Southern extent of the tile, decimal degrees on WGS 84.
+   * Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+   * body (planetocentric for any body other than EARTH).
    */
   public double SOUTH_DEG() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Eastern extent of the tile, decimal degrees on WGS 84.
+   * Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+   * body (planetocentric for any body other than EARTH), east positive.
    */
   public double EAST_DEG() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Northern extent of the tile, decimal degrees on WGS 84.
+   * Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+   * body (planetocentric for any body other than EARTH).
    */
   public double NORTH_DEG() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -263,6 +269,42 @@ public final class DTT extends com.google.flatbuffers.Table {
   public String REMARKS() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer REMARKSAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
   public ByteBuffer REMARKSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  /**
+   * The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+   * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+   * EARTH, so every tile published before 1.191.0 reads unchanged.
+   */
+  public String CENTER_NAME() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
+  /**
+   * Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+   * two are equatorial then polar (a spheroid); three are the semi-axes a
+   * (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+   * Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+   * datum, which reads the first value.
+   */
+  public double REFERENCE_RADII_M(int j) { int o = __offset(92); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int REFERENCE_RADII_MLength() { int o = __offset(92); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector referenceRadiiMVector() { return referenceRadiiMVector(new DoubleVector()); }
+  public DoubleVector referenceRadiiMVector(DoubleVector obj) { int o = __offset(92); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer REFERENCE_RADII_MAsByteBuffer() { return __vector_as_bytebuffer(92, 8); }
+  public ByteBuffer REFERENCE_RADII_MInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 8); }
+  /**
+   * Horizon elevation angles the publisher precomputed for the tile's posts,
+   * for lighting and visibility without a height search. One unsigned byte
+   * per post and sector: posts in the order of PAYLOAD's grid (row-major from
+   * the north-west post), sector the fastest index. Sector k is centred on
+   * azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+   * the elevation angle of the terrain horizon above the local horizontal at
+   * the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+   */
+  public DTTPayloadRef HORIZON_ELEVATIONS() { return HORIZON_ELEVATIONS(new DTTPayloadRef()); }
+  public DTTPayloadRef HORIZON_ELEVATIONS(DTTPayloadRef obj) { int o = __offset(94); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+   */
+  public int HORIZON_SECTORS() { int o = __offset(96); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createDTT(FlatBufferBuilder builder,
       int TILESET_IDOffset,
@@ -307,8 +349,12 @@ public final class DTT extends com.google.flatbuffers.Table {
       int EPOCHOffset,
       int ETAGOffset,
       int EXPIRESOffset,
-      int REMARKSOffset) {
-    builder.startTable(43);
+      int REMARKSOffset,
+      int CENTER_NAMEOffset,
+      int REFERENCE_RADII_MOffset,
+      int HORIZON_ELEVATIONSOffset,
+      int HORIZON_SECTORS) {
+    builder.startTable(47);
     DTT.addNoDataValue(builder, NO_DATA_VALUE);
     DTT.addDataCoverageFraction(builder, DATA_COVERAGE_FRACTION);
     DTT.addHorizontalAccuracyM(builder, HORIZONTAL_ACCURACY_M);
@@ -322,6 +368,9 @@ public final class DTT extends com.google.flatbuffers.Table {
     DTT.addEastDeg(builder, EAST_DEG);
     DTT.addSouthDeg(builder, SOUTH_DEG);
     DTT.addWestDeg(builder, WEST_DEG);
+    DTT.addHorizonElevations(builder, HORIZON_ELEVATIONSOffset);
+    DTT.addReferenceRadiiM(builder, REFERENCE_RADII_MOffset);
+    DTT.addCenterName(builder, CENTER_NAMEOffset);
     DTT.addRemarks(builder, REMARKSOffset);
     DTT.addExpires(builder, EXPIRESOffset);
     DTT.addEtag(builder, ETAGOffset);
@@ -345,6 +394,7 @@ public final class DTT extends com.google.flatbuffers.Table {
     DTT.addLevel(builder, LEVEL);
     DTT.addTilesetName(builder, TILESET_NAMEOffset);
     DTT.addTilesetId(builder, TILESET_IDOffset);
+    DTT.addHorizonSectors(builder, HORIZON_SECTORS);
     DTT.addSourceClass(builder, SOURCE_CLASS);
     DTT.addChildAvailability(builder, CHILD_AVAILABILITY);
     DTT.addWaterMaskKind(builder, WATER_MASK_KIND);
@@ -355,7 +405,7 @@ public final class DTT extends com.google.flatbuffers.Table {
     return DTT.endDTT(builder);
   }
 
-  public static void startDTT(FlatBufferBuilder builder) { builder.startTable(43); }
+  public static void startDTT(FlatBufferBuilder builder) { builder.startTable(47); }
   public static void addTilesetId(FlatBufferBuilder builder, int TILESET_IDOffset) { builder.addOffset(0, TILESET_IDOffset, 0); }
   public static void addTilesetName(FlatBufferBuilder builder, int TILESET_NAMEOffset) { builder.addOffset(1, TILESET_NAMEOffset, 0); }
   public static void addTilingScheme(FlatBufferBuilder builder, byte TILING_SCHEME) { builder.addByte(2, TILING_SCHEME, 0); }
@@ -399,6 +449,12 @@ public final class DTT extends com.google.flatbuffers.Table {
   public static void addEtag(FlatBufferBuilder builder, int ETAGOffset) { builder.addOffset(40, ETAGOffset, 0); }
   public static void addExpires(FlatBufferBuilder builder, int EXPIRESOffset) { builder.addOffset(41, EXPIRESOffset, 0); }
   public static void addRemarks(FlatBufferBuilder builder, int REMARKSOffset) { builder.addOffset(42, REMARKSOffset, 0); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(43, CENTER_NAMEOffset, 0); }
+  public static void addReferenceRadiiM(FlatBufferBuilder builder, int REFERENCE_RADII_MOffset) { builder.addOffset(44, REFERENCE_RADII_MOffset, 0); }
+  public static int createReferenceRadiiMVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startReferenceRadiiMVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addHorizonElevations(FlatBufferBuilder builder, int HORIZON_ELEVATIONSOffset) { builder.addOffset(45, HORIZON_ELEVATIONSOffset, 0); }
+  public static void addHorizonSectors(FlatBufferBuilder builder, int HORIZON_SECTORS) { builder.addByte(46, (byte) HORIZON_SECTORS, (byte) 0); }
   public static int endDTT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // TILESET_ID

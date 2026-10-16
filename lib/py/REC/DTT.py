@@ -21,7 +21,9 @@ np = import_numpy()
 # $DTT records, is configured by $TRN, and its heights may be consumed by
 # $TRS.
 #
-# Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+# Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+# another body names it in CENTER_NAME; its angles are then planetocentric
+# degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 # referenced by content identifier by default; see DTTPayloadRef.
 class DTT(object):
     __slots__ = ['_tab']
@@ -104,7 +106,8 @@ class DTT(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-    # Western extent of the tile, decimal degrees on WGS 84.
+    # Western extent of the tile, decimal degrees on CENTER_NAME's reference
+    # body (WGS 84 for EARTH; planetocentric for any other body).
     # DTT
     def WEST_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -112,7 +115,8 @@ class DTT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Southern extent of the tile, decimal degrees on WGS 84.
+    # Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+    # body (planetocentric for any body other than EARTH).
     # DTT
     def SOUTH_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -120,7 +124,8 @@ class DTT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Eastern extent of the tile, decimal degrees on WGS 84.
+    # Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+    # body (planetocentric for any body other than EARTH), east positive.
     # DTT
     def EAST_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -128,7 +133,8 @@ class DTT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Northern extent of the tile, decimal degrees on WGS 84.
+    # Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+    # body (planetocentric for any body other than EARTH).
     # DTT
     def NORTH_DEG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -438,8 +444,76 @@ class DTT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+    # keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    # EARTH, so every tile published before 1.191.0 reads unchanged.
+    # DTT
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+    # two are equatorial then polar (a spheroid); three are the semi-axes a
+    # (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+    # Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+    # datum, which reads the first value.
+    # DTT
+    def REFERENCE_RADII_M(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # DTT
+    def REFERENCE_RADII_MAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # DTT
+    def REFERENCE_RADII_MLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # DTT
+    def REFERENCE_RADII_MIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
+        return o == 0
+
+    # Horizon elevation angles the publisher precomputed for the tile's posts,
+    # for lighting and visibility without a height search. One unsigned byte
+    # per post and sector: posts in the order of PAYLOAD's grid (row-major from
+    # the north-west post), sector the fastest index. Sector k is centred on
+    # azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+    # the elevation angle of the terrain horizon above the local horizontal at
+    # the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+    # DTT
+    def HORIZON_ELEVATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from DTTPayloadRef import DTTPayloadRef
+            obj = DTTPayloadRef()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+    # DTT
+    def HORIZON_SECTORS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
 def DTTStart(builder):
-    builder.StartObject(43)
+    builder.StartObject(47)
 
 def Start(builder):
     DTTStart(builder)
@@ -702,6 +776,46 @@ def DTTAddREMARKS(builder, REMARKS):
 def AddREMARKS(builder, REMARKS):
     DTTAddREMARKS(builder, REMARKS)
 
+def DTTAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    DTTAddCENTER_NAME(builder, CENTER_NAME)
+
+def DTTAddREFERENCE_RADII_M(builder, REFERENCE_RADII_M):
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_RADII_M), 0)
+
+def AddREFERENCE_RADII_M(builder, REFERENCE_RADII_M):
+    DTTAddREFERENCE_RADII_M(builder, REFERENCE_RADII_M)
+
+def DTTStartREFERENCE_RADII_MVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartREFERENCE_RADII_MVector(builder, numElems):
+    return DTTStartREFERENCE_RADII_MVector(builder, numElems)
+
+def DTTCreateREFERENCE_RADII_MVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateREFERENCE_RADII_MVector(builder, data):
+    return DTTCreateREFERENCE_RADII_MVector(builder, data)
+
+def DTTAddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONS):
+    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(HORIZON_ELEVATIONS), 0)
+
+def AddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONS):
+    DTTAddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONS)
+
+def DTTAddHORIZON_SECTORS(builder, HORIZON_SECTORS):
+    builder.PrependUint8Slot(46, HORIZON_SECTORS, 0)
+
+def AddHORIZON_SECTORS(builder, HORIZON_SECTORS):
+    DTTAddHORIZON_SECTORS(builder, HORIZON_SECTORS)
+
 def DTTEnd(builder):
     return builder.EndObject()
 
@@ -711,7 +825,7 @@ def End(builder):
 import DTTPayloadRef
 import DTTProvenance
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -763,6 +877,10 @@ class DTTT(object):
         ETAG = None,
         EXPIRES = None,
         REMARKS = None,
+        CENTER_NAME = None,
+        REFERENCE_RADII_M = None,
+        HORIZON_ELEVATIONS = None,
+        HORIZON_SECTORS = 0,
     ):
         self.TILESET_ID = TILESET_ID  # type: Optional[str]
         self.TILESET_NAME = TILESET_NAME  # type: Optional[str]
@@ -807,6 +925,10 @@ class DTTT(object):
         self.ETAG = ETAG  # type: Optional[str]
         self.EXPIRES = EXPIRES  # type: Optional[str]
         self.REMARKS = REMARKS  # type: Optional[str]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REFERENCE_RADII_M = REFERENCE_RADII_M  # type: Optional[List[float]]
+        self.HORIZON_ELEVATIONS = HORIZON_ELEVATIONS  # type: Optional[DTTPayloadRef.DTTPayloadRefT]
+        self.HORIZON_SECTORS = HORIZON_SECTORS  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -878,6 +1000,17 @@ class DTTT(object):
         self.ETAG = DTT.ETAG()
         self.EXPIRES = DTT.EXPIRES()
         self.REMARKS = DTT.REMARKS()
+        self.CENTER_NAME = DTT.CENTER_NAME()
+        if not DTT.REFERENCE_RADII_MIsNone():
+            if np is None:
+                self.REFERENCE_RADII_M = []
+                for i in range(DTT.REFERENCE_RADII_MLength()):
+                    self.REFERENCE_RADII_M.append(DTT.REFERENCE_RADII_M(i))
+            else:
+                self.REFERENCE_RADII_M = DTT.REFERENCE_RADII_MAsNumpy()
+        if DTT.HORIZON_ELEVATIONS() is not None:
+            self.HORIZON_ELEVATIONS = DTTPayloadRef.DTTPayloadRefT.InitFromObj(DTT.HORIZON_ELEVATIONS())
+        self.HORIZON_SECTORS = DTT.HORIZON_SECTORS()
 
     # DTTT
     def Pack(self, builder):
@@ -911,6 +1044,18 @@ class DTTT(object):
             EXPIRES = builder.CreateString(self.EXPIRES)
         if self.REMARKS is not None:
             REMARKS = builder.CreateString(self.REMARKS)
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.REFERENCE_RADII_M is not None:
+            if np is not None and type(self.REFERENCE_RADII_M) is np.ndarray:
+                REFERENCE_RADII_M = builder.CreateNumpyVector(self.REFERENCE_RADII_M)
+            else:
+                DTTStartREFERENCE_RADII_MVector(builder, len(self.REFERENCE_RADII_M))
+                for i in reversed(range(len(self.REFERENCE_RADII_M))):
+                    builder.PrependFloat64(self.REFERENCE_RADII_M[i])
+                REFERENCE_RADII_M = builder.EndVector()
+        if self.HORIZON_ELEVATIONS is not None:
+            HORIZON_ELEVATIONS = self.HORIZON_ELEVATIONS.Pack(builder)
         DTTStart(builder)
         if self.TILESET_ID is not None:
             DTTAddTILESET_ID(builder, TILESET_ID)
@@ -970,5 +1115,12 @@ class DTTT(object):
             DTTAddEXPIRES(builder, EXPIRES)
         if self.REMARKS is not None:
             DTTAddREMARKS(builder, REMARKS)
+        if self.CENTER_NAME is not None:
+            DTTAddCENTER_NAME(builder, CENTER_NAME)
+        if self.REFERENCE_RADII_M is not None:
+            DTTAddREFERENCE_RADII_M(builder, REFERENCE_RADII_M)
+        if self.HORIZON_ELEVATIONS is not None:
+            DTTAddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONS)
+        DTTAddHORIZON_SECTORS(builder, self.HORIZON_SECTORS)
         DTT = DTTEnd(builder)
         return DTT

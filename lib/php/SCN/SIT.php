@@ -86,7 +86,8 @@ class SIT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Latitude of the site
+    /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+    /// body when that is not EARTH
     /**
      * @return float
      */
@@ -96,7 +97,7 @@ class SIT extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Longitude of the site
+    /// Longitude of the site, degrees, east positive
     /**
      * @return float
      */
@@ -106,7 +107,7 @@ class SIT extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
-    /// Altitude of the site
+    /// Altitude of the site above CENTER_NAME's reference surface
     /**
      * @return float
      */
@@ -398,22 +399,58 @@ class SIT extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+    /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    /// EARTH, so every site published before 1.2.0 reads unchanged.
+    public function getCENTER_NAME()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+    /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+    /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+    /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+    public function getREFERENCE_FRAME()
+    {
+        $obj = new RFM();
+        $o = $this->__offset(78);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+    /// source names it. Empty for a site of no mission.
+    public function getMISSION()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// When the landing or impact took place, RFC 3339 UTC; for a
+    /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+    public function getEVENT_EPOCH()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSIT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(36);
+        $builder->StartObject(40);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SIT
      */
-    public static function createSIT(FlatBufferBuilder $builder, $ID, $NAME, $ABBREVIATION, $SITE_TYPE, $CATCODE, $NETWORK, $LATITUDE, $LONGITUDE, $ALTITUDE, $GEOMETRY, $CENTER_POINT_GEOMETRY, $CLASSIFICATION, $CTR_ID, $CREATED_BY, $DESCRIPTION, $MODEL_URL, $SOURCE, $TASKABLE, $OPERATIONAL_STATUS, $ESTABLISHMENT_DATE, $CONTACT_INFO, $ENVIRONMENTAL_IMPACT, $ACCESSIBILITY_INFRA, $INTEGRATED_DEVICES, $LIFECYCLE_STATUS, $LIFECYCLE_STATUS_DATE, $STATUS_VERIFIED_AT, $STATUS_EVIDENCE, $SITE_KIND, $DESCRIPTION_LANGUAGE, $DESCRIPTION_CITATION, $POSITION_CITATION, $EXTERNAL_REFERENCES, $PARTIES, $QUANTITIES, $PROVENANCE)
+    public static function createSIT(FlatBufferBuilder $builder, $ID, $NAME, $ABBREVIATION, $SITE_TYPE, $CATCODE, $NETWORK, $LATITUDE, $LONGITUDE, $ALTITUDE, $GEOMETRY, $CENTER_POINT_GEOMETRY, $CLASSIFICATION, $CTR_ID, $CREATED_BY, $DESCRIPTION, $MODEL_URL, $SOURCE, $TASKABLE, $OPERATIONAL_STATUS, $ESTABLISHMENT_DATE, $CONTACT_INFO, $ENVIRONMENTAL_IMPACT, $ACCESSIBILITY_INFRA, $INTEGRATED_DEVICES, $LIFECYCLE_STATUS, $LIFECYCLE_STATUS_DATE, $STATUS_VERIFIED_AT, $STATUS_EVIDENCE, $SITE_KIND, $DESCRIPTION_LANGUAGE, $DESCRIPTION_CITATION, $POSITION_CITATION, $EXTERNAL_REFERENCES, $PARTIES, $QUANTITIES, $PROVENANCE, $CENTER_NAME, $REFERENCE_FRAME, $MISSION, $EVENT_EPOCH)
     {
-        $builder->startObject(36);
+        $builder->startObject(40);
         self::addID($builder, $ID);
         self::addNAME($builder, $NAME);
         self::addABBREVIATION($builder, $ABBREVIATION);
@@ -450,6 +487,10 @@ class SIT extends Table
         self::addPARTIES($builder, $PARTIES);
         self::addQUANTITIES($builder, $QUANTITIES);
         self::addPROVENANCE($builder, $PROVENANCE);
+        self::addCENTER_NAME($builder, $CENTER_NAME);
+        self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
+        self::addMISSION($builder, $MISSION);
+        self::addEVENT_EPOCH($builder, $EVENT_EPOCH);
         $o = $builder->endObject();
         return $o;
     }
@@ -956,6 +997,46 @@ class SIT extends Table
     public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
     {
         $builder->addOffsetX(35, $PROVENANCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCENTER_NAME(FlatBufferBuilder $builder, $CENTER_NAME)
+    {
+        $builder->addOffsetX(36, $CENTER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
+    {
+        $builder->addOffsetX(37, $REFERENCE_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMISSION(FlatBufferBuilder $builder, $MISSION)
+    {
+        $builder->addOffsetX(38, $MISSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEVENT_EPOCH(FlatBufferBuilder $builder, $EVENT_EPOCH)
+    {
+        $builder->addOffsetX(39, $EVENT_EPOCH, 0);
     }
 
     /**

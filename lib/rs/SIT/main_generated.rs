@@ -2,17 +2,18 @@
 // @generated
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SITE_TYPE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_SITE_TYPE: i8 = 17;
+pub const ENUM_MAX_SITE_TYPE: i8 = 21;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_SITE_TYPE: [SiteType; 18] = [
+pub const ENUM_VALUES_SITE_TYPE: [SiteType; 22] = [
     SiteType::LAUNCH_SITE,
     SiteType::OBSERVATION_STATION,
     SiteType::HOBBYIST_OBSERVER,
@@ -31,6 +32,10 @@ pub const ENUM_VALUES_SITE_TYPE: [SiteType; 18] = [
     SiteType::NATIONAL_PARK,
     SiteType::HISTORICAL_SITE,
     SiteType::OTHER,
+    SiteType::LANDING_SITE,
+    SiteType::IMPACT_SITE,
+    SiteType::CANDIDATE_REGION,
+    SiteType::SURFACE_FEATURE,
 ];
 
 /// Enum for the type of site
@@ -58,9 +63,17 @@ impl SiteType {
     pub const NATIONAL_PARK: Self = Self(15);
     pub const HISTORICAL_SITE: Self = Self(16);
     pub const OTHER: Self = Self(17);
+    /// A place a spacecraft touched down or is to touch down on a body surface
+    pub const LANDING_SITE: Self = Self(18);
+    /// A place a spacecraft or stage struck a body surface
+    pub const IMPACT_SITE: Self = Self(19);
+    /// A surface region under study as a landing or exploration target
+    pub const CANDIDATE_REGION: Self = Self(20);
+    /// A named natural feature of a body surface (crater, mare, rille, mons)
+    pub const SURFACE_FEATURE: Self = Self(21);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 17;
+    pub const ENUM_MAX: i8 = 21;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::LAUNCH_SITE,
         Self::OBSERVATION_STATION,
@@ -80,6 +93,10 @@ impl SiteType {
         Self::NATIONAL_PARK,
         Self::HISTORICAL_SITE,
         Self::OTHER,
+        Self::LANDING_SITE,
+        Self::IMPACT_SITE,
+        Self::CANDIDATE_REGION,
+        Self::SURFACE_FEATURE,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -103,6 +120,10 @@ impl SiteType {
             Self::NATIONAL_PARK => Some("NATIONAL_PARK"),
             Self::HISTORICAL_SITE => Some("HISTORICAL_SITE"),
             Self::OTHER => Some("OTHER"),
+            Self::LANDING_SITE => Some("LANDING_SITE"),
+            Self::IMPACT_SITE => Some("IMPACT_SITE"),
+            Self::CANDIDATE_REGION => Some("CANDIDATE_REGION"),
+            Self::SURFACE_FEATURE => Some("SURFACE_FEATURE"),
             _ => None,
         }
     }
@@ -2141,6 +2162,10 @@ impl<'a> SIT<'a> {
     pub const VT_PARTIES: ::flatbuffers::VOffsetT = 70;
     pub const VT_QUANTITIES: ::flatbuffers::VOffsetT = 72;
     pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 74;
+    pub const VT_CENTER_NAME: ::flatbuffers::VOffsetT = 76;
+    pub const VT_REFERENCE_FRAME: ::flatbuffers::VOffsetT = 78;
+    pub const VT_MISSION: ::flatbuffers::VOffsetT = 80;
+    pub const VT_EVENT_EPOCH: ::flatbuffers::VOffsetT = 82;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2153,6 +2178,10 @@ impl<'a> SIT<'a> {
         args: &'args SITArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SIT<'bldr>> {
         let mut builder = SITBuilder::new(_fbb);
+        if let Some(x) = args.EVENT_EPOCH { builder.add_EVENT_EPOCH(x); }
+        if let Some(x) = args.MISSION { builder.add_MISSION(x); }
+        if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
+        if let Some(x) = args.CENTER_NAME { builder.add_CENTER_NAME(x); }
         if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.QUANTITIES { builder.add_QUANTITIES(x); }
         if let Some(x) = args.PARTIES { builder.add_PARTIES(x); }
@@ -2289,6 +2318,18 @@ impl<'a> SIT<'a> {
         let PROVENANCE = self.PROVENANCE().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let CENTER_NAME = self.CENTER_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let MISSION = self.MISSION().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EVENT_EPOCH = self.EVENT_EPOCH().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         SITT {
             ID,
             NAME,
@@ -2326,6 +2367,10 @@ impl<'a> SIT<'a> {
             PARTIES,
             QUANTITIES,
             PROVENANCE,
+            CENTER_NAME,
+            REFERENCE_FRAME,
+            MISSION,
+            EVENT_EPOCH,
         }
     }
 
@@ -2383,7 +2428,8 @@ impl<'a> SIT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_NETWORK, None)}
     }
 
-    /// Latitude of the site
+    /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+    /// body when that is not EARTH
     #[inline]
     pub fn LATITUDE(&self) -> f32 {
         // Safety:
@@ -2392,7 +2438,7 @@ impl<'a> SIT<'a> {
         unsafe { self._tab.get::<f32>(SIT::VT_LATITUDE, Some(0.0)).unwrap()}
     }
 
-    /// Longitude of the site
+    /// Longitude of the site, degrees, east positive
     #[inline]
     pub fn LONGITUDE(&self) -> f32 {
         // Safety:
@@ -2401,7 +2447,7 @@ impl<'a> SIT<'a> {
         unsafe { self._tab.get::<f32>(SIT::VT_LONGITUDE, Some(0.0)).unwrap()}
     }
 
-    /// Altitude of the site
+    /// Altitude of the site above CENTER_NAME's reference surface
     #[inline]
     pub fn ALTITUDE(&self) -> f32 {
         // Safety:
@@ -2657,6 +2703,49 @@ impl<'a> SIT<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PVN>>(SIT::VT_PROVENANCE, None)}
     }
+
+    /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+    /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    /// EARTH, so every site published before 1.2.0 reads unchanged.
+    #[inline]
+    pub fn CENTER_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_CENTER_NAME, None)}
+    }
+
+    /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+    /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+    /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+    /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+    #[inline]
+    pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<RFM>>(SIT::VT_REFERENCE_FRAME, None)}
+    }
+
+    /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+    /// source names it. Empty for a site of no mission.
+    #[inline]
+    pub fn MISSION(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_MISSION, None)}
+    }
+
+    /// When the landing or impact took place, RFC 3339 UTC; for a
+    /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+    #[inline]
+    pub fn EVENT_EPOCH(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SIT::VT_EVENT_EPOCH, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for SIT<'_> {
@@ -2701,6 +2790,10 @@ impl ::flatbuffers::Verifiable for SIT<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SITParty>>>>("PARTIES", Self::VT_PARTIES, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<SITQuantity>>>>("QUANTITIES", Self::VT_QUANTITIES, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CENTER_NAME", Self::VT_CENTER_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<RFM>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MISSION", Self::VT_MISSION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EVENT_EPOCH", Self::VT_EVENT_EPOCH, false)?
             .finish();
         Ok(())
     }
@@ -2743,6 +2836,10 @@ pub struct SITArgs<'a> {
     pub PARTIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SITParty<'a>>>>>,
     pub QUANTITIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<SITQuantity<'a>>>>>,
     pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
+    pub CENTER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub REFERENCE_FRAME: Option<::flatbuffers::WIPOffset<RFM<'a>>>,
+    pub MISSION: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EVENT_EPOCH: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for SITArgs<'a> {
@@ -2785,6 +2882,10 @@ impl<'a> Default for SITArgs<'a> {
             PARTIES: None,
             QUANTITIES: None,
             PROVENANCE: None,
+            CENTER_NAME: None,
+            REFERENCE_FRAME: None,
+            MISSION: None,
+            EVENT_EPOCH: None,
         }
     }
 }
@@ -2976,6 +3077,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SITBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_CENTER_NAME(&mut self, CENTER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_CENTER_NAME, CENTER_NAME);
+    }
+
+    #[inline]
+    pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: ::flatbuffers::WIPOffset<RFM<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<RFM>>(SIT::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+    }
+
+    #[inline]
+    pub fn add_MISSION(&mut self, MISSION: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_MISSION, MISSION);
+    }
+
+    #[inline]
+    pub fn add_EVENT_EPOCH(&mut self, EVENT_EPOCH: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SIT::VT_EVENT_EPOCH, EVENT_EPOCH);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SITBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SITBuilder {
@@ -3030,6 +3151,10 @@ impl ::core::fmt::Debug for SIT<'_> {
         ds.field("PARTIES", &self.PARTIES());
         ds.field("QUANTITIES", &self.QUANTITIES());
         ds.field("PROVENANCE", &self.PROVENANCE());
+        ds.field("CENTER_NAME", &self.CENTER_NAME());
+        ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
+        ds.field("MISSION", &self.MISSION());
+        ds.field("EVENT_EPOCH", &self.EVENT_EPOCH());
         ds.finish()
     }
 }
@@ -3073,6 +3198,10 @@ pub struct SITT {
     pub PARTIES: Option<alloc::vec::Vec<SITPartyT>>,
     pub QUANTITIES: Option<alloc::vec::Vec<SITQuantityT>>,
     pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
+    pub CENTER_NAME: Option<alloc::string::String>,
+    pub REFERENCE_FRAME: Option<alloc::boxed::Box<RFMT>>,
+    pub MISSION: Option<alloc::string::String>,
+    pub EVENT_EPOCH: Option<alloc::string::String>,
 }
 
 impl Default for SITT {
@@ -3114,6 +3243,10 @@ impl Default for SITT {
             PARTIES: None,
             QUANTITIES: None,
             PROVENANCE: None,
+            CENTER_NAME: None,
+            REFERENCE_FRAME: None,
+            MISSION: None,
+            EVENT_EPOCH: None,
         }
     }
 }
@@ -3219,6 +3352,18 @@ impl SITT {
         let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let CENTER_NAME = self.CENTER_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let MISSION = self.MISSION.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EVENT_EPOCH = self.EVENT_EPOCH.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         SIT::create(_fbb, &SITArgs{
             ID,
             NAME,
@@ -3256,6 +3401,10 @@ impl SITT {
             PARTIES,
             QUANTITIES,
             PROVENANCE,
+            CENTER_NAME,
+            REFERENCE_FRAME,
+            MISSION,
+            EVENT_EPOCH,
         })
     }
 }

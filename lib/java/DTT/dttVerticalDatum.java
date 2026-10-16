@@ -34,8 +34,14 @@ public final class dttVerticalDatum {
    * A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
    */
   public static final byte CUSTOM = 5;
+  /**
+   * Heights above the reference sphere of CENTER_NAME's body, whose radius is
+   * REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+   * against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+   */
+  public static final byte REFERENCE_SPHERE = 6;
 
-  public static final String[] names = { "UNSPECIFIED", "ELLIPSOIDAL_WGS84", "GEOID", "MEAN_SEA_LEVEL", "REGIONAL_DATUM", "CUSTOM", };
+  public static final String[] names = { "UNSPECIFIED", "ELLIPSOIDAL_WGS84", "GEOID", "MEAN_SEA_LEVEL", "REGIONAL_DATUM", "CUSTOM", "REFERENCE_SPHERE", };
 
   public static String name(int e) { return names[e]; }
 }

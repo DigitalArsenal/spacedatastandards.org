@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.250.0+1792097955998",
+  version: "1.251.0+1792119709545",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -469,8 +469,8 @@ file_identifier "$PLK";`,
       ]
     },
     DTT: {
-      IDL: `// Hash: 1c06f10c333415f1f9e7e65ed18053134658e3d574844f1699d272ad7f9e5327
-// Version: 1.190.0
+      IDL: `// Hash: 00f13f0a331557b828913f0ab311ac6e383d167ff1c9da6006e0a3be3eacc09e
+// Version: 1.191.0
 // -----------------------------------END_HEADER
 /// Scheme that maps a LEVEL/X/Y address to a region of the ellipsoid. The
 /// scheme is stated, never inferred from tile counts. Ordinals are wire
@@ -488,7 +488,12 @@ enum dttTilingScheme : byte {
   WEB_MERCATOR,
   /// A scheme this enum does not model; the publisher states it out of band
   /// and the tile is not addressable by a consumer that does not know it.
-  CUSTOM
+  CUSTOM,
+  /// Equirectangular geographic scheme on the reference body named by
+  /// CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+  /// degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+  /// body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+  GEOGRAPHIC_TWO_ROOT_BODY
 }
 
 /// Encoding of the tile payload bytes. The format determines how a consumer
@@ -530,7 +535,11 @@ enum dttVerticalDatum : byte {
   /// verbatim in VERTICAL_DATUM_NAME.
   REGIONAL_DATUM,
   /// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
-  CUSTOM
+  CUSTOM,
+  /// Heights above the reference sphere of CENTER_NAME's body, whose radius is
+  /// REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+  /// against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+  REFERENCE_SPHERE
 }
 
 /// Capability class of the measurement technique the source elevations were
@@ -676,7 +685,9 @@ table DTTProvenance {
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 table DTT {
   /// Publisher-stable identifier for the tile pyramid (the tileset) this tile
@@ -696,13 +707,17 @@ table DTT {
   /// Row index 0 lies at the north edge of the scheme. When false, row 0 lies
   /// at the south edge.
   ROW_ORIGIN_NORTH:bool = false;
-  /// Western extent of the tile, decimal degrees on WGS 84.
+  /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (WGS 84 for EARTH; planetocentric for any other body).
   WEST_DEG:double;
-  /// Southern extent of the tile, decimal degrees on WGS 84.
+  /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   SOUTH_DEG:double;
-  /// Eastern extent of the tile, decimal degrees on WGS 84.
+  /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH), east positive.
   EAST_DEG:double;
-  /// Northern extent of the tile, decimal degrees on WGS 84.
+  /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   NORTH_DEG:double;
   /// Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
   /// so a consumer can build a bounding volume without decoding the payload.
@@ -790,6 +805,26 @@ table DTT {
   /// Free-form publisher notes about this tile. Never a substitute for a
   /// stated field.
   REMARKS:string;
+  /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every tile published before 1.191.0 reads unchanged.
+  CENTER_NAME:string;
+  /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+  /// two are equatorial then polar (a spheroid); three are the semi-axes a
+  /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+  /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+  /// datum, which reads the first value.
+  REFERENCE_RADII_M:[double];
+  /// Horizon elevation angles the publisher precomputed for the tile's posts,
+  /// for lighting and visibility without a height search. One unsigned byte
+  /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+  /// the north-west post), sector the fastest index. Sector k is centred on
+  /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+  /// the elevation angle of the terrain horizon above the local horizontal at
+  /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+  HORIZON_ELEVATIONS:DTTPayloadRef;
+  /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+  HORIZON_SECTORS:uint8;
 }
 
 root_type DTT;
@@ -7208,11 +7243,12 @@ file_identifier "$PPE";`,
       ]
     },
     SIT: {
-      IDL: `// Hash: 9e83c8b84fa57192eb7ca02fd78eef64b869bbaf223078dc0bcb33534acadfc9
-// Version: 1.1.0
+      IDL: `// Hash: e0e09396c3f9fe0c7206fc77ea9b1759ec85360e1f2b15b7643626a8dac34be1
+// Version: 1.2.0
 // -----------------------------------END_HEADER
 include "../IDM/main.fbs";
 include "../PVN/main.fbs";
+include "../RFM/main.fbs";
 
 /// Enum for the type of site
 enum SiteType: byte {
@@ -7233,7 +7269,15 @@ enum SiteType: byte {
   URBAN_AREA,
   NATIONAL_PARK,
   HISTORICAL_SITE,
-  OTHER
+  OTHER,
+  /// A place a spacecraft touched down or is to touch down on a body surface
+  LANDING_SITE,
+  /// A place a spacecraft or stage struck a body surface
+  IMPACT_SITE,
+  /// A surface region under study as a landing or exploration target
+  CANDIDATE_REGION,
+  /// A named natural feature of a body surface (crater, mare, rille, mons)
+  SURFACE_FEATURE
 }
 
 /// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
@@ -7403,11 +7447,12 @@ table SIT {
   CATCODE: string;
   /// Network identifier
   NETWORK: string;
-  /// Latitude of the site
+  /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+  /// body when that is not EARTH
   LATITUDE: float;
-  /// Longitude of the site
+  /// Longitude of the site, degrees, east positive
   LONGITUDE: float;
-  /// Altitude of the site
+  /// Altitude of the site above CENTER_NAME's reference surface
   ALTITUDE: float;
   /// Geometry of the site
   GEOMETRY: Geometry;
@@ -7468,6 +7513,21 @@ table SIT {
   /// The record's provider and producer, and the terms of the content the
   /// record reproduces (each citation carries its own source's terms)
   PROVENANCE: PVN;
+  /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every site published before 1.2.0 reads unchanged.
+  CENTER_NAME: string;
+  /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+  /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+  /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+  /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+  REFERENCE_FRAME: RFM;
+  /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+  /// source names it. Empty for a site of no mission.
+  MISSION: string;
+  /// When the landing or impact took place, RFC 3339 UTC; for a
+  /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+  EVENT_EPOCH: string;
 }
 
 root_type SIT;
@@ -36930,7 +36990,8 @@ var json_default = {
             "GEOGRAPHIC_WGS84",
             "GEOGRAPHIC_SINGLE_ROOT",
             "WEB_MERCATOR",
-            "CUSTOM"
+            "CUSTOM",
+            "GEOGRAPHIC_TWO_ROOT_BODY"
           ]
         },
         dttPayloadFormat: {
@@ -36953,7 +37014,8 @@ var json_default = {
             "GEOID",
             "MEAN_SEA_LEVEL",
             "REGIONAL_DATUM",
-            "CUSTOM"
+            "CUSTOM",
+            "REFERENCE_SPHERE"
           ]
         },
         dttSourceClass: {
@@ -37099,7 +37161,7 @@ var json_default = {
         },
         DTT: {
           type: "object",
-          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
           properties: {
             TILESET_ID: {
               type: "string",
@@ -37137,19 +37199,19 @@ var json_default = {
             },
             WEST_DEG: {
               type: "number",
-              description: "Western extent of the tile, decimal degrees on WGS 84."
+              description: "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body)."
             },
             SOUTH_DEG: {
               type: "number",
-              description: "Southern extent of the tile, decimal degrees on WGS 84."
+              description: "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH)."
             },
             EAST_DEG: {
               type: "number",
-              description: "Eastern extent of the tile, decimal degrees on WGS 84."
+              description: "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive."
             },
             NORTH_DEG: {
               type: "number",
-              description: "Northern extent of the tile, decimal degrees on WGS 84."
+              description: "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH)."
             },
             MIN_HEIGHT_M: {
               type: "number",
@@ -37289,6 +37351,27 @@ var json_default = {
             REMARKS: {
               type: "string",
               description: "Free-form publisher notes about this tile. Never a substitute for a\nstated field."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged."
+            },
+            REFERENCE_RADII_M: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value."
+            },
+            HORIZON_ELEVATIONS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0."
+            },
+            HORIZON_SECTORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent)."
             }
           },
           required: [
@@ -77310,6 +77393,187 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "NonCommercial"
           ]
         },
+        CelestialFrame: {
+          type: "string",
+          enum: [
+            "GCRF",
+            "ICRF",
+            "J2000",
+            "J2000A",
+            "EME2000",
+            "TEMEOFDATE",
+            "GTOD",
+            "CIRS",
+            "MOD_EARTH",
+            "MOD_CB",
+            "MOD_MOON",
+            "TOD_EARTH",
+            "TOD_CB",
+            "TOD_MOON",
+            "TOE_EARTH",
+            "TOE_CB",
+            "TOE_MOON",
+            "ITRF2000",
+            "ITRF93",
+            "ITRF97",
+            "EFG",
+            "FIXED_CB",
+            "FIXED_EARTH",
+            "WGS84",
+            "DTRFYYYY",
+            "ALIGN_EARTH",
+            "ALIGN_CB",
+            "B1950"
+          ]
+        },
+        SpacecraftFrame: {
+          type: "string",
+          enum: [
+            "ACC_i",
+            "ACTUATOR_i",
+            "AST_i",
+            "CSS_i",
+            "DSS_i",
+            "ESA_i",
+            "GYRO_FRAME_i",
+            "IMU_FRAME_i",
+            "INSTRUMENT_i",
+            "MTA_i",
+            "RW_i",
+            "SA_i",
+            "SC_BODY_i",
+            "SENSOR_i",
+            "STARTRACKER_i",
+            "TAM_i"
+          ]
+        },
+        OrbitFrame: {
+          type: "string",
+          enum: [
+            "EQW_INERTIAL",
+            "LVLH_INERTIAL",
+            "LVLH_ROTATING",
+            "NSW_INERTIAL",
+            "NSW_ROTATING",
+            "NTW_INERTIAL",
+            "NTW_ROTATING",
+            "PQW_INERTIAL",
+            "RSW_INERTIAL",
+            "RSW_ROTATING",
+            "SEZ_INERTIAL",
+            "SEZ_ROTATING",
+            "TNW_INERTIAL",
+            "TNW_ROTATING",
+            "VNC_INERTIAL",
+            "VNC_ROTATING"
+          ]
+        },
+        CustomFrame: {
+          type: "string",
+          enum: [
+            "ECEF",
+            "TEME",
+            "TEMEOFEPOCH",
+            "ENU",
+            "NED",
+            "NEU",
+            "RIC",
+            "RTN",
+            "TVN",
+            "VVLH",
+            "QSW",
+            "LTP",
+            "LVLH",
+            "PNE",
+            "BRF",
+            "RSW",
+            "TNW",
+            "UVW"
+          ]
+        },
+        rfmAxisType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEAN_EQUATOR_EQUINOX_J2000",
+            "MEAN_ECLIPTIC_EQUINOX_J2000",
+            "ICRF",
+            "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+            "MEAN_OF_DATE_EQUATOR",
+            "MEAN_OF_DATE_ECLIPTIC",
+            "TRUE_OF_DATE_EQUATOR",
+            "TRUE_OF_DATE_ECLIPTIC",
+            "MEAN_OF_EPOCH_EQUATOR",
+            "MEAN_OF_EPOCH_ECLIPTIC",
+            "TRUE_OF_EPOCH_EQUATOR",
+            "TRUE_OF_EPOCH_ECLIPTIC",
+            "BODY_FIXED",
+            "BODY_INERTIAL",
+            "OBJECT_REFERENCED",
+            "LOCAL_ALIGNED_CONSTRAINED",
+            "BODY_EQUATOR",
+            "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+            "SOLAR_MAGNETOSPHERIC",
+            "TOPOCENTRIC",
+            "BODY_SPIN_SUN",
+            "EPHEMERIS_KERNEL_DEFINED",
+            "MEAN_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_IERS1996",
+            "TRUE_OF_DATE_EQUATOR_IERS2003",
+            "TOPOCENTRIC_EAST_NORTH_UP",
+            "TOPOCENTRIC_NORTH_EAST_DOWN",
+            "TOPOCENTRIC_SOUTH_EAST_ZENITH",
+            "ORBITAL_VELOCITY_NORMAL_CONORMAL",
+            "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+            "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+          ]
+        },
+        rfmOriginKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CELESTIAL_BODY",
+            "BARYCENTRE",
+            "LIBRATION_POINT",
+            "SPACE_OBJECT",
+            "GROUND_SITE"
+          ]
+        },
+        rfmLibrationPoint: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5"
+          ]
+        },
+        rfmVectorSpecification: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RADIAL",
+            "ANTI_RADIAL",
+            "VELOCITY",
+            "ANTI_VELOCITY",
+            "ORBIT_NORMAL",
+            "ANTI_ORBIT_NORMAL"
+          ]
+        },
+        RFMUnion: {
+          type: "string",
+          enum: [
+            "NONE",
+            "CelestialFrameWrapper",
+            "SpacecraftFrameWrapper",
+            "OrbitFrameWrapper",
+            "CustomFrameWrapper",
+            "RFMCoordinateSystemWrapper"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -77330,7 +77594,11 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ]
         },
         siteLifecycleStatus: {
@@ -77597,6 +77865,270 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
           },
           additionalProperties: false
         },
+        RFMOrigin: {
+          type: "object",
+          description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/rfmOriginKind"
+            },
+            CELESTIAL_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code when KIND is CELESTIAL_BODY."
+            },
+            BARYCENTRE_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+            },
+            LIBRATION_POINT: {
+              $ref: "#/definitions/rfmLibrationPoint",
+              description: "Which libration point, when KIND is LIBRATION_POINT."
+            },
+            LIBRATION_PRIMARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system primary."
+            },
+            LIBRATION_SECONDARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system secondary."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Identifier of the space object when KIND is SPACE_OBJECT."
+            },
+            SITE_ID: {
+              type: "string",
+              description: "Identifier of the surface site when KIND is GROUND_SITE."
+            },
+            SITE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the body the site sits on."
+            },
+            SITE_LATITUDE: {
+              type: "number",
+              description: "Geodetic latitude of the site, degrees, positive north."
+            },
+            SITE_LONGITUDE: {
+              type: "number",
+              description: "Geodetic longitude of the site, degrees, positive east."
+            },
+            SITE_ALTITUDE: {
+              type: "number",
+              description: "Height of the site above the reference ellipsoid, metres."
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable label. Descriptive only."
+            }
+          },
+          additionalProperties: false
+        },
+        RFMObjectReferencedAxes: {
+          type: "object",
+          description: "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+          properties: {
+            PRIMARY_OBJECT_ID: {
+              type: "string"
+            },
+            SECONDARY_OBJECT_ID: {
+              type: "string"
+            },
+            X_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification"
+            },
+            Y_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification"
+            },
+            Z_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMLocalAlignedConstrainedAxes: {
+          type: "object",
+          description: "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+          properties: {
+            REFERENCE_OBJECT_ID: {
+              type: "string"
+            },
+            REFERENCE_COORDINATE_SYSTEM_NAME: {
+              type: "string"
+            },
+            ALIGNMENT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            ALIGNMENT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            CONSTRAINT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            CONSTRAINT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystem: {
+          type: "object",
+          description: "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "Stable name for this coordinate system within the producing data set."
+            },
+            AXIS_TYPE: {
+              $ref: "#/definitions/rfmAxisType",
+              description: "Orientation rule."
+            },
+            ORIGIN: {
+              $ref: "#/definitions/RFMOrigin",
+              description: "Centre of the system."
+            },
+            AXIS_REFERENCE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+            },
+            EPOCH_TIME_SYSTEM: {
+              type: "string",
+              description: 'Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example "UTC", "TAI", "TT", "TDB", "A1").'
+            },
+            OBJECT_REFERENCED_AXES: {
+              $ref: "#/definitions/RFMObjectReferencedAxes",
+              description: "Extra parameters for OBJECT_REFERENCED axes."
+            },
+            LOCAL_ALIGNED_CONSTRAINED_AXES: {
+              $ref: "#/definitions/RFMLocalAlignedConstrainedAxes",
+              description: "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+            },
+            KERNEL_FRAME_NAME: {
+              type: "string",
+              description: "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+            },
+            KERNEL_FRAME_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+            },
+            EOP_DATA_SET_CID: {
+              type: "string",
+              description: "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+            }
+          },
+          additionalProperties: false
+        },
+        CelestialFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CelestialFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        SpacecraftFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/SpacecraftFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        OrbitFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/OrbitFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        CustomFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CustomFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystemWrapper: {
+          type: "object",
+          properties: {
+            COORDINATE_SYSTEM: {
+              $ref: "#/definitions/RFMCoordinateSystem"
+            }
+          },
+          additionalProperties: false
+        },
+        RFM: {
+          type: "object",
+          description: "Reference Frame Message",
+          properties: {
+            REFERENCE_FRAME_type: {
+              $ref: "#/definitions/RFMUnion"
+            },
+            REFERENCE_FRAME: {
+              anyOf: [
+                {
+                  $ref: "#/definitions/CelestialFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/SpacecraftFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/OrbitFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/CustomFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/RFMCoordinateSystemWrapper"
+                }
+              ]
+            },
+            INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647
+            },
+            NAME: {
+              type: "string"
+            }
+          },
+          additionalProperties: false
+        },
         SITCitation: {
           type: "object",
           description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
@@ -77784,15 +78316,15 @@ provider's reviewed register). Never free text.`
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site"
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site"
+              description: "Longitude of the site, degrees, east positive"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site"
+              description: "Altitude of the site above CENTER_NAME's reference surface"
             },
             GEOMETRY: {
               $ref: "#/definitions/Geometry",
@@ -77919,6 +78451,22 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged."
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame."
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none."
             }
           },
           additionalProperties: false
@@ -78609,7 +79157,11 @@ provider's reviewed register). Never free text.`
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ]
         },
         siteLifecycleStatus: {
@@ -82319,15 +82871,15 @@ provider's reviewed register). Never free text.`
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site"
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site"
+              description: "Longitude of the site, degrees, east positive"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site"
+              description: "Altitude of the site above CENTER_NAME's reference surface"
             },
             GEOMETRY: {
               $ref: "#/definitions/Geometry",
@@ -82454,6 +83006,22 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged."
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame."
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none."
             }
           },
           additionalProperties: false
@@ -87125,7 +87693,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ]
         },
         siteLifecycleStatus: {
@@ -89601,15 +90173,15 @@ provider's reviewed register). Never free text.`
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site"
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site"
+              description: "Longitude of the site, degrees, east positive"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site"
+              description: "Altitude of the site above CENTER_NAME's reference surface"
             },
             GEOMETRY: {
               $ref: "#/definitions/Geometry",
@@ -89736,6 +90308,22 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged."
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame."
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none."
             }
           },
           additionalProperties: false
@@ -124985,7 +125573,8 @@ format class are named by $NCD's container format.`
             "GEOGRAPHIC_WGS84",
             "GEOGRAPHIC_SINGLE_ROOT",
             "WEB_MERCATOR",
-            "CUSTOM"
+            "CUSTOM",
+            "GEOGRAPHIC_TWO_ROOT_BODY"
           ]
         },
         dttPayloadFormat: {
@@ -125008,7 +125597,8 @@ format class are named by $NCD's container format.`
             "GEOID",
             "MEAN_SEA_LEVEL",
             "REGIONAL_DATUM",
-            "CUSTOM"
+            "CUSTOM",
+            "REFERENCE_SPHERE"
           ]
         },
         dttSourceClass: {
@@ -126542,7 +127132,11 @@ format class are named by $NCD's container format.`
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ]
         },
         siteLifecycleStatus: {
@@ -154265,7 +154859,7 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
         },
         DTT: {
           type: "object",
-          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
           properties: {
             TILESET_ID: {
               type: "string",
@@ -154303,19 +154897,19 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             },
             WEST_DEG: {
               type: "number",
-              description: "Western extent of the tile, decimal degrees on WGS 84."
+              description: "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body)."
             },
             SOUTH_DEG: {
               type: "number",
-              description: "Southern extent of the tile, decimal degrees on WGS 84."
+              description: "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH)."
             },
             EAST_DEG: {
               type: "number",
-              description: "Eastern extent of the tile, decimal degrees on WGS 84."
+              description: "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive."
             },
             NORTH_DEG: {
               type: "number",
-              description: "Northern extent of the tile, decimal degrees on WGS 84."
+              description: "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH)."
             },
             MIN_HEIGHT_M: {
               type: "number",
@@ -154455,6 +155049,27 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             REMARKS: {
               type: "string",
               description: "Free-form publisher notes about this tile. Never a substitute for a\nstated field."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged."
+            },
+            REFERENCE_RADII_M: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value."
+            },
+            HORIZON_ELEVATIONS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0."
+            },
+            HORIZON_SECTORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent)."
             }
           },
           required: [
@@ -168327,15 +168942,15 @@ provider's reviewed register). Never free text.`
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site"
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site"
+              description: "Longitude of the site, degrees, east positive"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site"
+              description: "Altitude of the site above CENTER_NAME's reference surface"
             },
             GEOMETRY: {
               $ref: "#/definitions/Geometry",
@@ -168462,6 +169077,22 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged."
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame."
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none."
             }
           },
           additionalProperties: false
@@ -250049,6 +250680,187 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "NonCommercial"
           ]
         },
+        CelestialFrame: {
+          type: "string",
+          enum: [
+            "GCRF",
+            "ICRF",
+            "J2000",
+            "J2000A",
+            "EME2000",
+            "TEMEOFDATE",
+            "GTOD",
+            "CIRS",
+            "MOD_EARTH",
+            "MOD_CB",
+            "MOD_MOON",
+            "TOD_EARTH",
+            "TOD_CB",
+            "TOD_MOON",
+            "TOE_EARTH",
+            "TOE_CB",
+            "TOE_MOON",
+            "ITRF2000",
+            "ITRF93",
+            "ITRF97",
+            "EFG",
+            "FIXED_CB",
+            "FIXED_EARTH",
+            "WGS84",
+            "DTRFYYYY",
+            "ALIGN_EARTH",
+            "ALIGN_CB",
+            "B1950"
+          ]
+        },
+        SpacecraftFrame: {
+          type: "string",
+          enum: [
+            "ACC_i",
+            "ACTUATOR_i",
+            "AST_i",
+            "CSS_i",
+            "DSS_i",
+            "ESA_i",
+            "GYRO_FRAME_i",
+            "IMU_FRAME_i",
+            "INSTRUMENT_i",
+            "MTA_i",
+            "RW_i",
+            "SA_i",
+            "SC_BODY_i",
+            "SENSOR_i",
+            "STARTRACKER_i",
+            "TAM_i"
+          ]
+        },
+        OrbitFrame: {
+          type: "string",
+          enum: [
+            "EQW_INERTIAL",
+            "LVLH_INERTIAL",
+            "LVLH_ROTATING",
+            "NSW_INERTIAL",
+            "NSW_ROTATING",
+            "NTW_INERTIAL",
+            "NTW_ROTATING",
+            "PQW_INERTIAL",
+            "RSW_INERTIAL",
+            "RSW_ROTATING",
+            "SEZ_INERTIAL",
+            "SEZ_ROTATING",
+            "TNW_INERTIAL",
+            "TNW_ROTATING",
+            "VNC_INERTIAL",
+            "VNC_ROTATING"
+          ]
+        },
+        CustomFrame: {
+          type: "string",
+          enum: [
+            "ECEF",
+            "TEME",
+            "TEMEOFEPOCH",
+            "ENU",
+            "NED",
+            "NEU",
+            "RIC",
+            "RTN",
+            "TVN",
+            "VVLH",
+            "QSW",
+            "LTP",
+            "LVLH",
+            "PNE",
+            "BRF",
+            "RSW",
+            "TNW",
+            "UVW"
+          ]
+        },
+        rfmAxisType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEAN_EQUATOR_EQUINOX_J2000",
+            "MEAN_ECLIPTIC_EQUINOX_J2000",
+            "ICRF",
+            "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+            "MEAN_OF_DATE_EQUATOR",
+            "MEAN_OF_DATE_ECLIPTIC",
+            "TRUE_OF_DATE_EQUATOR",
+            "TRUE_OF_DATE_ECLIPTIC",
+            "MEAN_OF_EPOCH_EQUATOR",
+            "MEAN_OF_EPOCH_ECLIPTIC",
+            "TRUE_OF_EPOCH_EQUATOR",
+            "TRUE_OF_EPOCH_ECLIPTIC",
+            "BODY_FIXED",
+            "BODY_INERTIAL",
+            "OBJECT_REFERENCED",
+            "LOCAL_ALIGNED_CONSTRAINED",
+            "BODY_EQUATOR",
+            "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+            "SOLAR_MAGNETOSPHERIC",
+            "TOPOCENTRIC",
+            "BODY_SPIN_SUN",
+            "EPHEMERIS_KERNEL_DEFINED",
+            "MEAN_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_IERS1996",
+            "TRUE_OF_DATE_EQUATOR_IERS2003",
+            "TOPOCENTRIC_EAST_NORTH_UP",
+            "TOPOCENTRIC_NORTH_EAST_DOWN",
+            "TOPOCENTRIC_SOUTH_EAST_ZENITH",
+            "ORBITAL_VELOCITY_NORMAL_CONORMAL",
+            "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+            "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+          ]
+        },
+        rfmOriginKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CELESTIAL_BODY",
+            "BARYCENTRE",
+            "LIBRATION_POINT",
+            "SPACE_OBJECT",
+            "GROUND_SITE"
+          ]
+        },
+        rfmLibrationPoint: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5"
+          ]
+        },
+        rfmVectorSpecification: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RADIAL",
+            "ANTI_RADIAL",
+            "VELOCITY",
+            "ANTI_VELOCITY",
+            "ORBIT_NORMAL",
+            "ANTI_ORBIT_NORMAL"
+          ]
+        },
+        RFMUnion: {
+          type: "string",
+          enum: [
+            "NONE",
+            "CelestialFrameWrapper",
+            "SpacecraftFrameWrapper",
+            "OrbitFrameWrapper",
+            "CustomFrameWrapper",
+            "RFMCoordinateSystemWrapper"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -250069,7 +250881,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ]
         },
         siteLifecycleStatus: {
@@ -250564,6 +251380,270 @@ compressed). Nothing hashes the payload before the protocol hash.`
           },
           additionalProperties: false
         },
+        RFMOrigin: {
+          type: "object",
+          description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/rfmOriginKind"
+            },
+            CELESTIAL_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code when KIND is CELESTIAL_BODY."
+            },
+            BARYCENTRE_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the barycentre when KIND is BARYCENTRE."
+            },
+            LIBRATION_POINT: {
+              $ref: "#/definitions/rfmLibrationPoint",
+              description: "Which libration point, when KIND is LIBRATION_POINT."
+            },
+            LIBRATION_PRIMARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system primary."
+            },
+            LIBRATION_SECONDARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system secondary."
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Identifier of the space object when KIND is SPACE_OBJECT."
+            },
+            SITE_ID: {
+              type: "string",
+              description: "Identifier of the surface site when KIND is GROUND_SITE."
+            },
+            SITE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the body the site sits on."
+            },
+            SITE_LATITUDE: {
+              type: "number",
+              description: "Geodetic latitude of the site, degrees, positive north."
+            },
+            SITE_LONGITUDE: {
+              type: "number",
+              description: "Geodetic longitude of the site, degrees, positive east."
+            },
+            SITE_ALTITUDE: {
+              type: "number",
+              description: "Height of the site above the reference ellipsoid, metres."
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable label. Descriptive only."
+            }
+          },
+          additionalProperties: false
+        },
+        RFMObjectReferencedAxes: {
+          type: "object",
+          description: "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+          properties: {
+            PRIMARY_OBJECT_ID: {
+              type: "string"
+            },
+            SECONDARY_OBJECT_ID: {
+              type: "string"
+            },
+            X_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification"
+            },
+            Y_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification"
+            },
+            Z_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMLocalAlignedConstrainedAxes: {
+          type: "object",
+          description: "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+          properties: {
+            REFERENCE_OBJECT_ID: {
+              type: "string"
+            },
+            REFERENCE_COORDINATE_SYSTEM_NAME: {
+              type: "string"
+            },
+            ALIGNMENT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            ALIGNMENT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            CONSTRAINT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            },
+            CONSTRAINT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystem: {
+          type: "object",
+          description: "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "Stable name for this coordinate system within the producing data set."
+            },
+            AXIS_TYPE: {
+              $ref: "#/definitions/rfmAxisType",
+              description: "Orientation rule."
+            },
+            ORIGIN: {
+              $ref: "#/definitions/RFMOrigin",
+              description: "Centre of the system."
+            },
+            AXIS_REFERENCE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones."
+            },
+            EPOCH_TIME_SYSTEM: {
+              type: "string",
+              description: 'Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example "UTC", "TAI", "TT", "TDB", "A1").'
+            },
+            OBJECT_REFERENCED_AXES: {
+              $ref: "#/definitions/RFMObjectReferencedAxes",
+              description: "Extra parameters for OBJECT_REFERENCED axes."
+            },
+            LOCAL_ALIGNED_CONSTRAINED_AXES: {
+              $ref: "#/definitions/RFMLocalAlignedConstrainedAxes",
+              description: "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes."
+            },
+            KERNEL_FRAME_NAME: {
+              type: "string",
+              description: "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes."
+            },
+            KERNEL_FRAME_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes."
+            },
+            EOP_DATA_SET_CID: {
+              type: "string",
+              description: "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+            }
+          },
+          additionalProperties: false
+        },
+        CelestialFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CelestialFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        SpacecraftFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/SpacecraftFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        OrbitFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/OrbitFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        CustomFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CustomFrame"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystemWrapper: {
+          type: "object",
+          properties: {
+            COORDINATE_SYSTEM: {
+              $ref: "#/definitions/RFMCoordinateSystem"
+            }
+          },
+          additionalProperties: false
+        },
+        RFM: {
+          type: "object",
+          description: "Reference Frame Message",
+          properties: {
+            REFERENCE_FRAME_type: {
+              $ref: "#/definitions/RFMUnion"
+            },
+            REFERENCE_FRAME: {
+              anyOf: [
+                {
+                  $ref: "#/definitions/CelestialFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/SpacecraftFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/OrbitFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/CustomFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/RFMCoordinateSystemWrapper"
+                }
+              ]
+            },
+            INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647
+            },
+            NAME: {
+              type: "string"
+            }
+          },
+          additionalProperties: false
+        },
         SITCitation: {
           type: "object",
           description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
@@ -250751,15 +251831,15 @@ provider's reviewed register). Never free text.`
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site"
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site"
+              description: "Longitude of the site, degrees, east positive"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site"
+              description: "Altitude of the site above CENTER_NAME's reference surface"
             },
             GEOMETRY: {
               $ref: "#/definitions/Geometry",
@@ -250886,6 +251966,22 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged."
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame."
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none."
             }
           },
           additionalProperties: false
@@ -266734,7 +267830,11 @@ assumptions".`
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ]
         },
         siteLifecycleStatus: {
@@ -269239,15 +270339,15 @@ provider's reviewed register). Never free text.`
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site"
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site"
+              description: "Longitude of the site, degrees, east positive"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site"
+              description: "Altitude of the site above CENTER_NAME's reference surface"
             },
             GEOMETRY: {
               $ref: "#/definitions/Geometry",
@@ -269374,6 +270474,22 @@ provider's reviewed register). Never free text.`
             PROVENANCE: {
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged."
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame."
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission."
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none."
             }
           },
           additionalProperties: false
@@ -320168,7 +321284,8 @@ var fbjson_default = {
             "GEOGRAPHIC_WGS84",
             "GEOGRAPHIC_SINGLE_ROOT",
             "WEB_MERCATOR",
-            "CUSTOM"
+            "CUSTOM",
+            "GEOGRAPHIC_TWO_ROOT_BODY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -320192,6 +321309,10 @@ var fbjson_default = {
             CUSTOM: {
               value: 4,
               description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+            },
+            GEOGRAPHIC_TWO_ROOT_BODY: {
+              value: 5,
+              description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
             }
           }
         },
@@ -320247,7 +321368,8 @@ var fbjson_default = {
             "GEOID",
             "MEAN_SEA_LEVEL",
             "REGIONAL_DATUM",
-            "CUSTOM"
+            "CUSTOM",
+            "REFERENCE_SPHERE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -320275,6 +321397,10 @@ var fbjson_default = {
             CUSTOM: {
               value: 5,
               description: "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+            },
+            REFERENCE_SPHERE: {
+              value: 6,
+              description: "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
             }
           }
         },
@@ -320521,7 +321647,7 @@ var fbjson_default = {
         },
         DTT: {
           type: "object",
-          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
           properties: {
             TILESET_ID: {
               type: "string",
@@ -320559,6 +321685,10 @@ var fbjson_default = {
                 CUSTOM: {
                   value: 4,
                   description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                },
+                GEOGRAPHIC_TWO_ROOT_BODY: {
+                  value: 5,
+                  description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -320592,22 +321722,22 @@ var fbjson_default = {
             },
             WEST_DEG: {
               type: "number",
-              description: "Western extent of the tile, decimal degrees on WGS 84.",
+              description: "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body).",
               "x-flatbuffer-type": "double"
             },
             SOUTH_DEG: {
               type: "number",
-              description: "Southern extent of the tile, decimal degrees on WGS 84.",
+              description: "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
               "x-flatbuffer-type": "double"
             },
             EAST_DEG: {
               type: "number",
-              description: "Eastern extent of the tile, decimal degrees on WGS 84.",
+              description: "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive.",
               "x-flatbuffer-type": "double"
             },
             NORTH_DEG: {
               type: "number",
-              description: "Northern extent of the tile, decimal degrees on WGS 84.",
+              description: "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
               "x-flatbuffer-type": "double"
             },
             MIN_HEIGHT_M: {
@@ -320721,6 +321851,10 @@ var fbjson_default = {
                 CUSTOM: {
                   value: 5,
                   description: "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                },
+                REFERENCE_SPHERE: {
+                  value: 6,
+                  description: "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -320914,6 +322048,31 @@ var fbjson_default = {
               type: "string",
               description: "Free-form publisher notes about this tile. Never a substitute for a\nstated field.",
               "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_RADII_M: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value.",
+              "x-flatbuffer-type": "[double]"
+            },
+            HORIZON_ELEVATIONS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0.",
+              "x-flatbuffer-type": "DTTPayloadRef"
+            },
+            HORIZON_SECTORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).",
+              "x-flatbuffer-type": "uint8"
             }
           },
           required: [
@@ -422963,6 +424122,730 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             }
           }
         },
+        CelestialFrame: {
+          type: "string",
+          enum: [
+            "GCRF",
+            "ICRF",
+            "J2000",
+            "J2000A",
+            "EME2000",
+            "TEMEOFDATE",
+            "GTOD",
+            "CIRS",
+            "MOD_EARTH",
+            "MOD_CB",
+            "MOD_MOON",
+            "TOD_EARTH",
+            "TOD_CB",
+            "TOD_MOON",
+            "TOE_EARTH",
+            "TOE_CB",
+            "TOE_MOON",
+            "ITRF2000",
+            "ITRF93",
+            "ITRF97",
+            "EFG",
+            "FIXED_CB",
+            "FIXED_EARTH",
+            "WGS84",
+            "DTRFYYYY",
+            "ALIGN_EARTH",
+            "ALIGN_CB",
+            "B1950"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            GCRF: {
+              value: 0,
+              description: "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+            },
+            ICRF: {
+              value: 1,
+              description: "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+            },
+            J2000: {
+              value: 2,
+              description: "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+            },
+            J2000A: {
+              value: 3,
+              description: "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+            },
+            EME2000: {
+              value: 4,
+              description: "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+            },
+            TEMEOFDATE: {
+              value: 5,
+              description: "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+            },
+            GTOD: {
+              value: 6,
+              description: "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+            },
+            CIRS: {
+              value: 7,
+              description: "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+            },
+            MOD_EARTH: {
+              value: 8,
+              description: "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+            },
+            MOD_CB: {
+              value: 9,
+              description: "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+            },
+            MOD_MOON: {
+              value: 10,
+              description: "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+            },
+            TOD_EARTH: {
+              value: 11,
+              description: "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+            },
+            TOD_CB: {
+              value: 12,
+              description: "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+            },
+            TOD_MOON: {
+              value: 13,
+              description: "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+            },
+            TOE_EARTH: {
+              value: 14,
+              description: "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+            },
+            TOE_CB: {
+              value: 15,
+              description: "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+            },
+            TOE_MOON: {
+              value: 16,
+              description: "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+            },
+            ITRF2000: {
+              value: 17,
+              description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+            },
+            ITRF93: {
+              value: 18,
+              description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+            },
+            ITRF97: {
+              value: 19,
+              description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+            },
+            EFG: {
+              value: 20,
+              description: "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+            },
+            FIXED_CB: {
+              value: 21,
+              description: "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+            },
+            FIXED_EARTH: {
+              value: 22,
+              description: "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+            },
+            WGS84: {
+              value: 23,
+              description: "WGS84 Earth-fixed terrestrial system."
+            },
+            DTRFYYYY: {
+              value: 24,
+              description: "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+            },
+            ALIGN_EARTH: {
+              value: 25,
+              description: "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+            },
+            ALIGN_CB: {
+              value: 26,
+              description: "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+            },
+            B1950: {
+              value: 27,
+              description: "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+            }
+          }
+        },
+        SpacecraftFrame: {
+          type: "string",
+          enum: [
+            "ACC_i",
+            "ACTUATOR_i",
+            "AST_i",
+            "CSS_i",
+            "DSS_i",
+            "ESA_i",
+            "GYRO_FRAME_i",
+            "IMU_FRAME_i",
+            "INSTRUMENT_i",
+            "MTA_i",
+            "RW_i",
+            "SA_i",
+            "SC_BODY_i",
+            "SENSOR_i",
+            "STARTRACKER_i",
+            "TAM_i"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            ACC_i: {
+              value: 0,
+              description: "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+            },
+            ACTUATOR_i: {
+              value: 1,
+              description: "OID: 1.3.112.4.57.8.2 Actuator system frame."
+            },
+            AST_i: {
+              value: 2,
+              description: "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+            },
+            CSS_i: {
+              value: 3,
+              description: "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+            },
+            DSS_i: {
+              value: 4,
+              description: "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+            },
+            ESA_i: {
+              value: 5,
+              description: "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+            },
+            GYRO_FRAME_i: {
+              value: 6,
+              description: "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+            },
+            IMU_FRAME_i: {
+              value: 7,
+              description: "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+            },
+            INSTRUMENT_i: {
+              value: 8,
+              description: "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+            },
+            MTA_i: {
+              value: 9,
+              description: "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+            },
+            RW_i: {
+              value: 10,
+              description: "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+            },
+            SA_i: {
+              value: 11,
+              description: "OID: 1.3.112.4.57.8.12 Solar Array frame."
+            },
+            SC_BODY_i: {
+              value: 12,
+              description: "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+            },
+            SENSOR_i: {
+              value: 13,
+              description: "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+            },
+            STARTRACKER_i: {
+              value: 14,
+              description: "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+            },
+            TAM_i: {
+              value: 15,
+              description: "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+            }
+          }
+        },
+        OrbitFrame: {
+          type: "string",
+          enum: [
+            "EQW_INERTIAL",
+            "LVLH_INERTIAL",
+            "LVLH_ROTATING",
+            "NSW_INERTIAL",
+            "NSW_ROTATING",
+            "NTW_INERTIAL",
+            "NTW_ROTATING",
+            "PQW_INERTIAL",
+            "RSW_INERTIAL",
+            "RSW_ROTATING",
+            "SEZ_INERTIAL",
+            "SEZ_ROTATING",
+            "TNW_INERTIAL",
+            "TNW_ROTATING",
+            "VNC_INERTIAL",
+            "VNC_ROTATING"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            EQW_INERTIAL: {
+              value: 0,
+              description: "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+            },
+            LVLH_INERTIAL: {
+              value: 1,
+              description: "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+            },
+            LVLH_ROTATING: {
+              value: 2,
+              description: "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+            },
+            NSW_INERTIAL: {
+              value: 3,
+              description: "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+            },
+            NSW_ROTATING: {
+              value: 4,
+              description: "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+            },
+            NTW_INERTIAL: {
+              value: 5,
+              description: "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+            },
+            NTW_ROTATING: {
+              value: 6,
+              description: "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+            },
+            PQW_INERTIAL: {
+              value: 7,
+              description: "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+            },
+            RSW_INERTIAL: {
+              value: 8,
+              description: "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+            },
+            RSW_ROTATING: {
+              value: 9,
+              description: "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+            },
+            SEZ_INERTIAL: {
+              value: 10,
+              description: "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+            },
+            SEZ_ROTATING: {
+              value: 11,
+              description: "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+            },
+            TNW_INERTIAL: {
+              value: 12,
+              description: "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+            },
+            TNW_ROTATING: {
+              value: 13,
+              description: "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+            },
+            VNC_INERTIAL: {
+              value: 14,
+              description: "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+            },
+            VNC_ROTATING: {
+              value: 15,
+              description: "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+            }
+          }
+        },
+        CustomFrame: {
+          type: "string",
+          enum: [
+            "ECEF",
+            "TEME",
+            "TEMEOFEPOCH",
+            "ENU",
+            "NED",
+            "NEU",
+            "RIC",
+            "RTN",
+            "TVN",
+            "VVLH",
+            "QSW",
+            "LTP",
+            "LVLH",
+            "PNE",
+            "BRF",
+            "RSW",
+            "TNW",
+            "UVW"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            ECEF: {
+              value: 0,
+              description: "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+            },
+            TEME: {
+              value: 1,
+              description: "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+            },
+            TEMEOFEPOCH: {
+              value: 2,
+              description: "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+            },
+            ENU: {
+              value: 3,
+              description: "East-North-Up: Local tangent plane for surface points."
+            },
+            NED: {
+              value: 4,
+              description: "North-East-Down: Aviation/navigation frame aligned with gravity."
+            },
+            NEU: {
+              value: 5,
+              description: "North-East-Up: Local tangent plane variant with Up positive."
+            },
+            RIC: {
+              value: 6,
+              description: "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+            },
+            RTN: {
+              value: 7,
+              description: "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+            },
+            TVN: {
+              value: 8,
+              description: "Transverse-Velocity-Normal: Alternative orbit frame."
+            },
+            VVLH: {
+              value: 9,
+              description: "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+            },
+            QSW: {
+              value: 10,
+              description: "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+            },
+            LTP: {
+              value: 11,
+              description: "Local Tangent Plane: Surface-fixed frame centered on a point."
+            },
+            LVLH: {
+              value: 12,
+              description: "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+            },
+            PNE: {
+              value: 13,
+              description: "Polar-North-East: Surface coordinate frame."
+            },
+            BRF: {
+              value: 14,
+              description: "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+            },
+            RSW: {
+              value: 15,
+              description: "Radial-Along-track-Cross-track: Same as RSW."
+            },
+            TNW: {
+              value: 16,
+              description: "Tangential-Normal-Cross-track: Same as TNW."
+            },
+            UVW: {
+              value: 17,
+              description: "Radial-UTF: Radial, Along-track, Cross-track variant."
+            }
+          }
+        },
+        rfmAxisType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEAN_EQUATOR_EQUINOX_J2000",
+            "MEAN_ECLIPTIC_EQUINOX_J2000",
+            "ICRF",
+            "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+            "MEAN_OF_DATE_EQUATOR",
+            "MEAN_OF_DATE_ECLIPTIC",
+            "TRUE_OF_DATE_EQUATOR",
+            "TRUE_OF_DATE_ECLIPTIC",
+            "MEAN_OF_EPOCH_EQUATOR",
+            "MEAN_OF_EPOCH_ECLIPTIC",
+            "TRUE_OF_EPOCH_EQUATOR",
+            "TRUE_OF_EPOCH_ECLIPTIC",
+            "BODY_FIXED",
+            "BODY_INERTIAL",
+            "OBJECT_REFERENCED",
+            "LOCAL_ALIGNED_CONSTRAINED",
+            "BODY_EQUATOR",
+            "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+            "SOLAR_MAGNETOSPHERIC",
+            "TOPOCENTRIC",
+            "BODY_SPIN_SUN",
+            "EPHEMERIS_KERNEL_DEFINED",
+            "MEAN_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_IERS1996",
+            "TRUE_OF_DATE_EQUATOR_IERS2003",
+            "TOPOCENTRIC_EAST_NORTH_UP",
+            "TOPOCENTRIC_NORTH_EAST_DOWN",
+            "TOPOCENTRIC_SOUTH_EAST_ZENITH",
+            "ORBITAL_VELOCITY_NORMAL_CONORMAL",
+            "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+            "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            MEAN_EQUATOR_EQUINOX_J2000: {
+              value: 1,
+              description: "Mean equator and mean equinox of the J2000.0 epoch."
+            },
+            MEAN_ECLIPTIC_EQUINOX_J2000: {
+              value: 2,
+              description: "Mean ecliptic and mean equinox of the J2000.0 epoch."
+            },
+            ICRF: {
+              value: 3,
+              description: "International Celestial Reference Frame axes."
+            },
+            TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE: {
+              value: 4,
+              description: "True equator, mean equinox of date."
+            },
+            MEAN_OF_DATE_EQUATOR: {
+              value: 5,
+              description: "Mean equator of date (precession applied to the epoch of the state)."
+            },
+            MEAN_OF_DATE_ECLIPTIC: {
+              value: 6,
+              description: "Mean ecliptic of date."
+            },
+            TRUE_OF_DATE_EQUATOR: {
+              value: 7,
+              description: "True equator of date (precession and nutation applied)."
+            },
+            TRUE_OF_DATE_ECLIPTIC: {
+              value: 8,
+              description: "True ecliptic of date."
+            },
+            MEAN_OF_EPOCH_EQUATOR: {
+              value: 9,
+              description: "Mean equator of a fixed reference epoch."
+            },
+            MEAN_OF_EPOCH_ECLIPTIC: {
+              value: 10,
+              description: "Mean ecliptic of a fixed reference epoch."
+            },
+            TRUE_OF_EPOCH_EQUATOR: {
+              value: 11,
+              description: "True equator of a fixed reference epoch."
+            },
+            TRUE_OF_EPOCH_ECLIPTIC: {
+              value: 12,
+              description: "True ecliptic of a fixed reference epoch."
+            },
+            BODY_FIXED: {
+              value: 13,
+              description: "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+            },
+            BODY_INERTIAL: {
+              value: 14,
+              description: "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+            },
+            OBJECT_REFERENCED: {
+              value: 15,
+              description: "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+            },
+            LOCAL_ALIGNED_CONSTRAINED: {
+              value: 16,
+              description: "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+            },
+            BODY_EQUATOR: {
+              value: 17,
+              description: "Axes in the reference body's equatorial plane at the requested epoch."
+            },
+            SOLAR_ECLIPTIC_MAGNETOSPHERIC: {
+              value: 18,
+              description: "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+            },
+            SOLAR_MAGNETOSPHERIC: {
+              value: 19,
+              description: "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+            },
+            TOPOCENTRIC: {
+              value: 20,
+              description: "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+            },
+            BODY_SPIN_SUN: {
+              value: 21,
+              description: "Axes fixed by the body spin axis and the body-to-Sun direction."
+            },
+            EPHEMERIS_KERNEL_DEFINED: {
+              value: 22,
+              description: "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+            },
+            MEAN_OF_DATE_EQUATOR_FK5: {
+              value: 23,
+              description: "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+            },
+            TRUE_OF_DATE_EQUATOR_FK5: {
+              value: 24,
+              description: "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+            },
+            TRUE_OF_DATE_EQUATOR_IERS1996: {
+              value: 25,
+              description: "True equator of date computed with the IERS Conventions (1996) reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980 nutation with the observed celestial pole offsets applied. Distinct from TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR (IAU-2006/2000A)."
+            },
+            TRUE_OF_DATE_EQUATOR_IERS2003: {
+              value: 26,
+              description: "True equator of date computed with the IERS Conventions (2003) reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976 precession with the IAU 2000 precession-rate corrections. The mean-of-date equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5."
+            },
+            TOPOCENTRIC_EAST_NORTH_UP: {
+              value: 27,
+              description: "Topocentric East-North-Up axes at a surface site; the site is carried on RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does."
+            },
+            TOPOCENTRIC_NORTH_EAST_DOWN: {
+              value: 28,
+              description: "Topocentric North-East-Down axes at a surface site."
+            },
+            TOPOCENTRIC_SOUTH_EAST_ZENITH: {
+              value: 29,
+              description: "Topocentric South-East-Zenith axes at a surface site."
+            },
+            ORBITAL_VELOCITY_NORMAL_CONORMAL: {
+              value: 30,
+              description: "Orbital axes from the object's state: X along the velocity, Z along the orbit normal, Y completing the right-handed set (VNC). The object is the origin body of the coordinate system."
+            },
+            ORBITAL_RADIAL_TRANSVERSE_NORMAL: {
+              value: 31,
+              description: "Orbital axes from the object's state: X radial (outward), Z along the orbit normal, Y transverse completing the set (RTN, also RSW)."
+            },
+            ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: {
+              value: 32,
+              description: "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+            }
+          }
+        },
+        rfmOriginKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CELESTIAL_BODY",
+            "BARYCENTRE",
+            "LIBRATION_POINT",
+            "SPACE_OBJECT",
+            "GROUND_SITE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            CELESTIAL_BODY: {
+              value: 1,
+              description: "The centre of mass of a single celestial body."
+            },
+            BARYCENTRE: {
+              value: 2,
+              description: "The barycentre of a named system of bodies."
+            },
+            LIBRATION_POINT: {
+              value: 3,
+              description: "A libration (Lagrange) point of a two-body system."
+            },
+            SPACE_OBJECT: {
+              value: 4,
+              description: "Another tracked space object, identified by OBJECT_ID."
+            },
+            GROUND_SITE: {
+              value: 5,
+              description: "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            }
+          }
+        },
+        rfmLibrationPoint: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            L1: {
+              value: 1
+            },
+            L2: {
+              value: 2
+            },
+            L3: {
+              value: 3
+            },
+            L4: {
+              value: 4
+            },
+            L5: {
+              value: 5
+            }
+          }
+        },
+        rfmVectorSpecification: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RADIAL",
+            "ANTI_RADIAL",
+            "VELOCITY",
+            "ANTI_VELOCITY",
+            "ORBIT_NORMAL",
+            "ANTI_ORBIT_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RADIAL: {
+              value: 1,
+              description: "Primary-to-secondary position direction."
+            },
+            ANTI_RADIAL: {
+              value: 2,
+              description: "Negated RADIAL."
+            },
+            VELOCITY: {
+              value: 3,
+              description: "Relative velocity direction."
+            },
+            ANTI_VELOCITY: {
+              value: 4,
+              description: "Negated VELOCITY."
+            },
+            ORBIT_NORMAL: {
+              value: 5,
+              description: "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            ANTI_ORBIT_NORMAL: {
+              value: 6,
+              description: "Negated ORBIT_NORMAL."
+            }
+          }
+        },
+        RFMUnion: {
+          type: "string",
+          enum: [
+            "NONE",
+            "CelestialFrameWrapper",
+            "SpacecraftFrameWrapper",
+            "OrbitFrameWrapper",
+            "CustomFrameWrapper",
+            "RFMCoordinateSystemWrapper"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -422983,7 +424866,11 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -423041,6 +424928,22 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             OTHER: {
               value: 17
+            },
+            LANDING_SITE: {
+              value: 18,
+              description: "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            IMPACT_SITE: {
+              value: 19,
+              description: "A place a spacecraft or stage struck a body surface"
+            },
+            CANDIDATE_REGION: {
+              value: 20,
+              description: "A surface region under study as a landing or exploration target"
+            },
+            SURFACE_FEATURE: {
+              value: 21,
+              description: "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -423757,6 +425660,914 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
           },
           additionalProperties: false
         },
+        RFMOrigin: {
+          type: "object",
+          description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/rfmOriginKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                CELESTIAL_BODY: {
+                  value: 1,
+                  description: "The centre of mass of a single celestial body."
+                },
+                BARYCENTRE: {
+                  value: 2,
+                  description: "The barycentre of a named system of bodies."
+                },
+                LIBRATION_POINT: {
+                  value: 3,
+                  description: "A libration (Lagrange) point of a two-body system."
+                },
+                SPACE_OBJECT: {
+                  value: 4,
+                  description: "Another tracked space object, identified by OBJECT_ID."
+                },
+                GROUND_SITE: {
+                  value: 5,
+                  description: "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CELESTIAL_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code when KIND is CELESTIAL_BODY.",
+              "x-flatbuffer-type": "int"
+            },
+            BARYCENTRE_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the barycentre when KIND is BARYCENTRE.",
+              "x-flatbuffer-type": "int"
+            },
+            LIBRATION_POINT: {
+              $ref: "#/definitions/rfmLibrationPoint",
+              description: "Which libration point, when KIND is LIBRATION_POINT.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                L1: {
+                  value: 1
+                },
+                L2: {
+                  value: 2
+                },
+                L3: {
+                  value: 3
+                },
+                L4: {
+                  value: 4
+                },
+                L5: {
+                  value: 5
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIBRATION_PRIMARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system primary.",
+              "x-flatbuffer-type": "int"
+            },
+            LIBRATION_SECONDARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system secondary.",
+              "x-flatbuffer-type": "int"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Identifier of the space object when KIND is SPACE_OBJECT.",
+              "x-flatbuffer-type": "string"
+            },
+            SITE_ID: {
+              type: "string",
+              description: "Identifier of the surface site when KIND is GROUND_SITE.",
+              "x-flatbuffer-type": "string"
+            },
+            SITE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the body the site sits on.",
+              "x-flatbuffer-type": "int"
+            },
+            SITE_LATITUDE: {
+              type: "number",
+              description: "Geodetic latitude of the site, degrees, positive north.",
+              "x-flatbuffer-type": "double"
+            },
+            SITE_LONGITUDE: {
+              type: "number",
+              description: "Geodetic longitude of the site, degrees, positive east.",
+              "x-flatbuffer-type": "double"
+            },
+            SITE_ALTITUDE: {
+              type: "number",
+              description: "Height of the site above the reference ellipsoid, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable label. Descriptive only.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMObjectReferencedAxes: {
+          type: "object",
+          description: "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+          properties: {
+            PRIMARY_OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            SECONDARY_OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            X_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RADIAL: {
+                  value: 1,
+                  description: "Primary-to-secondary position direction."
+                },
+                ANTI_RADIAL: {
+                  value: 2,
+                  description: "Negated RADIAL."
+                },
+                VELOCITY: {
+                  value: 3,
+                  description: "Relative velocity direction."
+                },
+                ANTI_VELOCITY: {
+                  value: 4,
+                  description: "Negated VELOCITY."
+                },
+                ORBIT_NORMAL: {
+                  value: 5,
+                  description: "Orbit normal, RADIAL crossed into VELOCITY."
+                },
+                ANTI_ORBIT_NORMAL: {
+                  value: 6,
+                  description: "Negated ORBIT_NORMAL."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            Y_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RADIAL: {
+                  value: 1,
+                  description: "Primary-to-secondary position direction."
+                },
+                ANTI_RADIAL: {
+                  value: 2,
+                  description: "Negated RADIAL."
+                },
+                VELOCITY: {
+                  value: 3,
+                  description: "Relative velocity direction."
+                },
+                ANTI_VELOCITY: {
+                  value: 4,
+                  description: "Negated VELOCITY."
+                },
+                ORBIT_NORMAL: {
+                  value: 5,
+                  description: "Orbit normal, RADIAL crossed into VELOCITY."
+                },
+                ANTI_ORBIT_NORMAL: {
+                  value: 6,
+                  description: "Negated ORBIT_NORMAL."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            Z_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RADIAL: {
+                  value: 1,
+                  description: "Primary-to-secondary position direction."
+                },
+                ANTI_RADIAL: {
+                  value: 2,
+                  description: "Negated RADIAL."
+                },
+                VELOCITY: {
+                  value: 3,
+                  description: "Relative velocity direction."
+                },
+                ANTI_VELOCITY: {
+                  value: 4,
+                  description: "Negated VELOCITY."
+                },
+                ORBIT_NORMAL: {
+                  value: 5,
+                  description: "Orbit normal, RADIAL crossed into VELOCITY."
+                },
+                ANTI_ORBIT_NORMAL: {
+                  value: 6,
+                  description: "Negated ORBIT_NORMAL."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMLocalAlignedConstrainedAxes: {
+          type: "object",
+          description: "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+          properties: {
+            REFERENCE_OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_COORDINATE_SYSTEM_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            ALIGNMENT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            ALIGNMENT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            CONSTRAINT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            CONSTRAINT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystem: {
+          type: "object",
+          description: "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "Stable name for this coordinate system within the producing data set.",
+              "x-flatbuffer-type": "string"
+            },
+            AXIS_TYPE: {
+              $ref: "#/definitions/rfmAxisType",
+              description: "Orientation rule.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                MEAN_EQUATOR_EQUINOX_J2000: {
+                  value: 1,
+                  description: "Mean equator and mean equinox of the J2000.0 epoch."
+                },
+                MEAN_ECLIPTIC_EQUINOX_J2000: {
+                  value: 2,
+                  description: "Mean ecliptic and mean equinox of the J2000.0 epoch."
+                },
+                ICRF: {
+                  value: 3,
+                  description: "International Celestial Reference Frame axes."
+                },
+                TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE: {
+                  value: 4,
+                  description: "True equator, mean equinox of date."
+                },
+                MEAN_OF_DATE_EQUATOR: {
+                  value: 5,
+                  description: "Mean equator of date (precession applied to the epoch of the state)."
+                },
+                MEAN_OF_DATE_ECLIPTIC: {
+                  value: 6,
+                  description: "Mean ecliptic of date."
+                },
+                TRUE_OF_DATE_EQUATOR: {
+                  value: 7,
+                  description: "True equator of date (precession and nutation applied)."
+                },
+                TRUE_OF_DATE_ECLIPTIC: {
+                  value: 8,
+                  description: "True ecliptic of date."
+                },
+                MEAN_OF_EPOCH_EQUATOR: {
+                  value: 9,
+                  description: "Mean equator of a fixed reference epoch."
+                },
+                MEAN_OF_EPOCH_ECLIPTIC: {
+                  value: 10,
+                  description: "Mean ecliptic of a fixed reference epoch."
+                },
+                TRUE_OF_EPOCH_EQUATOR: {
+                  value: 11,
+                  description: "True equator of a fixed reference epoch."
+                },
+                TRUE_OF_EPOCH_ECLIPTIC: {
+                  value: 12,
+                  description: "True ecliptic of a fixed reference epoch."
+                },
+                BODY_FIXED: {
+                  value: 13,
+                  description: "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+                },
+                BODY_INERTIAL: {
+                  value: 14,
+                  description: "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+                },
+                OBJECT_REFERENCED: {
+                  value: 15,
+                  description: "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+                },
+                LOCAL_ALIGNED_CONSTRAINED: {
+                  value: 16,
+                  description: "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+                },
+                BODY_EQUATOR: {
+                  value: 17,
+                  description: "Axes in the reference body's equatorial plane at the requested epoch."
+                },
+                SOLAR_ECLIPTIC_MAGNETOSPHERIC: {
+                  value: 18,
+                  description: "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+                },
+                SOLAR_MAGNETOSPHERIC: {
+                  value: 19,
+                  description: "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+                },
+                TOPOCENTRIC: {
+                  value: 20,
+                  description: "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+                },
+                BODY_SPIN_SUN: {
+                  value: 21,
+                  description: "Axes fixed by the body spin axis and the body-to-Sun direction."
+                },
+                EPHEMERIS_KERNEL_DEFINED: {
+                  value: 22,
+                  description: "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+                },
+                MEAN_OF_DATE_EQUATOR_FK5: {
+                  value: 23,
+                  description: "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+                },
+                TRUE_OF_DATE_EQUATOR_FK5: {
+                  value: 24,
+                  description: "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+                },
+                TRUE_OF_DATE_EQUATOR_IERS1996: {
+                  value: 25,
+                  description: "True equator of date computed with the IERS Conventions (1996) reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980 nutation with the observed celestial pole offsets applied. Distinct from TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR (IAU-2006/2000A)."
+                },
+                TRUE_OF_DATE_EQUATOR_IERS2003: {
+                  value: 26,
+                  description: "True equator of date computed with the IERS Conventions (2003) reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976 precession with the IAU 2000 precession-rate corrections. The mean-of-date equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5."
+                },
+                TOPOCENTRIC_EAST_NORTH_UP: {
+                  value: 27,
+                  description: "Topocentric East-North-Up axes at a surface site; the site is carried on RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does."
+                },
+                TOPOCENTRIC_NORTH_EAST_DOWN: {
+                  value: 28,
+                  description: "Topocentric North-East-Down axes at a surface site."
+                },
+                TOPOCENTRIC_SOUTH_EAST_ZENITH: {
+                  value: 29,
+                  description: "Topocentric South-East-Zenith axes at a surface site."
+                },
+                ORBITAL_VELOCITY_NORMAL_CONORMAL: {
+                  value: 30,
+                  description: "Orbital axes from the object's state: X along the velocity, Z along the orbit normal, Y completing the right-handed set (VNC). The object is the origin body of the coordinate system."
+                },
+                ORBITAL_RADIAL_TRANSVERSE_NORMAL: {
+                  value: 31,
+                  description: "Orbital axes from the object's state: X radial (outward), Z along the orbit normal, Y transverse completing the set (RTN, also RSW)."
+                },
+                ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: {
+                  value: 32,
+                  description: "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ORIGIN: {
+              $ref: "#/definitions/RFMOrigin",
+              description: "Centre of the system.",
+              "x-flatbuffer-type": "RFMOrigin"
+            },
+            AXIS_REFERENCE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN.",
+              "x-flatbuffer-type": "int"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_TIME_SYSTEM: {
+              type: "string",
+              description: 'Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example "UTC", "TAI", "TT", "TDB", "A1").',
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_REFERENCED_AXES: {
+              $ref: "#/definitions/RFMObjectReferencedAxes",
+              description: "Extra parameters for OBJECT_REFERENCED axes.",
+              "x-flatbuffer-type": "RFMObjectReferencedAxes"
+            },
+            LOCAL_ALIGNED_CONSTRAINED_AXES: {
+              $ref: "#/definitions/RFMLocalAlignedConstrainedAxes",
+              description: "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.",
+              "x-flatbuffer-type": "RFMLocalAlignedConstrainedAxes"
+            },
+            KERNEL_FRAME_NAME: {
+              type: "string",
+              description: "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.",
+              "x-flatbuffer-type": "string"
+            },
+            KERNEL_FRAME_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.",
+              "x-flatbuffer-type": "int"
+            },
+            EOP_DATA_SET_CID: {
+              type: "string",
+              description: "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CelestialFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CelestialFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GCRF: {
+                  value: 0,
+                  description: "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+                },
+                ICRF: {
+                  value: 1,
+                  description: "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+                },
+                J2000: {
+                  value: 2,
+                  description: "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+                },
+                J2000A: {
+                  value: 3,
+                  description: "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+                },
+                EME2000: {
+                  value: 4,
+                  description: "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+                },
+                TEMEOFDATE: {
+                  value: 5,
+                  description: "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+                },
+                GTOD: {
+                  value: 6,
+                  description: "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+                },
+                CIRS: {
+                  value: 7,
+                  description: "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+                },
+                MOD_EARTH: {
+                  value: 8,
+                  description: "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+                },
+                MOD_CB: {
+                  value: 9,
+                  description: "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+                },
+                MOD_MOON: {
+                  value: 10,
+                  description: "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+                },
+                TOD_EARTH: {
+                  value: 11,
+                  description: "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+                },
+                TOD_CB: {
+                  value: 12,
+                  description: "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+                },
+                TOD_MOON: {
+                  value: 13,
+                  description: "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+                },
+                TOE_EARTH: {
+                  value: 14,
+                  description: "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+                },
+                TOE_CB: {
+                  value: 15,
+                  description: "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+                },
+                TOE_MOON: {
+                  value: 16,
+                  description: "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+                },
+                ITRF2000: {
+                  value: 17,
+                  description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+                },
+                ITRF93: {
+                  value: 18,
+                  description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+                },
+                ITRF97: {
+                  value: 19,
+                  description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+                },
+                EFG: {
+                  value: 20,
+                  description: "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+                },
+                FIXED_CB: {
+                  value: 21,
+                  description: "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+                },
+                FIXED_EARTH: {
+                  value: 22,
+                  description: "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+                },
+                WGS84: {
+                  value: 23,
+                  description: "WGS84 Earth-fixed terrestrial system."
+                },
+                DTRFYYYY: {
+                  value: 24,
+                  description: "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+                },
+                ALIGN_EARTH: {
+                  value: 25,
+                  description: "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+                },
+                ALIGN_CB: {
+                  value: 26,
+                  description: "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+                },
+                B1950: {
+                  value: 27,
+                  description: "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SpacecraftFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/SpacecraftFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                ACC_i: {
+                  value: 0,
+                  description: "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+                },
+                ACTUATOR_i: {
+                  value: 1,
+                  description: "OID: 1.3.112.4.57.8.2 Actuator system frame."
+                },
+                AST_i: {
+                  value: 2,
+                  description: "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+                },
+                CSS_i: {
+                  value: 3,
+                  description: "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+                },
+                DSS_i: {
+                  value: 4,
+                  description: "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+                },
+                ESA_i: {
+                  value: 5,
+                  description: "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+                },
+                GYRO_FRAME_i: {
+                  value: 6,
+                  description: "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+                },
+                IMU_FRAME_i: {
+                  value: 7,
+                  description: "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+                },
+                INSTRUMENT_i: {
+                  value: 8,
+                  description: "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+                },
+                MTA_i: {
+                  value: 9,
+                  description: "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+                },
+                RW_i: {
+                  value: 10,
+                  description: "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+                },
+                SA_i: {
+                  value: 11,
+                  description: "OID: 1.3.112.4.57.8.12 Solar Array frame."
+                },
+                SC_BODY_i: {
+                  value: 12,
+                  description: "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+                },
+                SENSOR_i: {
+                  value: 13,
+                  description: "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+                },
+                STARTRACKER_i: {
+                  value: 14,
+                  description: "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+                },
+                TAM_i: {
+                  value: 15,
+                  description: "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        OrbitFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/OrbitFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                EQW_INERTIAL: {
+                  value: 0,
+                  description: "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+                },
+                LVLH_INERTIAL: {
+                  value: 1,
+                  description: "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+                },
+                LVLH_ROTATING: {
+                  value: 2,
+                  description: "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+                },
+                NSW_INERTIAL: {
+                  value: 3,
+                  description: "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+                },
+                NSW_ROTATING: {
+                  value: 4,
+                  description: "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+                },
+                NTW_INERTIAL: {
+                  value: 5,
+                  description: "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+                },
+                NTW_ROTATING: {
+                  value: 6,
+                  description: "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+                },
+                PQW_INERTIAL: {
+                  value: 7,
+                  description: "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+                },
+                RSW_INERTIAL: {
+                  value: 8,
+                  description: "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+                },
+                RSW_ROTATING: {
+                  value: 9,
+                  description: "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+                },
+                SEZ_INERTIAL: {
+                  value: 10,
+                  description: "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+                },
+                SEZ_ROTATING: {
+                  value: 11,
+                  description: "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+                },
+                TNW_INERTIAL: {
+                  value: 12,
+                  description: "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+                },
+                TNW_ROTATING: {
+                  value: 13,
+                  description: "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+                },
+                VNC_INERTIAL: {
+                  value: 14,
+                  description: "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+                },
+                VNC_ROTATING: {
+                  value: 15,
+                  description: "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        CustomFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CustomFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                ECEF: {
+                  value: 0,
+                  description: "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+                },
+                TEME: {
+                  value: 1,
+                  description: "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+                },
+                TEMEOFEPOCH: {
+                  value: 2,
+                  description: "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+                },
+                ENU: {
+                  value: 3,
+                  description: "East-North-Up: Local tangent plane for surface points."
+                },
+                NED: {
+                  value: 4,
+                  description: "North-East-Down: Aviation/navigation frame aligned with gravity."
+                },
+                NEU: {
+                  value: 5,
+                  description: "North-East-Up: Local tangent plane variant with Up positive."
+                },
+                RIC: {
+                  value: 6,
+                  description: "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+                },
+                RTN: {
+                  value: 7,
+                  description: "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+                },
+                TVN: {
+                  value: 8,
+                  description: "Transverse-Velocity-Normal: Alternative orbit frame."
+                },
+                VVLH: {
+                  value: 9,
+                  description: "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+                },
+                QSW: {
+                  value: 10,
+                  description: "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+                },
+                LTP: {
+                  value: 11,
+                  description: "Local Tangent Plane: Surface-fixed frame centered on a point."
+                },
+                LVLH: {
+                  value: 12,
+                  description: "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+                },
+                PNE: {
+                  value: 13,
+                  description: "Polar-North-East: Surface coordinate frame."
+                },
+                BRF: {
+                  value: 14,
+                  description: "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+                },
+                RSW: {
+                  value: 15,
+                  description: "Radial-Along-track-Cross-track: Same as RSW."
+                },
+                TNW: {
+                  value: 16,
+                  description: "Tangential-Normal-Cross-track: Same as TNW."
+                },
+                UVW: {
+                  value: 17,
+                  description: "Radial-UTF: Radial, Along-track, Cross-track variant."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystemWrapper: {
+          type: "object",
+          properties: {
+            COORDINATE_SYSTEM: {
+              $ref: "#/definitions/RFMCoordinateSystem",
+              "x-flatbuffer-type": "RFMCoordinateSystem"
+            }
+          },
+          additionalProperties: false
+        },
+        RFM: {
+          type: "object",
+          description: "Reference Frame Message",
+          properties: {
+            REFERENCE_FRAME_type: {
+              $ref: "#/definitions/RFMUnion"
+            },
+            REFERENCE_FRAME: {
+              anyOf: [
+                {
+                  $ref: "#/definitions/CelestialFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/SpacecraftFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/OrbitFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/CustomFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/RFMCoordinateSystemWrapper"
+                }
+              ],
+              "x-flatbuffer-type": "RFMUnion"
+            },
+            INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              "x-flatbuffer-type": "int"
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SITCitation: {
           type: "object",
           description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
@@ -424138,6 +426949,22 @@ provider's reviewed register). Never free text.`,
                 },
                 OTHER: {
                   value: 17
+                },
+                LANDING_SITE: {
+                  value: 18,
+                  description: "A place a spacecraft touched down or is to touch down on a body surface"
+                },
+                IMPACT_SITE: {
+                  value: 19,
+                  description: "A place a spacecraft or stage struck a body surface"
+                },
+                CANDIDATE_REGION: {
+                  value: 20,
+                  description: "A surface region under study as a landing or exploration target"
+                },
+                SURFACE_FEATURE: {
+                  value: 21,
+                  description: "A named natural feature of a body surface (crater, mare, rille, mons)"
                 }
               }
             },
@@ -424153,17 +426980,17 @@ provider's reviewed register). Never free text.`,
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site",
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
               "x-flatbuffer-type": "float"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site",
+              description: "Longitude of the site, degrees, east positive",
               "x-flatbuffer-type": "float"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site",
+              description: "Altitude of the site above CENTER_NAME's reference surface",
               "x-flatbuffer-type": "float"
             },
             GEOMETRY: {
@@ -424366,6 +427193,26 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
               "x-flatbuffer-type": "PVN"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+              "x-flatbuffer-type": "RFM"
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -427048,7 +429895,11 @@ provider's reviewed register). Never free text.`,
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -427106,6 +429957,22 @@ provider's reviewed register). Never free text.`,
             },
             OTHER: {
               value: 17
+            },
+            LANDING_SITE: {
+              value: 18,
+              description: "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            IMPACT_SITE: {
+              value: 19,
+              description: "A place a spacecraft or stage struck a body surface"
+            },
+            CANDIDATE_REGION: {
+              value: 20,
+              description: "A surface region under study as a landing or exploration target"
+            },
+            SURFACE_FEATURE: {
+              value: 21,
+              description: "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -435159,6 +438026,22 @@ provider's reviewed register). Never free text.`,
                 },
                 OTHER: {
                   value: 17
+                },
+                LANDING_SITE: {
+                  value: 18,
+                  description: "A place a spacecraft touched down or is to touch down on a body surface"
+                },
+                IMPACT_SITE: {
+                  value: 19,
+                  description: "A place a spacecraft or stage struck a body surface"
+                },
+                CANDIDATE_REGION: {
+                  value: 20,
+                  description: "A surface region under study as a landing or exploration target"
+                },
+                SURFACE_FEATURE: {
+                  value: 21,
+                  description: "A named natural feature of a body surface (crater, mare, rille, mons)"
                 }
               }
             },
@@ -435174,17 +438057,17 @@ provider's reviewed register). Never free text.`,
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site",
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
               "x-flatbuffer-type": "float"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site",
+              description: "Longitude of the site, degrees, east positive",
               "x-flatbuffer-type": "float"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site",
+              description: "Altitude of the site above CENTER_NAME's reference surface",
               "x-flatbuffer-type": "float"
             },
             GEOMETRY: {
@@ -435387,6 +438270,26 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
               "x-flatbuffer-type": "PVN"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+              "x-flatbuffer-type": "RFM"
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -443926,7 +446829,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -443984,6 +446891,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             OTHER: {
               value: 17
+            },
+            LANDING_SITE: {
+              value: 18,
+              description: "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            IMPACT_SITE: {
+              value: 19,
+              description: "A place a spacecraft or stage struck a body surface"
+            },
+            CANDIDATE_REGION: {
+              value: 20,
+              description: "A surface region under study as a landing or exploration target"
+            },
+            SURFACE_FEATURE: {
+              value: 21,
+              description: "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -449144,6 +452067,22 @@ provider's reviewed register). Never free text.`,
                 },
                 OTHER: {
                   value: 17
+                },
+                LANDING_SITE: {
+                  value: 18,
+                  description: "A place a spacecraft touched down or is to touch down on a body surface"
+                },
+                IMPACT_SITE: {
+                  value: 19,
+                  description: "A place a spacecraft or stage struck a body surface"
+                },
+                CANDIDATE_REGION: {
+                  value: 20,
+                  description: "A surface region under study as a landing or exploration target"
+                },
+                SURFACE_FEATURE: {
+                  value: 21,
+                  description: "A named natural feature of a body surface (crater, mare, rille, mons)"
                 }
               }
             },
@@ -449159,17 +452098,17 @@ provider's reviewed register). Never free text.`,
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site",
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
               "x-flatbuffer-type": "float"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site",
+              description: "Longitude of the site, degrees, east positive",
               "x-flatbuffer-type": "float"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site",
+              description: "Altitude of the site above CENTER_NAME's reference surface",
               "x-flatbuffer-type": "float"
             },
             GEOMETRY: {
@@ -449372,6 +452311,26 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
               "x-flatbuffer-type": "PVN"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+              "x-flatbuffer-type": "RFM"
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -529069,7 +532028,8 @@ format class are named by $NCD's container format.`,
             "GEOGRAPHIC_WGS84",
             "GEOGRAPHIC_SINGLE_ROOT",
             "WEB_MERCATOR",
-            "CUSTOM"
+            "CUSTOM",
+            "GEOGRAPHIC_TWO_ROOT_BODY"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -529093,6 +532053,10 @@ format class are named by $NCD's container format.`,
             CUSTOM: {
               value: 4,
               description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+            },
+            GEOGRAPHIC_TWO_ROOT_BODY: {
+              value: 5,
+              description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
             }
           }
         },
@@ -529148,7 +532112,8 @@ format class are named by $NCD's container format.`,
             "GEOID",
             "MEAN_SEA_LEVEL",
             "REGIONAL_DATUM",
-            "CUSTOM"
+            "CUSTOM",
+            "REFERENCE_SPHERE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -529176,6 +532141,10 @@ format class are named by $NCD's container format.`,
             CUSTOM: {
               value: 5,
               description: "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+            },
+            REFERENCE_SPHERE: {
+              value: 6,
+              description: "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
             }
           }
         },
@@ -534041,7 +537010,11 @@ format class are named by $NCD's container format.`,
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -534099,6 +537072,22 @@ format class are named by $NCD's container format.`,
             },
             OTHER: {
               value: 17
+            },
+            LANDING_SITE: {
+              value: 18,
+              description: "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            IMPACT_SITE: {
+              value: 19,
+              description: "A place a spacecraft or stage struck a body surface"
+            },
+            CANDIDATE_REGION: {
+              value: 20,
+              description: "A surface region under study as a landing or exploration target"
+            },
+            SURFACE_FEATURE: {
+              value: 21,
+              description: "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -588542,7 +591531,7 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
         },
         DTT: {
           type: "object",
-          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
           properties: {
             TILESET_ID: {
               type: "string",
@@ -588580,6 +591569,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 CUSTOM: {
                   value: 4,
                   description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                },
+                GEOGRAPHIC_TWO_ROOT_BODY: {
+                  value: 5,
+                  description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -588613,22 +591606,22 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             WEST_DEG: {
               type: "number",
-              description: "Western extent of the tile, decimal degrees on WGS 84.",
+              description: "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body).",
               "x-flatbuffer-type": "double"
             },
             SOUTH_DEG: {
               type: "number",
-              description: "Southern extent of the tile, decimal degrees on WGS 84.",
+              description: "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
               "x-flatbuffer-type": "double"
             },
             EAST_DEG: {
               type: "number",
-              description: "Eastern extent of the tile, decimal degrees on WGS 84.",
+              description: "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive.",
               "x-flatbuffer-type": "double"
             },
             NORTH_DEG: {
               type: "number",
-              description: "Northern extent of the tile, decimal degrees on WGS 84.",
+              description: "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
               "x-flatbuffer-type": "double"
             },
             MIN_HEIGHT_M: {
@@ -588742,6 +591735,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
                 CUSTOM: {
                   value: 5,
                   description: "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                },
+                REFERENCE_SPHERE: {
+                  value: 6,
+                  description: "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -588935,6 +591932,31 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               type: "string",
               description: "Free-form publisher notes about this tile. Never a substitute for a\nstated field.",
               "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_RADII_M: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value.",
+              "x-flatbuffer-type": "[double]"
+            },
+            HORIZON_ELEVATIONS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0.",
+              "x-flatbuffer-type": "DTTPayloadRef"
+            },
+            HORIZON_SECTORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).",
+              "x-flatbuffer-type": "uint8"
             }
           },
           required: [
@@ -610400,6 +613422,22 @@ provider's reviewed register). Never free text.`,
                 },
                 OTHER: {
                   value: 17
+                },
+                LANDING_SITE: {
+                  value: 18,
+                  description: "A place a spacecraft touched down or is to touch down on a body surface"
+                },
+                IMPACT_SITE: {
+                  value: 19,
+                  description: "A place a spacecraft or stage struck a body surface"
+                },
+                CANDIDATE_REGION: {
+                  value: 20,
+                  description: "A surface region under study as a landing or exploration target"
+                },
+                SURFACE_FEATURE: {
+                  value: 21,
+                  description: "A named natural feature of a body surface (crater, mare, rille, mons)"
                 }
               }
             },
@@ -610415,17 +613453,17 @@ provider's reviewed register). Never free text.`,
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site",
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
               "x-flatbuffer-type": "float"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site",
+              description: "Longitude of the site, degrees, east positive",
               "x-flatbuffer-type": "float"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site",
+              description: "Altitude of the site above CENTER_NAME's reference surface",
               "x-flatbuffer-type": "float"
             },
             GEOMETRY: {
@@ -610628,6 +613666,26 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
               "x-flatbuffer-type": "PVN"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+              "x-flatbuffer-type": "RFM"
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -778932,6 +781990,730 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        CelestialFrame: {
+          type: "string",
+          enum: [
+            "GCRF",
+            "ICRF",
+            "J2000",
+            "J2000A",
+            "EME2000",
+            "TEMEOFDATE",
+            "GTOD",
+            "CIRS",
+            "MOD_EARTH",
+            "MOD_CB",
+            "MOD_MOON",
+            "TOD_EARTH",
+            "TOD_CB",
+            "TOD_MOON",
+            "TOE_EARTH",
+            "TOE_CB",
+            "TOE_MOON",
+            "ITRF2000",
+            "ITRF93",
+            "ITRF97",
+            "EFG",
+            "FIXED_CB",
+            "FIXED_EARTH",
+            "WGS84",
+            "DTRFYYYY",
+            "ALIGN_EARTH",
+            "ALIGN_CB",
+            "B1950"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            GCRF: {
+              value: 0,
+              description: "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+            },
+            ICRF: {
+              value: 1,
+              description: "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+            },
+            J2000: {
+              value: 2,
+              description: "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+            },
+            J2000A: {
+              value: 3,
+              description: "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+            },
+            EME2000: {
+              value: 4,
+              description: "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+            },
+            TEMEOFDATE: {
+              value: 5,
+              description: "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+            },
+            GTOD: {
+              value: 6,
+              description: "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+            },
+            CIRS: {
+              value: 7,
+              description: "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+            },
+            MOD_EARTH: {
+              value: 8,
+              description: "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+            },
+            MOD_CB: {
+              value: 9,
+              description: "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+            },
+            MOD_MOON: {
+              value: 10,
+              description: "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+            },
+            TOD_EARTH: {
+              value: 11,
+              description: "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+            },
+            TOD_CB: {
+              value: 12,
+              description: "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+            },
+            TOD_MOON: {
+              value: 13,
+              description: "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+            },
+            TOE_EARTH: {
+              value: 14,
+              description: "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+            },
+            TOE_CB: {
+              value: 15,
+              description: "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+            },
+            TOE_MOON: {
+              value: 16,
+              description: "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+            },
+            ITRF2000: {
+              value: 17,
+              description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+            },
+            ITRF93: {
+              value: 18,
+              description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+            },
+            ITRF97: {
+              value: 19,
+              description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+            },
+            EFG: {
+              value: 20,
+              description: "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+            },
+            FIXED_CB: {
+              value: 21,
+              description: "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+            },
+            FIXED_EARTH: {
+              value: 22,
+              description: "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+            },
+            WGS84: {
+              value: 23,
+              description: "WGS84 Earth-fixed terrestrial system."
+            },
+            DTRFYYYY: {
+              value: 24,
+              description: "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+            },
+            ALIGN_EARTH: {
+              value: 25,
+              description: "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+            },
+            ALIGN_CB: {
+              value: 26,
+              description: "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+            },
+            B1950: {
+              value: 27,
+              description: "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+            }
+          }
+        },
+        SpacecraftFrame: {
+          type: "string",
+          enum: [
+            "ACC_i",
+            "ACTUATOR_i",
+            "AST_i",
+            "CSS_i",
+            "DSS_i",
+            "ESA_i",
+            "GYRO_FRAME_i",
+            "IMU_FRAME_i",
+            "INSTRUMENT_i",
+            "MTA_i",
+            "RW_i",
+            "SA_i",
+            "SC_BODY_i",
+            "SENSOR_i",
+            "STARTRACKER_i",
+            "TAM_i"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            ACC_i: {
+              value: 0,
+              description: "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+            },
+            ACTUATOR_i: {
+              value: 1,
+              description: "OID: 1.3.112.4.57.8.2 Actuator system frame."
+            },
+            AST_i: {
+              value: 2,
+              description: "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+            },
+            CSS_i: {
+              value: 3,
+              description: "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+            },
+            DSS_i: {
+              value: 4,
+              description: "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+            },
+            ESA_i: {
+              value: 5,
+              description: "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+            },
+            GYRO_FRAME_i: {
+              value: 6,
+              description: "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+            },
+            IMU_FRAME_i: {
+              value: 7,
+              description: "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+            },
+            INSTRUMENT_i: {
+              value: 8,
+              description: "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+            },
+            MTA_i: {
+              value: 9,
+              description: "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+            },
+            RW_i: {
+              value: 10,
+              description: "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+            },
+            SA_i: {
+              value: 11,
+              description: "OID: 1.3.112.4.57.8.12 Solar Array frame."
+            },
+            SC_BODY_i: {
+              value: 12,
+              description: "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+            },
+            SENSOR_i: {
+              value: 13,
+              description: "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+            },
+            STARTRACKER_i: {
+              value: 14,
+              description: "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+            },
+            TAM_i: {
+              value: 15,
+              description: "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+            }
+          }
+        },
+        OrbitFrame: {
+          type: "string",
+          enum: [
+            "EQW_INERTIAL",
+            "LVLH_INERTIAL",
+            "LVLH_ROTATING",
+            "NSW_INERTIAL",
+            "NSW_ROTATING",
+            "NTW_INERTIAL",
+            "NTW_ROTATING",
+            "PQW_INERTIAL",
+            "RSW_INERTIAL",
+            "RSW_ROTATING",
+            "SEZ_INERTIAL",
+            "SEZ_ROTATING",
+            "TNW_INERTIAL",
+            "TNW_ROTATING",
+            "VNC_INERTIAL",
+            "VNC_ROTATING"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            EQW_INERTIAL: {
+              value: 0,
+              description: "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+            },
+            LVLH_INERTIAL: {
+              value: 1,
+              description: "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+            },
+            LVLH_ROTATING: {
+              value: 2,
+              description: "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+            },
+            NSW_INERTIAL: {
+              value: 3,
+              description: "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+            },
+            NSW_ROTATING: {
+              value: 4,
+              description: "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+            },
+            NTW_INERTIAL: {
+              value: 5,
+              description: "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+            },
+            NTW_ROTATING: {
+              value: 6,
+              description: "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+            },
+            PQW_INERTIAL: {
+              value: 7,
+              description: "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+            },
+            RSW_INERTIAL: {
+              value: 8,
+              description: "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+            },
+            RSW_ROTATING: {
+              value: 9,
+              description: "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+            },
+            SEZ_INERTIAL: {
+              value: 10,
+              description: "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+            },
+            SEZ_ROTATING: {
+              value: 11,
+              description: "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+            },
+            TNW_INERTIAL: {
+              value: 12,
+              description: "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+            },
+            TNW_ROTATING: {
+              value: 13,
+              description: "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+            },
+            VNC_INERTIAL: {
+              value: 14,
+              description: "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+            },
+            VNC_ROTATING: {
+              value: 15,
+              description: "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+            }
+          }
+        },
+        CustomFrame: {
+          type: "string",
+          enum: [
+            "ECEF",
+            "TEME",
+            "TEMEOFEPOCH",
+            "ENU",
+            "NED",
+            "NEU",
+            "RIC",
+            "RTN",
+            "TVN",
+            "VVLH",
+            "QSW",
+            "LTP",
+            "LVLH",
+            "PNE",
+            "BRF",
+            "RSW",
+            "TNW",
+            "UVW"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            ECEF: {
+              value: 0,
+              description: "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+            },
+            TEME: {
+              value: 1,
+              description: "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+            },
+            TEMEOFEPOCH: {
+              value: 2,
+              description: "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+            },
+            ENU: {
+              value: 3,
+              description: "East-North-Up: Local tangent plane for surface points."
+            },
+            NED: {
+              value: 4,
+              description: "North-East-Down: Aviation/navigation frame aligned with gravity."
+            },
+            NEU: {
+              value: 5,
+              description: "North-East-Up: Local tangent plane variant with Up positive."
+            },
+            RIC: {
+              value: 6,
+              description: "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+            },
+            RTN: {
+              value: 7,
+              description: "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+            },
+            TVN: {
+              value: 8,
+              description: "Transverse-Velocity-Normal: Alternative orbit frame."
+            },
+            VVLH: {
+              value: 9,
+              description: "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+            },
+            QSW: {
+              value: 10,
+              description: "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+            },
+            LTP: {
+              value: 11,
+              description: "Local Tangent Plane: Surface-fixed frame centered on a point."
+            },
+            LVLH: {
+              value: 12,
+              description: "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+            },
+            PNE: {
+              value: 13,
+              description: "Polar-North-East: Surface coordinate frame."
+            },
+            BRF: {
+              value: 14,
+              description: "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+            },
+            RSW: {
+              value: 15,
+              description: "Radial-Along-track-Cross-track: Same as RSW."
+            },
+            TNW: {
+              value: 16,
+              description: "Tangential-Normal-Cross-track: Same as TNW."
+            },
+            UVW: {
+              value: 17,
+              description: "Radial-UTF: Radial, Along-track, Cross-track variant."
+            }
+          }
+        },
+        rfmAxisType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "MEAN_EQUATOR_EQUINOX_J2000",
+            "MEAN_ECLIPTIC_EQUINOX_J2000",
+            "ICRF",
+            "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE",
+            "MEAN_OF_DATE_EQUATOR",
+            "MEAN_OF_DATE_ECLIPTIC",
+            "TRUE_OF_DATE_EQUATOR",
+            "TRUE_OF_DATE_ECLIPTIC",
+            "MEAN_OF_EPOCH_EQUATOR",
+            "MEAN_OF_EPOCH_ECLIPTIC",
+            "TRUE_OF_EPOCH_EQUATOR",
+            "TRUE_OF_EPOCH_ECLIPTIC",
+            "BODY_FIXED",
+            "BODY_INERTIAL",
+            "OBJECT_REFERENCED",
+            "LOCAL_ALIGNED_CONSTRAINED",
+            "BODY_EQUATOR",
+            "SOLAR_ECLIPTIC_MAGNETOSPHERIC",
+            "SOLAR_MAGNETOSPHERIC",
+            "TOPOCENTRIC",
+            "BODY_SPIN_SUN",
+            "EPHEMERIS_KERNEL_DEFINED",
+            "MEAN_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_FK5",
+            "TRUE_OF_DATE_EQUATOR_IERS1996",
+            "TRUE_OF_DATE_EQUATOR_IERS2003",
+            "TOPOCENTRIC_EAST_NORTH_UP",
+            "TOPOCENTRIC_NORTH_EAST_DOWN",
+            "TOPOCENTRIC_SOUTH_EAST_ZENITH",
+            "ORBITAL_VELOCITY_NORMAL_CONORMAL",
+            "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
+            "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            MEAN_EQUATOR_EQUINOX_J2000: {
+              value: 1,
+              description: "Mean equator and mean equinox of the J2000.0 epoch."
+            },
+            MEAN_ECLIPTIC_EQUINOX_J2000: {
+              value: 2,
+              description: "Mean ecliptic and mean equinox of the J2000.0 epoch."
+            },
+            ICRF: {
+              value: 3,
+              description: "International Celestial Reference Frame axes."
+            },
+            TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE: {
+              value: 4,
+              description: "True equator, mean equinox of date."
+            },
+            MEAN_OF_DATE_EQUATOR: {
+              value: 5,
+              description: "Mean equator of date (precession applied to the epoch of the state)."
+            },
+            MEAN_OF_DATE_ECLIPTIC: {
+              value: 6,
+              description: "Mean ecliptic of date."
+            },
+            TRUE_OF_DATE_EQUATOR: {
+              value: 7,
+              description: "True equator of date (precession and nutation applied)."
+            },
+            TRUE_OF_DATE_ECLIPTIC: {
+              value: 8,
+              description: "True ecliptic of date."
+            },
+            MEAN_OF_EPOCH_EQUATOR: {
+              value: 9,
+              description: "Mean equator of a fixed reference epoch."
+            },
+            MEAN_OF_EPOCH_ECLIPTIC: {
+              value: 10,
+              description: "Mean ecliptic of a fixed reference epoch."
+            },
+            TRUE_OF_EPOCH_EQUATOR: {
+              value: 11,
+              description: "True equator of a fixed reference epoch."
+            },
+            TRUE_OF_EPOCH_ECLIPTIC: {
+              value: 12,
+              description: "True ecliptic of a fixed reference epoch."
+            },
+            BODY_FIXED: {
+              value: 13,
+              description: "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+            },
+            BODY_INERTIAL: {
+              value: 14,
+              description: "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+            },
+            OBJECT_REFERENCED: {
+              value: 15,
+              description: "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+            },
+            LOCAL_ALIGNED_CONSTRAINED: {
+              value: 16,
+              description: "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+            },
+            BODY_EQUATOR: {
+              value: 17,
+              description: "Axes in the reference body's equatorial plane at the requested epoch."
+            },
+            SOLAR_ECLIPTIC_MAGNETOSPHERIC: {
+              value: 18,
+              description: "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+            },
+            SOLAR_MAGNETOSPHERIC: {
+              value: 19,
+              description: "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+            },
+            TOPOCENTRIC: {
+              value: 20,
+              description: "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+            },
+            BODY_SPIN_SUN: {
+              value: 21,
+              description: "Axes fixed by the body spin axis and the body-to-Sun direction."
+            },
+            EPHEMERIS_KERNEL_DEFINED: {
+              value: 22,
+              description: "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+            },
+            MEAN_OF_DATE_EQUATOR_FK5: {
+              value: 23,
+              description: "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+            },
+            TRUE_OF_DATE_EQUATOR_FK5: {
+              value: 24,
+              description: "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+            },
+            TRUE_OF_DATE_EQUATOR_IERS1996: {
+              value: 25,
+              description: "True equator of date computed with the IERS Conventions (1996) reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980 nutation with the observed celestial pole offsets applied. Distinct from TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR (IAU-2006/2000A)."
+            },
+            TRUE_OF_DATE_EQUATOR_IERS2003: {
+              value: 26,
+              description: "True equator of date computed with the IERS Conventions (2003) reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976 precession with the IAU 2000 precession-rate corrections. The mean-of-date equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5."
+            },
+            TOPOCENTRIC_EAST_NORTH_UP: {
+              value: 27,
+              description: "Topocentric East-North-Up axes at a surface site; the site is carried on RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does."
+            },
+            TOPOCENTRIC_NORTH_EAST_DOWN: {
+              value: 28,
+              description: "Topocentric North-East-Down axes at a surface site."
+            },
+            TOPOCENTRIC_SOUTH_EAST_ZENITH: {
+              value: 29,
+              description: "Topocentric South-East-Zenith axes at a surface site."
+            },
+            ORBITAL_VELOCITY_NORMAL_CONORMAL: {
+              value: 30,
+              description: "Orbital axes from the object's state: X along the velocity, Z along the orbit normal, Y completing the right-handed set (VNC). The object is the origin body of the coordinate system."
+            },
+            ORBITAL_RADIAL_TRANSVERSE_NORMAL: {
+              value: 31,
+              description: "Orbital axes from the object's state: X radial (outward), Z along the orbit normal, Y transverse completing the set (RTN, also RSW)."
+            },
+            ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: {
+              value: 32,
+              description: "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+            }
+          }
+        },
+        rfmOriginKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CELESTIAL_BODY",
+            "BARYCENTRE",
+            "LIBRATION_POINT",
+            "SPACE_OBJECT",
+            "GROUND_SITE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            CELESTIAL_BODY: {
+              value: 1,
+              description: "The centre of mass of a single celestial body."
+            },
+            BARYCENTRE: {
+              value: 2,
+              description: "The barycentre of a named system of bodies."
+            },
+            LIBRATION_POINT: {
+              value: 3,
+              description: "A libration (Lagrange) point of a two-body system."
+            },
+            SPACE_OBJECT: {
+              value: 4,
+              description: "Another tracked space object, identified by OBJECT_ID."
+            },
+            GROUND_SITE: {
+              value: 5,
+              description: "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            }
+          }
+        },
+        rfmLibrationPoint: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "L1",
+            "L2",
+            "L3",
+            "L4",
+            "L5"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            L1: {
+              value: 1
+            },
+            L2: {
+              value: 2
+            },
+            L3: {
+              value: 3
+            },
+            L4: {
+              value: 4
+            },
+            L5: {
+              value: 5
+            }
+          }
+        },
+        rfmVectorSpecification: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RADIAL",
+            "ANTI_RADIAL",
+            "VELOCITY",
+            "ANTI_VELOCITY",
+            "ORBIT_NORMAL",
+            "ANTI_ORBIT_NORMAL"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RADIAL: {
+              value: 1,
+              description: "Primary-to-secondary position direction."
+            },
+            ANTI_RADIAL: {
+              value: 2,
+              description: "Negated RADIAL."
+            },
+            VELOCITY: {
+              value: 3,
+              description: "Relative velocity direction."
+            },
+            ANTI_VELOCITY: {
+              value: 4,
+              description: "Negated VELOCITY."
+            },
+            ORBIT_NORMAL: {
+              value: 5,
+              description: "Orbit normal, RADIAL crossed into VELOCITY."
+            },
+            ANTI_ORBIT_NORMAL: {
+              value: 6,
+              description: "Negated ORBIT_NORMAL."
+            }
+          }
+        },
+        RFMUnion: {
+          type: "string",
+          enum: [
+            "NONE",
+            "CelestialFrameWrapper",
+            "SpacecraftFrameWrapper",
+            "OrbitFrameWrapper",
+            "CustomFrameWrapper",
+            "RFMCoordinateSystemWrapper"
+          ]
+        },
         SiteType: {
           type: "string",
           enum: [
@@ -778952,7 +782734,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -779010,6 +782796,22 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             OTHER: {
               value: 17
+            },
+            LANDING_SITE: {
+              value: 18,
+              description: "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            IMPACT_SITE: {
+              value: 19,
+              description: "A place a spacecraft or stage struck a body surface"
+            },
+            CANDIDATE_REGION: {
+              value: 20,
+              description: "A surface region under study as a landing or exploration target"
+            },
+            SURFACE_FEATURE: {
+              value: 21,
+              description: "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -780694,6 +784496,914 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           },
           additionalProperties: false
         },
+        RFMOrigin: {
+          type: "object",
+          description: "The point a coordinate system is centred on. Body and barycentre\nidentifiers are integer ephemeris body codes; text NAME is descriptive\nonly and is never the machine key.",
+          properties: {
+            KIND: {
+              $ref: "#/definitions/rfmOriginKind",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                CELESTIAL_BODY: {
+                  value: 1,
+                  description: "The centre of mass of a single celestial body."
+                },
+                BARYCENTRE: {
+                  value: 2,
+                  description: "The barycentre of a named system of bodies."
+                },
+                LIBRATION_POINT: {
+                  value: 3,
+                  description: "A libration (Lagrange) point of a two-body system."
+                },
+                SPACE_OBJECT: {
+                  value: 4,
+                  description: "Another tracked space object, identified by OBJECT_ID."
+                },
+                GROUND_SITE: {
+                  value: 5,
+                  description: "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            CELESTIAL_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code when KIND is CELESTIAL_BODY.",
+              "x-flatbuffer-type": "int"
+            },
+            BARYCENTRE_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the barycentre when KIND is BARYCENTRE.",
+              "x-flatbuffer-type": "int"
+            },
+            LIBRATION_POINT: {
+              $ref: "#/definitions/rfmLibrationPoint",
+              description: "Which libration point, when KIND is LIBRATION_POINT.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                L1: {
+                  value: 1
+                },
+                L2: {
+                  value: 2
+                },
+                L3: {
+                  value: 3
+                },
+                L4: {
+                  value: 4
+                },
+                L5: {
+                  value: 5
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LIBRATION_PRIMARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system primary.",
+              "x-flatbuffer-type": "int"
+            },
+            LIBRATION_SECONDARY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the libration system secondary.",
+              "x-flatbuffer-type": "int"
+            },
+            OBJECT_ID: {
+              type: "string",
+              description: "Identifier of the space object when KIND is SPACE_OBJECT.",
+              "x-flatbuffer-type": "string"
+            },
+            SITE_ID: {
+              type: "string",
+              description: "Identifier of the surface site when KIND is GROUND_SITE.",
+              "x-flatbuffer-type": "string"
+            },
+            SITE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code of the body the site sits on.",
+              "x-flatbuffer-type": "int"
+            },
+            SITE_LATITUDE: {
+              type: "number",
+              description: "Geodetic latitude of the site, degrees, positive north.",
+              "x-flatbuffer-type": "double"
+            },
+            SITE_LONGITUDE: {
+              type: "number",
+              description: "Geodetic longitude of the site, degrees, positive east.",
+              "x-flatbuffer-type": "double"
+            },
+            SITE_ALTITUDE: {
+              type: "number",
+              description: "Height of the site above the reference ellipsoid, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            NAME: {
+              type: "string",
+              description: "Human-readable label. Descriptive only.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMObjectReferencedAxes: {
+          type: "object",
+          description: "Axes built from the relative geometry of two objects. Exactly two of the\nthree axis assignments are independent; the third completes the triad.",
+          properties: {
+            PRIMARY_OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            SECONDARY_OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            X_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RADIAL: {
+                  value: 1,
+                  description: "Primary-to-secondary position direction."
+                },
+                ANTI_RADIAL: {
+                  value: 2,
+                  description: "Negated RADIAL."
+                },
+                VELOCITY: {
+                  value: 3,
+                  description: "Relative velocity direction."
+                },
+                ANTI_VELOCITY: {
+                  value: 4,
+                  description: "Negated VELOCITY."
+                },
+                ORBIT_NORMAL: {
+                  value: 5,
+                  description: "Orbit normal, RADIAL crossed into VELOCITY."
+                },
+                ANTI_ORBIT_NORMAL: {
+                  value: 6,
+                  description: "Negated ORBIT_NORMAL."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            Y_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RADIAL: {
+                  value: 1,
+                  description: "Primary-to-secondary position direction."
+                },
+                ANTI_RADIAL: {
+                  value: 2,
+                  description: "Negated RADIAL."
+                },
+                VELOCITY: {
+                  value: 3,
+                  description: "Relative velocity direction."
+                },
+                ANTI_VELOCITY: {
+                  value: 4,
+                  description: "Negated VELOCITY."
+                },
+                ORBIT_NORMAL: {
+                  value: 5,
+                  description: "Orbit normal, RADIAL crossed into VELOCITY."
+                },
+                ANTI_ORBIT_NORMAL: {
+                  value: 6,
+                  description: "Negated ORBIT_NORMAL."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            Z_AXIS: {
+              $ref: "#/definitions/rfmVectorSpecification",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RADIAL: {
+                  value: 1,
+                  description: "Primary-to-secondary position direction."
+                },
+                ANTI_RADIAL: {
+                  value: 2,
+                  description: "Negated RADIAL."
+                },
+                VELOCITY: {
+                  value: 3,
+                  description: "Relative velocity direction."
+                },
+                ANTI_VELOCITY: {
+                  value: 4,
+                  description: "Negated VELOCITY."
+                },
+                ORBIT_NORMAL: {
+                  value: 5,
+                  description: "Orbit normal, RADIAL crossed into VELOCITY."
+                },
+                ANTI_ORBIT_NORMAL: {
+                  value: 6,
+                  description: "Negated ORBIT_NORMAL."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMLocalAlignedConstrainedAxes: {
+          type: "object",
+          description: "Axes built by aligning one vector with a reference direction and using a\nsecond vector as a constraint. Vectors are 3-element, expressed in the\ncoordinate system named by REFERENCE_COORDINATE_SYSTEM_NAME.",
+          properties: {
+            REFERENCE_OBJECT_ID: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_COORDINATE_SYSTEM_NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            },
+            ALIGNMENT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            ALIGNMENT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            CONSTRAINT_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            },
+            CONSTRAINT_REFERENCE_VECTOR: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              "x-flatbuffer-type": "[double]"
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystem: {
+          type: "object",
+          description: "A fully specified coordinate system: an axis set, an origin, and the epoch\nand time system the axis set is evaluated at. This is the unit a frames\nconsumer needs; the pre-existing RFMUnion members name an axis convention\nalone and cannot express an origin.",
+          properties: {
+            NAME: {
+              type: "string",
+              description: "Stable name for this coordinate system within the producing data set.",
+              "x-flatbuffer-type": "string"
+            },
+            AXIS_TYPE: {
+              $ref: "#/definitions/rfmAxisType",
+              description: "Orientation rule.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                MEAN_EQUATOR_EQUINOX_J2000: {
+                  value: 1,
+                  description: "Mean equator and mean equinox of the J2000.0 epoch."
+                },
+                MEAN_ECLIPTIC_EQUINOX_J2000: {
+                  value: 2,
+                  description: "Mean ecliptic and mean equinox of the J2000.0 epoch."
+                },
+                ICRF: {
+                  value: 3,
+                  description: "International Celestial Reference Frame axes."
+                },
+                TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE: {
+                  value: 4,
+                  description: "True equator, mean equinox of date."
+                },
+                MEAN_OF_DATE_EQUATOR: {
+                  value: 5,
+                  description: "Mean equator of date (precession applied to the epoch of the state)."
+                },
+                MEAN_OF_DATE_ECLIPTIC: {
+                  value: 6,
+                  description: "Mean ecliptic of date."
+                },
+                TRUE_OF_DATE_EQUATOR: {
+                  value: 7,
+                  description: "True equator of date (precession and nutation applied)."
+                },
+                TRUE_OF_DATE_ECLIPTIC: {
+                  value: 8,
+                  description: "True ecliptic of date."
+                },
+                MEAN_OF_EPOCH_EQUATOR: {
+                  value: 9,
+                  description: "Mean equator of a fixed reference epoch."
+                },
+                MEAN_OF_EPOCH_ECLIPTIC: {
+                  value: 10,
+                  description: "Mean ecliptic of a fixed reference epoch."
+                },
+                TRUE_OF_EPOCH_EQUATOR: {
+                  value: 11,
+                  description: "True equator of a fixed reference epoch."
+                },
+                TRUE_OF_EPOCH_ECLIPTIC: {
+                  value: 12,
+                  description: "True ecliptic of a fixed reference epoch."
+                },
+                BODY_FIXED: {
+                  value: 13,
+                  description: "Axes rotating with the body named by AXIS_REFERENCE_BODY_NAIF_ID, per its published rotation elements."
+                },
+                BODY_INERTIAL: {
+                  value: 14,
+                  description: "Non-rotating axes aligned with the reference body's equator and prime meridian at the reference epoch."
+                },
+                OBJECT_REFERENCED: {
+                  value: 15,
+                  description: "Axes built from the relative geometry of two named objects; see RFMObjectReferencedAxes."
+                },
+                LOCAL_ALIGNED_CONSTRAINED: {
+                  value: 16,
+                  description: "Axes built by aligning one vector and constraining a second; see RFMLocalAlignedConstrainedAxes."
+                },
+                BODY_EQUATOR: {
+                  value: 17,
+                  description: "Axes in the reference body's equatorial plane at the requested epoch."
+                },
+                SOLAR_ECLIPTIC_MAGNETOSPHERIC: {
+                  value: 18,
+                  description: "Solar-ecliptic magnetospheric axes: X toward the Sun, Z along the ecliptic north, commonly abbreviated GSE."
+                },
+                SOLAR_MAGNETOSPHERIC: {
+                  value: 19,
+                  description: "Solar-magnetospheric axes: X toward the Sun, Z in the plane containing the body magnetic dipole, commonly abbreviated GSM."
+                },
+                TOPOCENTRIC: {
+                  value: 20,
+                  description: "Local horizon axes at a surface site; the site is carried on RFMOrigin."
+                },
+                BODY_SPIN_SUN: {
+                  value: 21,
+                  description: "Axes fixed by the body spin axis and the body-to-Sun direction."
+                },
+                EPHEMERIS_KERNEL_DEFINED: {
+                  value: 22,
+                  description: "Axes defined by a loaded ephemeris/orientation kernel; identified by KERNEL_FRAME_NAME / KERNEL_FRAME_ID on RFMCoordinateSystem."
+                },
+                MEAN_OF_DATE_EQUATOR_FK5: {
+                  value: 23,
+                  description: "LEGACY, retained and NAMED rather than left implicit: mean equator of date computed with the IAU-76/FK5 precession theory instead of the IAU-2006/2000A chain. Results differ from MEAN_OF_DATE_EQUATOR at the milliarcsecond level and the two are not interchangeable."
+                },
+                TRUE_OF_DATE_EQUATOR_FK5: {
+                  value: 24,
+                  description: "LEGACY, retained and NAMED: true equator of date computed with the IAU-76/FK5 precession-nutation theory. See MEAN_OF_DATE_EQUATOR_FK5."
+                },
+                TRUE_OF_DATE_EQUATOR_IERS1996: {
+                  value: 25,
+                  description: "True equator of date computed with the IERS Conventions (1996) reduction (IERS Technical Note 21): IAU 1976 precession, IAU 1980 nutation with the observed celestial pole offsets applied. Distinct from TRUE_OF_DATE_EQUATOR_FK5 (no offsets) and TRUE_OF_DATE_EQUATOR (IAU-2006/2000A)."
+                },
+                TRUE_OF_DATE_EQUATOR_IERS2003: {
+                  value: 26,
+                  description: "True equator of date computed with the IERS Conventions (2003) reduction (IERS Technical Note 32): IAU 2000A nutation on the IAU 1976 precession with the IAU 2000 precession-rate corrections. The mean-of-date equator under this reduction is MEAN_OF_DATE_EQUATOR_FK5."
+                },
+                TOPOCENTRIC_EAST_NORTH_UP: {
+                  value: 27,
+                  description: "Topocentric East-North-Up axes at a surface site; the site is carried on RFMOrigin. TOPOCENTRIC (20) does not fix the axis order; this does."
+                },
+                TOPOCENTRIC_NORTH_EAST_DOWN: {
+                  value: 28,
+                  description: "Topocentric North-East-Down axes at a surface site."
+                },
+                TOPOCENTRIC_SOUTH_EAST_ZENITH: {
+                  value: 29,
+                  description: "Topocentric South-East-Zenith axes at a surface site."
+                },
+                ORBITAL_VELOCITY_NORMAL_CONORMAL: {
+                  value: 30,
+                  description: "Orbital axes from the object's state: X along the velocity, Z along the orbit normal, Y completing the right-handed set (VNC). The object is the origin body of the coordinate system."
+                },
+                ORBITAL_RADIAL_TRANSVERSE_NORMAL: {
+                  value: 31,
+                  description: "Orbital axes from the object's state: X radial (outward), Z along the orbit normal, Y transverse completing the set (RTN, also RSW)."
+                },
+                ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: {
+                  value: 32,
+                  description: "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            ORIGIN: {
+              $ref: "#/definitions/RFMOrigin",
+              description: "Centre of the system.",
+              "x-flatbuffer-type": "RFMOrigin"
+            },
+            AXIS_REFERENCE_BODY_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Ephemeris body code whose equator/rotation defines the axes, for the\nbody-referenced axis types. Independent of ORIGIN.",
+              "x-flatbuffer-type": "int"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Reference epoch the axis set is evaluated at, ISO 8601. Required for the\nof-date and of-epoch axis types; ignored by the inertial ones.",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_TIME_SYSTEM: {
+              type: "string",
+              description: 'Time system the EPOCH is expressed in, named by the $TIM timingStandard\nmember name (for example "UTC", "TAI", "TT", "TDB", "A1").',
+              "x-flatbuffer-type": "string"
+            },
+            OBJECT_REFERENCED_AXES: {
+              $ref: "#/definitions/RFMObjectReferencedAxes",
+              description: "Extra parameters for OBJECT_REFERENCED axes.",
+              "x-flatbuffer-type": "RFMObjectReferencedAxes"
+            },
+            LOCAL_ALIGNED_CONSTRAINED_AXES: {
+              $ref: "#/definitions/RFMLocalAlignedConstrainedAxes",
+              description: "Extra parameters for LOCAL_ALIGNED_CONSTRAINED axes.",
+              "x-flatbuffer-type": "RFMLocalAlignedConstrainedAxes"
+            },
+            KERNEL_FRAME_NAME: {
+              type: "string",
+              description: "Kernel-declared frame name for EPHEMERIS_KERNEL_DEFINED axes.",
+              "x-flatbuffer-type": "string"
+            },
+            KERNEL_FRAME_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Kernel-declared numeric frame id for EPHEMERIS_KERNEL_DEFINED axes.",
+              "x-flatbuffer-type": "int"
+            },
+            EOP_DATA_SET_CID: {
+              type: "string",
+              description: "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        CelestialFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CelestialFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GCRF: {
+                  value: 0,
+                  description: "OID: 1.3.112.4.57.2.9 Inertial Earth-centered frame aligned with Earth's center of mass."
+                },
+                ICRF: {
+                  value: 1,
+                  description: "OID: 1.3.112.4.57.2.11 International Celestial Reference Frame based on distant quasars."
+                },
+                J2000: {
+                  value: 2,
+                  description: "OID: 1.3.112.4.57.2.14 Classical J2000 inertial frame defined at epoch J2000.0."
+                },
+                J2000A: {
+                  value: 3,
+                  description: "OID: 1.3.112.4.57.2.15 Updated J2000 frame using IAU2000A precession-nutation models."
+                },
+                EME2000: {
+                  value: 4,
+                  description: "OID: 1.3.112.4.57.2.7 Earth Mean Equator frame at epoch J2000 used in orbit determination."
+                },
+                TEMEOFDATE: {
+                  value: 5,
+                  description: "OID: 1.3.112.4.57.2.25 True Equator Mean Equinox of Date frame for satellite tracking."
+                },
+                GTOD: {
+                  value: 6,
+                  description: "OID: 1.3.112.4.57.2.10 Greenwich True of Date: Earth rotation relative to celestial reference."
+                },
+                CIRS: {
+                  value: 7,
+                  description: "OID: 1.3.112.4.57.2.4 Celestial Intermediate Reference System based on CIP and CIO."
+                },
+                MOD_EARTH: {
+                  value: 8,
+                  description: "OID: 1.3.112.4.57.2.18 Mean of Date (MOD) Earth frame using IAU1976 precession."
+                },
+                MOD_CB: {
+                  value: 9,
+                  description: "OID: 1.3.112.4.57.2.17 Mean of Date (MOD) celestial body frame evaluated at each epoch."
+                },
+                MOD_MOON: {
+                  value: 10,
+                  description: "OID: 1.3.112.4.57.2.19 Mean of Date (MOD) Moon frame evaluated at each epoch."
+                },
+                TOD_EARTH: {
+                  value: 11,
+                  description: "OID: 1.3.112.4.57.2.29 True of Date (TOD) Earth frame with polar motion included."
+                },
+                TOD_CB: {
+                  value: 12,
+                  description: "OID: 1.3.112.4.57.2.28 True of Date (TOD) celestial body frame."
+                },
+                TOD_MOON: {
+                  value: 13,
+                  description: "OID: 1.3.112.4.57.2.30 True of Date (TOD) Moon frame."
+                },
+                TOE_EARTH: {
+                  value: 14,
+                  description: "OID: 1.3.112.4.57.2.32 True of Epoch (TOE) Earth frame at specific epoch."
+                },
+                TOE_CB: {
+                  value: 15,
+                  description: "OID: 1.3.112.4.57.2.31 True of Epoch (TOE) celestial body frame at specific epoch."
+                },
+                TOE_MOON: {
+                  value: 16,
+                  description: "OID: 1.3.112.4.57.2.33 True of Epoch (TOE) Moon frame at specific epoch."
+                },
+                ITRF2000: {
+                  value: 17,
+                  description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 2000 (Earth-fixed)."
+                },
+                ITRF93: {
+                  value: 18,
+                  description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1993 (Earth-fixed)."
+                },
+                ITRF97: {
+                  value: 19,
+                  description: "OID: 1.3.112.4.57.2.13 International Terrestrial Reference Frame 1997 (Earth-fixed)."
+                },
+                EFG: {
+                  value: 20,
+                  description: "OID: 1.3.112.4.57.2.6 Earth-Fixed Geocentric frame using geodetic coordinates."
+                },
+                FIXED_CB: {
+                  value: 21,
+                  description: "OID: 1.3.112.4.57.2.8 Fixed frame of a celestial body."
+                },
+                FIXED_EARTH: {
+                  value: 22,
+                  description: "OID: 1.3.112.4.57.2.39 Fixed Earth frame aligned with WGS84 ellipsoid."
+                },
+                WGS84: {
+                  value: 23,
+                  description: "WGS84 Earth-fixed terrestrial system."
+                },
+                DTRFYYYY: {
+                  value: 24,
+                  description: "OID: 1.3.112.4.57.2.5 Dynamic Terrestrial Reference Frame for a given year (DTRFYYYY)."
+                },
+                ALIGN_EARTH: {
+                  value: 25,
+                  description: "OID: 1.3.112.4.57.2.2 Mean Earth Equator and Equinox (ALIGN_EARTH) frame."
+                },
+                ALIGN_CB: {
+                  value: 26,
+                  description: "OID: 1.3.112.4.57.2.1 Mean Central Body Equator and Equinox (ALIGN_CB) frame."
+                },
+                B1950: {
+                  value: 27,
+                  description: "OID: 1.3.112.4.57.2.3 Classical Besselian 1950 equator and equinox frame."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SpacecraftFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/SpacecraftFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                ACC_i: {
+                  value: 0,
+                  description: "OID: 1.3.112.4.57.8.1 Accelerometer instrument frame."
+                },
+                ACTUATOR_i: {
+                  value: 1,
+                  description: "OID: 1.3.112.4.57.8.2 Actuator system frame."
+                },
+                AST_i: {
+                  value: 2,
+                  description: "OID: 1.3.112.4.57.8.3 Attitude Sensor Target frame."
+                },
+                CSS_i: {
+                  value: 3,
+                  description: "OID: 1.3.112.4.57.8.4 Coarse Sun Sensor frame."
+                },
+                DSS_i: {
+                  value: 4,
+                  description: "OID: 1.3.112.4.57.8.5 Digital Sun Sensor frame."
+                },
+                ESA_i: {
+                  value: 5,
+                  description: "OID: 1.3.112.4.57.8.6 Earth Sensor Assembly frame."
+                },
+                GYRO_FRAME_i: {
+                  value: 6,
+                  description: "OID: 1.3.112.4.57.8.7 Gyroscope instrument frame."
+                },
+                IMU_FRAME_i: {
+                  value: 7,
+                  description: "OID: 1.3.112.4.57.8.8 Inertial Measurement Unit frame."
+                },
+                INSTRUMENT_i: {
+                  value: 8,
+                  description: "OID: 1.3.112.4.57.8.9 Generic instrument mounting frame."
+                },
+                MTA_i: {
+                  value: 9,
+                  description: "OID: 1.3.112.4.57.8.10 Magnetic Torquer Assembly frame."
+                },
+                RW_i: {
+                  value: 10,
+                  description: "OID: 1.3.112.4.57.8.11 Reaction Wheel assembly frame."
+                },
+                SA_i: {
+                  value: 11,
+                  description: "OID: 1.3.112.4.57.8.12 Solar Array frame."
+                },
+                SC_BODY_i: {
+                  value: 12,
+                  description: "OID: 1.3.112.4.57.8.13 Spacecraft body fixed frame."
+                },
+                SENSOR_i: {
+                  value: 13,
+                  description: "OID: 1.3.112.4.57.8.14 Generic sensor assembly frame."
+                },
+                STARTRACKER_i: {
+                  value: 14,
+                  description: "OID: 1.3.112.4.57.8.15 Star Tracker instrument frame."
+                },
+                TAM_i: {
+                  value: 15,
+                  description: "OID: 1.3.112.4.57.8.16 Thermal Assembly Module frame."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        OrbitFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/OrbitFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                EQW_INERTIAL: {
+                  value: 0,
+                  description: "OID: 1.3.112.4.57.3.1 Earth Equatorial Inertial frame aligned with J2000 epoch."
+                },
+                LVLH_INERTIAL: {
+                  value: 1,
+                  description: "OID: 1.3.112.4.57.3.3 Local Vertical Local Horizontal inertial frame."
+                },
+                LVLH_ROTATING: {
+                  value: 2,
+                  description: "OID: 1.3.112.4.57.3.2 Local Vertical Local Horizontal rotating frame."
+                },
+                NSW_INERTIAL: {
+                  value: 3,
+                  description: "OID: 1.3.112.4.57.3.5 Normal along-track cross-track inertial frame."
+                },
+                NSW_ROTATING: {
+                  value: 4,
+                  description: "OID: 1.3.112.4.57.3.4 Normal along-track cross-track rotating frame."
+                },
+                NTW_INERTIAL: {
+                  value: 5,
+                  description: "OID: 1.3.112.4.57.3.7 Orbit normal Tangential cross-track inertial frame."
+                },
+                NTW_ROTATING: {
+                  value: 6,
+                  description: "OID: 1.3.112.4.57.3.6 Orbit normal Tangential cross-track rotating frame."
+                },
+                PQW_INERTIAL: {
+                  value: 7,
+                  description: "OID: 1.3.112.4.57.3.8 Perifocal frame aligned with orbit's perigee."
+                },
+                RSW_INERTIAL: {
+                  value: 8,
+                  description: "OID: 1.3.112.4.57.3.10 Radial along-track cross-track inertial frame."
+                },
+                RSW_ROTATING: {
+                  value: 9,
+                  description: "OID: 1.3.112.4.57.3.9 Radial along-track cross-track rotating frame."
+                },
+                SEZ_INERTIAL: {
+                  value: 10,
+                  description: "OID: 1.3.112.4.57.3.14 South-East-Zenith inertial (topocentric) frame."
+                },
+                SEZ_ROTATING: {
+                  value: 11,
+                  description: "OID: 1.3.112.4.57.3.13 South-East-Zenith rotating (topocentric) frame."
+                },
+                TNW_INERTIAL: {
+                  value: 12,
+                  description: "OID: 1.3.112.4.57.3.12 Transverse normal cross-track inertial frame."
+                },
+                TNW_ROTATING: {
+                  value: 13,
+                  description: "OID: 1.3.112.4.57.3.11 Transverse normal cross-track rotating frame."
+                },
+                VNC_INERTIAL: {
+                  value: 14,
+                  description: "OID: 1.3.112.4.57.3.16 Velocity-normal co-normal inertial frame."
+                },
+                VNC_ROTATING: {
+                  value: 15,
+                  description: "OID: 1.3.112.4.57.3.15 Velocity-normal co-normal rotating frame."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        CustomFrameWrapper: {
+          type: "object",
+          properties: {
+            frame: {
+              $ref: "#/definitions/CustomFrame",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                ECEF: {
+                  value: 0,
+                  description: "Earth-Centered-Earth-Fixed: Rotates with Earth. X-axis at prime meridian, Y eastward, Z towards North Pole."
+                },
+                TEME: {
+                  value: 1,
+                  description: "True Equator Mean Equinox of Date, same as TEMEOFDATE: Dynamic frame for SGP4 satellite tracking."
+                },
+                TEMEOFEPOCH: {
+                  value: 2,
+                  description: "True Equator Mean Equinox of Epoch: Static version of TEMEOFDATE at a given epoch."
+                },
+                ENU: {
+                  value: 3,
+                  description: "East-North-Up: Local tangent plane for surface points."
+                },
+                NED: {
+                  value: 4,
+                  description: "North-East-Down: Aviation/navigation frame aligned with gravity."
+                },
+                NEU: {
+                  value: 5,
+                  description: "North-East-Up: Local tangent plane variant with Up positive."
+                },
+                RIC: {
+                  value: 6,
+                  description: "Radial-Intrack-Cross-track: Spacecraft orientation aligned with orbit."
+                },
+                RTN: {
+                  value: 7,
+                  description: "Radial-Transverse-Normal: Orbit frame for spacecraft dynamics."
+                },
+                TVN: {
+                  value: 8,
+                  description: "Transverse-Velocity-Normal: Alternative orbit frame."
+                },
+                VVLH: {
+                  value: 9,
+                  description: "Vehicle-Velocity-Local-Horizontal: Orbit frame aligned with velocity vector."
+                },
+                QSW: {
+                  value: 10,
+                  description: "Radial-Tangential-Cross-track: Equivalent to LVLH/QSW."
+                },
+                LTP: {
+                  value: 11,
+                  description: "Local Tangent Plane: Surface-fixed frame centered on a point."
+                },
+                LVLH: {
+                  value: 12,
+                  description: "Local Vertical-Local Horizontal: Z axis towards Earth center, X along velocity."
+                },
+                PNE: {
+                  value: 13,
+                  description: "Polar-North-East: Surface coordinate frame."
+                },
+                BRF: {
+                  value: 14,
+                  description: "Body-Fixed Reference Frame: Fixed to a spacecraft or celestial object."
+                },
+                RSW: {
+                  value: 15,
+                  description: "Radial-Along-track-Cross-track: Same as RSW."
+                },
+                TNW: {
+                  value: 16,
+                  description: "Tangential-Normal-Cross-track: Same as TNW."
+                },
+                UVW: {
+                  value: 17,
+                  description: "Radial-UTF: Radial, Along-track, Cross-track variant."
+                }
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        RFMCoordinateSystemWrapper: {
+          type: "object",
+          properties: {
+            COORDINATE_SYSTEM: {
+              $ref: "#/definitions/RFMCoordinateSystem",
+              "x-flatbuffer-type": "RFMCoordinateSystem"
+            }
+          },
+          additionalProperties: false
+        },
+        RFM: {
+          type: "object",
+          description: "Reference Frame Message",
+          properties: {
+            REFERENCE_FRAME_type: {
+              $ref: "#/definitions/RFMUnion"
+            },
+            REFERENCE_FRAME: {
+              anyOf: [
+                {
+                  $ref: "#/definitions/CelestialFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/SpacecraftFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/OrbitFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/CustomFrameWrapper"
+                },
+                {
+                  $ref: "#/definitions/RFMCoordinateSystemWrapper"
+                }
+              ],
+              "x-flatbuffer-type": "RFMUnion"
+            },
+            INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              "x-flatbuffer-type": "int"
+            },
+            NAME: {
+              type: "string",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SITCitation: {
           type: "object",
           description: "Where one statement about a site was read: the source, the record, the\nversion of the record and the field the statement came from.",
@@ -781075,6 +785785,22 @@ provider's reviewed register). Never free text.`,
                 },
                 OTHER: {
                   value: 17
+                },
+                LANDING_SITE: {
+                  value: 18,
+                  description: "A place a spacecraft touched down or is to touch down on a body surface"
+                },
+                IMPACT_SITE: {
+                  value: 19,
+                  description: "A place a spacecraft or stage struck a body surface"
+                },
+                CANDIDATE_REGION: {
+                  value: 20,
+                  description: "A surface region under study as a landing or exploration target"
+                },
+                SURFACE_FEATURE: {
+                  value: 21,
+                  description: "A named natural feature of a body surface (crater, mare, rille, mons)"
                 }
               }
             },
@@ -781090,17 +785816,17 @@ provider's reviewed register). Never free text.`,
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site",
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
               "x-flatbuffer-type": "float"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site",
+              description: "Longitude of the site, degrees, east positive",
               "x-flatbuffer-type": "float"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site",
+              description: "Altitude of the site above CENTER_NAME's reference surface",
               "x-flatbuffer-type": "float"
             },
             GEOMETRY: {
@@ -781303,6 +786029,26 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
               "x-flatbuffer-type": "PVN"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+              "x-flatbuffer-type": "RFM"
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -815738,7 +820484,11 @@ assumptions".`,
             "URBAN_AREA",
             "NATIONAL_PARK",
             "HISTORICAL_SITE",
-            "OTHER"
+            "OTHER",
+            "LANDING_SITE",
+            "IMPACT_SITE",
+            "CANDIDATE_REGION",
+            "SURFACE_FEATURE"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -815796,6 +820546,22 @@ assumptions".`,
             },
             OTHER: {
               value: 17
+            },
+            LANDING_SITE: {
+              value: 18,
+              description: "A place a spacecraft touched down or is to touch down on a body surface"
+            },
+            IMPACT_SITE: {
+              value: 19,
+              description: "A place a spacecraft or stage struck a body surface"
+            },
+            CANDIDATE_REGION: {
+              value: 20,
+              description: "A surface region under study as a landing or exploration target"
+            },
+            SURFACE_FEATURE: {
+              value: 21,
+              description: "A named natural feature of a body surface (crater, mare, rille, mons)"
             }
           }
         },
@@ -821039,6 +825805,22 @@ provider's reviewed register). Never free text.`,
                 },
                 OTHER: {
                   value: 17
+                },
+                LANDING_SITE: {
+                  value: 18,
+                  description: "A place a spacecraft touched down or is to touch down on a body surface"
+                },
+                IMPACT_SITE: {
+                  value: 19,
+                  description: "A place a spacecraft or stage struck a body surface"
+                },
+                CANDIDATE_REGION: {
+                  value: 20,
+                  description: "A surface region under study as a landing or exploration target"
+                },
+                SURFACE_FEATURE: {
+                  value: 21,
+                  description: "A named natural feature of a body surface (crater, mare, rille, mons)"
                 }
               }
             },
@@ -821054,17 +825836,17 @@ provider's reviewed register). Never free text.`,
             },
             LATITUDE: {
               type: "number",
-              description: "Latitude of the site",
+              description: "Latitude of the site, degrees; planetocentric on CENTER_NAME's reference\nbody when that is not EARTH",
               "x-flatbuffer-type": "float"
             },
             LONGITUDE: {
               type: "number",
-              description: "Longitude of the site",
+              description: "Longitude of the site, degrees, east positive",
               "x-flatbuffer-type": "float"
             },
             ALTITUDE: {
               type: "number",
-              description: "Altitude of the site",
+              description: "Altitude of the site above CENTER_NAME's reference surface",
               "x-flatbuffer-type": "float"
             },
             GEOMETRY: {
@@ -821267,6 +826049,26 @@ provider's reviewed register). Never free text.`,
               $ref: "#/definitions/PVN",
               description: "The record's provider and producer, and the terms of the content the\nrecord reproduces (each citation carries its own source's terms)",
               "x-flatbuffer-type": "PVN"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every site published before 1.2.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_FRAME: {
+              $ref: "#/definitions/RFM",
+              description: "The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an\nRFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose\nKERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent\nmeans the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.",
+              "x-flatbuffer-type": "RFM"
+            },
+            MISSION: {
+              type: "string",
+              description: "The mission the site belongs to (Apollo 11, Chandrayaan-3), as its\nsource names it. Empty for a site of no mission.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_EPOCH: {
+              type: "string",
+              description: "When the landing or impact took place, RFC 3339 UTC; for a\nLANDING_SITE or IMPACT_SITE only. Empty when the source states none.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

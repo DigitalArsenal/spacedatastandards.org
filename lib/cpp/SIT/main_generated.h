@@ -15,6 +15,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
 
 struct SITCitation;
 struct SITCitationBuilder;
@@ -57,11 +58,19 @@ enum SiteType : int8_t {
   SiteType_NATIONAL_PARK = 15,
   SiteType_HISTORICAL_SITE = 16,
   SiteType_OTHER = 17,
+  /// A place a spacecraft touched down or is to touch down on a body surface
+  SiteType_LANDING_SITE = 18,
+  /// A place a spacecraft or stage struck a body surface
+  SiteType_IMPACT_SITE = 19,
+  /// A surface region under study as a landing or exploration target
+  SiteType_CANDIDATE_REGION = 20,
+  /// A named natural feature of a body surface (crater, mare, rille, mons)
+  SiteType_SURFACE_FEATURE = 21,
   SiteType_MIN = SiteType_LAUNCH_SITE,
-  SiteType_MAX = SiteType_OTHER
+  SiteType_MAX = SiteType_SURFACE_FEATURE
 };
 
-inline const SiteType (&EnumValuesSiteType())[18] {
+inline const SiteType (&EnumValuesSiteType())[22] {
   static const SiteType values[] = {
     SiteType_LAUNCH_SITE,
     SiteType_OBSERVATION_STATION,
@@ -80,13 +89,17 @@ inline const SiteType (&EnumValuesSiteType())[18] {
     SiteType_URBAN_AREA,
     SiteType_NATIONAL_PARK,
     SiteType_HISTORICAL_SITE,
-    SiteType_OTHER
+    SiteType_OTHER,
+    SiteType_LANDING_SITE,
+    SiteType_IMPACT_SITE,
+    SiteType_CANDIDATE_REGION,
+    SiteType_SURFACE_FEATURE
   };
   return values;
 }
 
 inline const char * const *EnumNamesSiteType() {
-  static const char * const names[19] = {
+  static const char * const names[23] = {
     "LAUNCH_SITE",
     "OBSERVATION_STATION",
     "HOBBYIST_OBSERVER",
@@ -105,13 +118,17 @@ inline const char * const *EnumNamesSiteType() {
     "NATIONAL_PARK",
     "HISTORICAL_SITE",
     "OTHER",
+    "LANDING_SITE",
+    "IMPACT_SITE",
+    "CANDIDATE_REGION",
+    "SURFACE_FEATURE",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameSiteType(SiteType e) {
-  if (::flatbuffers::IsOutRange(e, SiteType_LAUNCH_SITE, SiteType_OTHER)) return "";
+  if (::flatbuffers::IsOutRange(e, SiteType_LAUNCH_SITE, SiteType_SURFACE_FEATURE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesSiteType()[index];
 }
@@ -979,7 +996,11 @@ struct SIT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EXTERNAL_REFERENCES = 68,
     VT_PARTIES = 70,
     VT_QUANTITIES = 72,
-    VT_PROVENANCE = 74
+    VT_PROVENANCE = 74,
+    VT_CENTER_NAME = 76,
+    VT_REFERENCE_FRAME = 78,
+    VT_MISSION = 80,
+    VT_EVENT_EPOCH = 82
   };
   /// Unique identifier for the site, BE_NUMBER
   const ::flatbuffers::String *ID() const {
@@ -1005,15 +1026,16 @@ struct SIT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *NETWORK() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NETWORK);
   }
-  /// Latitude of the site
+  /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+  /// body when that is not EARTH
   float LATITUDE() const {
     return GetField<float>(VT_LATITUDE, 0.0f);
   }
-  /// Longitude of the site
+  /// Longitude of the site, degrees, east positive
   float LONGITUDE() const {
     return GetField<float>(VT_LONGITUDE, 0.0f);
   }
-  /// Altitude of the site
+  /// Altitude of the site above CENTER_NAME's reference surface
   float ALTITUDE() const {
     return GetField<float>(VT_ALTITUDE, 0.0f);
   }
@@ -1130,6 +1152,29 @@ struct SIT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PVN *PROVENANCE() const {
     return GetPointer<const PVN *>(VT_PROVENANCE);
   }
+  /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every site published before 1.2.0 reads unchanged.
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+  /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+  /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+  /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+  const RFM *REFERENCE_FRAME() const {
+    return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
+  }
+  /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+  /// source names it. Empty for a site of no mission.
+  const ::flatbuffers::String *MISSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MISSION);
+  }
+  /// When the landing or impact took place, RFC 3339 UTC; for a
+  /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+  const ::flatbuffers::String *EVENT_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_EPOCH);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1204,6 +1249,14 @@ struct SIT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfTables(QUANTITIES()) &&
            VerifyOffset(verifier, VT_PROVENANCE) &&
            verifier.VerifyTable(PROVENANCE()) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
+           verifier.VerifyTable(REFERENCE_FRAME()) &&
+           VerifyOffset(verifier, VT_MISSION) &&
+           verifier.VerifyString(MISSION()) &&
+           VerifyOffset(verifier, VT_EVENT_EPOCH) &&
+           verifier.VerifyString(EVENT_EPOCH()) &&
            verifier.EndTable();
   }
 };
@@ -1320,6 +1373,18 @@ struct SITBuilder {
   void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
     fbb_.AddOffset(SIT::VT_PROVENANCE, PROVENANCE);
   }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(SIT::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<RFM> REFERENCE_FRAME) {
+    fbb_.AddOffset(SIT::VT_REFERENCE_FRAME, REFERENCE_FRAME);
+  }
+  void add_MISSION(::flatbuffers::Offset<::flatbuffers::String> MISSION) {
+    fbb_.AddOffset(SIT::VT_MISSION, MISSION);
+  }
+  void add_EVENT_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EVENT_EPOCH) {
+    fbb_.AddOffset(SIT::VT_EVENT_EPOCH, EVENT_EPOCH);
+  }
   explicit SITBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1368,8 +1433,16 @@ inline ::flatbuffers::Offset<SIT> CreateSIT(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SITReference>>> EXTERNAL_REFERENCES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SITParty>>> PARTIES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<SITQuantity>>> QUANTITIES = 0,
-    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MISSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EVENT_EPOCH = 0) {
   SITBuilder builder_(_fbb);
+  builder_.add_EVENT_EPOCH(EVENT_EPOCH);
+  builder_.add_MISSION(MISSION);
+  builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
+  builder_.add_CENTER_NAME(CENTER_NAME);
   builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_QUANTITIES(QUANTITIES);
   builder_.add_PARTIES(PARTIES);
@@ -1446,7 +1519,11 @@ inline ::flatbuffers::Offset<SIT> CreateSITDirect(
     const std::vector<::flatbuffers::Offset<SITReference>> *EXTERNAL_REFERENCES = nullptr,
     const std::vector<::flatbuffers::Offset<SITParty>> *PARTIES = nullptr,
     const std::vector<::flatbuffers::Offset<SITQuantity>> *QUANTITIES = nullptr,
-    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0,
+    const char *CENTER_NAME = nullptr,
+    ::flatbuffers::Offset<RFM> REFERENCE_FRAME = 0,
+    const char *MISSION = nullptr,
+    const char *EVENT_EPOCH = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto ABBREVIATION__ = ABBREVIATION ? _fbb.CreateString(ABBREVIATION) : 0;
@@ -1473,6 +1550,9 @@ inline ::flatbuffers::Offset<SIT> CreateSITDirect(
   auto EXTERNAL_REFERENCES__ = EXTERNAL_REFERENCES ? _fbb.CreateVector<::flatbuffers::Offset<SITReference>>(*EXTERNAL_REFERENCES) : 0;
   auto PARTIES__ = PARTIES ? _fbb.CreateVector<::flatbuffers::Offset<SITParty>>(*PARTIES) : 0;
   auto QUANTITIES__ = QUANTITIES ? _fbb.CreateVector<::flatbuffers::Offset<SITQuantity>>(*QUANTITIES) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto MISSION__ = MISSION ? _fbb.CreateString(MISSION) : 0;
+  auto EVENT_EPOCH__ = EVENT_EPOCH ? _fbb.CreateString(EVENT_EPOCH) : 0;
   return CreateSIT(
       _fbb,
       ID__,
@@ -1510,7 +1590,11 @@ inline ::flatbuffers::Offset<SIT> CreateSITDirect(
       EXTERNAL_REFERENCES__,
       PARTIES__,
       QUANTITIES__,
-      PROVENANCE);
+      PROVENANCE,
+      CENTER_NAME__,
+      REFERENCE_FRAME,
+      MISSION__,
+      EVENT_EPOCH__);
 }
 
 inline const SIT *GetSIT(const void *buf) {

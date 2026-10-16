@@ -1,8 +1,9 @@
-// Hash: 9e83c8b84fa57192eb7ca02fd78eef64b869bbaf223078dc0bcb33534acadfc9
-// Version: 1.1.0
+// Hash: e0e09396c3f9fe0c7206fc77ea9b1759ec85360e1f2b15b7643626a8dac34be1
+// Version: 1.2.0
 // -----------------------------------END_HEADER
 include "../IDM/main.fbs";
 include "../PVN/main.fbs";
+include "../RFM/main.fbs";
 
 /// Enum for the type of site
 enum SiteType: byte {
@@ -23,7 +24,15 @@ enum SiteType: byte {
   URBAN_AREA,
   NATIONAL_PARK,
   HISTORICAL_SITE,
-  OTHER
+  OTHER,
+  /// A place a spacecraft touched down or is to touch down on a body surface
+  LANDING_SITE,
+  /// A place a spacecraft or stage struck a body surface
+  IMPACT_SITE,
+  /// A surface region under study as a landing or exploration target
+  CANDIDATE_REGION,
+  /// A named natural feature of a body surface (crater, mare, rille, mons)
+  SURFACE_FEATURE
 }
 
 /// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
@@ -193,11 +202,12 @@ table SIT {
   CATCODE: string;
   /// Network identifier
   NETWORK: string;
-  /// Latitude of the site
+  /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+  /// body when that is not EARTH
   LATITUDE: float;
-  /// Longitude of the site
+  /// Longitude of the site, degrees, east positive
   LONGITUDE: float;
-  /// Altitude of the site
+  /// Altitude of the site above CENTER_NAME's reference surface
   ALTITUDE: float;
   /// Geometry of the site
   GEOMETRY: Geometry;
@@ -258,6 +268,21 @@ table SIT {
   /// The record's provider and producer, and the terms of the content the
   /// record reproduces (each citation carries its own source's terms)
   PROVENANCE: PVN;
+  /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every site published before 1.2.0 reads unchanged.
+  CENTER_NAME: string;
+  /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+  /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+  /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+  /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+  REFERENCE_FRAME: RFM;
+  /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+  /// source names it. Empty for a site of no mission.
+  MISSION: string;
+  /// When the landing or impact took place, RFC 3339 UTC; for a
+  /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+  EVENT_EPOCH: string;
 }
 
 root_type SIT;

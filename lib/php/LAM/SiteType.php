@@ -22,6 +22,14 @@ class SiteType
     const NATIONAL_PARK = 15;
     const HISTORICAL_SITE = 16;
     const OTHER = 17;
+    /// A place a spacecraft touched down or is to touch down on a body surface
+    const LANDING_SITE = 18;
+    /// A place a spacecraft or stage struck a body surface
+    const IMPACT_SITE = 19;
+    /// A surface region under study as a landing or exploration target
+    const CANDIDATE_REGION = 20;
+    /// A named natural feature of a body surface (crater, mare, rille, mons)
+    const SURFACE_FEATURE = 21;
 
     private static $names = array(
         SiteType::LAUNCH_SITE=>"LAUNCH_SITE",
@@ -42,6 +50,10 @@ class SiteType
         SiteType::NATIONAL_PARK=>"NATIONAL_PARK",
         SiteType::HISTORICAL_SITE=>"HISTORICAL_SITE",
         SiteType::OTHER=>"OTHER",
+        SiteType::LANDING_SITE=>"LANDING_SITE",
+        SiteType::IMPACT_SITE=>"IMPACT_SITE",
+        SiteType::CANDIDATE_REGION=>"CANDIDATE_REGION",
+        SiteType::SURFACE_FEATURE=>"SURFACE_FEATURE",
     );
 
     public static function Name($e)

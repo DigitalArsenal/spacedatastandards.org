@@ -21,7 +21,9 @@ using global::Google.FlatBuffers;
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 public struct DTT : IFlatbufferObject
 {
@@ -64,13 +66,17 @@ public struct DTT : IFlatbufferObject
   /// Row index 0 lies at the north edge of the scheme. When false, row 0 lies
   /// at the south edge.
   public bool ROW_ORIGIN_NORTH { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Western extent of the tile, decimal degrees on WGS 84.
+  /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (WGS 84 for EARTH; planetocentric for any other body).
   public double WEST_DEG { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Southern extent of the tile, decimal degrees on WGS 84.
+  /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   public double SOUTH_DEG { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Eastern extent of the tile, decimal degrees on WGS 84.
+  /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH), east positive.
   public double EAST_DEG { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Northern extent of the tile, decimal degrees on WGS 84.
+  /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   public double NORTH_DEG { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
   /// so a consumer can build a bounding volume without decoding the payload.
@@ -200,6 +206,39 @@ public struct DTT : IFlatbufferObject
   public ArraySegment<byte>? GetREMARKSBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
   public byte[] GetREMARKSArray() { return __p.__vector_as_array<byte>(88); }
+  /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every tile published before 1.191.0 reads unchanged.
+  public string CENTER_NAME { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(90, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(90); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(90); }
+  /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+  /// two are equatorial then polar (a spheroid); three are the semi-axes a
+  /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+  /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+  /// datum, which reads the first value.
+  public double REFERENCE_RADII_M(int j) { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int REFERENCE_RADII_MLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetREFERENCE_RADII_MBytes() { return __p.__vector_as_span<double>(92, 8); }
+#else
+  public ArraySegment<byte>? GetREFERENCE_RADII_MBytes() { return __p.__vector_as_arraysegment(92); }
+#endif
+  public double[] GetREFERENCE_RADII_MArray() { return __p.__vector_as_array<double>(92); }
+  /// Horizon elevation angles the publisher precomputed for the tile's posts,
+  /// for lighting and visibility without a height search. One unsigned byte
+  /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+  /// the north-west post), sector the fastest index. Sector k is centred on
+  /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+  /// the elevation angle of the terrain horizon above the local horizontal at
+  /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+  public DTTPayloadRef? HORIZON_ELEVATIONS { get { int o = __p.__offset(94); return o != 0 ? (DTTPayloadRef?)(new DTTPayloadRef()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+  public byte HORIZON_SECTORS { get { int o = __p.__offset(96); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
 
   public static Offset<DTT> CreateDTT(FlatBufferBuilder builder,
       StringOffset TILESET_IDOffset = default(StringOffset),
@@ -244,8 +283,12 @@ public struct DTT : IFlatbufferObject
       StringOffset EPOCHOffset = default(StringOffset),
       StringOffset ETAGOffset = default(StringOffset),
       StringOffset EXPIRESOffset = default(StringOffset),
-      StringOffset REMARKSOffset = default(StringOffset)) {
-    builder.StartTable(43);
+      StringOffset REMARKSOffset = default(StringOffset),
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      VectorOffset REFERENCE_RADII_MOffset = default(VectorOffset),
+      Offset<DTTPayloadRef> HORIZON_ELEVATIONSOffset = default(Offset<DTTPayloadRef>),
+      byte HORIZON_SECTORS = 0) {
+    builder.StartTable(47);
     DTT.AddNO_DATA_VALUE(builder, NO_DATA_VALUE);
     DTT.AddDATA_COVERAGE_FRACTION(builder, DATA_COVERAGE_FRACTION);
     DTT.AddHORIZONTAL_ACCURACY_M(builder, HORIZONTAL_ACCURACY_M);
@@ -259,6 +302,9 @@ public struct DTT : IFlatbufferObject
     DTT.AddEAST_DEG(builder, EAST_DEG);
     DTT.AddSOUTH_DEG(builder, SOUTH_DEG);
     DTT.AddWEST_DEG(builder, WEST_DEG);
+    DTT.AddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONSOffset);
+    DTT.AddREFERENCE_RADII_M(builder, REFERENCE_RADII_MOffset);
+    DTT.AddCENTER_NAME(builder, CENTER_NAMEOffset);
     DTT.AddREMARKS(builder, REMARKSOffset);
     DTT.AddEXPIRES(builder, EXPIRESOffset);
     DTT.AddETAG(builder, ETAGOffset);
@@ -282,6 +328,7 @@ public struct DTT : IFlatbufferObject
     DTT.AddLEVEL(builder, LEVEL);
     DTT.AddTILESET_NAME(builder, TILESET_NAMEOffset);
     DTT.AddTILESET_ID(builder, TILESET_IDOffset);
+    DTT.AddHORIZON_SECTORS(builder, HORIZON_SECTORS);
     DTT.AddSOURCE_CLASS(builder, SOURCE_CLASS);
     DTT.AddCHILD_AVAILABILITY(builder, CHILD_AVAILABILITY);
     DTT.AddWATER_MASK_KIND(builder, WATER_MASK_KIND);
@@ -292,7 +339,7 @@ public struct DTT : IFlatbufferObject
     return DTT.EndDTT(builder);
   }
 
-  public static void StartDTT(FlatBufferBuilder builder) { builder.StartTable(43); }
+  public static void StartDTT(FlatBufferBuilder builder) { builder.StartTable(47); }
   public static void AddTILESET_ID(FlatBufferBuilder builder, StringOffset TILESET_IDOffset) { builder.AddOffset(0, TILESET_IDOffset.Value, 0); }
   public static void AddTILESET_NAME(FlatBufferBuilder builder, StringOffset TILESET_NAMEOffset) { builder.AddOffset(1, TILESET_NAMEOffset.Value, 0); }
   public static void AddTILING_SCHEME(FlatBufferBuilder builder, dttTilingScheme TILING_SCHEME) { builder.AddSbyte(2, (sbyte)TILING_SCHEME, 0); }
@@ -336,6 +383,15 @@ public struct DTT : IFlatbufferObject
   public static void AddETAG(FlatBufferBuilder builder, StringOffset ETAGOffset) { builder.AddOffset(40, ETAGOffset.Value, 0); }
   public static void AddEXPIRES(FlatBufferBuilder builder, StringOffset EXPIRESOffset) { builder.AddOffset(41, EXPIRESOffset.Value, 0); }
   public static void AddREMARKS(FlatBufferBuilder builder, StringOffset REMARKSOffset) { builder.AddOffset(42, REMARKSOffset.Value, 0); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(43, CENTER_NAMEOffset.Value, 0); }
+  public static void AddREFERENCE_RADII_M(FlatBufferBuilder builder, VectorOffset REFERENCE_RADII_MOffset) { builder.AddOffset(44, REFERENCE_RADII_MOffset.Value, 0); }
+  public static VectorOffset CreateREFERENCE_RADII_MVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateREFERENCE_RADII_MVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateREFERENCE_RADII_MVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateREFERENCE_RADII_MVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartREFERENCE_RADII_MVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddHORIZON_ELEVATIONS(FlatBufferBuilder builder, Offset<DTTPayloadRef> HORIZON_ELEVATIONSOffset) { builder.AddOffset(45, HORIZON_ELEVATIONSOffset.Value, 0); }
+  public static void AddHORIZON_SECTORS(FlatBufferBuilder builder, byte HORIZON_SECTORS) { builder.AddByte(46, HORIZON_SECTORS, 0); }
   public static Offset<DTT> EndDTT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // TILESET_ID
@@ -394,6 +450,11 @@ public struct DTT : IFlatbufferObject
     _o.ETAG = this.ETAG;
     _o.EXPIRES = this.EXPIRES;
     _o.REMARKS = this.REMARKS;
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.REFERENCE_RADII_M = new List<double>();
+    for (var _j = 0; _j < this.REFERENCE_RADII_MLength; ++_j) {_o.REFERENCE_RADII_M.Add(this.REFERENCE_RADII_M(_j));}
+    _o.HORIZON_ELEVATIONS = this.HORIZON_ELEVATIONS.HasValue ? this.HORIZON_ELEVATIONS.Value.UnPack() : null;
+    _o.HORIZON_SECTORS = this.HORIZON_SECTORS;
   }
   public static Offset<DTT> Pack(FlatBufferBuilder builder, DTTT _o) {
     if (_o == null) return default(Offset<DTT>);
@@ -412,6 +473,13 @@ public struct DTT : IFlatbufferObject
     var _ETAG = _o.ETAG == null ? default(StringOffset) : builder.CreateString(_o.ETAG);
     var _EXPIRES = _o.EXPIRES == null ? default(StringOffset) : builder.CreateString(_o.EXPIRES);
     var _REMARKS = _o.REMARKS == null ? default(StringOffset) : builder.CreateString(_o.REMARKS);
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _REFERENCE_RADII_M = default(VectorOffset);
+    if (_o.REFERENCE_RADII_M != null) {
+      var __REFERENCE_RADII_M = _o.REFERENCE_RADII_M.ToArray();
+      _REFERENCE_RADII_M = CreateREFERENCE_RADII_MVector(builder, __REFERENCE_RADII_M);
+    }
+    var _HORIZON_ELEVATIONS = _o.HORIZON_ELEVATIONS == null ? default(Offset<DTTPayloadRef>) : DTTPayloadRef.Pack(builder, _o.HORIZON_ELEVATIONS);
     return CreateDTT(
       builder,
       _TILESET_ID,
@@ -456,7 +524,11 @@ public struct DTT : IFlatbufferObject
       _EPOCH,
       _ETAG,
       _EXPIRES,
-      _REMARKS);
+      _REMARKS,
+      _CENTER_NAME,
+      _REFERENCE_RADII_M,
+      _HORIZON_ELEVATIONS,
+      _o.HORIZON_SECTORS);
   }
 }
 
@@ -505,6 +577,10 @@ public class DTTT
   public string ETAG { get; set; }
   public string EXPIRES { get; set; }
   public string REMARKS { get; set; }
+  public string CENTER_NAME { get; set; }
+  public List<double> REFERENCE_RADII_M { get; set; }
+  public DTTPayloadRefT HORIZON_ELEVATIONS { get; set; }
+  public byte HORIZON_SECTORS { get; set; }
 
   public DTTT() {
     this.TILESET_ID = null;
@@ -550,6 +626,10 @@ public class DTTT
     this.ETAG = null;
     this.EXPIRES = null;
     this.REMARKS = null;
+    this.CENTER_NAME = null;
+    this.REFERENCE_RADII_M = null;
+    this.HORIZON_ELEVATIONS = null;
+    this.HORIZON_SECTORS = 0;
   }
   public static DTTT DeserializeFromBinary(byte[] fbBuffer) {
     return DTT.GetRootAsDTT(new ByteBuffer(fbBuffer)).UnPack();
@@ -610,6 +690,10 @@ static public class DTTVerify
       && verifier.VerifyString(tablePos, 84 /*ETAG*/, false)
       && verifier.VerifyString(tablePos, 86 /*EXPIRES*/, false)
       && verifier.VerifyString(tablePos, 88 /*REMARKS*/, false)
+      && verifier.VerifyString(tablePos, 90 /*CENTER_NAME*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 92 /*REFERENCE_RADII_M*/, 8 /*double*/, false)
+      && verifier.VerifyTable(tablePos, 94 /*HORIZON_ELEVATIONS*/, DTTPayloadRefVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 96 /*HORIZON_SECTORS*/, 1 /*byte*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

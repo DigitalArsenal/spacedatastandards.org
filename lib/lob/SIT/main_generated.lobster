@@ -21,6 +21,14 @@ enum SiteType:
     SiteType_NATIONAL_PARK = 15
     SiteType_HISTORICAL_SITE = 16
     SiteType_OTHER = 17
+    /// A place a spacecraft touched down or is to touch down on a body surface
+    SiteType_LANDING_SITE = 18
+    /// A place a spacecraft or stage struck a body surface
+    SiteType_IMPACT_SITE = 19
+    /// A surface region under study as a landing or exploration target
+    SiteType_CANDIDATE_REGION = 20
+    /// A named natural feature of a body surface (crater, mare, rille, mons)
+    SiteType_SURFACE_FEATURE = 21
 
 /// Where a site stands in its life. IAEA PRIS/RRDB terms; compatible with the
 /// EU INSPIRE ConditionOfFacilityValue list. Ordinals are wire values: append only.
@@ -385,13 +393,14 @@ class SIT : flatbuffers.handle
     /// Network identifier
     def NETWORK() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
-    /// Latitude of the site
+    /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+    /// body when that is not EARTH
     def LATITUDE() -> float:
         return flatbuffers.field_float32(buf_, pos_, 16, 0.0)
-    /// Longitude of the site
+    /// Longitude of the site, degrees, east positive
     def LONGITUDE() -> float:
         return flatbuffers.field_float32(buf_, pos_, 18, 0.0)
-    /// Altitude of the site
+    /// Altitude of the site above CENTER_NAME's reference surface
     def ALTITUDE() -> float:
         return flatbuffers.field_float32(buf_, pos_, 20, 0.0)
     /// Geometry of the site
@@ -496,13 +505,33 @@ class SIT : flatbuffers.handle
     def PROVENANCE() -> PVN?:
         let o = flatbuffers.field_table(buf_, pos_, 74)
         return if o: PVN { buf_, o } else: nil
+    /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+    /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    /// EARTH, so every site published before 1.2.0 reads unchanged.
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 76)
+    /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+    /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+    /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+    /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+    def REFERENCE_FRAME() -> RFM?:
+        let o = flatbuffers.field_table(buf_, pos_, 78)
+        return if o: RFM { buf_, o } else: nil
+    /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+    /// source names it. Empty for a site of no mission.
+    def MISSION() -> string:
+        return flatbuffers.field_string(buf_, pos_, 80)
+    /// When the landing or impact took place, RFC 3339 UTC; for a
+    /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+    def EVENT_EPOCH() -> string:
+        return flatbuffers.field_string(buf_, pos_, 82)
 
 def GetRootAsSIT(buf:string): return SIT { buf, flatbuffers.indirect(buf, 0) }
 
 struct SITBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(36)
+        b_.StartObject(40)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -611,6 +640,18 @@ struct SITBuilder:
         return this
     def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(35, PROVENANCE)
+        return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(36, CENTER_NAME)
+        return this
+    def add_REFERENCE_FRAME(REFERENCE_FRAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(37, REFERENCE_FRAME)
+        return this
+    def add_MISSION(MISSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(38, MISSION)
+        return this
+    def add_EVENT_EPOCH(EVENT_EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(39, EVENT_EPOCH)
         return this
     def end():
         return b_.EndObject()

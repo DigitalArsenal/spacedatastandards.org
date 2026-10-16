@@ -31,8 +31,15 @@ public final class dttTilingScheme {
    * and the tile is not addressable by a consumer that does not know it.
    */
   public static final byte CUSTOM = 4;
+  /**
+   * Equirectangular geographic scheme on the reference body named by
+   * CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+   * degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+   * body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+   */
+  public static final byte GEOGRAPHIC_TWO_ROOT_BODY = 5;
 
-  public static final String[] names = { "UNSPECIFIED", "GEOGRAPHIC_WGS84", "GEOGRAPHIC_SINGLE_ROOT", "WEB_MERCATOR", "CUSTOM", };
+  public static final String[] names = { "UNSPECIFIED", "GEOGRAPHIC_WGS84", "GEOGRAPHIC_SINGLE_ROOT", "WEB_MERCATOR", "CUSTOM", "GEOGRAPHIC_TWO_ROOT_BODY", };
 
   public static String name(int e) { return names[e]; }
 }

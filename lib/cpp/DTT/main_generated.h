@@ -39,35 +39,42 @@ enum dttTilingScheme : int8_t {
   /// A scheme this enum does not model; the publisher states it out of band
   /// and the tile is not addressable by a consumer that does not know it.
   dttTilingScheme_CUSTOM = 4,
+  /// Equirectangular geographic scheme on the reference body named by
+  /// CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+  /// degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+  /// body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+  dttTilingScheme_GEOGRAPHIC_TWO_ROOT_BODY = 5,
   dttTilingScheme_MIN = dttTilingScheme_UNSPECIFIED,
-  dttTilingScheme_MAX = dttTilingScheme_CUSTOM
+  dttTilingScheme_MAX = dttTilingScheme_GEOGRAPHIC_TWO_ROOT_BODY
 };
 
-inline const dttTilingScheme (&EnumValuesdttTilingScheme())[5] {
+inline const dttTilingScheme (&EnumValuesdttTilingScheme())[6] {
   static const dttTilingScheme values[] = {
     dttTilingScheme_UNSPECIFIED,
     dttTilingScheme_GEOGRAPHIC_WGS84,
     dttTilingScheme_GEOGRAPHIC_SINGLE_ROOT,
     dttTilingScheme_WEB_MERCATOR,
-    dttTilingScheme_CUSTOM
+    dttTilingScheme_CUSTOM,
+    dttTilingScheme_GEOGRAPHIC_TWO_ROOT_BODY
   };
   return values;
 }
 
 inline const char * const *EnumNamesdttTilingScheme() {
-  static const char * const names[6] = {
+  static const char * const names[7] = {
     "UNSPECIFIED",
     "GEOGRAPHIC_WGS84",
     "GEOGRAPHIC_SINGLE_ROOT",
     "WEB_MERCATOR",
     "CUSTOM",
+    "GEOGRAPHIC_TWO_ROOT_BODY",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamedttTilingScheme(dttTilingScheme e) {
-  if (::flatbuffers::IsOutRange(e, dttTilingScheme_UNSPECIFIED, dttTilingScheme_CUSTOM)) return "";
+  if (::flatbuffers::IsOutRange(e, dttTilingScheme_UNSPECIFIED, dttTilingScheme_GEOGRAPHIC_TWO_ROOT_BODY)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesdttTilingScheme()[index];
 }
@@ -147,37 +154,43 @@ enum dttVerticalDatum : int8_t {
   dttVerticalDatum_REGIONAL_DATUM = 4,
   /// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
   dttVerticalDatum_CUSTOM = 5,
+  /// Heights above the reference sphere of CENTER_NAME's body, whose radius is
+  /// REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+  /// against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+  dttVerticalDatum_REFERENCE_SPHERE = 6,
   dttVerticalDatum_MIN = dttVerticalDatum_UNSPECIFIED,
-  dttVerticalDatum_MAX = dttVerticalDatum_CUSTOM
+  dttVerticalDatum_MAX = dttVerticalDatum_REFERENCE_SPHERE
 };
 
-inline const dttVerticalDatum (&EnumValuesdttVerticalDatum())[6] {
+inline const dttVerticalDatum (&EnumValuesdttVerticalDatum())[7] {
   static const dttVerticalDatum values[] = {
     dttVerticalDatum_UNSPECIFIED,
     dttVerticalDatum_ELLIPSOIDAL_WGS84,
     dttVerticalDatum_GEOID,
     dttVerticalDatum_MEAN_SEA_LEVEL,
     dttVerticalDatum_REGIONAL_DATUM,
-    dttVerticalDatum_CUSTOM
+    dttVerticalDatum_CUSTOM,
+    dttVerticalDatum_REFERENCE_SPHERE
   };
   return values;
 }
 
 inline const char * const *EnumNamesdttVerticalDatum() {
-  static const char * const names[7] = {
+  static const char * const names[8] = {
     "UNSPECIFIED",
     "ELLIPSOIDAL_WGS84",
     "GEOID",
     "MEAN_SEA_LEVEL",
     "REGIONAL_DATUM",
     "CUSTOM",
+    "REFERENCE_SPHERE",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamedttVerticalDatum(dttVerticalDatum e) {
-  if (::flatbuffers::IsOutRange(e, dttVerticalDatum_UNSPECIFIED, dttVerticalDatum_CUSTOM)) return "";
+  if (::flatbuffers::IsOutRange(e, dttVerticalDatum_UNSPECIFIED, dttVerticalDatum_REFERENCE_SPHERE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesdttVerticalDatum()[index];
 }
@@ -753,7 +766,9 @@ inline ::flatbuffers::Offset<DTTProvenance> CreateDTTProvenanceDirect(
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 struct DTT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DTTBuilder Builder;
@@ -800,7 +815,11 @@ struct DTT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EPOCH = 82,
     VT_ETAG = 84,
     VT_EXPIRES = 86,
-    VT_REMARKS = 88
+    VT_REMARKS = 88,
+    VT_CENTER_NAME = 90,
+    VT_REFERENCE_RADII_M = 92,
+    VT_HORIZON_ELEVATIONS = 94,
+    VT_HORIZON_SECTORS = 96
   };
   /// Publisher-stable identifier for the tile pyramid (the tileset) this tile
   /// belongs to. Tiles of one pyramid share a scheme, format, and datum.
@@ -833,19 +852,23 @@ struct DTT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   bool ROW_ORIGIN_NORTH() const {
     return GetField<uint8_t>(VT_ROW_ORIGIN_NORTH, 0) != 0;
   }
-  /// Western extent of the tile, decimal degrees on WGS 84.
+  /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (WGS 84 for EARTH; planetocentric for any other body).
   double WEST_DEG() const {
     return GetField<double>(VT_WEST_DEG, 0.0);
   }
-  /// Southern extent of the tile, decimal degrees on WGS 84.
+  /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   double SOUTH_DEG() const {
     return GetField<double>(VT_SOUTH_DEG, 0.0);
   }
-  /// Eastern extent of the tile, decimal degrees on WGS 84.
+  /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH), east positive.
   double EAST_DEG() const {
     return GetField<double>(VT_EAST_DEG, 0.0);
   }
-  /// Northern extent of the tile, decimal degrees on WGS 84.
+  /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   double NORTH_DEG() const {
     return GetField<double>(VT_NORTH_DEG, 0.0);
   }
@@ -999,6 +1022,34 @@ struct DTT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *REMARKS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REMARKS);
   }
+  /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every tile published before 1.191.0 reads unchanged.
+  const ::flatbuffers::String *CENTER_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
+  }
+  /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+  /// two are equatorial then polar (a spheroid); three are the semi-axes a
+  /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+  /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+  /// datum, which reads the first value.
+  const ::flatbuffers::Vector<double> *REFERENCE_RADII_M() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_REFERENCE_RADII_M);
+  }
+  /// Horizon elevation angles the publisher precomputed for the tile's posts,
+  /// for lighting and visibility without a height search. One unsigned byte
+  /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+  /// the north-west post), sector the fastest index. Sector k is centred on
+  /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+  /// the elevation angle of the terrain horizon above the local horizontal at
+  /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+  const DTTPayloadRef *HORIZON_ELEVATIONS() const {
+    return GetPointer<const DTTPayloadRef *>(VT_HORIZON_ELEVATIONS);
+  }
+  /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+  uint8_t HORIZON_SECTORS() const {
+    return GetField<uint8_t>(VT_HORIZON_SECTORS, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1060,6 +1111,13 @@ struct DTT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(EXPIRES()) &&
            VerifyOffset(verifier, VT_REMARKS) &&
            verifier.VerifyString(REMARKS()) &&
+           VerifyOffset(verifier, VT_CENTER_NAME) &&
+           verifier.VerifyString(CENTER_NAME()) &&
+           VerifyOffset(verifier, VT_REFERENCE_RADII_M) &&
+           verifier.VerifyVector(REFERENCE_RADII_M()) &&
+           VerifyOffset(verifier, VT_HORIZON_ELEVATIONS) &&
+           verifier.VerifyTable(HORIZON_ELEVATIONS()) &&
+           VerifyField<uint8_t>(verifier, VT_HORIZON_SECTORS, 1) &&
            verifier.EndTable();
   }
 };
@@ -1197,6 +1255,18 @@ struct DTTBuilder {
   void add_REMARKS(::flatbuffers::Offset<::flatbuffers::String> REMARKS) {
     fbb_.AddOffset(DTT::VT_REMARKS, REMARKS);
   }
+  void add_CENTER_NAME(::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME) {
+    fbb_.AddOffset(DTT::VT_CENTER_NAME, CENTER_NAME);
+  }
+  void add_REFERENCE_RADII_M(::flatbuffers::Offset<::flatbuffers::Vector<double>> REFERENCE_RADII_M) {
+    fbb_.AddOffset(DTT::VT_REFERENCE_RADII_M, REFERENCE_RADII_M);
+  }
+  void add_HORIZON_ELEVATIONS(::flatbuffers::Offset<DTTPayloadRef> HORIZON_ELEVATIONS) {
+    fbb_.AddOffset(DTT::VT_HORIZON_ELEVATIONS, HORIZON_ELEVATIONS);
+  }
+  void add_HORIZON_SECTORS(uint8_t HORIZON_SECTORS) {
+    fbb_.AddElement<uint8_t>(DTT::VT_HORIZON_SECTORS, HORIZON_SECTORS, 0);
+  }
   explicit DTTBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1255,7 +1325,11 @@ inline ::flatbuffers::Offset<DTT> CreateDTT(
     ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ETAG = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EXPIRES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> REMARKS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> REMARKS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CENTER_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> REFERENCE_RADII_M = 0,
+    ::flatbuffers::Offset<DTTPayloadRef> HORIZON_ELEVATIONS = 0,
+    uint8_t HORIZON_SECTORS = 0) {
   DTTBuilder builder_(_fbb);
   builder_.add_NO_DATA_VALUE(NO_DATA_VALUE);
   builder_.add_DATA_COVERAGE_FRACTION(DATA_COVERAGE_FRACTION);
@@ -1270,6 +1344,9 @@ inline ::flatbuffers::Offset<DTT> CreateDTT(
   builder_.add_EAST_DEG(EAST_DEG);
   builder_.add_SOUTH_DEG(SOUTH_DEG);
   builder_.add_WEST_DEG(WEST_DEG);
+  builder_.add_HORIZON_ELEVATIONS(HORIZON_ELEVATIONS);
+  builder_.add_REFERENCE_RADII_M(REFERENCE_RADII_M);
+  builder_.add_CENTER_NAME(CENTER_NAME);
   builder_.add_REMARKS(REMARKS);
   builder_.add_EXPIRES(EXPIRES);
   builder_.add_ETAG(ETAG);
@@ -1293,6 +1370,7 @@ inline ::flatbuffers::Offset<DTT> CreateDTT(
   builder_.add_LEVEL(LEVEL);
   builder_.add_TILESET_NAME(TILESET_NAME);
   builder_.add_TILESET_ID(TILESET_ID);
+  builder_.add_HORIZON_SECTORS(HORIZON_SECTORS);
   builder_.add_SOURCE_CLASS(SOURCE_CLASS);
   builder_.add_CHILD_AVAILABILITY(CHILD_AVAILABILITY);
   builder_.add_WATER_MASK_KIND(WATER_MASK_KIND);
@@ -1347,7 +1425,11 @@ inline ::flatbuffers::Offset<DTT> CreateDTTDirect(
     const char *EPOCH = nullptr,
     const char *ETAG = nullptr,
     const char *EXPIRES = nullptr,
-    const char *REMARKS = nullptr) {
+    const char *REMARKS = nullptr,
+    const char *CENTER_NAME = nullptr,
+    const std::vector<double> *REFERENCE_RADII_M = nullptr,
+    ::flatbuffers::Offset<DTTPayloadRef> HORIZON_ELEVATIONS = 0,
+    uint8_t HORIZON_SECTORS = 0) {
   auto TILESET_ID__ = TILESET_ID ? _fbb.CreateString(TILESET_ID) : 0;
   auto TILESET_NAME__ = TILESET_NAME ? _fbb.CreateString(TILESET_NAME) : 0;
   auto PAYLOAD_FORMAT_VERSION__ = PAYLOAD_FORMAT_VERSION ? _fbb.CreateString(PAYLOAD_FORMAT_VERSION) : 0;
@@ -1357,6 +1439,8 @@ inline ::flatbuffers::Offset<DTT> CreateDTTDirect(
   auto ETAG__ = ETAG ? _fbb.CreateString(ETAG) : 0;
   auto EXPIRES__ = EXPIRES ? _fbb.CreateString(EXPIRES) : 0;
   auto REMARKS__ = REMARKS ? _fbb.CreateString(REMARKS) : 0;
+  auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
+  auto REFERENCE_RADII_M__ = REFERENCE_RADII_M ? _fbb.CreateVector<double>(*REFERENCE_RADII_M) : 0;
   return CreateDTT(
       _fbb,
       TILESET_ID__,
@@ -1401,7 +1485,11 @@ inline ::flatbuffers::Offset<DTT> CreateDTTDirect(
       EPOCH__,
       ETAG__,
       EXPIRES__,
-      REMARKS__);
+      REMARKS__,
+      CENTER_NAME__,
+      REFERENCE_RADII_M__,
+      HORIZON_ELEVATIONS,
+      HORIZON_SECTORS);
 }
 
 inline const DTT *GetDTT(const void *buf) {

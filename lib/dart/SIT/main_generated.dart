@@ -26,7 +26,11 @@ enum SiteType {
   URBAN_AREA(14),
   NATIONAL_PARK(15),
   HISTORICAL_SITE(16),
-  OTHER(17);
+  OTHER(17),
+  LANDING_SITE(18),
+  IMPACT_SITE(19),
+  CANDIDATE_REGION(20),
+  SURFACE_FEATURE(21);
 
   final int value;
   const SiteType(this.value);
@@ -51,6 +55,10 @@ enum SiteType {
       case 15: return SiteType.NATIONAL_PARK;
       case 16: return SiteType.HISTORICAL_SITE;
       case 17: return SiteType.OTHER;
+      case 18: return SiteType.LANDING_SITE;
+      case 19: return SiteType.IMPACT_SITE;
+      case 20: return SiteType.CANDIDATE_REGION;
+      case 21: return SiteType.SURFACE_FEATURE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -59,7 +67,7 @@ enum SiteType {
       value == null ? null : SiteType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 17;
+  static const int maxValue = 21;
   static const fb.Reader<SiteType> reader = _SiteTypeReader();
 }
 
@@ -979,11 +987,12 @@ class SIT {
   String? get CATCODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   ///  Network identifier
   String? get NETWORK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  ///  Latitude of the site
+  ///  Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+  ///  body when that is not EARTH
   double get LATITUDE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  ///  Longitude of the site
+  ///  Longitude of the site, degrees, east positive
   double get LONGITUDE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  ///  Altitude of the site
+  ///  Altitude of the site above CENTER_NAME's reference surface
   double get ALTITUDE => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   ///  Geometry of the site
   Geometry? get GEOMETRY => Geometry.reader.vTableGetNullable(_bc, _bcOffset, 22);
@@ -1063,10 +1072,28 @@ class SIT {
   ///  The record's provider and producer, and the terms of the content the
   ///  record reproduces (each citation carries its own source's terms)
   PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 74);
+  ///  The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+  ///  keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  ///  EARTH, so every site published before 1.2.0 reads unchanged.
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  String? get centerName => CENTER_NAME;
+  ///  The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+  ///  RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+  ///  KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+  ///  means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+  RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 78);
+  RFM? get referenceFrame => REFERENCE_FRAME;
+  ///  The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+  ///  source names it. Empty for a site of no mission.
+  String? get MISSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  ///  When the landing or impact took place, RFC 3339 UTC; for a
+  ///  LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+  String? get EVENT_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  String? get eventEpoch => EVENT_EPOCH;
 
   @override
   String toString() {
-    return 'SIT{ID: ${ID}, NAME: ${NAME}, ABBREVIATION: ${ABBREVIATION}, siteType: ${siteType}, CATCODE: ${CATCODE}, NETWORK: ${NETWORK}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, GEOMETRY: ${GEOMETRY}, centerPointGeometry: ${centerPointGeometry}, CLASSIFICATION: ${CLASSIFICATION}, ctrId: ${ctrId}, createdBy: ${createdBy}, DESCRIPTION: ${DESCRIPTION}, modelUrl: ${modelUrl}, SOURCE: ${SOURCE}, TASKABLE: ${TASKABLE}, operationalStatus: ${operationalStatus}, establishmentDate: ${establishmentDate}, contactInfo: ${contactInfo}, environmentalImpact: ${environmentalImpact}, accessibilityInfra: ${accessibilityInfra}, integratedDevices: ${integratedDevices}, lifecycleStatus: ${lifecycleStatus}, lifecycleStatusDate: ${lifecycleStatusDate}, statusVerifiedAt: ${statusVerifiedAt}, statusEvidence: ${statusEvidence}, siteKind: ${siteKind}, descriptionLanguage: ${descriptionLanguage}, descriptionCitation: ${descriptionCitation}, positionCitation: ${positionCitation}, externalReferences: ${externalReferences}, PARTIES: ${PARTIES}, QUANTITIES: ${QUANTITIES}, PROVENANCE: ${PROVENANCE}}';
+    return 'SIT{ID: ${ID}, NAME: ${NAME}, ABBREVIATION: ${ABBREVIATION}, siteType: ${siteType}, CATCODE: ${CATCODE}, NETWORK: ${NETWORK}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, GEOMETRY: ${GEOMETRY}, centerPointGeometry: ${centerPointGeometry}, CLASSIFICATION: ${CLASSIFICATION}, ctrId: ${ctrId}, createdBy: ${createdBy}, DESCRIPTION: ${DESCRIPTION}, modelUrl: ${modelUrl}, SOURCE: ${SOURCE}, TASKABLE: ${TASKABLE}, operationalStatus: ${operationalStatus}, establishmentDate: ${establishmentDate}, contactInfo: ${contactInfo}, environmentalImpact: ${environmentalImpact}, accessibilityInfra: ${accessibilityInfra}, integratedDevices: ${integratedDevices}, lifecycleStatus: ${lifecycleStatus}, lifecycleStatusDate: ${lifecycleStatusDate}, statusVerifiedAt: ${statusVerifiedAt}, statusEvidence: ${statusEvidence}, siteKind: ${siteKind}, descriptionLanguage: ${descriptionLanguage}, descriptionCitation: ${descriptionCitation}, positionCitation: ${positionCitation}, externalReferences: ${externalReferences}, PARTIES: ${PARTIES}, QUANTITIES: ${QUANTITIES}, PROVENANCE: ${PROVENANCE}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, MISSION: ${MISSION}, eventEpoch: ${eventEpoch}}';
   }
 }
 
@@ -1084,7 +1111,7 @@ class SITBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(36);
+    fbBuilder.startTable(40);
   }
 
   int addIdOffset(int? offset) {
@@ -1231,6 +1258,22 @@ class SITBuilder {
     fbBuilder.addOffset(35, offset);
     return fbBuilder.offset;
   }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addMissionOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addEventEpochOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1274,6 +1317,10 @@ class SITObjectBuilder extends fb.ObjectBuilder {
   final List<SITPartyObjectBuilder>? _PARTIES;
   final List<SITQuantityObjectBuilder>? _QUANTITIES;
   final PVNObjectBuilder? _PROVENANCE;
+  final String? _CENTER_NAME;
+  final RFMObjectBuilder? _REFERENCE_FRAME;
+  final String? _MISSION;
+  final String? _EVENT_EPOCH;
 
   SITObjectBuilder({
     String? ID,
@@ -1332,6 +1379,13 @@ class SITObjectBuilder extends fb.ObjectBuilder {
     List<SITPartyObjectBuilder>? PARTIES,
     List<SITQuantityObjectBuilder>? QUANTITIES,
     PVNObjectBuilder? PROVENANCE,
+    String? CENTER_NAME,
+    String? centerName,
+    RFMObjectBuilder? REFERENCE_FRAME,
+    RFMObjectBuilder? referenceFrame,
+    String? MISSION,
+    String? EVENT_EPOCH,
+    String? eventEpoch,
   })
       : _ID = ID,
         _NAME = NAME,
@@ -1368,7 +1422,11 @@ class SITObjectBuilder extends fb.ObjectBuilder {
         _EXTERNAL_REFERENCES = externalReferences ?? EXTERNAL_REFERENCES,
         _PARTIES = PARTIES,
         _QUANTITIES = QUANTITIES,
-        _PROVENANCE = PROVENANCE;
+        _PROVENANCE = PROVENANCE,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _MISSION = MISSION,
+        _EVENT_EPOCH = eventEpoch ?? EVENT_EPOCH;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1429,7 +1487,14 @@ class SITObjectBuilder extends fb.ObjectBuilder {
     final int? QUANTITIESOffset = _QUANTITIES == null ? null
         : fbBuilder.writeList(_QUANTITIES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(36);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REFERENCE_FRAMEOffset = _REFERENCE_FRAME?.getOrCreateOffset(fbBuilder);
+    final int? MISSIONOffset = _MISSION == null ? null
+        : fbBuilder.writeString(_MISSION!);
+    final int? EVENT_EPOCHOffset = _EVENT_EPOCH == null ? null
+        : fbBuilder.writeString(_EVENT_EPOCH!);
+    fbBuilder.startTable(40);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, NAMEOffset);
     fbBuilder.addOffset(2, ABBREVIATIONOffset);
@@ -1466,6 +1531,10 @@ class SITObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(33, PARTIESOffset);
     fbBuilder.addOffset(34, QUANTITIESOffset);
     fbBuilder.addOffset(35, PROVENANCEOffset);
+    fbBuilder.addOffset(36, CENTER_NAMEOffset);
+    fbBuilder.addOffset(37, REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(38, MISSIONOffset);
+    fbBuilder.addOffset(39, EVENT_EPOCHOffset);
     return fbBuilder.endTable();
   }
 

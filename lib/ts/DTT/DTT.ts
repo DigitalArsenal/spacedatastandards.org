@@ -29,7 +29,9 @@ import { dttWaterMask } from './dttWaterMask.js';
  * $DTT records, is configured by $TRN, and its heights may be consumed by
  * $TRS.
  *
- * Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+ * Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+ * another body names it in CENTER_NAME; its angles are then planetocentric
+ * degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
  * referenced by content identifier by default; see DTTPayloadRef.
  */
 export class DTT implements flatbuffers.IUnpackableObject<DTTT> {
@@ -118,7 +120,8 @@ ROW_ORIGIN_NORTH():boolean {
 }
 
 /**
- * Western extent of the tile, decimal degrees on WGS 84.
+ * Western extent of the tile, decimal degrees on CENTER_NAME's reference
+ * body (WGS 84 for EARTH; planetocentric for any other body).
  */
 WEST_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -126,7 +129,8 @@ WEST_DEG():number {
 }
 
 /**
- * Southern extent of the tile, decimal degrees on WGS 84.
+ * Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+ * body (planetocentric for any body other than EARTH).
  */
 SOUTH_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
@@ -134,7 +138,8 @@ SOUTH_DEG():number {
 }
 
 /**
- * Eastern extent of the tile, decimal degrees on WGS 84.
+ * Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+ * body (planetocentric for any body other than EARTH), east positive.
  */
 EAST_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
@@ -142,7 +147,8 @@ EAST_DEG():number {
 }
 
 /**
- * Northern extent of the tile, decimal degrees on WGS 84.
+ * Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+ * body (planetocentric for any body other than EARTH).
  */
 NORTH_DEG():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
@@ -439,8 +445,64 @@ REMARKS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+ * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+ * EARTH, so every tile published before 1.191.0 reads unchanged.
+ */
+CENTER_NAME():string|null
+CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+ * two are equatorial then polar (a spheroid); three are the semi-axes a
+ * (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+ * Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+ * datum, which reads the first value.
+ */
+REFERENCE_RADII_M(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+referenceRadiiMLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+referenceRadiiMArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Horizon elevation angles the publisher precomputed for the tile's posts,
+ * for lighting and visibility without a height search. One unsigned byte
+ * per post and sector: posts in the order of PAYLOAD's grid (row-major from
+ * the north-west post), sector the fastest index. Sector k is centred on
+ * azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+ * the elevation angle of the terrain horizon above the local horizontal at
+ * the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+ */
+HORIZON_ELEVATIONS(obj?:DTTPayloadRef):DTTPayloadRef|null {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? (obj || new DTTPayloadRef()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+ */
+HORIZON_SECTORS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
 static startDTT(builder:flatbuffers.Builder) {
-  builder.startObject(43);
+  builder.startObject(47);
 }
 
 static addTilesetId(builder:flatbuffers.Builder, TILESET_IDOffset:flatbuffers.Offset) {
@@ -615,6 +677,39 @@ static addRemarks(builder:flatbuffers.Builder, REMARKSOffset:flatbuffers.Offset)
   builder.addFieldOffset(42, REMARKSOffset, 0);
 }
 
+static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(43, CENTER_NAMEOffset, 0);
+}
+
+static addReferenceRadiiM(builder:flatbuffers.Builder, REFERENCE_RADII_MOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(44, REFERENCE_RADII_MOffset, 0);
+}
+
+static createReferenceRadiiMVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createReferenceRadiiMVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createReferenceRadiiMVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startReferenceRadiiMVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addHorizonElevations(builder:flatbuffers.Builder, HORIZON_ELEVATIONSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(45, HORIZON_ELEVATIONSOffset, 0);
+}
+
+static addHorizonSectors(builder:flatbuffers.Builder, HORIZON_SECTORS:number) {
+  builder.addFieldInt8(46, HORIZON_SECTORS, 0);
+}
+
 static endDTT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // TILESET_ID
@@ -676,7 +771,11 @@ unpack(): DTTT {
     this.EPOCH(),
     this.ETAG(),
     this.EXPIRES(),
-    this.REMARKS()
+    this.REMARKS(),
+    this.CENTER_NAME(),
+    this.bb!.createScalarList<number>(this.REFERENCE_RADII_M.bind(this), this.referenceRadiiMLength()),
+    (this.HORIZON_ELEVATIONS() !== null ? this.HORIZON_ELEVATIONS()!.unpack() : null),
+    this.HORIZON_SECTORS()
   );
 }
 
@@ -725,6 +824,10 @@ unpackTo(_o: DTTT): void {
   _o.ETAG = this.ETAG();
   _o.EXPIRES = this.EXPIRES();
   _o.REMARKS = this.REMARKS();
+  _o.CENTER_NAME = this.CENTER_NAME();
+  _o.REFERENCE_RADII_M = this.bb!.createScalarList<number>(this.REFERENCE_RADII_M.bind(this), this.referenceRadiiMLength());
+  _o.HORIZON_ELEVATIONS = (this.HORIZON_ELEVATIONS() !== null ? this.HORIZON_ELEVATIONS()!.unpack() : null);
+  _o.HORIZON_SECTORS = this.HORIZON_SECTORS();
 }
 }
 
@@ -772,7 +875,11 @@ constructor(
   public EPOCH: string|Uint8Array|null = null,
   public ETAG: string|Uint8Array|null = null,
   public EXPIRES: string|Uint8Array|null = null,
-  public REMARKS: string|Uint8Array|null = null
+  public REMARKS: string|Uint8Array|null = null,
+  public CENTER_NAME: string|Uint8Array|null = null,
+  public REFERENCE_RADII_M: (number)[] = [],
+  public HORIZON_ELEVATIONS: DTTPayloadRefT|null = null,
+  public HORIZON_SECTORS: number = 0
 ){}
 
 
@@ -792,6 +899,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ETAG = (this.ETAG !== null ? builder.createString(this.ETAG!) : 0);
   const EXPIRES = (this.EXPIRES !== null ? builder.createString(this.EXPIRES!) : 0);
   const REMARKS = (this.REMARKS !== null ? builder.createString(this.REMARKS!) : 0);
+  const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const REFERENCE_RADII_M = DTT.createReferenceRadiiMVector(builder, this.REFERENCE_RADII_M);
+  const HORIZON_ELEVATIONS = (this.HORIZON_ELEVATIONS !== null ? this.HORIZON_ELEVATIONS!.pack(builder) : 0);
 
   DTT.startDTT(builder);
   DTT.addTilesetId(builder, TILESET_ID);
@@ -837,6 +947,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   DTT.addEtag(builder, ETAG);
   DTT.addExpires(builder, EXPIRES);
   DTT.addRemarks(builder, REMARKS);
+  DTT.addCenterName(builder, CENTER_NAME);
+  DTT.addReferenceRadiiM(builder, REFERENCE_RADII_M);
+  DTT.addHorizonElevations(builder, HORIZON_ELEVATIONS);
+  DTT.addHorizonSectors(builder, this.HORIZON_SECTORS);
 
   return DTT.endDTT(builder);
 }

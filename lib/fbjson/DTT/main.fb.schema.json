@@ -8,7 +8,8 @@
         "GEOGRAPHIC_WGS84",
         "GEOGRAPHIC_SINGLE_ROOT",
         "WEB_MERCATOR",
-        "CUSTOM"
+        "CUSTOM",
+        "GEOGRAPHIC_TWO_ROOT_BODY"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -32,6 +33,10 @@
         "CUSTOM": {
           "value": 4,
           "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+        },
+        "GEOGRAPHIC_TWO_ROOT_BODY": {
+          "value": 5,
+          "description": "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
         }
       }
     },
@@ -87,7 +92,8 @@
         "GEOID",
         "MEAN_SEA_LEVEL",
         "REGIONAL_DATUM",
-        "CUSTOM"
+        "CUSTOM",
+        "REFERENCE_SPHERE"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -115,6 +121,10 @@
         "CUSTOM": {
           "value": 5,
           "description": "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+        },
+        "REFERENCE_SPHERE": {
+          "value": 6,
+          "description": "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
         }
       }
     },
@@ -361,7 +371,7 @@
     },
     "DTT": {
       "type": "object",
-      "description": "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+      "description": "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
       "properties": {
         "TILESET_ID": {
           "type": "string",
@@ -399,6 +409,10 @@
             "CUSTOM": {
               "value": 4,
               "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+            },
+            "GEOGRAPHIC_TWO_ROOT_BODY": {
+              "value": 5,
+              "description": "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -432,22 +446,22 @@
         },
         "WEST_DEG": {
           "type": "number",
-          "description": "Western extent of the tile, decimal degrees on WGS 84.",
+          "description": "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body).",
           "x-flatbuffer-type": "double"
         },
         "SOUTH_DEG": {
           "type": "number",
-          "description": "Southern extent of the tile, decimal degrees on WGS 84.",
+          "description": "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
           "x-flatbuffer-type": "double"
         },
         "EAST_DEG": {
           "type": "number",
-          "description": "Eastern extent of the tile, decimal degrees on WGS 84.",
+          "description": "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive.",
           "x-flatbuffer-type": "double"
         },
         "NORTH_DEG": {
           "type": "number",
-          "description": "Northern extent of the tile, decimal degrees on WGS 84.",
+          "description": "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
           "x-flatbuffer-type": "double"
         },
         "MIN_HEIGHT_M": {
@@ -561,6 +575,10 @@
             "CUSTOM": {
               "value": 5,
               "description": "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+            },
+            "REFERENCE_SPHERE": {
+              "value": 6,
+              "description": "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -754,6 +772,31 @@
           "type": "string",
           "description": "Free-form publisher notes about this tile. Never a substitute for a\nstated field.",
           "x-flatbuffer-type": "string"
+        },
+        "CENTER_NAME": {
+          "type": "string",
+          "description": "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_RADII_M": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "HORIZON_ELEVATIONS": {
+          "$ref": "#/definitions/DTTPayloadRef",
+          "description": "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0.",
+          "x-flatbuffer-type": "DTTPayloadRef"
+        },
+        "HORIZON_SECTORS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).",
+          "x-flatbuffer-type": "uint8"
         }
       },
       "required": [

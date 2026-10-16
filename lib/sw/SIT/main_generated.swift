@@ -31,8 +31,16 @@ public enum SiteType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   case nationalPark = 15
   case historicalSite = 16
   case other = 17
+  ///  A place a spacecraft touched down or is to touch down on a body surface
+  case landingSite = 18
+  ///  A place a spacecraft or stage struck a body surface
+  case impactSite = 19
+  ///  A surface region under study as a landing or exploration target
+  case candidateRegion = 20
+  ///  A named natural feature of a body surface (crater, mare, rille, mons)
+  case surfaceFeature = 21
 
-  public static var max: SiteType { return .other }
+  public static var max: SiteType { return .surfaceFeature }
   public static var min: SiteType { return .launchSite }
 }
 
@@ -569,6 +577,10 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let PARTIES: VOffset = 70
     static let QUANTITIES: VOffset = 72
     static let PROVENANCE: VOffset = 74
+    static let CENTER_NAME: VOffset = 76
+    static let REFERENCE_FRAME: VOffset = 78
+    static let MISSION: VOffset = 80
+    static let EVENT_EPOCH: VOffset = 82
   }
 
   ///  Unique identifier for the site, BE_NUMBER
@@ -588,11 +600,12 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Network identifier
   public var NETWORK: String? { let o = _accessor.offset(VT.NETWORK); return o == 0 ? nil : _accessor.string(at: o) }
   public var NETWORKSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NETWORK) }
-  ///  Latitude of the site
+  ///  Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+  ///  body when that is not EARTH
   public var LATITUDE: Float32 { let o = _accessor.offset(VT.LATITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Longitude of the site
+  ///  Longitude of the site, degrees, east positive
   public var LONGITUDE: Float32 { let o = _accessor.offset(VT.LONGITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  Altitude of the site
+  ///  Altitude of the site above CENTER_NAME's reference surface
   public var ALTITUDE: Float32 { let o = _accessor.offset(VT.ALTITUDE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Geometry of the site
   public var GEOMETRY: Geometry? { let o = _accessor.offset(VT.GEOMETRY); return o == 0 ? nil : Geometry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -669,7 +682,25 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  The record's provider and producer, and the terms of the content the
   ///  record reproduces (each citation carries its own source's terms)
   public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startSIT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 36) }
+  ///  The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+  ///  keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  ///  EARTH, so every site published before 1.2.0 reads unchanged.
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+  ///  RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+  ///  KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+  ///  means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+  public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+  ///  source names it. Empty for a site of no mission.
+  public var MISSION: String? { let o = _accessor.offset(VT.MISSION); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MISSION) }
+  ///  When the landing or impact took place, RFC 3339 UTC; for a
+  ///  LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+  public var EVENT_EPOCH: String? { let o = _accessor.offset(VT.EVENT_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVENT_EPOCH) }
+  public static func startSIT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 40) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(ABBREVIATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABBREVIATION, at: VT.ABBREVIATION) }
@@ -707,6 +738,10 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(PARTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTIES, at: VT.PARTIES) }
   public static func addVectorOf(QUANTITIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUANTITIES, at: VT.QUANTITIES) }
   public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VT.REFERENCE_FRAME) }
+  public static func add(MISSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION, at: VT.MISSION) }
+  public static func add(EVENT_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_EPOCH, at: VT.EVENT_EPOCH) }
   public static func endSIT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSIT(
     _ fbb: inout FlatBufferBuilder,
@@ -745,7 +780,11 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     EXTERNAL_REFERENCESVectorOffset EXTERNAL_REFERENCES: Offset = Offset(),
     PARTIESVectorOffset PARTIES: Offset = Offset(),
     QUANTITIESVectorOffset QUANTITIES: Offset = Offset(),
-    PROVENANCEOffset PROVENANCE: Offset = Offset()
+    PROVENANCEOffset PROVENANCE: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
+    MISSIONOffset MISSION: Offset = Offset(),
+    EVENT_EPOCHOffset EVENT_EPOCH: Offset = Offset()
   ) -> Offset {
     let __start = SIT.startSIT(&fbb)
     SIT.add(ID: ID, &fbb)
@@ -784,6 +823,10 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SIT.addVectorOf(PARTIES: PARTIES, &fbb)
     SIT.addVectorOf(QUANTITIES: QUANTITIES, &fbb)
     SIT.add(PROVENANCE: PROVENANCE, &fbb)
+    SIT.add(CENTER_NAME: CENTER_NAME, &fbb)
+    SIT.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
+    SIT.add(MISSION: MISSION, &fbb)
+    SIT.add(EVENT_EPOCH: EVENT_EPOCH, &fbb)
     return SIT.endSIT(&fbb, start: __start)
   }
 
@@ -825,6 +868,10 @@ public struct SIT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.PARTIES, fieldName: "PARTIES", required: false, type: ForwardOffset<Vector<ForwardOffset<SITParty>, SITParty>>.self)
     try _v.visit(field: VT.QUANTITIES, fieldName: "QUANTITIES", required: false, type: ForwardOffset<Vector<ForwardOffset<SITQuantity>, SITQuantity>>.self)
     try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_FRAME, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<RFM>.self)
+    try _v.visit(field: VT.MISSION, fieldName: "MISSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EVENT_EPOCH, fieldName: "EVENT_EPOCH", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

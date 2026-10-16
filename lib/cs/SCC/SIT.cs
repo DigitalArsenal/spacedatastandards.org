@@ -61,11 +61,12 @@ public struct SIT : IFlatbufferObject
   public ArraySegment<byte>? GetNETWORKBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetNETWORKArray() { return __p.__vector_as_array<byte>(14); }
-  /// Latitude of the site
+  /// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+  /// body when that is not EARTH
   public float LATITUDE { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Longitude of the site
+  /// Longitude of the site, degrees, east positive
   public float LONGITUDE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  /// Altitude of the site
+  /// Altitude of the site above CENTER_NAME's reference surface
   public float ALTITUDE { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// Geometry of the site
   public Geometry? GEOMETRY { get { int o = __p.__offset(22); return o != 0 ? (Geometry?)(new Geometry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -228,6 +229,39 @@ public struct SIT : IFlatbufferObject
   /// The record's provider and producer, and the terms of the content the
   /// record reproduces (each citation carries its own source's terms)
   public PVN? PROVENANCE { get { int o = __p.__offset(74); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every site published before 1.2.0 reads unchanged.
+  public string CENTER_NAME { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(76, 1); }
+#else
+  public ArraySegment<byte>? GetCENTER_NAMEBytes() { return __p.__vector_as_arraysegment(76); }
+#endif
+  public byte[] GetCENTER_NAMEArray() { return __p.__vector_as_array<byte>(76); }
+  /// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+  /// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+  /// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+  /// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+  public RFM? REFERENCE_FRAME { get { int o = __p.__offset(78); return o != 0 ? (RFM?)(new RFM()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+  /// source names it. Empty for a site of no mission.
+  public string MISSION { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMISSIONBytes() { return __p.__vector_as_span<byte>(80, 1); }
+#else
+  public ArraySegment<byte>? GetMISSIONBytes() { return __p.__vector_as_arraysegment(80); }
+#endif
+  public byte[] GetMISSIONArray() { return __p.__vector_as_array<byte>(80); }
+  /// When the landing or impact took place, RFC 3339 UTC; for a
+  /// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+  public string EVENT_EPOCH { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEVENT_EPOCHBytes() { return __p.__vector_as_span<byte>(82, 1); }
+#else
+  public ArraySegment<byte>? GetEVENT_EPOCHBytes() { return __p.__vector_as_arraysegment(82); }
+#endif
+  public byte[] GetEVENT_EPOCHArray() { return __p.__vector_as_array<byte>(82); }
 
   public static Offset<SIT> CreateSIT(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -265,8 +299,16 @@ public struct SIT : IFlatbufferObject
       VectorOffset EXTERNAL_REFERENCESOffset = default(VectorOffset),
       VectorOffset PARTIESOffset = default(VectorOffset),
       VectorOffset QUANTITIESOffset = default(VectorOffset),
-      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
-    builder.StartTable(36);
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>),
+      StringOffset CENTER_NAMEOffset = default(StringOffset),
+      Offset<RFM> REFERENCE_FRAMEOffset = default(Offset<RFM>),
+      StringOffset MISSIONOffset = default(StringOffset),
+      StringOffset EVENT_EPOCHOffset = default(StringOffset)) {
+    builder.StartTable(40);
+    SIT.AddEVENT_EPOCH(builder, EVENT_EPOCHOffset);
+    SIT.AddMISSION(builder, MISSIONOffset);
+    SIT.AddREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset);
+    SIT.AddCENTER_NAME(builder, CENTER_NAMEOffset);
     SIT.AddPROVENANCE(builder, PROVENANCEOffset);
     SIT.AddQUANTITIES(builder, QUANTITIESOffset);
     SIT.AddPARTIES(builder, PARTIESOffset);
@@ -306,7 +348,7 @@ public struct SIT : IFlatbufferObject
     return SIT.EndSIT(builder);
   }
 
-  public static void StartSIT(FlatBufferBuilder builder) { builder.StartTable(36); }
+  public static void StartSIT(FlatBufferBuilder builder) { builder.StartTable(40); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(1, NAMEOffset.Value, 0); }
   public static void AddABBREVIATION(FlatBufferBuilder builder, StringOffset ABBREVIATIONOffset) { builder.AddOffset(2, ABBREVIATIONOffset.Value, 0); }
@@ -373,6 +415,10 @@ public struct SIT : IFlatbufferObject
   public static VectorOffset CreateQUANTITIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<SITQuantity>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartQUANTITIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(35, PROVENANCEOffset.Value, 0); }
+  public static void AddCENTER_NAME(FlatBufferBuilder builder, StringOffset CENTER_NAMEOffset) { builder.AddOffset(36, CENTER_NAMEOffset.Value, 0); }
+  public static void AddREFERENCE_FRAME(FlatBufferBuilder builder, Offset<RFM> REFERENCE_FRAMEOffset) { builder.AddOffset(37, REFERENCE_FRAMEOffset.Value, 0); }
+  public static void AddMISSION(FlatBufferBuilder builder, StringOffset MISSIONOffset) { builder.AddOffset(38, MISSIONOffset.Value, 0); }
+  public static void AddEVENT_EPOCH(FlatBufferBuilder builder, StringOffset EVENT_EPOCHOffset) { builder.AddOffset(39, EVENT_EPOCHOffset.Value, 0); }
   public static Offset<SIT> EndSIT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SIT>(o);
@@ -427,6 +473,10 @@ public struct SIT : IFlatbufferObject
     _o.QUANTITIES = new List<SITQuantityT>();
     for (var _j = 0; _j < this.QUANTITIESLength; ++_j) {_o.QUANTITIES.Add(this.QUANTITIES(_j).HasValue ? this.QUANTITIES(_j).Value.UnPack() : null);}
     _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
+    _o.CENTER_NAME = this.CENTER_NAME;
+    _o.REFERENCE_FRAME = this.REFERENCE_FRAME.HasValue ? this.REFERENCE_FRAME.Value.UnPack() : null;
+    _o.MISSION = this.MISSION;
+    _o.EVENT_EPOCH = this.EVENT_EPOCH;
   }
   public static Offset<SIT> Pack(FlatBufferBuilder builder, SITT _o) {
     if (_o == null) return default(Offset<SIT>);
@@ -489,6 +539,10 @@ public struct SIT : IFlatbufferObject
       _QUANTITIES = CreateQUANTITIESVector(builder, __QUANTITIES);
     }
     var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
+    var _CENTER_NAME = _o.CENTER_NAME == null ? default(StringOffset) : builder.CreateString(_o.CENTER_NAME);
+    var _REFERENCE_FRAME = _o.REFERENCE_FRAME == null ? default(Offset<RFM>) : RFM.Pack(builder, _o.REFERENCE_FRAME);
+    var _MISSION = _o.MISSION == null ? default(StringOffset) : builder.CreateString(_o.MISSION);
+    var _EVENT_EPOCH = _o.EVENT_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EVENT_EPOCH);
     return CreateSIT(
       builder,
       _ID,
@@ -526,7 +580,11 @@ public struct SIT : IFlatbufferObject
       _EXTERNAL_REFERENCES,
       _PARTIES,
       _QUANTITIES,
-      _PROVENANCE);
+      _PROVENANCE,
+      _CENTER_NAME,
+      _REFERENCE_FRAME,
+      _MISSION,
+      _EVENT_EPOCH);
   }
 }
 
@@ -568,6 +626,10 @@ public class SITT
   public List<SITPartyT> PARTIES { get; set; }
   public List<SITQuantityT> QUANTITIES { get; set; }
   public PVNT PROVENANCE { get; set; }
+  public string CENTER_NAME { get; set; }
+  public RFMT REFERENCE_FRAME { get; set; }
+  public string MISSION { get; set; }
+  public string EVENT_EPOCH { get; set; }
 
   public SITT() {
     this.ID = null;
@@ -606,6 +668,10 @@ public class SITT
     this.PARTIES = null;
     this.QUANTITIES = null;
     this.PROVENANCE = null;
+    this.CENTER_NAME = null;
+    this.REFERENCE_FRAME = null;
+    this.MISSION = null;
+    this.EVENT_EPOCH = null;
   }
   public static SITT DeserializeFromBinary(byte[] fbBuffer) {
     return SIT.GetRootAsSIT(new ByteBuffer(fbBuffer)).UnPack();
@@ -659,6 +725,10 @@ static public class SITVerify
       && verifier.VerifyVectorOfTables(tablePos, 70 /*PARTIES*/, SITPartyVerify.Verify, false)
       && verifier.VerifyVectorOfTables(tablePos, 72 /*QUANTITIES*/, SITQuantityVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 74 /*PROVENANCE*/, PVNVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 76 /*CENTER_NAME*/, false)
+      && verifier.VerifyTable(tablePos, 78 /*REFERENCE_FRAME*/, RFMVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 80 /*MISSION*/, false)
+      && verifier.VerifyString(tablePos, 82 /*EVENT_EPOCH*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

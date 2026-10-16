@@ -28,8 +28,13 @@ public enum dttTilingScheme: Int8, FlatbuffersVectorInitializable, Enum, Verifia
   ///  A scheme this enum does not model; the publisher states it out of band
   ///  and the tile is not addressable by a consumer that does not know it.
   case custom = 4
+  ///  Equirectangular geographic scheme on the reference body named by
+  ///  CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+  ///  degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+  ///  body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+  case geographicTwoRootBody = 5
 
-  public static var max: dttTilingScheme { return .custom }
+  public static var max: dttTilingScheme { return .geographicTwoRootBody }
   public static var min: dttTilingScheme { return .unspecified }
 }
 
@@ -84,8 +89,12 @@ public enum dttVerticalDatum: Int8, FlatbuffersVectorInitializable, Enum, Verifi
   case regionalDatum = 4
   ///  A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
   case custom = 5
+  ///  Heights above the reference sphere of CENTER_NAME's body, whose radius is
+  ///  REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+  ///  against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+  case referenceSphere = 6
 
-  public static var max: dttVerticalDatum { return .custom }
+  public static var max: dttVerticalDatum { return .referenceSphere }
   public static var min: dttVerticalDatum { return .unspecified }
 }
 
@@ -430,7 +439,9 @@ public struct DTTProvenance: FlatBufferVerifiableTable, FlatbuffersVectorInitial
 ///  $DTT records, is configured by $TRN, and its heights may be consumed by
 ///  $TRS.
 ///
-///  Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+///  Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+///  another body names it in CENTER_NAME; its angles are then planetocentric
+///  degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 ///  referenced by content identifier by default; see DTTPayloadRef.
 public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -487,6 +498,10 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ETAG: VOffset = 84
     static let EXPIRES: VOffset = 86
     static let REMARKS: VOffset = 88
+    static let CENTER_NAME: VOffset = 90
+    static let REFERENCE_RADII_M: VOffset = 92
+    static let HORIZON_ELEVATIONS: VOffset = 94
+    static let HORIZON_SECTORS: VOffset = 96
   }
 
   ///  Publisher-stable identifier for the tile pyramid (the tileset) this tile
@@ -508,13 +523,17 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Row index 0 lies at the north edge of the scheme. When false, row 0 lies
   ///  at the south edge.
   public var ROW_ORIGIN_NORTH: Bool { let o = _accessor.offset(VT.ROW_ORIGIN_NORTH); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  ///  Western extent of the tile, decimal degrees on WGS 84.
+  ///  Western extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (WGS 84 for EARTH; planetocentric for any other body).
   public var WEST_DEG: Double { let o = _accessor.offset(VT.WEST_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Southern extent of the tile, decimal degrees on WGS 84.
+  ///  Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (planetocentric for any body other than EARTH).
   public var SOUTH_DEG: Double { let o = _accessor.offset(VT.SOUTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Eastern extent of the tile, decimal degrees on WGS 84.
+  ///  Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (planetocentric for any body other than EARTH), east positive.
   public var EAST_DEG: Double { let o = _accessor.offset(VT.EAST_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Northern extent of the tile, decimal degrees on WGS 84.
+  ///  Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (planetocentric for any body other than EARTH).
   public var NORTH_DEG: Double { let o = _accessor.offset(VT.NORTH_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
   ///  so a consumer can build a bounding volume without decoding the payload.
@@ -609,7 +628,29 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  stated field.
   public var REMARKS: String? { let o = _accessor.offset(VT.REMARKS); return o == 0 ? nil : _accessor.string(at: o) }
   public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REMARKS) }
-  public static func startDTT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 43) }
+  ///  The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+  ///  keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  ///  EARTH, so every tile published before 1.191.0 reads unchanged.
+  public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
+  ///  Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+  ///  two are equatorial then polar (a spheroid); three are the semi-axes a
+  ///  (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+  ///  Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+  ///  datum, which reads the first value.
+  public var REFERENCE_RADII_M: FlatbufferVector<Double> { return _accessor.vector(at: VT.REFERENCE_RADII_M, byteSize: 8) }
+  public func withUnsafePointerToReferenceRadiiM<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.REFERENCE_RADII_M, body: body) }
+  ///  Horizon elevation angles the publisher precomputed for the tile's posts,
+  ///  for lighting and visibility without a height search. One unsigned byte
+  ///  per post and sector: posts in the order of PAYLOAD's grid (row-major from
+  ///  the north-west post), sector the fastest index. Sector k is centred on
+  ///  azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+  ///  the elevation angle of the terrain horizon above the local horizontal at
+  ///  the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+  public var HORIZON_ELEVATIONS: DTTPayloadRef? { let o = _accessor.offset(VT.HORIZON_ELEVATIONS); return o == 0 ? nil : DTTPayloadRef(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+  public var HORIZON_SECTORS: UInt8 { let o = _accessor.offset(VT.HORIZON_SECTORS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  public static func startDTT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
   public static func add(TILESET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TILESET_ID, at: VT.TILESET_ID) }
   public static func add(TILESET_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TILESET_NAME, at: VT.TILESET_NAME) }
   public static func add(TILING_SCHEME: dttTilingScheme, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TILING_SCHEME.rawValue, def: 0, at: VT.TILING_SCHEME) }
@@ -654,6 +695,10 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(ETAG: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ETAG, at: VT.ETAG) }
   public static func add(EXPIRES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPIRES, at: VT.EXPIRES) }
   public static func add(REMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS, at: VT.REMARKS) }
+  public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
+  public static func addVectorOf(REFERENCE_RADII_M: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_RADII_M, at: VT.REFERENCE_RADII_M) }
+  public static func add(HORIZON_ELEVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HORIZON_ELEVATIONS, at: VT.HORIZON_ELEVATIONS) }
+  public static func add(HORIZON_SECTORS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZON_SECTORS, def: 0, at: VT.HORIZON_SECTORS) }
   public static func endDTT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 34, 80]); return end }
   public static func createDTT(
     _ fbb: inout FlatBufferBuilder,
@@ -699,7 +744,11 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     EPOCHOffset EPOCH: Offset = Offset(),
     ETAGOffset ETAG: Offset = Offset(),
     EXPIRESOffset EXPIRES: Offset = Offset(),
-    REMARKSOffset REMARKS: Offset = Offset()
+    REMARKSOffset REMARKS: Offset = Offset(),
+    CENTER_NAMEOffset CENTER_NAME: Offset = Offset(),
+    REFERENCE_RADII_MVectorOffset REFERENCE_RADII_M: Offset = Offset(),
+    HORIZON_ELEVATIONSOffset HORIZON_ELEVATIONS: Offset = Offset(),
+    HORIZON_SECTORS: UInt8 = 0
   ) -> Offset {
     let __start = DTT.startDTT(&fbb)
     DTT.add(TILESET_ID: TILESET_ID, &fbb)
@@ -745,6 +794,10 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     DTT.add(ETAG: ETAG, &fbb)
     DTT.add(EXPIRES: EXPIRES, &fbb)
     DTT.add(REMARKS: REMARKS, &fbb)
+    DTT.add(CENTER_NAME: CENTER_NAME, &fbb)
+    DTT.addVectorOf(REFERENCE_RADII_M: REFERENCE_RADII_M, &fbb)
+    DTT.add(HORIZON_ELEVATIONS: HORIZON_ELEVATIONS, &fbb)
+    DTT.add(HORIZON_SECTORS: HORIZON_SECTORS, &fbb)
     return DTT.endDTT(&fbb, start: __start)
   }
 
@@ -793,6 +846,10 @@ public struct DTT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ETAG, fieldName: "ETAG", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.EXPIRES, fieldName: "EXPIRES", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.REMARKS, fieldName: "REMARKS", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.CENTER_NAME, fieldName: "CENTER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.REFERENCE_RADII_M, fieldName: "REFERENCE_RADII_M", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.HORIZON_ELEVATIONS, fieldName: "HORIZON_ELEVATIONS", required: false, type: ForwardOffset<DTTPayloadRef>.self)
+    try _v.visit(field: VT.HORIZON_SECTORS, fieldName: "HORIZON_SECTORS", required: false, type: UInt8.self)
     _v.finish()
   }
 }

@@ -19,6 +19,22 @@ export declare enum SiteType {
     URBAN_AREA = 14,
     NATIONAL_PARK = 15,
     HISTORICAL_SITE = 16,
-    OTHER = 17
+    OTHER = 17,
+    /**
+     * A place a spacecraft touched down or is to touch down on a body surface
+     */
+    LANDING_SITE = 18,
+    /**
+     * A place a spacecraft or stage struck a body surface
+     */
+    IMPACT_SITE = 19,
+    /**
+     * A surface region under study as a landing or exploration target
+     */
+    CANDIDATE_REGION = 20,
+    /**
+     * A named natural feature of a body surface (crater, mare, rille, mons)
+     */
+    SURFACE_FEATURE = 21
 }
 //# sourceMappingURL=SiteType.d.ts.map

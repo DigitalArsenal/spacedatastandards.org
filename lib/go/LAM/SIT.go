@@ -146,7 +146,8 @@ func (rcv *SIT) Network() []byte {
 }
 
 /// Network identifier
-/// Latitude of the site
+/// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+/// body when that is not EARTH
 func (rcv *SIT) LATITUDE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -159,7 +160,8 @@ func (rcv *SIT) Latitude() float32 {
 	return rcv.LATITUDE()
 }
 
-/// Latitude of the site
+/// Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+/// body when that is not EARTH
 func (rcv *SIT) MutateLATITUDE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(16, n)
 }
@@ -168,7 +170,7 @@ func (rcv *SIT) MutateLatitude(n float32) bool {
 	return rcv.MutateLATITUDE(n)
 }
 
-/// Longitude of the site
+/// Longitude of the site, degrees, east positive
 func (rcv *SIT) LONGITUDE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -181,7 +183,7 @@ func (rcv *SIT) Longitude() float32 {
 	return rcv.LONGITUDE()
 }
 
-/// Longitude of the site
+/// Longitude of the site, degrees, east positive
 func (rcv *SIT) MutateLONGITUDE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(18, n)
 }
@@ -190,7 +192,7 @@ func (rcv *SIT) MutateLongitude(n float32) bool {
 	return rcv.MutateLONGITUDE(n)
 }
 
-/// Altitude of the site
+/// Altitude of the site above CENTER_NAME's reference surface
 func (rcv *SIT) ALTITUDE() float32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -203,7 +205,7 @@ func (rcv *SIT) Altitude() float32 {
 	return rcv.ALTITUDE()
 }
 
-/// Altitude of the site
+/// Altitude of the site above CENTER_NAME's reference surface
 func (rcv *SIT) MutateALTITUDE(n float32) bool {
 	return rcv._tab.MutateFloat32Slot(20, n)
 }
@@ -757,8 +759,83 @@ func (rcv *SIT) Provenance(obj *PVN) *PVN {
 
 /// The record's provider and producer, and the terms of the content the
 /// record reproduces (each citation carries its own source's terms)
+/// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+/// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+/// EARTH, so every site published before 1.2.0 reads unchanged.
+func (rcv *SIT) CENTER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) CenterName() []byte {
+	return rcv.CENTER_NAME()
+}
+
+/// The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+/// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+/// EARTH, so every site published before 1.2.0 reads unchanged.
+/// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+/// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+/// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+/// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+func (rcv *SIT) REFERENCE_FRAME(obj *RFM) *RFM {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(RFM)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SIT) ReferenceFrame(obj *RFM) *RFM {
+	return rcv.REFERENCE_FRAME(obj)
+}
+
+/// The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+/// RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+/// KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+/// means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+/// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+/// source names it. Empty for a site of no mission.
+func (rcv *SIT) MISSION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) Mission() []byte {
+	return rcv.MISSION()
+}
+
+/// The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+/// source names it. Empty for a site of no mission.
+/// When the landing or impact took place, RFC 3339 UTC; for a
+/// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+func (rcv *SIT) EVENT_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *SIT) EventEpoch() []byte {
+	return rcv.EVENT_EPOCH()
+}
+
+/// When the landing or impact took place, RFC 3339 UTC; for a
+/// LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
 func SITStart(builder *flatbuffers.Builder) {
-	builder.StartObject(36)
+	builder.StartObject(40)
 }
 func SITAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -1011,6 +1088,30 @@ func SITAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffs
 }
 func SITAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
 	SITAddPROVENANCE(builder, PROVENANCE)
+}
+func SITAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func SITAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	SITAddCENTER_NAME(builder, CENTER_NAME)
+}
+func SITAddREFERENCE_FRAME(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(REFERENCE_FRAME), 0)
+}
+func SITAddReferenceFrame(builder *flatbuffers.Builder, REFERENCE_FRAME flatbuffers.UOffsetT) {
+	SITAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+}
+func SITAddMISSION(builder *flatbuffers.Builder, MISSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(38, flatbuffers.UOffsetT(MISSION), 0)
+}
+func SITAddMission(builder *flatbuffers.Builder, MISSION flatbuffers.UOffsetT) {
+	SITAddMISSION(builder, MISSION)
+}
+func SITAddEVENT_EPOCH(builder *flatbuffers.Builder, EVENT_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(EVENT_EPOCH), 0)
+}
+func SITAddEventEpoch(builder *flatbuffers.Builder, EVENT_EPOCH flatbuffers.UOffsetT) {
+	SITAddEVENT_EPOCH(builder, EVENT_EPOCH)
 }
 func SITEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

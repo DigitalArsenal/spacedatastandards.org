@@ -63,15 +63,16 @@ public final class SIT extends com.google.flatbuffers.Table {
   public ByteBuffer NETWORKAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer NETWORKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
   /**
-   * Latitude of the site
+   * Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+   * body when that is not EARTH
    */
   public float LATITUDE() { int o = __offset(16); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Longitude of the site
+   * Longitude of the site, degrees, east positive
    */
   public float LONGITUDE() { int o = __offset(18); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
-   * Altitude of the site
+   * Altitude of the site above CENTER_NAME's reference surface
    */
   public float ALTITUDE() { int o = __offset(20); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
   /**
@@ -246,6 +247,36 @@ public final class SIT extends com.google.flatbuffers.Table {
    */
   public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
   public PVN PROVENANCE(PVN obj) { int o = __offset(74); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+   * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+   * EARTH, so every site published before 1.2.0 reads unchanged.
+   */
+  public String CENTER_NAME() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer CENTER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+   * RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+   * KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+   * means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+   */
+  public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
+  public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(78); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+   * source names it. Empty for a site of no mission.
+   */
+  public String MISSION() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MISSIONAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
+  public ByteBuffer MISSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
+  /**
+   * When the landing or impact took place, RFC 3339 UTC; for a
+   * LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+   */
+  public String EVENT_EPOCH() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EVENT_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer EVENT_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
 
   public static int createSIT(FlatBufferBuilder builder,
       int IDOffset,
@@ -283,8 +314,16 @@ public final class SIT extends com.google.flatbuffers.Table {
       int EXTERNAL_REFERENCESOffset,
       int PARTIESOffset,
       int QUANTITIESOffset,
-      int PROVENANCEOffset) {
-    builder.startTable(36);
+      int PROVENANCEOffset,
+      int CENTER_NAMEOffset,
+      int REFERENCE_FRAMEOffset,
+      int MISSIONOffset,
+      int EVENT_EPOCHOffset) {
+    builder.startTable(40);
+    SIT.addEventEpoch(builder, EVENT_EPOCHOffset);
+    SIT.addMission(builder, MISSIONOffset);
+    SIT.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
+    SIT.addCenterName(builder, CENTER_NAMEOffset);
     SIT.addProvenance(builder, PROVENANCEOffset);
     SIT.addQuantities(builder, QUANTITIESOffset);
     SIT.addParties(builder, PARTIESOffset);
@@ -324,7 +363,7 @@ public final class SIT extends com.google.flatbuffers.Table {
     return SIT.endSIT(builder);
   }
 
-  public static void startSIT(FlatBufferBuilder builder) { builder.startTable(36); }
+  public static void startSIT(FlatBufferBuilder builder) { builder.startTable(40); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(1, NAMEOffset, 0); }
   public static void addAbbreviation(FlatBufferBuilder builder, int ABBREVIATIONOffset) { builder.addOffset(2, ABBREVIATIONOffset, 0); }
@@ -373,6 +412,10 @@ public final class SIT extends com.google.flatbuffers.Table {
   public static int createQuantitiesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startQuantitiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(35, PROVENANCEOffset, 0); }
+  public static void addCenterName(FlatBufferBuilder builder, int CENTER_NAMEOffset) { builder.addOffset(36, CENTER_NAMEOffset, 0); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(37, REFERENCE_FRAMEOffset, 0); }
+  public static void addMission(FlatBufferBuilder builder, int MISSIONOffset) { builder.addOffset(38, MISSIONOffset, 0); }
+  public static void addEventEpoch(FlatBufferBuilder builder, int EVENT_EPOCHOffset) { builder.addOffset(39, EVENT_EPOCHOffset, 0); }
   public static int endSIT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

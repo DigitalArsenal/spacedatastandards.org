@@ -18,6 +18,11 @@ enum dttTilingScheme:
     /// A scheme this enum does not model; the publisher states it out of band
     /// and the tile is not addressable by a consumer that does not know it.
     dttTilingScheme_CUSTOM = 4
+    /// Equirectangular geographic scheme on the reference body named by
+    /// CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+    /// degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+    /// body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+    dttTilingScheme_GEOGRAPHIC_TWO_ROOT_BODY = 5
 
 /// Encoding of the tile payload bytes. The format determines how a consumer
 /// decodes heights; it is never guessed from the payload size or extension.
@@ -58,6 +63,10 @@ enum dttVerticalDatum:
     dttVerticalDatum_REGIONAL_DATUM = 4
     /// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
     dttVerticalDatum_CUSTOM = 5
+    /// Heights above the reference sphere of CENTER_NAME's body, whose radius is
+    /// REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+    /// against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+    dttVerticalDatum_REFERENCE_SPHERE = 6
 
 /// Capability class of the measurement technique the source elevations were
 /// produced by. The standard names no mission, dataset, agency, or vendor:
@@ -321,7 +330,9 @@ struct DTTProvenanceBuilder:
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 class DTT : flatbuffers.handle
     /// Publisher-stable identifier for the tile pyramid (the tileset) this tile
@@ -348,16 +359,20 @@ class DTT : flatbuffers.handle
     /// at the south edge.
     def ROW_ORIGIN_NORTH() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
-    /// Western extent of the tile, decimal degrees on WGS 84.
+    /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (WGS 84 for EARTH; planetocentric for any other body).
     def WEST_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    /// Southern extent of the tile, decimal degrees on WGS 84.
+    /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH).
     def SOUTH_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
-    /// Eastern extent of the tile, decimal degrees on WGS 84.
+    /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH), east positive.
     def EAST_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
-    /// Northern extent of the tile, decimal degrees on WGS 84.
+    /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+    /// body (planetocentric for any body other than EARTH).
     def NORTH_DEG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
     /// Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
@@ -484,13 +499,40 @@ class DTT : flatbuffers.handle
     /// stated field.
     def REMARKS() -> string:
         return flatbuffers.field_string(buf_, pos_, 88)
+    /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+    /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    /// EARTH, so every tile published before 1.191.0 reads unchanged.
+    def CENTER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 90)
+    /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+    /// two are equatorial then polar (a spheroid); three are the semi-axes a
+    /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+    /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+    /// datum, which reads the first value.
+    def REFERENCE_RADII_M(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 92) + i * 8)
+    def REFERENCE_RADII_M_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 92)
+    /// Horizon elevation angles the publisher precomputed for the tile's posts,
+    /// for lighting and visibility without a height search. One unsigned byte
+    /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+    /// the north-west post), sector the fastest index. Sector k is centred on
+    /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+    /// the elevation angle of the terrain horizon above the local horizontal at
+    /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+    def HORIZON_ELEVATIONS() -> DTTPayloadRef?:
+        let o = flatbuffers.field_table(buf_, pos_, 94)
+        return if o: DTTPayloadRef { buf_, o } else: nil
+    /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+    def HORIZON_SECTORS() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 96, 0)
 
 def GetRootAsDTT(buf:string): return DTT { buf, flatbuffers.indirect(buf, 0) }
 
 struct DTTBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(43)
+        b_.StartObject(47)
         return this
     def add_TILESET_ID(TILESET_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, TILESET_ID)
@@ -621,5 +663,24 @@ struct DTTBuilder:
     def add_REMARKS(REMARKS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(42, REMARKS)
         return this
+    def add_CENTER_NAME(CENTER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(43, CENTER_NAME)
+        return this
+    def add_REFERENCE_RADII_M(REFERENCE_RADII_M:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(44, REFERENCE_RADII_M)
+        return this
+    def add_HORIZON_ELEVATIONS(HORIZON_ELEVATIONS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(45, HORIZON_ELEVATIONS)
+        return this
+    def add_HORIZON_SECTORS(HORIZON_SECTORS:int):
+        b_.PrependUint8Slot(46, HORIZON_SECTORS, 0)
+        return this
     def end():
         return b_.EndObject()
+
+def DTTStartREFERENCERADIIMVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def DTTCreateREFERENCERADIIMVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)

@@ -24,8 +24,24 @@ public final class SiteType {
   public static final byte NATIONAL_PARK = 15;
   public static final byte HISTORICAL_SITE = 16;
   public static final byte OTHER = 17;
+  /**
+   * A place a spacecraft touched down or is to touch down on a body surface
+   */
+  public static final byte LANDING_SITE = 18;
+  /**
+   * A place a spacecraft or stage struck a body surface
+   */
+  public static final byte IMPACT_SITE = 19;
+  /**
+   * A surface region under study as a landing or exploration target
+   */
+  public static final byte CANDIDATE_REGION = 20;
+  /**
+   * A named natural feature of a body surface (crater, mare, rille, mons)
+   */
+  public static final byte SURFACE_FEATURE = 21;
 
-  public static final String[] names = { "LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER", };
+  public static final String[] names = { "LAUNCH_SITE", "OBSERVATION_STATION", "HOBBYIST_OBSERVER", "RESEARCH_FACILITY", "SATELLITE_GROUND_STATION", "SPACEPORT", "MILITARY_BASE", "WEATHER_STATION", "ASTRONOMICAL_OBSERVATORY", "EDUCATIONAL_INSTITUTE", "COMMUNICATION_HUB", "POWER_PLANT", "INDUSTRIAL_COMPLEX", "TRANSPORTATION_HUB", "URBAN_AREA", "NATIONAL_PARK", "HISTORICAL_SITE", "OTHER", "LANDING_SITE", "IMPACT_SITE", "CANDIDATE_REGION", "SURFACE_FEATURE", };
 
   public static String name(int e) { return names[e]; }
 }

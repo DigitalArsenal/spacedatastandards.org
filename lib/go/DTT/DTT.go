@@ -21,7 +21,9 @@ import (
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 type DTT struct {
 	_tab flatbuffers.Table
@@ -198,7 +200,8 @@ func (rcv *DTT) MutateRowOriginNorth(n bool) bool {
 	return rcv.MutateROW_ORIGIN_NORTH(n)
 }
 
-/// Western extent of the tile, decimal degrees on WGS 84.
+/// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (WGS 84 for EARTH; planetocentric for any other body).
 func (rcv *DTT) WEST_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -211,7 +214,8 @@ func (rcv *DTT) WestDeg() float64 {
 	return rcv.WEST_DEG()
 }
 
-/// Western extent of the tile, decimal degrees on WGS 84.
+/// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (WGS 84 for EARTH; planetocentric for any other body).
 func (rcv *DTT) MutateWEST_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
@@ -220,7 +224,8 @@ func (rcv *DTT) MutateWestDeg(n float64) bool {
 	return rcv.MutateWEST_DEG(n)
 }
 
-/// Southern extent of the tile, decimal degrees on WGS 84.
+/// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (planetocentric for any body other than EARTH).
 func (rcv *DTT) SOUTH_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -233,7 +238,8 @@ func (rcv *DTT) SouthDeg() float64 {
 	return rcv.SOUTH_DEG()
 }
 
-/// Southern extent of the tile, decimal degrees on WGS 84.
+/// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (planetocentric for any body other than EARTH).
 func (rcv *DTT) MutateSOUTH_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
@@ -242,7 +248,8 @@ func (rcv *DTT) MutateSouthDeg(n float64) bool {
 	return rcv.MutateSOUTH_DEG(n)
 }
 
-/// Eastern extent of the tile, decimal degrees on WGS 84.
+/// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (planetocentric for any body other than EARTH), east positive.
 func (rcv *DTT) EAST_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -255,7 +262,8 @@ func (rcv *DTT) EastDeg() float64 {
 	return rcv.EAST_DEG()
 }
 
-/// Eastern extent of the tile, decimal degrees on WGS 84.
+/// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (planetocentric for any body other than EARTH), east positive.
 func (rcv *DTT) MutateEAST_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }
@@ -264,7 +272,8 @@ func (rcv *DTT) MutateEastDeg(n float64) bool {
 	return rcv.MutateEAST_DEG(n)
 }
 
-/// Northern extent of the tile, decimal degrees on WGS 84.
+/// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (planetocentric for any body other than EARTH).
 func (rcv *DTT) NORTH_DEG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -277,7 +286,8 @@ func (rcv *DTT) NorthDeg() float64 {
 	return rcv.NORTH_DEG()
 }
 
-/// Northern extent of the tile, decimal degrees on WGS 84.
+/// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+/// body (planetocentric for any body other than EARTH).
 func (rcv *DTT) MutateNORTH_DEG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
 }
@@ -960,8 +970,127 @@ func (rcv *DTT) Remarks() []byte {
 
 /// Free-form publisher notes about this tile. Never a substitute for a
 /// stated field.
+/// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+/// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+/// EARTH, so every tile published before 1.191.0 reads unchanged.
+func (rcv *DTT) CENTER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *DTT) CenterName() []byte {
+	return rcv.CENTER_NAME()
+}
+
+/// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+/// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+/// EARTH, so every tile published before 1.191.0 reads unchanged.
+/// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+/// two are equatorial then polar (a spheroid); three are the semi-axes a
+/// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+/// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+/// datum, which reads the first value.
+func (rcv *DTT) REFERENCE_RADII_M(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *DTT) ReferenceRadiiM(j int) float64 {
+	return rcv.REFERENCE_RADII_M(j)
+}
+
+func (rcv *DTT) REFERENCE_RADII_MLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *DTT) ReferenceRadiiMLength() int {
+	return rcv.REFERENCE_RADII_MLength()
+}
+
+/// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+/// two are equatorial then polar (a spheroid); three are the semi-axes a
+/// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+/// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+/// datum, which reads the first value.
+func (rcv *DTT) MutateREFERENCE_RADII_M(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *DTT) MutateReferenceRadiiM(j int, n float64) bool {
+	return rcv.MutateREFERENCE_RADII_M(j, n)
+}
+
+/// Horizon elevation angles the publisher precomputed for the tile's posts,
+/// for lighting and visibility without a height search. One unsigned byte
+/// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+/// the north-west post), sector the fastest index. Sector k is centred on
+/// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+/// the elevation angle of the terrain horizon above the local horizontal at
+/// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+func (rcv *DTT) HORIZON_ELEVATIONS(obj *DTTPayloadRef) *DTTPayloadRef {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(DTTPayloadRef)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *DTT) HorizonElevations(obj *DTTPayloadRef) *DTTPayloadRef {
+	return rcv.HORIZON_ELEVATIONS(obj)
+}
+
+/// Horizon elevation angles the publisher precomputed for the tile's posts,
+/// for lighting and visibility without a height search. One unsigned byte
+/// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+/// the north-west post), sector the fastest index. Sector k is centred on
+/// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+/// the elevation angle of the terrain horizon above the local horizontal at
+/// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+/// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+func (rcv *DTT) HORIZON_SECTORS() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DTT) HorizonSectors() byte {
+	return rcv.HORIZON_SECTORS()
+}
+
+/// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+func (rcv *DTT) MutateHORIZON_SECTORS(n byte) bool {
+	return rcv._tab.MutateByteSlot(96, n)
+}
+
+func (rcv *DTT) MutateHorizonSectors(n byte) bool {
+	return rcv.MutateHORIZON_SECTORS(n)
+}
+
 func DTTStart(builder *flatbuffers.Builder) {
-	builder.StartObject(43)
+	builder.StartObject(47)
 }
 func DTTAddTILESET_ID(builder *flatbuffers.Builder, TILESET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(TILESET_ID), 0)
@@ -1214,6 +1343,36 @@ func DTTAddREMARKS(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
 }
 func DTTAddRemarks(builder *flatbuffers.Builder, REMARKS flatbuffers.UOffsetT) {
 	DTTAddREMARKS(builder, REMARKS)
+}
+func DTTAddCENTER_NAME(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(CENTER_NAME), 0)
+}
+func DTTAddCenterName(builder *flatbuffers.Builder, CENTER_NAME flatbuffers.UOffsetT) {
+	DTTAddCENTER_NAME(builder, CENTER_NAME)
+}
+func DTTAddREFERENCE_RADII_M(builder *flatbuffers.Builder, REFERENCE_RADII_M flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(REFERENCE_RADII_M), 0)
+}
+func DTTAddReferenceRadiiM(builder *flatbuffers.Builder, REFERENCE_RADII_M flatbuffers.UOffsetT) {
+	DTTAddREFERENCE_RADII_M(builder, REFERENCE_RADII_M)
+}
+func DTTStartREFERENCE_RADII_MVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func DTTStartReferenceRadiiMVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DTTStartREFERENCE_RADII_MVector(builder, numElems)
+}
+func DTTAddHORIZON_ELEVATIONS(builder *flatbuffers.Builder, HORIZON_ELEVATIONS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(HORIZON_ELEVATIONS), 0)
+}
+func DTTAddHorizonElevations(builder *flatbuffers.Builder, HORIZON_ELEVATIONS flatbuffers.UOffsetT) {
+	DTTAddHORIZON_ELEVATIONS(builder, HORIZON_ELEVATIONS)
+}
+func DTTAddHORIZON_SECTORS(builder *flatbuffers.Builder, HORIZON_SECTORS byte) {
+	builder.PrependByteSlot(46, HORIZON_SECTORS, 0)
+}
+func DTTAddHorizonSectors(builder *flatbuffers.Builder, HORIZON_SECTORS byte) {
+	DTTAddHORIZON_SECTORS(builder, HORIZON_SECTORS)
 }
 func DTTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

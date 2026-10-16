@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { Geometry, GeometryT } from './Geometry.js';
 import { IDM, IDMT } from './IDM.js';
 import { PVN, PVNT } from './PVN.js';
+import { RFM, RFMT } from './RFM.js';
 import { SITCitation, SITCitationT } from './SITCitation.js';
 import { SITParty, SITPartyT } from './SITParty.js';
 import { SITQuantity, SITQuantityT } from './SITQuantity.js';
@@ -100,7 +101,8 @@ NETWORK(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Latitude of the site
+ * Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+ * body when that is not EARTH
  */
 LATITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
@@ -108,7 +110,7 @@ LATITUDE():number {
 }
 
 /**
- * Longitude of the site
+ * Longitude of the site, degrees, east positive
  */
 LONGITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
@@ -116,7 +118,7 @@ LONGITUDE():number {
 }
 
 /**
- * Altitude of the site
+ * Altitude of the site above CENTER_NAME's reference surface
  */
 ALTITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
@@ -409,8 +411,53 @@ PROVENANCE(obj?:PVN):PVN|null {
   return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+ * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+ * EARTH, so every site published before 1.2.0 reads unchanged.
+ */
+CENTER_NAME():string|null
+CENTER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+ * RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+ * KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+ * means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+ */
+REFERENCE_FRAME(obj?:RFM):RFM|null {
+  const offset = this.bb!.__offset(this.bb_pos, 78);
+  return offset ? (obj || new RFM()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+ * source names it. Empty for a site of no mission.
+ */
+MISSION():string|null
+MISSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MISSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * When the landing or impact took place, RFC 3339 UTC; for a
+ * LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+ */
+EVENT_EPOCH():string|null
+EVENT_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EVENT_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSIT(builder:flatbuffers.Builder) {
-  builder.startObject(36);
+  builder.startObject(40);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -634,6 +681,22 @@ static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.O
   builder.addFieldOffset(35, PROVENANCEOffset, 0);
 }
 
+static addCenterName(builder:flatbuffers.Builder, CENTER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(36, CENTER_NAMEOffset, 0);
+}
+
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, REFERENCE_FRAMEOffset, 0);
+}
+
+static addMission(builder:flatbuffers.Builder, MISSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(38, MISSIONOffset, 0);
+}
+
+static addEventEpoch(builder:flatbuffers.Builder, EVENT_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(39, EVENT_EPOCHOffset, 0);
+}
+
 static endSIT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -685,7 +748,11 @@ unpack(): SITT {
     this.bb!.createObjList<SITReference, SITReferenceT>(this.EXTERNAL_REFERENCES.bind(this), this.externalReferencesLength()),
     this.bb!.createObjList<SITParty, SITPartyT>(this.PARTIES.bind(this), this.partiesLength()),
     this.bb!.createObjList<SITQuantity, SITQuantityT>(this.QUANTITIES.bind(this), this.quantitiesLength()),
-    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null),
+    this.CENTER_NAME(),
+    (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null),
+    this.MISSION(),
+    this.EVENT_EPOCH()
   );
 }
 
@@ -727,6 +794,10 @@ unpackTo(_o: SITT): void {
   _o.PARTIES = this.bb!.createObjList<SITParty, SITPartyT>(this.PARTIES.bind(this), this.partiesLength());
   _o.QUANTITIES = this.bb!.createObjList<SITQuantity, SITQuantityT>(this.QUANTITIES.bind(this), this.quantitiesLength());
   _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
+  _o.CENTER_NAME = this.CENTER_NAME();
+  _o.REFERENCE_FRAME = (this.REFERENCE_FRAME() !== null ? this.REFERENCE_FRAME()!.unpack() : null);
+  _o.MISSION = this.MISSION();
+  _o.EVENT_EPOCH = this.EVENT_EPOCH();
 }
 }
 
@@ -767,7 +838,11 @@ constructor(
   public EXTERNAL_REFERENCES: (SITReferenceT)[] = [],
   public PARTIES: (SITPartyT)[] = [],
   public QUANTITIES: (SITQuantityT)[] = [],
-  public PROVENANCE: PVNT|null = null
+  public PROVENANCE: PVNT|null = null,
+  public CENTER_NAME: string|Uint8Array|null = null,
+  public REFERENCE_FRAME: RFMT|null = null,
+  public MISSION: string|Uint8Array|null = null,
+  public EVENT_EPOCH: string|Uint8Array|null = null
 ){}
 
 
@@ -802,6 +877,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PARTIES = SIT.createPartiesVector(builder, builder.createObjectOffsetList(this.PARTIES));
   const QUANTITIES = SIT.createQuantitiesVector(builder, builder.createObjectOffsetList(this.QUANTITIES));
   const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
+  const CENTER_NAME = (this.CENTER_NAME !== null ? builder.createString(this.CENTER_NAME!) : 0);
+  const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? this.REFERENCE_FRAME!.pack(builder) : 0);
+  const MISSION = (this.MISSION !== null ? builder.createString(this.MISSION!) : 0);
+  const EVENT_EPOCH = (this.EVENT_EPOCH !== null ? builder.createString(this.EVENT_EPOCH!) : 0);
 
   SIT.startSIT(builder);
   SIT.addId(builder, ID);
@@ -840,6 +919,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   SIT.addParties(builder, PARTIES);
   SIT.addQuantities(builder, QUANTITIES);
   SIT.addProvenance(builder, PROVENANCE);
+  SIT.addCenterName(builder, CENTER_NAME);
+  SIT.addReferenceFrame(builder, REFERENCE_FRAME);
+  SIT.addMission(builder, MISSION);
+  SIT.addEventEpoch(builder, EVENT_EPOCH);
 
   return SIT.endSIT(builder);
 }

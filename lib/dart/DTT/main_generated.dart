@@ -14,7 +14,8 @@ enum dttTilingScheme {
   GEOGRAPHIC_WGS84(1),
   GEOGRAPHIC_SINGLE_ROOT(2),
   WEB_MERCATOR(3),
-  CUSTOM(4);
+  CUSTOM(4),
+  GEOGRAPHIC_TWO_ROOT_BODY(5);
 
   final int value;
   const dttTilingScheme(this.value);
@@ -26,6 +27,7 @@ enum dttTilingScheme {
       case 2: return dttTilingScheme.GEOGRAPHIC_SINGLE_ROOT;
       case 3: return dttTilingScheme.WEB_MERCATOR;
       case 4: return dttTilingScheme.CUSTOM;
+      case 5: return dttTilingScheme.GEOGRAPHIC_TWO_ROOT_BODY;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -34,7 +36,7 @@ enum dttTilingScheme {
       value == null ? null : dttTilingScheme.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 4;
+  static const int maxValue = 5;
   static const fb.Reader<dttTilingScheme> reader = _dttTilingSchemeReader();
 }
 
@@ -103,7 +105,8 @@ enum dttVerticalDatum {
   GEOID(2),
   MEAN_SEA_LEVEL(3),
   REGIONAL_DATUM(4),
-  CUSTOM(5);
+  CUSTOM(5),
+  REFERENCE_SPHERE(6);
 
   final int value;
   const dttVerticalDatum(this.value);
@@ -116,6 +119,7 @@ enum dttVerticalDatum {
       case 3: return dttVerticalDatum.MEAN_SEA_LEVEL;
       case 4: return dttVerticalDatum.REGIONAL_DATUM;
       case 5: return dttVerticalDatum.CUSTOM;
+      case 6: return dttVerticalDatum.REFERENCE_SPHERE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -124,7 +128,7 @@ enum dttVerticalDatum {
       value == null ? null : dttVerticalDatum.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<dttVerticalDatum> reader = _dttVerticalDatumReader();
 }
 
@@ -698,7 +702,9 @@ class DTTProvenanceObjectBuilder extends fb.ObjectBuilder {
 ///  $DTT records, is configured by $TRN, and its heights may be consumed by
 ///  $TRS.
 ///
-///  Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+///  Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+///  another body names it in CENTER_NAME; its angles are then planetocentric
+///  degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 ///  referenced by content identifier by default; see DTTPayloadRef.
 class DTT {
   DTT._(this._bc, this._bcOffset);
@@ -733,16 +739,20 @@ class DTT {
   ///  at the south edge.
   bool get ROW_ORIGIN_NORTH => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
   bool get rowOriginNorth => ROW_ORIGIN_NORTH;
-  ///  Western extent of the tile, decimal degrees on WGS 84.
+  ///  Western extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (WGS 84 for EARTH; planetocentric for any other body).
   double get WEST_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   double get westDeg => WEST_DEG;
-  ///  Southern extent of the tile, decimal degrees on WGS 84.
+  ///  Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (planetocentric for any body other than EARTH).
   double get SOUTH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
   double get southDeg => SOUTH_DEG;
-  ///  Eastern extent of the tile, decimal degrees on WGS 84.
+  ///  Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (planetocentric for any body other than EARTH), east positive.
   double get EAST_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
   double get eastDeg => EAST_DEG;
-  ///  Northern extent of the tile, decimal degrees on WGS 84.
+  ///  Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+  ///  body (planetocentric for any body other than EARTH).
   double get NORTH_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
   double get northDeg => NORTH_DEG;
   ///  Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
@@ -857,10 +867,34 @@ class DTT {
   ///  Free-form publisher notes about this tile. Never a substitute for a
   ///  stated field.
   String? get REMARKS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  ///  The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+  ///  keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  ///  EARTH, so every tile published before 1.191.0 reads unchanged.
+  String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
+  String? get centerName => CENTER_NAME;
+  ///  Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+  ///  two are equatorial then polar (a spheroid); three are the semi-axes a
+  ///  (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+  ///  Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+  ///  datum, which reads the first value.
+  List<double>? get REFERENCE_RADII_M => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 92);
+  List<double>? get referenceRadiiM => REFERENCE_RADII_M;
+  ///  Horizon elevation angles the publisher precomputed for the tile's posts,
+  ///  for lighting and visibility without a height search. One unsigned byte
+  ///  per post and sector: posts in the order of PAYLOAD's grid (row-major from
+  ///  the north-west post), sector the fastest index. Sector k is centred on
+  ///  azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+  ///  the elevation angle of the terrain horizon above the local horizontal at
+  ///  the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+  DTTPayloadRef? get HORIZON_ELEVATIONS => DTTPayloadRef.reader.vTableGetNullable(_bc, _bcOffset, 94);
+  DTTPayloadRef? get horizonElevations => HORIZON_ELEVATIONS;
+  ///  Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+  int get HORIZON_SECTORS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  int get horizonSectors => HORIZON_SECTORS;
 
   @override
   String toString() {
-    return 'DTT{tilesetId: ${tilesetId}, tilesetName: ${tilesetName}, tilingScheme: ${tilingScheme}, LEVEL: ${LEVEL}, X: ${X}, Y: ${Y}, rowOriginNorth: ${rowOriginNorth}, westDeg: ${westDeg}, southDeg: ${southDeg}, eastDeg: ${eastDeg}, northDeg: ${northDeg}, minHeightM: ${minHeightM}, maxHeightM: ${maxHeightM}, payloadFormat: ${payloadFormat}, payloadFormatVersion: ${payloadFormatVersion}, PAYLOAD: ${PAYLOAD}, gridWidth: ${gridWidth}, gridHeight: ${gridHeight}, postSpacingM: ${postSpacingM}, sourcePostSpacingM: ${sourcePostSpacingM}, verticalDatum: ${verticalDatum}, verticalDatumName: ${verticalDatumName}, horizontalDatumName: ${horizontalDatumName}, verticalAccuracyM: ${verticalAccuracyM}, accuracyConfidence: ${accuracyConfidence}, horizontalAccuracyM: ${horizontalAccuracyM}, dataCoverageFraction: ${dataCoverageFraction}, noDataValue: ${noDataValue}, waterMaskKind: ${waterMaskKind}, waterMask: ${waterMask}, waterMaskWidth: ${waterMaskWidth}, waterMaskHeight: ${waterMaskHeight}, waterMaskProvenance: ${waterMaskProvenance}, vertexNormals: ${vertexNormals}, landCover: ${landCover}, childAvailability: ${childAvailability}, maxLevel: ${maxLevel}, sourceClass: ${sourceClass}, PROVENANCE: ${PROVENANCE}, EPOCH: ${EPOCH}, ETAG: ${ETAG}, EXPIRES: ${EXPIRES}, REMARKS: ${REMARKS}}';
+    return 'DTT{tilesetId: ${tilesetId}, tilesetName: ${tilesetName}, tilingScheme: ${tilingScheme}, LEVEL: ${LEVEL}, X: ${X}, Y: ${Y}, rowOriginNorth: ${rowOriginNorth}, westDeg: ${westDeg}, southDeg: ${southDeg}, eastDeg: ${eastDeg}, northDeg: ${northDeg}, minHeightM: ${minHeightM}, maxHeightM: ${maxHeightM}, payloadFormat: ${payloadFormat}, payloadFormatVersion: ${payloadFormatVersion}, PAYLOAD: ${PAYLOAD}, gridWidth: ${gridWidth}, gridHeight: ${gridHeight}, postSpacingM: ${postSpacingM}, sourcePostSpacingM: ${sourcePostSpacingM}, verticalDatum: ${verticalDatum}, verticalDatumName: ${verticalDatumName}, horizontalDatumName: ${horizontalDatumName}, verticalAccuracyM: ${verticalAccuracyM}, accuracyConfidence: ${accuracyConfidence}, horizontalAccuracyM: ${horizontalAccuracyM}, dataCoverageFraction: ${dataCoverageFraction}, noDataValue: ${noDataValue}, waterMaskKind: ${waterMaskKind}, waterMask: ${waterMask}, waterMaskWidth: ${waterMaskWidth}, waterMaskHeight: ${waterMaskHeight}, waterMaskProvenance: ${waterMaskProvenance}, vertexNormals: ${vertexNormals}, landCover: ${landCover}, childAvailability: ${childAvailability}, maxLevel: ${maxLevel}, sourceClass: ${sourceClass}, PROVENANCE: ${PROVENANCE}, EPOCH: ${EPOCH}, ETAG: ${ETAG}, EXPIRES: ${EXPIRES}, REMARKS: ${REMARKS}, centerName: ${centerName}, referenceRadiiM: ${referenceRadiiM}, horizonElevations: ${horizonElevations}, horizonSectors: ${horizonSectors}}';
   }
 }
 
@@ -878,7 +912,7 @@ class DTTBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(43);
+    fbBuilder.startTable(47);
   }
 
   int addTilesetIdOffset(int? offset) {
@@ -1053,6 +1087,22 @@ class DTTBuilder {
     fbBuilder.addOffset(42, offset);
     return fbBuilder.offset;
   }
+  int addCenterNameOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
+    return fbBuilder.offset;
+  }
+  int addReferenceRadiiMOffset(int? offset) {
+    fbBuilder.addOffset(44, offset);
+    return fbBuilder.offset;
+  }
+  int addHorizonElevationsOffset(int? offset) {
+    fbBuilder.addOffset(45, offset);
+    return fbBuilder.offset;
+  }
+  int addHorizonSectors(int? HORIZON_SECTORS) {
+    fbBuilder.addUint8(46, HORIZON_SECTORS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1103,6 +1153,10 @@ class DTTObjectBuilder extends fb.ObjectBuilder {
   final String? _ETAG;
   final String? _EXPIRES;
   final String? _REMARKS;
+  final String? _CENTER_NAME;
+  final List<double>? _REFERENCE_RADII_M;
+  final DTTPayloadRefObjectBuilder? _HORIZON_ELEVATIONS;
+  final int? _HORIZON_SECTORS;
 
   DTTObjectBuilder({
     String? TILESET_ID,
@@ -1182,6 +1236,14 @@ class DTTObjectBuilder extends fb.ObjectBuilder {
     String? ETAG,
     String? EXPIRES,
     String? REMARKS,
+    String? CENTER_NAME,
+    String? centerName,
+    List<double>? REFERENCE_RADII_M,
+    List<double>? referenceRadiiM,
+    DTTPayloadRefObjectBuilder? HORIZON_ELEVATIONS,
+    DTTPayloadRefObjectBuilder? horizonElevations,
+    int? HORIZON_SECTORS,
+    int? horizonSectors,
   })
       : _TILESET_ID = tilesetId ?? TILESET_ID,
         _TILESET_NAME = tilesetName ?? TILESET_NAME,
@@ -1225,7 +1287,11 @@ class DTTObjectBuilder extends fb.ObjectBuilder {
         _EPOCH = EPOCH,
         _ETAG = ETAG,
         _EXPIRES = EXPIRES,
-        _REMARKS = REMARKS;
+        _REMARKS = REMARKS,
+        _CENTER_NAME = centerName ?? CENTER_NAME,
+        _REFERENCE_RADII_M = referenceRadiiM ?? REFERENCE_RADII_M,
+        _HORIZON_ELEVATIONS = horizonElevations ?? HORIZON_ELEVATIONS,
+        _HORIZON_SECTORS = horizonSectors ?? HORIZON_SECTORS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1254,7 +1320,12 @@ class DTTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EXPIRES!);
     final int? REMARKSOffset = _REMARKS == null ? null
         : fbBuilder.writeString(_REMARKS!);
-    fbBuilder.startTable(43);
+    final int? CENTER_NAMEOffset = _CENTER_NAME == null ? null
+        : fbBuilder.writeString(_CENTER_NAME!);
+    final int? REFERENCE_RADII_MOffset = _REFERENCE_RADII_M == null ? null
+        : fbBuilder.writeListFloat64(_REFERENCE_RADII_M!);
+    final int? HORIZON_ELEVATIONSOffset = _HORIZON_ELEVATIONS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(47);
     fbBuilder.addOffset(0, TILESET_IDOffset);
     fbBuilder.addOffset(1, TILESET_NAMEOffset);
     fbBuilder.addInt8(2, _TILING_SCHEME?.value);
@@ -1298,6 +1369,10 @@ class DTTObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(40, ETAGOffset);
     fbBuilder.addOffset(41, EXPIRESOffset);
     fbBuilder.addOffset(42, REMARKSOffset);
+    fbBuilder.addOffset(43, CENTER_NAMEOffset);
+    fbBuilder.addOffset(44, REFERENCE_RADII_MOffset);
+    fbBuilder.addOffset(45, HORIZON_ELEVATIONSOffset);
+    fbBuilder.addUint8(46, _HORIZON_SECTORS);
     return fbBuilder.endTable();
   }
 

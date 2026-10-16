@@ -22,7 +22,9 @@ import { dttWaterMask } from './dttWaterMask.js';
  * $DTT records, is configured by $TRN, and its heights may be consumed by
  * $TRS.
  *
- * Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+ * Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+ * another body names it in CENTER_NAME; its angles are then planetocentric
+ * degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
  * referenced by content identifier by default; see DTTPayloadRef.
  */
 export declare class DTT implements flatbuffers.IUnpackableObject<DTTT> {
@@ -66,19 +68,23 @@ export declare class DTT implements flatbuffers.IUnpackableObject<DTTT> {
      */
     ROW_ORIGIN_NORTH(): boolean;
     /**
-     * Western extent of the tile, decimal degrees on WGS 84.
+     * Western extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (WGS 84 for EARTH; planetocentric for any other body).
      */
     WEST_DEG(): number;
     /**
-     * Southern extent of the tile, decimal degrees on WGS 84.
+     * Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (planetocentric for any body other than EARTH).
      */
     SOUTH_DEG(): number;
     /**
-     * Eastern extent of the tile, decimal degrees on WGS 84.
+     * Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (planetocentric for any body other than EARTH), east positive.
      */
     EAST_DEG(): number;
     /**
-     * Northern extent of the tile, decimal degrees on WGS 84.
+     * Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+     * body (planetocentric for any body other than EARTH).
      */
     NORTH_DEG(): number;
     /**
@@ -236,6 +242,37 @@ export declare class DTT implements flatbuffers.IUnpackableObject<DTTT> {
      */
     REMARKS(): string | null;
     REMARKS(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+     * keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+     * EARTH, so every tile published before 1.191.0 reads unchanged.
+     */
+    CENTER_NAME(): string | null;
+    CENTER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+     * two are equatorial then polar (a spheroid); three are the semi-axes a
+     * (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+     * Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+     * datum, which reads the first value.
+     */
+    REFERENCE_RADII_M(index: number): number | null;
+    referenceRadiiMLength(): number;
+    referenceRadiiMArray(): Float64Array | null;
+    /**
+     * Horizon elevation angles the publisher precomputed for the tile's posts,
+     * for lighting and visibility without a height search. One unsigned byte
+     * per post and sector: posts in the order of PAYLOAD's grid (row-major from
+     * the north-west post), sector the fastest index. Sector k is centred on
+     * azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+     * the elevation angle of the terrain horizon above the local horizontal at
+     * the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+     */
+    HORIZON_ELEVATIONS(obj?: DTTPayloadRef): DTTPayloadRef | null;
+    /**
+     * Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+     */
+    HORIZON_SECTORS(): number;
     static startDTT(builder: flatbuffers.Builder): void;
     static addTilesetId(builder: flatbuffers.Builder, TILESET_IDOffset: flatbuffers.Offset): void;
     static addTilesetName(builder: flatbuffers.Builder, TILESET_NAMEOffset: flatbuffers.Offset): void;
@@ -280,6 +317,16 @@ export declare class DTT implements flatbuffers.IUnpackableObject<DTTT> {
     static addEtag(builder: flatbuffers.Builder, ETAGOffset: flatbuffers.Offset): void;
     static addExpires(builder: flatbuffers.Builder, EXPIRESOffset: flatbuffers.Offset): void;
     static addRemarks(builder: flatbuffers.Builder, REMARKSOffset: flatbuffers.Offset): void;
+    static addCenterName(builder: flatbuffers.Builder, CENTER_NAMEOffset: flatbuffers.Offset): void;
+    static addReferenceRadiiM(builder: flatbuffers.Builder, REFERENCE_RADII_MOffset: flatbuffers.Offset): void;
+    static createReferenceRadiiMVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createReferenceRadiiMVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startReferenceRadiiMVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addHorizonElevations(builder: flatbuffers.Builder, HORIZON_ELEVATIONSOffset: flatbuffers.Offset): void;
+    static addHorizonSectors(builder: flatbuffers.Builder, HORIZON_SECTORS: number): void;
     static endDTT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishDTTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedDTTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -330,7 +377,11 @@ export declare class DTTT implements flatbuffers.IGeneratedObject {
     ETAG: string | Uint8Array | null;
     EXPIRES: string | Uint8Array | null;
     REMARKS: string | Uint8Array | null;
-    constructor(TILESET_ID?: string | Uint8Array | null, TILESET_NAME?: string | Uint8Array | null, TILING_SCHEME?: dttTilingScheme, LEVEL?: number, X?: number, Y?: number, ROW_ORIGIN_NORTH?: boolean, WEST_DEG?: number, SOUTH_DEG?: number, EAST_DEG?: number, NORTH_DEG?: number, MIN_HEIGHT_M?: number, MAX_HEIGHT_M?: number, PAYLOAD_FORMAT?: dttPayloadFormat, PAYLOAD_FORMAT_VERSION?: string | Uint8Array | null, PAYLOAD?: DTTPayloadRefT | null, GRID_WIDTH?: number, GRID_HEIGHT?: number, POST_SPACING_M?: number, SOURCE_POST_SPACING_M?: number, VERTICAL_DATUM?: dttVerticalDatum, VERTICAL_DATUM_NAME?: string | Uint8Array | null, HORIZONTAL_DATUM_NAME?: string | Uint8Array | null, VERTICAL_ACCURACY_M?: number, ACCURACY_CONFIDENCE?: number, HORIZONTAL_ACCURACY_M?: number, DATA_COVERAGE_FRACTION?: number, NO_DATA_VALUE?: number, WATER_MASK_KIND?: dttWaterMask, WATER_MASK?: DTTPayloadRefT | null, WATER_MASK_WIDTH?: number, WATER_MASK_HEIGHT?: number, WATER_MASK_PROVENANCE?: DTTProvenanceT | null, VERTEX_NORMALS?: DTTPayloadRefT | null, LAND_COVER?: DTTPayloadRefT | null, CHILD_AVAILABILITY?: number, MAX_LEVEL?: number, SOURCE_CLASS?: dttSourceClass, PROVENANCE?: DTTProvenanceT | null, EPOCH?: string | Uint8Array | null, ETAG?: string | Uint8Array | null, EXPIRES?: string | Uint8Array | null, REMARKS?: string | Uint8Array | null);
+    CENTER_NAME: string | Uint8Array | null;
+    REFERENCE_RADII_M: (number)[];
+    HORIZON_ELEVATIONS: DTTPayloadRefT | null;
+    HORIZON_SECTORS: number;
+    constructor(TILESET_ID?: string | Uint8Array | null, TILESET_NAME?: string | Uint8Array | null, TILING_SCHEME?: dttTilingScheme, LEVEL?: number, X?: number, Y?: number, ROW_ORIGIN_NORTH?: boolean, WEST_DEG?: number, SOUTH_DEG?: number, EAST_DEG?: number, NORTH_DEG?: number, MIN_HEIGHT_M?: number, MAX_HEIGHT_M?: number, PAYLOAD_FORMAT?: dttPayloadFormat, PAYLOAD_FORMAT_VERSION?: string | Uint8Array | null, PAYLOAD?: DTTPayloadRefT | null, GRID_WIDTH?: number, GRID_HEIGHT?: number, POST_SPACING_M?: number, SOURCE_POST_SPACING_M?: number, VERTICAL_DATUM?: dttVerticalDatum, VERTICAL_DATUM_NAME?: string | Uint8Array | null, HORIZONTAL_DATUM_NAME?: string | Uint8Array | null, VERTICAL_ACCURACY_M?: number, ACCURACY_CONFIDENCE?: number, HORIZONTAL_ACCURACY_M?: number, DATA_COVERAGE_FRACTION?: number, NO_DATA_VALUE?: number, WATER_MASK_KIND?: dttWaterMask, WATER_MASK?: DTTPayloadRefT | null, WATER_MASK_WIDTH?: number, WATER_MASK_HEIGHT?: number, WATER_MASK_PROVENANCE?: DTTProvenanceT | null, VERTEX_NORMALS?: DTTPayloadRefT | null, LAND_COVER?: DTTPayloadRefT | null, CHILD_AVAILABILITY?: number, MAX_LEVEL?: number, SOURCE_CLASS?: dttSourceClass, PROVENANCE?: DTTProvenanceT | null, EPOCH?: string | Uint8Array | null, ETAG?: string | Uint8Array | null, EXPIRES?: string | Uint8Array | null, REMARKS?: string | Uint8Array | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_RADII_M?: (number)[], HORIZON_ELEVATIONS?: DTTPayloadRefT | null, HORIZON_SECTORS?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DTT.d.ts.map

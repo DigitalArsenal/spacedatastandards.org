@@ -77,7 +77,8 @@ class SIT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Latitude of the site
+    # Latitude of the site, degrees; planetocentric on CENTER_NAME's reference
+    # body when that is not EARTH
     # SIT
     def LATITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -85,7 +86,7 @@ class SIT(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    # Longitude of the site
+    # Longitude of the site, degrees, east positive
     # SIT
     def LONGITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -93,7 +94,7 @@ class SIT(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
-    # Altitude of the site
+    # Altitude of the site above CENTER_NAME's reference surface
     # SIT
     def ALTITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -448,8 +449,51 @@ class SIT(object):
             return obj
         return None
 
+    # The body the site stands on, spelled as the CCSDS ODM/OMM CENTER_NAME
+    # keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+    # EARTH, so every site published before 1.2.0 reads unchanged.
+    # SIT
+    def CENTER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # The body-fixed frame LATITUDE and LONGITUDE are expressed in, as an
+    # RFMCoordinateSystem of AXIS_TYPE EPHEMERIS_KERNEL_DEFINED whose
+    # KERNEL_FRAME_NAME names the kernel frame (IAU_MOON, MOON_ME). Absent
+    # means the Earth-fixed frame of EARTH, or the body's IAU body-fixed frame.
+    # SIT
+    def REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from RFM import RFM
+            obj = RFM()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # The mission the site belongs to (Apollo 11, Chandrayaan-3), as its
+    # source names it. Empty for a site of no mission.
+    # SIT
+    def MISSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # When the landing or impact took place, RFC 3339 UTC; for a
+    # LANDING_SITE or IMPACT_SITE only. Empty when the source states none.
+    # SIT
+    def EVENT_EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def SITStart(builder):
-    builder.StartObject(36)
+    builder.StartObject(40)
 
 def Start(builder):
     SITStart(builder)
@@ -746,6 +790,30 @@ def SITAddPROVENANCE(builder, PROVENANCE):
 def AddPROVENANCE(builder, PROVENANCE):
     SITAddPROVENANCE(builder, PROVENANCE)
 
+def SITAddCENTER_NAME(builder, CENTER_NAME):
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_NAME), 0)
+
+def AddCENTER_NAME(builder, CENTER_NAME):
+    SITAddCENTER_NAME(builder, CENTER_NAME)
+
+def SITAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
+
+def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    SITAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+
+def SITAddMISSION(builder, MISSION):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(MISSION), 0)
+
+def AddMISSION(builder, MISSION):
+    SITAddMISSION(builder, MISSION)
+
+def SITAddEVENT_EPOCH(builder, EVENT_EPOCH):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_EPOCH), 0)
+
+def AddEVENT_EPOCH(builder, EVENT_EPOCH):
+    SITAddEVENT_EPOCH(builder, EVENT_EPOCH)
+
 def SITEnd(builder):
     return builder.EndObject()
 
@@ -755,6 +823,7 @@ def End(builder):
 import Geometry
 import IDM
 import PVN
+import RFM
 import SITCitation
 import SITParty
 import SITQuantity
@@ -806,6 +875,10 @@ class SITT(object):
         PARTIES = None,
         QUANTITIES = None,
         PROVENANCE = None,
+        CENTER_NAME = None,
+        REFERENCE_FRAME = None,
+        MISSION = None,
+        EVENT_EPOCH = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.NAME = NAME  # type: Optional[str]
@@ -843,6 +916,10 @@ class SITT(object):
         self.PARTIES = PARTIES  # type: Optional[List[SITParty.SITPartyT]]
         self.QUANTITIES = QUANTITIES  # type: Optional[List[SITQuantity.SITQuantityT]]
         self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
+        self.CENTER_NAME = CENTER_NAME  # type: Optional[str]
+        self.REFERENCE_FRAME = REFERENCE_FRAME  # type: Optional[RFM.RFMT]
+        self.MISSION = MISSION  # type: Optional[str]
+        self.EVENT_EPOCH = EVENT_EPOCH  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -946,6 +1023,11 @@ class SITT(object):
                     self.QUANTITIES.append(sITQuantity_)
         if SIT.PROVENANCE() is not None:
             self.PROVENANCE = PVN.PVNT.InitFromObj(SIT.PROVENANCE())
+        self.CENTER_NAME = SIT.CENTER_NAME()
+        if SIT.REFERENCE_FRAME() is not None:
+            self.REFERENCE_FRAME = RFM.RFMT.InitFromObj(SIT.REFERENCE_FRAME())
+        self.MISSION = SIT.MISSION()
+        self.EVENT_EPOCH = SIT.EVENT_EPOCH()
 
     # SITT
     def Pack(self, builder):
@@ -1045,6 +1127,14 @@ class SITT(object):
             QUANTITIES = builder.EndVector()
         if self.PROVENANCE is not None:
             PROVENANCE = self.PROVENANCE.Pack(builder)
+        if self.CENTER_NAME is not None:
+            CENTER_NAME = builder.CreateString(self.CENTER_NAME)
+        if self.REFERENCE_FRAME is not None:
+            REFERENCE_FRAME = self.REFERENCE_FRAME.Pack(builder)
+        if self.MISSION is not None:
+            MISSION = builder.CreateString(self.MISSION)
+        if self.EVENT_EPOCH is not None:
+            EVENT_EPOCH = builder.CreateString(self.EVENT_EPOCH)
         SITStart(builder)
         if self.ID is not None:
             SITAddID(builder, ID)
@@ -1112,5 +1202,13 @@ class SITT(object):
             SITAddQUANTITIES(builder, QUANTITIES)
         if self.PROVENANCE is not None:
             SITAddPROVENANCE(builder, PROVENANCE)
+        if self.CENTER_NAME is not None:
+            SITAddCENTER_NAME(builder, CENTER_NAME)
+        if self.REFERENCE_FRAME is not None:
+            SITAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
+        if self.MISSION is not None:
+            SITAddMISSION(builder, MISSION)
+        if self.EVENT_EPOCH is not None:
+            SITAddEVENT_EPOCH(builder, EVENT_EPOCH)
         SIT = SITEnd(builder)
         return SIT

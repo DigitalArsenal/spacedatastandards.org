@@ -1,5 +1,5 @@
-// Hash: 1c06f10c333415f1f9e7e65ed18053134658e3d574844f1699d272ad7f9e5327
-// Version: 1.190.0
+// Hash: 00f13f0a331557b828913f0ab311ac6e383d167ff1c9da6006e0a3be3eacc09e
+// Version: 1.191.0
 // -----------------------------------END_HEADER
 /// Scheme that maps a LEVEL/X/Y address to a region of the ellipsoid. The
 /// scheme is stated, never inferred from tile counts. Ordinals are wire
@@ -17,7 +17,12 @@ enum dttTilingScheme : byte {
   WEB_MERCATOR,
   /// A scheme this enum does not model; the publisher states it out of band
   /// and the tile is not addressable by a consumer that does not know it.
-  CUSTOM
+  CUSTOM,
+  /// Equirectangular geographic scheme on the reference body named by
+  /// CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180]
+  /// degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any
+  /// body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0.
+  GEOGRAPHIC_TWO_ROOT_BODY
 }
 
 /// Encoding of the tile payload bytes. The format determines how a consumer
@@ -59,7 +64,11 @@ enum dttVerticalDatum : byte {
   /// verbatim in VERTICAL_DATUM_NAME.
   REGIONAL_DATUM,
   /// A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME.
-  CUSTOM
+  CUSTOM,
+  /// Heights above the reference sphere of CENTER_NAME's body, whose radius is
+  /// REFERENCE_RADII_M (one value). The datum of a planetary DEM published
+  /// against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0.
+  REFERENCE_SPHERE
 }
 
 /// Capability class of the measurement technique the source elevations were
@@ -205,7 +214,9 @@ table DTTProvenance {
 /// $DTT records, is configured by $TRN, and its heights may be consumed by
 /// $TRS.
 ///
-/// Angles are decimal degrees on WGS 84 and heights are metres. Tile bytes are
+/// Angles are decimal degrees on WGS 84 and heights are metres. A tile of
+/// another body names it in CENTER_NAME; its angles are then planetocentric
+/// degrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are
 /// referenced by content identifier by default; see DTTPayloadRef.
 table DTT {
   /// Publisher-stable identifier for the tile pyramid (the tileset) this tile
@@ -225,13 +236,17 @@ table DTT {
   /// Row index 0 lies at the north edge of the scheme. When false, row 0 lies
   /// at the south edge.
   ROW_ORIGIN_NORTH:bool = false;
-  /// Western extent of the tile, decimal degrees on WGS 84.
+  /// Western extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (WGS 84 for EARTH; planetocentric for any other body).
   WEST_DEG:double;
-  /// Southern extent of the tile, decimal degrees on WGS 84.
+  /// Southern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   SOUTH_DEG:double;
-  /// Eastern extent of the tile, decimal degrees on WGS 84.
+  /// Eastern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH), east positive.
   EAST_DEG:double;
-  /// Northern extent of the tile, decimal degrees on WGS 84.
+  /// Northern extent of the tile, decimal degrees on CENTER_NAME's reference
+  /// body (planetocentric for any body other than EARTH).
   NORTH_DEG:double;
   /// Lowest height present in the tile, metres above VERTICAL_DATUM. Stated
   /// so a consumer can build a bounding volume without decoding the payload.
@@ -319,6 +334,26 @@ table DTT {
   /// Free-form publisher notes about this tile. Never a substitute for a
   /// stated field.
   REMARKS:string;
+  /// The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME
+  /// keyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means
+  /// EARTH, so every tile published before 1.191.0 reads unchanged.
+  CENTER_NAME:string;
+  /// Radii of CENTER_NAME's reference body, metres. One value is a sphere;
+  /// two are equatorial then polar (a spheroid); three are the semi-axes a
+  /// (towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).
+  /// Empty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE
+  /// datum, which reads the first value.
+  REFERENCE_RADII_M:[double];
+  /// Horizon elevation angles the publisher precomputed for the tile's posts,
+  /// for lighting and visibility without a height search. One unsigned byte
+  /// per post and sector: posts in the order of PAYLOAD's grid (row-major from
+  /// the north-west post), sector the fastest index. Sector k is centred on
+  /// azimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is
+  /// the elevation angle of the terrain horizon above the local horizontal at
+  /// the post, v*90/255 degrees; a horizon at or below the horizontal is 0.
+  HORIZON_ELEVATIONS:DTTPayloadRef;
+  /// Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).
+  HORIZON_SECTORS:uint8;
 }
 
 root_type DTT;
