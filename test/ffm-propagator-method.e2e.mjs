@@ -10,7 +10,7 @@ const root = fileURLToPath(new URL("../", import.meta.url));
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
 // Execute the generated TS enum with this worktree's compiler, without writing
-// test artefacts or relying on another checkout's generated JS.
+// test artifacts or relying on another checkout's generated JS.
 const compiled = ts.transpileModule(read("lib/ts/AST/PropagatorMethod.ts"), {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
