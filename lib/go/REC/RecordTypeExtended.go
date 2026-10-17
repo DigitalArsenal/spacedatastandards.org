@@ -40,6 +40,8 @@ const (
 	RecordTypeExtendedTBP  RecordTypeExtended = 278
 	RecordTypeExtendedWHA  RecordTypeExtended = 279
 	RecordTypeExtendedXMT  RecordTypeExtended = 280
+	RecordTypeExtendedEXO  RecordTypeExtended = 281
+	RecordTypeExtendedGLX  RecordTypeExtended = 282
 )
 
 var EnumNamesRecordTypeExtended = map[RecordTypeExtended]string{
@@ -69,6 +71,8 @@ var EnumNamesRecordTypeExtended = map[RecordTypeExtended]string{
 	RecordTypeExtendedTBP:  "TBP",
 	RecordTypeExtendedWHA:  "WHA",
 	RecordTypeExtendedXMT:  "XMT",
+	RecordTypeExtendedEXO:  "EXO",
+	RecordTypeExtendedGLX:  "GLX",
 }
 
 var EnumValuesRecordTypeExtended = map[string]RecordTypeExtended{
@@ -98,6 +102,8 @@ var EnumValuesRecordTypeExtended = map[string]RecordTypeExtended{
 	"TBP":  RecordTypeExtendedTBP,
 	"WHA":  RecordTypeExtendedWHA,
 	"XMT":  RecordTypeExtendedXMT,
+	"EXO":  RecordTypeExtendedEXO,
+	"GLX":  RecordTypeExtendedGLX,
 }
 
 func (v RecordTypeExtended) String() string {

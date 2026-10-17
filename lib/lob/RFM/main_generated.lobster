@@ -324,6 +324,16 @@ enum rfmAxisType:
     /// Orbital axes from the object's state: Z toward the central body (nadir),
     /// Y opposite the orbit normal, X completing the set (LVLH).
     rfmAxisType_ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32
+    /// IAU 1958 Galactic longitude/latitude axes, Hipparcos realization:
+    /// NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg.
+    /// ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to
+    /// l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed).
+    /// This fixes orientation only, not the origin or the direction of Sgr A*.
+    /// Explicit Galactocentric parameters select the derived orientation
+    /// documented on ROLL_DEG; choosing an origin alone never rotates the axes.
+    /// See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its
+    /// realization in ICRS; do not substitute a newly fitted Galactic plane.
+    rfmAxisType_GALACTIC = 33
 
 /// What kind of point a coordinate system is centred on. Append new values
 /// only; never reorder or reuse existing values.
@@ -340,6 +350,10 @@ enum rfmOriginKind:
     /// A fixed site on a body surface, identified by SITE_ID and the geodetic
     /// fields on RFMOrigin.
     rfmOriginKind_GROUND_SITE = 5
+    /// Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+    /// roll and velocity are explicit parameters on RFMCoordinateSystem.
+    /// No ephemeris body code is implied by this origin.
+    rfmOriginKind_GALACTIC_CENTER = 6
 
 /// Libration point of the primary/secondary pair named on RFMOrigin. Append
 /// new values only; never reorder or reuse existing values.
@@ -654,13 +668,51 @@ class RFMCoordinateSystem : flatbuffers.handle
     /// consumers can prove they used the same table rather than assume it.
     def EOP_DATA_SET_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 24)
+    /// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+    /// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+    def GALCEN_RA_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, nan)
+    /// ICRS declination of the Galactic center, degrees. NaN means absent.
+    /// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+    def GALCEN_DEC_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, nan)
+    /// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+    /// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+    def GALCEN_DISTANCE_PC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, nan)
+    /// Solar height above the Galactic midplane, parsecs, positive north.
+    /// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+    def Z_SUN_PC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, nan)
+    /// Roll angle in degrees in the Astropy Galactocentric convention.
+    /// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+    /// parameters define a derived Galactocentric orientation: X points from
+    /// the Sun toward the center's projection in the midplane, Y follows
+    /// Galactic rotation, and Z completes a right-handed triad toward Galactic
+    /// north. This parameterized orientation is independent of ORIGIN; with
+    /// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+    /// All five scalars must be finite for a spatial Galactocentric transform,
+    /// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+    def ROLL_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, nan)
+    /// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+    /// axes, including circular motion (not just peculiar U,V,W). Exactly three
+    /// components when present; omit the vector when unknown, or use NaN for
+    /// an unknown component. A velocity transform requires all three finite.
+    /// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+    /// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+    /// Publishers must state their adopted total velocity; no default is implied.
+    def V_SUN_KMS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 8)
+    def V_SUN_KMS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
 
 def GetRootAsRFMCoordinateSystem(buf:string): return RFMCoordinateSystem { buf, flatbuffers.indirect(buf, 0) }
 
 struct RFMCoordinateSystemBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(11)
+        b_.StartObject(17)
         return this
     def add_NAME(NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, NAME)
@@ -695,8 +747,33 @@ struct RFMCoordinateSystemBuilder:
     def add_EOP_DATA_SET_CID(EOP_DATA_SET_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(10, EOP_DATA_SET_CID)
         return this
+    def add_GALCEN_RA_DEG(GALCEN_RA_DEG:float):
+        b_.PrependFloat64Slot(11, GALCEN_RA_DEG, nan)
+        return this
+    def add_GALCEN_DEC_DEG(GALCEN_DEC_DEG:float):
+        b_.PrependFloat64Slot(12, GALCEN_DEC_DEG, nan)
+        return this
+    def add_GALCEN_DISTANCE_PC(GALCEN_DISTANCE_PC:float):
+        b_.PrependFloat64Slot(13, GALCEN_DISTANCE_PC, nan)
+        return this
+    def add_Z_SUN_PC(Z_SUN_PC:float):
+        b_.PrependFloat64Slot(14, Z_SUN_PC, nan)
+        return this
+    def add_ROLL_DEG(ROLL_DEG:float):
+        b_.PrependFloat64Slot(15, ROLL_DEG, nan)
+        return this
+    def add_V_SUN_KMS(V_SUN_KMS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, V_SUN_KMS)
+        return this
     def end():
         return b_.EndObject()
+
+def RFMCoordinateSystemStartVSUNKMSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def RFMCoordinateSystemCreateVSUNKMSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
 
 class CelestialFrameWrapper : flatbuffers.handle
     def frame() -> CelestialFrame:

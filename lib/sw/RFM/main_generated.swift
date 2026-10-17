@@ -366,8 +366,18 @@ public enum rfmAxisType: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable
   ///  Orbital axes from the object's state: Z toward the central body (nadir),
   ///  Y opposite the orbit normal, X completing the set (LVLH).
   case orbitalLocalVerticalLocalHorizontal = 32
+  ///  IAU 1958 Galactic longitude/latitude axes, Hipparcos realization:
+  ///  NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg.
+  ///  ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to
+  ///  l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed).
+  ///  This fixes orientation only, not the origin or the direction of Sgr A*.
+  ///  Explicit Galactocentric parameters select the derived orientation
+  ///  documented on ROLL_DEG; choosing an origin alone never rotates the axes.
+  ///  See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its
+  ///  realization in ICRS; do not substitute a newly fitted Galactic plane.
+  case galactic = 33
 
-  public static var max: rfmAxisType { return .orbitalLocalVerticalLocalHorizontal }
+  public static var max: rfmAxisType { return .galactic }
   public static var min: rfmAxisType { return .unspecified }
 }
 
@@ -390,8 +400,12 @@ public enum rfmOriginKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiab
   ///  A fixed site on a body surface, identified by SITE_ID and the geodetic
   ///  fields on RFMOrigin.
   case groundSite = 5
+  ///  Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+  ///  roll and velocity are explicit parameters on RFMCoordinateSystem.
+  ///  No ephemeris body code is implied by this origin.
+  case galacticCenter = 6
 
-  public static var max: rfmOriginKind { return .groundSite }
+  public static var max: rfmOriginKind { return .galacticCenter }
   public static var min: rfmOriginKind { return .unspecified }
 }
 
@@ -749,6 +763,12 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
     static let KERNEL_FRAME_NAME: VOffset = 20
     static let KERNEL_FRAME_ID: VOffset = 22
     static let EOP_DATA_SET_CID: VOffset = 24
+    static let GALCEN_RA_DEG: VOffset = 26
+    static let GALCEN_DEC_DEG: VOffset = 28
+    static let GALCEN_DISTANCE_PC: VOffset = 30
+    static let Z_SUN_PC: VOffset = 32
+    static let ROLL_DEG: VOffset = 34
+    static let V_SUN_KMS: VOffset = 36
   }
 
   ///  Stable name for this coordinate system within the producing data set.
@@ -783,7 +803,38 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
   ///  consumers can prove they used the same table rather than assume it.
   public var EOP_DATA_SET_CID: String? { let o = _accessor.offset(VT.EOP_DATA_SET_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var EOP_DATA_SET_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EOP_DATA_SET_CID) }
-  public static func startRFMCoordinateSystem(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  ///  ICRS right ascension of the Galactic center, degrees. NaN means absent.
+  ///  Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+  public var GALCEN_RA_DEG: Double { let o = _accessor.offset(VT.GALCEN_RA_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ICRS declination of the Galactic center, degrees. NaN means absent.
+  ///  Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+  public var GALCEN_DEC_DEG: Double { let o = _accessor.offset(VT.GALCEN_DEC_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+  ///  Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+  public var GALCEN_DISTANCE_PC: Double { let o = _accessor.offset(VT.GALCEN_DISTANCE_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Solar height above the Galactic midplane, parsecs, positive north.
+  ///  NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+  public var Z_SUN_PC: Double { let o = _accessor.offset(VT.Z_SUN_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Roll angle in degrees in the Astropy Galactocentric convention.
+  ///  NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+  ///  parameters define a derived Galactocentric orientation: X points from
+  ///  the Sun toward the center's projection in the midplane, Y follows
+  ///  Galactic rotation, and Z completes a right-handed triad toward Galactic
+  ///  north. This parameterized orientation is independent of ORIGIN; with
+  ///  GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+  ///  All five scalars must be finite for a spatial Galactocentric transform,
+  ///  with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+  public var ROLL_DEG: Double { let o = _accessor.offset(VT.ROLL_DEG); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+  ///  axes, including circular motion (not just peculiar U,V,W). Exactly three
+  ///  components when present; omit the vector when unknown, or use NaN for
+  ///  an unknown component. A velocity transform requires all three finite.
+  ///  Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+  ///  motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+  ///  Publishers must state their adopted total velocity; no default is implied.
+  public var V_SUN_KMS: FlatbufferVector<Double> { return _accessor.vector(at: VT.V_SUN_KMS, byteSize: 8) }
+  public func withUnsafePointerToVSunKms<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.V_SUN_KMS, body: body) }
+  public static func startRFMCoordinateSystem(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
   public static func add(AXIS_TYPE: rfmAxisType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AXIS_TYPE.rawValue, def: 0, at: VT.AXIS_TYPE) }
   public static func add(ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGIN, at: VT.ORIGIN) }
@@ -795,6 +846,12 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
   public static func add(KERNEL_FRAME_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KERNEL_FRAME_NAME, at: VT.KERNEL_FRAME_NAME) }
   public static func add(KERNEL_FRAME_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KERNEL_FRAME_ID, def: 0, at: VT.KERNEL_FRAME_ID) }
   public static func add(EOP_DATA_SET_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EOP_DATA_SET_CID, at: VT.EOP_DATA_SET_CID) }
+  public static func add(GALCEN_RA_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GALCEN_RA_DEG, def: .nan, at: VT.GALCEN_RA_DEG) }
+  public static func add(GALCEN_DEC_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GALCEN_DEC_DEG, def: .nan, at: VT.GALCEN_DEC_DEG) }
+  public static func add(GALCEN_DISTANCE_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GALCEN_DISTANCE_PC, def: .nan, at: VT.GALCEN_DISTANCE_PC) }
+  public static func add(Z_SUN_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_SUN_PC, def: .nan, at: VT.Z_SUN_PC) }
+  public static func add(ROLL_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ROLL_DEG, def: .nan, at: VT.ROLL_DEG) }
+  public static func addVectorOf(V_SUN_KMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: V_SUN_KMS, at: VT.V_SUN_KMS) }
   public static func endRFMCoordinateSystem(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRFMCoordinateSystem(
     _ fbb: inout FlatBufferBuilder,
@@ -808,7 +865,13 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
     LOCAL_ALIGNED_CONSTRAINED_AXESOffset LOCAL_ALIGNED_CONSTRAINED_AXES: Offset = Offset(),
     KERNEL_FRAME_NAMEOffset KERNEL_FRAME_NAME: Offset = Offset(),
     KERNEL_FRAME_ID: Int32 = 0,
-    EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset()
+    EOP_DATA_SET_CIDOffset EOP_DATA_SET_CID: Offset = Offset(),
+    GALCEN_RA_DEG: Double = .nan,
+    GALCEN_DEC_DEG: Double = .nan,
+    GALCEN_DISTANCE_PC: Double = .nan,
+    Z_SUN_PC: Double = .nan,
+    ROLL_DEG: Double = .nan,
+    V_SUN_KMSVectorOffset V_SUN_KMS: Offset = Offset()
   ) -> Offset {
     let __start = RFMCoordinateSystem.startRFMCoordinateSystem(&fbb)
     RFMCoordinateSystem.add(NAME: NAME, &fbb)
@@ -822,6 +885,12 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
     RFMCoordinateSystem.add(KERNEL_FRAME_NAME: KERNEL_FRAME_NAME, &fbb)
     RFMCoordinateSystem.add(KERNEL_FRAME_ID: KERNEL_FRAME_ID, &fbb)
     RFMCoordinateSystem.add(EOP_DATA_SET_CID: EOP_DATA_SET_CID, &fbb)
+    RFMCoordinateSystem.add(GALCEN_RA_DEG: GALCEN_RA_DEG, &fbb)
+    RFMCoordinateSystem.add(GALCEN_DEC_DEG: GALCEN_DEC_DEG, &fbb)
+    RFMCoordinateSystem.add(GALCEN_DISTANCE_PC: GALCEN_DISTANCE_PC, &fbb)
+    RFMCoordinateSystem.add(Z_SUN_PC: Z_SUN_PC, &fbb)
+    RFMCoordinateSystem.add(ROLL_DEG: ROLL_DEG, &fbb)
+    RFMCoordinateSystem.addVectorOf(V_SUN_KMS: V_SUN_KMS, &fbb)
     return RFMCoordinateSystem.endRFMCoordinateSystem(&fbb, start: __start)
   }
 
@@ -838,6 +907,12 @@ public struct RFMCoordinateSystem: FlatBufferVerifiableTable, FlatbuffersVectorI
     try _v.visit(field: VT.KERNEL_FRAME_NAME, fieldName: "KERNEL_FRAME_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.KERNEL_FRAME_ID, fieldName: "KERNEL_FRAME_ID", required: false, type: Int32.self)
     try _v.visit(field: VT.EOP_DATA_SET_CID, fieldName: "EOP_DATA_SET_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.GALCEN_RA_DEG, fieldName: "GALCEN_RA_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.GALCEN_DEC_DEG, fieldName: "GALCEN_DEC_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.GALCEN_DISTANCE_PC, fieldName: "GALCEN_DISTANCE_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.Z_SUN_PC, fieldName: "Z_SUN_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.ROLL_DEG, fieldName: "ROLL_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.V_SUN_KMS, fieldName: "V_SUN_KMS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }

@@ -38,4 +38,6 @@ public final class RecordTypeExtended {
   public static final int TBP = 278;
   public static final int WHA = 279;
   public static final int XMT = 280;
+  public static final int EXO = 281;
+  public static final int GLX = 282;
 }

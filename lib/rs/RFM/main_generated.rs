@@ -810,11 +810,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for CustomFrame {}
 pub const ENUM_MIN_RFM_AXIS_TYPE: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RFM_AXIS_TYPE: u8 = 32;
+pub const ENUM_MAX_RFM_AXIS_TYPE: u8 = 33;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 33] = [
+pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 34] = [
     rfmAxisType::UNSPECIFIED,
     rfmAxisType::MEAN_EQUATOR_EQUINOX_J2000,
     rfmAxisType::MEAN_ECLIPTIC_EQUINOX_J2000,
@@ -848,6 +848,7 @@ pub const ENUM_VALUES_RFM_AXIS_TYPE: [rfmAxisType; 33] = [
     rfmAxisType::ORBITAL_VELOCITY_NORMAL_CONORMAL,
     rfmAxisType::ORBITAL_RADIAL_TRANSVERSE_NORMAL,
     rfmAxisType::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL,
+    rfmAxisType::GALACTIC,
 ];
 
 /// Axis-set capability classes for a fully specified coordinate system.
@@ -948,9 +949,19 @@ impl rfmAxisType {
     /// Orbital axes from the object's state: Z toward the central body (nadir),
     /// Y opposite the orbit normal, X completing the set (LVLH).
     pub const ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: Self = Self(32);
+    /// IAU 1958 Galactic longitude/latitude axes, Hipparcos realization:
+    /// NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg.
+    /// ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to
+    /// l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed).
+    /// This fixes orientation only, not the origin or the direction of Sgr A*.
+    /// Explicit Galactocentric parameters select the derived orientation
+    /// documented on ROLL_DEG; choosing an origin alone never rotates the axes.
+    /// See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its
+    /// realization in ICRS; do not substitute a newly fitted Galactic plane.
+    pub const GALACTIC: Self = Self(33);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 32;
+    pub const ENUM_MAX: u8 = 33;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::MEAN_EQUATOR_EQUINOX_J2000,
@@ -985,6 +996,7 @@ impl rfmAxisType {
         Self::ORBITAL_VELOCITY_NORMAL_CONORMAL,
         Self::ORBITAL_RADIAL_TRANSVERSE_NORMAL,
         Self::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL,
+        Self::GALACTIC,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1023,6 +1035,7 @@ impl rfmAxisType {
             Self::ORBITAL_VELOCITY_NORMAL_CONORMAL => Some("ORBITAL_VELOCITY_NORMAL_CONORMAL"),
             Self::ORBITAL_RADIAL_TRANSVERSE_NORMAL => Some("ORBITAL_RADIAL_TRANSVERSE_NORMAL"),
             Self::ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL => Some("ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"),
+            Self::GALACTIC => Some("GALACTIC"),
             _ => None,
         }
     }
@@ -1088,17 +1101,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for rfmAxisType {}
 pub const ENUM_MIN_RFM_ORIGIN_KIND: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RFM_ORIGIN_KIND: u8 = 5;
+pub const ENUM_MAX_RFM_ORIGIN_KIND: u8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RFM_ORIGIN_KIND: [rfmOriginKind; 6] = [
+pub const ENUM_VALUES_RFM_ORIGIN_KIND: [rfmOriginKind; 7] = [
     rfmOriginKind::UNSPECIFIED,
     rfmOriginKind::CELESTIAL_BODY,
     rfmOriginKind::BARYCENTRE,
     rfmOriginKind::LIBRATION_POINT,
     rfmOriginKind::SPACE_OBJECT,
     rfmOriginKind::GROUND_SITE,
+    rfmOriginKind::GALACTIC_CENTER,
 ];
 
 /// What kind of point a coordinate system is centred on. Append new values
@@ -1121,9 +1135,13 @@ impl rfmOriginKind {
     /// A fixed site on a body surface, identified by SITE_ID and the geodetic
     /// fields on RFMOrigin.
     pub const GROUND_SITE: Self = Self(5);
+    /// Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+    /// roll and velocity are explicit parameters on RFMCoordinateSystem.
+    /// No ephemeris body code is implied by this origin.
+    pub const GALACTIC_CENTER: Self = Self(6);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 5;
+    pub const ENUM_MAX: u8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::CELESTIAL_BODY,
@@ -1131,6 +1149,7 @@ impl rfmOriginKind {
         Self::LIBRATION_POINT,
         Self::SPACE_OBJECT,
         Self::GROUND_SITE,
+        Self::GALACTIC_CENTER,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1142,6 +1161,7 @@ impl rfmOriginKind {
             Self::LIBRATION_POINT => Some("LIBRATION_POINT"),
             Self::SPACE_OBJECT => Some("SPACE_OBJECT"),
             Self::GROUND_SITE => Some("GROUND_SITE"),
+            Self::GALACTIC_CENTER => Some("GALACTIC_CENTER"),
             _ => None,
         }
     }
@@ -2744,6 +2764,12 @@ impl<'a> RFMCoordinateSystem<'a> {
     pub const VT_KERNEL_FRAME_NAME: ::flatbuffers::VOffsetT = 20;
     pub const VT_KERNEL_FRAME_ID: ::flatbuffers::VOffsetT = 22;
     pub const VT_EOP_DATA_SET_CID: ::flatbuffers::VOffsetT = 24;
+    pub const VT_GALCEN_RA_DEG: ::flatbuffers::VOffsetT = 26;
+    pub const VT_GALCEN_DEC_DEG: ::flatbuffers::VOffsetT = 28;
+    pub const VT_GALCEN_DISTANCE_PC: ::flatbuffers::VOffsetT = 30;
+    pub const VT_Z_SUN_PC: ::flatbuffers::VOffsetT = 32;
+    pub const VT_ROLL_DEG: ::flatbuffers::VOffsetT = 34;
+    pub const VT_V_SUN_KMS: ::flatbuffers::VOffsetT = 36;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2756,6 +2782,12 @@ impl<'a> RFMCoordinateSystem<'a> {
         args: &'args RFMCoordinateSystemArgs<'args>
     ) -> ::flatbuffers::WIPOffset<RFMCoordinateSystem<'bldr>> {
         let mut builder = RFMCoordinateSystemBuilder::new(_fbb);
+        builder.add_ROLL_DEG(args.ROLL_DEG);
+        builder.add_Z_SUN_PC(args.Z_SUN_PC);
+        builder.add_GALCEN_DISTANCE_PC(args.GALCEN_DISTANCE_PC);
+        builder.add_GALCEN_DEC_DEG(args.GALCEN_DEC_DEG);
+        builder.add_GALCEN_RA_DEG(args.GALCEN_RA_DEG);
+        if let Some(x) = args.V_SUN_KMS { builder.add_V_SUN_KMS(x); }
         if let Some(x) = args.EOP_DATA_SET_CID { builder.add_EOP_DATA_SET_CID(x); }
         builder.add_KERNEL_FRAME_ID(args.KERNEL_FRAME_ID);
         if let Some(x) = args.KERNEL_FRAME_NAME { builder.add_KERNEL_FRAME_NAME(x); }
@@ -2798,6 +2830,14 @@ impl<'a> RFMCoordinateSystem<'a> {
         let EOP_DATA_SET_CID = self.EOP_DATA_SET_CID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let GALCEN_RA_DEG = self.GALCEN_RA_DEG();
+        let GALCEN_DEC_DEG = self.GALCEN_DEC_DEG();
+        let GALCEN_DISTANCE_PC = self.GALCEN_DISTANCE_PC();
+        let Z_SUN_PC = self.Z_SUN_PC();
+        let ROLL_DEG = self.ROLL_DEG();
+        let V_SUN_KMS = self.V_SUN_KMS().map(|x| {
+            x.into_iter().collect()
+        });
         RFMCoordinateSystemT {
             NAME,
             AXIS_TYPE,
@@ -2810,6 +2850,12 @@ impl<'a> RFMCoordinateSystem<'a> {
             KERNEL_FRAME_NAME,
             KERNEL_FRAME_ID,
             EOP_DATA_SET_CID,
+            GALCEN_RA_DEG,
+            GALCEN_DEC_DEG,
+            GALCEN_DISTANCE_PC,
+            Z_SUN_PC,
+            ROLL_DEG,
+            V_SUN_KMS,
         }
     }
 
@@ -2916,6 +2962,78 @@ impl<'a> RFMCoordinateSystem<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(RFMCoordinateSystem::VT_EOP_DATA_SET_CID, None)}
     }
+
+    /// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+    /// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+    #[inline]
+    pub fn GALCEN_RA_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFMCoordinateSystem::VT_GALCEN_RA_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ICRS declination of the Galactic center, degrees. NaN means absent.
+    /// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+    #[inline]
+    pub fn GALCEN_DEC_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFMCoordinateSystem::VT_GALCEN_DEC_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+    /// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+    #[inline]
+    pub fn GALCEN_DISTANCE_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFMCoordinateSystem::VT_GALCEN_DISTANCE_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Solar height above the Galactic midplane, parsecs, positive north.
+    /// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+    #[inline]
+    pub fn Z_SUN_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFMCoordinateSystem::VT_Z_SUN_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Roll angle in degrees in the Astropy Galactocentric convention.
+    /// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+    /// parameters define a derived Galactocentric orientation: X points from
+    /// the Sun toward the center's projection in the midplane, Y follows
+    /// Galactic rotation, and Z completes a right-handed triad toward Galactic
+    /// north. This parameterized orientation is independent of ORIGIN; with
+    /// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+    /// All five scalars must be finite for a spatial Galactocentric transform,
+    /// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+    #[inline]
+    pub fn ROLL_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(RFMCoordinateSystem::VT_ROLL_DEG, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+    /// axes, including circular motion (not just peculiar U,V,W). Exactly three
+    /// components when present; omit the vector when unknown, or use NaN for
+    /// an unknown component. A velocity transform requires all three finite.
+    /// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+    /// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+    /// Publishers must state their adopted total velocity; no default is implied.
+    #[inline]
+    pub fn V_SUN_KMS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(RFMCoordinateSystem::VT_V_SUN_KMS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for RFMCoordinateSystem<'_> {
@@ -2935,6 +3053,12 @@ impl ::flatbuffers::Verifiable for RFMCoordinateSystem<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KERNEL_FRAME_NAME", Self::VT_KERNEL_FRAME_NAME, false)?
             .visit_field::<i32>("KERNEL_FRAME_ID", Self::VT_KERNEL_FRAME_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EOP_DATA_SET_CID", Self::VT_EOP_DATA_SET_CID, false)?
+            .visit_field::<f64>("GALCEN_RA_DEG", Self::VT_GALCEN_RA_DEG, false)?
+            .visit_field::<f64>("GALCEN_DEC_DEG", Self::VT_GALCEN_DEC_DEG, false)?
+            .visit_field::<f64>("GALCEN_DISTANCE_PC", Self::VT_GALCEN_DISTANCE_PC, false)?
+            .visit_field::<f64>("Z_SUN_PC", Self::VT_Z_SUN_PC, false)?
+            .visit_field::<f64>("ROLL_DEG", Self::VT_ROLL_DEG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("V_SUN_KMS", Self::VT_V_SUN_KMS, false)?
             .finish();
         Ok(())
     }
@@ -2952,6 +3076,12 @@ pub struct RFMCoordinateSystemArgs<'a> {
     pub KERNEL_FRAME_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub KERNEL_FRAME_ID: i32,
     pub EOP_DATA_SET_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub GALCEN_RA_DEG: f64,
+    pub GALCEN_DEC_DEG: f64,
+    pub GALCEN_DISTANCE_PC: f64,
+    pub Z_SUN_PC: f64,
+    pub ROLL_DEG: f64,
+    pub V_SUN_KMS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 
 impl<'a> Default for RFMCoordinateSystemArgs<'a> {
@@ -2969,6 +3099,12 @@ impl<'a> Default for RFMCoordinateSystemArgs<'a> {
             KERNEL_FRAME_NAME: None,
             KERNEL_FRAME_ID: 0,
             EOP_DATA_SET_CID: None,
+            GALCEN_RA_DEG: f64::NAN,
+            GALCEN_DEC_DEG: f64::NAN,
+            GALCEN_DISTANCE_PC: f64::NAN,
+            Z_SUN_PC: f64::NAN,
+            ROLL_DEG: f64::NAN,
+            V_SUN_KMS: None,
         }
     }
 }
@@ -3035,6 +3171,36 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> RFMCoordinateSystemBuilder<'a
     }
 
     #[inline]
+    pub fn add_GALCEN_RA_DEG(&mut self, GALCEN_RA_DEG: f64) {
+        self.fbb_.push_slot::<f64>(RFMCoordinateSystem::VT_GALCEN_RA_DEG, GALCEN_RA_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_GALCEN_DEC_DEG(&mut self, GALCEN_DEC_DEG: f64) {
+        self.fbb_.push_slot::<f64>(RFMCoordinateSystem::VT_GALCEN_DEC_DEG, GALCEN_DEC_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_GALCEN_DISTANCE_PC(&mut self, GALCEN_DISTANCE_PC: f64) {
+        self.fbb_.push_slot::<f64>(RFMCoordinateSystem::VT_GALCEN_DISTANCE_PC, GALCEN_DISTANCE_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_Z_SUN_PC(&mut self, Z_SUN_PC: f64) {
+        self.fbb_.push_slot::<f64>(RFMCoordinateSystem::VT_Z_SUN_PC, Z_SUN_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ROLL_DEG(&mut self, ROLL_DEG: f64) {
+        self.fbb_.push_slot::<f64>(RFMCoordinateSystem::VT_ROLL_DEG, ROLL_DEG, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_V_SUN_KMS(&mut self, V_SUN_KMS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(RFMCoordinateSystem::VT_V_SUN_KMS, V_SUN_KMS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> RFMCoordinateSystemBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         RFMCoordinateSystemBuilder {
@@ -3064,6 +3230,12 @@ impl ::core::fmt::Debug for RFMCoordinateSystem<'_> {
         ds.field("KERNEL_FRAME_NAME", &self.KERNEL_FRAME_NAME());
         ds.field("KERNEL_FRAME_ID", &self.KERNEL_FRAME_ID());
         ds.field("EOP_DATA_SET_CID", &self.EOP_DATA_SET_CID());
+        ds.field("GALCEN_RA_DEG", &self.GALCEN_RA_DEG());
+        ds.field("GALCEN_DEC_DEG", &self.GALCEN_DEC_DEG());
+        ds.field("GALCEN_DISTANCE_PC", &self.GALCEN_DISTANCE_PC());
+        ds.field("Z_SUN_PC", &self.Z_SUN_PC());
+        ds.field("ROLL_DEG", &self.ROLL_DEG());
+        ds.field("V_SUN_KMS", &self.V_SUN_KMS());
         ds.finish()
     }
 }
@@ -3082,6 +3254,12 @@ pub struct RFMCoordinateSystemT {
     pub KERNEL_FRAME_NAME: Option<alloc::string::String>,
     pub KERNEL_FRAME_ID: i32,
     pub EOP_DATA_SET_CID: Option<alloc::string::String>,
+    pub GALCEN_RA_DEG: f64,
+    pub GALCEN_DEC_DEG: f64,
+    pub GALCEN_DISTANCE_PC: f64,
+    pub Z_SUN_PC: f64,
+    pub ROLL_DEG: f64,
+    pub V_SUN_KMS: Option<alloc::vec::Vec<f64>>,
 }
 
 impl Default for RFMCoordinateSystemT {
@@ -3098,6 +3276,12 @@ impl Default for RFMCoordinateSystemT {
             KERNEL_FRAME_NAME: None,
             KERNEL_FRAME_ID: 0,
             EOP_DATA_SET_CID: None,
+            GALCEN_RA_DEG: f64::NAN,
+            GALCEN_DEC_DEG: f64::NAN,
+            GALCEN_DISTANCE_PC: f64::NAN,
+            Z_SUN_PC: f64::NAN,
+            ROLL_DEG: f64::NAN,
+            V_SUN_KMS: None,
         }
     }
 }
@@ -3134,6 +3318,14 @@ impl RFMCoordinateSystemT {
         let EOP_DATA_SET_CID = self.EOP_DATA_SET_CID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let GALCEN_RA_DEG = self.GALCEN_RA_DEG;
+        let GALCEN_DEC_DEG = self.GALCEN_DEC_DEG;
+        let GALCEN_DISTANCE_PC = self.GALCEN_DISTANCE_PC;
+        let Z_SUN_PC = self.Z_SUN_PC;
+        let ROLL_DEG = self.ROLL_DEG;
+        let V_SUN_KMS = self.V_SUN_KMS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         RFMCoordinateSystem::create(_fbb, &RFMCoordinateSystemArgs{
             NAME,
             AXIS_TYPE,
@@ -3146,6 +3338,12 @@ impl RFMCoordinateSystemT {
             KERNEL_FRAME_NAME,
             KERNEL_FRAME_ID,
             EOP_DATA_SET_CID,
+            GALCEN_RA_DEG,
+            GALCEN_DEC_DEG,
+            GALCEN_DISTANCE_PC,
+            Z_SUN_PC,
+            ROLL_DEG,
+            V_SUN_KMS,
         })
     }
 }

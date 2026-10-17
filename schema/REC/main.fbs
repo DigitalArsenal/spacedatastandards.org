@@ -1,5 +1,5 @@
-// Hash: 379fec776f83bb783fd0b1c52242728a3a6911d526df7212f560a645d89b59fc
-// Version: 1.44.82
+// Hash: b552bfc1ebf8f8357e4c657891509d6ad5faa86c1b00db921f9ccf2593c27ee6
+// Version: 1.44.83
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -79,6 +79,7 @@ include "../ETM/main.fbs";
 include "../ETS/main.fbs";
 include "../EVL/main.fbs";
 include "../EWR/main.fbs";
+include "../EXO/main.fbs";
 include "../FCS/main.fbs";
 include "../FIL/main.fbs";
 include "../FPC/main.fbs";
@@ -92,6 +93,7 @@ include "../GDI/main.fbs";
 include "../GEL/main.fbs";
 include "../GEO/main.fbs";
 include "../GJN/main.fbs";
+include "../GLX/main.fbs";
 include "../GNO/main.fbs";
 include "../GNP/main.fbs";
 include "../GPX/main.fbs";
@@ -396,7 +398,9 @@ enum RecordTypeExtended : ushort {
   SRG = 277,
   TBP = 278,
   WHA = 279,
-  XMT = 280
+  XMT = 280,
+  EXO = 281,
+  GLX = 282
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

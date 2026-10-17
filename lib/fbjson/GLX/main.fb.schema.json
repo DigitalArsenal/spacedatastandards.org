@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "glxDistanceTechnique": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TRGB",
+        "CEPHEID",
+        "SBF",
+        "TULLY_FISHER",
+        "FUNDAMENTAL_PLANE",
+        "SN_IA",
+        "MEMBERSHIP",
+        "HUBBLE_FLOW",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FUNDAMENTAL_PLANE": {
+          "value": 5
+        }
+      }
+    },
+    "glxRedshiftTechnique": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SPECTROSCOPIC",
+        "PHOTOMETRIC",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "glxSpectralRestFrame": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "HELIOCENTER",
+        "CMB",
+        "BARYCENTER",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "glxObjectCategory": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GALAXY",
+        "QUASAR",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "glxTruthValue": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NO",
+        "YES"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
+        }
+      }
+    },
+    "GLX": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGNATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "RA_DEG": {
+          "type": "number",
+          "description": "ICRS right ascension and declination, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DEC_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CSO_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISTANCE_MPC": {
+          "type": "number",
+          "description": "Published distance and uncertainty in Mpc; METHOD and REF name its basis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DISTANCE_UNC_MPC": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DISTANCE_METHOD": {
+          "$ref": "#/definitions/glxDistanceTechnique",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FUNDAMENTAL_PLANE": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "DISTANCE_REF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HELIO_VELOCITY_KMS": {
+          "type": "number",
+          "description": "Published heliocentric radial velocity, km/s. Do not substitute c*z.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REDSHIFT": {
+          "type": "number",
+          "description": "Dimensionless z; its uncertainty, technique and rest frame are below.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ISOPHOTAL_MAJOR_ARCMIN": {
+          "type": "number",
+          "description": "Full major-axis diameter, arcmin, at the named band and surface brightness.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ISOPHOTE_BAND": {
+          "type": "string",
+          "description": "Source band token, e.g. B or Ks. D25 B and K20 Ks are different isophotes.",
+          "x-flatbuffer-type": "string"
+        },
+        "ISOPHOTE_LEVEL": {
+          "type": "number",
+          "description": "Surface-brightness threshold in mag/arcsec^2, e.g. 25 in B or 20 in Ks.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AXIS_RATIO": {
+          "type": "number",
+          "description": "Minor/major ratio b/a, dimensionless; position angle east of north, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PA_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "INCLINATION_DEG": {
+          "type": "number",
+          "description": "Disk inclination, degrees; source estimate, never inferred from b/a here.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "T_TYPE": {
+          "type": "number",
+          "description": "Numerical de Vaucouleurs morphology, not an integer category or default.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HUBBLE_CLASS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BAR": {
+          "type": "string",
+          "description": "Source bar classification verbatim (e.g. SA, SAB, SB); absent is unknown.",
+          "x-flatbuffer-type": "string"
+        },
+        "B_TOTAL_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "K_TOTAL_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GROUP_ID": {
+          "type": "string",
+          "description": "Catalog-qualified group identifier, also usable for finger-of-God grouping.",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCAL_GROUP_MEMBER": {
+          "$ref": "#/definitions/glxTruthValue",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "SOURCE_CATALOG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Dataset license; absent means unknown terms, not a redistribution grant.",
+          "x-flatbuffer-type": "string"
+        },
+        "REDSHIFT_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REDSHIFT_KIND": {
+          "$ref": "#/definitions/glxRedshiftTechnique",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REDSHIFT_FRAME": {
+          "$ref": "#/definitions/glxSpectralRestFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SOURCE_CLASS": {
+          "$ref": "#/definitions/glxObjectCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SURVEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RELEASE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_SAMPLE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMOVING_DISTANCE_MPC": {
+          "type": "number",
+          "description": "Line-of-sight comoving distance in Mpc, with the adopted cosmology below.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LIGHT_TRAVEL_DISTANCE_MPC": {
+          "type": "number",
+          "description": "c times lookback time, Mpc; distinct from comoving or luminosity distance.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COSMOLOGY_ID": {
+          "type": "string",
+          "description": "Versioned parameter-set identifier, e.g. Planck18; no implicit cosmology.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GLX",
+  "x-flatbuffer-root-type": "GLX",
+  "x-flatbuffer-file-identifier": "$GLX"
+}

@@ -37,4 +37,6 @@ public enum RecordTypeExtended : ushort
   TBP = 278,
   WHA = 279,
   XMT = 280,
+  EXO = 281,
+  GLX = 282,
 };

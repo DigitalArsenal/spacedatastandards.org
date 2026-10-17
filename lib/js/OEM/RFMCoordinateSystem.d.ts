@@ -69,6 +69,50 @@ export declare class RFMCoordinateSystem implements flatbuffers.IUnpackableObjec
      */
     EOP_DATA_SET_CID(): string | null;
     EOP_DATA_SET_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * ICRS right ascension of the Galactic center, degrees. NaN means absent.
+     * Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+     */
+    GALCEN_RA_DEG(): number;
+    /**
+     * ICRS declination of the Galactic center, degrees. NaN means absent.
+     * Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+     */
+    GALCEN_DEC_DEG(): number;
+    /**
+     * Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+     * Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+     */
+    GALCEN_DISTANCE_PC(): number;
+    /**
+     * Solar height above the Galactic midplane, parsecs, positive north.
+     * NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+     */
+    Z_SUN_PC(): number;
+    /**
+     * Roll angle in degrees in the Astropy Galactocentric convention.
+     * NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+     * parameters define a derived Galactocentric orientation: X points from
+     * the Sun toward the center's projection in the midplane, Y follows
+     * Galactic rotation, and Z completes a right-handed triad toward Galactic
+     * north. This parameterized orientation is independent of ORIGIN; with
+     * GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+     * All five scalars must be finite for a spatial Galactocentric transform,
+     * with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+     */
+    ROLL_DEG(): number;
+    /**
+     * Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+     * axes, including circular motion (not just peculiar U,V,W). Exactly three
+     * components when present; omit the vector when unknown, or use NaN for
+     * an unknown component. A velocity transform requires all three finite.
+     * Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+     * motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+     * Publishers must state their adopted total velocity; no default is implied.
+     */
+    V_SUN_KMS(index: number): number | null;
+    vSunKmsLength(): number;
+    vSunKmsArray(): Float64Array | null;
     static startRFMCoordinateSystem(builder: flatbuffers.Builder): void;
     static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
     static addAxisType(builder: flatbuffers.Builder, AXIS_TYPE: rfmAxisType): void;
@@ -81,6 +125,18 @@ export declare class RFMCoordinateSystem implements flatbuffers.IUnpackableObjec
     static addKernelFrameName(builder: flatbuffers.Builder, KERNEL_FRAME_NAMEOffset: flatbuffers.Offset): void;
     static addKernelFrameId(builder: flatbuffers.Builder, KERNEL_FRAME_ID: number): void;
     static addEopDataSetCid(builder: flatbuffers.Builder, EOP_DATA_SET_CIDOffset: flatbuffers.Offset): void;
+    static addGalcenRaDeg(builder: flatbuffers.Builder, GALCEN_RA_DEG: number): void;
+    static addGalcenDecDeg(builder: flatbuffers.Builder, GALCEN_DEC_DEG: number): void;
+    static addGalcenDistancePc(builder: flatbuffers.Builder, GALCEN_DISTANCE_PC: number): void;
+    static addZSunPc(builder: flatbuffers.Builder, Z_SUN_PC: number): void;
+    static addRollDeg(builder: flatbuffers.Builder, ROLL_DEG: number): void;
+    static addVSunKms(builder: flatbuffers.Builder, V_SUN_KMSOffset: flatbuffers.Offset): void;
+    static createVSunKmsVector(builder: flatbuffers.Builder, data: number[] | Float64Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createVSunKmsVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startVSunKmsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endRFMCoordinateSystem(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): RFMCoordinateSystemT;
     unpackTo(_o: RFMCoordinateSystemT): void;
@@ -97,7 +153,13 @@ export declare class RFMCoordinateSystemT implements flatbuffers.IGeneratedObjec
     KERNEL_FRAME_NAME: string | Uint8Array | null;
     KERNEL_FRAME_ID: number;
     EOP_DATA_SET_CID: string | Uint8Array | null;
-    constructor(NAME?: string | Uint8Array | null, AXIS_TYPE?: rfmAxisType, ORIGIN?: RFMOriginT | null, AXIS_REFERENCE_BODY_ID?: number, EPOCH?: string | Uint8Array | null, EPOCH_TIME_SYSTEM?: string | Uint8Array | null, OBJECT_REFERENCED_AXES?: RFMObjectReferencedAxesT | null, LOCAL_ALIGNED_CONSTRAINED_AXES?: RFMLocalAlignedConstrainedAxesT | null, KERNEL_FRAME_NAME?: string | Uint8Array | null, KERNEL_FRAME_ID?: number, EOP_DATA_SET_CID?: string | Uint8Array | null);
+    GALCEN_RA_DEG: number;
+    GALCEN_DEC_DEG: number;
+    GALCEN_DISTANCE_PC: number;
+    Z_SUN_PC: number;
+    ROLL_DEG: number;
+    V_SUN_KMS: (number)[];
+    constructor(NAME?: string | Uint8Array | null, AXIS_TYPE?: rfmAxisType, ORIGIN?: RFMOriginT | null, AXIS_REFERENCE_BODY_ID?: number, EPOCH?: string | Uint8Array | null, EPOCH_TIME_SYSTEM?: string | Uint8Array | null, OBJECT_REFERENCED_AXES?: RFMObjectReferencedAxesT | null, LOCAL_ALIGNED_CONSTRAINED_AXES?: RFMLocalAlignedConstrainedAxesT | null, KERNEL_FRAME_NAME?: string | Uint8Array | null, KERNEL_FRAME_ID?: number, EOP_DATA_SET_CID?: string | Uint8Array | null, GALCEN_RA_DEG?: number, GALCEN_DEC_DEG?: number, GALCEN_DISTANCE_PC?: number, Z_SUN_PC?: number, ROLL_DEG?: number, V_SUN_KMS?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=RFMCoordinateSystem.d.ts.map

@@ -280,6 +280,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8784,11 +8786,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 280;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 282;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 26] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 28] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8815,6 +8817,8 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 26] = [
     RecordTypeExtended::TBP,
     RecordTypeExtended::WHA,
     RecordTypeExtended::XMT,
+    RecordTypeExtended::EXO,
+    RecordTypeExtended::GLX,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8856,9 +8860,11 @@ impl RecordTypeExtended {
     pub const TBP: Self = Self(278);
     pub const WHA: Self = Self(279);
     pub const XMT: Self = Self(280);
+    pub const EXO: Self = Self(281);
+    pub const GLX: Self = Self(282);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 280;
+    pub const ENUM_MAX: u16 = 282;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8886,6 +8892,8 @@ impl RecordTypeExtended {
         Self::TBP,
         Self::WHA,
         Self::XMT,
+        Self::EXO,
+        Self::GLX,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -8917,6 +8925,8 @@ impl RecordTypeExtended {
             Self::TBP => Some("TBP"),
             Self::WHA => Some("WHA"),
             Self::XMT => Some("XMT"),
+            Self::EXO => Some("EXO"),
+            Self::GLX => Some("GLX"),
             _ => None,
         }
     }

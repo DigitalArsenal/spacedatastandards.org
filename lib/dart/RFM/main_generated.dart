@@ -326,7 +326,8 @@ enum rfmAxisType {
   TOPOCENTRIC_SOUTH_EAST_ZENITH(29),
   ORBITAL_VELOCITY_NORMAL_CONORMAL(30),
   ORBITAL_RADIAL_TRANSVERSE_NORMAL(31),
-  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL(32);
+  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL(32),
+  GALACTIC(33);
 
   final int value;
   const rfmAxisType(this.value);
@@ -366,6 +367,7 @@ enum rfmAxisType {
       case 30: return rfmAxisType.ORBITAL_VELOCITY_NORMAL_CONORMAL;
       case 31: return rfmAxisType.ORBITAL_RADIAL_TRANSVERSE_NORMAL;
       case 32: return rfmAxisType.ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL;
+      case 33: return rfmAxisType.GALACTIC;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -374,7 +376,7 @@ enum rfmAxisType {
       value == null ? null : rfmAxisType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 32;
+  static const int maxValue = 33;
   static const fb.Reader<rfmAxisType> reader = _rfmAxisTypeReader();
 }
 
@@ -397,7 +399,8 @@ enum rfmOriginKind {
   BARYCENTRE(2),
   LIBRATION_POINT(3),
   SPACE_OBJECT(4),
-  GROUND_SITE(5);
+  GROUND_SITE(5),
+  GALACTIC_CENTER(6);
 
   final int value;
   const rfmOriginKind(this.value);
@@ -410,6 +413,7 @@ enum rfmOriginKind {
       case 3: return rfmOriginKind.LIBRATION_POINT;
       case 4: return rfmOriginKind.SPACE_OBJECT;
       case 5: return rfmOriginKind.GROUND_SITE;
+      case 6: return rfmOriginKind.GALACTIC_CENTER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -418,7 +422,7 @@ enum rfmOriginKind {
       value == null ? null : rfmOriginKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<rfmOriginKind> reader = _rfmOriginKindReader();
 }
 
@@ -1104,10 +1108,46 @@ class RFMCoordinateSystem {
   ///  consumers can prove they used the same table rather than assume it.
   String? get EOP_DATA_SET_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
   String? get eopDataSetCid => EOP_DATA_SET_CID;
+  ///  ICRS right ascension of the Galactic center, degrees. NaN means absent.
+  ///  Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+  double get GALCEN_RA_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, double.nan);
+  double get galcenRaDeg => GALCEN_RA_DEG;
+  ///  ICRS declination of the Galactic center, degrees. NaN means absent.
+  ///  Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+  double get GALCEN_DEC_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, double.nan);
+  double get galcenDecDeg => GALCEN_DEC_DEG;
+  ///  Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+  ///  Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+  double get GALCEN_DISTANCE_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, double.nan);
+  double get galcenDistancePc => GALCEN_DISTANCE_PC;
+  ///  Solar height above the Galactic midplane, parsecs, positive north.
+  ///  NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+  double get Z_SUN_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, double.nan);
+  double get zSunPc => Z_SUN_PC;
+  ///  Roll angle in degrees in the Astropy Galactocentric convention.
+  ///  NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+  ///  parameters define a derived Galactocentric orientation: X points from
+  ///  the Sun toward the center's projection in the midplane, Y follows
+  ///  Galactic rotation, and Z completes a right-handed triad toward Galactic
+  ///  north. This parameterized orientation is independent of ORIGIN; with
+  ///  GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+  ///  All five scalars must be finite for a spatial Galactocentric transform,
+  ///  with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+  double get ROLL_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, double.nan);
+  double get rollDeg => ROLL_DEG;
+  ///  Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+  ///  axes, including circular motion (not just peculiar U,V,W). Exactly three
+  ///  components when present; omit the vector when unknown, or use NaN for
+  ///  an unknown component. A velocity transform requires all three finite.
+  ///  Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+  ///  motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+  ///  Publishers must state their adopted total velocity; no default is implied.
+  List<double>? get V_SUN_KMS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  List<double>? get vSunKms => V_SUN_KMS;
 
   @override
   String toString() {
-    return 'RFMCoordinateSystem{NAME: ${NAME}, axisType: ${axisType}, ORIGIN: ${ORIGIN}, axisReferenceBodyId: ${axisReferenceBodyId}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, objectReferencedAxes: ${objectReferencedAxes}, localAlignedConstrainedAxes: ${localAlignedConstrainedAxes}, kernelFrameName: ${kernelFrameName}, kernelFrameId: ${kernelFrameId}, eopDataSetCid: ${eopDataSetCid}}';
+    return 'RFMCoordinateSystem{NAME: ${NAME}, axisType: ${axisType}, ORIGIN: ${ORIGIN}, axisReferenceBodyId: ${axisReferenceBodyId}, EPOCH: ${EPOCH}, epochTimeSystem: ${epochTimeSystem}, objectReferencedAxes: ${objectReferencedAxes}, localAlignedConstrainedAxes: ${localAlignedConstrainedAxes}, kernelFrameName: ${kernelFrameName}, kernelFrameId: ${kernelFrameId}, eopDataSetCid: ${eopDataSetCid}, galcenRaDeg: ${galcenRaDeg}, galcenDecDeg: ${galcenDecDeg}, galcenDistancePc: ${galcenDistancePc}, zSunPc: ${zSunPc}, rollDeg: ${rollDeg}, vSunKms: ${vSunKms}}';
   }
 }
 
@@ -1125,7 +1165,7 @@ class RFMCoordinateSystemBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(11);
+    fbBuilder.startTable(17);
   }
 
   int addNameOffset(int? offset) {
@@ -1172,6 +1212,30 @@ class RFMCoordinateSystemBuilder {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
+  int addGalcenRaDeg(double? GALCEN_RA_DEG) {
+    fbBuilder.addFloat64(11, GALCEN_RA_DEG);
+    return fbBuilder.offset;
+  }
+  int addGalcenDecDeg(double? GALCEN_DEC_DEG) {
+    fbBuilder.addFloat64(12, GALCEN_DEC_DEG);
+    return fbBuilder.offset;
+  }
+  int addGalcenDistancePc(double? GALCEN_DISTANCE_PC) {
+    fbBuilder.addFloat64(13, GALCEN_DISTANCE_PC);
+    return fbBuilder.offset;
+  }
+  int addZSunPc(double? Z_SUN_PC) {
+    fbBuilder.addFloat64(14, Z_SUN_PC);
+    return fbBuilder.offset;
+  }
+  int addRollDeg(double? ROLL_DEG) {
+    fbBuilder.addFloat64(15, ROLL_DEG);
+    return fbBuilder.offset;
+  }
+  int addVSunKmsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1190,6 +1254,12 @@ class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
   final String? _KERNEL_FRAME_NAME;
   final int? _KERNEL_FRAME_ID;
   final String? _EOP_DATA_SET_CID;
+  final double? _GALCEN_RA_DEG;
+  final double? _GALCEN_DEC_DEG;
+  final double? _GALCEN_DISTANCE_PC;
+  final double? _Z_SUN_PC;
+  final double? _ROLL_DEG;
+  final List<double>? _V_SUN_KMS;
 
   RFMCoordinateSystemObjectBuilder({
     String? NAME,
@@ -1211,6 +1281,18 @@ class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
     int? kernelFrameId,
     String? EOP_DATA_SET_CID,
     String? eopDataSetCid,
+    double? GALCEN_RA_DEG,
+    double? galcenRaDeg,
+    double? GALCEN_DEC_DEG,
+    double? galcenDecDeg,
+    double? GALCEN_DISTANCE_PC,
+    double? galcenDistancePc,
+    double? Z_SUN_PC,
+    double? zSunPc,
+    double? ROLL_DEG,
+    double? rollDeg,
+    List<double>? V_SUN_KMS,
+    List<double>? vSunKms,
   })
       : _NAME = NAME,
         _AXIS_TYPE = axisType ?? AXIS_TYPE,
@@ -1222,7 +1304,13 @@ class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
         _LOCAL_ALIGNED_CONSTRAINED_AXES = localAlignedConstrainedAxes ?? LOCAL_ALIGNED_CONSTRAINED_AXES,
         _KERNEL_FRAME_NAME = kernelFrameName ?? KERNEL_FRAME_NAME,
         _KERNEL_FRAME_ID = kernelFrameId ?? KERNEL_FRAME_ID,
-        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID;
+        _EOP_DATA_SET_CID = eopDataSetCid ?? EOP_DATA_SET_CID,
+        _GALCEN_RA_DEG = galcenRaDeg ?? GALCEN_RA_DEG,
+        _GALCEN_DEC_DEG = galcenDecDeg ?? GALCEN_DEC_DEG,
+        _GALCEN_DISTANCE_PC = galcenDistancePc ?? GALCEN_DISTANCE_PC,
+        _Z_SUN_PC = zSunPc ?? Z_SUN_PC,
+        _ROLL_DEG = rollDeg ?? ROLL_DEG,
+        _V_SUN_KMS = vSunKms ?? V_SUN_KMS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1240,7 +1328,9 @@ class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_KERNEL_FRAME_NAME!);
     final int? EOP_DATA_SET_CIDOffset = _EOP_DATA_SET_CID == null ? null
         : fbBuilder.writeString(_EOP_DATA_SET_CID!);
-    fbBuilder.startTable(11);
+    final int? V_SUN_KMSOffset = _V_SUN_KMS == null ? null
+        : fbBuilder.writeListFloat64(_V_SUN_KMS!);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, NAMEOffset);
     fbBuilder.addUint8(1, _AXIS_TYPE?.value);
     fbBuilder.addOffset(2, ORIGINOffset);
@@ -1252,6 +1342,12 @@ class RFMCoordinateSystemObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(8, KERNEL_FRAME_NAMEOffset);
     fbBuilder.addInt32(9, _KERNEL_FRAME_ID);
     fbBuilder.addOffset(10, EOP_DATA_SET_CIDOffset);
+    fbBuilder.addFloat64(11, _GALCEN_RA_DEG);
+    fbBuilder.addFloat64(12, _GALCEN_DEC_DEG);
+    fbBuilder.addFloat64(13, _GALCEN_DISTANCE_PC);
+    fbBuilder.addFloat64(14, _Z_SUN_PC);
+    fbBuilder.addFloat64(15, _ROLL_DEG);
+    fbBuilder.addOffset(16, V_SUN_KMSOffset);
     return fbBuilder.endTable();
   }
 

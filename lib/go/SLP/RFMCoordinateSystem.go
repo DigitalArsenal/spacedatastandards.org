@@ -4,6 +4,7 @@ package SLP
 
 import (
 	flatbuffers "github.com/google/flatbuffers/go"
+	"math"
 )
 
 /// A fully specified coordinate system: an axis set, an origin, and the epoch
@@ -248,8 +249,194 @@ func (rcv *RFMCoordinateSystem) EopDataSetCid() []byte {
 /// Content identifier of the Earth-orientation data set used to realise
 /// this system, when the axis chain requires one. Recorded so that two
 /// consumers can prove they used the same table rather than assume it.
+/// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+/// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+func (rcv *RFMCoordinateSystem) GALCEN_RA_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *RFMCoordinateSystem) GalcenRaDeg() float64 {
+	return rcv.GALCEN_RA_DEG()
+}
+
+/// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+/// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+func (rcv *RFMCoordinateSystem) MutateGALCEN_RA_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+func (rcv *RFMCoordinateSystem) MutateGalcenRaDeg(n float64) bool {
+	return rcv.MutateGALCEN_RA_DEG(n)
+}
+
+/// ICRS declination of the Galactic center, degrees. NaN means absent.
+/// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+func (rcv *RFMCoordinateSystem) GALCEN_DEC_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *RFMCoordinateSystem) GalcenDecDeg() float64 {
+	return rcv.GALCEN_DEC_DEG()
+}
+
+/// ICRS declination of the Galactic center, degrees. NaN means absent.
+/// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+func (rcv *RFMCoordinateSystem) MutateGALCEN_DEC_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *RFMCoordinateSystem) MutateGalcenDecDeg(n float64) bool {
+	return rcv.MutateGALCEN_DEC_DEG(n)
+}
+
+/// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+/// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+func (rcv *RFMCoordinateSystem) GALCEN_DISTANCE_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *RFMCoordinateSystem) GalcenDistancePc() float64 {
+	return rcv.GALCEN_DISTANCE_PC()
+}
+
+/// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+/// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+func (rcv *RFMCoordinateSystem) MutateGALCEN_DISTANCE_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *RFMCoordinateSystem) MutateGalcenDistancePc(n float64) bool {
+	return rcv.MutateGALCEN_DISTANCE_PC(n)
+}
+
+/// Solar height above the Galactic midplane, parsecs, positive north.
+/// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+func (rcv *RFMCoordinateSystem) Z_SUN_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *RFMCoordinateSystem) ZSunPc() float64 {
+	return rcv.Z_SUN_PC()
+}
+
+/// Solar height above the Galactic midplane, parsecs, positive north.
+/// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+func (rcv *RFMCoordinateSystem) MutateZ_SUN_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+func (rcv *RFMCoordinateSystem) MutateZSunPc(n float64) bool {
+	return rcv.MutateZ_SUN_PC(n)
+}
+
+/// Roll angle in degrees in the Astropy Galactocentric convention.
+/// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+/// parameters define a derived Galactocentric orientation: X points from
+/// the Sun toward the center's projection in the midplane, Y follows
+/// Galactic rotation, and Z completes a right-handed triad toward Galactic
+/// north. This parameterized orientation is independent of ORIGIN; with
+/// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+/// All five scalars must be finite for a spatial Galactocentric transform,
+/// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+func (rcv *RFMCoordinateSystem) ROLL_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *RFMCoordinateSystem) RollDeg() float64 {
+	return rcv.ROLL_DEG()
+}
+
+/// Roll angle in degrees in the Astropy Galactocentric convention.
+/// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+/// parameters define a derived Galactocentric orientation: X points from
+/// the Sun toward the center's projection in the midplane, Y follows
+/// Galactic rotation, and Z completes a right-handed triad toward Galactic
+/// north. This parameterized orientation is independent of ORIGIN; with
+/// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+/// All five scalars must be finite for a spatial Galactocentric transform,
+/// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+func (rcv *RFMCoordinateSystem) MutateROLL_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *RFMCoordinateSystem) MutateRollDeg(n float64) bool {
+	return rcv.MutateROLL_DEG(n)
+}
+
+/// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+/// axes, including circular motion (not just peculiar U,V,W). Exactly three
+/// components when present; omit the vector when unknown, or use NaN for
+/// an unknown component. A velocity transform requires all three finite.
+/// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+/// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+/// Publishers must state their adopted total velocity; no default is implied.
+func (rcv *RFMCoordinateSystem) V_SUN_KMS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *RFMCoordinateSystem) VSunKms(j int) float64 {
+	return rcv.V_SUN_KMS(j)
+}
+
+func (rcv *RFMCoordinateSystem) V_SUN_KMSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *RFMCoordinateSystem) VSunKmsLength() int {
+	return rcv.V_SUN_KMSLength()
+}
+
+/// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+/// axes, including circular motion (not just peculiar U,V,W). Exactly three
+/// components when present; omit the vector when unknown, or use NaN for
+/// an unknown component. A velocity transform requires all three finite.
+/// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+/// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+/// Publishers must state their adopted total velocity; no default is implied.
+func (rcv *RFMCoordinateSystem) MutateV_SUN_KMS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *RFMCoordinateSystem) MutateVSunKms(j int, n float64) bool {
+	return rcv.MutateV_SUN_KMS(j, n)
+}
+
 func RFMCoordinateSystemStart(builder *flatbuffers.Builder) {
-	builder.StartObject(11)
+	builder.StartObject(17)
 }
 func RFMCoordinateSystemAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
@@ -316,6 +503,48 @@ func RFMCoordinateSystemAddEOP_DATA_SET_CID(builder *flatbuffers.Builder, EOP_DA
 }
 func RFMCoordinateSystemAddEopDataSetCid(builder *flatbuffers.Builder, EOP_DATA_SET_CID flatbuffers.UOffsetT) {
 	RFMCoordinateSystemAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
+}
+func RFMCoordinateSystemAddGALCEN_RA_DEG(builder *flatbuffers.Builder, GALCEN_RA_DEG float64) {
+	builder.PrependFloat64Slot(11, GALCEN_RA_DEG, float64(math.NaN()))
+}
+func RFMCoordinateSystemAddGalcenRaDeg(builder *flatbuffers.Builder, GALCEN_RA_DEG float64) {
+	RFMCoordinateSystemAddGALCEN_RA_DEG(builder, GALCEN_RA_DEG)
+}
+func RFMCoordinateSystemAddGALCEN_DEC_DEG(builder *flatbuffers.Builder, GALCEN_DEC_DEG float64) {
+	builder.PrependFloat64Slot(12, GALCEN_DEC_DEG, float64(math.NaN()))
+}
+func RFMCoordinateSystemAddGalcenDecDeg(builder *flatbuffers.Builder, GALCEN_DEC_DEG float64) {
+	RFMCoordinateSystemAddGALCEN_DEC_DEG(builder, GALCEN_DEC_DEG)
+}
+func RFMCoordinateSystemAddGALCEN_DISTANCE_PC(builder *flatbuffers.Builder, GALCEN_DISTANCE_PC float64) {
+	builder.PrependFloat64Slot(13, GALCEN_DISTANCE_PC, float64(math.NaN()))
+}
+func RFMCoordinateSystemAddGalcenDistancePc(builder *flatbuffers.Builder, GALCEN_DISTANCE_PC float64) {
+	RFMCoordinateSystemAddGALCEN_DISTANCE_PC(builder, GALCEN_DISTANCE_PC)
+}
+func RFMCoordinateSystemAddZ_SUN_PC(builder *flatbuffers.Builder, Z_SUN_PC float64) {
+	builder.PrependFloat64Slot(14, Z_SUN_PC, float64(math.NaN()))
+}
+func RFMCoordinateSystemAddZSunPc(builder *flatbuffers.Builder, Z_SUN_PC float64) {
+	RFMCoordinateSystemAddZ_SUN_PC(builder, Z_SUN_PC)
+}
+func RFMCoordinateSystemAddROLL_DEG(builder *flatbuffers.Builder, ROLL_DEG float64) {
+	builder.PrependFloat64Slot(15, ROLL_DEG, float64(math.NaN()))
+}
+func RFMCoordinateSystemAddRollDeg(builder *flatbuffers.Builder, ROLL_DEG float64) {
+	RFMCoordinateSystemAddROLL_DEG(builder, ROLL_DEG)
+}
+func RFMCoordinateSystemAddV_SUN_KMS(builder *flatbuffers.Builder, V_SUN_KMS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(V_SUN_KMS), 0)
+}
+func RFMCoordinateSystemAddVSunKms(builder *flatbuffers.Builder, V_SUN_KMS flatbuffers.UOffsetT) {
+	RFMCoordinateSystemAddV_SUN_KMS(builder, V_SUN_KMS)
+}
+func RFMCoordinateSystemStartV_SUN_KMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func RFMCoordinateSystemStartVSunKmsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return RFMCoordinateSystemStartV_SUN_KMSVector(builder, numElems)
 }
 func RFMCoordinateSystemEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

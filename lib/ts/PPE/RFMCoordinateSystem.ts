@@ -137,8 +137,84 @@ EOP_DATA_SET_CID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * ICRS right ascension of the Galactic center, degrees. NaN means absent.
+ * Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+ */
+GALCEN_RA_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ICRS declination of the Galactic center, degrees. NaN means absent.
+ * Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+ */
+GALCEN_DEC_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+ * Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+ */
+GALCEN_DISTANCE_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Solar height above the Galactic midplane, parsecs, positive north.
+ * NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+ */
+Z_SUN_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Roll angle in degrees in the Astropy Galactocentric convention.
+ * NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+ * parameters define a derived Galactocentric orientation: X points from
+ * the Sun toward the center's projection in the midplane, Y follows
+ * Galactic rotation, and Z completes a right-handed triad toward Galactic
+ * north. This parameterized orientation is independent of ORIGIN; with
+ * GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+ * All five scalars must be finite for a spatial Galactocentric transform,
+ * with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+ */
+ROLL_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+ * axes, including circular motion (not just peculiar U,V,W). Exactly three
+ * components when present; omit the vector when unknown, or use NaN for
+ * an unknown component. A velocity transform requires all three finite.
+ * Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+ * motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+ * Publishers must state their adopted total velocity; no default is implied.
+ */
+V_SUN_KMS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+vSunKmsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+vSunKmsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startRFMCoordinateSystem(builder:flatbuffers.Builder) {
-  builder.startObject(11);
+  builder.startObject(17);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
@@ -185,6 +261,47 @@ static addEopDataSetCid(builder:flatbuffers.Builder, EOP_DATA_SET_CIDOffset:flat
   builder.addFieldOffset(10, EOP_DATA_SET_CIDOffset, 0);
 }
 
+static addGalcenRaDeg(builder:flatbuffers.Builder, GALCEN_RA_DEG:number) {
+  builder.addFieldFloat64(11, GALCEN_RA_DEG, NaN);
+}
+
+static addGalcenDecDeg(builder:flatbuffers.Builder, GALCEN_DEC_DEG:number) {
+  builder.addFieldFloat64(12, GALCEN_DEC_DEG, NaN);
+}
+
+static addGalcenDistancePc(builder:flatbuffers.Builder, GALCEN_DISTANCE_PC:number) {
+  builder.addFieldFloat64(13, GALCEN_DISTANCE_PC, NaN);
+}
+
+static addZSunPc(builder:flatbuffers.Builder, Z_SUN_PC:number) {
+  builder.addFieldFloat64(14, Z_SUN_PC, NaN);
+}
+
+static addRollDeg(builder:flatbuffers.Builder, ROLL_DEG:number) {
+  builder.addFieldFloat64(15, ROLL_DEG, NaN);
+}
+
+static addVSunKms(builder:flatbuffers.Builder, V_SUN_KMSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, V_SUN_KMSOffset, 0);
+}
+
+static createVSunKmsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createVSunKmsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createVSunKmsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startVSunKmsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static endRFMCoordinateSystem(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -203,7 +320,13 @@ unpack(): RFMCoordinateSystemT {
     (this.LOCAL_ALIGNED_CONSTRAINED_AXES() !== null ? this.LOCAL_ALIGNED_CONSTRAINED_AXES()!.unpack() : null),
     this.KERNEL_FRAME_NAME(),
     this.KERNEL_FRAME_ID(),
-    this.EOP_DATA_SET_CID()
+    this.EOP_DATA_SET_CID(),
+    this.GALCEN_RA_DEG(),
+    this.GALCEN_DEC_DEG(),
+    this.GALCEN_DISTANCE_PC(),
+    this.Z_SUN_PC(),
+    this.ROLL_DEG(),
+    this.bb!.createScalarList<number>(this.V_SUN_KMS.bind(this), this.vSunKmsLength())
   );
 }
 
@@ -220,6 +343,12 @@ unpackTo(_o: RFMCoordinateSystemT): void {
   _o.KERNEL_FRAME_NAME = this.KERNEL_FRAME_NAME();
   _o.KERNEL_FRAME_ID = this.KERNEL_FRAME_ID();
   _o.EOP_DATA_SET_CID = this.EOP_DATA_SET_CID();
+  _o.GALCEN_RA_DEG = this.GALCEN_RA_DEG();
+  _o.GALCEN_DEC_DEG = this.GALCEN_DEC_DEG();
+  _o.GALCEN_DISTANCE_PC = this.GALCEN_DISTANCE_PC();
+  _o.Z_SUN_PC = this.Z_SUN_PC();
+  _o.ROLL_DEG = this.ROLL_DEG();
+  _o.V_SUN_KMS = this.bb!.createScalarList<number>(this.V_SUN_KMS.bind(this), this.vSunKmsLength());
 }
 }
 
@@ -235,7 +364,13 @@ constructor(
   public LOCAL_ALIGNED_CONSTRAINED_AXES: RFMLocalAlignedConstrainedAxesT|null = null,
   public KERNEL_FRAME_NAME: string|Uint8Array|null = null,
   public KERNEL_FRAME_ID: number = 0,
-  public EOP_DATA_SET_CID: string|Uint8Array|null = null
+  public EOP_DATA_SET_CID: string|Uint8Array|null = null,
+  public GALCEN_RA_DEG: number = NaN,
+  public GALCEN_DEC_DEG: number = NaN,
+  public GALCEN_DISTANCE_PC: number = NaN,
+  public Z_SUN_PC: number = NaN,
+  public ROLL_DEG: number = NaN,
+  public V_SUN_KMS: (number)[] = []
 ){}
 
 
@@ -248,6 +383,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LOCAL_ALIGNED_CONSTRAINED_AXES = (this.LOCAL_ALIGNED_CONSTRAINED_AXES !== null ? this.LOCAL_ALIGNED_CONSTRAINED_AXES!.pack(builder) : 0);
   const KERNEL_FRAME_NAME = (this.KERNEL_FRAME_NAME !== null ? builder.createString(this.KERNEL_FRAME_NAME!) : 0);
   const EOP_DATA_SET_CID = (this.EOP_DATA_SET_CID !== null ? builder.createString(this.EOP_DATA_SET_CID!) : 0);
+  const V_SUN_KMS = RFMCoordinateSystem.createVSunKmsVector(builder, this.V_SUN_KMS);
 
   RFMCoordinateSystem.startRFMCoordinateSystem(builder);
   RFMCoordinateSystem.addName(builder, NAME);
@@ -261,6 +397,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   RFMCoordinateSystem.addKernelFrameName(builder, KERNEL_FRAME_NAME);
   RFMCoordinateSystem.addKernelFrameId(builder, this.KERNEL_FRAME_ID);
   RFMCoordinateSystem.addEopDataSetCid(builder, EOP_DATA_SET_CID);
+  RFMCoordinateSystem.addGalcenRaDeg(builder, this.GALCEN_RA_DEG);
+  RFMCoordinateSystem.addGalcenDecDeg(builder, this.GALCEN_DEC_DEG);
+  RFMCoordinateSystem.addGalcenDistancePc(builder, this.GALCEN_DISTANCE_PC);
+  RFMCoordinateSystem.addZSunPc(builder, this.Z_SUN_PC);
+  RFMCoordinateSystem.addRollDeg(builder, this.ROLL_DEG);
+  RFMCoordinateSystem.addVSunKms(builder, V_SUN_KMS);
 
   return RFMCoordinateSystem.endRFMCoordinateSystem(builder);
 }

@@ -6150,7 +6150,8 @@
         "TOPOCENTRIC_SOUTH_EAST_ZENITH",
         "ORBITAL_VELOCITY_NORMAL_CONORMAL",
         "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
-        "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+        "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL",
+        "GALACTIC"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -6285,6 +6286,10 @@
         "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
           "value": 32,
           "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+        },
+        "GALACTIC": {
+          "value": 33,
+          "description": "IAU 1958 Galactic longitude/latitude axes, Hipparcos realization: NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg. ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed). This fixes orientation only, not the origin or the direction of Sgr A*. Explicit Galactocentric parameters select the derived orientation documented on ROLL_DEG; choosing an origin alone never rotates the axes. See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its realization in ICRS; do not substitute a newly fitted Galactic plane."
         }
       }
     },
@@ -6296,7 +6301,8 @@
         "BARYCENTRE",
         "LIBRATION_POINT",
         "SPACE_OBJECT",
-        "GROUND_SITE"
+        "GROUND_SITE",
+        "GALACTIC_CENTER"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -6323,6 +6329,10 @@
         "GROUND_SITE": {
           "value": 5,
           "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+        },
+        "GALACTIC_CENTER": {
+          "value": 6,
+          "description": "Galactic center at Sgr A*. Its ICRS direction, solar distance, height, roll and velocity are explicit parameters on RFMCoordinateSystem. No ephemeris body code is implied by this origin."
         }
       }
     },
@@ -14177,6 +14187,23 @@
         }
       }
     },
+    "exoDisposition": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONFIRMED",
+        "CANDIDATE",
+        "DISPUTED",
+        "RETRACTED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
     "FCSMode": {
       "type": "string",
       "enum": [
@@ -15564,6 +15591,95 @@
         },
         "GEOMETRY_COLLECTION": {
           "value": 6
+        }
+      }
+    },
+    "glxDistanceTechnique": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TRGB",
+        "CEPHEID",
+        "SBF",
+        "TULLY_FISHER",
+        "FUNDAMENTAL_PLANE",
+        "SN_IA",
+        "MEMBERSHIP",
+        "HUBBLE_FLOW",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "FUNDAMENTAL_PLANE": {
+          "value": 5
+        }
+      }
+    },
+    "glxRedshiftTechnique": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SPECTROSCOPIC",
+        "PHOTOMETRIC",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "glxSpectralRestFrame": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "HELIOCENTER",
+        "CMB",
+        "BARYCENTER",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "glxObjectCategory": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GALAXY",
+        "QUASAR",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "glxTruthValue": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NO",
+        "YES"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNKNOWN": {
+          "value": 0
         }
       }
     },
@@ -29218,7 +29334,9 @@
         "SRG",
         "TBP",
         "WHA",
-        "XMT"
+        "XMT",
+        "EXO",
+        "GLX"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -29300,6 +29418,12 @@
         },
         "XMT": {
           "value": 280
+        },
+        "EXO": {
+          "value": 281
+        },
+        "GLX": {
+          "value": 282
         }
       }
     },
@@ -46813,6 +46937,10 @@
             "GROUND_SITE": {
               "value": 5,
               "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            },
+            "GALACTIC_CENTER": {
+              "value": 6,
+              "description": "Galactic center at Sgr A*. Its ICRS direction, solar distance, height, roll and velocity are explicit parameters on RFMCoordinateSystem. No ephemeris body code is implied by this origin."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -47220,6 +47348,10 @@
             "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
               "value": 32,
               "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+            },
+            "GALACTIC": {
+              "value": 33,
+              "description": "IAU 1958 Galactic longitude/latitude axes, Hipparcos realization: NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg. ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed). This fixes orientation only, not the origin or the direction of Sgr A*. Explicit Galactocentric parameters select the derived orientation documented on ROLL_DEG; choosing an origin alone never rotates the axes. See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its realization in ICRS; do not substitute a newly fitted Galactic plane."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -47272,6 +47404,44 @@
           "type": "string",
           "description": "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it.",
           "x-flatbuffer-type": "string"
+        },
+        "GALCEN_RA_DEG": {
+          "type": "number",
+          "description": "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GALCEN_DEC_DEG": {
+          "type": "number",
+          "description": "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GALCEN_DISTANCE_PC": {
+          "type": "number",
+          "description": "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "Z_SUN_PC": {
+          "type": "number",
+          "description": "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ROLL_DEG": {
+          "type": "number",
+          "description": "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "V_SUN_KMS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied.",
+          "x-flatbuffer-type": "[double]"
         }
       },
       "additionalProperties": false
@@ -52762,6 +52932,10 @@
             "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
               "value": 32,
               "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+            },
+            "GALACTIC": {
+              "value": 33,
+              "description": "IAU 1958 Galactic longitude/latitude axes, Hipparcos realization: NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg. ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed). This fixes orientation only, not the origin or the direction of Sgr A*. Explicit Galactocentric parameters select the derived orientation documented on ROLL_DEG; choosing an origin alone never rotates the axes. See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its realization in ICRS; do not substitute a newly fitted Galactic plane."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -52794,6 +52968,10 @@
             "GROUND_SITE": {
               "value": 5,
               "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            },
+            "GALACTIC_CENTER": {
+              "value": 6,
+              "description": "Galactic center at Sgr A*. Its ICRS direction, solar distance, height, roll and velocity are explicit parameters on RFMCoordinateSystem. No ephemeris body code is implied by this origin."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -82212,6 +82390,241 @@
       },
       "additionalProperties": false
     },
+    "EXOParameter": {
+      "type": "object",
+      "description": "A measured value, its asymmetric uncertainties, and its own provenance.\nAn absent table means no parameter was supplied. NaN means a missing numeric\ncell, including when the archive supplies a reference or limit but no value.",
+      "properties": {
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ERR1": {
+          "type": "number",
+          "description": "Archive ERR1 (positive) and ERR2 (negative), retained without symmetrizing.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ERR2": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LIMIT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "Archive limit flag: 0 measurement, +1 upper limit, -1 lower limit.\n-128 means the source did not supply a flag; it is not a measurement.",
+          "x-flatbuffer-type": "byte",
+          "x-flatbuffer-default": "-128"
+        },
+        "DISPLAY": {
+          "type": "string",
+          "description": "Archive display string, if supplied, preserved without parsing/rounding.",
+          "x-flatbuffer-type": "string"
+        },
+        "UNIT": {
+          "type": "string",
+          "description": "Unit of VALUE/ERR1/ERR2, using IVOA VOUnits (d, deg, AU, K, or 1).\nEarth radius/mass are archive units R_earth and M_earth, not SI estimates.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REFERENCE_BIBCODE": {
+          "type": "string",
+          "description": "ADS bibcode when provided or unambiguously present in the source link.\nAbsent means unknown; archive references are not always ADS publications.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_URL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_TEXT": {
+          "type": "string",
+          "description": "The complete source reference cell, including archive reflink markup.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC retrieval time of this parameter's source.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "UNIT",
+        "RETRIEVED_AT"
+      ],
+      "additionalProperties": false
+    },
+    "EXO": {
+      "type": "object",
+      "properties": {
+        "PL_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "HOSTNAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GAIA_DR3_ID": {
+          "type": "string",
+          "description": "Archive identifier string, e.g. Gaia DR3 <source_id>. Never a JS number.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIMBAD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_ORBPER": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Period in days; semimajor axis in AU; eccentricity dimensionless.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBSMAX": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBECCEN": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBLPER": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Argument of periastron and orbital inclination in degrees. The archive\npreserves each publication's convention (planet/star omega may differ).",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBINCL": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_TRANMID": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Transit midpoint T0 and periastron epoch Tp, JD in their named systems.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_TRANMID_SYSTEMREF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_ORBTPER": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBTPER_SYSTEMREF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_ASC_NODE": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Longitude of ascending node Omega, degrees in the stated reference frame.\nNot a PSCompPars column; absence must never become an assumed zero.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "LONG_ASC_NODE_UNKNOWN": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "LONG_ASC_NODE_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_PROJOBLIQ": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Sky-projected spin-orbit obliquity lambda, degrees (not true 3D obliquity).",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_RADE": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Planet radius in Earth radii; best mass in Earth masses with its basis.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_BMASSE": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_BMASSPROV": {
+          "type": "string",
+          "description": "Archive provenance token, e.g. Mass, Msini, M-R relationship. A measured\nm*sin(i) is not silently promoted to mass; an estimate remains labeled.",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_EQT": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Equilibrium temperature in kelvin, with the source's model assumptions.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "GEOMETRIC_ALBEDO": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Dimensionless geometric albedo, distinct from Bond albedo. Not currently\nin PSCompPars; source/band are explicit when a publisher supplies it.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "GEOMETRIC_ALBEDO_BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISCOVERYMETHOD": {
+          "type": "string",
+          "description": "Archive discovery-method token, preserved verbatim for new techniques.",
+          "x-flatbuffer-type": "string"
+        },
+        "DISC_YEAR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Calendar year; -1 means absent.",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        },
+        "DISC_REFNAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ARCHIVE_STATUS": {
+          "$ref": "#/definitions/exoDisposition",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PL_CONTROV_FLAG": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "Original archive flag: 0 not controversial, 1 controversial, -1 absent.",
+          "x-flatbuffer-type": "byte",
+          "x-flatbuffer-default": "-1"
+        },
+        "STATUS_REFERENCE": {
+          "type": "string",
+          "description": "Reference explaining status, especially disputes or retractions.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC retrieval time, and replayable source table/query URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CATALOG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "PL_NAME",
+        "RETRIEVED_AT"
+      ],
+      "additionalProperties": false
+    },
     "FCS": {
       "type": "object",
       "description": "Fire Control Systems",
@@ -86060,6 +86473,242 @@
           "x-flatbuffer-type": "GJNBoundingBox"
         }
       },
+      "additionalProperties": false
+    },
+    "GLX": {
+      "type": "object",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGNATIONS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-flatbuffer-type": "[string]"
+        },
+        "RA_DEG": {
+          "type": "number",
+          "description": "ICRS right ascension and declination, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DEC_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CSO_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISTANCE_MPC": {
+          "type": "number",
+          "description": "Published distance and uncertainty in Mpc; METHOD and REF name its basis.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DISTANCE_UNC_MPC": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DISTANCE_METHOD": {
+          "$ref": "#/definitions/glxDistanceTechnique",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "FUNDAMENTAL_PLANE": {
+              "value": 5
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "DISTANCE_REF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "HELIO_VELOCITY_KMS": {
+          "type": "number",
+          "description": "Published heliocentric radial velocity, km/s. Do not substitute c*z.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REDSHIFT": {
+          "type": "number",
+          "description": "Dimensionless z; its uncertainty, technique and rest frame are below.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ISOPHOTAL_MAJOR_ARCMIN": {
+          "type": "number",
+          "description": "Full major-axis diameter, arcmin, at the named band and surface brightness.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ISOPHOTE_BAND": {
+          "type": "string",
+          "description": "Source band token, e.g. B or Ks. D25 B and K20 Ks are different isophotes.",
+          "x-flatbuffer-type": "string"
+        },
+        "ISOPHOTE_LEVEL": {
+          "type": "number",
+          "description": "Surface-brightness threshold in mag/arcsec^2, e.g. 25 in B or 20 in Ks.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AXIS_RATIO": {
+          "type": "number",
+          "description": "Minor/major ratio b/a, dimensionless; position angle east of north, degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PA_DEG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "INCLINATION_DEG": {
+          "type": "number",
+          "description": "Disk inclination, degrees; source estimate, never inferred from b/a here.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "T_TYPE": {
+          "type": "number",
+          "description": "Numerical de Vaucouleurs morphology, not an integer category or default.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HUBBLE_CLASS": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "BAR": {
+          "type": "string",
+          "description": "Source bar classification verbatim (e.g. SA, SAB, SB); absent is unknown.",
+          "x-flatbuffer-type": "string"
+        },
+        "B_TOTAL_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "K_TOTAL_MAG": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GROUP_ID": {
+          "type": "string",
+          "description": "Catalog-qualified group identifier, also usable for finger-of-God grouping.",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCAL_GROUP_MEMBER": {
+          "$ref": "#/definitions/glxTruthValue",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNKNOWN": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNKNOWN"
+        },
+        "SOURCE_CATALOG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "CITATION": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE": {
+          "type": "string",
+          "description": "Dataset license; absent means unknown terms, not a redistribution grant.",
+          "x-flatbuffer-type": "string"
+        },
+        "REDSHIFT_UNC": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REDSHIFT_KIND": {
+          "$ref": "#/definitions/glxRedshiftTechnique",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REDSHIFT_FRAME": {
+          "$ref": "#/definitions/glxSpectralRestFrame",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SOURCE_CLASS": {
+          "$ref": "#/definitions/glxObjectCategory",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SURVEY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "RELEASE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_SAMPLE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "COMOVING_DISTANCE_MPC": {
+          "type": "number",
+          "description": "Line-of-sight comoving distance in Mpc, with the adopted cosmology below.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LIGHT_TRAVEL_DISTANCE_MPC": {
+          "type": "number",
+          "description": "c times lookback time, Mpc; distinct from comoving or luminosity distance.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "COSMOLOGY_ID": {
+          "type": "string",
+          "description": "Versioned parameter-set identifier, e.g. Planck18; no implicit cosmology.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "ID"
+      ],
       "additionalProperties": false
     },
     "gnssObsData": {
@@ -145231,6 +145880,12 @@
             },
             "XMT": {
               "value": 280
+            },
+            "EXO": {
+              "value": 281
+            },
+            "GLX": {
+              "value": 282
             }
           },
           "x-flatbuffer-default": "NONE"

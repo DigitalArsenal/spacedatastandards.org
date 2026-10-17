@@ -29,8 +29,14 @@ public final class rfmOriginKind {
    * fields on RFMOrigin.
    */
   public static final int GROUND_SITE = 5;
+  /**
+   * Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+   * roll and velocity are explicit parameters on RFMCoordinateSystem.
+   * No ephemeris body code is implied by this origin.
+   */
+  public static final int GALACTIC_CENTER = 6;
 
-  public static final String[] names = { "UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", };
+  public static final String[] names = { "UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", "GALACTIC_CENTER", };
 
   public static String name(int e) { return names[e]; }
 }

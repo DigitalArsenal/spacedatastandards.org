@@ -99,6 +99,16 @@ const (
 	/// Orbital axes from the object's state: Z toward the central body (nadir),
 	/// Y opposite the orbit normal, X completing the set (LVLH).
 	rfmAxisTypeORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL rfmAxisType = 32
+	/// IAU 1958 Galactic longitude/latitude axes, Hipparcos realization:
+	/// NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg.
+	/// ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to
+	/// l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed).
+	/// This fixes orientation only, not the origin or the direction of Sgr A*.
+	/// Explicit Galactocentric parameters select the derived orientation
+	/// documented on ROLL_DEG; choosing an origin alone never rotates the axes.
+	/// See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its
+	/// realization in ICRS; do not substitute a newly fitted Galactic plane.
+	rfmAxisTypeGALACTIC                                rfmAxisType = 33
 )
 
 var EnumNamesrfmAxisType = map[rfmAxisType]string{
@@ -135,6 +145,7 @@ var EnumNamesrfmAxisType = map[rfmAxisType]string{
 	rfmAxisTypeORBITAL_VELOCITY_NORMAL_CONORMAL:        "ORBITAL_VELOCITY_NORMAL_CONORMAL",
 	rfmAxisTypeORBITAL_RADIAL_TRANSVERSE_NORMAL:        "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
 	rfmAxisTypeORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL: "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL",
+	rfmAxisTypeGALACTIC:                                "GALACTIC",
 }
 
 var EnumValuesrfmAxisType = map[string]rfmAxisType{
@@ -171,6 +182,7 @@ var EnumValuesrfmAxisType = map[string]rfmAxisType{
 	"ORBITAL_VELOCITY_NORMAL_CONORMAL":        rfmAxisTypeORBITAL_VELOCITY_NORMAL_CONORMAL,
 	"ORBITAL_RADIAL_TRANSVERSE_NORMAL":        rfmAxisTypeORBITAL_RADIAL_TRANSVERSE_NORMAL,
 	"ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": rfmAxisTypeORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL,
+	"GALACTIC":                                rfmAxisTypeGALACTIC,
 }
 
 func (v rfmAxisType) String() string {

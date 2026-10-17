@@ -38,5 +38,7 @@ class RecordTypeExtended private constructor() {
         const val TBP: UShort = 278u
         const val WHA: UShort = 279u
         const val XMT: UShort = 280u
+        const val EXO: UShort = 281u
+        const val GLX: UShort = 282u
     }
 }

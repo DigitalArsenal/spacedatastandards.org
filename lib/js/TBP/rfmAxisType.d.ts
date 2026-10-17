@@ -156,6 +156,18 @@ export declare enum rfmAxisType {
      * Orbital axes from the object's state: Z toward the central body (nadir),
      * Y opposite the orbit normal, X completing the set (LVLH).
      */
-    ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32
+    ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32,
+    /**
+     * IAU 1958 Galactic longitude/latitude axes, Hipparcos realization:
+     * NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg.
+     * ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to
+     * l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed).
+     * This fixes orientation only, not the origin or the direction of Sgr A*.
+     * Explicit Galactocentric parameters select the derived orientation
+     * documented on ROLL_DEG; choosing an origin alone never rotates the axes.
+     * See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its
+     * realization in ICRS; do not substitute a newly fitted Galactic plane.
+     */
+    GALACTIC = 33
 }
 //# sourceMappingURL=rfmAxisType.d.ts.map

@@ -293,6 +293,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "main_generated.h"
 #include "main_generated.h"
 #include "main_generated.h"
+#include "main_generated.h"
+#include "main_generated.h"
 
 struct Record;
 struct RecordBuilder;
@@ -2169,11 +2171,13 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_TBP = 278,
   RecordTypeExtended_WHA = 279,
   RecordTypeExtended_XMT = 280,
+  RecordTypeExtended_EXO = 281,
+  RecordTypeExtended_GLX = 282,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_XMT
+  RecordTypeExtended_MAX = RecordTypeExtended_GLX
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[26] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[28] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2200,7 +2204,9 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[26] {
     RecordTypeExtended_SRG,
     RecordTypeExtended_TBP,
     RecordTypeExtended_WHA,
-    RecordTypeExtended_XMT
+    RecordTypeExtended_XMT,
+    RecordTypeExtended_EXO,
+    RecordTypeExtended_GLX
   };
   return values;
 }
@@ -2233,6 +2239,8 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_TBP: return "TBP";
     case RecordTypeExtended_WHA: return "WHA";
     case RecordTypeExtended_XMT: return "XMT";
+    case RecordTypeExtended_EXO: return "EXO";
+    case RecordTypeExtended_GLX: return "GLX";
     default: return "";
   }
 }

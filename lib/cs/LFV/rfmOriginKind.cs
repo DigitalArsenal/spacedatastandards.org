@@ -18,4 +18,8 @@ public enum rfmOriginKind : byte
   /// A fixed site on a body surface, identified by SITE_ID and the geodetic
   /// fields on RFMOrigin.
   GROUND_SITE = 5,
+  /// Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+  /// roll and velocity are explicit parameters on RFMCoordinateSystem.
+  /// No ephemeris body code is implied by this origin.
+  GALACTIC_CENTER = 6,
 };
