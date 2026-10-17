@@ -77,6 +77,43 @@ public struct RFMCoordinateSystem : IFlatbufferObject
   public ArraySegment<byte>? GetEOP_DATA_SET_CIDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetEOP_DATA_SET_CIDArray() { return __p.__vector_as_array<byte>(24); }
+  /// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+  /// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+  public double GALCEN_RA_DEG { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ICRS declination of the Galactic center, degrees. NaN means absent.
+  /// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+  public double GALCEN_DEC_DEG { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+  /// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+  public double GALCEN_DISTANCE_PC { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Solar height above the Galactic midplane, parsecs, positive north.
+  /// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+  public double Z_SUN_PC { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Roll angle in degrees in the Astropy Galactocentric convention.
+  /// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+  /// parameters define a derived Galactocentric orientation: X points from
+  /// the Sun toward the center's projection in the midplane, Y follows
+  /// Galactic rotation, and Z completes a right-handed triad toward Galactic
+  /// north. This parameterized orientation is independent of ORIGIN; with
+  /// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+  /// All five scalars must be finite for a spatial Galactocentric transform,
+  /// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+  public double ROLL_DEG { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+  /// axes, including circular motion (not just peculiar U,V,W). Exactly three
+  /// components when present; omit the vector when unknown, or use NaN for
+  /// an unknown component. A velocity transform requires all three finite.
+  /// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+  /// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+  /// Publishers must state their adopted total velocity; no default is implied.
+  public double V_SUN_KMS(int j) { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int V_SUN_KMSLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetV_SUN_KMSBytes() { return __p.__vector_as_span<double>(36, 8); }
+#else
+  public ArraySegment<byte>? GetV_SUN_KMSBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public double[] GetV_SUN_KMSArray() { return __p.__vector_as_array<double>(36); }
 
   public static Offset<RFMCoordinateSystem> CreateRFMCoordinateSystem(FlatBufferBuilder builder,
       StringOffset NAMEOffset = default(StringOffset),
@@ -89,8 +126,20 @@ public struct RFMCoordinateSystem : IFlatbufferObject
       Offset<RFMLocalAlignedConstrainedAxes> LOCAL_ALIGNED_CONSTRAINED_AXESOffset = default(Offset<RFMLocalAlignedConstrainedAxes>),
       StringOffset KERNEL_FRAME_NAMEOffset = default(StringOffset),
       int KERNEL_FRAME_ID = 0,
-      StringOffset EOP_DATA_SET_CIDOffset = default(StringOffset)) {
-    builder.StartTable(11);
+      StringOffset EOP_DATA_SET_CIDOffset = default(StringOffset),
+      double GALCEN_RA_DEG = Double.NaN,
+      double GALCEN_DEC_DEG = Double.NaN,
+      double GALCEN_DISTANCE_PC = Double.NaN,
+      double Z_SUN_PC = Double.NaN,
+      double ROLL_DEG = Double.NaN,
+      VectorOffset V_SUN_KMSOffset = default(VectorOffset)) {
+    builder.StartTable(17);
+    RFMCoordinateSystem.AddROLL_DEG(builder, ROLL_DEG);
+    RFMCoordinateSystem.AddZ_SUN_PC(builder, Z_SUN_PC);
+    RFMCoordinateSystem.AddGALCEN_DISTANCE_PC(builder, GALCEN_DISTANCE_PC);
+    RFMCoordinateSystem.AddGALCEN_DEC_DEG(builder, GALCEN_DEC_DEG);
+    RFMCoordinateSystem.AddGALCEN_RA_DEG(builder, GALCEN_RA_DEG);
+    RFMCoordinateSystem.AddV_SUN_KMS(builder, V_SUN_KMSOffset);
     RFMCoordinateSystem.AddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CIDOffset);
     RFMCoordinateSystem.AddKERNEL_FRAME_ID(builder, KERNEL_FRAME_ID);
     RFMCoordinateSystem.AddKERNEL_FRAME_NAME(builder, KERNEL_FRAME_NAMEOffset);
@@ -105,7 +154,7 @@ public struct RFMCoordinateSystem : IFlatbufferObject
     return RFMCoordinateSystem.EndRFMCoordinateSystem(builder);
   }
 
-  public static void StartRFMCoordinateSystem(FlatBufferBuilder builder) { builder.StartTable(11); }
+  public static void StartRFMCoordinateSystem(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
   public static void AddAXIS_TYPE(FlatBufferBuilder builder, rfmAxisType AXIS_TYPE) { builder.AddByte(1, (byte)AXIS_TYPE, 0); }
   public static void AddORIGIN(FlatBufferBuilder builder, Offset<RFMOrigin> ORIGINOffset) { builder.AddOffset(2, ORIGINOffset.Value, 0); }
@@ -117,6 +166,17 @@ public struct RFMCoordinateSystem : IFlatbufferObject
   public static void AddKERNEL_FRAME_NAME(FlatBufferBuilder builder, StringOffset KERNEL_FRAME_NAMEOffset) { builder.AddOffset(8, KERNEL_FRAME_NAMEOffset.Value, 0); }
   public static void AddKERNEL_FRAME_ID(FlatBufferBuilder builder, int KERNEL_FRAME_ID) { builder.AddInt(9, KERNEL_FRAME_ID, 0); }
   public static void AddEOP_DATA_SET_CID(FlatBufferBuilder builder, StringOffset EOP_DATA_SET_CIDOffset) { builder.AddOffset(10, EOP_DATA_SET_CIDOffset.Value, 0); }
+  public static void AddGALCEN_RA_DEG(FlatBufferBuilder builder, double GALCEN_RA_DEG) { builder.AddDouble(11, GALCEN_RA_DEG, Double.NaN); }
+  public static void AddGALCEN_DEC_DEG(FlatBufferBuilder builder, double GALCEN_DEC_DEG) { builder.AddDouble(12, GALCEN_DEC_DEG, Double.NaN); }
+  public static void AddGALCEN_DISTANCE_PC(FlatBufferBuilder builder, double GALCEN_DISTANCE_PC) { builder.AddDouble(13, GALCEN_DISTANCE_PC, Double.NaN); }
+  public static void AddZ_SUN_PC(FlatBufferBuilder builder, double Z_SUN_PC) { builder.AddDouble(14, Z_SUN_PC, Double.NaN); }
+  public static void AddROLL_DEG(FlatBufferBuilder builder, double ROLL_DEG) { builder.AddDouble(15, ROLL_DEG, Double.NaN); }
+  public static void AddV_SUN_KMS(FlatBufferBuilder builder, VectorOffset V_SUN_KMSOffset) { builder.AddOffset(16, V_SUN_KMSOffset.Value, 0); }
+  public static VectorOffset CreateV_SUN_KMSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateV_SUN_KMSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateV_SUN_KMSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateV_SUN_KMSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartV_SUN_KMSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<RFMCoordinateSystem> EndRFMCoordinateSystem(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFMCoordinateSystem>(o);
@@ -138,6 +198,13 @@ public struct RFMCoordinateSystem : IFlatbufferObject
     _o.KERNEL_FRAME_NAME = this.KERNEL_FRAME_NAME;
     _o.KERNEL_FRAME_ID = this.KERNEL_FRAME_ID;
     _o.EOP_DATA_SET_CID = this.EOP_DATA_SET_CID;
+    _o.GALCEN_RA_DEG = this.GALCEN_RA_DEG;
+    _o.GALCEN_DEC_DEG = this.GALCEN_DEC_DEG;
+    _o.GALCEN_DISTANCE_PC = this.GALCEN_DISTANCE_PC;
+    _o.Z_SUN_PC = this.Z_SUN_PC;
+    _o.ROLL_DEG = this.ROLL_DEG;
+    _o.V_SUN_KMS = new List<double>();
+    for (var _j = 0; _j < this.V_SUN_KMSLength; ++_j) {_o.V_SUN_KMS.Add(this.V_SUN_KMS(_j));}
   }
   public static Offset<RFMCoordinateSystem> Pack(FlatBufferBuilder builder, RFMCoordinateSystemT _o) {
     if (_o == null) return default(Offset<RFMCoordinateSystem>);
@@ -149,6 +216,11 @@ public struct RFMCoordinateSystem : IFlatbufferObject
     var _LOCAL_ALIGNED_CONSTRAINED_AXES = _o.LOCAL_ALIGNED_CONSTRAINED_AXES == null ? default(Offset<RFMLocalAlignedConstrainedAxes>) : RFMLocalAlignedConstrainedAxes.Pack(builder, _o.LOCAL_ALIGNED_CONSTRAINED_AXES);
     var _KERNEL_FRAME_NAME = _o.KERNEL_FRAME_NAME == null ? default(StringOffset) : builder.CreateString(_o.KERNEL_FRAME_NAME);
     var _EOP_DATA_SET_CID = _o.EOP_DATA_SET_CID == null ? default(StringOffset) : builder.CreateString(_o.EOP_DATA_SET_CID);
+    var _V_SUN_KMS = default(VectorOffset);
+    if (_o.V_SUN_KMS != null) {
+      var __V_SUN_KMS = _o.V_SUN_KMS.ToArray();
+      _V_SUN_KMS = CreateV_SUN_KMSVector(builder, __V_SUN_KMS);
+    }
     return CreateRFMCoordinateSystem(
       builder,
       _NAME,
@@ -161,7 +233,13 @@ public struct RFMCoordinateSystem : IFlatbufferObject
       _LOCAL_ALIGNED_CONSTRAINED_AXES,
       _KERNEL_FRAME_NAME,
       _o.KERNEL_FRAME_ID,
-      _EOP_DATA_SET_CID);
+      _EOP_DATA_SET_CID,
+      _o.GALCEN_RA_DEG,
+      _o.GALCEN_DEC_DEG,
+      _o.GALCEN_DISTANCE_PC,
+      _o.Z_SUN_PC,
+      _o.ROLL_DEG,
+      _V_SUN_KMS);
   }
 }
 
@@ -178,6 +256,12 @@ public class RFMCoordinateSystemT
   public string KERNEL_FRAME_NAME { get; set; }
   public int KERNEL_FRAME_ID { get; set; }
   public string EOP_DATA_SET_CID { get; set; }
+  public double GALCEN_RA_DEG { get; set; }
+  public double GALCEN_DEC_DEG { get; set; }
+  public double GALCEN_DISTANCE_PC { get; set; }
+  public double Z_SUN_PC { get; set; }
+  public double ROLL_DEG { get; set; }
+  public List<double> V_SUN_KMS { get; set; }
 
   public RFMCoordinateSystemT() {
     this.NAME = null;
@@ -191,6 +275,12 @@ public class RFMCoordinateSystemT
     this.KERNEL_FRAME_NAME = null;
     this.KERNEL_FRAME_ID = 0;
     this.EOP_DATA_SET_CID = null;
+    this.GALCEN_RA_DEG = Double.NaN;
+    this.GALCEN_DEC_DEG = Double.NaN;
+    this.GALCEN_DISTANCE_PC = Double.NaN;
+    this.Z_SUN_PC = Double.NaN;
+    this.ROLL_DEG = Double.NaN;
+    this.V_SUN_KMS = null;
   }
 }
 
@@ -211,6 +301,12 @@ static public class RFMCoordinateSystemVerify
       && verifier.VerifyString(tablePos, 20 /*KERNEL_FRAME_NAME*/, false)
       && verifier.VerifyField(tablePos, 22 /*KERNEL_FRAME_ID*/, 4 /*int*/, 4, false)
       && verifier.VerifyString(tablePos, 24 /*EOP_DATA_SET_CID*/, false)
+      && verifier.VerifyField(tablePos, 26 /*GALCEN_RA_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*GALCEN_DEC_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*GALCEN_DISTANCE_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*Z_SUN_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*ROLL_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 36 /*V_SUN_KMS*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

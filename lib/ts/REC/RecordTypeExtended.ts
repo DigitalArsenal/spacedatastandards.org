@@ -37,5 +37,7 @@ export enum RecordTypeExtended {
   SRG = 277,
   TBP = 278,
   WHA = 279,
-  XMT = 280
+  XMT = 280,
+  EXO = 281,
+  GLX = 282
 }

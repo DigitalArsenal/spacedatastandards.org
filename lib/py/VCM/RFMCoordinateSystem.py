@@ -137,8 +137,94 @@ class RFMCoordinateSystem(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # ICRS right ascension of the Galactic center, degrees. NaN means absent.
+    # Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+    # RFMCoordinateSystem
+    def GALCEN_RA_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ICRS declination of the Galactic center, degrees. NaN means absent.
+    # Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+    # RFMCoordinateSystem
+    def GALCEN_DEC_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+    # Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+    # RFMCoordinateSystem
+    def GALCEN_DISTANCE_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Solar height above the Galactic midplane, parsecs, positive north.
+    # NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+    # RFMCoordinateSystem
+    def Z_SUN_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Roll angle in degrees in the Astropy Galactocentric convention.
+    # NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+    # parameters define a derived Galactocentric orientation: X points from
+    # the Sun toward the center's projection in the midplane, Y follows
+    # Galactic rotation, and Z completes a right-handed triad toward Galactic
+    # north. This parameterized orientation is independent of ORIGIN; with
+    # GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+    # All five scalars must be finite for a spatial Galactocentric transform,
+    # with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+    # RFMCoordinateSystem
+    def ROLL_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+    # axes, including circular motion (not just peculiar U,V,W). Exactly three
+    # components when present; omit the vector when unknown, or use NaN for
+    # an unknown component. A velocity transform requires all three finite.
+    # Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+    # motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+    # Publishers must state their adopted total velocity; no default is implied.
+    # RFMCoordinateSystem
+    def V_SUN_KMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # RFMCoordinateSystem
+    def V_SUN_KMSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # RFMCoordinateSystem
+    def V_SUN_KMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # RFMCoordinateSystem
+    def V_SUN_KMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        return o == 0
+
 def RFMCoordinateSystemStart(builder):
-    builder.StartObject(11)
+    builder.StartObject(17)
 
 def Start(builder):
     RFMCoordinateSystemStart(builder)
@@ -209,6 +295,58 @@ def RFMCoordinateSystemAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
 def AddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID):
     RFMCoordinateSystemAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
 
+def RFMCoordinateSystemAddGALCEN_RA_DEG(builder, GALCEN_RA_DEG):
+    builder.PrependFloat64Slot(11, GALCEN_RA_DEG, float('nan'))
+
+def AddGALCEN_RA_DEG(builder, GALCEN_RA_DEG):
+    RFMCoordinateSystemAddGALCEN_RA_DEG(builder, GALCEN_RA_DEG)
+
+def RFMCoordinateSystemAddGALCEN_DEC_DEG(builder, GALCEN_DEC_DEG):
+    builder.PrependFloat64Slot(12, GALCEN_DEC_DEG, float('nan'))
+
+def AddGALCEN_DEC_DEG(builder, GALCEN_DEC_DEG):
+    RFMCoordinateSystemAddGALCEN_DEC_DEG(builder, GALCEN_DEC_DEG)
+
+def RFMCoordinateSystemAddGALCEN_DISTANCE_PC(builder, GALCEN_DISTANCE_PC):
+    builder.PrependFloat64Slot(13, GALCEN_DISTANCE_PC, float('nan'))
+
+def AddGALCEN_DISTANCE_PC(builder, GALCEN_DISTANCE_PC):
+    RFMCoordinateSystemAddGALCEN_DISTANCE_PC(builder, GALCEN_DISTANCE_PC)
+
+def RFMCoordinateSystemAddZ_SUN_PC(builder, Z_SUN_PC):
+    builder.PrependFloat64Slot(14, Z_SUN_PC, float('nan'))
+
+def AddZ_SUN_PC(builder, Z_SUN_PC):
+    RFMCoordinateSystemAddZ_SUN_PC(builder, Z_SUN_PC)
+
+def RFMCoordinateSystemAddROLL_DEG(builder, ROLL_DEG):
+    builder.PrependFloat64Slot(15, ROLL_DEG, float('nan'))
+
+def AddROLL_DEG(builder, ROLL_DEG):
+    RFMCoordinateSystemAddROLL_DEG(builder, ROLL_DEG)
+
+def RFMCoordinateSystemAddV_SUN_KMS(builder, V_SUN_KMS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(V_SUN_KMS), 0)
+
+def AddV_SUN_KMS(builder, V_SUN_KMS):
+    RFMCoordinateSystemAddV_SUN_KMS(builder, V_SUN_KMS)
+
+def RFMCoordinateSystemStartV_SUN_KMSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartV_SUN_KMSVector(builder, numElems):
+    return RFMCoordinateSystemStartV_SUN_KMSVector(builder, numElems)
+
+def RFMCoordinateSystemCreateV_SUN_KMSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateV_SUN_KMSVector(builder, data):
+    return RFMCoordinateSystemCreateV_SUN_KMSVector(builder, data)
+
 def RFMCoordinateSystemEnd(builder):
     return builder.EndObject()
 
@@ -219,7 +357,7 @@ import RFMLocalAlignedConstrainedAxes
 import RFMObjectReferencedAxes
 import RFMOrigin
 try:
-    from typing import Optional
+    from typing import List, Optional
 except:
     pass
 
@@ -239,6 +377,12 @@ class RFMCoordinateSystemT(object):
         KERNEL_FRAME_NAME = None,
         KERNEL_FRAME_ID = 0,
         EOP_DATA_SET_CID = None,
+        GALCEN_RA_DEG = float('nan'),
+        GALCEN_DEC_DEG = float('nan'),
+        GALCEN_DISTANCE_PC = float('nan'),
+        Z_SUN_PC = float('nan'),
+        ROLL_DEG = float('nan'),
+        V_SUN_KMS = None,
     ):
         self.NAME = NAME  # type: Optional[str]
         self.AXIS_TYPE = AXIS_TYPE  # type: int
@@ -251,6 +395,12 @@ class RFMCoordinateSystemT(object):
         self.KERNEL_FRAME_NAME = KERNEL_FRAME_NAME  # type: Optional[str]
         self.KERNEL_FRAME_ID = KERNEL_FRAME_ID  # type: int
         self.EOP_DATA_SET_CID = EOP_DATA_SET_CID  # type: Optional[str]
+        self.GALCEN_RA_DEG = GALCEN_RA_DEG  # type: float
+        self.GALCEN_DEC_DEG = GALCEN_DEC_DEG  # type: float
+        self.GALCEN_DISTANCE_PC = GALCEN_DISTANCE_PC  # type: float
+        self.Z_SUN_PC = Z_SUN_PC  # type: float
+        self.ROLL_DEG = ROLL_DEG  # type: float
+        self.V_SUN_KMS = V_SUN_KMS  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -287,6 +437,18 @@ class RFMCoordinateSystemT(object):
         self.KERNEL_FRAME_NAME = RFMCoordinateSystem.KERNEL_FRAME_NAME()
         self.KERNEL_FRAME_ID = RFMCoordinateSystem.KERNEL_FRAME_ID()
         self.EOP_DATA_SET_CID = RFMCoordinateSystem.EOP_DATA_SET_CID()
+        self.GALCEN_RA_DEG = RFMCoordinateSystem.GALCEN_RA_DEG()
+        self.GALCEN_DEC_DEG = RFMCoordinateSystem.GALCEN_DEC_DEG()
+        self.GALCEN_DISTANCE_PC = RFMCoordinateSystem.GALCEN_DISTANCE_PC()
+        self.Z_SUN_PC = RFMCoordinateSystem.Z_SUN_PC()
+        self.ROLL_DEG = RFMCoordinateSystem.ROLL_DEG()
+        if not RFMCoordinateSystem.V_SUN_KMSIsNone():
+            if np is None:
+                self.V_SUN_KMS = []
+                for i in range(RFMCoordinateSystem.V_SUN_KMSLength()):
+                    self.V_SUN_KMS.append(RFMCoordinateSystem.V_SUN_KMS(i))
+            else:
+                self.V_SUN_KMS = RFMCoordinateSystem.V_SUN_KMSAsNumpy()
 
     # RFMCoordinateSystemT
     def Pack(self, builder):
@@ -306,6 +468,14 @@ class RFMCoordinateSystemT(object):
             KERNEL_FRAME_NAME = builder.CreateString(self.KERNEL_FRAME_NAME)
         if self.EOP_DATA_SET_CID is not None:
             EOP_DATA_SET_CID = builder.CreateString(self.EOP_DATA_SET_CID)
+        if self.V_SUN_KMS is not None:
+            if np is not None and type(self.V_SUN_KMS) is np.ndarray:
+                V_SUN_KMS = builder.CreateNumpyVector(self.V_SUN_KMS)
+            else:
+                RFMCoordinateSystemStartV_SUN_KMSVector(builder, len(self.V_SUN_KMS))
+                for i in reversed(range(len(self.V_SUN_KMS))):
+                    builder.PrependFloat64(self.V_SUN_KMS[i])
+                V_SUN_KMS = builder.EndVector()
         RFMCoordinateSystemStart(builder)
         if self.NAME is not None:
             RFMCoordinateSystemAddNAME(builder, NAME)
@@ -326,5 +496,12 @@ class RFMCoordinateSystemT(object):
         RFMCoordinateSystemAddKERNEL_FRAME_ID(builder, self.KERNEL_FRAME_ID)
         if self.EOP_DATA_SET_CID is not None:
             RFMCoordinateSystemAddEOP_DATA_SET_CID(builder, EOP_DATA_SET_CID)
+        RFMCoordinateSystemAddGALCEN_RA_DEG(builder, self.GALCEN_RA_DEG)
+        RFMCoordinateSystemAddGALCEN_DEC_DEG(builder, self.GALCEN_DEC_DEG)
+        RFMCoordinateSystemAddGALCEN_DISTANCE_PC(builder, self.GALCEN_DISTANCE_PC)
+        RFMCoordinateSystemAddZ_SUN_PC(builder, self.Z_SUN_PC)
+        RFMCoordinateSystemAddROLL_DEG(builder, self.ROLL_DEG)
+        if self.V_SUN_KMS is not None:
+            RFMCoordinateSystemAddV_SUN_KMS(builder, V_SUN_KMS)
         RFMCoordinateSystem = RFMCoordinateSystemEnd(builder)
         return RFMCoordinateSystem

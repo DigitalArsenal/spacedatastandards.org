@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "glxDistanceTechnique" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "TRGB", "CEPHEID", "SBF", "TULLY_FISHER", "FUNDAMENTAL_PLANE", "SN_IA", "MEMBERSHIP", "HUBBLE_FLOW", "OTHER"]
+    },
+    "glxRedshiftTechnique" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SPECTROSCOPIC", "PHOTOMETRIC", "OTHER"]
+    },
+    "glxSpectralRestFrame" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "HELIOCENTER", "CMB", "BARYCENTER", "OTHER"]
+    },
+    "glxObjectCategory" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "GALAXY", "QUASAR", "OTHER"]
+    },
+    "glxTruthValue" : {
+      "type" : "string",
+      "enum": ["UNKNOWN", "NO", "YES"]
+    },
+    "GLX" : {
+      "type" : "object",
+      "properties" : {
+        "ID" : {
+                "type" : "string"
+              },
+        "NAME" : {
+                "type" : "string"
+              },
+        "DESIGNATIONS" : {
+                "type" : "array", "items" : {"type" : "string"}
+              },
+        "RA_DEG" : {
+                "type" : "number",
+                "description" : "ICRS right ascension and declination, degrees."
+              },
+        "DEC_DEG" : {
+                "type" : "number"
+              },
+        "CSO_ID" : {
+                "type" : "string"
+              },
+        "DISTANCE_MPC" : {
+                "type" : "number",
+                "description" : "Published distance and uncertainty in Mpc; METHOD and REF name its basis."
+              },
+        "DISTANCE_UNC_MPC" : {
+                "type" : "number"
+              },
+        "DISTANCE_METHOD" : {
+                "$ref" : "#/definitions/glxDistanceTechnique"
+              },
+        "DISTANCE_REF" : {
+                "type" : "string"
+              },
+        "HELIO_VELOCITY_KMS" : {
+                "type" : "number",
+                "description" : "Published heliocentric radial velocity, km/s. Do not substitute c*z."
+              },
+        "REDSHIFT" : {
+                "type" : "number",
+                "description" : "Dimensionless z; its uncertainty, technique and rest frame are below."
+              },
+        "ISOPHOTAL_MAJOR_ARCMIN" : {
+                "type" : "number",
+                "description" : "Full major-axis diameter, arcmin, at the named band and surface brightness."
+              },
+        "ISOPHOTE_BAND" : {
+                "type" : "string",
+                "description" : "Source band token, e.g. B or Ks. D25 B and K20 Ks are different isophotes."
+              },
+        "ISOPHOTE_LEVEL" : {
+                "type" : "number",
+                "description" : "Surface-brightness threshold in mag/arcsec^2, e.g. 25 in B or 20 in Ks."
+              },
+        "AXIS_RATIO" : {
+                "type" : "number",
+                "description" : "Minor/major ratio b/a, dimensionless; position angle east of north, degrees."
+              },
+        "PA_DEG" : {
+                "type" : "number"
+              },
+        "INCLINATION_DEG" : {
+                "type" : "number",
+                "description" : "Disk inclination, degrees; source estimate, never inferred from b/a here."
+              },
+        "T_TYPE" : {
+                "type" : "number",
+                "description" : "Numerical de Vaucouleurs morphology, not an integer category or default."
+              },
+        "HUBBLE_CLASS" : {
+                "type" : "string"
+              },
+        "BAR" : {
+                "type" : "string",
+                "description" : "Source bar classification verbatim (e.g. SA, SAB, SB); absent is unknown."
+              },
+        "B_TOTAL_MAG" : {
+                "type" : "number"
+              },
+        "K_TOTAL_MAG" : {
+                "type" : "number"
+              },
+        "GROUP_ID" : {
+                "type" : "string",
+                "description" : "Catalog-qualified group identifier, also usable for finger-of-God grouping."
+              },
+        "LOCAL_GROUP_MEMBER" : {
+                "$ref" : "#/definitions/glxTruthValue"
+              },
+        "SOURCE_CATALOG" : {
+                "type" : "string"
+              },
+        "CITATION" : {
+                "type" : "string"
+              },
+        "LICENSE" : {
+                "type" : "string",
+                "description" : "Dataset license; absent means unknown terms, not a redistribution grant."
+              },
+        "REDSHIFT_UNC" : {
+                "type" : "number"
+              },
+        "REDSHIFT_KIND" : {
+                "$ref" : "#/definitions/glxRedshiftTechnique"
+              },
+        "REDSHIFT_FRAME" : {
+                "$ref" : "#/definitions/glxSpectralRestFrame"
+              },
+        "SOURCE_CLASS" : {
+                "$ref" : "#/definitions/glxObjectCategory"
+              },
+        "SURVEY" : {
+                "type" : "string"
+              },
+        "RELEASE" : {
+                "type" : "string"
+              },
+        "TARGET_SAMPLE" : {
+                "type" : "string"
+              },
+        "COMOVING_DISTANCE_MPC" : {
+                "type" : "number",
+                "description" : "Line-of-sight comoving distance in Mpc, with the adopted cosmology below."
+              },
+        "LIGHT_TRAVEL_DISTANCE_MPC" : {
+                "type" : "number",
+                "description" : "c times lookback time, Mpc; distinct from comoving or luminosity distance."
+              },
+        "COSMOLOGY_ID" : {
+                "type" : "string",
+                "description" : "Versioned parameter-set identifier, e.g. Planck18; no implicit cosmology."
+              }
+      },
+      "required" : ["ID"],
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GLX"
+}

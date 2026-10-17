@@ -686,6 +686,8 @@ enum RecordTypeExtended:
     RecordTypeExtended_TBP = 278
     RecordTypeExtended_WHA = 279
     RecordTypeExtended_XMT = 280
+    RecordTypeExtended_EXO = 281
+    RecordTypeExtended_GLX = 282
 
 class Record
 

@@ -21,6 +21,10 @@ const (
 	/// A fixed site on a body surface, identified by SITE_ID and the geodetic
 	/// fields on RFMOrigin.
 	rfmOriginKindGROUND_SITE     rfmOriginKind = 5
+	/// Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+	/// roll and velocity are explicit parameters on RFMCoordinateSystem.
+	/// No ephemeris body code is implied by this origin.
+	rfmOriginKindGALACTIC_CENTER rfmOriginKind = 6
 )
 
 var EnumNamesrfmOriginKind = map[rfmOriginKind]string{
@@ -30,6 +34,7 @@ var EnumNamesrfmOriginKind = map[rfmOriginKind]string{
 	rfmOriginKindLIBRATION_POINT: "LIBRATION_POINT",
 	rfmOriginKindSPACE_OBJECT:    "SPACE_OBJECT",
 	rfmOriginKindGROUND_SITE:     "GROUND_SITE",
+	rfmOriginKindGALACTIC_CENTER: "GALACTIC_CENTER",
 }
 
 var EnumValuesrfmOriginKind = map[string]rfmOriginKind{
@@ -39,6 +44,7 @@ var EnumValuesrfmOriginKind = map[string]rfmOriginKind{
 	"LIBRATION_POINT": rfmOriginKindLIBRATION_POINT,
 	"SPACE_OBJECT":    rfmOriginKindSPACE_OBJECT,
 	"GROUND_SITE":     rfmOriginKindGROUND_SITE,
+	"GALACTIC_CENTER": rfmOriginKindGALACTIC_CENTER,
 }
 
 func (v rfmOriginKind) String() string {

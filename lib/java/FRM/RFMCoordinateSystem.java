@@ -92,6 +92,53 @@ public final class RFMCoordinateSystem extends com.google.flatbuffers.Table {
   public String EOP_DATA_SET_CID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EOP_DATA_SET_CIDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer EOP_DATA_SET_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * ICRS right ascension of the Galactic center, degrees. NaN means absent.
+   * Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+   */
+  public double GALCEN_RA_DEG() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ICRS declination of the Galactic center, degrees. NaN means absent.
+   * Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+   */
+  public double GALCEN_DEC_DEG() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+   * Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+   */
+  public double GALCEN_DISTANCE_PC() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Solar height above the Galactic midplane, parsecs, positive north.
+   * NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+   */
+  public double Z_SUN_PC() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Roll angle in degrees in the Astropy Galactocentric convention.
+   * NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+   * parameters define a derived Galactocentric orientation: X points from
+   * the Sun toward the center's projection in the midplane, Y follows
+   * Galactic rotation, and Z completes a right-handed triad toward Galactic
+   * north. This parameterized orientation is independent of ORIGIN; with
+   * GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+   * All five scalars must be finite for a spatial Galactocentric transform,
+   * with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+   */
+  public double ROLL_DEG() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+   * axes, including circular motion (not just peculiar U,V,W). Exactly three
+   * components when present; omit the vector when unknown, or use NaN for
+   * an unknown component. A velocity transform requires all three finite.
+   * Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+   * motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+   * Publishers must state their adopted total velocity; no default is implied.
+   */
+  public double V_SUN_KMS(int j) { int o = __offset(36); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int V_SUN_KMSLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector vSunKmsVector() { return vSunKmsVector(new DoubleVector()); }
+  public DoubleVector vSunKmsVector(DoubleVector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer V_SUN_KMSAsByteBuffer() { return __vector_as_bytebuffer(36, 8); }
+  public ByteBuffer V_SUN_KMSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 8); }
 
   public static int createRFMCoordinateSystem(FlatBufferBuilder builder,
       int NAMEOffset,
@@ -104,8 +151,20 @@ public final class RFMCoordinateSystem extends com.google.flatbuffers.Table {
       int LOCAL_ALIGNED_CONSTRAINED_AXESOffset,
       int KERNEL_FRAME_NAMEOffset,
       int KERNEL_FRAME_ID,
-      int EOP_DATA_SET_CIDOffset) {
-    builder.startTable(11);
+      int EOP_DATA_SET_CIDOffset,
+      double GALCEN_RA_DEG,
+      double GALCEN_DEC_DEG,
+      double GALCEN_DISTANCE_PC,
+      double Z_SUN_PC,
+      double ROLL_DEG,
+      int V_SUN_KMSOffset) {
+    builder.startTable(17);
+    RFMCoordinateSystem.addRollDeg(builder, ROLL_DEG);
+    RFMCoordinateSystem.addZSunPc(builder, Z_SUN_PC);
+    RFMCoordinateSystem.addGalcenDistancePc(builder, GALCEN_DISTANCE_PC);
+    RFMCoordinateSystem.addGalcenDecDeg(builder, GALCEN_DEC_DEG);
+    RFMCoordinateSystem.addGalcenRaDeg(builder, GALCEN_RA_DEG);
+    RFMCoordinateSystem.addVSunKms(builder, V_SUN_KMSOffset);
     RFMCoordinateSystem.addEopDataSetCid(builder, EOP_DATA_SET_CIDOffset);
     RFMCoordinateSystem.addKernelFrameId(builder, KERNEL_FRAME_ID);
     RFMCoordinateSystem.addKernelFrameName(builder, KERNEL_FRAME_NAMEOffset);
@@ -120,7 +179,7 @@ public final class RFMCoordinateSystem extends com.google.flatbuffers.Table {
     return RFMCoordinateSystem.endRFMCoordinateSystem(builder);
   }
 
-  public static void startRFMCoordinateSystem(FlatBufferBuilder builder) { builder.startTable(11); }
+  public static void startRFMCoordinateSystem(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
   public static void addAxisType(FlatBufferBuilder builder, int AXIS_TYPE) { builder.addByte(1, (byte) AXIS_TYPE, (byte) 0); }
   public static void addOrigin(FlatBufferBuilder builder, int ORIGINOffset) { builder.addOffset(2, ORIGINOffset, 0); }
@@ -132,6 +191,14 @@ public final class RFMCoordinateSystem extends com.google.flatbuffers.Table {
   public static void addKernelFrameName(FlatBufferBuilder builder, int KERNEL_FRAME_NAMEOffset) { builder.addOffset(8, KERNEL_FRAME_NAMEOffset, 0); }
   public static void addKernelFrameId(FlatBufferBuilder builder, int KERNEL_FRAME_ID) { builder.addInt(9, KERNEL_FRAME_ID, 0); }
   public static void addEopDataSetCid(FlatBufferBuilder builder, int EOP_DATA_SET_CIDOffset) { builder.addOffset(10, EOP_DATA_SET_CIDOffset, 0); }
+  public static void addGalcenRaDeg(FlatBufferBuilder builder, double GALCEN_RA_DEG) { builder.addDouble(11, GALCEN_RA_DEG, Double.NaN); }
+  public static void addGalcenDecDeg(FlatBufferBuilder builder, double GALCEN_DEC_DEG) { builder.addDouble(12, GALCEN_DEC_DEG, Double.NaN); }
+  public static void addGalcenDistancePc(FlatBufferBuilder builder, double GALCEN_DISTANCE_PC) { builder.addDouble(13, GALCEN_DISTANCE_PC, Double.NaN); }
+  public static void addZSunPc(FlatBufferBuilder builder, double Z_SUN_PC) { builder.addDouble(14, Z_SUN_PC, Double.NaN); }
+  public static void addRollDeg(FlatBufferBuilder builder, double ROLL_DEG) { builder.addDouble(15, ROLL_DEG, Double.NaN); }
+  public static void addVSunKms(FlatBufferBuilder builder, int V_SUN_KMSOffset) { builder.addOffset(16, V_SUN_KMSOffset, 0); }
+  public static int createVSunKmsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startVSunKmsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int endRFMCoordinateSystem(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

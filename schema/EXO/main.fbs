@@ -1,0 +1,95 @@
+// Hash: e8944dd1837a9f5f903c11e11556703364a7db572adf0f817d6d9e102fa2704f
+// Version: 1.252.0
+// -----------------------------------END_HEADER
+/// One exoplanet and its independently sourced parameters. Column stems follow
+/// NASA Exoplanet Archive PSCompPars (uppercase at the SDS boundary):
+/// https://exoplanetarchive.ipac.caltech.edu/docs/API_PS_columns.html
+/// Composite parameters need not form one self-consistent orbital solution.
+/// Never propagate a citation from one parameter to another or assume an epoch.
+
+enum exoDisposition : ubyte {
+  UNSPECIFIED = 0, CONFIRMED = 1, CANDIDATE = 2, DISPUTED = 3, RETRACTED = 4
+}
+
+/// A measured value, its asymmetric uncertainties, and its own provenance.
+/// An absent table means no parameter was supplied. NaN means a missing numeric
+/// cell, including when the archive supplies a reference or limit but no value.
+table EXOParameter {
+  VALUE: double = nan;
+  /// Archive ERR1 (positive) and ERR2 (negative), retained without symmetrizing.
+  ERR1: double = nan;
+  ERR2: double = nan;
+  /// Archive limit flag: 0 measurement, +1 upper limit, -1 lower limit.
+  /// -128 means the source did not supply a flag; it is not a measurement.
+  LIMIT: byte = -128;
+  /// Archive display string, if supplied, preserved without parsing/rounding.
+  DISPLAY: string;
+  /// Unit of VALUE/ERR1/ERR2, using IVOA VOUnits (d, deg, AU, K, or 1).
+  /// Earth radius/mass are archive units R_earth and M_earth, not SI estimates.
+  UNIT: string (required);
+  /// ADS bibcode when provided or unambiguously present in the source link.
+  /// Absent means unknown; archive references are not always ADS publications.
+  REFERENCE_BIBCODE: string;
+  REFERENCE_URL: string;
+  /// The complete source reference cell, including archive reflink markup.
+  REFERENCE_TEXT: string;
+  /// ISO 8601 UTC retrieval time of this parameter's source.
+  RETRIEVED_AT: string (required);
+}
+
+table EXO {
+  PL_NAME: string (required);
+  HOSTNAME: string;
+  /// Archive identifier string, e.g. Gaia DR3 <source_id>. Never a JS number.
+  GAIA_DR3_ID: string;
+  SIMBAD_ID: string;
+  /// Period in days; semimajor axis in AU; eccentricity dimensionless.
+  PL_ORBPER: EXOParameter;
+  PL_ORBSMAX: EXOParameter;
+  PL_ORBECCEN: EXOParameter;
+  /// Argument of periastron and orbital inclination in degrees. The archive
+  /// preserves each publication's convention (planet/star omega may differ).
+  PL_ORBLPER: EXOParameter;
+  PL_ORBINCL: EXOParameter;
+  /// Transit midpoint T0 and periastron epoch Tp, JD in their named systems.
+  PL_TRANMID: EXOParameter;
+  PL_TRANMID_SYSTEMREF: string;
+  PL_ORBTPER: EXOParameter;
+  PL_ORBTPER_SYSTEMREF: string;
+  /// Longitude of ascending node Omega, degrees in the stated reference frame.
+  /// Not a PSCompPars column; absence must never become an assumed zero.
+  LONG_ASC_NODE: EXOParameter;
+  LONG_ASC_NODE_UNKNOWN: bool = true;
+  LONG_ASC_NODE_FRAME: string;
+  /// Sky-projected spin-orbit obliquity lambda, degrees (not true 3D obliquity).
+  PL_PROJOBLIQ: EXOParameter;
+  /// Planet radius in Earth radii; best mass in Earth masses with its basis.
+  PL_RADE: EXOParameter;
+  PL_BMASSE: EXOParameter;
+  /// Archive provenance token, e.g. Mass, Msini, M-R relationship. A measured
+  /// m*sin(i) is not silently promoted to mass; an estimate remains labeled.
+  PL_BMASSPROV: string;
+  /// Equilibrium temperature in kelvin, with the source's model assumptions.
+  PL_EQT: EXOParameter;
+  /// Dimensionless geometric albedo, distinct from Bond albedo. Not currently
+  /// in PSCompPars; source/band are explicit when a publisher supplies it.
+  GEOMETRIC_ALBEDO: EXOParameter;
+  GEOMETRIC_ALBEDO_BAND: string;
+  /// Archive discovery-method token, preserved verbatim for new techniques.
+  DISCOVERYMETHOD: string;
+  /// Calendar year; -1 means absent.
+  DISC_YEAR: int = -1;
+  DISC_REFNAME: string;
+  ARCHIVE_STATUS: exoDisposition = UNSPECIFIED;
+  /// Original archive flag: 0 not controversial, 1 controversial, -1 absent.
+  PL_CONTROV_FLAG: byte = -1;
+  /// Reference explaining status, especially disputes or retractions.
+  STATUS_REFERENCE: string;
+  /// ISO 8601 UTC retrieval time, and replayable source table/query URL.
+  RETRIEVED_AT: string (required);
+  SOURCE_CATALOG: string;
+  SOURCE_QUERY: string;
+}
+
+root_type EXO;
+file_identifier "$EXO";

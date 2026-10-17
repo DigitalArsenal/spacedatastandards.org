@@ -17,6 +17,10 @@ class rfmOriginKind
     /// A fixed site on a body surface, identified by SITE_ID and the geodetic
     /// fields on RFMOrigin.
     const GROUND_SITE = 5;
+    /// Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+    /// roll and velocity are explicit parameters on RFMCoordinateSystem.
+    /// No ephemeris body code is implied by this origin.
+    const GALACTIC_CENTER = 6;
 
     private static $names = array(
         rfmOriginKind::UNSPECIFIED=>"UNSPECIFIED",
@@ -25,6 +29,7 @@ class rfmOriginKind
         rfmOriginKind::LIBRATION_POINT=>"LIBRATION_POINT",
         rfmOriginKind::SPACE_OBJECT=>"SPACE_OBJECT",
         rfmOriginKind::GROUND_SITE=>"GROUND_SITE",
+        rfmOriginKind::GALACTIC_CENTER=>"GALACTIC_CENTER",
     );
 
     public static function Name($e)

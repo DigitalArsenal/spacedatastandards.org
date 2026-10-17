@@ -29,5 +29,11 @@ class rfmOriginKind private constructor() {
          * fields on RFMOrigin.
          */
         const val GROUND_SITE: UByte = 5u
+        /**
+         * Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+         * roll and velocity are explicit parameters on RFMCoordinateSystem.
+         * No ephemeris body code is implied by this origin.
+         */
+        const val GALACTIC_CENTER: UByte = 6u
     }
 }

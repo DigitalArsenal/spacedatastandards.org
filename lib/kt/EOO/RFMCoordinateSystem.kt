@@ -167,6 +167,81 @@ class RFMCoordinateSystem : Table() {
         }
     val eopDataSetCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(24, 1)
     fun eopDataSetCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * ICRS right ascension of the Galactic center, degrees. NaN means absent.
+     * Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+     */
+    val galcenRaDeg : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ICRS declination of the Galactic center, degrees. NaN means absent.
+     * Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+     */
+    val galcenDecDeg : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+     * Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+     */
+    val galcenDistancePc : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Solar height above the Galactic midplane, parsecs, positive north.
+     * NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+     */
+    val zSunPc : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Roll angle in degrees in the Astropy Galactocentric convention.
+     * NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+     * parameters define a derived Galactocentric orientation: X points from
+     * the Sun toward the center's projection in the midplane, Y follows
+     * Galactic rotation, and Z completes a right-handed triad toward Galactic
+     * north. This parameterized orientation is independent of ORIGIN; with
+     * GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+     * All five scalars must be finite for a spatial Galactocentric transform,
+     * with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+     */
+    val rollDeg : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+     * axes, including circular motion (not just peculiar U,V,W). Exactly three
+     * components when present; omit the vector when unknown, or use NaN for
+     * an unknown component. A velocity transform requires all three finite.
+     * Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+     * motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+     * Publishers must state their adopted total velocity; no default is implied.
+     */
+    fun vSunKms(j: Int) : Double {
+        val o = __offset(36)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val vSunKmsLength : Int
+        get() {
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
+        }
+    val vSunKmsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 8)
+    fun vSunKmsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsRFMCoordinateSystem(_bb: ByteBuffer): RFMCoordinateSystem = getRootAsRFMCoordinateSystem(_bb, RFMCoordinateSystem())
@@ -174,8 +249,14 @@ class RFMCoordinateSystem : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRFMCoordinateSystem(builder: FlatBufferBuilder, nameOffset: Int, axisType: UByte, originOffset: Int, axisReferenceBodyId: Int, epochOffset: Int, epochTimeSystemOffset: Int, objectReferencedAxesOffset: Int, localAlignedConstrainedAxesOffset: Int, kernelFrameNameOffset: Int, kernelFrameId: Int, eopDataSetCidOffset: Int) : Int {
-            builder.startTable(11)
+        fun createRFMCoordinateSystem(builder: FlatBufferBuilder, nameOffset: Int, axisType: UByte, originOffset: Int, axisReferenceBodyId: Int, epochOffset: Int, epochTimeSystemOffset: Int, objectReferencedAxesOffset: Int, localAlignedConstrainedAxesOffset: Int, kernelFrameNameOffset: Int, kernelFrameId: Int, eopDataSetCidOffset: Int, galcenRaDeg: Double, galcenDecDeg: Double, galcenDistancePc: Double, zSunPc: Double, rollDeg: Double, vSunKmsOffset: Int) : Int {
+            builder.startTable(17)
+            addROLLDEG(builder, rollDeg)
+            addZSUNPC(builder, zSunPc)
+            addGALCENDISTANCEPC(builder, galcenDistancePc)
+            addGALCENDECDEG(builder, galcenDecDeg)
+            addGALCENRADEG(builder, galcenRaDeg)
+            addVSUNKMS(builder, vSunKmsOffset)
             addEOPDATASETCID(builder, eopDataSetCidOffset)
             addKERNELFRAMEID(builder, kernelFrameId)
             addKERNELFRAMENAME(builder, kernelFrameNameOffset)
@@ -189,7 +270,7 @@ class RFMCoordinateSystem : Table() {
             addAXISTYPE(builder, axisType)
             return endRFMCoordinateSystem(builder)
         }
-        fun startRFMCoordinateSystem(builder: FlatBufferBuilder) = builder.startTable(11)
+        fun startRFMCoordinateSystem(builder: FlatBufferBuilder) = builder.startTable(17)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
         fun addAXISTYPE(builder: FlatBufferBuilder, axisType: UByte) = builder.addByte(1, axisType.toByte(), 0)
         fun addORIGIN(builder: FlatBufferBuilder, origin: Int) = builder.addOffset(2, origin, 0)
@@ -201,6 +282,20 @@ class RFMCoordinateSystem : Table() {
         fun addKERNELFRAMENAME(builder: FlatBufferBuilder, kernelFrameName: Int) = builder.addOffset(8, kernelFrameName, 0)
         fun addKERNELFRAMEID(builder: FlatBufferBuilder, kernelFrameId: Int) = builder.addInt(9, kernelFrameId, 0)
         fun addEOPDATASETCID(builder: FlatBufferBuilder, eopDataSetCid: Int) = builder.addOffset(10, eopDataSetCid, 0)
+        fun addGALCENRADEG(builder: FlatBufferBuilder, galcenRaDeg: Double) = builder.addDouble(11, galcenRaDeg, Double.NaN)
+        fun addGALCENDECDEG(builder: FlatBufferBuilder, galcenDecDeg: Double) = builder.addDouble(12, galcenDecDeg, Double.NaN)
+        fun addGALCENDISTANCEPC(builder: FlatBufferBuilder, galcenDistancePc: Double) = builder.addDouble(13, galcenDistancePc, Double.NaN)
+        fun addZSUNPC(builder: FlatBufferBuilder, zSunPc: Double) = builder.addDouble(14, zSunPc, Double.NaN)
+        fun addROLLDEG(builder: FlatBufferBuilder, rollDeg: Double) = builder.addDouble(15, rollDeg, Double.NaN)
+        fun addVSUNKMS(builder: FlatBufferBuilder, vSunKms: Int) = builder.addOffset(16, vSunKms, 0)
+        fun createVSunKmsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startVSunKmsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun endRFMCoordinateSystem(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

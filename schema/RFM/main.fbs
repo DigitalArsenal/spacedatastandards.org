@@ -1,5 +1,5 @@
-// Hash: fc73d87d272448fd932f415f1f8403d4db773ab35a4b9da8f417fcf32665f5cf
-// Version: 4.0.12
+// Hash: 50bab29b63c737c16a07afe0ad7fd52e7e8c191bb2c46fb3407ff87a08e33cac
+// Version: 4.0.13
 // -----------------------------------END_HEADER
 /// https://www.sanaregistry.org/r/celestial_body_reference_frames/
 /// Celestial Reference Frames (SANA registry 1.3.112.4.57.2)
@@ -401,7 +401,17 @@ enum rfmAxisType : ubyte {
   ORBITAL_RADIAL_TRANSVERSE_NORMAL = 31,
   /// Orbital axes from the object's state: Z toward the central body (nadir),
   /// Y opposite the orbit normal, X completing the set (LVLH).
-  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32
+  ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL = 32,
+  /// IAU 1958 Galactic longitude/latitude axes, Hipparcos realization:
+  /// NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg.
+  /// ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to
+  /// l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed).
+  /// This fixes orientation only, not the origin or the direction of Sgr A*.
+  /// Explicit Galactocentric parameters select the derived orientation
+  /// documented on ROLL_DEG; choosing an origin alone never rotates the axes.
+  /// See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its
+  /// realization in ICRS; do not substitute a newly fitted Galactic plane.
+  GALACTIC = 33
 }
 
 /// What kind of point a coordinate system is centred on. Append new values
@@ -418,7 +428,11 @@ enum rfmOriginKind : ubyte {
   SPACE_OBJECT = 4,
   /// A fixed site on a body surface, identified by SITE_ID and the geodetic
   /// fields on RFMOrigin.
-  GROUND_SITE = 5
+  GROUND_SITE = 5,
+  /// Galactic center at Sgr A*. Its ICRS direction, solar distance, height,
+  /// roll and velocity are explicit parameters on RFMCoordinateSystem.
+  /// No ephemeris body code is implied by this origin.
+  GALACTIC_CENTER = 6
 }
 
 /// Libration point of the primary/secondary pair named on RFMOrigin. Append
@@ -556,6 +570,42 @@ table RFMCoordinateSystem {
   /// this system, when the axis chain requires one. Recorded so that two
   /// consumers can prove they used the same table rather than assume it.
   EOP_DATA_SET_CID: string;
+
+  /// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+  /// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+  GALCEN_RA_DEG: double = nan;
+
+  /// ICRS declination of the Galactic center, degrees. NaN means absent.
+  /// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+  GALCEN_DEC_DEG: double = nan;
+
+  /// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+  /// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+  GALCEN_DISTANCE_PC: double = nan;
+
+  /// Solar height above the Galactic midplane, parsecs, positive north.
+  /// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+  Z_SUN_PC: double = nan;
+
+  /// Roll angle in degrees in the Astropy Galactocentric convention.
+  /// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+  /// parameters define a derived Galactocentric orientation: X points from
+  /// the Sun toward the center's projection in the midplane, Y follows
+  /// Galactic rotation, and Z completes a right-handed triad toward Galactic
+  /// north. This parameterized orientation is independent of ORIGIN; with
+  /// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+  /// All five scalars must be finite for a spatial Galactocentric transform,
+  /// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+  ROLL_DEG: double = nan;
+
+  /// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+  /// axes, including circular motion (not just peculiar U,V,W). Exactly three
+  /// components when present; omit the vector when unknown, or use NaN for
+  /// an unknown component. A velocity transform requires all three finite.
+  /// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+  /// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+  /// Publishers must state their adopted total velocity; no default is implied.
+  V_SUN_KMS: [double];
 }
 
 // wrapper tables for each enum

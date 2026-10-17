@@ -19,11 +19,11 @@
     },
     "rfmAxisType" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"]
+      "enum": ["UNSPECIFIED", "MEAN_EQUATOR_EQUINOX_J2000", "MEAN_ECLIPTIC_EQUINOX_J2000", "ICRF", "TRUE_EQUATOR_MEAN_EQUINOX_OF_DATE", "MEAN_OF_DATE_EQUATOR", "MEAN_OF_DATE_ECLIPTIC", "TRUE_OF_DATE_EQUATOR", "TRUE_OF_DATE_ECLIPTIC", "MEAN_OF_EPOCH_EQUATOR", "MEAN_OF_EPOCH_ECLIPTIC", "TRUE_OF_EPOCH_EQUATOR", "TRUE_OF_EPOCH_ECLIPTIC", "BODY_FIXED", "BODY_INERTIAL", "OBJECT_REFERENCED", "LOCAL_ALIGNED_CONSTRAINED", "BODY_EQUATOR", "SOLAR_ECLIPTIC_MAGNETOSPHERIC", "SOLAR_MAGNETOSPHERIC", "TOPOCENTRIC", "BODY_SPIN_SUN", "EPHEMERIS_KERNEL_DEFINED", "MEAN_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_FK5", "TRUE_OF_DATE_EQUATOR_IERS1996", "TRUE_OF_DATE_EQUATOR_IERS2003", "TOPOCENTRIC_EAST_NORTH_UP", "TOPOCENTRIC_NORTH_EAST_DOWN", "TOPOCENTRIC_SOUTH_EAST_ZENITH", "ORBITAL_VELOCITY_NORMAL_CONORMAL", "ORBITAL_RADIAL_TRANSVERSE_NORMAL", "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL", "GALACTIC"]
     },
     "rfmOriginKind" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE"]
+      "enum": ["UNSPECIFIED", "CELESTIAL_BODY", "BARYCENTRE", "LIBRATION_POINT", "SPACE_OBJECT", "GROUND_SITE", "GALACTIC_CENTER"]
     },
     "rfmLibrationPoint" : {
       "type" : "string",
@@ -345,6 +345,30 @@
         "EOP_DATA_SET_CID" : {
                 "type" : "string",
                 "description" : "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it."
+              },
+        "GALCEN_RA_DEG" : {
+                "type" : "number",
+                "description" : "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DEC_DEG" : {
+                "type" : "number",
+                "description" : "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872)."
+              },
+        "GALCEN_DISTANCE_PC" : {
+                "type" : "number",
+                "description" : "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10)."
+              },
+        "Z_SUN_PC" : {
+                "type" : "number",
+                "description" : "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417)."
+              },
+        "ROLL_DEG" : {
+                "type" : "number",
+                "description" : "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default."
+              },
+        "V_SUN_KMS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied."
               }
       },
       "additionalProperties" : false

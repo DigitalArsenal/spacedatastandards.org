@@ -138,22 +138,110 @@ class RFMCoordinateSystem extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// ICRS right ascension of the Galactic center, degrees. NaN means absent.
+    /// Sgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).
+    /**
+     * @return double
+     */
+    public function getGALCEN_RA_DEG()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ICRS declination of the Galactic center, degrees. NaN means absent.
+    /// Sgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).
+    /**
+     * @return double
+     */
+    public function getGALCEN_DEC_DEG()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Sun-to-Galactic-center distance R0, parsecs. NaN means absent.
+    /// Example: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).
+    /**
+     * @return double
+     */
+    public function getGALCEN_DISTANCE_PC()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Solar height above the Galactic midplane, parsecs, positive north.
+    /// NaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).
+    /**
+     * @return double
+     */
+    public function getZ_SUN_PC()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Roll angle in degrees in the Astropy Galactocentric convention.
+    /// NaN means absent, not zero. With GALACTIC axes, the five explicit scalar
+    /// parameters define a derived Galactocentric orientation: X points from
+    /// the Sun toward the center's projection in the midplane, Y follows
+    /// Galactic rotation, and Z completes a right-handed triad toward Galactic
+    /// north. This parameterized orientation is independent of ORIGIN; with
+    /// GALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.
+    /// All five scalars must be finite for a spatial Galactocentric transform,
+    /// with R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.
+    /**
+     * @return double
+     */
+    public function getROLL_DEG()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric
+    /// axes, including circular motion (not just peculiar U,V,W). Exactly three
+    /// components when present; omit the vector when unknown, or use NaN for
+    /// an unknown component. A velocity transform requires all three finite.
+    /// Schonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar
+    /// motion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.
+    /// Publishers must state their adopted total velocity; no default is implied.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getV_SUN_KMS($j)
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getV_SUN_KMSLength()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startRFMCoordinateSystem(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(11);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFMCoordinateSystem
      */
-    public static function createRFMCoordinateSystem(FlatBufferBuilder $builder, $NAME, $AXIS_TYPE, $ORIGIN, $AXIS_REFERENCE_BODY_ID, $EPOCH, $EPOCH_TIME_SYSTEM, $OBJECT_REFERENCED_AXES, $LOCAL_ALIGNED_CONSTRAINED_AXES, $KERNEL_FRAME_NAME, $KERNEL_FRAME_ID, $EOP_DATA_SET_CID)
+    public static function createRFMCoordinateSystem(FlatBufferBuilder $builder, $NAME, $AXIS_TYPE, $ORIGIN, $AXIS_REFERENCE_BODY_ID, $EPOCH, $EPOCH_TIME_SYSTEM, $OBJECT_REFERENCED_AXES, $LOCAL_ALIGNED_CONSTRAINED_AXES, $KERNEL_FRAME_NAME, $KERNEL_FRAME_ID, $EOP_DATA_SET_CID, $GALCEN_RA_DEG, $GALCEN_DEC_DEG, $GALCEN_DISTANCE_PC, $Z_SUN_PC, $ROLL_DEG, $V_SUN_KMS)
     {
-        $builder->startObject(11);
+        $builder->startObject(17);
         self::addNAME($builder, $NAME);
         self::addAXIS_TYPE($builder, $AXIS_TYPE);
         self::addORIGIN($builder, $ORIGIN);
@@ -165,6 +253,12 @@ class RFMCoordinateSystem extends Table
         self::addKERNEL_FRAME_NAME($builder, $KERNEL_FRAME_NAME);
         self::addKERNEL_FRAME_ID($builder, $KERNEL_FRAME_ID);
         self::addEOP_DATA_SET_CID($builder, $EOP_DATA_SET_CID);
+        self::addGALCEN_RA_DEG($builder, $GALCEN_RA_DEG);
+        self::addGALCEN_DEC_DEG($builder, $GALCEN_DEC_DEG);
+        self::addGALCEN_DISTANCE_PC($builder, $GALCEN_DISTANCE_PC);
+        self::addZ_SUN_PC($builder, $Z_SUN_PC);
+        self::addROLL_DEG($builder, $ROLL_DEG);
+        self::addV_SUN_KMS($builder, $V_SUN_KMS);
         $o = $builder->endObject();
         return $o;
     }
@@ -277,6 +371,90 @@ class RFMCoordinateSystem extends Table
     public static function addEOP_DATA_SET_CID(FlatBufferBuilder $builder, $EOP_DATA_SET_CID)
     {
         $builder->addOffsetX(10, $EOP_DATA_SET_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGALCEN_RA_DEG(FlatBufferBuilder $builder, $GALCEN_RA_DEG)
+    {
+        $builder->addDoubleX(11, $GALCEN_RA_DEG, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGALCEN_DEC_DEG(FlatBufferBuilder $builder, $GALCEN_DEC_DEG)
+    {
+        $builder->addDoubleX(12, $GALCEN_DEC_DEG, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGALCEN_DISTANCE_PC(FlatBufferBuilder $builder, $GALCEN_DISTANCE_PC)
+    {
+        $builder->addDoubleX(13, $GALCEN_DISTANCE_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addZ_SUN_PC(FlatBufferBuilder $builder, $Z_SUN_PC)
+    {
+        $builder->addDoubleX(14, $Z_SUN_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addROLL_DEG(FlatBufferBuilder $builder, $ROLL_DEG)
+    {
+        $builder->addDoubleX(15, $ROLL_DEG, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addV_SUN_KMS(FlatBufferBuilder $builder, $V_SUN_KMS)
+    {
+        $builder->addOffsetX(16, $V_SUN_KMS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createV_SUN_KMSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startV_SUN_KMSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**

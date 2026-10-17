@@ -462,7 +462,8 @@
         "TOPOCENTRIC_SOUTH_EAST_ZENITH",
         "ORBITAL_VELOCITY_NORMAL_CONORMAL",
         "ORBITAL_RADIAL_TRANSVERSE_NORMAL",
-        "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL"
+        "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL",
+        "GALACTIC"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -597,6 +598,10 @@
         "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
           "value": 32,
           "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+        },
+        "GALACTIC": {
+          "value": 33,
+          "description": "IAU 1958 Galactic longitude/latitude axes, Hipparcos realization: NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg. ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed). This fixes orientation only, not the origin or the direction of Sgr A*. Explicit Galactocentric parameters select the derived orientation documented on ROLL_DEG; choosing an origin alone never rotates the axes. See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its realization in ICRS; do not substitute a newly fitted Galactic plane."
         }
       }
     },
@@ -608,7 +613,8 @@
         "BARYCENTRE",
         "LIBRATION_POINT",
         "SPACE_OBJECT",
-        "GROUND_SITE"
+        "GROUND_SITE",
+        "GALACTIC_CENTER"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -635,6 +641,10 @@
         "GROUND_SITE": {
           "value": 5,
           "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+        },
+        "GALACTIC_CENTER": {
+          "value": 6,
+          "description": "Galactic center at Sgr A*. Its ICRS direction, solar distance, height, roll and velocity are explicit parameters on RFMCoordinateSystem. No ephemeris body code is implied by this origin."
         }
       }
     },
@@ -1214,6 +1224,10 @@
             "GROUND_SITE": {
               "value": 5,
               "description": "A fixed site on a body surface, identified by SITE_ID and the geodetic fields on RFMOrigin."
+            },
+            "GALACTIC_CENTER": {
+              "value": 6,
+              "description": "Galactic center at Sgr A*. Its ICRS direction, solar distance, height, roll and velocity are explicit parameters on RFMCoordinateSystem. No ephemeris body code is implied by this origin."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -1621,6 +1635,10 @@
             "ORBITAL_LOCAL_VERTICAL_LOCAL_HORIZONTAL": {
               "value": 32,
               "description": "Orbital axes from the object's state: Z toward the central body (nadir), Y opposite the orbit normal, X completing the set (LVLH)."
+            },
+            "GALACTIC": {
+              "value": 33,
+              "description": "IAU 1958 Galactic longitude/latitude axes, Hipparcos realization: NGP RA = 192.85948 deg, Dec = +27.12825 deg; l_Omega = 32.93192 deg. ESA SP-1200 (1997), Vol. 1, Section 1.5.3. Cartesian X points to l=0,b=0, Y to l=90,b=0, Z to the north Galactic pole (right-handed). This fixes orientation only, not the origin or the direction of Sgr A*. Explicit Galactocentric parameters select the derived orientation documented on ROLL_DEG; choosing an origin alone never rotates the axes. See Liu, Zhu & Zhang (2011), A&A 526, A16, on the definition and its realization in ICRS; do not substitute a newly fitted Galactic plane."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -1673,6 +1691,44 @@
           "type": "string",
           "description": "Content identifier of the Earth-orientation data set used to realise\nthis system, when the axis chain requires one. Recorded so that two\nconsumers can prove they used the same table rather than assume it.",
           "x-flatbuffer-type": "string"
+        },
+        "GALCEN_RA_DEG": {
+          "type": "number",
+          "description": "ICRS right ascension of the Galactic center, degrees. NaN means absent.\nSgr A*: 17h45m40.0409s (Reid & Brunthaler 2004, ApJ 616, 872).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GALCEN_DEC_DEG": {
+          "type": "number",
+          "description": "ICRS declination of the Galactic center, degrees. NaN means absent.\nSgr A*: -29d00m28.118s (Reid & Brunthaler 2004, ApJ 616, 872).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "GALCEN_DISTANCE_PC": {
+          "type": "number",
+          "description": "Sun-to-Galactic-center distance R0, parsecs. NaN means absent.\nExample: 8178 pc (GRAVITY Collaboration 2019, A&A 625, L10).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "Z_SUN_PC": {
+          "type": "number",
+          "description": "Solar height above the Galactic midplane, parsecs, positive north.\nNaN means absent; example: 20.8 pc (Bennett & Bovy 2019, MNRAS 482, 1417).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ROLL_DEG": {
+          "type": "number",
+          "description": "Roll angle in degrees in the Astropy Galactocentric convention.\nNaN means absent, not zero. With GALACTIC axes, the five explicit scalar\nparameters define a derived Galactocentric orientation: X points from\nthe Sun toward the center's projection in the midplane, Y follows\nGalactic rotation, and Z completes a right-handed triad toward Galactic\nnorth. This parameterized orientation is independent of ORIGIN; with\nGALACTIC_CENTER the Sun lies at X=-sqrt(R0^2-Z_SUN_PC^2), Y=0, Z=Z_SUN_PC.\nAll five scalars must be finite for a spatial Galactocentric transform,\nwith R0 > 0 and abs(Z_SUN_PC) <= R0; none has an assumed default.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "V_SUN_KMS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Total solar velocity [v_X,v_Y,v_Z] in km/s in the resulting Galactocentric\naxes, including circular motion (not just peculiar U,V,W). Exactly three\ncomponents when present; omit the vector when unknown, or use NaN for\nan unknown component. A velocity transform requires all three finite.\nSchonrich, Binney & Dehnen (2010), MNRAS 403, 1829, constrain peculiar\nmotion; Reid & Brunthaler (2020), ApJ 892, 39, constrain Sgr A* motion.\nPublishers must state their adopted total velocity; no default is implied.",
+          "x-flatbuffer-type": "[double]"
         }
       },
       "additionalProperties": false

@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "exoDisposition": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONFIRMED",
+        "CANDIDATE",
+        "DISPUTED",
+        "RETRACTED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
+    "EXOParameter": {
+      "type": "object",
+      "description": "A measured value, its asymmetric uncertainties, and its own provenance.\nAn absent table means no parameter was supplied. NaN means a missing numeric\ncell, including when the archive supplies a reference or limit but no value.",
+      "properties": {
+        "VALUE": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ERR1": {
+          "type": "number",
+          "description": "Archive ERR1 (positive) and ERR2 (negative), retained without symmetrizing.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "ERR2": {
+          "type": "number",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LIMIT": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "Archive limit flag: 0 measurement, +1 upper limit, -1 lower limit.\n-128 means the source did not supply a flag; it is not a measurement.",
+          "x-flatbuffer-type": "byte",
+          "x-flatbuffer-default": "-128"
+        },
+        "DISPLAY": {
+          "type": "string",
+          "description": "Archive display string, if supplied, preserved without parsing/rounding.",
+          "x-flatbuffer-type": "string"
+        },
+        "UNIT": {
+          "type": "string",
+          "description": "Unit of VALUE/ERR1/ERR2, using IVOA VOUnits (d, deg, AU, K, or 1).\nEarth radius/mass are archive units R_earth and M_earth, not SI estimates.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REFERENCE_BIBCODE": {
+          "type": "string",
+          "description": "ADS bibcode when provided or unambiguously present in the source link.\nAbsent means unknown; archive references are not always ADS publications.",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_URL": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "REFERENCE_TEXT": {
+          "type": "string",
+          "description": "The complete source reference cell, including archive reflink markup.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC retrieval time of this parameter's source.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "UNIT",
+        "RETRIEVED_AT"
+      ],
+      "additionalProperties": false
+    },
+    "EXO": {
+      "type": "object",
+      "properties": {
+        "PL_NAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "HOSTNAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GAIA_DR3_ID": {
+          "type": "string",
+          "description": "Archive identifier string, e.g. Gaia DR3 <source_id>. Never a JS number.",
+          "x-flatbuffer-type": "string"
+        },
+        "SIMBAD_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_ORBPER": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Period in days; semimajor axis in AU; eccentricity dimensionless.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBSMAX": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBECCEN": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBLPER": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Argument of periastron and orbital inclination in degrees. The archive\npreserves each publication's convention (planet/star omega may differ).",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBINCL": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_TRANMID": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Transit midpoint T0 and periastron epoch Tp, JD in their named systems.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_TRANMID_SYSTEMREF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_ORBTPER": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_ORBTPER_SYSTEMREF": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LONG_ASC_NODE": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Longitude of ascending node Omega, degrees in the stated reference frame.\nNot a PSCompPars column; absence must never become an assumed zero.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "LONG_ASC_NODE_UNKNOWN": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "LONG_ASC_NODE_FRAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_PROJOBLIQ": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Sky-projected spin-orbit obliquity lambda, degrees (not true 3D obliquity).",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_RADE": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Planet radius in Earth radii; best mass in Earth masses with its basis.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_BMASSE": {
+          "$ref": "#/definitions/EXOParameter",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "PL_BMASSPROV": {
+          "type": "string",
+          "description": "Archive provenance token, e.g. Mass, Msini, M-R relationship. A measured\nm*sin(i) is not silently promoted to mass; an estimate remains labeled.",
+          "x-flatbuffer-type": "string"
+        },
+        "PL_EQT": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Equilibrium temperature in kelvin, with the source's model assumptions.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "GEOMETRIC_ALBEDO": {
+          "$ref": "#/definitions/EXOParameter",
+          "description": "Dimensionless geometric albedo, distinct from Bond albedo. Not currently\nin PSCompPars; source/band are explicit when a publisher supplies it.",
+          "x-flatbuffer-type": "EXOParameter"
+        },
+        "GEOMETRIC_ALBEDO_BAND": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "DISCOVERYMETHOD": {
+          "type": "string",
+          "description": "Archive discovery-method token, preserved verbatim for new techniques.",
+          "x-flatbuffer-type": "string"
+        },
+        "DISC_YEAR": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Calendar year; -1 means absent.",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        },
+        "DISC_REFNAME": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "ARCHIVE_STATUS": {
+          "$ref": "#/definitions/exoDisposition",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "PL_CONTROV_FLAG": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "Original archive flag: 0 not controversial, 1 controversial, -1 absent.",
+          "x-flatbuffer-type": "byte",
+          "x-flatbuffer-default": "-1"
+        },
+        "STATUS_REFERENCE": {
+          "type": "string",
+          "description": "Reference explaining status, especially disputes or retractions.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "ISO 8601 UTC retrieval time, and replayable source table/query URL.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CATALOG": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_QUERY": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "PL_NAME",
+        "RETRIEVED_AT"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/EXO",
+  "x-flatbuffer-root-type": "EXO",
+  "x-flatbuffer-file-identifier": "$EXO"
+}

@@ -36,3 +36,5 @@ class RecordTypeExtended(object):
     TBP = 278
     WHA = 279
     XMT = 280
+    EXO = 281
+    GLX = 282

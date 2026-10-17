@@ -36,6 +36,8 @@ class RecordTypeExtended
     const TBP = 278;
     const WHA = 279;
     const XMT = 280;
+    const EXO = 281;
+    const GLX = 282;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
@@ -64,6 +66,8 @@ class RecordTypeExtended
         RecordTypeExtended::TBP=>"TBP",
         RecordTypeExtended::WHA=>"WHA",
         RecordTypeExtended::XMT=>"XMT",
+        RecordTypeExtended::EXO=>"EXO",
+        RecordTypeExtended::GLX=>"GLX",
     );
 
     public static function Name($e)
