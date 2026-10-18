@@ -191,6 +191,27 @@ class FCK : Table() {
         }
     val previousFeedRootCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
     fun previousFeedRootCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+     */
+    val recordBytes : ULong
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+     */
+    val minW : Long
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
+    val maxW : Long
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFCK(_bb: ByteBuffer): FCK = getRootAsFCK(_bb, FCK())
@@ -199,7 +220,7 @@ class FCK : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun FCKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FCK")
-        fun startFCK(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startFCK(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addSELFOFFSET(builder: FlatBufferBuilder, selfOffset: ULong) = builder.addLong(0, selfOffset.toLong(), 0)
         fun addPREVIOUS(builder: FlatBufferBuilder, previous: ULong) = builder.addLong(1, previous.toLong(), 0)
         fun addFEEDID(builder: FlatBufferBuilder, feedId: UInt) = builder.addInt(2, feedId.toInt(), 0)
@@ -243,6 +264,9 @@ class FCK : Table() {
             return builder.endVector()
         }
         fun startPreviousFeedRootCidVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addRECORDBYTES(builder: FlatBufferBuilder, recordBytes: ULong) = builder.addLong(15, recordBytes.toLong(), 0)
+        fun addMINW(builder: FlatBufferBuilder, minW: Long) = builder.addLong(16, minW, 0L)
+        fun addMAXW(builder: FlatBufferBuilder, maxW: Long) = builder.addLong(17, maxW, 0L)
         fun endFCK(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

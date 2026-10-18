@@ -1247,6 +1247,9 @@ impl<'a> FCK<'a> {
     pub const VT_SEGMENT_DIGESTS: ::flatbuffers::VOffsetT = 28;
     pub const VT_COMMITS_ROOT_CID: ::flatbuffers::VOffsetT = 30;
     pub const VT_PREVIOUS_FEED_ROOT_CID: ::flatbuffers::VOffsetT = 32;
+    pub const VT_RECORD_BYTES: ::flatbuffers::VOffsetT = 34;
+    pub const VT_MIN_W: ::flatbuffers::VOffsetT = 36;
+    pub const VT_MAX_W: ::flatbuffers::VOffsetT = 38;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1259,6 +1262,9 @@ impl<'a> FCK<'a> {
         args: &'args FCKArgs<'args>
     ) -> ::flatbuffers::WIPOffset<FCK<'bldr>> {
         let mut builder = FCKBuilder::new(_fbb);
+        builder.add_MAX_W(args.MAX_W);
+        builder.add_MIN_W(args.MIN_W);
+        builder.add_RECORD_BYTES(args.RECORD_BYTES);
         builder.add_TYPE_SEQ_HIGH(args.TYPE_SEQ_HIGH);
         builder.add_APPLIED_THROUGH(args.APPLIED_THROUGH);
         builder.add_COMMITTED_AT(args.COMMITTED_AT);
@@ -1309,6 +1315,9 @@ impl<'a> FCK<'a> {
         let PREVIOUS_FEED_ROOT_CID = self.PREVIOUS_FEED_ROOT_CID().map(|x| {
             x.into_iter().collect()
         });
+        let RECORD_BYTES = self.RECORD_BYTES();
+        let MIN_W = self.MIN_W();
+        let MAX_W = self.MAX_W();
         FCKT {
             SELF_OFFSET,
             PREVIOUS,
@@ -1325,6 +1334,9 @@ impl<'a> FCK<'a> {
             SEGMENT_DIGESTS,
             COMMITS_ROOT_CID,
             PREVIOUS_FEED_ROOT_CID,
+            RECORD_BYTES,
+            MIN_W,
+            MAX_W,
         }
     }
 
@@ -1457,6 +1469,32 @@ impl<'a> FCK<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(FCK::VT_PREVIOUS_FEED_ROOT_CID, None)}
     }
+
+    /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+    #[inline]
+    pub fn RECORD_BYTES(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(FCK::VT_RECORD_BYTES, Some(0)).unwrap()}
+    }
+
+    /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+    #[inline]
+    pub fn MIN_W(&self) -> i64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i64>(FCK::VT_MIN_W, Some(0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn MAX_W(&self) -> i64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i64>(FCK::VT_MAX_W, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for FCK<'_> {
@@ -1480,6 +1518,9 @@ impl ::flatbuffers::Verifiable for FCK<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("SEGMENT_DIGESTS", Self::VT_SEGMENT_DIGESTS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("COMMITS_ROOT_CID", Self::VT_COMMITS_ROOT_CID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("PREVIOUS_FEED_ROOT_CID", Self::VT_PREVIOUS_FEED_ROOT_CID, false)?
+            .visit_field::<u64>("RECORD_BYTES", Self::VT_RECORD_BYTES, false)?
+            .visit_field::<i64>("MIN_W", Self::VT_MIN_W, false)?
+            .visit_field::<i64>("MAX_W", Self::VT_MAX_W, false)?
             .finish();
         Ok(())
     }
@@ -1501,6 +1542,9 @@ pub struct FCKArgs<'a> {
     pub SEGMENT_DIGESTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub COMMITS_ROOT_CID: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
     pub PREVIOUS_FEED_ROOT_CID: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub RECORD_BYTES: u64,
+    pub MIN_W: i64,
+    pub MAX_W: i64,
 }
 
 impl<'a> Default for FCKArgs<'a> {
@@ -1522,6 +1566,9 @@ impl<'a> Default for FCKArgs<'a> {
             SEGMENT_DIGESTS: None,
             COMMITS_ROOT_CID: None,
             PREVIOUS_FEED_ROOT_CID: None,
+            RECORD_BYTES: 0,
+            MIN_W: 0,
+            MAX_W: 0,
         }
     }
 }
@@ -1608,6 +1655,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FCKBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_RECORD_BYTES(&mut self, RECORD_BYTES: u64) {
+        self.fbb_.push_slot::<u64>(FCK::VT_RECORD_BYTES, RECORD_BYTES, 0);
+    }
+
+    #[inline]
+    pub fn add_MIN_W(&mut self, MIN_W: i64) {
+        self.fbb_.push_slot::<i64>(FCK::VT_MIN_W, MIN_W, 0);
+    }
+
+    #[inline]
+    pub fn add_MAX_W(&mut self, MAX_W: i64) {
+        self.fbb_.push_slot::<i64>(FCK::VT_MAX_W, MAX_W, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FCKBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         FCKBuilder {
@@ -1641,6 +1703,9 @@ impl ::core::fmt::Debug for FCK<'_> {
         ds.field("SEGMENT_DIGESTS", &self.SEGMENT_DIGESTS());
         ds.field("COMMITS_ROOT_CID", &self.COMMITS_ROOT_CID());
         ds.field("PREVIOUS_FEED_ROOT_CID", &self.PREVIOUS_FEED_ROOT_CID());
+        ds.field("RECORD_BYTES", &self.RECORD_BYTES());
+        ds.field("MIN_W", &self.MIN_W());
+        ds.field("MAX_W", &self.MAX_W());
         ds.finish()
     }
 }
@@ -1663,6 +1728,9 @@ pub struct FCKT {
     pub SEGMENT_DIGESTS: Option<alloc::vec::Vec<u8>>,
     pub COMMITS_ROOT_CID: Option<alloc::vec::Vec<u8>>,
     pub PREVIOUS_FEED_ROOT_CID: Option<alloc::vec::Vec<u8>>,
+    pub RECORD_BYTES: u64,
+    pub MIN_W: i64,
+    pub MAX_W: i64,
 }
 
 impl Default for FCKT {
@@ -1683,6 +1751,9 @@ impl Default for FCKT {
             SEGMENT_DIGESTS: None,
             COMMITS_ROOT_CID: None,
             PREVIOUS_FEED_ROOT_CID: None,
+            RECORD_BYTES: 0,
+            MIN_W: 0,
+            MAX_W: 0,
         }
     }
 }
@@ -1722,6 +1793,9 @@ impl FCKT {
         let PREVIOUS_FEED_ROOT_CID = self.PREVIOUS_FEED_ROOT_CID.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let RECORD_BYTES = self.RECORD_BYTES;
+        let MIN_W = self.MIN_W;
+        let MAX_W = self.MAX_W;
         FCK::create(_fbb, &FCKArgs{
             SELF_OFFSET,
             PREVIOUS,
@@ -1738,6 +1812,9 @@ impl FCKT {
             SEGMENT_DIGESTS,
             COMMITS_ROOT_CID,
             PREVIOUS_FEED_ROOT_CID,
+            RECORD_BYTES,
+            MIN_W,
+            MAX_W,
         })
     }
 }

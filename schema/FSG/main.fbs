@@ -1,5 +1,5 @@
-// Hash: 0617bb29e5dde24d15fbc3c0ea899edeb7978879036307bfc0fcc33575a8bb4f
-// Version: 1.254.0
+// Hash: 1e4d8258a70db3e6190dc594d84220831111dc37d9a6f0adba1a567313850a7a
+// Version: 1.254.1
 // -----------------------------------END_HEADER
 include "../FMB/main.fbs";
 include "../FCK/main.fbs";
@@ -74,6 +74,9 @@ table FSG {
   PAIRS: [FSGPair];
   /// Reserved for analytics column segments.
   COLUMN: [ubyte];
+  /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+  /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+  INSTANCE_URL_IDS: [uint];
 }
 
 root_type FSG;

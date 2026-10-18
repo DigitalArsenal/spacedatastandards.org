@@ -63,6 +63,16 @@ public struct FSG : IFlatbufferObject
   public ArraySegment<byte>? GetCOLUMNBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public byte[] GetCOLUMNArray() { return __p.__vector_as_array<byte>(32); }
+  /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+  /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+  public uint INSTANCE_URL_IDS(int j) { int o = __p.__offset(34); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int INSTANCE_URL_IDSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<uint> GetINSTANCE_URL_IDSBytes() { return __p.__vector_as_span<uint>(34, 4); }
+#else
+  public ArraySegment<byte>? GetINSTANCE_URL_IDSBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public uint[] GetINSTANCE_URL_IDSArray() { return __p.__vector_as_array<uint>(34); }
 
   public static Offset<FSG> CreateFSG(FlatBufferBuilder builder,
       ulong SELF_OFFSET = 0,
@@ -79,13 +89,15 @@ public struct FSG : IFlatbufferObject
       VectorOffset INSTANCESOffset = default(VectorOffset),
       VectorOffset TOKENSOffset = default(VectorOffset),
       VectorOffset PAIRSOffset = default(VectorOffset),
-      VectorOffset COLUMNOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset COLUMNOffset = default(VectorOffset),
+      VectorOffset INSTANCE_URL_IDSOffset = default(VectorOffset)) {
+    builder.StartTable(16);
     FSG.AddCOVERS_THROUGH(builder, COVERS_THROUGH);
     FSG.AddMAX_SEQ(builder, MAX_SEQ);
     FSG.AddMIN_SEQ(builder, MIN_SEQ);
     FSG.AddPREVIOUS(builder, PREVIOUS);
     FSG.AddSELF_OFFSET(builder, SELF_OFFSET);
+    FSG.AddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDSOffset);
     FSG.AddCOLUMN(builder, COLUMNOffset);
     FSG.AddPAIRS(builder, PAIRSOffset);
     FSG.AddTOKENS(builder, TOKENSOffset);
@@ -99,7 +111,7 @@ public struct FSG : IFlatbufferObject
     return FSG.EndFSG(builder);
   }
 
-  public static void StartFSG(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartFSG(FlatBufferBuilder builder) { builder.StartTable(16); }
   public static void AddSELF_OFFSET(FlatBufferBuilder builder, ulong SELF_OFFSET) { builder.AddUlong(0, SELF_OFFSET, 0); }
   public static void AddPREVIOUS(FlatBufferBuilder builder, ulong PREVIOUS) { builder.AddUlong(1, PREVIOUS, 0); }
   public static void AddFEED_ID(FlatBufferBuilder builder, uint FEED_ID) { builder.AddUint(2, FEED_ID, 0); }
@@ -138,6 +150,12 @@ public struct FSG : IFlatbufferObject
   public static VectorOffset CreateCOLUMNVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateCOLUMNVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartCOLUMNVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddINSTANCE_URL_IDS(FlatBufferBuilder builder, VectorOffset INSTANCE_URL_IDSOffset) { builder.AddOffset(15, INSTANCE_URL_IDSOffset.Value, 0); }
+  public static VectorOffset CreateINSTANCE_URL_IDSVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANCE_URL_IDSVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANCE_URL_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<uint> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINSTANCE_URL_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<uint>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINSTANCE_URL_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<FSG> EndFSG(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<FSG>(o);
@@ -172,6 +190,8 @@ public struct FSG : IFlatbufferObject
     for (var _j = 0; _j < this.PAIRSLength; ++_j) {_o.PAIRS.Add(this.PAIRS(_j).HasValue ? this.PAIRS(_j).Value.UnPack() : null);}
     _o.COLUMN = new List<byte>();
     for (var _j = 0; _j < this.COLUMNLength; ++_j) {_o.COLUMN.Add(this.COLUMN(_j));}
+    _o.INSTANCE_URL_IDS = new List<uint>();
+    for (var _j = 0; _j < this.INSTANCE_URL_IDSLength; ++_j) {_o.INSTANCE_URL_IDS.Add(this.INSTANCE_URL_IDS(_j));}
   }
   public static Offset<FSG> Pack(FlatBufferBuilder builder, FSGT _o) {
     if (_o == null) return default(Offset<FSG>);
@@ -215,6 +235,11 @@ public struct FSG : IFlatbufferObject
       var __COLUMN = _o.COLUMN.ToArray();
       _COLUMN = CreateCOLUMNVector(builder, __COLUMN);
     }
+    var _INSTANCE_URL_IDS = default(VectorOffset);
+    if (_o.INSTANCE_URL_IDS != null) {
+      var __INSTANCE_URL_IDS = _o.INSTANCE_URL_IDS.ToArray();
+      _INSTANCE_URL_IDS = CreateINSTANCE_URL_IDSVector(builder, __INSTANCE_URL_IDS);
+    }
     return CreateFSG(
       builder,
       _o.SELF_OFFSET,
@@ -231,7 +256,8 @@ public struct FSG : IFlatbufferObject
       _INSTANCES,
       _TOKENS,
       _PAIRS,
-      _COLUMN);
+      _COLUMN,
+      _INSTANCE_URL_IDS);
   }
 }
 
@@ -252,6 +278,7 @@ public class FSGT
   public List<FMBEntryT> TOKENS { get; set; }
   public List<FSGPairT> PAIRS { get; set; }
   public List<byte> COLUMN { get; set; }
+  public List<uint> INSTANCE_URL_IDS { get; set; }
 
   public FSGT() {
     this.SELF_OFFSET = 0;
@@ -269,6 +296,7 @@ public class FSGT
     this.TOKENS = null;
     this.PAIRS = null;
     this.COLUMN = null;
+    this.INSTANCE_URL_IDS = null;
   }
   public static FSGT DeserializeFromBinary(byte[] fbBuffer) {
     return FSG.GetRootAsFSG(new ByteBuffer(fbBuffer)).UnPack();
@@ -301,6 +329,7 @@ static public class FSGVerify
       && verifier.VerifyVectorOfTables(tablePos, 28 /*TOKENS*/, FMBEntryVerify.Verify, false)
       && verifier.VerifyVectorOfData(tablePos, 30 /*PAIRS*/, 32 /*FSGPair*/, false)
       && verifier.VerifyVectorOfData(tablePos, 32 /*COLUMN*/, 1 /*byte*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 34 /*INSTANCE_URL_IDS*/, 4 /*uint*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

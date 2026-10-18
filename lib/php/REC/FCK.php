@@ -239,22 +239,51 @@ class FCK extends Table
         return $this->__vector_as_bytes(32);
     }
 
+    /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+    /**
+     * @return ulong
+     */
+    public function getRECORD_BYTES()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+    /**
+     * @return long
+     */
+    public function getMIN_W()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
+    /**
+     * @return long
+     */
+    public function getMAX_W()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startFCK(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return FCK
      */
-    public static function createFCK(FlatBufferBuilder $builder, $SELF_OFFSET, $PREVIOUS, $FEED_ID, $TYPE, $PROVIDER, $SOURCE, $GENERATION, $COMMITTED_AT, $APPLIED_THROUGH, $TYPE_SEQ_HIGH, $COUNTERS, $SEGMENTS, $SEGMENT_DIGESTS, $COMMITS_ROOT_CID, $PREVIOUS_FEED_ROOT_CID)
+    public static function createFCK(FlatBufferBuilder $builder, $SELF_OFFSET, $PREVIOUS, $FEED_ID, $TYPE, $PROVIDER, $SOURCE, $GENERATION, $COMMITTED_AT, $APPLIED_THROUGH, $TYPE_SEQ_HIGH, $COUNTERS, $SEGMENTS, $SEGMENT_DIGESTS, $COMMITS_ROOT_CID, $PREVIOUS_FEED_ROOT_CID, $RECORD_BYTES, $MIN_W, $MAX_W)
     {
-        $builder->startObject(15);
+        $builder->startObject(18);
         self::addSELF_OFFSET($builder, $SELF_OFFSET);
         self::addPREVIOUS($builder, $PREVIOUS);
         self::addFEED_ID($builder, $FEED_ID);
@@ -270,6 +299,9 @@ class FCK extends Table
         self::addSEGMENT_DIGESTS($builder, $SEGMENT_DIGESTS);
         self::addCOMMITS_ROOT_CID($builder, $COMMITS_ROOT_CID);
         self::addPREVIOUS_FEED_ROOT_CID($builder, $PREVIOUS_FEED_ROOT_CID);
+        self::addRECORD_BYTES($builder, $RECORD_BYTES);
+        self::addMIN_W($builder, $MIN_W);
+        self::addMAX_W($builder, $MAX_W);
         $o = $builder->endObject();
         return $o;
     }
@@ -518,6 +550,36 @@ class FCK extends Table
     public static function startPREVIOUS_FEED_ROOT_CIDVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addRECORD_BYTES(FlatBufferBuilder $builder, $RECORD_BYTES)
+    {
+        $builder->addUlongX(15, $RECORD_BYTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addMIN_W(FlatBufferBuilder $builder, $MIN_W)
+    {
+        $builder->addLongX(16, $MIN_W, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addMAX_W(FlatBufferBuilder $builder, $MAX_W)
+    {
+        $builder->addLongX(17, $MAX_W, 0);
     }
 
     /**

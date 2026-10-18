@@ -271,8 +271,37 @@ class FSG(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # Each instance's latest url, parallel to INSTANCES: an id into the feed
+    # dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+    # FSG
+    def INSTANCE_URL_IDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # FSG
+    def INSTANCE_URL_IDSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
+        return 0
+
+    # FSG
+    def INSTANCE_URL_IDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # FSG
+    def INSTANCE_URL_IDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
 def FSGStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(16)
 
 def Start(builder):
     FSGStart(builder)
@@ -471,6 +500,28 @@ def FSGCreateCOLUMNVector(builder, data):
 def CreateCOLUMNVector(builder, data):
     return FSGCreateCOLUMNVector(builder, data)
 
+def FSGAddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(INSTANCE_URL_IDS), 0)
+
+def AddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDS):
+    FSGAddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDS)
+
+def FSGStartINSTANCE_URL_IDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartINSTANCE_URL_IDSVector(builder, numElems):
+    return FSGStartINSTANCE_URL_IDSVector(builder, numElems)
+
+def FSGCreateINSTANCE_URL_IDSVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependUint32(item)
+    return builder.EndVector()
+
+def CreateINSTANCE_URL_IDSVector(builder, data):
+    return FSGCreateINSTANCE_URL_IDSVector(builder, data)
+
 def FSGEnd(builder):
     return builder.EndObject()
 
@@ -506,6 +557,7 @@ class FSGT(object):
         TOKENS = None,
         PAIRS = None,
         COLUMN = None,
+        INSTANCE_URL_IDS = None,
     ):
         self.SELF_OFFSET = SELF_OFFSET  # type: int
         self.PREVIOUS = PREVIOUS  # type: int
@@ -522,6 +574,7 @@ class FSGT(object):
         self.TOKENS = TOKENS  # type: Optional[List[FMBEntry.FMBEntryT]]
         self.PAIRS = PAIRS  # type: Optional[List[FSGPair.FSGPairT]]
         self.COLUMN = COLUMN  # type: Optional[List[int]]
+        self.INSTANCE_URL_IDS = INSTANCE_URL_IDS  # type: Optional[List[int]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -606,6 +659,13 @@ class FSGT(object):
                     self.COLUMN.append(FSG.COLUMN(i))
             else:
                 self.COLUMN = FSG.COLUMNAsNumpy()
+        if not FSG.INSTANCE_URL_IDSIsNone():
+            if np is None:
+                self.INSTANCE_URL_IDS = []
+                for i in range(FSG.INSTANCE_URL_IDSLength()):
+                    self.INSTANCE_URL_IDS.append(FSG.INSTANCE_URL_IDS(i))
+            else:
+                self.INSTANCE_URL_IDS = FSG.INSTANCE_URL_IDSAsNumpy()
 
     # FSGT
     def Pack(self, builder):
@@ -656,6 +716,14 @@ class FSGT(object):
                 for i in reversed(range(len(self.COLUMN))):
                     builder.PrependUint8(self.COLUMN[i])
                 COLUMN = builder.EndVector()
+        if self.INSTANCE_URL_IDS is not None:
+            if np is not None and type(self.INSTANCE_URL_IDS) is np.ndarray:
+                INSTANCE_URL_IDS = builder.CreateNumpyVector(self.INSTANCE_URL_IDS)
+            else:
+                FSGStartINSTANCE_URL_IDSVector(builder, len(self.INSTANCE_URL_IDS))
+                for i in reversed(range(len(self.INSTANCE_URL_IDS))):
+                    builder.PrependUint32(self.INSTANCE_URL_IDS[i])
+                INSTANCE_URL_IDS = builder.EndVector()
         FSGStart(builder)
         FSGAddSELF_OFFSET(builder, self.SELF_OFFSET)
         FSGAddPREVIOUS(builder, self.PREVIOUS)
@@ -679,5 +747,7 @@ class FSGT(object):
             FSGAddPAIRS(builder, PAIRS)
         if self.COLUMN is not None:
             FSGAddCOLUMN(builder, COLUMN)
+        if self.INSTANCE_URL_IDS is not None:
+            FSGAddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDS)
         FSG = FSGEnd(builder)
         return FSG

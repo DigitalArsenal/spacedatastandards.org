@@ -264,22 +264,43 @@ class FSG extends Table
         return $this->__vector_as_bytes(32);
     }
 
+    /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+    /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+    /**
+     * @param int offset
+     * @return uint
+     */
+    public function getINSTANCE_URL_IDS($j)
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getUint($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getINSTANCE_URL_IDSLength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startFSG(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(16);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return FSG
      */
-    public static function createFSG(FlatBufferBuilder $builder, $SELF_OFFSET, $PREVIOUS, $FEED_ID, $KIND, $LEVEL, $MIN_SEQ, $MAX_SEQ, $COVERS_THROUGH, $REPLACES, $ENTRIES, $LATEST, $INSTANCES, $TOKENS, $PAIRS, $COLUMN)
+    public static function createFSG(FlatBufferBuilder $builder, $SELF_OFFSET, $PREVIOUS, $FEED_ID, $KIND, $LEVEL, $MIN_SEQ, $MAX_SEQ, $COVERS_THROUGH, $REPLACES, $ENTRIES, $LATEST, $INSTANCES, $TOKENS, $PAIRS, $COLUMN, $INSTANCE_URL_IDS)
     {
-        $builder->startObject(15);
+        $builder->startObject(16);
         self::addSELF_OFFSET($builder, $SELF_OFFSET);
         self::addPREVIOUS($builder, $PREVIOUS);
         self::addFEED_ID($builder, $FEED_ID);
@@ -295,6 +316,7 @@ class FSG extends Table
         self::addTOKENS($builder, $TOKENS);
         self::addPAIRS($builder, $PAIRS);
         self::addCOLUMN($builder, $COLUMN);
+        self::addINSTANCE_URL_IDS($builder, $INSTANCE_URL_IDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -615,6 +637,40 @@ class FSG extends Table
     public static function startCOLUMNVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINSTANCE_URL_IDS(FlatBufferBuilder $builder, $INSTANCE_URL_IDS)
+    {
+        $builder->addOffsetX(15, $INSTANCE_URL_IDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createINSTANCE_URL_IDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putUint($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startINSTANCE_URL_IDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

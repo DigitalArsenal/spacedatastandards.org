@@ -192,6 +192,24 @@ class FSG : Table() {
         }
     val columnAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
     fun columnInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Each instance's latest url, parallel to INSTANCES: an id into the feed
+     * dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+     */
+    fun instanceUrlIds(j: Int) : UInt {
+        val o = __offset(34)
+        return if (o != 0) {
+            bb.getInt(__vector(o) + j * 4).toUInt()
+        } else {
+            0u
+        }
+    }
+    val instanceUrlIdsLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
+    val instanceUrlIdsAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(34, 4)
+    fun instanceUrlIdsInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 34, 4)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsFSG(_bb: ByteBuffer): FSG = getRootAsFSG(_bb, FSG())
@@ -200,13 +218,14 @@ class FSG : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun FSGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FSG")
-        fun createFSG(builder: FlatBufferBuilder, selfOffset: ULong, previous: ULong, feedId: UInt, kind: UByte, level: UByte, minSeq: ULong, maxSeq: ULong, coversThrough: ULong, replacesOffset: Int, entriesOffset: Int, latestOffset: Int, instancesOffset: Int, tokensOffset: Int, pairsOffset: Int, columnOffset: Int) : Int {
-            builder.startTable(15)
+        fun createFSG(builder: FlatBufferBuilder, selfOffset: ULong, previous: ULong, feedId: UInt, kind: UByte, level: UByte, minSeq: ULong, maxSeq: ULong, coversThrough: ULong, replacesOffset: Int, entriesOffset: Int, latestOffset: Int, instancesOffset: Int, tokensOffset: Int, pairsOffset: Int, columnOffset: Int, instanceUrlIdsOffset: Int) : Int {
+            builder.startTable(16)
             addCOVERSTHROUGH(builder, coversThrough)
             addMAXSEQ(builder, maxSeq)
             addMINSEQ(builder, minSeq)
             addPREVIOUS(builder, previous)
             addSELFOFFSET(builder, selfOffset)
+            addINSTANCEURLIDS(builder, instanceUrlIdsOffset)
             addCOLUMN(builder, columnOffset)
             addPAIRS(builder, pairsOffset)
             addTOKENS(builder, tokensOffset)
@@ -219,7 +238,7 @@ class FSG : Table() {
             addKIND(builder, kind)
             return endFSG(builder)
         }
-        fun startFSG(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startFSG(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addSELFOFFSET(builder: FlatBufferBuilder, selfOffset: ULong) = builder.addLong(0, selfOffset.toLong(), 0)
         fun addPREVIOUS(builder: FlatBufferBuilder, previous: ULong) = builder.addLong(1, previous.toLong(), 0)
         fun addFEEDID(builder: FlatBufferBuilder, feedId: UInt) = builder.addInt(2, feedId.toInt(), 0)
@@ -272,6 +291,16 @@ class FSG : Table() {
             return builder.endVector()
         }
         fun startColumnVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addINSTANCEURLIDS(builder: FlatBufferBuilder, instanceUrlIds: Int) = builder.addOffset(15, instanceUrlIds, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createInstanceUrlIdsVector(builder: FlatBufferBuilder, data: UIntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addInt(data[i].toInt())
+            }
+            return builder.endVector()
+        }
+        fun startInstanceUrlIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endFSG(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

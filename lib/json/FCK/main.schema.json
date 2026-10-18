@@ -154,6 +154,17 @@
         "PREVIOUS_FEED_ROOT_CID" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
                 "description" : "Binary CID of the previous feed root."
+              },
+        "RECORD_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+              },
+        "MIN_W" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+              },
+        "MAX_W" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
               }
       },
       "additionalProperties" : false

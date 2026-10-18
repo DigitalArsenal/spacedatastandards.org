@@ -311,6 +311,26 @@
           },
           "description": "Binary CID of the previous feed root.",
           "x-flatbuffer-type": "[ubyte]"
+        },
+        "RECORD_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "MIN_W": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.",
+          "x-flatbuffer-type": "long"
+        },
+        "MAX_W": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "x-flatbuffer-type": "long"
         }
       },
       "additionalProperties": false

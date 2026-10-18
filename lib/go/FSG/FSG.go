@@ -474,8 +474,50 @@ func (rcv *FSG) MutateColumn(j int, n byte) bool {
 	return rcv.MutateCOLUMN(j, n)
 }
 
+/// Each instance's latest url, parallel to INSTANCES: an id into the feed
+/// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+func (rcv *FSG) INSTANCE_URL_IDS(j int) uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetUint32(a + flatbuffers.UOffsetT(j*4))
+	}
+	return 0
+}
+
+func (rcv *FSG) InstanceUrlIds(j int) uint32 {
+	return rcv.INSTANCE_URL_IDS(j)
+}
+
+func (rcv *FSG) INSTANCE_URL_IDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *FSG) InstanceUrlIdsLength() int {
+	return rcv.INSTANCE_URL_IDSLength()
+}
+
+/// Each instance's latest url, parallel to INSTANCES: an id into the feed
+/// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+func (rcv *FSG) MutateINSTANCE_URL_IDS(j int, n uint32) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateUint32(a+flatbuffers.UOffsetT(j*4), n)
+	}
+	return false
+}
+
+func (rcv *FSG) MutateInstanceUrlIds(j int, n uint32) bool {
+	return rcv.MutateINSTANCE_URL_IDS(j, n)
+}
+
 func FSGStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(16)
 }
 func FSGAddSELF_OFFSET(builder *flatbuffers.Builder, SELF_OFFSET uint64) {
 	builder.PrependUint64Slot(0, SELF_OFFSET, 0)
@@ -608,6 +650,18 @@ func FSGStartCOLUMNVector(builder *flatbuffers.Builder, numElems int) flatbuffer
 }
 func FSGStartColumnVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return FSGStartCOLUMNVector(builder, numElems)
+}
+func FSGAddINSTANCE_URL_IDS(builder *flatbuffers.Builder, INSTANCE_URL_IDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(INSTANCE_URL_IDS), 0)
+}
+func FSGAddInstanceUrlIds(builder *flatbuffers.Builder, INSTANCE_URL_IDS flatbuffers.UOffsetT) {
+	FSGAddINSTANCE_URL_IDS(builder, INSTANCE_URL_IDS)
+}
+func FSGStartINSTANCE_URL_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func FSGStartInstanceUrlIdsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return FSGStartINSTANCE_URL_IDSVector(builder, numElems)
 }
 func FSGEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

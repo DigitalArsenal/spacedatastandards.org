@@ -408,10 +408,18 @@ class FCK {
   ///  Binary CID of the previous feed root.
   List<int>? get PREVIOUS_FEED_ROOT_CID => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 32);
   List<int>? get previousFeedRootCid => PREVIOUS_FEED_ROOT_CID;
+  ///  Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+  int get RECORD_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get recordBytes => RECORD_BYTES;
+  ///  Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+  int get MIN_W => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  int get minW => MIN_W;
+  int get MAX_W => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  int get maxW => MAX_W;
 
   @override
   String toString() {
-    return 'FCK{selfOffset: ${selfOffset}, PREVIOUS: ${PREVIOUS}, feedId: ${feedId}, TYPE: ${TYPE}, PROVIDER: ${PROVIDER}, SOURCE: ${SOURCE}, GENERATION: ${GENERATION}, committedAt: ${committedAt}, appliedThrough: ${appliedThrough}, typeSeqHigh: ${typeSeqHigh}, COUNTERS: ${COUNTERS}, SEGMENTS: ${SEGMENTS}, segmentDigests: ${segmentDigests}, commitsRootCid: ${commitsRootCid}, previousFeedRootCid: ${previousFeedRootCid}}';
+    return 'FCK{selfOffset: ${selfOffset}, PREVIOUS: ${PREVIOUS}, feedId: ${feedId}, TYPE: ${TYPE}, PROVIDER: ${PROVIDER}, SOURCE: ${SOURCE}, GENERATION: ${GENERATION}, committedAt: ${committedAt}, appliedThrough: ${appliedThrough}, typeSeqHigh: ${typeSeqHigh}, COUNTERS: ${COUNTERS}, SEGMENTS: ${SEGMENTS}, segmentDigests: ${segmentDigests}, commitsRootCid: ${commitsRootCid}, previousFeedRootCid: ${previousFeedRootCid}, recordBytes: ${recordBytes}, minW: ${minW}, maxW: ${maxW}}';
   }
 }
 
@@ -429,7 +437,7 @@ class FCKBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(18);
   }
 
   int addSelfOffset(int? SELF_OFFSET) {
@@ -492,6 +500,18 @@ class FCKBuilder {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addRecordBytes(int? RECORD_BYTES) {
+    fbBuilder.addUint64(15, RECORD_BYTES);
+    return fbBuilder.offset;
+  }
+  int addMinW(int? MIN_W) {
+    fbBuilder.addInt64(16, MIN_W);
+    return fbBuilder.offset;
+  }
+  int addMaxW(int? MAX_W) {
+    fbBuilder.addInt64(17, MAX_W);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -514,6 +534,9 @@ class FCKObjectBuilder extends fb.ObjectBuilder {
   final List<int>? _SEGMENT_DIGESTS;
   final List<int>? _COMMITS_ROOT_CID;
   final List<int>? _PREVIOUS_FEED_ROOT_CID;
+  final int? _RECORD_BYTES;
+  final int? _MIN_W;
+  final int? _MAX_W;
 
   FCKObjectBuilder({
     int? SELF_OFFSET,
@@ -539,6 +562,12 @@ class FCKObjectBuilder extends fb.ObjectBuilder {
     List<int>? commitsRootCid,
     List<int>? PREVIOUS_FEED_ROOT_CID,
     List<int>? previousFeedRootCid,
+    int? RECORD_BYTES,
+    int? recordBytes,
+    int? MIN_W,
+    int? minW,
+    int? MAX_W,
+    int? maxW,
   })
       : _SELF_OFFSET = selfOffset ?? SELF_OFFSET,
         _PREVIOUS = PREVIOUS,
@@ -554,7 +583,10 @@ class FCKObjectBuilder extends fb.ObjectBuilder {
         _SEGMENTS = SEGMENTS,
         _SEGMENT_DIGESTS = segmentDigests ?? SEGMENT_DIGESTS,
         _COMMITS_ROOT_CID = commitsRootCid ?? COMMITS_ROOT_CID,
-        _PREVIOUS_FEED_ROOT_CID = previousFeedRootCid ?? PREVIOUS_FEED_ROOT_CID;
+        _PREVIOUS_FEED_ROOT_CID = previousFeedRootCid ?? PREVIOUS_FEED_ROOT_CID,
+        _RECORD_BYTES = recordBytes ?? RECORD_BYTES,
+        _MIN_W = minW ?? MIN_W,
+        _MAX_W = maxW ?? MAX_W;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -573,7 +605,7 @@ class FCKObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListUint8(_COMMITS_ROOT_CID!);
     final int? PREVIOUS_FEED_ROOT_CIDOffset = _PREVIOUS_FEED_ROOT_CID == null ? null
         : fbBuilder.writeListUint8(_PREVIOUS_FEED_ROOT_CID!);
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(18);
     fbBuilder.addUint64(0, _SELF_OFFSET);
     fbBuilder.addUint64(1, _PREVIOUS);
     fbBuilder.addUint32(2, _FEED_ID);
@@ -591,6 +623,9 @@ class FCKObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(12, SEGMENT_DIGESTSOffset);
     fbBuilder.addOffset(13, COMMITS_ROOT_CIDOffset);
     fbBuilder.addOffset(14, PREVIOUS_FEED_ROOT_CIDOffset);
+    fbBuilder.addUint64(15, _RECORD_BYTES);
+    fbBuilder.addInt64(16, _MIN_W);
+    fbBuilder.addInt64(17, _MAX_W);
     return fbBuilder.endTable();
   }
 

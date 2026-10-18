@@ -382,10 +382,14 @@ class FSG {
   List<FSGPair>? get PAIRS => const fb.ListReader<FSGPair>(FSGPair.reader).vTableGetNullable(_bc, _bcOffset, 30);
   ///  Reserved for analytics column segments.
   List<int>? get COLUMN => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Each instance's latest url, parallel to INSTANCES: an id into the feed
+  ///  dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+  List<int>? get INSTANCE_URL_IDS => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  List<int>? get instanceUrlIds => INSTANCE_URL_IDS;
 
   @override
   String toString() {
-    return 'FSG{selfOffset: ${selfOffset}, PREVIOUS: ${PREVIOUS}, feedId: ${feedId}, KIND: ${KIND}, LEVEL: ${LEVEL}, minSeq: ${minSeq}, maxSeq: ${maxSeq}, coversThrough: ${coversThrough}, REPLACES: ${REPLACES}, ENTRIES: ${ENTRIES}, LATEST: ${LATEST}, INSTANCES: ${INSTANCES}, TOKENS: ${TOKENS}, PAIRS: ${PAIRS}, COLUMN: ${COLUMN}}';
+    return 'FSG{selfOffset: ${selfOffset}, PREVIOUS: ${PREVIOUS}, feedId: ${feedId}, KIND: ${KIND}, LEVEL: ${LEVEL}, minSeq: ${minSeq}, maxSeq: ${maxSeq}, coversThrough: ${coversThrough}, REPLACES: ${REPLACES}, ENTRIES: ${ENTRIES}, LATEST: ${LATEST}, INSTANCES: ${INSTANCES}, TOKENS: ${TOKENS}, PAIRS: ${PAIRS}, COLUMN: ${COLUMN}, instanceUrlIds: ${instanceUrlIds}}';
   }
 }
 
@@ -403,7 +407,7 @@ class FSGBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(16);
   }
 
   int addSelfOffset(int? SELF_OFFSET) {
@@ -466,6 +470,10 @@ class FSGBuilder {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addInstanceUrlIdsOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -488,6 +496,7 @@ class FSGObjectBuilder extends fb.ObjectBuilder {
   final List<FMBEntryObjectBuilder>? _TOKENS;
   final List<FSGPairObjectBuilder>? _PAIRS;
   final List<int>? _COLUMN;
+  final List<int>? _INSTANCE_URL_IDS;
 
   FSGObjectBuilder({
     int? SELF_OFFSET,
@@ -510,6 +519,8 @@ class FSGObjectBuilder extends fb.ObjectBuilder {
     List<FMBEntryObjectBuilder>? TOKENS,
     List<FSGPairObjectBuilder>? PAIRS,
     List<int>? COLUMN,
+    List<int>? INSTANCE_URL_IDS,
+    List<int>? instanceUrlIds,
   })
       : _SELF_OFFSET = selfOffset ?? SELF_OFFSET,
         _PREVIOUS = PREVIOUS,
@@ -525,7 +536,8 @@ class FSGObjectBuilder extends fb.ObjectBuilder {
         _INSTANCES = INSTANCES,
         _TOKENS = TOKENS,
         _PAIRS = PAIRS,
-        _COLUMN = COLUMN;
+        _COLUMN = COLUMN,
+        _INSTANCE_URL_IDS = instanceUrlIds ?? INSTANCE_URL_IDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -544,7 +556,9 @@ class FSGObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListOfStructs(_PAIRS!);
     final int? COLUMNOffset = _COLUMN == null ? null
         : fbBuilder.writeListUint8(_COLUMN!);
-    fbBuilder.startTable(15);
+    final int? INSTANCE_URL_IDSOffset = _INSTANCE_URL_IDS == null ? null
+        : fbBuilder.writeListUint32(_INSTANCE_URL_IDS!);
+    fbBuilder.startTable(16);
     fbBuilder.addUint64(0, _SELF_OFFSET);
     fbBuilder.addUint64(1, _PREVIOUS);
     fbBuilder.addUint32(2, _FEED_ID);
@@ -560,6 +574,7 @@ class FSGObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(12, TOKENSOffset);
     fbBuilder.addOffset(13, PAIRSOffset);
     fbBuilder.addOffset(14, COLUMNOffset);
+    fbBuilder.addOffset(15, INSTANCE_URL_IDSOffset);
     return fbBuilder.endTable();
   }
 

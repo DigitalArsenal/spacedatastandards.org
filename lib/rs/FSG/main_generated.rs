@@ -1084,6 +1084,7 @@ impl<'a> FSG<'a> {
     pub const VT_TOKENS: ::flatbuffers::VOffsetT = 28;
     pub const VT_PAIRS: ::flatbuffers::VOffsetT = 30;
     pub const VT_COLUMN: ::flatbuffers::VOffsetT = 32;
+    pub const VT_INSTANCE_URL_IDS: ::flatbuffers::VOffsetT = 34;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1101,6 +1102,7 @@ impl<'a> FSG<'a> {
         builder.add_MIN_SEQ(args.MIN_SEQ);
         builder.add_PREVIOUS(args.PREVIOUS);
         builder.add_SELF_OFFSET(args.SELF_OFFSET);
+        if let Some(x) = args.INSTANCE_URL_IDS { builder.add_INSTANCE_URL_IDS(x); }
         if let Some(x) = args.COLUMN { builder.add_COLUMN(x); }
         if let Some(x) = args.PAIRS { builder.add_PAIRS(x); }
         if let Some(x) = args.TOKENS { builder.add_TOKENS(x); }
@@ -1144,6 +1146,9 @@ impl<'a> FSG<'a> {
         let COLUMN = self.COLUMN().map(|x| {
             x.into_iter().collect()
         });
+        let INSTANCE_URL_IDS = self.INSTANCE_URL_IDS().map(|x| {
+            x.into_iter().collect()
+        });
         FSGT {
             SELF_OFFSET,
             PREVIOUS,
@@ -1160,6 +1165,7 @@ impl<'a> FSG<'a> {
             TOKENS,
             PAIRS,
             COLUMN,
+            INSTANCE_URL_IDS,
         }
     }
 
@@ -1292,6 +1298,16 @@ impl<'a> FSG<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u8>>>(FSG::VT_COLUMN, None)}
     }
+
+    /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+    /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+    #[inline]
+    pub fn INSTANCE_URL_IDS(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(FSG::VT_INSTANCE_URL_IDS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for FSG<'_> {
@@ -1315,6 +1331,7 @@ impl ::flatbuffers::Verifiable for FSG<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<FMBEntry>>>>("TOKENS", Self::VT_TOKENS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, FSGPair>>>("PAIRS", Self::VT_PAIRS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u8>>>("COLUMN", Self::VT_COLUMN, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("INSTANCE_URL_IDS", Self::VT_INSTANCE_URL_IDS, false)?
             .finish();
         Ok(())
     }
@@ -1336,6 +1353,7 @@ pub struct FSGArgs<'a> {
     pub TOKENS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<FMBEntry<'a>>>>>,
     pub PAIRS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, FSGPair>>>,
     pub COLUMN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u8>>>,
+    pub INSTANCE_URL_IDS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
 }
 
 impl<'a> Default for FSGArgs<'a> {
@@ -1357,6 +1375,7 @@ impl<'a> Default for FSGArgs<'a> {
             TOKENS: None,
             PAIRS: None,
             COLUMN: None,
+            INSTANCE_URL_IDS: None,
         }
     }
 }
@@ -1443,6 +1462,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> FSGBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_INSTANCE_URL_IDS(&mut self, INSTANCE_URL_IDS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(FSG::VT_INSTANCE_URL_IDS, INSTANCE_URL_IDS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> FSGBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         FSGBuilder {
@@ -1476,6 +1500,7 @@ impl ::core::fmt::Debug for FSG<'_> {
         ds.field("TOKENS", &self.TOKENS());
         ds.field("PAIRS", &self.PAIRS());
         ds.field("COLUMN", &self.COLUMN());
+        ds.field("INSTANCE_URL_IDS", &self.INSTANCE_URL_IDS());
         ds.finish()
     }
 }
@@ -1498,6 +1523,7 @@ pub struct FSGT {
     pub TOKENS: Option<alloc::vec::Vec<FMBEntryT>>,
     pub PAIRS: Option<alloc::vec::Vec<FSGPairT>>,
     pub COLUMN: Option<alloc::vec::Vec<u8>>,
+    pub INSTANCE_URL_IDS: Option<alloc::vec::Vec<u32>>,
 }
 
 impl Default for FSGT {
@@ -1518,6 +1544,7 @@ impl Default for FSGT {
             TOKENS: None,
             PAIRS: None,
             COLUMN: None,
+            INSTANCE_URL_IDS: None,
         }
     }
 }
@@ -1556,6 +1583,9 @@ impl FSGT {
         let COLUMN = self.COLUMN.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let INSTANCE_URL_IDS = self.INSTANCE_URL_IDS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         FSG::create(_fbb, &FSGArgs{
             SELF_OFFSET,
             PREVIOUS,
@@ -1572,6 +1602,7 @@ impl FSGT {
             TOKENS,
             PAIRS,
             COLUMN,
+            INSTANCE_URL_IDS,
         })
     }
 }

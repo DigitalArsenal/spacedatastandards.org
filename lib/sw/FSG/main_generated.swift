@@ -258,6 +258,7 @@ public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let TOKENS: VOffset = 28
     static let PAIRS: VOffset = 30
     static let COLUMN: VOffset = 32
+    static let INSTANCE_URL_IDS: VOffset = 34
   }
 
   ///  Stream offset of this frame's size prefix.
@@ -293,7 +294,11 @@ public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Reserved for analytics column segments.
   public var COLUMN: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.COLUMN, byteSize: 1) }
   public func withUnsafePointerToColumn<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.COLUMN, body: body) }
-  public static func startFSG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Each instance's latest url, parallel to INSTANCES: an id into the feed
+  ///  dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+  public var INSTANCE_URL_IDS: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.INSTANCE_URL_IDS, byteSize: 4) }
+  public func withUnsafePointerToInstanceUrlIds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.INSTANCE_URL_IDS, body: body) }
+  public static func startFSG(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(SELF_OFFSET: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELF_OFFSET, def: 0, at: VT.SELF_OFFSET) }
   public static func add(PREVIOUS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREVIOUS, def: 0, at: VT.PREVIOUS) }
   public static func add(FEED_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FEED_ID, def: 0, at: VT.FEED_ID) }
@@ -318,6 +323,7 @@ public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     builder.startVector(size * MemoryLayout<FSGPair>.size, elementSize: MemoryLayout<FSGPair>.alignment)
   }
   public static func addVectorOf(COLUMN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLUMN, at: VT.COLUMN) }
+  public static func addVectorOf(INSTANCE_URL_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTANCE_URL_IDS, at: VT.INSTANCE_URL_IDS) }
   public static func endFSG(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFSG(
     _ fbb: inout FlatBufferBuilder,
@@ -335,7 +341,8 @@ public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     INSTANCESVectorOffset INSTANCES: Offset = Offset(),
     TOKENSVectorOffset TOKENS: Offset = Offset(),
     PAIRSVectorOffset PAIRS: Offset = Offset(),
-    COLUMNVectorOffset COLUMN: Offset = Offset()
+    COLUMNVectorOffset COLUMN: Offset = Offset(),
+    INSTANCE_URL_IDSVectorOffset INSTANCE_URL_IDS: Offset = Offset()
   ) -> Offset {
     let __start = FSG.startFSG(&fbb)
     FSG.add(SELF_OFFSET: SELF_OFFSET, &fbb)
@@ -353,6 +360,7 @@ public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     FSG.addVectorOf(TOKENS: TOKENS, &fbb)
     FSG.addVectorOf(PAIRS: PAIRS, &fbb)
     FSG.addVectorOf(COLUMN: COLUMN, &fbb)
+    FSG.addVectorOf(INSTANCE_URL_IDS: INSTANCE_URL_IDS, &fbb)
     return FSG.endFSG(&fbb, start: __start)
   }
 
@@ -373,6 +381,7 @@ public struct FSG: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.TOKENS, fieldName: "TOKENS", required: false, type: ForwardOffset<Vector<ForwardOffset<FMBEntry>, FMBEntry>>.self)
     try _v.visit(field: VT.PAIRS, fieldName: "PAIRS", required: false, type: ForwardOffset<Vector<FSGPair, FSGPair>>.self)
     try _v.visit(field: VT.COLUMN, fieldName: "COLUMN", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.INSTANCE_URL_IDS, fieldName: "INSTANCE_URL_IDS", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
     _v.finish()
   }
 }

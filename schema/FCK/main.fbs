@@ -1,5 +1,5 @@
-// Hash: 36630fab896394528790381dac848135eb9cd4d131a51850fb29af00591f6562
-// Version: 1.254.0
+// Hash: 961fa1e3872db57181af74b3430b66519f6bc76feaca17069a6f260571ebd838
+// Version: 1.254.1
 // -----------------------------------END_HEADER
 /// FlatSQL Checkpoint.
 ///
@@ -98,6 +98,11 @@ table FCK {
   COMMITS_ROOT_CID: [ubyte];
   /// Binary CID of the previous feed root.
   PREVIOUS_FEED_ROOT_CID: [ubyte];
+  /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+  RECORD_BYTES: ulong;
+  /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+  MIN_W: long;
+  MAX_W: long;
 }
 
 root_type FCK;

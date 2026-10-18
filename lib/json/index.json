@@ -131014,6 +131014,23 @@
                                 "maximum": 255
                             },
                             "description": "Binary CID of the previous feed root."
+                        },
+                        "RECORD_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+                        },
+                        "MIN_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+                        },
+                        "MAX_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
                         }
                     },
                     "additionalProperties": false
@@ -132073,6 +132090,15 @@
                                 "maximum": 255
                             },
                             "description": "Reserved for analytics column segments."
+                        },
+                        "INSTANCE_URL_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Each instance's latest url, parallel to INSTANCES: an id into the feed\ndictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none."
                         }
                     },
                     "additionalProperties": false
@@ -212829,6 +212855,23 @@
                                 "maximum": 255
                             },
                             "description": "Binary CID of the previous feed root."
+                        },
+                        "RECORD_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+                        },
+                        "MIN_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+                        },
+                        "MAX_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
                         }
                     },
                     "additionalProperties": false
@@ -265163,6 +265206,23 @@
                                 "maximum": 255
                             },
                             "description": "Binary CID of the previous feed root."
+                        },
+                        "RECORD_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+                        },
+                        "MIN_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+                        },
+                        "MAX_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
                         }
                     },
                     "additionalProperties": false
@@ -265392,6 +265452,15 @@
                                 "maximum": 255
                             },
                             "description": "Reserved for analytics column segments."
+                        },
+                        "INSTANCE_URL_IDS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 4294967295
+                            },
+                            "description": "Each instance's latest url, parallel to INSTANCES: an id into the feed\ndictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none."
                         }
                     },
                     "additionalProperties": false

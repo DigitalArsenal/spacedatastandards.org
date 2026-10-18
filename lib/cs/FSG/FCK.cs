@@ -84,6 +84,11 @@ public struct FCK : IFlatbufferObject
   public ArraySegment<byte>? GetPREVIOUS_FEED_ROOT_CIDBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public byte[] GetPREVIOUS_FEED_ROOT_CIDArray() { return __p.__vector_as_array<byte>(32); }
+  /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+  public ulong RECORD_BYTES { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+  public long MIN_W { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  public long MAX_W { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
 
   public static Offset<FCK> CreateFCK(FlatBufferBuilder builder,
       ulong SELF_OFFSET = 0,
@@ -100,8 +105,14 @@ public struct FCK : IFlatbufferObject
       VectorOffset SEGMENTSOffset = default(VectorOffset),
       VectorOffset SEGMENT_DIGESTSOffset = default(VectorOffset),
       VectorOffset COMMITS_ROOT_CIDOffset = default(VectorOffset),
-      VectorOffset PREVIOUS_FEED_ROOT_CIDOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset PREVIOUS_FEED_ROOT_CIDOffset = default(VectorOffset),
+      ulong RECORD_BYTES = 0,
+      long MIN_W = 0,
+      long MAX_W = 0) {
+    builder.StartTable(18);
+    FCK.AddMAX_W(builder, MAX_W);
+    FCK.AddMIN_W(builder, MIN_W);
+    FCK.AddRECORD_BYTES(builder, RECORD_BYTES);
     FCK.AddTYPE_SEQ_HIGH(builder, TYPE_SEQ_HIGH);
     FCK.AddAPPLIED_THROUGH(builder, APPLIED_THROUGH);
     FCK.AddCOMMITTED_AT(builder, COMMITTED_AT);
@@ -120,7 +131,7 @@ public struct FCK : IFlatbufferObject
     return FCK.EndFCK(builder);
   }
 
-  public static void StartFCK(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartFCK(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddSELF_OFFSET(FlatBufferBuilder builder, ulong SELF_OFFSET) { builder.AddUlong(0, SELF_OFFSET, 0); }
   public static void AddPREVIOUS(FlatBufferBuilder builder, ulong PREVIOUS) { builder.AddUlong(1, PREVIOUS, 0); }
   public static void AddFEED_ID(FlatBufferBuilder builder, uint FEED_ID) { builder.AddUint(2, FEED_ID, 0); }
@@ -152,6 +163,9 @@ public struct FCK : IFlatbufferObject
   public static VectorOffset CreatePREVIOUS_FEED_ROOT_CIDVectorBlock(FlatBufferBuilder builder, ArraySegment<byte> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePREVIOUS_FEED_ROOT_CIDVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<byte>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPREVIOUS_FEED_ROOT_CIDVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddRECORD_BYTES(FlatBufferBuilder builder, ulong RECORD_BYTES) { builder.AddUlong(15, RECORD_BYTES, 0); }
+  public static void AddMIN_W(FlatBufferBuilder builder, long MIN_W) { builder.AddLong(16, MIN_W, 0); }
+  public static void AddMAX_W(FlatBufferBuilder builder, long MAX_W) { builder.AddLong(17, MAX_W, 0); }
   public static Offset<FCK> EndFCK(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<FCK>(o);
@@ -183,6 +197,9 @@ public struct FCK : IFlatbufferObject
     for (var _j = 0; _j < this.COMMITS_ROOT_CIDLength; ++_j) {_o.COMMITS_ROOT_CID.Add(this.COMMITS_ROOT_CID(_j));}
     _o.PREVIOUS_FEED_ROOT_CID = new List<byte>();
     for (var _j = 0; _j < this.PREVIOUS_FEED_ROOT_CIDLength; ++_j) {_o.PREVIOUS_FEED_ROOT_CID.Add(this.PREVIOUS_FEED_ROOT_CID(_j));}
+    _o.RECORD_BYTES = this.RECORD_BYTES;
+    _o.MIN_W = this.MIN_W;
+    _o.MAX_W = this.MAX_W;
   }
   public static Offset<FCK> Pack(FlatBufferBuilder builder, FCKT _o) {
     if (_o == null) return default(Offset<FCK>);
@@ -226,7 +243,10 @@ public struct FCK : IFlatbufferObject
       _SEGMENTS,
       _SEGMENT_DIGESTS,
       _COMMITS_ROOT_CID,
-      _PREVIOUS_FEED_ROOT_CID);
+      _PREVIOUS_FEED_ROOT_CID,
+      _o.RECORD_BYTES,
+      _o.MIN_W,
+      _o.MAX_W);
   }
 }
 
@@ -247,6 +267,9 @@ public class FCKT
   public List<byte> SEGMENT_DIGESTS { get; set; }
   public List<byte> COMMITS_ROOT_CID { get; set; }
   public List<byte> PREVIOUS_FEED_ROOT_CID { get; set; }
+  public ulong RECORD_BYTES { get; set; }
+  public long MIN_W { get; set; }
+  public long MAX_W { get; set; }
 
   public FCKT() {
     this.SELF_OFFSET = 0;
@@ -264,6 +287,9 @@ public class FCKT
     this.SEGMENT_DIGESTS = null;
     this.COMMITS_ROOT_CID = null;
     this.PREVIOUS_FEED_ROOT_CID = null;
+    this.RECORD_BYTES = 0;
+    this.MIN_W = 0;
+    this.MAX_W = 0;
   }
   public static FCKT DeserializeFromBinary(byte[] fbBuffer) {
     return FCK.GetRootAsFCK(new ByteBuffer(fbBuffer)).UnPack();
@@ -296,6 +322,9 @@ static public class FCKVerify
       && verifier.VerifyVectorOfData(tablePos, 28 /*SEGMENT_DIGESTS*/, 1 /*byte*/, false)
       && verifier.VerifyVectorOfData(tablePos, 30 /*COMMITS_ROOT_CID*/, 1 /*byte*/, false)
       && verifier.VerifyVectorOfData(tablePos, 32 /*PREVIOUS_FEED_ROOT_CID*/, 1 /*byte*/, false)
+      && verifier.VerifyField(tablePos, 34 /*RECORD_BYTES*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*MIN_W*/, 8 /*long*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*MAX_W*/, 8 /*long*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

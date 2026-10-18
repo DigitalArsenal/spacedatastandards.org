@@ -66,6 +66,15 @@ export declare class FCK implements flatbuffers.IUnpackableObject<FCKT> {
     PREVIOUS_FEED_ROOT_CID(index: number): number | null;
     previousFeedRootCidLength(): number;
     previousFeedRootCidArray(): Uint8Array | null;
+    /**
+     * Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+     */
+    RECORD_BYTES(): bigint;
+    /**
+     * Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+     */
+    MIN_W(): bigint;
+    MAX_W(): bigint;
     static startFCK(builder: flatbuffers.Builder): void;
     static addSelfOffset(builder: flatbuffers.Builder, SELF_OFFSET: bigint): void;
     static addPrevious(builder: flatbuffers.Builder, PREVIOUS: bigint): void;
@@ -89,6 +98,9 @@ export declare class FCK implements flatbuffers.IUnpackableObject<FCKT> {
     static addPreviousFeedRootCid(builder: flatbuffers.Builder, PREVIOUS_FEED_ROOT_CIDOffset: flatbuffers.Offset): void;
     static createPreviousFeedRootCidVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startPreviousFeedRootCidVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addRecordBytes(builder: flatbuffers.Builder, RECORD_BYTES: bigint): void;
+    static addMinW(builder: flatbuffers.Builder, MIN_W: bigint): void;
+    static addMaxW(builder: flatbuffers.Builder, MAX_W: bigint): void;
     static endFCK(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishFCKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedFCKBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -111,7 +123,10 @@ export declare class FCKT implements flatbuffers.IGeneratedObject {
     SEGMENT_DIGESTS: (number)[];
     COMMITS_ROOT_CID: (number)[];
     PREVIOUS_FEED_ROOT_CID: (number)[];
-    constructor(SELF_OFFSET?: bigint, PREVIOUS?: bigint, FEED_ID?: number, TYPE?: string | Uint8Array | null, PROVIDER?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, GENERATION?: number, COMMITTED_AT?: bigint, APPLIED_THROUGH?: bigint, TYPE_SEQ_HIGH?: bigint, COUNTERS?: FCKCountersT | null, SEGMENTS?: (FCKSegmentT)[], SEGMENT_DIGESTS?: (number)[], COMMITS_ROOT_CID?: (number)[], PREVIOUS_FEED_ROOT_CID?: (number)[]);
+    RECORD_BYTES: bigint;
+    MIN_W: bigint;
+    MAX_W: bigint;
+    constructor(SELF_OFFSET?: bigint, PREVIOUS?: bigint, FEED_ID?: number, TYPE?: string | Uint8Array | null, PROVIDER?: string | Uint8Array | null, SOURCE?: string | Uint8Array | null, GENERATION?: number, COMMITTED_AT?: bigint, APPLIED_THROUGH?: bigint, TYPE_SEQ_HIGH?: bigint, COUNTERS?: FCKCountersT | null, SEGMENTS?: (FCKSegmentT)[], SEGMENT_DIGESTS?: (number)[], COMMITS_ROOT_CID?: (number)[], PREVIOUS_FEED_ROOT_CID?: (number)[], RECORD_BYTES?: bigint, MIN_W?: bigint, MAX_W?: bigint);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=FCK.d.ts.map

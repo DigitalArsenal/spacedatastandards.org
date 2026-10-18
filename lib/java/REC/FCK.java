@@ -99,8 +99,17 @@ public final class FCK extends com.google.flatbuffers.Table {
   public ByteVector previousFeedRootCidVector(ByteVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer PREVIOUS_FEED_ROOT_CIDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
   public ByteBuffer PREVIOUS_FEED_ROOT_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+   */
+  public long RECORD_BYTES() { int o = __offset(34); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+   */
+  public long MIN_W() { int o = __offset(36); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long MAX_W() { int o = __offset(38); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
-  public static void startFCK(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startFCK(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addSelfOffset(FlatBufferBuilder builder, long SELF_OFFSET) { builder.addLong(0, SELF_OFFSET, 0L); }
   public static void addPrevious(FlatBufferBuilder builder, long PREVIOUS) { builder.addLong(1, PREVIOUS, 0L); }
   public static void addFeedId(FlatBufferBuilder builder, long FEED_ID) { builder.addInt(2, (int) FEED_ID, (int) 0L); }
@@ -126,6 +135,9 @@ public final class FCK extends com.google.flatbuffers.Table {
   public static int createPreviousFeedRootCidVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createPreviousFeedRootCidVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startPreviousFeedRootCidVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addRecordBytes(FlatBufferBuilder builder, long RECORD_BYTES) { builder.addLong(15, RECORD_BYTES, 0L); }
+  public static void addMinW(FlatBufferBuilder builder, long MIN_W) { builder.addLong(16, MIN_W, 0L); }
+  public static void addMaxW(FlatBufferBuilder builder, long MAX_W) { builder.addLong(17, MAX_W, 0L); }
   public static int endFCK(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -214,7 +214,8 @@ struct FSG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_INSTANCES = 26,
     VT_TOKENS = 28,
     VT_PAIRS = 30,
-    VT_COLUMN = 32
+    VT_COLUMN = 32,
+    VT_INSTANCE_URL_IDS = 34
   };
   /// Stream offset of this frame's size prefix.
   uint64_t SELF_OFFSET() const {
@@ -271,6 +272,11 @@ struct FSG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *COLUMN() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_COLUMN);
   }
+  /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+  /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+  const ::flatbuffers::Vector<uint32_t> *INSTANCE_URL_IDS() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_INSTANCE_URL_IDS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -298,6 +304,8 @@ struct FSG FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(PAIRS()) &&
            VerifyOffset(verifier, VT_COLUMN) &&
            verifier.VerifyVector(COLUMN()) &&
+           VerifyOffset(verifier, VT_INSTANCE_URL_IDS) &&
+           verifier.VerifyVector(INSTANCE_URL_IDS()) &&
            verifier.EndTable();
   }
 };
@@ -351,6 +359,9 @@ struct FSGBuilder {
   void add_COLUMN(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> COLUMN) {
     fbb_.AddOffset(FSG::VT_COLUMN, COLUMN);
   }
+  void add_INSTANCE_URL_IDS(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> INSTANCE_URL_IDS) {
+    fbb_.AddOffset(FSG::VT_INSTANCE_URL_IDS, INSTANCE_URL_IDS);
+  }
   explicit FSGBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -378,13 +389,15 @@ inline ::flatbuffers::Offset<FSG> CreateFSG(
     ::flatbuffers::Offset<::flatbuffers::Vector<const FSGInstance *>> INSTANCES = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<FMBEntry>>> TOKENS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<const FSGPair *>> PAIRS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> COLUMN = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> COLUMN = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> INSTANCE_URL_IDS = 0) {
   FSGBuilder builder_(_fbb);
   builder_.add_COVERS_THROUGH(COVERS_THROUGH);
   builder_.add_MAX_SEQ(MAX_SEQ);
   builder_.add_MIN_SEQ(MIN_SEQ);
   builder_.add_PREVIOUS(PREVIOUS);
   builder_.add_SELF_OFFSET(SELF_OFFSET);
+  builder_.add_INSTANCE_URL_IDS(INSTANCE_URL_IDS);
   builder_.add_COLUMN(COLUMN);
   builder_.add_PAIRS(PAIRS);
   builder_.add_TOKENS(TOKENS);
@@ -414,7 +427,8 @@ inline ::flatbuffers::Offset<FSG> CreateFSGDirect(
     const std::vector<FSGInstance> *INSTANCES = nullptr,
     const std::vector<::flatbuffers::Offset<FMBEntry>> *TOKENS = nullptr,
     const std::vector<FSGPair> *PAIRS = nullptr,
-    const std::vector<uint8_t> *COLUMN = nullptr) {
+    const std::vector<uint8_t> *COLUMN = nullptr,
+    const std::vector<uint32_t> *INSTANCE_URL_IDS = nullptr) {
   auto REPLACES__ = REPLACES ? _fbb.CreateVector<uint64_t>(*REPLACES) : 0;
   auto ENTRIES__ = ENTRIES ? _fbb.CreateVector<::flatbuffers::Offset<FMBEntry>>(*ENTRIES) : 0;
   auto LATEST__ = LATEST ? _fbb.CreateVectorOfStructs<FSGLatest>(*LATEST) : 0;
@@ -422,6 +436,7 @@ inline ::flatbuffers::Offset<FSG> CreateFSGDirect(
   auto TOKENS__ = TOKENS ? _fbb.CreateVector<::flatbuffers::Offset<FMBEntry>>(*TOKENS) : 0;
   auto PAIRS__ = PAIRS ? _fbb.CreateVectorOfStructs<FSGPair>(*PAIRS) : 0;
   auto COLUMN__ = COLUMN ? _fbb.CreateVector<uint8_t>(*COLUMN) : 0;
+  auto INSTANCE_URL_IDS__ = INSTANCE_URL_IDS ? _fbb.CreateVector<uint32_t>(*INSTANCE_URL_IDS) : 0;
   return CreateFSG(
       _fbb,
       SELF_OFFSET,
@@ -438,7 +453,8 @@ inline ::flatbuffers::Offset<FSG> CreateFSGDirect(
       INSTANCES__,
       TOKENS__,
       PAIRS__,
-      COLUMN__);
+      COLUMN__,
+      INSTANCE_URL_IDS__);
 }
 
 inline const FSG *GetFSG(const void *buf) {

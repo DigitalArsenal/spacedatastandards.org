@@ -181,8 +181,27 @@ columnArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Each instance's latest url, parallel to INSTANCES: an id into the feed
+ * dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+ */
+INSTANCE_URL_IDS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
+}
+
+instanceUrlIdsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+instanceUrlIdsArray():Uint32Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? new Uint32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startFSG(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(16);
 }
 
 static addSelfOffset(builder:flatbuffers.Builder, SELF_OFFSET:bigint) {
@@ -305,6 +324,27 @@ static startColumnVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(1, numElems, 1);
 }
 
+static addInstanceUrlIds(builder:flatbuffers.Builder, INSTANCE_URL_IDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, INSTANCE_URL_IDSOffset, 0);
+}
+
+static createInstanceUrlIdsVector(builder:flatbuffers.Builder, data:number[]|Uint32Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createInstanceUrlIdsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createInstanceUrlIdsVector(builder:flatbuffers.Builder, data:number[]|Uint32Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt32(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startInstanceUrlIdsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endFSG(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -318,7 +358,7 @@ static finishSizePrefixedFSGBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$FSG', true);
 }
 
-static createFSG(builder:flatbuffers.Builder, SELF_OFFSET:bigint, PREVIOUS:bigint, FEED_ID:number, KIND:fckSegmentKind, LEVEL:number, MIN_SEQ:bigint, MAX_SEQ:bigint, COVERS_THROUGH:bigint, REPLACESOffset:flatbuffers.Offset, ENTRIESOffset:flatbuffers.Offset, LATESTOffset:flatbuffers.Offset, INSTANCESOffset:flatbuffers.Offset, TOKENSOffset:flatbuffers.Offset, PAIRSOffset:flatbuffers.Offset, COLUMNOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createFSG(builder:flatbuffers.Builder, SELF_OFFSET:bigint, PREVIOUS:bigint, FEED_ID:number, KIND:fckSegmentKind, LEVEL:number, MIN_SEQ:bigint, MAX_SEQ:bigint, COVERS_THROUGH:bigint, REPLACESOffset:flatbuffers.Offset, ENTRIESOffset:flatbuffers.Offset, LATESTOffset:flatbuffers.Offset, INSTANCESOffset:flatbuffers.Offset, TOKENSOffset:flatbuffers.Offset, PAIRSOffset:flatbuffers.Offset, COLUMNOffset:flatbuffers.Offset, INSTANCE_URL_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   FSG.startFSG(builder);
   FSG.addSelfOffset(builder, SELF_OFFSET);
   FSG.addPrevious(builder, PREVIOUS);
@@ -335,6 +375,7 @@ static createFSG(builder:flatbuffers.Builder, SELF_OFFSET:bigint, PREVIOUS:bigin
   FSG.addTokens(builder, TOKENSOffset);
   FSG.addPairs(builder, PAIRSOffset);
   FSG.addColumn(builder, COLUMNOffset);
+  FSG.addInstanceUrlIds(builder, INSTANCE_URL_IDSOffset);
   return FSG.endFSG(builder);
 }
 
@@ -354,7 +395,8 @@ unpack(): FSGT {
     this.bb!.createObjList<FSGInstance, FSGInstanceT>(this.INSTANCES.bind(this), this.instancesLength()),
     this.bb!.createObjList<FMBEntry, FMBEntryT>(this.TOKENS.bind(this), this.tokensLength()),
     this.bb!.createObjList<FSGPair, FSGPairT>(this.PAIRS.bind(this), this.pairsLength()),
-    this.bb!.createScalarList<number>(this.COLUMN.bind(this), this.columnLength())
+    this.bb!.createScalarList<number>(this.COLUMN.bind(this), this.columnLength()),
+    this.bb!.createScalarList<number>(this.INSTANCE_URL_IDS.bind(this), this.instanceUrlIdsLength())
   );
 }
 
@@ -375,6 +417,7 @@ unpackTo(_o: FSGT): void {
   _o.TOKENS = this.bb!.createObjList<FMBEntry, FMBEntryT>(this.TOKENS.bind(this), this.tokensLength());
   _o.PAIRS = this.bb!.createObjList<FSGPair, FSGPairT>(this.PAIRS.bind(this), this.pairsLength());
   _o.COLUMN = this.bb!.createScalarList<number>(this.COLUMN.bind(this), this.columnLength());
+  _o.INSTANCE_URL_IDS = this.bb!.createScalarList<number>(this.INSTANCE_URL_IDS.bind(this), this.instanceUrlIdsLength());
 }
 }
 
@@ -394,7 +437,8 @@ constructor(
   public INSTANCES: (FSGInstanceT)[] = [],
   public TOKENS: (FMBEntryT)[] = [],
   public PAIRS: (FSGPairT)[] = [],
-  public COLUMN: (number)[] = []
+  public COLUMN: (number)[] = [],
+  public INSTANCE_URL_IDS: (number)[] = []
 ){}
 
 
@@ -406,6 +450,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TOKENS = FSG.createTokensVector(builder, builder.createObjectOffsetList(this.TOKENS));
   const PAIRS = builder.createStructOffsetList(this.PAIRS, FSG.startPairsVector);
   const COLUMN = FSG.createColumnVector(builder, this.COLUMN);
+  const INSTANCE_URL_IDS = FSG.createInstanceUrlIdsVector(builder, this.INSTANCE_URL_IDS);
 
   return FSG.createFSG(builder,
     this.SELF_OFFSET,
@@ -422,7 +467,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     INSTANCES,
     TOKENS,
     PAIRS,
-    COLUMN
+    COLUMN,
+    INSTANCE_URL_IDS
   );
 }
 }

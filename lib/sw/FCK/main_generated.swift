@@ -271,6 +271,9 @@ public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SEGMENT_DIGESTS: VOffset = 28
     static let COMMITS_ROOT_CID: VOffset = 30
     static let PREVIOUS_FEED_ROOT_CID: VOffset = 32
+    static let RECORD_BYTES: VOffset = 34
+    static let MIN_W: VOffset = 36
+    static let MAX_W: VOffset = 38
   }
 
   ///  Stream offset of this frame's size prefix.
@@ -307,7 +310,12 @@ public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Binary CID of the previous feed root.
   public var PREVIOUS_FEED_ROOT_CID: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.PREVIOUS_FEED_ROOT_CID, byteSize: 1) }
   public func withUnsafePointerToPreviousFeedRootCid<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.PREVIOUS_FEED_ROOT_CID, body: body) }
-  public static func startFCK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+  public var RECORD_BYTES: UInt64 { let o = _accessor.offset(VT.RECORD_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+  public var MIN_W: Int64 { let o = _accessor.offset(VT.MIN_W); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public var MAX_W: Int64 { let o = _accessor.offset(VT.MAX_W); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  public static func startFCK(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(SELF_OFFSET: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELF_OFFSET, def: 0, at: VT.SELF_OFFSET) }
   public static func add(PREVIOUS: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREVIOUS, def: 0, at: VT.PREVIOUS) }
   public static func add(FEED_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FEED_ID, def: 0, at: VT.FEED_ID) }
@@ -326,6 +334,9 @@ public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(SEGMENT_DIGESTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENT_DIGESTS, at: VT.SEGMENT_DIGESTS) }
   public static func addVectorOf(COMMITS_ROOT_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMITS_ROOT_CID, at: VT.COMMITS_ROOT_CID) }
   public static func addVectorOf(PREVIOUS_FEED_ROOT_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREVIOUS_FEED_ROOT_CID, at: VT.PREVIOUS_FEED_ROOT_CID) }
+  public static func add(RECORD_BYTES: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RECORD_BYTES, def: 0, at: VT.RECORD_BYTES) }
+  public static func add(MIN_W: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_W, def: 0, at: VT.MIN_W) }
+  public static func add(MAX_W: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_W, def: 0, at: VT.MAX_W) }
   public static func endFCK(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createFCK(
     _ fbb: inout FlatBufferBuilder,
@@ -343,7 +354,10 @@ public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SEGMENTSVectorOffset SEGMENTS: Offset = Offset(),
     SEGMENT_DIGESTSVectorOffset SEGMENT_DIGESTS: Offset = Offset(),
     COMMITS_ROOT_CIDVectorOffset COMMITS_ROOT_CID: Offset = Offset(),
-    PREVIOUS_FEED_ROOT_CIDVectorOffset PREVIOUS_FEED_ROOT_CID: Offset = Offset()
+    PREVIOUS_FEED_ROOT_CIDVectorOffset PREVIOUS_FEED_ROOT_CID: Offset = Offset(),
+    RECORD_BYTES: UInt64 = 0,
+    MIN_W: Int64 = 0,
+    MAX_W: Int64 = 0
   ) -> Offset {
     let __start = FCK.startFCK(&fbb)
     FCK.add(SELF_OFFSET: SELF_OFFSET, &fbb)
@@ -361,6 +375,9 @@ public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     FCK.addVectorOf(SEGMENT_DIGESTS: SEGMENT_DIGESTS, &fbb)
     FCK.addVectorOf(COMMITS_ROOT_CID: COMMITS_ROOT_CID, &fbb)
     FCK.addVectorOf(PREVIOUS_FEED_ROOT_CID: PREVIOUS_FEED_ROOT_CID, &fbb)
+    FCK.add(RECORD_BYTES: RECORD_BYTES, &fbb)
+    FCK.add(MIN_W: MIN_W, &fbb)
+    FCK.add(MAX_W: MAX_W, &fbb)
     return FCK.endFCK(&fbb, start: __start)
   }
 
@@ -381,6 +398,9 @@ public struct FCK: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SEGMENT_DIGESTS, fieldName: "SEGMENT_DIGESTS", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VT.COMMITS_ROOT_CID, fieldName: "COMMITS_ROOT_CID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
     try _v.visit(field: VT.PREVIOUS_FEED_ROOT_CID, fieldName: "PREVIOUS_FEED_ROOT_CID", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.RECORD_BYTES, fieldName: "RECORD_BYTES", required: false, type: UInt64.self)
+    try _v.visit(field: VT.MIN_W, fieldName: "MIN_W", required: false, type: Int64.self)
+    try _v.visit(field: VT.MAX_W, fieldName: "MAX_W", required: false, type: Int64.self)
     _v.finish()
   }
 }

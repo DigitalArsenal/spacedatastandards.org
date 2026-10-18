@@ -180,13 +180,21 @@ class FCK : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1)
     def PREVIOUS_FEED_ROOT_CID_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+    def RECORD_BYTES() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 34, 0)
+    /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+    def MIN_W() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 36, 0)
+    def MAX_W() -> int:
+        return flatbuffers.field_int64(buf_, pos_, 38, 0)
 
 def GetRootAsFCK(buf:string): return FCK { buf, flatbuffers.indirect(buf, 0) }
 
 struct FCKBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(18)
         return this
     def add_SELF_OFFSET(SELF_OFFSET:int):
         b_.PrependUint64Slot(0, SELF_OFFSET, 0)
@@ -232,6 +240,15 @@ struct FCKBuilder:
         return this
     def add_PREVIOUS_FEED_ROOT_CID(PREVIOUS_FEED_ROOT_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, PREVIOUS_FEED_ROOT_CID)
+        return this
+    def add_RECORD_BYTES(RECORD_BYTES:int):
+        b_.PrependUint64Slot(15, RECORD_BYTES, 0)
+        return this
+    def add_MIN_W(MIN_W:int):
+        b_.PrependInt64Slot(16, MIN_W, 0)
+        return this
+    def add_MAX_W(MAX_W:int):
+        b_.PrependInt64Slot(17, MAX_W, 0)
         return this
     def end():
         return b_.EndObject()

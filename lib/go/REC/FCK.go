@@ -447,8 +447,72 @@ func (rcv *FCK) MutatePreviousFeedRootCid(j int, n byte) bool {
 	return rcv.MutatePREVIOUS_FEED_ROOT_CID(j, n)
 }
 
+/// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+func (rcv *FCK) RECORD_BYTES() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *FCK) RecordBytes() uint64 {
+	return rcv.RECORD_BYTES()
+}
+
+/// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+func (rcv *FCK) MutateRECORD_BYTES(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(34, n)
+}
+
+func (rcv *FCK) MutateRecordBytes(n uint64) bool {
+	return rcv.MutateRECORD_BYTES(n)
+}
+
+/// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+func (rcv *FCK) MIN_W() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *FCK) MinW() int64 {
+	return rcv.MIN_W()
+}
+
+/// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+func (rcv *FCK) MutateMIN_W(n int64) bool {
+	return rcv._tab.MutateInt64Slot(36, n)
+}
+
+func (rcv *FCK) MutateMinW(n int64) bool {
+	return rcv.MutateMIN_W(n)
+}
+
+func (rcv *FCK) MAX_W() int64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *FCK) MaxW() int64 {
+	return rcv.MAX_W()
+}
+
+func (rcv *FCK) MutateMAX_W(n int64) bool {
+	return rcv._tab.MutateInt64Slot(38, n)
+}
+
+func (rcv *FCK) MutateMaxW(n int64) bool {
+	return rcv.MutateMAX_W(n)
+}
+
 func FCKStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(18)
 }
 func FCKAddSELF_OFFSET(builder *flatbuffers.Builder, SELF_OFFSET uint64) {
 	builder.PrependUint64Slot(0, SELF_OFFSET, 0)
@@ -563,6 +627,24 @@ func FCKStartPREVIOUS_FEED_ROOT_CIDVector(builder *flatbuffers.Builder, numElems
 }
 func FCKStartPreviousFeedRootCidVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return FCKStartPREVIOUS_FEED_ROOT_CIDVector(builder, numElems)
+}
+func FCKAddRECORD_BYTES(builder *flatbuffers.Builder, RECORD_BYTES uint64) {
+	builder.PrependUint64Slot(15, RECORD_BYTES, 0)
+}
+func FCKAddRecordBytes(builder *flatbuffers.Builder, RECORD_BYTES uint64) {
+	FCKAddRECORD_BYTES(builder, RECORD_BYTES)
+}
+func FCKAddMIN_W(builder *flatbuffers.Builder, MIN_W int64) {
+	builder.PrependInt64Slot(16, MIN_W, 0)
+}
+func FCKAddMinW(builder *flatbuffers.Builder, MIN_W int64) {
+	FCKAddMIN_W(builder, MIN_W)
+}
+func FCKAddMAX_W(builder *flatbuffers.Builder, MAX_W int64) {
+	builder.PrependInt64Slot(17, MAX_W, 0)
+}
+func FCKAddMaxW(builder *flatbuffers.Builder, MAX_W int64) {
+	FCKAddMAX_W(builder, MAX_W)
 }
 func FCKEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

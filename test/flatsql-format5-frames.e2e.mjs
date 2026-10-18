@@ -206,6 +206,7 @@ const fsg = Object.assign(new FSGT(), {
   LATEST: [Object.assign(new FSGLatestT(), { OBJECT_KEY_ID: 1, RESERVED: 0, EPOCH: 1792339200n, RID: 100n << 16n, ROW_REF: fmbOffset << 16n })],
   INSTANCES: [Object.assign(new FSGInstanceT(), { BATCH_ID: 1, CONTENT_KEY_ID: 0, RECORDS: 2n, BYTES: BigInt(records[0].length + records[1].length),
     MIN_W: 1792335600n, MAX_W: 1792339200n, MIN_SEQ: 100n, MAX_SEQ: 101n, FIRST: 1792337152n, UPDATED: 1792337152n, MAX_AT: 1792337152n, MAX_TS: 1792337101n })],
+  INSTANCE_URL_IDS: [7],
 });
 const fsgBytes = encode('FSG', fsg);
 parts.push(frame(fsgBytes));
@@ -222,6 +223,7 @@ const fck = Object.assign(new FCKT(), {
   SEGMENT_DIGESTS: [...sha256(fsgBytes)],
   COMMITS_ROOT_CID: [0x01, 0x70, 0x12, 0x20, ...sha256(Buffer.from('commits'))],
   PREVIOUS_FEED_ROOT_CID: [],
+  RECORD_BYTES: BigInt(records[0].length + records[1].length), MIN_W: 1792335600n, MAX_W: 1792339200n,
 });
 parts.push(frame(encode('FCK', fck)));
 const stream = Buffer.concat(parts);
@@ -277,6 +279,12 @@ for (const row of back.ROWS) {
 }
 assert.equal(d * 32, back.DIGESTS.length);
 assert.equal(decode('OMM', frames[1].bytes).NORAD_CAT_ID, 25544);
+// Section 13 rebuild inputs: each instance's url id, and the feed's record bytes and w range.
+const seg = meta[2][1], ck = meta[3][1], gen = meta[0][1];
+assert.deepEqual(seg.INSTANCE_URL_IDS, [7]);
+assert.equal(seg.INSTANCE_URL_IDS.length, seg.INSTANCES.length);
+assert.deepEqual([ck.RECORD_BYTES, ck.MIN_W, ck.MAX_W], [BigInt(records[0].length + records[1].length), 1792335600n, 1792339200n]);
+assert.deepEqual([gen.RECORD_BYTES, gen.MIN_W, gen.MAX_W], [0n, 0n, 0n]);
 
 // JS -> C++ -> JS for every frame kind and the DPM.
 const scratch = mkdtempSync(join(root, '.flatsql-format5-e2e-'));
@@ -298,5 +306,5 @@ try {
   assert.equal(catalog.ASSETS[0].THROUGH_SEQ, 101n);
   console.log(`PASS FlatSQL format 5 frames: stream of ${frames.length} frames (${stream.length} B) walked by size prefix, `
     + `${d} record ranges hash to their FMB digests, commit chain of ${meta.length}, `
-    + `${cases.length} tables JS -> C++ -> JS (FMBRow 40 B, FCKSegment 48 B, FSGPair 32 B), DPM CAR_ARCHIVE through seq 101`);
+    + `${cases.length} tables JS -> C++ -> JS (FMBRow 40 B, FCKSegment 48 B, FSGPair 32 B), DPM CAR_ARCHIVE through seq 101, FSG instance url ids and FCK record bytes/w range`);
 } finally { rmSync(scratch, { recursive: true, force: true }); }

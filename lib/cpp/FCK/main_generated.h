@@ -283,7 +283,10 @@ struct FCK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SEGMENTS = 26,
     VT_SEGMENT_DIGESTS = 28,
     VT_COMMITS_ROOT_CID = 30,
-    VT_PREVIOUS_FEED_ROOT_CID = 32
+    VT_PREVIOUS_FEED_ROOT_CID = 32,
+    VT_RECORD_BYTES = 34,
+    VT_MIN_W = 36,
+    VT_MAX_W = 38
   };
   /// Stream offset of this frame's size prefix.
   uint64_t SELF_OFFSET() const {
@@ -340,6 +343,17 @@ struct FCK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<uint8_t> *PREVIOUS_FEED_ROOT_CID() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_PREVIOUS_FEED_ROOT_CID);
   }
+  /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+  uint64_t RECORD_BYTES() const {
+    return GetField<uint64_t>(VT_RECORD_BYTES, 0);
+  }
+  /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+  int64_t MIN_W() const {
+    return GetField<int64_t>(VT_MIN_W, 0);
+  }
+  int64_t MAX_W() const {
+    return GetField<int64_t>(VT_MAX_W, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -365,6 +379,9 @@ struct FCK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVector(COMMITS_ROOT_CID()) &&
            VerifyOffset(verifier, VT_PREVIOUS_FEED_ROOT_CID) &&
            verifier.VerifyVector(PREVIOUS_FEED_ROOT_CID()) &&
+           VerifyField<uint64_t>(verifier, VT_RECORD_BYTES, 8) &&
+           VerifyField<int64_t>(verifier, VT_MIN_W, 8) &&
+           VerifyField<int64_t>(verifier, VT_MAX_W, 8) &&
            verifier.EndTable();
   }
 };
@@ -418,6 +435,15 @@ struct FCKBuilder {
   void add_PREVIOUS_FEED_ROOT_CID(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PREVIOUS_FEED_ROOT_CID) {
     fbb_.AddOffset(FCK::VT_PREVIOUS_FEED_ROOT_CID, PREVIOUS_FEED_ROOT_CID);
   }
+  void add_RECORD_BYTES(uint64_t RECORD_BYTES) {
+    fbb_.AddElement<uint64_t>(FCK::VT_RECORD_BYTES, RECORD_BYTES, 0);
+  }
+  void add_MIN_W(int64_t MIN_W) {
+    fbb_.AddElement<int64_t>(FCK::VT_MIN_W, MIN_W, 0);
+  }
+  void add_MAX_W(int64_t MAX_W) {
+    fbb_.AddElement<int64_t>(FCK::VT_MAX_W, MAX_W, 0);
+  }
   explicit FCKBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -445,8 +471,14 @@ inline ::flatbuffers::Offset<FCK> CreateFCK(
     ::flatbuffers::Offset<::flatbuffers::Vector<const FCKSegment *>> SEGMENTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> SEGMENT_DIGESTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> COMMITS_ROOT_CID = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PREVIOUS_FEED_ROOT_CID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> PREVIOUS_FEED_ROOT_CID = 0,
+    uint64_t RECORD_BYTES = 0,
+    int64_t MIN_W = 0,
+    int64_t MAX_W = 0) {
   FCKBuilder builder_(_fbb);
+  builder_.add_MAX_W(MAX_W);
+  builder_.add_MIN_W(MIN_W);
+  builder_.add_RECORD_BYTES(RECORD_BYTES);
   builder_.add_TYPE_SEQ_HIGH(TYPE_SEQ_HIGH);
   builder_.add_APPLIED_THROUGH(APPLIED_THROUGH);
   builder_.add_COMMITTED_AT(COMMITTED_AT);
@@ -481,7 +513,10 @@ inline ::flatbuffers::Offset<FCK> CreateFCKDirect(
     const std::vector<FCKSegment> *SEGMENTS = nullptr,
     const std::vector<uint8_t> *SEGMENT_DIGESTS = nullptr,
     const std::vector<uint8_t> *COMMITS_ROOT_CID = nullptr,
-    const std::vector<uint8_t> *PREVIOUS_FEED_ROOT_CID = nullptr) {
+    const std::vector<uint8_t> *PREVIOUS_FEED_ROOT_CID = nullptr,
+    uint64_t RECORD_BYTES = 0,
+    int64_t MIN_W = 0,
+    int64_t MAX_W = 0) {
   auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
   auto PROVIDER__ = PROVIDER ? _fbb.CreateString(PROVIDER) : 0;
   auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
@@ -505,7 +540,10 @@ inline ::flatbuffers::Offset<FCK> CreateFCKDirect(
       SEGMENTS__,
       SEGMENT_DIGESTS__,
       COMMITS_ROOT_CID__,
-      PREVIOUS_FEED_ROOT_CID__);
+      PREVIOUS_FEED_ROOT_CID__,
+      RECORD_BYTES,
+      MIN_W,
+      MAX_W);
 }
 
 inline const FCK *GetFCK(const void *buf) {

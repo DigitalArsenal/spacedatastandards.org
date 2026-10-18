@@ -67,6 +67,13 @@ export declare class FSG implements flatbuffers.IUnpackableObject<FSGT> {
     COLUMN(index: number): number | null;
     columnLength(): number;
     columnArray(): Uint8Array | null;
+    /**
+     * Each instance's latest url, parallel to INSTANCES: an id into the feed
+     * dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+     */
+    INSTANCE_URL_IDS(index: number): number | null;
+    instanceUrlIdsLength(): number;
+    instanceUrlIdsArray(): Uint32Array | null;
     static startFSG(builder: flatbuffers.Builder): void;
     static addSelfOffset(builder: flatbuffers.Builder, SELF_OFFSET: bigint): void;
     static addPrevious(builder: flatbuffers.Builder, PREVIOUS: bigint): void;
@@ -94,10 +101,17 @@ export declare class FSG implements flatbuffers.IUnpackableObject<FSGT> {
     static addColumn(builder: flatbuffers.Builder, COLUMNOffset: flatbuffers.Offset): void;
     static createColumnVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
     static startColumnVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addInstanceUrlIds(builder: flatbuffers.Builder, INSTANCE_URL_IDSOffset: flatbuffers.Offset): void;
+    static createInstanceUrlIdsVector(builder: flatbuffers.Builder, data: number[] | Uint32Array): flatbuffers.Offset;
+    /**
+     * @deprecated This Uint8Array overload will be removed in the future.
+     */
+    static createInstanceUrlIdsVector(builder: flatbuffers.Builder, data: number[] | Uint8Array): flatbuffers.Offset;
+    static startInstanceUrlIdsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endFSG(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishFSGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedFSGBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createFSG(builder: flatbuffers.Builder, SELF_OFFSET: bigint, PREVIOUS: bigint, FEED_ID: number, KIND: fckSegmentKind, LEVEL: number, MIN_SEQ: bigint, MAX_SEQ: bigint, COVERS_THROUGH: bigint, REPLACESOffset: flatbuffers.Offset, ENTRIESOffset: flatbuffers.Offset, LATESTOffset: flatbuffers.Offset, INSTANCESOffset: flatbuffers.Offset, TOKENSOffset: flatbuffers.Offset, PAIRSOffset: flatbuffers.Offset, COLUMNOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createFSG(builder: flatbuffers.Builder, SELF_OFFSET: bigint, PREVIOUS: bigint, FEED_ID: number, KIND: fckSegmentKind, LEVEL: number, MIN_SEQ: bigint, MAX_SEQ: bigint, COVERS_THROUGH: bigint, REPLACESOffset: flatbuffers.Offset, ENTRIESOffset: flatbuffers.Offset, LATESTOffset: flatbuffers.Offset, INSTANCESOffset: flatbuffers.Offset, TOKENSOffset: flatbuffers.Offset, PAIRSOffset: flatbuffers.Offset, COLUMNOffset: flatbuffers.Offset, INSTANCE_URL_IDSOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): FSGT;
     unpackTo(_o: FSGT): void;
 }
@@ -117,7 +131,8 @@ export declare class FSGT implements flatbuffers.IGeneratedObject {
     TOKENS: (FMBEntryT)[];
     PAIRS: (FSGPairT)[];
     COLUMN: (number)[];
-    constructor(SELF_OFFSET?: bigint, PREVIOUS?: bigint, FEED_ID?: number, KIND?: fckSegmentKind, LEVEL?: number, MIN_SEQ?: bigint, MAX_SEQ?: bigint, COVERS_THROUGH?: bigint, REPLACES?: (bigint)[], ENTRIES?: (FMBEntryT)[], LATEST?: (FSGLatestT)[], INSTANCES?: (FSGInstanceT)[], TOKENS?: (FMBEntryT)[], PAIRS?: (FSGPairT)[], COLUMN?: (number)[]);
+    INSTANCE_URL_IDS: (number)[];
+    constructor(SELF_OFFSET?: bigint, PREVIOUS?: bigint, FEED_ID?: number, KIND?: fckSegmentKind, LEVEL?: number, MIN_SEQ?: bigint, MAX_SEQ?: bigint, COVERS_THROUGH?: bigint, REPLACES?: (bigint)[], ENTRIES?: (FMBEntryT)[], LATEST?: (FSGLatestT)[], INSTANCES?: (FSGInstanceT)[], TOKENS?: (FMBEntryT)[], PAIRS?: (FSGPairT)[], COLUMN?: (number)[], INSTANCE_URL_IDS?: (number)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=FSG.d.ts.map

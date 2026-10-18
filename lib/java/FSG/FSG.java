@@ -103,6 +103,16 @@ public final class FSG extends com.google.flatbuffers.Table {
   public ByteVector columnVector(ByteVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer COLUMNAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
   public ByteBuffer COLUMNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Each instance's latest url, parallel to INSTANCES: an id into the feed
+   * dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+   */
+  public long INSTANCE_URL_IDS(int j) { int o = __offset(34); return o != 0 ? (long)bb.getInt(__vector(o) + j * 4) & 0xFFFFFFFFL : 0; }
+  public int INSTANCE_URL_IDSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public IntVector instanceUrlIdsVector() { return instanceUrlIdsVector(new IntVector()); }
+  public IntVector instanceUrlIdsVector(IntVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer INSTANCE_URL_IDSAsByteBuffer() { return __vector_as_bytebuffer(34, 4); }
+  public ByteBuffer INSTANCE_URL_IDSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 4); }
 
   public static int createFSG(FlatBufferBuilder builder,
       long SELF_OFFSET,
@@ -119,13 +129,15 @@ public final class FSG extends com.google.flatbuffers.Table {
       int INSTANCESOffset,
       int TOKENSOffset,
       int PAIRSOffset,
-      int COLUMNOffset) {
-    builder.startTable(15);
+      int COLUMNOffset,
+      int INSTANCE_URL_IDSOffset) {
+    builder.startTable(16);
     FSG.addCoversThrough(builder, COVERS_THROUGH);
     FSG.addMaxSeq(builder, MAX_SEQ);
     FSG.addMinSeq(builder, MIN_SEQ);
     FSG.addPrevious(builder, PREVIOUS);
     FSG.addSelfOffset(builder, SELF_OFFSET);
+    FSG.addInstanceUrlIds(builder, INSTANCE_URL_IDSOffset);
     FSG.addColumn(builder, COLUMNOffset);
     FSG.addPairs(builder, PAIRSOffset);
     FSG.addTokens(builder, TOKENSOffset);
@@ -139,7 +151,7 @@ public final class FSG extends com.google.flatbuffers.Table {
     return FSG.endFSG(builder);
   }
 
-  public static void startFSG(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startFSG(FlatBufferBuilder builder) { builder.startTable(16); }
   public static void addSelfOffset(FlatBufferBuilder builder, long SELF_OFFSET) { builder.addLong(0, SELF_OFFSET, 0L); }
   public static void addPrevious(FlatBufferBuilder builder, long PREVIOUS) { builder.addLong(1, PREVIOUS, 0L); }
   public static void addFeedId(FlatBufferBuilder builder, long FEED_ID) { builder.addInt(2, (int) FEED_ID, (int) 0L); }
@@ -167,6 +179,9 @@ public final class FSG extends com.google.flatbuffers.Table {
   public static int createColumnVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createColumnVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startColumnVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addInstanceUrlIds(FlatBufferBuilder builder, int INSTANCE_URL_IDSOffset) { builder.addOffset(15, INSTANCE_URL_IDSOffset, 0); }
+  public static int createInstanceUrlIdsVector(FlatBufferBuilder builder, long[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addInt((int) data[i]); return builder.endVector(); }
+  public static void startInstanceUrlIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endFSG(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

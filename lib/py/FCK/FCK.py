@@ -225,8 +225,31 @@ class FCK(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+    # FCK
+    def RECORD_BYTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+    # FCK
+    def MIN_W(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
+    # FCK
+    def MAX_W(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
+
 def FCKStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(18)
 
 def Start(builder):
     FCKStart(builder)
@@ -385,6 +408,24 @@ def FCKCreatePREVIOUS_FEED_ROOT_CIDVector(builder, data):
 def CreatePREVIOUS_FEED_ROOT_CIDVector(builder, data):
     return FCKCreatePREVIOUS_FEED_ROOT_CIDVector(builder, data)
 
+def FCKAddRECORD_BYTES(builder, RECORD_BYTES):
+    builder.PrependUint64Slot(15, RECORD_BYTES, 0)
+
+def AddRECORD_BYTES(builder, RECORD_BYTES):
+    FCKAddRECORD_BYTES(builder, RECORD_BYTES)
+
+def FCKAddMIN_W(builder, MIN_W):
+    builder.PrependInt64Slot(16, MIN_W, 0)
+
+def AddMIN_W(builder, MIN_W):
+    FCKAddMIN_W(builder, MIN_W)
+
+def FCKAddMAX_W(builder, MAX_W):
+    builder.PrependInt64Slot(17, MAX_W, 0)
+
+def AddMAX_W(builder, MAX_W):
+    FCKAddMAX_W(builder, MAX_W)
+
 def FCKEnd(builder):
     return builder.EndObject()
 
@@ -418,6 +459,9 @@ class FCKT(object):
         SEGMENT_DIGESTS = None,
         COMMITS_ROOT_CID = None,
         PREVIOUS_FEED_ROOT_CID = None,
+        RECORD_BYTES = 0,
+        MIN_W = 0,
+        MAX_W = 0,
     ):
         self.SELF_OFFSET = SELF_OFFSET  # type: int
         self.PREVIOUS = PREVIOUS  # type: int
@@ -434,6 +478,9 @@ class FCKT(object):
         self.SEGMENT_DIGESTS = SEGMENT_DIGESTS  # type: Optional[List[int]]
         self.COMMITS_ROOT_CID = COMMITS_ROOT_CID  # type: Optional[List[int]]
         self.PREVIOUS_FEED_ROOT_CID = PREVIOUS_FEED_ROOT_CID  # type: Optional[List[int]]
+        self.RECORD_BYTES = RECORD_BYTES  # type: int
+        self.MIN_W = MIN_W  # type: int
+        self.MAX_W = MAX_W  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -497,6 +544,9 @@ class FCKT(object):
                     self.PREVIOUS_FEED_ROOT_CID.append(FCK.PREVIOUS_FEED_ROOT_CID(i))
             else:
                 self.PREVIOUS_FEED_ROOT_CID = FCK.PREVIOUS_FEED_ROOT_CIDAsNumpy()
+        self.RECORD_BYTES = FCK.RECORD_BYTES()
+        self.MIN_W = FCK.MIN_W()
+        self.MAX_W = FCK.MAX_W()
 
     # FCKT
     def Pack(self, builder):
@@ -560,5 +610,8 @@ class FCKT(object):
             FCKAddCOMMITS_ROOT_CID(builder, COMMITS_ROOT_CID)
         if self.PREVIOUS_FEED_ROOT_CID is not None:
             FCKAddPREVIOUS_FEED_ROOT_CID(builder, PREVIOUS_FEED_ROOT_CID)
+        FCKAddRECORD_BYTES(builder, self.RECORD_BYTES)
+        FCKAddMIN_W(builder, self.MIN_W)
+        FCKAddMAX_W(builder, self.MAX_W)
         FCK = FCKEnd(builder)
         return FCK

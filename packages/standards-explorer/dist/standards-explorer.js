@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.255.0+1792345808759",
+  version: "1.256.0+1792354244479",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -22616,8 +22616,8 @@ file_identifier "$NEV";`,
       ]
     },
     FCK: {
-      IDL: `// Hash: 36630fab896394528790381dac848135eb9cd4d131a51850fb29af00591f6562
-// Version: 1.254.0
+      IDL: `// Hash: 961fa1e3872db57181af74b3430b66519f6bc76feaca17069a6f260571ebd838
+// Version: 1.254.1
 // -----------------------------------END_HEADER
 /// FlatSQL Checkpoint.
 ///
@@ -22716,6 +22716,11 @@ table FCK {
   COMMITS_ROOT_CID: [ubyte];
   /// Binary CID of the previous feed root.
   PREVIOUS_FEED_ROOT_CID: [ubyte];
+  /// Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+  RECORD_BYTES: ulong;
+  /// Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+  MIN_W: long;
+  MAX_W: long;
 }
 
 root_type FCK;
@@ -30787,8 +30792,8 @@ file_identifier "$OIL";`,
       ]
     },
     FSG: {
-      IDL: `// Hash: 0617bb29e5dde24d15fbc3c0ea899edeb7978879036307bfc0fcc33575a8bb4f
-// Version: 1.254.0
+      IDL: `// Hash: 1e4d8258a70db3e6190dc594d84220831111dc37d9a6f0adba1a567313850a7a
+// Version: 1.254.1
 // -----------------------------------END_HEADER
 include "../FMB/main.fbs";
 include "../FCK/main.fbs";
@@ -30863,6 +30868,9 @@ table FSG {
   PAIRS: [FSGPair];
   /// Reserved for analytics column segments.
   COLUMN: [ubyte];
+  /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+  /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+  INSTANCE_URL_IDS: [uint];
 }
 
 root_type FSG;
@@ -163421,6 +163429,23 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
                 maximum: 255
               },
               description: "Binary CID of the previous feed root."
+            },
+            RECORD_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+            },
+            MIN_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+            },
+            MAX_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3
             }
           },
           additionalProperties: false
@@ -164480,6 +164505,15 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
                 maximum: 255
               },
               description: "Reserved for analytics column segments."
+            },
+            INSTANCE_URL_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              description: "Each instance's latest url, parallel to INSTANCES: an id into the feed\ndictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none."
             }
           },
           additionalProperties: false
@@ -245322,6 +245356,23 @@ compressed). Nothing hashes the payload before the protocol hash.`
                 maximum: 255
               },
               description: "Binary CID of the previous feed root."
+            },
+            RECORD_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+            },
+            MIN_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+            },
+            MAX_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3
             }
           },
           additionalProperties: false
@@ -297760,6 +297811,23 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
                 maximum: 255
               },
               description: "Binary CID of the previous feed root."
+            },
+            RECORD_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0."
+            },
+            MIN_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0."
+            },
+            MAX_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3
             }
           },
           additionalProperties: false
@@ -297989,6 +298057,15 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
                 maximum: 255
               },
               description: "Reserved for analytics column segments."
+            },
+            INSTANCE_URL_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              description: "Each instance's latest url, parallel to INSTANCES: an id into the feed\ndictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none."
             }
           },
           additionalProperties: false
@@ -609450,6 +609527,26 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               },
               description: "Binary CID of the previous feed root.",
               "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.",
+              "x-flatbuffer-type": "ulong"
+            },
+            MIN_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.",
+              "x-flatbuffer-type": "long"
+            },
+            MAX_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              "x-flatbuffer-type": "long"
             }
           },
           additionalProperties: false
@@ -610789,6 +610886,16 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               },
               description: "Reserved for analytics column segments.",
               "x-flatbuffer-type": "[ubyte]"
+            },
+            INSTANCE_URL_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              description: "Each instance's latest url, parallel to INSTANCES: an id into the feed\ndictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.",
+              "x-flatbuffer-type": "[uint]"
             }
           },
           additionalProperties: false
@@ -772124,6 +772231,26 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               },
               description: "Binary CID of the previous feed root.",
               "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.",
+              "x-flatbuffer-type": "ulong"
+            },
+            MIN_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.",
+              "x-flatbuffer-type": "long"
+            },
+            MAX_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              "x-flatbuffer-type": "long"
             }
           },
           additionalProperties: false
@@ -884094,6 +884221,26 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               },
               description: "Binary CID of the previous feed root.",
               "x-flatbuffer-type": "[ubyte]"
+            },
+            RECORD_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.",
+              "x-flatbuffer-type": "ulong"
+            },
+            MIN_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.",
+              "x-flatbuffer-type": "long"
+            },
+            MAX_W: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              "x-flatbuffer-type": "long"
             }
           },
           additionalProperties: false
@@ -884387,6 +884534,16 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               },
               description: "Reserved for analytics column segments.",
               "x-flatbuffer-type": "[ubyte]"
+            },
+            INSTANCE_URL_IDS: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 4294967295
+              },
+              description: "Each instance's latest url, parallel to INSTANCES: an id into the feed\ndictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.",
+              "x-flatbuffer-type": "[uint]"
             }
           },
           additionalProperties: false
@@ -908699,7 +908856,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// node_modules/flatc-wasm/dist/flatc-wasm.js
+// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

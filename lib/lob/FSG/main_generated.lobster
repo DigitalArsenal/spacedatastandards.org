@@ -158,13 +158,19 @@ class FSG : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1)
     def COLUMN_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// Each instance's latest url, parallel to INSTANCES: an id into the feed
+    /// dictionary (fmbDictKind URL, the FMBGroup.URL_ID id space); 0 = none.
+    def INSTANCE_URL_IDS(i:int) -> int:
+        return read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 4)
+    def INSTANCE_URL_IDS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
 
 def GetRootAsFSG(buf:string): return FSG { buf, flatbuffers.indirect(buf, 0) }
 
 struct FSGBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(16)
         return this
     def add_SELF_OFFSET(SELF_OFFSET:int):
         b_.PrependUint64Slot(0, SELF_OFFSET, 0)
@@ -211,6 +217,9 @@ struct FSGBuilder:
     def add_COLUMN(COLUMN:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, COLUMN)
         return this
+    def add_INSTANCE_URL_IDS(INSTANCE_URL_IDS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, INSTANCE_URL_IDS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -249,4 +258,11 @@ def FSGStartCOLUMNVector(b_:flatbuffers.builder, n_:int):
 def FSGCreateCOLUMNVector(b_:flatbuffers.builder, v_:[int]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def FSGStartINSTANCEURLIDSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def FSGCreateINSTANCEURLIDSVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUint32(e_)
     return b_.EndVector(v_.length)

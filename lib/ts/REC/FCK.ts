@@ -179,8 +179,29 @@ previousFeedRootCidArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Total record bytes of the feed's rows; 0 when COUNTERS.ROWS is 0.
+ */
+RECORD_BYTES():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * Lowest and highest w over the feed's rows; 0 when COUNTERS.ROWS is 0.
+ */
+MIN_W():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
+MAX_W():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startFCK(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(18);
 }
 
 static addSelfOffset(builder:flatbuffers.Builder, SELF_OFFSET:bigint) {
@@ -283,6 +304,18 @@ static startPreviousFeedRootCidVector(builder:flatbuffers.Builder, numElems:numb
   builder.startVector(1, numElems, 1);
 }
 
+static addRecordBytes(builder:flatbuffers.Builder, RECORD_BYTES:bigint) {
+  builder.addFieldInt64(15, RECORD_BYTES, BigInt('0'));
+}
+
+static addMinW(builder:flatbuffers.Builder, MIN_W:bigint) {
+  builder.addFieldInt64(16, MIN_W, BigInt('0'));
+}
+
+static addMaxW(builder:flatbuffers.Builder, MAX_W:bigint) {
+  builder.addFieldInt64(17, MAX_W, BigInt('0'));
+}
+
 static endFCK(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -313,7 +346,10 @@ unpack(): FCKT {
     this.bb!.createObjList<FCKSegment, FCKSegmentT>(this.SEGMENTS.bind(this), this.segmentsLength()),
     this.bb!.createScalarList<number>(this.SEGMENT_DIGESTS.bind(this), this.segmentDigestsLength()),
     this.bb!.createScalarList<number>(this.COMMITS_ROOT_CID.bind(this), this.commitsRootCidLength()),
-    this.bb!.createScalarList<number>(this.PREVIOUS_FEED_ROOT_CID.bind(this), this.previousFeedRootCidLength())
+    this.bb!.createScalarList<number>(this.PREVIOUS_FEED_ROOT_CID.bind(this), this.previousFeedRootCidLength()),
+    this.RECORD_BYTES(),
+    this.MIN_W(),
+    this.MAX_W()
   );
 }
 
@@ -334,6 +370,9 @@ unpackTo(_o: FCKT): void {
   _o.SEGMENT_DIGESTS = this.bb!.createScalarList<number>(this.SEGMENT_DIGESTS.bind(this), this.segmentDigestsLength());
   _o.COMMITS_ROOT_CID = this.bb!.createScalarList<number>(this.COMMITS_ROOT_CID.bind(this), this.commitsRootCidLength());
   _o.PREVIOUS_FEED_ROOT_CID = this.bb!.createScalarList<number>(this.PREVIOUS_FEED_ROOT_CID.bind(this), this.previousFeedRootCidLength());
+  _o.RECORD_BYTES = this.RECORD_BYTES();
+  _o.MIN_W = this.MIN_W();
+  _o.MAX_W = this.MAX_W();
 }
 }
 
@@ -353,7 +392,10 @@ constructor(
   public SEGMENTS: (FCKSegmentT)[] = [],
   public SEGMENT_DIGESTS: (number)[] = [],
   public COMMITS_ROOT_CID: (number)[] = [],
-  public PREVIOUS_FEED_ROOT_CID: (number)[] = []
+  public PREVIOUS_FEED_ROOT_CID: (number)[] = [],
+  public RECORD_BYTES: bigint = BigInt('0'),
+  public MIN_W: bigint = BigInt('0'),
+  public MAX_W: bigint = BigInt('0')
 ){}
 
 
@@ -382,6 +424,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   FCK.addSegmentDigests(builder, SEGMENT_DIGESTS);
   FCK.addCommitsRootCid(builder, COMMITS_ROOT_CID);
   FCK.addPreviousFeedRootCid(builder, PREVIOUS_FEED_ROOT_CID);
+  FCK.addRecordBytes(builder, this.RECORD_BYTES);
+  FCK.addMinW(builder, this.MIN_W);
+  FCK.addMaxW(builder, this.MAX_W);
 
   return FCK.endFCK(builder);
 }
