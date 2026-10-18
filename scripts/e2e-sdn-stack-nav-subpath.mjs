@@ -18,10 +18,10 @@ const fragment = JSON.parse(readFileSync(join(repositoryRoot, "dist/static-asset
 const navVersion = fragment.navVersion;
 const sources = {
   [`sdn-stack-nav/${navVersion}`]: join(repositoryRoot, `dist/static-assets/assets/sdn-stack-nav/${navVersion}`),
-  "hd-wallet-ui/2.1.0": join(repositoryRoot, "assets/vendor/hd-wallet-ui/2.1.0"),
+  "hd-wallet-ui/2.2.1": join(repositoryRoot, "assets/vendor/hd-wallet-ui/2.2.1"),
 };
 const wallet = {
-  script: ["sdn-wallet-public-client.f611e7e151a3b5c38384272f8894a4c6634f0a29bf925b0e02e0e27f8db0bfff.js", "sha384-R+QqsKoWJIS7iWrtPmgJ49DVnb1hSGjZokupbLInJd1PLp8RwQhtF/hnaerc33ci"],
+  script: ["sdn-wallet-public-client.9ab041131df957fcb6ef7e3d87bf9d19fe313bc5d7f1e53337752faf0ba354da.js", "sha384-FNcHq8FI7eBz2YUhfO3jNfmdObbCXmfg4ugmBEHzXW/KBpbUdJXqIzpn30OWJBuB"],
   style: ["sdn-wallet-public-client.c3f68d1cfd88478f10d836a5e829d1dfc6a10157972cf0f7d4d319d0636f2cc4.css", "sha384-fICuhN4I9xqOK1F5vGGzl26opuO+xQIvTZXMSV76lWTBiQ6AfzztMGLLDw8yRT8i"],
 };
 
@@ -37,11 +37,11 @@ for (const [key, extension] of [["navScript", "js"], ["navStyle", "css"]]) {
 
 const navFile = (record) => record.url.slice(record.url.lastIndexOf("/") + 1);
 const navDir = `assets/vendor/sdn-stack-nav/${navVersion}`;
-const walletDir = "assets/vendor/hd-wallet-ui/2.1.0";
+const walletDir = "assets/vendor/hd-wallet-ui/2.2.1";
 
 // One page: the nav script always loads from the page's own valid location, so
 // a refusal comes from the asset URLs the page hands the nav (prefix).
-// Each site's registered wallet client id and callback (hd-wallet-ui 2.1.0).
+// Each site's registered wallet client id and callback (hd-wallet-ui 2.2.1).
 const sites = {
   "": ["sdn-standards-web-v1", "https://spacedatastandards.org/wallet-callback.html"],
   "/flatsql": ["sdn-flatsql-pages-v1", "https://digitalarsenal.github.io/flatsql/wallet-callback.html"],
