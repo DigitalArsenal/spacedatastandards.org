@@ -17,6 +17,9 @@ from SCHEMA_STANDARD import SCHEMA_STANDARDT
 
 
 PRESERVED_DIST_FILES = {"schema-embeddings.json", "sds_parsers.js", "sds_parsers.wasm"}
+# Release files of record (sdn-stack-nav); never regenerated here. Pinned by
+# scripts/static-assets.sha256.json, checked by check-release-integrity.mjs R5.
+PRESERVED_DIST_DIRS = {"static-assets"}
 
 
 def read_manifest_flatbuffer(file_path):
@@ -135,6 +138,8 @@ def main():
         for entry in os.listdir(dist_dir):
             entry_path = os.path.join(dist_dir, entry)
             if os.path.isdir(entry_path):
+                if entry in PRESERVED_DIST_DIRS:
+                    continue
                 shutil.rmtree(entry_path)
             elif entry not in PRESERVED_DIST_FILES:
                 os.remove(entry_path)

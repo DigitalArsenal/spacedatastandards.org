@@ -18,6 +18,10 @@
  *   R4 version-parity    dist/manifest.json .version === package.json .version
  *                        (generateArchives.py copies it verbatim, so this is
  *                        exact string equality, not a semver range)
+ *   R5 static-assets     every file pinned in scripts/static-assets.sha256.json
+ *                        (dist/static-assets release files of record) exists
+ *                        with its pinned sha256 (2026-10-18: an SDS release
+ *                        build deleted them). Runs in every mode.
  *
  * Modes (which files are candidates):
  *   --all            every tracked file          (release / deploy / CI gate)
@@ -33,6 +37,7 @@
  */
 
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 
@@ -374,6 +379,52 @@ function checkManifest(failures, notes) {
   }
 }
 
+const STATIC_ASSET_PINS = "scripts/static-assets.sha256.json";
+
+/** Raw bytes of a path as the mode judges it: the commit, the index, or the tree. */
+function readBytes(path, mode) {
+  const spec = mode === "rev" ? `${reviewRev}:${path}` : mode === "staged" ? `:${path}` : null;
+  if (spec) {
+    try {
+      return execFileSync("git", ["show", spec], { cwd: repoRoot, maxBuffer: 256 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] });
+    } catch {
+      return null;
+    }
+  }
+  const absolute = resolve(repoRoot, path);
+  return existsSync(absolute) ? readFileSync(absolute) : null;
+}
+
+function checkStaticAssets(mode, failures, notes) {
+  const pinsBytes = readBytes(STATIC_ASSET_PINS, mode);
+  if (!pinsBytes) {
+    failures.push({ rule: "static-assets", detail: `${STATIC_ASSET_PINS} is missing`, offenders: [] });
+    return;
+  }
+  let pins;
+  try {
+    pins = JSON.parse(pinsBytes.toString("utf8")).files;
+  } catch (error) {
+    failures.push({ rule: "static-assets", detail: `${STATIC_ASSET_PINS} does not parse: ${error.message}`, offenders: [] });
+    return;
+  }
+  const offenders = [];
+  for (const [path, want] of Object.entries(pins)) {
+    const bytes = readBytes(path, mode);
+    if (!bytes) offenders.push(`missing: ${path}`);
+    else if (createHash("sha256").update(bytes).digest("hex") !== want) offenders.push(`changed: ${path}`);
+  }
+  if (offenders.length > 0) {
+    failures.push({
+      rule: "static-assets",
+      detail: "dist/static-assets release files differ from their pins (restore them from git; builds must preserve them)",
+      offenders,
+    });
+  } else {
+    notes.push(`static-assets OK: ${Object.keys(pins).length} pinned files byte-identical`);
+  }
+}
+
 function manifestIsRelevant(mode, candidates) {
   if (mode === "all" || mode === "rev") return true;
   return candidates.some(
@@ -409,6 +460,7 @@ function main() {
   checkConflictMarkers(candidates, failures);
   checkJsonParse(candidates, failures);
   if (manifestIsRelevant(options.mode, candidates)) checkManifest(failures, notes);
+  checkStaticAssets(options.mode, failures, notes);
 
   const report = {
     mode: options.mode,

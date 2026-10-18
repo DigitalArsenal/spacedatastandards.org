@@ -1,0 +1,10 @@
+{
+  "note": "dist/static-assets release files of record (sdn-stack-nav). Builds must preserve them byte-identical; a new nav release adds its files here.",
+  "files": {
+    "dist/static-assets/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css": "36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7",
+    "dist/static-assets/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.d781c774994cb21b63423fa746e2926071941a5d1621fe82d4ede1a63a46929c.js": "d781c774994cb21b63423fa746e2926071941a5d1621fe82d4ede1a63a46929c",
+    "dist/static-assets/assets/sdn-stack-nav/1.0.1/sdn-stack-nav.24eb3001afc5448a90cef87e53bb4e599c0ae4dc9e14bafb6d1236e0233c6008.js": "24eb3001afc5448a90cef87e53bb4e599c0ae4dc9e14bafb6d1236e0233c6008",
+    "dist/static-assets/assets/sdn-stack-nav/1.0.1/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css": "36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7",
+    "dist/static-assets/sdn-stack-nav.release-fragment.v1.json": "1ffc123dd5f3d2cfa613d541890694c9701f9fa28223b57157fe1c0a3974e94a"
+  }
+}
