@@ -17,7 +17,7 @@ class sktPayloadKind private constructor() {
          */
         const val DIFFUSE_MAP: UByte = 2u
         /**
-         * Pixel map of localisation probability per pixel; the values of a
+         * Pixel map of localization probability per pixel; the values of a
          * complete layer at one order sum to 1.
          */
         const val PROBABILITY_MAP: UByte = 3u

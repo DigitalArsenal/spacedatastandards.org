@@ -8,6 +8,32 @@ import Common
 
 import FlatBuffers
 
+///  How a star's distance was estimated.
+///  Append new values only; never reorder or reuse existing values.
+public enum strDistanceEstimator: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN.
+  case unspecified = 0
+  ///  Geometric distance: the median of the posterior from the parallax under a
+  ///  direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147).
+  case bailerJones2021Geo = 1
+  ///  Photogeometric distance: the geometric posterior further constrained by the
+  ///  star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147).
+  case bailerJones2021Photogeo = 2
+  ///  Mode of the posterior from the parallax under the exponentially decreasing
+  ///  space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994).
+  case edsdPosterior = 3
+  ///  Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the
+  ///  fractional parallax uncertainty is small.
+  case parallaxInverse = 4
+
+  public static var max: strDistanceEstimator { return .parallaxInverse }
+  public static var min: strDistanceEstimator { return .unspecified }
+}
+
+
 ///  Star Catalog Entry
 public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -24,7 +50,7 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let ID: VOffset = 4
     static let CS_ID: VOffset = 6
     static let GNC_CAT_ID: VOffset = 8
-    static let GAIADR3_CAT_ID: VOffset = 10
+    static let GAIA_DR3_SOURCE_ID: VOffset = 10
     static let HIP_CAT_ID: VOffset = 12
     static let CAT_VERSION: VOffset = 14
     static let ASTROMETRY_ORIGIN: VOffset = 16
@@ -80,6 +106,11 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let VARIABILITY_AMPLITUDE: VOffset = 116
     static let VARIABILITY_EPOCH: VOffset = 118
     static let PHOTOMETRY: VOffset = 120
+    static let DISTANCE_PC: VOffset = 122
+    static let DISTANCE_LO_PC: VOffset = 124
+    static let DISTANCE_HI_PC: VOffset = 126
+    static let DISTANCE_METHOD: VOffset = 128
+    static let DISTANCE_REF: VOffset = 130
   }
 
   ///  Unique internal identifier
@@ -89,8 +120,9 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var CS_ID: Int64 { let o = _accessor.offset(VT.CS_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
   ///  GNC star catalog identifier
   public var GNC_CAT_ID: UInt32 { let o = _accessor.offset(VT.GNC_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  ///  Source identifier in the third data release of the all-sky space astrometry survey
-  public var GAIADR3_CAT_ID: Int64 { let o = _accessor.offset(VT.GAIADR3_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  Source identifier (source_id) in the third data release of the all-sky space astrometry
+  ///  survey; 0 when the star has no match in that release
+  public var GAIA_DR3_SOURCE_ID: UInt64 { let o = _accessor.offset(VT.GAIA_DR3_SOURCE_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   ///  Identifier in the first space astrometry mission's main catalog
   public var HIP_CAT_ID: UInt32 { let o = _accessor.offset(VT.HIP_CAT_ID); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Catalog version string
@@ -182,7 +214,7 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Spectral type in the MK system, e.g. "A1 V"
   public var SPECTRAL_TYPE: String? { let o = _accessor.offset(VT.SPECTRAL_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
   public var SPECTRAL_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SPECTRAL_TYPE) }
-  ///  Proper name as recognised by the astronomical naming authority
+  ///  Proper name as recognized by the astronomical naming authority
   public var PROPER_NAME: String? { let o = _accessor.offset(VT.PROPER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var PROPER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPER_NAME) }
   ///  Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
@@ -206,13 +238,30 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var VARIABILITY_AMPLITUDE: Double { let o = _accessor.offset(VT.VARIABILITY_AMPLITUDE); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
   public var VARIABILITY_EPOCH: Double { let o = _accessor.offset(VT.VARIABILITY_EPOCH); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Brightness in every band the star was measured or modelled in
+  ///  Brightness in every band the star was measured or modeled in
   public var PHOTOMETRY: FlatbufferVector<PHBMeasurement> { return _accessor.vector(at: VT.PHOTOMETRY, byteSize: 4) }
-  public static func startSTR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 59) }
+  ///  Distance from the Sun (parsecs): the posterior median, or the mode for
+  ///  EDSD_POSTERIOR, as DISTANCE_METHOD states
+  public var DISTANCE_PC: Double { let o = _accessor.offset(VT.DISTANCE_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Lower bound of the distance (parsecs): the 16th percentile of the posterior
+  ///  for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+  ///  the 68% highest-density interval for EDSD_POSTERIOR, and
+  ///  1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+  public var DISTANCE_LO_PC: Double { let o = _accessor.offset(VT.DISTANCE_LO_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+  ///  the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+  ///  DISTANCE_LO_PC; NaN when unbounded
+  public var DISTANCE_HI_PC: Double { let o = _accessor.offset(VT.DISTANCE_HI_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+  public var DISTANCE_METHOD: strDistanceEstimator { let o = _accessor.offset(VT.DISTANCE_METHOD); return o == 0 ? .unspecified : strDistanceEstimator(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+  public var DISTANCE_REF: String? { let o = _accessor.offset(VT.DISTANCE_REF); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DISTANCE_REFSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DISTANCE_REF) }
+  public static func startSTR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 64) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(CS_ID: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CS_ID, def: 0, at: VT.CS_ID) }
   public static func add(GNC_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNC_CAT_ID, def: 0, at: VT.GNC_CAT_ID) }
-  public static func add(GAIADR3_CAT_ID: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIADR3_CAT_ID, def: 0, at: VT.GAIADR3_CAT_ID) }
+  public static func add(GAIA_DR3_SOURCE_ID: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIA_DR3_SOURCE_ID, def: 0, at: VT.GAIA_DR3_SOURCE_ID) }
   public static func add(HIP_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HIP_CAT_ID, def: 0, at: VT.HIP_CAT_ID) }
   public static func add(CAT_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_VERSION, at: VT.CAT_VERSION) }
   public static func add(ASTROMETRY_ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASTROMETRY_ORIGIN, at: VT.ASTROMETRY_ORIGIN) }
@@ -274,13 +323,18 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(VARIABILITY_AMPLITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIABILITY_AMPLITUDE, def: .nan, at: VT.VARIABILITY_AMPLITUDE) }
   public static func add(VARIABILITY_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VARIABILITY_EPOCH, def: .nan, at: VT.VARIABILITY_EPOCH) }
   public static func addVectorOf(PHOTOMETRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHOTOMETRY, at: VT.PHOTOMETRY) }
+  public static func add(DISTANCE_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_PC, def: .nan, at: VT.DISTANCE_PC) }
+  public static func add(DISTANCE_LO_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_LO_PC, def: .nan, at: VT.DISTANCE_LO_PC) }
+  public static func add(DISTANCE_HI_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_HI_PC, def: .nan, at: VT.DISTANCE_HI_PC) }
+  public static func add(DISTANCE_METHOD: strDistanceEstimator, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISTANCE_METHOD.rawValue, def: 0, at: VT.DISTANCE_METHOD) }
+  public static func add(DISTANCE_REF: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DISTANCE_REF, at: VT.DISTANCE_REF) }
   public static func endSTR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSTR(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     CS_ID: Int64 = 0,
     GNC_CAT_ID: UInt32 = 0,
-    GAIADR3_CAT_ID: Int64 = 0,
+    GAIA_DR3_SOURCE_ID: UInt64 = 0,
     HIP_CAT_ID: UInt32 = 0,
     CAT_VERSIONOffset CAT_VERSION: Offset = Offset(),
     ASTROMETRY_ORIGINOffset ASTROMETRY_ORIGIN: Offset = Offset(),
@@ -335,13 +389,18 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     VARIABILITY_PERIOD: Double = .nan,
     VARIABILITY_AMPLITUDE: Double = .nan,
     VARIABILITY_EPOCH: Double = .nan,
-    PHOTOMETRYVectorOffset PHOTOMETRY: Offset = Offset()
+    PHOTOMETRYVectorOffset PHOTOMETRY: Offset = Offset(),
+    DISTANCE_PC: Double = .nan,
+    DISTANCE_LO_PC: Double = .nan,
+    DISTANCE_HI_PC: Double = .nan,
+    DISTANCE_METHOD: strDistanceEstimator = .unspecified,
+    DISTANCE_REFOffset DISTANCE_REF: Offset = Offset()
   ) -> Offset {
     let __start = STR.startSTR(&fbb)
     STR.add(ID: ID, &fbb)
     STR.add(CS_ID: CS_ID, &fbb)
     STR.add(GNC_CAT_ID: GNC_CAT_ID, &fbb)
-    STR.add(GAIADR3_CAT_ID: GAIADR3_CAT_ID, &fbb)
+    STR.add(GAIA_DR3_SOURCE_ID: GAIA_DR3_SOURCE_ID, &fbb)
     STR.add(HIP_CAT_ID: HIP_CAT_ID, &fbb)
     STR.add(CAT_VERSION: CAT_VERSION, &fbb)
     STR.add(ASTROMETRY_ORIGIN: ASTROMETRY_ORIGIN, &fbb)
@@ -397,6 +456,11 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     STR.add(VARIABILITY_AMPLITUDE: VARIABILITY_AMPLITUDE, &fbb)
     STR.add(VARIABILITY_EPOCH: VARIABILITY_EPOCH, &fbb)
     STR.addVectorOf(PHOTOMETRY: PHOTOMETRY, &fbb)
+    STR.add(DISTANCE_PC: DISTANCE_PC, &fbb)
+    STR.add(DISTANCE_LO_PC: DISTANCE_LO_PC, &fbb)
+    STR.add(DISTANCE_HI_PC: DISTANCE_HI_PC, &fbb)
+    STR.add(DISTANCE_METHOD: DISTANCE_METHOD, &fbb)
+    STR.add(DISTANCE_REF: DISTANCE_REF, &fbb)
     return STR.endSTR(&fbb, start: __start)
   }
 
@@ -405,7 +469,7 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.ID, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CS_ID, fieldName: "CS_ID", required: false, type: Int64.self)
     try _v.visit(field: VT.GNC_CAT_ID, fieldName: "GNC_CAT_ID", required: false, type: UInt32.self)
-    try _v.visit(field: VT.GAIADR3_CAT_ID, fieldName: "GAIADR3_CAT_ID", required: false, type: Int64.self)
+    try _v.visit(field: VT.GAIA_DR3_SOURCE_ID, fieldName: "GAIA_DR3_SOURCE_ID", required: false, type: UInt64.self)
     try _v.visit(field: VT.HIP_CAT_ID, fieldName: "HIP_CAT_ID", required: false, type: UInt32.self)
     try _v.visit(field: VT.CAT_VERSION, fieldName: "CAT_VERSION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ASTROMETRY_ORIGIN, fieldName: "ASTROMETRY_ORIGIN", required: false, type: ForwardOffset<String>.self)
@@ -461,6 +525,11 @@ public struct STR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.VARIABILITY_AMPLITUDE, fieldName: "VARIABILITY_AMPLITUDE", required: false, type: Double.self)
     try _v.visit(field: VT.VARIABILITY_EPOCH, fieldName: "VARIABILITY_EPOCH", required: false, type: Double.self)
     try _v.visit(field: VT.PHOTOMETRY, fieldName: "PHOTOMETRY", required: false, type: ForwardOffset<Vector<ForwardOffset<PHBMeasurement>, PHBMeasurement>>.self)
+    try _v.visit(field: VT.DISTANCE_PC, fieldName: "DISTANCE_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_LO_PC, fieldName: "DISTANCE_LO_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_HI_PC, fieldName: "DISTANCE_HI_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.DISTANCE_METHOD, fieldName: "DISTANCE_METHOD", required: false, type: strDistanceEstimator.self)
+    try _v.visit(field: VT.DISTANCE_REF, fieldName: "DISTANCE_REF", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

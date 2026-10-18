@@ -43,9 +43,10 @@ public final class STR extends com.google.flatbuffers.Table {
    */
   public long GNC_CAT_ID() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
-   * Source identifier in the third data release of the all-sky space astrometry survey
+   * Source identifier (source_id) in the third data release of the all-sky space astrometry
+   * survey; 0 when the star has no match in that release
    */
-  public long GAIADR3_CAT_ID() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  public long GAIA_DR3_SOURCE_ID() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
    * Identifier in the first space astrometry mission's main catalog
    */
@@ -229,7 +230,7 @@ public final class STR extends com.google.flatbuffers.Table {
   public ByteBuffer SPECTRAL_TYPEAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
   public ByteBuffer SPECTRAL_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
   /**
-   * Proper name as recognised by the astronomical naming authority
+   * Proper name as recognized by the astronomical naming authority
    */
   public String PROPER_NAME() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PROPER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
@@ -280,19 +281,47 @@ public final class STR extends com.google.flatbuffers.Table {
    */
   public double VARIABILITY_EPOCH() { int o = __offset(118); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
-   * Brightness in every band the star was measured or modelled in
+   * Brightness in every band the star was measured or modeled in
    */
   public PHBMeasurement PHOTOMETRY(int j) { return PHOTOMETRY(new PHBMeasurement(), j); }
   public PHBMeasurement PHOTOMETRY(PHBMeasurement obj, int j) { int o = __offset(120); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
   public int PHOTOMETRYLength() { int o = __offset(120); return o != 0 ? __vector_len(o) : 0; }
   public PHBMeasurement.Vector photometryVector() { return photometryVector(new PHBMeasurement.Vector()); }
   public PHBMeasurement.Vector photometryVector(PHBMeasurement.Vector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Distance from the Sun (parsecs): the posterior median, or the mode for
+   * EDSD_POSTERIOR, as DISTANCE_METHOD states
+   */
+  public double DISTANCE_PC() { int o = __offset(122); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Lower bound of the distance (parsecs): the 16th percentile of the posterior
+   * for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+   * the 68% highest-density interval for EDSD_POSTERIOR, and
+   * 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+   */
+  public double DISTANCE_LO_PC() { int o = __offset(124); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+   * the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+   * DISTANCE_LO_PC; NaN when unbounded
+   */
+  public double DISTANCE_HI_PC() { int o = __offset(126); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+   */
+  public int DISTANCE_METHOD() { int o = __offset(128); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+   */
+  public String DISTANCE_REF() { int o = __offset(130); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DISTANCE_REFAsByteBuffer() { return __vector_as_bytebuffer(130, 1); }
+  public ByteBuffer DISTANCE_REFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 130, 1); }
 
   public static int createSTR(FlatBufferBuilder builder,
       int IDOffset,
       long CS_ID,
       long GNC_CAT_ID,
-      long GAIADR3_CAT_ID,
+      long GAIA_DR3_SOURCE_ID,
       long HIP_CAT_ID,
       int CAT_VERSIONOffset,
       int ASTROMETRY_ORIGINOffset,
@@ -347,8 +376,16 @@ public final class STR extends com.google.flatbuffers.Table {
       double VARIABILITY_PERIOD,
       double VARIABILITY_AMPLITUDE,
       double VARIABILITY_EPOCH,
-      int PHOTOMETRYOffset) {
-    builder.startTable(59);
+      int PHOTOMETRYOffset,
+      double DISTANCE_PC,
+      double DISTANCE_LO_PC,
+      double DISTANCE_HI_PC,
+      int DISTANCE_METHOD,
+      int DISTANCE_REFOffset) {
+    builder.startTable(64);
+    STR.addDistanceHiPc(builder, DISTANCE_HI_PC);
+    STR.addDistanceLoPc(builder, DISTANCE_LO_PC);
+    STR.addDistancePc(builder, DISTANCE_PC);
     STR.addVariabilityEpoch(builder, VARIABILITY_EPOCH);
     STR.addVariabilityAmplitude(builder, VARIABILITY_AMPLITUDE);
     STR.addVariabilityPeriod(builder, VARIABILITY_PERIOD);
@@ -385,8 +422,9 @@ public final class STR extends com.google.flatbuffers.Table {
     STR.addRaUnc(builder, RA_UNC);
     STR.addRa(builder, RA);
     STR.addStarEpoch(builder, STAR_EPOCH);
-    STR.addGaiadr3CatId(builder, GAIADR3_CAT_ID);
+    STR.addGaiaDr3SourceId(builder, GAIA_DR3_SOURCE_ID);
     STR.addCsId(builder, CS_ID);
+    STR.addDistanceRef(builder, DISTANCE_REFOffset);
     STR.addPhotometry(builder, PHOTOMETRYOffset);
     STR.addVariabilityClass(builder, VARIABILITY_CLASSOffset);
     STR.addDesignations(builder, DESIGNATIONSOffset);
@@ -402,6 +440,7 @@ public final class STR extends com.google.flatbuffers.Table {
     STR.addHipCatId(builder, HIP_CAT_ID);
     STR.addGncCatId(builder, GNC_CAT_ID);
     STR.addId(builder, IDOffset);
+    STR.addDistanceMethod(builder, DISTANCE_METHOD);
     STR.addShiftFlag(builder, SHIFT_FLAG);
     STR.addNeighborFlag(builder, NEIGHBOR_FLAG);
     STR.addMultFlag(builder, MULT_FLAG);
@@ -411,11 +450,11 @@ public final class STR extends com.google.flatbuffers.Table {
     return STR.endSTR(builder);
   }
 
-  public static void startSTR(FlatBufferBuilder builder) { builder.startTable(59); }
+  public static void startSTR(FlatBufferBuilder builder) { builder.startTable(64); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addCsId(FlatBufferBuilder builder, long CS_ID) { builder.addLong(1, CS_ID, 0L); }
   public static void addGncCatId(FlatBufferBuilder builder, long GNC_CAT_ID) { builder.addInt(2, (int) GNC_CAT_ID, (int) 0L); }
-  public static void addGaiadr3CatId(FlatBufferBuilder builder, long GAIADR3_CAT_ID) { builder.addLong(3, GAIADR3_CAT_ID, 0L); }
+  public static void addGaiaDr3SourceId(FlatBufferBuilder builder, long GAIA_DR3_SOURCE_ID) { builder.addLong(3, GAIA_DR3_SOURCE_ID, 0L); }
   public static void addHipCatId(FlatBufferBuilder builder, long HIP_CAT_ID) { builder.addInt(4, (int) HIP_CAT_ID, (int) 0L); }
   public static void addCatVersion(FlatBufferBuilder builder, int CAT_VERSIONOffset) { builder.addOffset(5, CAT_VERSIONOffset, 0); }
   public static void addAstrometryOrigin(FlatBufferBuilder builder, int ASTROMETRY_ORIGINOffset) { builder.addOffset(6, ASTROMETRY_ORIGINOffset, 0); }
@@ -475,6 +514,11 @@ public final class STR extends com.google.flatbuffers.Table {
   public static void addPhotometry(FlatBufferBuilder builder, int PHOTOMETRYOffset) { builder.addOffset(58, PHOTOMETRYOffset, 0); }
   public static int createPhotometryVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPhotometryVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addDistancePc(FlatBufferBuilder builder, double DISTANCE_PC) { builder.addDouble(59, DISTANCE_PC, Double.NaN); }
+  public static void addDistanceLoPc(FlatBufferBuilder builder, double DISTANCE_LO_PC) { builder.addDouble(60, DISTANCE_LO_PC, Double.NaN); }
+  public static void addDistanceHiPc(FlatBufferBuilder builder, double DISTANCE_HI_PC) { builder.addDouble(61, DISTANCE_HI_PC, Double.NaN); }
+  public static void addDistanceMethod(FlatBufferBuilder builder, int DISTANCE_METHOD) { builder.addByte(62, (byte) DISTANCE_METHOD, (byte) 0); }
+  public static void addDistanceRef(FlatBufferBuilder builder, int DISTANCE_REFOffset) { builder.addOffset(63, DISTANCE_REFOffset, 0); }
   public static int endSTR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

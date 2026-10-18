@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.253.0+1792248768925",
+  version: "1.254.0+1792337152633",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -17820,7 +17820,7 @@ file_identifier "$XTC";`,
       ]
     },
     SKT: {
-      IDL: "// Hash: 6c60553b98a9605da33d281e8a932168949443fae7e9cc6cbbf73a4f8dbb80c1\n// Version: 1.224.0\n// -----------------------------------END_HEADER\ninclude \"../PHB/main.fbs\";\n\n// Sky Tile (SKT)\n// Description\n// One tile of an all-sky layer on the HEALPix sphere: either a packed set of\n// point sources (stars, compact sources) ready to draw, or a pixel map of a\n// diffuse quantity (surface brightness in one band, a count map, a\n// localisation probability). A layer is every tile that shares LAYER_ID; a\n// consumer streams the tiles its view needs and never the whole sky. Tiles\n// are durable derived products published over the network by content\n// identifier; the full records behind a point tile are `$STR` and `$CSO`.\n//\n// THE SPHERE. Tiles are HEALPix pixels in the NESTED scheme, in the frame\n// named by FRAME. A tile at ORDER k has NSIDE = 2^k and is one of\n// 12 * 4^k pixels, numbered 0 .. 12 * 4^k - 1 by PIXEL. The four children of\n// (k, p) are (k + 1, 4p + i) for i = 0..3. Every pixel has the same solid\n// angle, 4 pi / (12 * 4^k) steradians.\n//\n// POINT LAYERS REFINE BY ADDITION. In a POINT_SOURCES layer a tile holds the\n// sources inside its pixel that no ancestor tile holds, brightest first, and\n// MAG_LIMIT is the faintest magnitude it holds. Drawing a tile and all of its\n// ancestors draws every source of that pixel down to the tile's MAG_LIMIT;\n// a consumer descends while the view needs fainter sources. REFINE is ADD.\n//\n// MAP LAYERS REFINE BY REPLACEMENT. A DIFFUSE_MAP or PROBABILITY_MAP tile at\n// ORDER k with MAP_DEPTH d holds 4^d values, one for each pixel at order\n// k + d inside it, in nested order: value i belongs to pixel\n// PIXEL * 4^d + i at order k + d. Its children hold the same field at the\n// next order. REFINE is REPLACE: when the children draw, the parent does not.\n//\n// THE PACKED POINT. SKTPoint is 24 bytes, little-endian, 4-byte aligned, so a\n// point tile is uploaded to a GPU without a parse. Fixed-point positions\n// resolve 0.3 milliarcseconds, well below a pixel at any field of view a\n// renderer draws; an analysis that needs full precision follows ROW back to\n// the record. Out-of-range or unknown values use the sentinels documented on\n// each field and set the matching FLAGS bit.\n//\n// WHERE THE BYTES LIVE. POINTS and MAP_VALUES carry the payload inline. A\n// large tile instead leaves them absent and names PAYLOAD_CID: the bytes at\n// that identifier are exactly the POINTS array (POINT_COUNT * 24 bytes of\n// SKTPoint) or exactly the MAP_VALUES bytes.\n//\n// ABSENT IS NOT ZERO. Every scalar that can be unknown defaults to NaN.\n\n/// Celestial frame a tile's HEALPix grid is laid on.\n/// Append new values only; never reorder or reuse existing values.\nenum sktCelestialFrame : ubyte {\n  UNSPECIFIED = 0,\n  /// International Celestial Reference System.\n  ICRS = 1,\n  /// Galactic coordinates (l, b).\n  GALACTIC = 2,\n  /// Ecliptic coordinates of J2000.0.\n  ECLIPTIC_J2000 = 3\n}\n\n/// What a tile's payload is.\n/// Append new values only; never reorder or reuse existing values.\nenum sktPayloadKind : ubyte {\n  UNSPECIFIED = 0,\n  /// Packed SKTPoint sources.\n  POINT_SOURCES = 1,\n  /// Pixel map of a diffuse quantity.\n  DIFFUSE_MAP = 2,\n  /// Pixel map of localisation probability per pixel; the values of a\n  /// complete layer at one order sum to 1.\n  PROBABILITY_MAP = 3\n}\n\n/// How a tile relates to its ancestors and children.\n/// Append new values only; never reorder or reuse existing values.\nenum sktRefinement : ubyte {\n  /// The tile adds to its ancestors (point layers).\n  ADD = 0,\n  /// The tile replaces its parent (map layers).\n  REPLACE = 1\n}\n\n/// Which place the positions of a point tile are.\n/// Append new values only; never reorder or reuse existing values.\nenum sktPlaceKind : ubyte {\n  UNSPECIFIED = 0,\n  /// Barycentric catalogue place at EPOCH: proper motion applied from the\n  /// catalogue epoch, nothing else.\n  CATALOG = 1,\n  /// Astrometric place for the observer named by OBSERVER_ID at EPOCH:\n  /// space motion and parallax applied, no aberration or deflection.\n  ASTROMETRIC = 2,\n  /// Apparent place for the observer named by OBSERVER_ID at EPOCH: space\n  /// motion, parallax, light deflection and aberration applied, in FRAME\n  /// axes.\n  APPARENT = 3\n}\n\n/// What the COLOR slot of every point in a tile holds.\n/// Append new values only; never reorder or reuse existing values.\nenum sktColorEncoding : ubyte {\n  /// No colour; COLOR is 0.\n  NONE = 0,\n  /// Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in\n  /// millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means\n  /// unknown.\n  COLOR_INDEX = 1,\n  /// Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded.\n  /// 0 means unknown.\n  EFFECTIVE_TEMPERATURE = 2\n}\n\n/// Numeric encoding of MAP_VALUES.\n/// Append new values only; never reorder or reuse existing values.\nenum sktMapEncoding : ubyte {\n  UNSPECIFIED = 0,\n  /// IEEE 754 binary32, little-endian. NaN marks a pixel with no data.\n  FLOAT32 = 1,\n  /// IEEE 754 binary16, little-endian. NaN marks a pixel with no data.\n  FLOAT16 = 2,\n  /// Unsigned 16-bit, little-endian; physical = raw * MAP_SCALE +\n  /// MAP_OFFSET. MAP_BLANK marks a pixel with no data.\n  UINT16_SCALED = 3,\n  /// Unsigned 8-bit; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK\n  /// marks a pixel with no data.\n  UINT8_SCALED = 4\n}\n\n/// Physical quantity a map pixel states.\n/// Append new values only; never reorder or reuse existing values.\nenum sktMapQuantity : ubyte {\n  UNSPECIFIED = 0,\n  /// Surface brightness, MAP_UNITS per steradian or per square arcsecond as\n  /// MAP_UNITS states.\n  SURFACE_BRIGHTNESS = 1,\n  /// Brightness temperature, kelvin.\n  BRIGHTNESS_TEMPERATURE = 2,\n  /// Detected counts per pixel.\n  COUNTS = 3,\n  /// Counts per unit exposure (a rate map).\n  COUNT_RATE = 4,\n  /// Exposure per pixel.\n  EXPOSURE = 5,\n  /// Probability per pixel.\n  PROBABILITY = 6,\n  /// Surface density of sources per pixel.\n  SOURCE_DENSITY = 7,\n  /// Quantity named in MAP_QUANTITY_NAME.\n  OTHER = 8\n}\n\n/// Intensity stretch a producer recommends for display.\n/// Append new values only; never reorder or reuse existing values.\nenum sktStretchFunction : ubyte {\n  UNSPECIFIED = 0,\n  LINEAR = 1,\n  SQUARE_ROOT = 2,\n  LOGARITHMIC = 3,\n  /// Inverse hyperbolic sine with softening STRETCH_SOFTENING.\n  ASINH = 4,\n  /// Histogram equalisation over PERCENTILE_VALUES.\n  HISTOGRAM_EQUALIZED = 5\n}\n\n/// One point source packed for drawing (24 bytes).\nstruct SKTPoint {\n  /// Right ascension (or longitude in FRAME) as a fraction of a full turn:\n  /// degrees = RA_FIXED * 360 / 2^32.\n  RA_FIXED: uint32;\n  /// Declination (or latitude in FRAME): degrees = DEC_FIXED * 90 / 2^31.\n  DEC_FIXED: int32;\n  /// Proper motion in RA times cos(DEC), milliarcseconds per year. -32768\n  /// when unknown or out of range (FLAGS bit 2).\n  PMRA: int16;\n  /// Proper motion in DEC, milliarcseconds per year. -32768 when unknown or\n  /// out of range (FLAGS bit 2).\n  PMDEC: int16;\n  /// Parallax in units of 0.02 milliarcseconds. 0 when unknown, not\n  /// positive or out of range (FLAGS bit 3).\n  PARALLAX: uint16;\n  /// Magnitude in the tile's band, millimagnitudes. -32768 when unknown.\n  MAG: int16;\n  /// Colour, encoded as the tile's COLOR_ENCODING states.\n  COLOR: uint16;\n  /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\n  /// not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n  /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\n  /// within the confusion radius. 7: extended source. 8-15: reserved, 0.\n  FLAGS: uint16;\n  /// Index of the source's full record in the tile's row collection\n  /// (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.\n  ROW: uint32;\n}\n\n/// Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.\ntable SKT {\n  /// Stable identifier of the layer: equal across every tile of one\n  /// (producer, source catalogue or survey, band, place, epoch).\n  LAYER_ID: string (required);\n  /// Frame the HEALPix grid and the point positions are stated in.\n  FRAME: sktCelestialFrame = ICRS;\n  /// HEALPix order; NSIDE = 2^ORDER.\n  ORDER: uint8;\n  /// Nested pixel index at ORDER.\n  PIXEL: uint64;\n  /// Deepest order of the layer, when the producer knows it; 255 when\n  /// unstated.\n  MAX_ORDER: uint8 = 255;\n  /// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\n  /// a leaf.\n  CHILD_MASK: uint8;\n  /// Payload the tile carries.\n  PAYLOAD_KIND: sktPayloadKind = UNSPECIFIED;\n  /// How the tile relates to its ancestors and children.\n  REFINE: sktRefinement = ADD;\n\n  /// Coarse spectral region of the band.\n  SPECTRAL_REGIME: phbSpectralRegime = UNSPECIFIED;\n  /// Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are\n  /// in this band.\n  BAND_ID: string;\n  /// Effective wavelength of the band, nanometres (vacuum).\n  WAVELENGTH_EFF_NM: double = nan;\n  /// Short edge of a band-integrated map, nanometres.\n  WAVELENGTH_MIN_NM: double = nan;\n  /// Long edge of a band-integrated map, nanometres.\n  WAVELENGTH_MAX_NM: double = nan;\n  /// Calibration system of MAG.\n  MAGNITUDE_SYSTEM: phbMagnitudeSystem = UNSPECIFIED;\n\n  /// Which place point positions are.\n  PLACE: sktPlaceKind = CATALOG;\n  /// Epoch of point positions, Julian years (TT).\n  EPOCH: double = nan;\n  /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\n  /// spacecraft or the geocentre), as the producer names it.\n  OBSERVER_ID: string;\n  /// Number of points in the payload.\n  POINT_COUNT: uint32;\n  /// Brightest magnitude in the tile.\n  MAG_BRIGHTEST: float = nan;\n  /// Faintest magnitude in the tile; with the ancestors, the layer is\n  /// complete to this limit inside the pixel.\n  MAG_LIMIT: float = nan;\n  /// What each point's COLOR holds.\n  COLOR_ENCODING: sktColorEncoding = NONE;\n  /// Bluer band of a COLOR_INDEX colour.\n  COLOR_BLUE_BAND_ID: string;\n  /// Redder band of a COLOR_INDEX colour.\n  COLOR_RED_BAND_ID: string;\n  /// Packed points, brightest first.\n  POINTS: [SKTPoint];\n  /// Content identifier of the full `$STR` / `$CSO` records of the points,\n  /// a size-prefixed record sequence in ROW order.\n  ROW_COLLECTION_CID: string;\n\n  /// Order offset of the map pixels: the tile holds 4^MAP_DEPTH values.\n  MAP_DEPTH: uint8;\n  /// Numeric encoding of MAP_VALUES.\n  MAP_ENCODING: sktMapEncoding = UNSPECIFIED;\n  /// Physical quantity of the map.\n  MAP_QUANTITY: sktMapQuantity = UNSPECIFIED;\n  /// Producer's name for the quantity when MAP_QUANTITY is OTHER.\n  MAP_QUANTITY_NAME: string;\n  /// Units of the physical map values, UCUM style (e.g. \"K\", \"MJy/sr\",\n  /// \"count/s/sr\").\n  MAP_UNITS: string;\n  /// Scale of a scaled integer encoding.\n  MAP_SCALE: double = 1;\n  /// Offset of a scaled integer encoding.\n  MAP_OFFSET: double = 0;\n  /// Raw value marking a pixel with no data in a scaled integer encoding.\n  MAP_BLANK: uint32 = 4294967295;\n  /// Raw map bytes, 4^MAP_DEPTH values in nested order.\n  MAP_VALUES: [ubyte];\n\n  /// Recommended stretch.\n  STRETCH: sktStretchFunction = UNSPECIFIED;\n  /// Physical value drawn black.\n  BLACK_POINT: double = nan;\n  /// Physical value drawn white.\n  WHITE_POINT: double = nan;\n  /// Softening of an ASINH stretch, in physical units.\n  STRETCH_SOFTENING: double = nan;\n  /// Percentile levels of the layer's value distribution, in [0, 100],\n  /// ascending.\n  PERCENTILE_LEVELS: [float];\n  /// Physical value at each PERCENTILE_LEVELS entry. Computed over the whole\n  /// layer, so every tile stretches alike.\n  PERCENTILE_VALUES: [double];\n\n  /// Content identifier of the payload when POINTS and MAP_VALUES are absent.\n  PAYLOAD_CID: string;\n  /// Length of the payload at PAYLOAD_CID, bytes.\n  PAYLOAD_BYTES: uint64;\n\n  /// Start of the observations the tile summarises, ISO 8601 UTC.\n  OBSERVATION_START: string;\n  /// End of the observations the tile summarises, ISO 8601 UTC.\n  OBSERVATION_END: string;\n  /// Verbatim names of the catalogues or surveys the tile was derived from.\n  SOURCE_NAMES: [string];\n  /// Peer identifier of the node that produced the tile.\n  PRODUCER_PEER_ID: string;\n  /// Producer software and version.\n  PRODUCER_VERSION: string;\n  /// Time the tile was produced, ISO 8601 UTC.\n  PRODUCED_AT: string;\n  /// Citation the upstream publishers ask for.\n  CITATION: string;\n  /// URL of the licence or terms of the source data.\n  LICENSE_URL: string;\n}\n\nroot_type SKT;\nfile_identifier \"$SKT\";",
+      IDL: "// Hash: f5baafdf20d9ee46bf203cafe8df6eb6919c73749f1b5f2bc2a613896f2d3e9e\n// Version: 1.224.1\n// -----------------------------------END_HEADER\ninclude \"../PHB/main.fbs\";\n\n// Sky Tile (SKT)\n// Description\n// One tile of a sky layer: either a packed set of point sources (stars,\n// compact sources) ready to draw, or a pixel map of a diffuse quantity\n// (surface brightness in one band, a count map, a localization probability).\n// PARTITION says how the layer divides into tiles: HEALPix pixels on the\n// sphere of directions, or nodes of a heliocentric octree in 3D. A layer is\n// every tile that shares LAYER_ID; a consumer streams the tiles its view\n// needs and never the whole layer. Tiles are durable derived products\n// published over the network by content identifier; the full records behind\n// a point tile are `$STR` and `$CSO`.\n//\n// THE SPHERE. A HEALPIX layer's tiles are HEALPix pixels in the NESTED\n// scheme, in the frame named by FRAME. A tile at ORDER k has NSIDE = 2^k and\n// is one of 12 * 4^k pixels, numbered 0 .. 12 * 4^k - 1 by PIXEL. The four\n// children of (k, p) are (k + 1, 4p + i) for i = 0..3. Every pixel has the\n// same solid angle, 4 pi / (12 * 4^k) steradians.\n//\n// THE OCTREE. An OCTREE_HELIO_ICRS layer's tiles are cubic nodes of an\n// octree of the space around the Sun, after the magnitude-sorted octree of\n// Sagrista et al. 2019 (IEEE TVCG 25(1)): axes ICRS (FRAME is ICRS), origin\n// the Sun, lengths in parsecs. The root is OCTREE_LEVEL 0, OCTREE_KEY 0, a\n// cube centered on the Sun. The node (L, k) has eight children\n// (L + 1, 8k + i) for i = 0..7, where bit 0 of i takes the +X half, bit 1 the\n// +Y half and bit 2 the +Z half; so OCTREE_KEY is the 3L-bit Morton code of\n// the cell, x, y and z interleaved from the root down, and L is at most 21. A\n// child's HALF_SIZE_PC is half its parent's, and its center is the parent's\n// center plus or minus the child's HALF_SIZE_PC on each axis as i selects.\n// Each node states CENTER_X_PC, CENTER_Y_PC, CENTER_Z_PC and HALF_SIZE_PC, so\n// no consumer re-derives them.\n//\n// POINT LAYERS REFINE BY ADDITION. In a POINT_SOURCES layer a tile holds the\n// sources inside its pixel that no ancestor tile holds, brightest first, and\n// MAG_LIMIT is the faintest magnitude it holds. Drawing a tile and all of its\n// ancestors draws every source of that pixel down to the tile's MAG_LIMIT;\n// a consumer descends while the view needs fainter sources. REFINE is ADD.\n// An octree point layer refines the same way by absolute magnitude: a node\n// holds the stars inside its cube that no ancestor holds, brightest ABS_MAG\n// first, and ABS_MAG_FAINTEST is the faintest it holds; a node and its\n// ancestors draw every star inside the node's cube down to its\n// ABS_MAG_FAINTEST, and the rest lie in its children.\n//\n// MAP LAYERS REFINE BY REPLACEMENT. A DIFFUSE_MAP or PROBABILITY_MAP tile at\n// ORDER k with MAP_DEPTH d holds 4^d values, one for each pixel at order\n// k + d inside it, in nested order: value i belongs to pixel\n// PIXEL * 4^d + i at order k + d. Its children hold the same field at the\n// next order. REFINE is REPLACE: when the children draw, the parent does not.\n//\n// THE PACKED POINT. SKTPoint is 24 bytes, little-endian, 4-byte aligned, so a\n// point tile is uploaded to a GPU without a parse. Fixed-point positions\n// resolve 0.3 milliarcseconds, well below a pixel at any field of view a\n// renderer draws; an analysis that needs full precision follows ROW back to\n// the record. Out-of-range or unknown values use the sentinels documented on\n// each field and set the matching FLAGS bit. SKTPoint3D is also 24 bytes,\n// little-endian, 4-byte aligned: a position relative to the node's center in\n// float32 parsecs, which resolves the node's HALF_SIZE_PC times 2^-23; a\n// renderer adds the node's double-precision center (or a camera-relative\n// offset) once per node, never per point.\n//\n// WHERE THE BYTES LIVE. POINTS, POINTS_3D and MAP_VALUES carry the payload\n// inline. A large tile instead leaves them absent and names PAYLOAD_CID: the\n// bytes at that identifier are exactly the POINTS array (POINT_COUNT * 24\n// bytes of SKTPoint), exactly the POINTS_3D array (POINT_COUNT * 24 bytes of\n// SKTPoint3D) or exactly the MAP_VALUES bytes.\n//\n// ABSENT IS NOT ZERO. Every scalar that can be unknown defaults to NaN.\n\n/// How a layer divides into tiles.\n/// Append new values only; never reorder or reuse existing values.\nenum sktPartitionScheme : ubyte {\n  /// HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL.\n  HEALPIX = 0,\n  /// Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed\n  /// by OCTREE_LEVEL and OCTREE_KEY.\n  OCTREE_HELIO_ICRS = 1\n}\n\n/// Celestial frame a tile's HEALPix grid and point positions are laid on.\n/// Append new values only; never reorder or reuse existing values.\nenum sktCelestialFrame : ubyte {\n  UNSPECIFIED = 0,\n  /// International Celestial Reference System.\n  ICRS = 1,\n  /// Galactic coordinates (l, b).\n  GALACTIC = 2,\n  /// Ecliptic coordinates of J2000.0.\n  ECLIPTIC_J2000 = 3\n}\n\n/// What a tile's payload is.\n/// Append new values only; never reorder or reuse existing values.\nenum sktPayloadKind : ubyte {\n  UNSPECIFIED = 0,\n  /// Packed SKTPoint sources.\n  POINT_SOURCES = 1,\n  /// Pixel map of a diffuse quantity.\n  DIFFUSE_MAP = 2,\n  /// Pixel map of localization probability per pixel; the values of a\n  /// complete layer at one order sum to 1.\n  PROBABILITY_MAP = 3\n}\n\n/// How a tile relates to its ancestors and children.\n/// Append new values only; never reorder or reuse existing values.\nenum sktRefinement : ubyte {\n  /// The tile adds to its ancestors (point layers).\n  ADD = 0,\n  /// The tile replaces its parent (map layers).\n  REPLACE = 1\n}\n\n/// Which place the positions of a point tile are.\n/// Append new values only; never reorder or reuse existing values.\nenum sktPlaceKind : ubyte {\n  UNSPECIFIED = 0,\n  /// Barycentric catalog place at EPOCH: proper motion applied from the\n  /// catalog epoch, nothing else.\n  CATALOG = 1,\n  /// Astrometric place for the observer named by OBSERVER_ID at EPOCH:\n  /// space motion and parallax applied, no aberration or deflection.\n  ASTROMETRIC = 2,\n  /// Apparent place for the observer named by OBSERVER_ID at EPOCH: space\n  /// motion, parallax, light deflection and aberration applied, in FRAME\n  /// axes.\n  APPARENT = 3\n}\n\n/// What the COLOR slot of every point in a tile holds.\n/// Append new values only; never reorder or reuse existing values.\nenum sktColorEncoding : ubyte {\n  /// No color; COLOR is 0.\n  NONE = 0,\n  /// Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in\n  /// millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means\n  /// unknown.\n  COLOR_INDEX = 1,\n  /// Effective temperature in units of 2 kelvin (COLOR = Teff / 2), rounded.\n  /// 0 means unknown.\n  EFFECTIVE_TEMPERATURE = 2\n}\n\n/// Numeric encoding of MAP_VALUES.\n/// Append new values only; never reorder or reuse existing values.\nenum sktMapEncoding : ubyte {\n  UNSPECIFIED = 0,\n  /// IEEE 754 binary32, little-endian. NaN marks a pixel with no data.\n  FLOAT32 = 1,\n  /// IEEE 754 binary16, little-endian. NaN marks a pixel with no data.\n  FLOAT16 = 2,\n  /// Unsigned 16-bit, little-endian; physical = raw * MAP_SCALE +\n  /// MAP_OFFSET. MAP_BLANK marks a pixel with no data.\n  UINT16_SCALED = 3,\n  /// Unsigned 8-bit; physical = raw * MAP_SCALE + MAP_OFFSET. MAP_BLANK\n  /// marks a pixel with no data.\n  UINT8_SCALED = 4\n}\n\n/// Physical quantity a map pixel states.\n/// Append new values only; never reorder or reuse existing values.\nenum sktMapQuantity : ubyte {\n  UNSPECIFIED = 0,\n  /// Surface brightness, MAP_UNITS per steradian or per square arcsecond as\n  /// MAP_UNITS states.\n  SURFACE_BRIGHTNESS = 1,\n  /// Brightness temperature, kelvin.\n  BRIGHTNESS_TEMPERATURE = 2,\n  /// Detected counts per pixel.\n  COUNTS = 3,\n  /// Counts per unit exposure (a rate map).\n  COUNT_RATE = 4,\n  /// Exposure per pixel.\n  EXPOSURE = 5,\n  /// Probability per pixel.\n  PROBABILITY = 6,\n  /// Surface density of sources per pixel.\n  SOURCE_DENSITY = 7,\n  /// Quantity named in MAP_QUANTITY_NAME.\n  OTHER = 8\n}\n\n/// Intensity stretch a producer recommends for display.\n/// Append new values only; never reorder or reuse existing values.\nenum sktStretchFunction : ubyte {\n  UNSPECIFIED = 0,\n  LINEAR = 1,\n  SQUARE_ROOT = 2,\n  LOGARITHMIC = 3,\n  /// Inverse hyperbolic sine with softening STRETCH_SOFTENING.\n  ASINH = 4,\n  /// Histogram equalization over PERCENTILE_VALUES.\n  HISTOGRAM_EQUALIZED = 5\n}\n\n/// One point source packed for drawing (24 bytes).\nstruct SKTPoint {\n  /// Right ascension (or longitude in FRAME) as a fraction of a full turn:\n  /// degrees = RA_FIXED * 360 / 2^32.\n  RA_FIXED: uint32;\n  /// Declination (or latitude in FRAME): degrees = DEC_FIXED * 90 / 2^31.\n  DEC_FIXED: int32;\n  /// Proper motion in RA times cos(DEC), milliarcseconds per year. -32768\n  /// when unknown or out of range (FLAGS bit 2).\n  PMRA: int16;\n  /// Proper motion in DEC, milliarcseconds per year. -32768 when unknown or\n  /// out of range (FLAGS bit 2).\n  PMDEC: int16;\n  /// Parallax in units of 0.02 milliarcseconds. 0 when unknown, not\n  /// positive or out of range (FLAGS bit 3).\n  PARALLAX: uint16;\n  /// Magnitude in the tile's band, millimagnitudes. -32768 when unknown.\n  MAG: int16;\n  /// Color, encoded as the tile's COLOR_ENCODING states.\n  COLOR: uint16;\n  /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\n  /// not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n  /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\n  /// within the confusion radius. 7: extended source. 8-15: reserved, 0.\n  FLAGS: uint16;\n  /// Index of the source's full record in the tile's row collection\n  /// (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.\n  ROW: uint32;\n}\n\n/// One point source placed in 3D in an octree node, packed for drawing (24\n/// bytes).\nstruct SKTPoint3D {\n  /// ICRS X of the star minus the node's CENTER_X_PC, parsecs.\n  X_PC: float;\n  /// ICRS Y of the star minus the node's CENTER_Y_PC, parsecs.\n  Y_PC: float;\n  /// ICRS Z of the star minus the node's CENTER_Z_PC, parsecs.\n  Z_PC: float;\n  /// Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\n  /// extinction removed, millimagnitudes. -32768 when unknown.\n  ABS_MAG: int16;\n  /// Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\n  /// COLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP).\n  COLOR: uint16;\n  /// Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\n  /// DISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\n  /// or 6.5535 or more.\n  DIST_FRAC_UNC: uint16;\n  /// Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\n  /// multiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\n  /// a `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\n  /// radius. 7: extended source. 2, 3 and 8-15: reserved, 0.\n  FLAGS: uint16;\n  /// Index of the source's full record in the tile's row collection\n  /// (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.\n  ROW: uint32;\n}\n\n/// Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\n/// or diffuse-map layer.\ntable SKT {\n  /// Stable identifier of the layer: equal across every tile of one\n  /// (producer, source catalog or survey, band, place, epoch).\n  LAYER_ID: string (required);\n  /// Frame the HEALPix grid and the point positions are stated in; ICRS for\n  /// an OCTREE_HELIO_ICRS layer.\n  FRAME: sktCelestialFrame = ICRS;\n  /// HEALPix order; NSIDE = 2^ORDER.\n  ORDER: uint8;\n  /// Nested pixel index at ORDER.\n  PIXEL: uint64;\n  /// Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\n  /// producer knows it; 255 when unstated.\n  MAX_ORDER: uint8 = 255;\n  /// Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n  /// 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.\n  CHILD_MASK: uint8;\n  /// Payload the tile carries.\n  PAYLOAD_KIND: sktPayloadKind = UNSPECIFIED;\n  /// How the tile relates to its ancestors and children.\n  REFINE: sktRefinement = ADD;\n\n  /// Coarse spectral region of the band.\n  SPECTRAL_REGIME: phbSpectralRegime = UNSPECIFIED;\n  /// Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are\n  /// in this band.\n  BAND_ID: string;\n  /// Effective wavelength of the band, nanometers (vacuum).\n  WAVELENGTH_EFF_NM: double = nan;\n  /// Short edge of a band-integrated map, nanometers.\n  WAVELENGTH_MIN_NM: double = nan;\n  /// Long edge of a band-integrated map, nanometers.\n  WAVELENGTH_MAX_NM: double = nan;\n  /// Calibration system of MAG.\n  MAGNITUDE_SYSTEM: phbMagnitudeSystem = UNSPECIFIED;\n\n  /// Which place point positions are.\n  PLACE: sktPlaceKind = CATALOG;\n  /// Epoch of point positions, Julian years (TT).\n  EPOCH: double = nan;\n  /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\n  /// spacecraft or the geocenter), as the producer names it.\n  OBSERVER_ID: string;\n  /// Number of points in the payload (POINTS or POINTS_3D).\n  POINT_COUNT: uint32;\n  /// Brightest magnitude in the tile.\n  MAG_BRIGHTEST: float = nan;\n  /// Faintest magnitude in the tile; with the ancestors, the layer is\n  /// complete to this limit inside the pixel.\n  MAG_LIMIT: float = nan;\n  /// What each point's COLOR holds (POINTS and POINTS_3D alike).\n  COLOR_ENCODING: sktColorEncoding = NONE;\n  /// Bluer band of a COLOR_INDEX color.\n  COLOR_BLUE_BAND_ID: string;\n  /// Redder band of a COLOR_INDEX color.\n  COLOR_RED_BAND_ID: string;\n  /// Packed points, brightest first.\n  POINTS: [SKTPoint];\n  /// Content identifier of the full `$STR` / `$CSO` records of the points,\n  /// a size-prefixed record sequence in ROW order.\n  ROW_COLLECTION_CID: string;\n\n  /// Order offset of the map pixels: the tile holds 4^MAP_DEPTH values.\n  MAP_DEPTH: uint8;\n  /// Numeric encoding of MAP_VALUES.\n  MAP_ENCODING: sktMapEncoding = UNSPECIFIED;\n  /// Physical quantity of the map.\n  MAP_QUANTITY: sktMapQuantity = UNSPECIFIED;\n  /// Producer's name for the quantity when MAP_QUANTITY is OTHER.\n  MAP_QUANTITY_NAME: string;\n  /// Units of the physical map values, UCUM style (e.g. \"K\", \"MJy/sr\",\n  /// \"count/s/sr\").\n  MAP_UNITS: string;\n  /// Scale of a scaled integer encoding.\n  MAP_SCALE: double = 1;\n  /// Offset of a scaled integer encoding.\n  MAP_OFFSET: double = 0;\n  /// Raw value marking a pixel with no data in a scaled integer encoding.\n  MAP_BLANK: uint32 = 4294967295;\n  /// Raw map bytes, 4^MAP_DEPTH values in nested order.\n  MAP_VALUES: [ubyte];\n\n  /// Recommended stretch.\n  STRETCH: sktStretchFunction = UNSPECIFIED;\n  /// Physical value drawn black.\n  BLACK_POINT: double = nan;\n  /// Physical value drawn white.\n  WHITE_POINT: double = nan;\n  /// Softening of an ASINH stretch, in physical units.\n  STRETCH_SOFTENING: double = nan;\n  /// Percentile levels of the layer's value distribution, in [0, 100],\n  /// ascending.\n  PERCENTILE_LEVELS: [float];\n  /// Physical value at each PERCENTILE_LEVELS entry. Computed over the whole\n  /// layer, so every tile stretches alike.\n  PERCENTILE_VALUES: [double];\n\n  /// Content identifier of the payload when POINTS and MAP_VALUES are absent.\n  PAYLOAD_CID: string;\n  /// Length of the payload at PAYLOAD_CID, bytes.\n  PAYLOAD_BYTES: uint64;\n\n  /// Start of the observations the tile summarizes, ISO 8601 UTC.\n  OBSERVATION_START: string;\n  /// End of the observations the tile summarizes, ISO 8601 UTC.\n  OBSERVATION_END: string;\n  /// Verbatim names of the catalogs or surveys the tile was derived from.\n  SOURCE_NAMES: [string];\n  /// Peer identifier of the node that produced the tile.\n  PRODUCER_PEER_ID: string;\n  /// Producer software and version.\n  PRODUCER_VERSION: string;\n  /// Time the tile was produced, ISO 8601 UTC.\n  PRODUCED_AT: string;\n  /// Citation the upstream publishers ask for.\n  CITATION: string;\n  /// URL of the license or terms of the source data.\n  LICENSE_URL: string;\n\n  // Appended 2026-10-18: the heliocentric octree partition (THE OCTREE above).\n\n  /// How the layer divides into tiles.\n  PARTITION: sktPartitionScheme = HEALPIX;\n  /// Octree level of the node; the root is 0, at most 21.\n  OCTREE_LEVEL: uint8;\n  /// Morton key of the node at OCTREE_LEVEL, 3 bits per level.\n  OCTREE_KEY: uint64;\n  /// ICRS X of the node's center, parsecs from the Sun.\n  CENTER_X_PC: double = nan;\n  /// ICRS Y of the node's center, parsecs from the Sun.\n  CENTER_Y_PC: double = nan;\n  /// ICRS Z of the node's center, parsecs from the Sun.\n  CENTER_Z_PC: double = nan;\n  /// Half the edge length of the node's cube, parsecs.\n  HALF_SIZE_PC: double = nan;\n  /// Brightest absolute magnitude in the node.\n  ABS_MAG_BRIGHTEST: float = nan;\n  /// Faintest absolute magnitude in the node; with its ancestors, the layer\n  /// is complete to this limit inside the node's cube.\n  ABS_MAG_FAINTEST: float = nan;\n  /// Packed points of an octree node, brightest absolute magnitude first.\n  POINTS_3D: [SKTPoint3D];\n}\n\nroot_type SKT;\nfile_identifier \"$SKT\";",
       files: [
         "./dist/SKT/SKT.sw.tar.gz",
         "./dist/SKT/SKT.py.tar.gz",
@@ -29830,10 +29830,29 @@ file_identifier "$ACL";`,
       ]
     },
     STR: {
-      IDL: `// Hash: a91bc7e3dfc7de45ddd363f255af99d395bf9104ea0febddc2ce05e0d480ea4c
-// Version: 0.0.5
+      IDL: `// Hash: b4e03e434a6d3e5d9b864939985996c05a742bb5efa7ee6f53f847592011b64a
+// Version: 0.0.6
 // -----------------------------------END_HEADER
 include "../PHB/main.fbs";
+
+/// How a star's distance was estimated.
+/// Append new values only; never reorder or reuse existing values.
+enum strDistanceEstimator : ubyte {
+  /// No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN.
+  UNSPECIFIED = 0,
+  /// Geometric distance: the median of the posterior from the parallax under a
+  /// direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147).
+  BAILER_JONES_2021_GEO = 1,
+  /// Photogeometric distance: the geometric posterior further constrained by the
+  /// star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147).
+  BAILER_JONES_2021_PHOTOGEO = 2,
+  /// Mode of the posterior from the parallax under the exponentially decreasing
+  /// space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994).
+  EDSD_POSTERIOR = 3,
+  /// Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the
+  /// fractional parallax uncertainty is small.
+  PARALLAX_INVERSE = 4
+}
 
 /// Star Catalog Entry
 table STR {
@@ -29843,8 +29862,9 @@ table STR {
   CS_ID:long;
   /// GNC star catalog identifier
   GNC_CAT_ID:uint32;
-  /// Source identifier in the third data release of the all-sky space astrometry survey
-  GAIADR3_CAT_ID:long;
+  /// Source identifier (source_id) in the third data release of the all-sky space astrometry
+  /// survey; 0 when the star has no match in that release
+  GAIA_DR3_SOURCE_ID:ulong;
   /// Identifier in the first space astrometry mission's main catalog
   HIP_CAT_ID:uint32;
   /// Catalog version string
@@ -29937,7 +29957,7 @@ table STR {
   RADIAL_VELOCITY_UNC:double = nan;
   /// Spectral type in the MK system, e.g. "A1 V"
   SPECTRAL_TYPE:string;
-  /// Proper name as recognised by the astronomical naming authority
+  /// Proper name as recognized by the astronomical naming authority
   PROPER_NAME:string;
   /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
   BAYER_FLAMSTEED:string;
@@ -29957,8 +29977,28 @@ table STR {
   VARIABILITY_AMPLITUDE:double = nan;
   /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
   VARIABILITY_EPOCH:double = nan;
-  /// Brightness in every band the star was measured or modelled in
+  /// Brightness in every band the star was measured or modeled in
   PHOTOMETRY:[PHBMeasurement];
+
+  // Appended 2026-10-18: distance. DISTANCE_METHOD names the estimator; a
+  // distance is never derived from PARALLAX unless it says PARALLAX_INVERSE.
+
+  /// Distance from the Sun (parsecs): the posterior median, or the mode for
+  /// EDSD_POSTERIOR, as DISTANCE_METHOD states
+  DISTANCE_PC:double = nan;
+  /// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+  /// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+  /// the 68% highest-density interval for EDSD_POSTERIOR, and
+  /// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+  DISTANCE_LO_PC:double = nan;
+  /// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+  /// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+  /// DISTANCE_LO_PC; NaN when unbounded
+  DISTANCE_HI_PC:double = nan;
+  /// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+  DISTANCE_METHOD:strDistanceEstimator = UNSPECIFIED;
+  /// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+  DISTANCE_REF:string;
 }
 
 root_type STR;
@@ -57736,6 +57776,13 @@ turned into a number.`
             "LOWER_LIMIT"
           ]
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ]
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -57996,13 +58043,62 @@ turned into a number.`
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -58015,15 +58111,15 @@ turned into a number.`
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch)."
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in."
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer."
             },
             ORDER: {
               type: "integer",
@@ -58041,13 +58137,13 @@ turned into a number.`
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated."
             },
             CHILD_MASK: {
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf."
             },
             PAYLOAD_KIND: {
               $ref: "#/definitions/sktPayloadKind",
@@ -58067,15 +58163,15 @@ turned into a number.`
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum)."
+              description: "Effective wavelength of the band, nanometers (vacuum)."
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres."
+              description: "Short edge of a band-integrated map, nanometers."
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres."
+              description: "Long edge of a band-integrated map, nanometers."
             },
             MAGNITUDE_SYSTEM: {
               $ref: "#/definitions/phbMagnitudeSystem",
@@ -58091,13 +58187,13 @@ turned into a number.`
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it."
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload."
+              description: "Number of points in the payload (POINTS or POINTS_3D)."
             },
             MAG_BRIGHTEST: {
               type: "number",
@@ -58109,15 +58205,15 @@ turned into a number.`
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds."
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike)."
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour."
+              description: "Bluer band of a COLOR_INDEX color."
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour."
+              description: "Redder band of a COLOR_INDEX color."
             },
             POINTS: {
               type: "array",
@@ -58217,18 +58313,18 @@ turned into a number.`
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC."
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC."
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC."
+              description: "End of the observations the tile summarizes, ISO 8601 UTC."
             },
             SOURCE_NAMES: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from."
+              description: "Verbatim names of the catalogs or surveys the tile was derived from."
             },
             PRODUCER_PEER_ID: {
               type: "string",
@@ -58248,7 +58344,54 @@ turned into a number.`
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data."
+              description: "URL of the license or terms of the source data."
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles."
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21."
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level."
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun."
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun."
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun."
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs."
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node."
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube."
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first."
             }
           },
           required: [
@@ -130263,6 +130406,13 @@ format class are named by $NCD's container format.`
             "BROADBAND"
           ]
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ]
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -130623,6 +130773,16 @@ format class are named by $NCD's container format.`
             "ArchiveBudgetReached",
             "ProviderPageOnly",
             "Failed"
+          ]
+        },
+        strDistanceEstimator: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BAILER_JONES_2021_GEO",
+            "BAILER_JONES_2021_PHOTOGEO",
+            "EDSD_POSTERIOR",
+            "PARALLAX_INVERSE"
           ]
         },
         txsServiceClass: {
@@ -190434,13 +190594,62 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -190453,15 +190662,15 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch)."
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in."
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer."
             },
             ORDER: {
               type: "integer",
@@ -190479,13 +190688,13 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated."
             },
             CHILD_MASK: {
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf."
             },
             PAYLOAD_KIND: {
               $ref: "#/definitions/sktPayloadKind",
@@ -190505,15 +190714,15 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum)."
+              description: "Effective wavelength of the band, nanometers (vacuum)."
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres."
+              description: "Short edge of a band-integrated map, nanometers."
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres."
+              description: "Long edge of a band-integrated map, nanometers."
             },
             MAGNITUDE_SYSTEM: {
               $ref: "#/definitions/phbMagnitudeSystem",
@@ -190529,13 +190738,13 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it."
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload."
+              description: "Number of points in the payload (POINTS or POINTS_3D)."
             },
             MAG_BRIGHTEST: {
               type: "number",
@@ -190547,15 +190756,15 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds."
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike)."
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour."
+              description: "Bluer band of a COLOR_INDEX color."
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour."
+              description: "Redder band of a COLOR_INDEX color."
             },
             POINTS: {
               type: "array",
@@ -190655,18 +190864,18 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC."
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC."
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC."
+              description: "End of the observations the tile summarizes, ISO 8601 UTC."
             },
             SOURCE_NAMES: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from."
+              description: "Verbatim names of the catalogs or surveys the tile was derived from."
             },
             PRODUCER_PEER_ID: {
               type: "string",
@@ -190686,7 +190895,54 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data."
+              description: "URL of the license or terms of the source data."
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles."
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21."
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level."
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun."
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun."
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun."
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs."
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node."
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube."
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first."
             }
           },
           required: [
@@ -192648,11 +192904,11 @@ format class are named by $NCD's container format.`
               maximum: 4294967295,
               description: "GNC star catalog identifier"
             },
-            GAIADR3_CAT_ID: {
+            GAIA_DR3_SOURCE_ID: {
               type: "integer",
-              minimum: -9223372036854776e3,
-              maximum: 9223372036854776e3,
-              description: "Source identifier in the third data release of the all-sky space astrometry survey"
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Source identifier (source_id) in the third data release of the all-sky space astrometry\nsurvey; 0 when the star has no match in that release"
             },
             HIP_CAT_ID: {
               type: "integer",
@@ -192836,7 +193092,7 @@ format class are named by $NCD's container format.`
             },
             PROPER_NAME: {
               type: "string",
-              description: "Proper name as recognised by the astronomical naming authority"
+              description: "Proper name as recognized by the astronomical naming authority"
             },
             BAYER_FLAMSTEED: {
               type: "string",
@@ -192886,7 +193142,27 @@ format class are named by $NCD's container format.`
               items: {
                 $ref: "#/definitions/PHBMeasurement"
               },
-              description: "Brightness in every band the star was measured or modelled in"
+              description: "Brightness in every band the star was measured or modeled in"
+            },
+            DISTANCE_PC: {
+              type: "number",
+              description: "Distance from the Sun (parsecs): the posterior median, or the mode for\nEDSD_POSTERIOR, as DISTANCE_METHOD states"
+            },
+            DISTANCE_LO_PC: {
+              type: "number",
+              description: "Lower bound of the distance (parsecs): the 16th percentile of the posterior\nfor BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of\nthe 68% highest-density interval for EDSD_POSTERIOR, and\n1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE"
+            },
+            DISTANCE_HI_PC: {
+              type: "number",
+              description: "Upper bound of the distance (parsecs): the 84th percentile, the upper edge of\nthe 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for\nDISTANCE_LO_PC; NaN when unbounded"
+            },
+            DISTANCE_METHOD: {
+              $ref: "#/definitions/strDistanceEstimator",
+              description: "Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC"
+            },
+            DISTANCE_REF: {
+              type: "string",
+              description: 'Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"'
             }
           },
           additionalProperties: false
@@ -220702,6 +220978,13 @@ balance service's own rate.`
             "LOWER_LIMIT"
           ]
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ]
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -220948,13 +221231,62 @@ balance service's own rate.`
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -220967,15 +221299,15 @@ balance service's own rate.`
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch)."
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in."
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer."
             },
             ORDER: {
               type: "integer",
@@ -220993,13 +221325,13 @@ balance service's own rate.`
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated."
             },
             CHILD_MASK: {
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf."
             },
             PAYLOAD_KIND: {
               $ref: "#/definitions/sktPayloadKind",
@@ -221019,15 +221351,15 @@ balance service's own rate.`
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum)."
+              description: "Effective wavelength of the band, nanometers (vacuum)."
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres."
+              description: "Short edge of a band-integrated map, nanometers."
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres."
+              description: "Long edge of a band-integrated map, nanometers."
             },
             MAGNITUDE_SYSTEM: {
               $ref: "#/definitions/phbMagnitudeSystem",
@@ -221043,13 +221375,13 @@ balance service's own rate.`
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it."
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload."
+              description: "Number of points in the payload (POINTS or POINTS_3D)."
             },
             MAG_BRIGHTEST: {
               type: "number",
@@ -221061,15 +221393,15 @@ balance service's own rate.`
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds."
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike)."
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour."
+              description: "Bluer band of a COLOR_INDEX color."
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour."
+              description: "Redder band of a COLOR_INDEX color."
             },
             POINTS: {
               type: "array",
@@ -221169,18 +221501,18 @@ balance service's own rate.`
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC."
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC."
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC."
+              description: "End of the observations the tile summarizes, ISO 8601 UTC."
             },
             SOURCE_NAMES: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from."
+              description: "Verbatim names of the catalogs or surveys the tile was derived from."
             },
             PRODUCER_PEER_ID: {
               type: "string",
@@ -221200,7 +221532,54 @@ balance service's own rate.`
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data."
+              description: "URL of the license or terms of the source data."
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles."
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21."
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level."
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun."
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun."
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun."
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs."
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node."
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube."
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first."
             }
           },
           required: [
@@ -243996,6 +244375,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "LOWER_LIMIT"
           ]
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ]
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -244266,13 +244652,62 @@ compressed). Nothing hashes the payload before the protocol hash.`
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -244285,15 +244720,15 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch)."
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in."
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer."
             },
             ORDER: {
               type: "integer",
@@ -244311,13 +244746,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated."
             },
             CHILD_MASK: {
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf."
             },
             PAYLOAD_KIND: {
               $ref: "#/definitions/sktPayloadKind",
@@ -244337,15 +244772,15 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum)."
+              description: "Effective wavelength of the band, nanometers (vacuum)."
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres."
+              description: "Short edge of a band-integrated map, nanometers."
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres."
+              description: "Long edge of a band-integrated map, nanometers."
             },
             MAGNITUDE_SYSTEM: {
               $ref: "#/definitions/phbMagnitudeSystem",
@@ -244361,13 +244796,13 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it."
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload."
+              description: "Number of points in the payload (POINTS or POINTS_3D)."
             },
             MAG_BRIGHTEST: {
               type: "number",
@@ -244379,15 +244814,15 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds."
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike)."
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour."
+              description: "Bluer band of a COLOR_INDEX color."
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour."
+              description: "Redder band of a COLOR_INDEX color."
             },
             POINTS: {
               type: "array",
@@ -244487,18 +244922,18 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC."
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC."
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC."
+              description: "End of the observations the tile summarizes, ISO 8601 UTC."
             },
             SOURCE_NAMES: {
               type: "array",
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from."
+              description: "Verbatim names of the catalogs or surveys the tile was derived from."
             },
             PRODUCER_PEER_ID: {
               type: "string",
@@ -244518,7 +244953,54 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data."
+              description: "URL of the license or terms of the source data."
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles."
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21."
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level."
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun."
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun."
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun."
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs."
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node."
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube."
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first."
             }
           },
           required: [
@@ -291603,6 +292085,16 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "LOWER_LIMIT"
           ]
         },
+        strDistanceEstimator: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BAILER_JONES_2021_GEO",
+            "BAILER_JONES_2021_PHOTOGEO",
+            "EDSD_POSTERIOR",
+            "PARALLAX_INVERSE"
+          ]
+        },
         PHBMeasurement: {
           type: "object",
           description: "One source's brightness in one band.",
@@ -291748,11 +292240,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
               maximum: 4294967295,
               description: "GNC star catalog identifier"
             },
-            GAIADR3_CAT_ID: {
+            GAIA_DR3_SOURCE_ID: {
               type: "integer",
-              minimum: -9223372036854776e3,
-              maximum: 9223372036854776e3,
-              description: "Source identifier in the third data release of the all-sky space astrometry survey"
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Source identifier (source_id) in the third data release of the all-sky space astrometry\nsurvey; 0 when the star has no match in that release"
             },
             HIP_CAT_ID: {
               type: "integer",
@@ -291936,7 +292428,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             PROPER_NAME: {
               type: "string",
-              description: "Proper name as recognised by the astronomical naming authority"
+              description: "Proper name as recognized by the astronomical naming authority"
             },
             BAYER_FLAMSTEED: {
               type: "string",
@@ -291986,7 +292478,27 @@ compressed). Nothing hashes the payload before the protocol hash.`
               items: {
                 $ref: "#/definitions/PHBMeasurement"
               },
-              description: "Brightness in every band the star was measured or modelled in"
+              description: "Brightness in every band the star was measured or modeled in"
+            },
+            DISTANCE_PC: {
+              type: "number",
+              description: "Distance from the Sun (parsecs): the posterior median, or the mode for\nEDSD_POSTERIOR, as DISTANCE_METHOD states"
+            },
+            DISTANCE_LO_PC: {
+              type: "number",
+              description: "Lower bound of the distance (parsecs): the 16th percentile of the posterior\nfor BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of\nthe 68% highest-density interval for EDSD_POSTERIOR, and\n1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE"
+            },
+            DISTANCE_HI_PC: {
+              type: "number",
+              description: "Upper bound of the distance (parsecs): the 84th percentile, the upper edge of\nthe 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for\nDISTANCE_LO_PC; NaN when unbounded"
+            },
+            DISTANCE_METHOD: {
+              $ref: "#/definitions/strDistanceEstimator",
+              description: "Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC"
+            },
+            DISTANCE_REF: {
+              type: "string",
+              description: 'Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"'
             }
           },
           additionalProperties: false
@@ -367898,6 +368410,25 @@ turned into a number.`,
             }
           }
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            HEALPIX: {
+              value: 0,
+              description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+            },
+            OCTREE_HELIO_ICRS: {
+              value: 1,
+              description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+            }
+          }
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -367950,7 +368481,7 @@ turned into a number.`,
             },
             PROBABILITY_MAP: {
               value: 3,
-              description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+              description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
             }
           }
         },
@@ -367989,7 +368520,7 @@ turned into a number.`,
             },
             CATALOG: {
               value: 1,
-              description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+              description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
             },
             ASTROMETRIC: {
               value: 2,
@@ -368013,11 +368544,11 @@ turned into a number.`,
           "x-flatbuffer-enum-values": {
             NONE: {
               value: 0,
-              description: "No colour; COLOR is 0."
+              description: "No color; COLOR is 0."
             },
             COLOR_INDEX: {
               value: 1,
-              description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+              description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
             },
             EFFECTIVE_TEMPERATURE: {
               value: 2,
@@ -368142,7 +368673,7 @@ turned into a number.`,
             },
             HISTOGRAM_EQUALIZED: {
               value: 5,
-              description: "Histogram equalisation over PERCENTILE_VALUES."
+              description: "Histogram equalization over PERCENTILE_VALUES."
             }
           }
         },
@@ -368640,13 +369171,62 @@ turned into a number.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -368659,17 +369239,17 @@ turned into a number.`,
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch).",
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch).",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in.",
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -368709,7 +369289,7 @@ turned into a number.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated.",
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated.",
               "x-flatbuffer-type": "uint8",
               "x-flatbuffer-default": "255"
             },
@@ -368717,7 +369297,7 @@ turned into a number.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf.",
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.",
               "x-flatbuffer-type": "uint8"
             },
             PAYLOAD_KIND: {
@@ -368739,7 +369319,7 @@ turned into a number.`,
                 },
                 PROBABILITY_MAP: {
                   value: 3,
-                  description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+                  description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -368832,19 +369412,19 @@ turned into a number.`,
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum).",
+              description: "Effective wavelength of the band, nanometers (vacuum).",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres.",
+              description: "Short edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres.",
+              description: "Long edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
@@ -368891,7 +369471,7 @@ turned into a number.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -368912,14 +369492,14 @@ turned into a number.`,
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it.",
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it.",
               "x-flatbuffer-type": "string"
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload.",
+              description: "Number of points in the payload (POINTS or POINTS_3D).",
               "x-flatbuffer-type": "uint32"
             },
             MAG_BRIGHTEST: {
@@ -368936,17 +369516,17 @@ turned into a number.`,
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds.",
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -368957,12 +369537,12 @@ turned into a number.`,
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour.",
+              description: "Bluer band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour.",
+              description: "Redder band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             POINTS: {
@@ -369121,7 +369701,7 @@ turned into a number.`,
                 },
                 HISTOGRAM_EQUALIZED: {
                   value: 5,
-                  description: "Histogram equalisation over PERCENTILE_VALUES."
+                  description: "Histogram equalization over PERCENTILE_VALUES."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -369174,12 +369754,12 @@ turned into a number.`,
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC.",
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC.",
+              description: "End of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_NAMES: {
@@ -369187,7 +369767,7 @@ turned into a number.`,
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from.",
+              description: "Verbatim names of the catalogs or surveys the tile was derived from.",
               "x-flatbuffer-type": "[string]"
             },
             PRODUCER_PEER_ID: {
@@ -369212,8 +369792,83 @@ turned into a number.`,
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data.",
+              description: "URL of the license or terms of the source data.",
               "x-flatbuffer-type": "string"
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                HEALPIX: {
+                  value: 0,
+                  description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+                },
+                OCTREE_HELIO_ICRS: {
+                  value: 1,
+                  description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+                }
+              },
+              "x-flatbuffer-default": "HEALPIX"
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21.",
+              "x-flatbuffer-type": "uint8"
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level.",
+              "x-flatbuffer-type": "uint64"
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first.",
+              "x-flatbuffer-type": "[SKTPoint3D]"
             }
           },
           required: [
@@ -369404,7 +370059,7 @@ turned into a number.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -369451,11 +370106,11 @@ turned into a number.`,
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -547116,6 +547771,25 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            HEALPIX: {
+              value: 0,
+              description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+            },
+            OCTREE_HELIO_ICRS: {
+              value: 1,
+              description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+            }
+          }
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -547168,7 +547842,7 @@ format class are named by $NCD's container format.`,
             },
             PROBABILITY_MAP: {
               value: 3,
-              description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+              description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
             }
           }
         },
@@ -547207,7 +547881,7 @@ format class are named by $NCD's container format.`,
             },
             CATALOG: {
               value: 1,
-              description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+              description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
             },
             ASTROMETRIC: {
               value: 2,
@@ -547231,11 +547905,11 @@ format class are named by $NCD's container format.`,
           "x-flatbuffer-enum-values": {
             NONE: {
               value: 0,
-              description: "No colour; COLOR is 0."
+              description: "No color; COLOR is 0."
             },
             COLOR_INDEX: {
               value: 1,
-              description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+              description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
             },
             EFFECTIVE_TEMPERATURE: {
               value: 2,
@@ -547360,7 +548034,7 @@ format class are named by $NCD's container format.`,
             },
             HISTOGRAM_EQUALIZED: {
               value: 5,
-              description: "Histogram equalisation over PERCENTILE_VALUES."
+              description: "Histogram equalization over PERCENTILE_VALUES."
             }
           }
         },
@@ -548259,6 +548933,40 @@ format class are named by $NCD's container format.`,
             Failed: {
               value: 9,
               description: "Retrieval failed (NOTE says why)."
+            }
+          }
+        },
+        strDistanceEstimator: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BAILER_JONES_2021_GEO",
+            "BAILER_JONES_2021_PHOTOGEO",
+            "EDSD_POSTERIOR",
+            "PARALLAX_INVERSE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN."
+            },
+            BAILER_JONES_2021_GEO: {
+              value: 1,
+              description: "Geometric distance: the median of the posterior from the parallax under a direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147)."
+            },
+            BAILER_JONES_2021_PHOTOGEO: {
+              value: 2,
+              description: "Photogeometric distance: the geometric posterior further constrained by the star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147)."
+            },
+            EDSD_POSTERIOR: {
+              value: 3,
+              description: "Mode of the posterior from the parallax under the exponentially decreasing space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994)."
+            },
+            PARALLAX_INVERSE: {
+              value: 4,
+              description: "Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the fractional parallax uncertainty is small."
             }
           }
         },
@@ -646887,13 +647595,62 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -646906,17 +647663,17 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch).",
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch).",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in.",
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -646956,7 +647713,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated.",
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated.",
               "x-flatbuffer-type": "uint8",
               "x-flatbuffer-default": "255"
             },
@@ -646964,7 +647721,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf.",
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.",
               "x-flatbuffer-type": "uint8"
             },
             PAYLOAD_KIND: {
@@ -646986,7 +647743,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 PROBABILITY_MAP: {
                   value: 3,
-                  description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+                  description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -647079,19 +647836,19 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum).",
+              description: "Effective wavelength of the band, nanometers (vacuum).",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres.",
+              description: "Short edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres.",
+              description: "Long edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
@@ -647138,7 +647895,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -647159,14 +647916,14 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it.",
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it.",
               "x-flatbuffer-type": "string"
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload.",
+              description: "Number of points in the payload (POINTS or POINTS_3D).",
               "x-flatbuffer-type": "uint32"
             },
             MAG_BRIGHTEST: {
@@ -647183,17 +647940,17 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds.",
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -647204,12 +647961,12 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour.",
+              description: "Bluer band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour.",
+              description: "Redder band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             POINTS: {
@@ -647368,7 +648125,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 HISTOGRAM_EQUALIZED: {
                   value: 5,
-                  description: "Histogram equalisation over PERCENTILE_VALUES."
+                  description: "Histogram equalization over PERCENTILE_VALUES."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -647421,12 +648178,12 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC.",
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC.",
+              description: "End of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_NAMES: {
@@ -647434,7 +648191,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from.",
+              description: "Verbatim names of the catalogs or surveys the tile was derived from.",
               "x-flatbuffer-type": "[string]"
             },
             PRODUCER_PEER_ID: {
@@ -647459,8 +648216,83 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data.",
+              description: "URL of the license or terms of the source data.",
               "x-flatbuffer-type": "string"
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                HEALPIX: {
+                  value: 0,
+                  description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+                },
+                OCTREE_HELIO_ICRS: {
+                  value: 1,
+                  description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+                }
+              },
+              "x-flatbuffer-default": "HEALPIX"
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21.",
+              "x-flatbuffer-type": "uint8"
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level.",
+              "x-flatbuffer-type": "uint64"
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first.",
+              "x-flatbuffer-type": "[SKTPoint3D]"
             }
           },
           required: [
@@ -647651,7 +648483,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -647698,11 +648530,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -648041,7 +648873,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -653129,12 +653961,12 @@ format class are named by $NCD's container format.`,
               description: "GNC star catalog identifier",
               "x-flatbuffer-type": "uint32"
             },
-            GAIADR3_CAT_ID: {
+            GAIA_DR3_SOURCE_ID: {
               type: "integer",
-              minimum: -9223372036854776e3,
-              maximum: 9223372036854776e3,
-              description: "Source identifier in the third data release of the all-sky space astrometry survey",
-              "x-flatbuffer-type": "long"
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Source identifier (source_id) in the third data release of the all-sky space astrometry\nsurvey; 0 when the star has no match in that release",
+              "x-flatbuffer-type": "ulong"
             },
             HIP_CAT_ID: {
               type: "integer",
@@ -653370,7 +654202,7 @@ format class are named by $NCD's container format.`,
             },
             PROPER_NAME: {
               type: "string",
-              description: "Proper name as recognised by the astronomical naming authority",
+              description: "Proper name as recognized by the astronomical naming authority",
               "x-flatbuffer-type": "string"
             },
             BAYER_FLAMSTEED: {
@@ -653433,8 +654265,60 @@ format class are named by $NCD's container format.`,
               items: {
                 $ref: "#/definitions/PHBMeasurement"
               },
-              description: "Brightness in every band the star was measured or modelled in",
+              description: "Brightness in every band the star was measured or modeled in",
               "x-flatbuffer-type": "[PHBMeasurement]"
+            },
+            DISTANCE_PC: {
+              type: "number",
+              description: "Distance from the Sun (parsecs): the posterior median, or the mode for\nEDSD_POSTERIOR, as DISTANCE_METHOD states",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DISTANCE_LO_PC: {
+              type: "number",
+              description: "Lower bound of the distance (parsecs): the 16th percentile of the posterior\nfor BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of\nthe 68% highest-density interval for EDSD_POSTERIOR, and\n1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DISTANCE_HI_PC: {
+              type: "number",
+              description: "Upper bound of the distance (parsecs): the 84th percentile, the upper edge of\nthe 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for\nDISTANCE_LO_PC; NaN when unbounded",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DISTANCE_METHOD: {
+              $ref: "#/definitions/strDistanceEstimator",
+              description: "Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN."
+                },
+                BAILER_JONES_2021_GEO: {
+                  value: 1,
+                  description: "Geometric distance: the median of the posterior from the parallax under a direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147)."
+                },
+                BAILER_JONES_2021_PHOTOGEO: {
+                  value: 2,
+                  description: "Photogeometric distance: the geometric posterior further constrained by the star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147)."
+                },
+                EDSD_POSTERIOR: {
+                  value: 3,
+                  description: "Mode of the posterior from the parallax under the exponentially decreasing space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994)."
+                },
+                PARALLAX_INVERSE: {
+                  value: 4,
+                  description: "Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the fractional parallax uncertainty is small."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISTANCE_REF: {
+              type: "string",
+              description: 'Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -708005,6 +708889,25 @@ balance service's own rate.`,
             }
           }
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            HEALPIX: {
+              value: 0,
+              description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+            },
+            OCTREE_HELIO_ICRS: {
+              value: 1,
+              description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+            }
+          }
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -708057,7 +708960,7 @@ balance service's own rate.`,
             },
             PROBABILITY_MAP: {
               value: 3,
-              description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+              description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
             }
           }
         },
@@ -708096,7 +708999,7 @@ balance service's own rate.`,
             },
             CATALOG: {
               value: 1,
-              description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+              description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
             },
             ASTROMETRIC: {
               value: 2,
@@ -708120,11 +709023,11 @@ balance service's own rate.`,
           "x-flatbuffer-enum-values": {
             NONE: {
               value: 0,
-              description: "No colour; COLOR is 0."
+              description: "No color; COLOR is 0."
             },
             COLOR_INDEX: {
               value: 1,
-              description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+              description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
             },
             EFFECTIVE_TEMPERATURE: {
               value: 2,
@@ -708249,7 +709152,7 @@ balance service's own rate.`,
             },
             HISTOGRAM_EQUALIZED: {
               value: 5,
-              description: "Histogram equalisation over PERCENTILE_VALUES."
+              description: "Histogram equalization over PERCENTILE_VALUES."
             }
           }
         },
@@ -708694,13 +709597,62 @@ balance service's own rate.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -708713,17 +709665,17 @@ balance service's own rate.`,
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch).",
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch).",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in.",
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -708763,7 +709715,7 @@ balance service's own rate.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated.",
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated.",
               "x-flatbuffer-type": "uint8",
               "x-flatbuffer-default": "255"
             },
@@ -708771,7 +709723,7 @@ balance service's own rate.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf.",
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.",
               "x-flatbuffer-type": "uint8"
             },
             PAYLOAD_KIND: {
@@ -708793,7 +709745,7 @@ balance service's own rate.`,
                 },
                 PROBABILITY_MAP: {
                   value: 3,
-                  description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+                  description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -708886,19 +709838,19 @@ balance service's own rate.`,
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum).",
+              description: "Effective wavelength of the band, nanometers (vacuum).",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres.",
+              description: "Short edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres.",
+              description: "Long edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
@@ -708945,7 +709897,7 @@ balance service's own rate.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -708966,14 +709918,14 @@ balance service's own rate.`,
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it.",
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it.",
               "x-flatbuffer-type": "string"
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload.",
+              description: "Number of points in the payload (POINTS or POINTS_3D).",
               "x-flatbuffer-type": "uint32"
             },
             MAG_BRIGHTEST: {
@@ -708990,17 +709942,17 @@ balance service's own rate.`,
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds.",
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -709011,12 +709963,12 @@ balance service's own rate.`,
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour.",
+              description: "Bluer band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour.",
+              description: "Redder band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             POINTS: {
@@ -709175,7 +710127,7 @@ balance service's own rate.`,
                 },
                 HISTOGRAM_EQUALIZED: {
                   value: 5,
-                  description: "Histogram equalisation over PERCENTILE_VALUES."
+                  description: "Histogram equalization over PERCENTILE_VALUES."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -709228,12 +710180,12 @@ balance service's own rate.`,
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC.",
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC.",
+              description: "End of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_NAMES: {
@@ -709241,7 +710193,7 @@ balance service's own rate.`,
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from.",
+              description: "Verbatim names of the catalogs or surveys the tile was derived from.",
               "x-flatbuffer-type": "[string]"
             },
             PRODUCER_PEER_ID: {
@@ -709266,8 +710218,83 @@ balance service's own rate.`,
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data.",
+              description: "URL of the license or terms of the source data.",
               "x-flatbuffer-type": "string"
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                HEALPIX: {
+                  value: 0,
+                  description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+                },
+                OCTREE_HELIO_ICRS: {
+                  value: 1,
+                  description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+                }
+              },
+              "x-flatbuffer-default": "HEALPIX"
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21.",
+              "x-flatbuffer-type": "uint8"
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level.",
+              "x-flatbuffer-type": "uint64"
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first.",
+              "x-flatbuffer-type": "[SKTPoint3D]"
             }
           },
           required: [
@@ -767683,6 +768710,25 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        sktPartitionScheme: {
+          type: "string",
+          enum: [
+            "HEALPIX",
+            "OCTREE_HELIO_ICRS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            HEALPIX: {
+              value: 0,
+              description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+            },
+            OCTREE_HELIO_ICRS: {
+              value: 1,
+              description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+            }
+          }
+        },
         sktCelestialFrame: {
           type: "string",
           enum: [
@@ -767735,7 +768781,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             PROBABILITY_MAP: {
               value: 3,
-              description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+              description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
             }
           }
         },
@@ -767774,7 +768820,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             CATALOG: {
               value: 1,
-              description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+              description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
             },
             ASTROMETRIC: {
               value: 2,
@@ -767798,11 +768844,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           "x-flatbuffer-enum-values": {
             NONE: {
               value: 0,
-              description: "No colour; COLOR is 0."
+              description: "No color; COLOR is 0."
             },
             COLOR_INDEX: {
               value: 1,
-              description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+              description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
             },
             EFFECTIVE_TEMPERATURE: {
               value: 2,
@@ -767927,7 +768973,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             HISTOGRAM_EQUALIZED: {
               value: 5,
-              description: "Histogram equalisation over PERCENTILE_VALUES."
+              description: "Histogram equalization over PERCENTILE_VALUES."
             }
           }
         },
@@ -768458,13 +769504,62 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Colour, encoded as the tile's COLOR_ENCODING states."
+              description: "Color, encoded as the tile's COLOR_ENCODING states."
             },
             FLAGS: {
               type: "integer",
               minimum: 0,
               maximum: 65535,
-              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              description: "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+            },
+            ROW: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+            }
+          },
+          additionalProperties: false
+        },
+        SKTPoint3D: {
+          type: "object",
+          description: "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+          properties: {
+            X_PC: {
+              type: "number",
+              description: "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+            },
+            Y_PC: {
+              type: "number",
+              description: "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+            },
+            Z_PC: {
+              type: "number",
+              description: "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+            },
+            ABS_MAG: {
+              type: "integer",
+              minimum: -32768,
+              maximum: 32767,
+              description: "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+            },
+            COLOR: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+            },
+            DIST_FRAC_UNC: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+            },
+            FLAGS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
             },
             ROW: {
               type: "integer",
@@ -768477,17 +769572,17 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         SKT: {
           type: "object",
-          description: "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+          description: "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
           properties: {
             LAYER_ID: {
               type: "string",
-              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch).",
+              description: "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch).",
               "x-flatbuffer-type": "string",
               "x-flatbuffer-required": true
             },
             FRAME: {
               $ref: "#/definitions/sktCelestialFrame",
-              description: "Frame the HEALPix grid and the point positions are stated in.",
+              description: "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer.",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
@@ -768527,7 +769622,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Deepest order of the layer, when the producer knows it; 255 when\nunstated.",
+              description: "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated.",
               "x-flatbuffer-type": "uint8",
               "x-flatbuffer-default": "255"
             },
@@ -768535,7 +769630,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               type: "integer",
               minimum: 0,
               maximum: 255,
-              description: "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf.",
+              description: "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.",
               "x-flatbuffer-type": "uint8"
             },
             PAYLOAD_KIND: {
@@ -768557,7 +769652,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 PROBABILITY_MAP: {
                   value: 3,
-                  description: "Pixel map of localisation probability per pixel; the values of a complete layer at one order sum to 1."
+                  description: "Pixel map of localization probability per pixel; the values of a complete layer at one order sum to 1."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -768650,19 +769745,19 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             WAVELENGTH_EFF_NM: {
               type: "number",
-              description: "Effective wavelength of the band, nanometres (vacuum).",
+              description: "Effective wavelength of the band, nanometers (vacuum).",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MIN_NM: {
               type: "number",
-              description: "Short edge of a band-integrated map, nanometres.",
+              description: "Short edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
             WAVELENGTH_MAX_NM: {
               type: "number",
-              description: "Long edge of a band-integrated map, nanometres.",
+              description: "Long edge of a band-integrated map, nanometers.",
               "x-flatbuffer-type": "double",
               "x-flatbuffer-default": "nan"
             },
@@ -768709,7 +769804,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -768730,14 +769825,14 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             OBSERVER_ID: {
               type: "string",
-              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it.",
+              description: "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it.",
               "x-flatbuffer-type": "string"
             },
             POINT_COUNT: {
               type: "integer",
               minimum: 0,
               maximum: 4294967295,
-              description: "Number of points in the payload.",
+              description: "Number of points in the payload (POINTS or POINTS_3D).",
               "x-flatbuffer-type": "uint32"
             },
             MAG_BRIGHTEST: {
@@ -768754,17 +769849,17 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             COLOR_ENCODING: {
               $ref: "#/definitions/sktColorEncoding",
-              description: "What each point's COLOR holds.",
+              description: "What each point's COLOR holds (POINTS and POINTS_3D alike).",
               "x-flatbuffer-type": "enum",
               "x-flatbuffer-enum-type": "ubyte",
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -768775,12 +769870,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             COLOR_BLUE_BAND_ID: {
               type: "string",
-              description: "Bluer band of a COLOR_INDEX colour.",
+              description: "Bluer band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             COLOR_RED_BAND_ID: {
               type: "string",
-              description: "Redder band of a COLOR_INDEX colour.",
+              description: "Redder band of a COLOR_INDEX color.",
               "x-flatbuffer-type": "string"
             },
             POINTS: {
@@ -768939,7 +770034,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 HISTOGRAM_EQUALIZED: {
                   value: 5,
-                  description: "Histogram equalisation over PERCENTILE_VALUES."
+                  description: "Histogram equalization over PERCENTILE_VALUES."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -768992,12 +770087,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             OBSERVATION_START: {
               type: "string",
-              description: "Start of the observations the tile summarises, ISO 8601 UTC.",
+              description: "Start of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             OBSERVATION_END: {
               type: "string",
-              description: "End of the observations the tile summarises, ISO 8601 UTC.",
+              description: "End of the observations the tile summarizes, ISO 8601 UTC.",
               "x-flatbuffer-type": "string"
             },
             SOURCE_NAMES: {
@@ -769005,7 +770100,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               items: {
                 type: "string"
               },
-              description: "Verbatim names of the catalogues or surveys the tile was derived from.",
+              description: "Verbatim names of the catalogs or surveys the tile was derived from.",
               "x-flatbuffer-type": "[string]"
             },
             PRODUCER_PEER_ID: {
@@ -769030,8 +770125,83 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             LICENSE_URL: {
               type: "string",
-              description: "URL of the licence or terms of the source data.",
+              description: "URL of the license or terms of the source data.",
               "x-flatbuffer-type": "string"
+            },
+            PARTITION: {
+              $ref: "#/definitions/sktPartitionScheme",
+              description: "How the layer divides into tiles.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                HEALPIX: {
+                  value: 0,
+                  description: "HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL."
+                },
+                OCTREE_HELIO_ICRS: {
+                  value: 1,
+                  description: "Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed by OCTREE_LEVEL and OCTREE_KEY."
+                }
+              },
+              "x-flatbuffer-default": "HEALPIX"
+            },
+            OCTREE_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Octree level of the node; the root is 0, at most 21.",
+              "x-flatbuffer-type": "uint8"
+            },
+            OCTREE_KEY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Morton key of the node at OCTREE_LEVEL, 3 bits per level.",
+              "x-flatbuffer-type": "uint64"
+            },
+            CENTER_X_PC: {
+              type: "number",
+              description: "ICRS X of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Y_PC: {
+              type: "number",
+              description: "ICRS Y of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CENTER_Z_PC: {
+              type: "number",
+              description: "ICRS Z of the node's center, parsecs from the Sun.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HALF_SIZE_PC: {
+              type: "number",
+              description: "Half the edge length of the node's cube, parsecs.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_BRIGHTEST: {
+              type: "number",
+              description: "Brightest absolute magnitude in the node.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            ABS_MAG_FAINTEST: {
+              type: "number",
+              description: "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube.",
+              "x-flatbuffer-type": "float",
+              "x-flatbuffer-default": "nan"
+            },
+            POINTS_3D: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SKTPoint3D"
+              },
+              description: "Packed points of an octree node, brightest absolute magnitude first.",
+              "x-flatbuffer-type": "[SKTPoint3D]"
             }
           },
           required: [
@@ -769222,7 +770392,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -769269,11 +770439,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               "x-flatbuffer-enum-values": {
                 NONE: {
                   value: 0,
-                  description: "No colour; COLOR is 0."
+                  description: "No color; COLOR is 0."
                 },
                 COLOR_INDEX: {
                   value: 1,
-                  description: "Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
+                  description: "Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means unknown."
                 },
                 EFFECTIVE_TEMPERATURE: {
                   value: 2,
@@ -769612,7 +770782,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 },
                 CATALOG: {
                   value: 1,
-                  description: "Barycentric catalogue place at EPOCH: proper motion applied from the catalogue epoch, nothing else."
+                  description: "Barycentric catalog place at EPOCH: proper motion applied from the catalog epoch, nothing else."
                 },
                 ASTROMETRIC: {
                   value: 2,
@@ -870870,6 +872040,40 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        strDistanceEstimator: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "BAILER_JONES_2021_GEO",
+            "BAILER_JONES_2021_PHOTOGEO",
+            "EDSD_POSTERIOR",
+            "PARALLAX_INVERSE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN."
+            },
+            BAILER_JONES_2021_GEO: {
+              value: 1,
+              description: "Geometric distance: the median of the posterior from the parallax under a direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147)."
+            },
+            BAILER_JONES_2021_PHOTOGEO: {
+              value: 2,
+              description: "Photogeometric distance: the geometric posterior further constrained by the star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147)."
+            },
+            EDSD_POSTERIOR: {
+              value: 3,
+              description: "Mode of the posterior from the parallax under the exponentially decreasing space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994)."
+            },
+            PARALLAX_INVERSE: {
+              value: 4,
+              description: "Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the fractional parallax uncertainty is small."
+            }
+          }
+        },
         PHBMeasurement: {
           type: "object",
           description: "One source's brightness in one band.",
@@ -871290,12 +872494,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               description: "GNC star catalog identifier",
               "x-flatbuffer-type": "uint32"
             },
-            GAIADR3_CAT_ID: {
+            GAIA_DR3_SOURCE_ID: {
               type: "integer",
-              minimum: -9223372036854776e3,
-              maximum: 9223372036854776e3,
-              description: "Source identifier in the third data release of the all-sky space astrometry survey",
-              "x-flatbuffer-type": "long"
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Source identifier (source_id) in the third data release of the all-sky space astrometry\nsurvey; 0 when the star has no match in that release",
+              "x-flatbuffer-type": "ulong"
             },
             HIP_CAT_ID: {
               type: "integer",
@@ -871531,7 +872735,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             PROPER_NAME: {
               type: "string",
-              description: "Proper name as recognised by the astronomical naming authority",
+              description: "Proper name as recognized by the astronomical naming authority",
               "x-flatbuffer-type": "string"
             },
             BAYER_FLAMSTEED: {
@@ -871594,8 +872798,60 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               items: {
                 $ref: "#/definitions/PHBMeasurement"
               },
-              description: "Brightness in every band the star was measured or modelled in",
+              description: "Brightness in every band the star was measured or modeled in",
               "x-flatbuffer-type": "[PHBMeasurement]"
+            },
+            DISTANCE_PC: {
+              type: "number",
+              description: "Distance from the Sun (parsecs): the posterior median, or the mode for\nEDSD_POSTERIOR, as DISTANCE_METHOD states",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DISTANCE_LO_PC: {
+              type: "number",
+              description: "Lower bound of the distance (parsecs): the 16th percentile of the posterior\nfor BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of\nthe 68% highest-density interval for EDSD_POSTERIOR, and\n1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DISTANCE_HI_PC: {
+              type: "number",
+              description: "Upper bound of the distance (parsecs): the 84th percentile, the upper edge of\nthe 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for\nDISTANCE_LO_PC; NaN when unbounded",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DISTANCE_METHOD: {
+              $ref: "#/definitions/strDistanceEstimator",
+              description: "Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN."
+                },
+                BAILER_JONES_2021_GEO: {
+                  value: 1,
+                  description: "Geometric distance: the median of the posterior from the parallax under a direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147)."
+                },
+                BAILER_JONES_2021_PHOTOGEO: {
+                  value: 2,
+                  description: "Photogeometric distance: the geometric posterior further constrained by the star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147)."
+                },
+                EDSD_POSTERIOR: {
+                  value: 3,
+                  description: "Mode of the posterior from the parallax under the exponentially decreasing space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994)."
+                },
+                PARALLAX_INVERSE: {
+                  value: 4,
+                  description: "Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the fractional parallax uncertainty is small."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            DISTANCE_REF: {
+              type: "string",
+              description: 'Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"',
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

@@ -30,11 +30,11 @@ public struct SKTPoint : IFlatbufferObject
   public ushort PARALLAX { get { return __p.bb.GetUshort(__p.bb_pos + 12); } }
   /// Magnitude in the tile's band, millimagnitudes. -32768 when unknown.
   public short MAG { get { return __p.bb.GetShort(__p.bb_pos + 14); } }
-  /// Colour, encoded as the tile's COLOR_ENCODING states.
+  /// Color, encoded as the tile's COLOR_ENCODING states.
   public ushort COLOR { get { return __p.bb.GetUshort(__p.bb_pos + 16); } }
   /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-  /// not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-  /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+  /// not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+  /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
   /// within the confusion radius. 7: extended source. 8-15: reserved, 0.
   public ushort FLAGS { get { return __p.bb.GetUshort(__p.bb_pos + 18); } }
   /// Index of the source's full record in the tile's row collection

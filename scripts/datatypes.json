@@ -1,5 +1,5 @@
 [
-  ["--cpp", "C++ header", "cpp", "include"],
+  [["--cpp", "--keep-prefix"], "C++ header", "cpp", "include"],
   ["--java", "Java", "java", "java"],
   ["--kotlin", "Kotlin", "kt", "java"],
   [["--csharp", "--gen-object-api"], "C#", "cs", "net"],

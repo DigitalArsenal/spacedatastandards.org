@@ -53,13 +53,13 @@ public final class SKTPoint extends Struct {
    */
   public short MAG() { return bb.getShort(bb_pos + 14); }
   /**
-   * Colour, encoded as the tile's COLOR_ENCODING states.
+   * Color, encoded as the tile's COLOR_ENCODING states.
    */
   public int COLOR() { return bb.getShort(bb_pos + 16) & 0xFFFF; }
   /**
    * Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-   * not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-   * 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+   * not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+   * 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
    * within the confusion radius. 7: extended source. 8-15: reserved, 0.
    */
   public int FLAGS() { return bb.getShort(bb_pos + 18) & 0xFFFF; }

@@ -17,7 +17,7 @@ public final class sktPayloadKind {
    */
   public static final int DIFFUSE_MAP = 2;
   /**
-   * Pixel map of localisation probability per pixel; the values of a
+   * Pixel map of localization probability per pixel; the values of a
    * complete layer at one order sum to 1.
    */
   public static final int PROBABILITY_MAP = 3;

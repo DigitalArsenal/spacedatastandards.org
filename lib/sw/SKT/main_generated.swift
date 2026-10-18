@@ -8,7 +8,24 @@ import Common
 
 import FlatBuffers
 
-///  Celestial frame a tile's HEALPix grid is laid on.
+///  How a layer divides into tiles.
+///  Append new values only; never reorder or reuse existing values.
+public enum sktPartitionScheme: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL.
+  case healpix = 0
+  ///  Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed
+  ///  by OCTREE_LEVEL and OCTREE_KEY.
+  case octreeHelioIcrs = 1
+
+  public static var max: sktPartitionScheme { return .octreeHelioIcrs }
+  public static var min: sktPartitionScheme { return .healpix }
+}
+
+
+///  Celestial frame a tile's HEALPix grid and point positions are laid on.
 ///  Append new values only; never reorder or reuse existing values.
 public enum sktCelestialFrame: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
@@ -38,7 +55,7 @@ public enum sktPayloadKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifia
   case pointSources = 1
   ///  Pixel map of a diffuse quantity.
   case diffuseMap = 2
-  ///  Pixel map of localisation probability per pixel; the values of a
+  ///  Pixel map of localization probability per pixel; the values of a
   ///  complete layer at one order sum to 1.
   case probabilityMap = 3
 
@@ -70,8 +87,8 @@ public enum sktPlaceKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  Barycentric catalogue place at EPOCH: proper motion applied from the
-  ///  catalogue epoch, nothing else.
+  ///  Barycentric catalog place at EPOCH: proper motion applied from the
+  ///  catalog epoch, nothing else.
   case catalog = 1
   ///  Astrometric place for the observer named by OBSERVER_ID at EPOCH:
   ///  space motion and parallax applied, no aberration or deflection.
@@ -92,9 +109,9 @@ public enum sktColorEncoding: UInt8, FlatbuffersVectorInitializable, Enum, Verif
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  ///  No colour; COLOR is 0.
+  ///  No color; COLOR is 0.
   case none_ = 0
-  ///  Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
+  ///  Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
   ///  millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means
   ///  unknown.
   case colorIndex = 1
@@ -172,7 +189,7 @@ public enum sktStretchFunction: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case logarithmic = 3
   ///  Inverse hyperbolic sine with softening STRETCH_SOFTENING.
   case asinh = 4
-  ///  Histogram equalisation over PERCENTILE_VALUES.
+  ///  Histogram equalization over PERCENTILE_VALUES.
   case histogramEqualized = 5
 
   public static var max: sktStretchFunction { return .histogramEqualized }
@@ -201,11 +218,11 @@ public struct SKTPoint: NativeStruct, FlatbuffersVectorInitializable, Verifiable
   private var _PARALLAX: UInt16
   ///  Magnitude in the tile's band, millimagnitudes. -32768 when unknown.
   private var _MAG: Int16
-  ///  Colour, encoded as the tile's COLOR_ENCODING states.
+  ///  Color, encoded as the tile's COLOR_ENCODING states.
   private var _COLOR: UInt16
   ///  Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-  ///  not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-  ///  5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+  ///  not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+  ///  5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
   ///  within the confusion radius. 7: extended source. 8-15: reserved, 0.
   private var _FLAGS: UInt16
   ///  Index of the source's full record in the tile's row collection
@@ -256,11 +273,11 @@ public struct SKTPoint: NativeStruct, FlatbuffersVectorInitializable, Verifiable
   public var PARALLAX: UInt16 { _PARALLAX }
   ///  Magnitude in the tile's band, millimagnitudes. -32768 when unknown.
   public var MAG: Int16 { _MAG }
-  ///  Colour, encoded as the tile's COLOR_ENCODING states.
+  ///  Color, encoded as the tile's COLOR_ENCODING states.
   public var COLOR: UInt16 { _COLOR }
   ///  Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-  ///  not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-  ///  5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+  ///  not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+  ///  5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
   ///  within the confusion radius. 7: extended source. 8-15: reserved, 0.
   public var FLAGS: UInt16 { _FLAGS }
   ///  Index of the source's full record in the tile's row collection
@@ -292,7 +309,115 @@ public struct SKTPoint_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable
   public var ROW: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 20) }
 }
 
-///  Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+///  One point source placed in 3D in an octree node, packed for drawing (24
+///  bytes).
+public struct SKTPoint3D: NativeStruct, FlatbuffersVectorInitializable, Verifiable, FlatbuffersInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+
+  ///  ICRS X of the star minus the node's CENTER_X_PC, parsecs.
+  private var _X_PC: Float32
+  ///  ICRS Y of the star minus the node's CENTER_Y_PC, parsecs.
+  private var _Y_PC: Float32
+  ///  ICRS Z of the star minus the node's CENTER_Z_PC, parsecs.
+  private var _Z_PC: Float32
+  ///  Absolute magnitude in the tile's band, the magnitude at 10 parsecs with
+  ///  extinction removed, millimagnitudes. -32768 when unknown.
+  private var _ABS_MAG: Int16
+  ///  Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:
+  ///  COLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP).
+  private var _COLOR: UInt16
+  ///  Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -
+  ///  DISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown
+  ///  or 6.5535 or more.
+  private var _DIST_FRAC_UNC: UInt16
+  ///  Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a
+  ///  multiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to
+  ///  a `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion
+  ///  radius. 7: extended source. 2, 3 and 8-15: reserved, 0.
+  private var _FLAGS: UInt16
+  ///  Index of the source's full record in the tile's row collection
+  ///  (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.
+  private var _ROW: UInt32
+
+  public init(_ bb: ByteBuffer, o: Int32) {
+    self = bb.read(def: Self.self, position: Int(o))
+  }
+
+  public init(X_PC: Float32, Y_PC: Float32, Z_PC: Float32, ABS_MAG: Int16, COLOR: UInt16, DIST_FRAC_UNC: UInt16, FLAGS: UInt16, ROW: UInt32) {
+    _X_PC = X_PC
+    _Y_PC = Y_PC
+    _Z_PC = Z_PC
+    _ABS_MAG = ABS_MAG
+    _COLOR = COLOR
+    _DIST_FRAC_UNC = DIST_FRAC_UNC
+    _FLAGS = FLAGS
+    _ROW = ROW
+  }
+
+  public init() {
+    _X_PC = 0.0
+    _Y_PC = 0.0
+    _Z_PC = 0.0
+    _ABS_MAG = 0
+    _COLOR = 0
+    _DIST_FRAC_UNC = 0
+    _FLAGS = 0
+    _ROW = 0
+  }
+
+  ///  ICRS X of the star minus the node's CENTER_X_PC, parsecs.
+  public var X_PC: Float32 { _X_PC }
+  ///  ICRS Y of the star minus the node's CENTER_Y_PC, parsecs.
+  public var Y_PC: Float32 { _Y_PC }
+  ///  ICRS Z of the star minus the node's CENTER_Z_PC, parsecs.
+  public var Z_PC: Float32 { _Z_PC }
+  ///  Absolute magnitude in the tile's band, the magnitude at 10 parsecs with
+  ///  extinction removed, millimagnitudes. -32768 when unknown.
+  public var ABS_MAG: Int16 { _ABS_MAG }
+  ///  Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:
+  ///  COLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP).
+  public var COLOR: UInt16 { _COLOR }
+  ///  Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -
+  ///  DISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown
+  ///  or 6.5535 or more.
+  public var DIST_FRAC_UNC: UInt16 { _DIST_FRAC_UNC }
+  ///  Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a
+  ///  multiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to
+  ///  a `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion
+  ///  radius. 7: extended source. 2, 3 and 8-15: reserved, 0.
+  public var FLAGS: UInt16 { _FLAGS }
+  ///  Index of the source's full record in the tile's row collection
+  ///  (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.
+  public var ROW: UInt32 { _ROW }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    try verifier.inBuffer(position: position, of: SKTPoint3D.self)
+  }
+}
+
+///  One point source placed in 3D in an octree node, packed for drawing (24
+///  bytes).
+public struct SKTPoint3D_Mutable: FlatBufferStruct, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Struct
+
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Struct(bb: bb, position: o) }
+
+  public var X_PC: Float32 { return _accessor.readBuffer(of: Float32.self, at: 0) }
+  public var Y_PC: Float32 { return _accessor.readBuffer(of: Float32.self, at: 4) }
+  public var Z_PC: Float32 { return _accessor.readBuffer(of: Float32.self, at: 8) }
+  public var ABS_MAG: Int16 { return _accessor.readBuffer(of: Int16.self, at: 12) }
+  public var COLOR: UInt16 { return _accessor.readBuffer(of: UInt16.self, at: 14) }
+  public var DIST_FRAC_UNC: UInt16 { return _accessor.readBuffer(of: UInt16.self, at: 16) }
+  public var FLAGS: UInt16 { return _accessor.readBuffer(of: UInt16.self, at: 18) }
+  public var ROW: UInt32 { return _accessor.readBuffer(of: UInt32.self, at: 20) }
+}
+
+///  Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+///  or diffuse-map layer.
 public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -355,23 +480,34 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let PRODUCED_AT: VOffset = 98
     static let CITATION: VOffset = 100
     static let LICENSE_URL: VOffset = 102
+    static let PARTITION: VOffset = 104
+    static let OCTREE_LEVEL: VOffset = 106
+    static let OCTREE_KEY: VOffset = 108
+    static let CENTER_X_PC: VOffset = 110
+    static let CENTER_Y_PC: VOffset = 112
+    static let CENTER_Z_PC: VOffset = 114
+    static let HALF_SIZE_PC: VOffset = 116
+    static let ABS_MAG_BRIGHTEST: VOffset = 118
+    static let ABS_MAG_FAINTEST: VOffset = 120
+    static let POINTS_3D: VOffset = 122
   }
 
   ///  Stable identifier of the layer: equal across every tile of one
-  ///  (producer, source catalogue or survey, band, place, epoch).
+  ///  (producer, source catalog or survey, band, place, epoch).
   public var LAYER_ID: String! { let o = _accessor.offset(VT.LAYER_ID); return _accessor.string(at: o) }
   public var LAYER_IDSegmentArray: [UInt8]! { return _accessor.getVector(at: VT.LAYER_ID) }
-  ///  Frame the HEALPix grid and the point positions are stated in.
+  ///  Frame the HEALPix grid and the point positions are stated in; ICRS for
+  ///  an OCTREE_HELIO_ICRS layer.
   public var FRAME: sktCelestialFrame { let o = _accessor.offset(VT.FRAME); return o == 0 ? .icrs : sktCelestialFrame(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .icrs }
   ///  HEALPix order; NSIDE = 2^ORDER.
   public var ORDER: UInt8 { let o = _accessor.offset(VT.ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Nested pixel index at ORDER.
   public var PIXEL: UInt64 { let o = _accessor.offset(VT.PIXEL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Deepest order of the layer, when the producer knows it; 255 when
-  ///  unstated.
+  ///  Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+  ///  producer knows it; 255 when unstated.
   public var MAX_ORDER: UInt8 { let o = _accessor.offset(VT.MAX_ORDER); return o == 0 ? 255 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  ///  Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-  ///  a leaf.
+  ///  Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+  ///  0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
   public var CHILD_MASK: UInt8 { let o = _accessor.offset(VT.CHILD_MASK); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  Payload the tile carries.
   public var PAYLOAD_KIND: sktPayloadKind { let o = _accessor.offset(VT.PAYLOAD_KIND); return o == 0 ? .unspecified : sktPayloadKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
@@ -383,11 +519,11 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  in this band.
   public var BAND_ID: String? { let o = _accessor.offset(VT.BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.BAND_ID) }
-  ///  Effective wavelength of the band, nanometres (vacuum).
+  ///  Effective wavelength of the band, nanometers (vacuum).
   public var WAVELENGTH_EFF_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_EFF_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Short edge of a band-integrated map, nanometres.
+  ///  Short edge of a band-integrated map, nanometers.
   public var WAVELENGTH_MIN_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_MIN_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Long edge of a band-integrated map, nanometres.
+  ///  Long edge of a band-integrated map, nanometers.
   public var WAVELENGTH_MAX_NM: Double { let o = _accessor.offset(VT.WAVELENGTH_MAX_NM); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Calibration system of MAG.
   public var MAGNITUDE_SYSTEM: phbMagnitudeSystem { let o = _accessor.offset(VT.MAGNITUDE_SYSTEM); return o == 0 ? .unspecified : phbMagnitudeSystem(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
@@ -396,22 +532,22 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Epoch of point positions, Julian years (TT).
   public var EPOCH: Double { let o = _accessor.offset(VT.EPOCH); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-  ///  spacecraft or the geocentre), as the producer names it.
+  ///  spacecraft or the geocenter), as the producer names it.
   public var OBSERVER_ID: String? { let o = _accessor.offset(VT.OBSERVER_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBSERVER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER_ID) }
-  ///  Number of points in the payload.
+  ///  Number of points in the payload (POINTS or POINTS_3D).
   public var POINT_COUNT: UInt32 { let o = _accessor.offset(VT.POINT_COUNT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  Brightest magnitude in the tile.
   public var MAG_BRIGHTEST: Float32 { let o = _accessor.offset(VT.MAG_BRIGHTEST); return o == 0 ? .nan : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  Faintest magnitude in the tile; with the ancestors, the layer is
   ///  complete to this limit inside the pixel.
   public var MAG_LIMIT: Float32 { let o = _accessor.offset(VT.MAG_LIMIT); return o == 0 ? .nan : _accessor.readBuffer(of: Float32.self, at: o) }
-  ///  What each point's COLOR holds.
+  ///  What each point's COLOR holds (POINTS and POINTS_3D alike).
   public var COLOR_ENCODING: sktColorEncoding { let o = _accessor.offset(VT.COLOR_ENCODING); return o == 0 ? .none_ : sktColorEncoding(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
-  ///  Bluer band of a COLOR_INDEX colour.
+  ///  Bluer band of a COLOR_INDEX color.
   public var COLOR_BLUE_BAND_ID: String? { let o = _accessor.offset(VT.COLOR_BLUE_BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var COLOR_BLUE_BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR_BLUE_BAND_ID) }
-  ///  Redder band of a COLOR_INDEX colour.
+  ///  Redder band of a COLOR_INDEX color.
   public var COLOR_RED_BAND_ID: String? { let o = _accessor.offset(VT.COLOR_RED_BAND_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var COLOR_RED_BAND_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.COLOR_RED_BAND_ID) }
   ///  Packed points, brightest first.
@@ -465,13 +601,13 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var PAYLOAD_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PAYLOAD_CID) }
   ///  Length of the payload at PAYLOAD_CID, bytes.
   public var PAYLOAD_BYTES: UInt64 { let o = _accessor.offset(VT.PAYLOAD_BYTES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  ///  Start of the observations the tile summarises, ISO 8601 UTC.
+  ///  Start of the observations the tile summarizes, ISO 8601 UTC.
   public var OBSERVATION_START: String? { let o = _accessor.offset(VT.OBSERVATION_START); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBSERVATION_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVATION_START) }
-  ///  End of the observations the tile summarises, ISO 8601 UTC.
+  ///  End of the observations the tile summarizes, ISO 8601 UTC.
   public var OBSERVATION_END: String? { let o = _accessor.offset(VT.OBSERVATION_END); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBSERVATION_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVATION_END) }
-  ///  Verbatim names of the catalogues or surveys the tile was derived from.
+  ///  Verbatim names of the catalogs or surveys the tile was derived from.
   public var SOURCE_NAMES: FlatbufferVector<String?> { return _accessor.vector(at: VT.SOURCE_NAMES, byteSize: 4) }
   ///  Peer identifier of the node that produced the tile.
   public var PRODUCER_PEER_ID: String? { let o = _accessor.offset(VT.PRODUCER_PEER_ID); return o == 0 ? nil : _accessor.string(at: o) }
@@ -485,10 +621,33 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Citation the upstream publishers ask for.
   public var CITATION: String? { let o = _accessor.offset(VT.CITATION); return o == 0 ? nil : _accessor.string(at: o) }
   public var CITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CITATION) }
-  ///  URL of the licence or terms of the source data.
+  ///  URL of the license or terms of the source data.
   public var LICENSE_URL: String? { let o = _accessor.offset(VT.LICENSE_URL); return o == 0 ? nil : _accessor.string(at: o) }
   public var LICENSE_URLSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.LICENSE_URL) }
-  public static func startSKT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 50) }
+  ///  How the layer divides into tiles.
+  public var PARTITION: sktPartitionScheme { let o = _accessor.offset(VT.PARTITION); return o == 0 ? .healpix : sktPartitionScheme(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .healpix }
+  ///  Octree level of the node; the root is 0, at most 21.
+  public var OCTREE_LEVEL: UInt8 { let o = _accessor.offset(VT.OCTREE_LEVEL); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+  public var OCTREE_KEY: UInt64 { let o = _accessor.offset(VT.OCTREE_KEY); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  ///  ICRS X of the node's center, parsecs from the Sun.
+  public var CENTER_X_PC: Double { let o = _accessor.offset(VT.CENTER_X_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ICRS Y of the node's center, parsecs from the Sun.
+  public var CENTER_Y_PC: Double { let o = _accessor.offset(VT.CENTER_Y_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  ICRS Z of the node's center, parsecs from the Sun.
+  public var CENTER_Z_PC: Double { let o = _accessor.offset(VT.CENTER_Z_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Half the edge length of the node's cube, parsecs.
+  public var HALF_SIZE_PC: Double { let o = _accessor.offset(VT.HALF_SIZE_PC); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Brightest absolute magnitude in the node.
+  public var ABS_MAG_BRIGHTEST: Float32 { let o = _accessor.offset(VT.ABS_MAG_BRIGHTEST); return o == 0 ? .nan : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Faintest absolute magnitude in the node; with its ancestors, the layer
+  ///  is complete to this limit inside the node's cube.
+  public var ABS_MAG_FAINTEST: Float32 { let o = _accessor.offset(VT.ABS_MAG_FAINTEST); return o == 0 ? .nan : _accessor.readBuffer(of: Float32.self, at: o) }
+  ///  Packed points of an octree node, brightest absolute magnitude first.
+  public var POINTS_3D: FlatbufferVector<SKTPoint3D> { return _accessor.vector(at: VT.POINTS_3D, byteSize: 24) }
+  public var mutablePoints3D: FlatbufferVector<SKTPoint3D_Mutable> { return _accessor.vector(at: VT.POINTS_3D, byteSize: 24) }
+  public func withUnsafePointerToPoints3D<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.POINTS_3D, body: body) }
+  public static func startSKT(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 60) }
   public static func add(LAYER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAYER_ID, at: VT.LAYER_ID) }
   public static func add(FRAME: sktCelestialFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME.rawValue, def: 1, at: VT.FRAME) }
   public static func add(ORDER: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORDER, def: 0, at: VT.ORDER) }
@@ -542,6 +701,19 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(PRODUCED_AT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCED_AT, at: VT.PRODUCED_AT) }
   public static func add(CITATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CITATION, at: VT.CITATION) }
   public static func add(LICENSE_URL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LICENSE_URL, at: VT.LICENSE_URL) }
+  public static func add(PARTITION: sktPartitionScheme, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARTITION.rawValue, def: 0, at: VT.PARTITION) }
+  public static func add(OCTREE_LEVEL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCTREE_LEVEL, def: 0, at: VT.OCTREE_LEVEL) }
+  public static func add(OCTREE_KEY: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCTREE_KEY, def: 0, at: VT.OCTREE_KEY) }
+  public static func add(CENTER_X_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_X_PC, def: .nan, at: VT.CENTER_X_PC) }
+  public static func add(CENTER_Y_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_Y_PC, def: .nan, at: VT.CENTER_Y_PC) }
+  public static func add(CENTER_Z_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_Z_PC, def: .nan, at: VT.CENTER_Z_PC) }
+  public static func add(HALF_SIZE_PC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HALF_SIZE_PC, def: .nan, at: VT.HALF_SIZE_PC) }
+  public static func add(ABS_MAG_BRIGHTEST: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABS_MAG_BRIGHTEST, def: .nan, at: VT.ABS_MAG_BRIGHTEST) }
+  public static func add(ABS_MAG_FAINTEST: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ABS_MAG_FAINTEST, def: .nan, at: VT.ABS_MAG_FAINTEST) }
+  public static func addVectorOf(POINTS_3D: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS_3D, at: VT.POINTS_3D) }
+  public static func startVectorOfPoints3D(_ size: Int, in builder: inout FlatBufferBuilder) {
+    builder.startVector(size * MemoryLayout<SKTPoint3D>.size, elementSize: MemoryLayout<SKTPoint3D>.alignment)
+  }
   public static func endSKT(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
   public static func createSKT(
     _ fbb: inout FlatBufferBuilder,
@@ -594,7 +766,17 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PRODUCER_VERSIONOffset PRODUCER_VERSION: Offset = Offset(),
     PRODUCED_ATOffset PRODUCED_AT: Offset = Offset(),
     CITATIONOffset CITATION: Offset = Offset(),
-    LICENSE_URLOffset LICENSE_URL: Offset = Offset()
+    LICENSE_URLOffset LICENSE_URL: Offset = Offset(),
+    PARTITION: sktPartitionScheme = .healpix,
+    OCTREE_LEVEL: UInt8 = 0,
+    OCTREE_KEY: UInt64 = 0,
+    CENTER_X_PC: Double = .nan,
+    CENTER_Y_PC: Double = .nan,
+    CENTER_Z_PC: Double = .nan,
+    HALF_SIZE_PC: Double = .nan,
+    ABS_MAG_BRIGHTEST: Float32 = .nan,
+    ABS_MAG_FAINTEST: Float32 = .nan,
+    POINTS_3DVectorOffset POINTS_3D: Offset = Offset()
   ) -> Offset {
     let __start = SKT.startSKT(&fbb)
     SKT.add(LAYER_ID: LAYER_ID, &fbb)
@@ -647,6 +829,16 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SKT.add(PRODUCED_AT: PRODUCED_AT, &fbb)
     SKT.add(CITATION: CITATION, &fbb)
     SKT.add(LICENSE_URL: LICENSE_URL, &fbb)
+    SKT.add(PARTITION: PARTITION, &fbb)
+    SKT.add(OCTREE_LEVEL: OCTREE_LEVEL, &fbb)
+    SKT.add(OCTREE_KEY: OCTREE_KEY, &fbb)
+    SKT.add(CENTER_X_PC: CENTER_X_PC, &fbb)
+    SKT.add(CENTER_Y_PC: CENTER_Y_PC, &fbb)
+    SKT.add(CENTER_Z_PC: CENTER_Z_PC, &fbb)
+    SKT.add(HALF_SIZE_PC: HALF_SIZE_PC, &fbb)
+    SKT.add(ABS_MAG_BRIGHTEST: ABS_MAG_BRIGHTEST, &fbb)
+    SKT.add(ABS_MAG_FAINTEST: ABS_MAG_FAINTEST, &fbb)
+    SKT.addVectorOf(POINTS_3D: POINTS_3D, &fbb)
     return SKT.endSKT(&fbb, start: __start)
   }
 
@@ -702,6 +894,16 @@ public struct SKT: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.PRODUCED_AT, fieldName: "PRODUCED_AT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CITATION, fieldName: "CITATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.LICENSE_URL, fieldName: "LICENSE_URL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PARTITION, fieldName: "PARTITION", required: false, type: sktPartitionScheme.self)
+    try _v.visit(field: VT.OCTREE_LEVEL, fieldName: "OCTREE_LEVEL", required: false, type: UInt8.self)
+    try _v.visit(field: VT.OCTREE_KEY, fieldName: "OCTREE_KEY", required: false, type: UInt64.self)
+    try _v.visit(field: VT.CENTER_X_PC, fieldName: "CENTER_X_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.CENTER_Y_PC, fieldName: "CENTER_Y_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.CENTER_Z_PC, fieldName: "CENTER_Z_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.HALF_SIZE_PC, fieldName: "HALF_SIZE_PC", required: false, type: Double.self)
+    try _v.visit(field: VT.ABS_MAG_BRIGHTEST, fieldName: "ABS_MAG_BRIGHTEST", required: false, type: Float32.self)
+    try _v.visit(field: VT.ABS_MAG_FAINTEST, fieldName: "ABS_MAG_FAINTEST", required: false, type: Float32.self)
+    try _v.visit(field: VT.POINTS_3D, fieldName: "POINTS_3D", required: false, type: ForwardOffset<Vector<SKTPoint3D, SKTPoint3D>>.self)
     _v.finish()
   }
 }

@@ -11,7 +11,7 @@ public enum sktPayloadKind : byte
   POINT_SOURCES = 1,
   /// Pixel map of a diffuse quantity.
   DIFFUSE_MAP = 2,
-  /// Pixel map of localisation probability per pixel; the values of a
+  /// Pixel map of localization probability per pixel; the values of a
   /// complete layer at one order sum to 1.
   PROBABILITY_MAP = 3,
 };

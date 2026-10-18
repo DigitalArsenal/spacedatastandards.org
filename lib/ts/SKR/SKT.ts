@@ -5,12 +5,14 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { SKTPoint, SKTPointT } from './SKTPoint.js';
+import { SKTPoint3D, SKTPoint3DT } from './SKTPoint3D.js';
 import { phbMagnitudeSystem } from './phbMagnitudeSystem.js';
 import { phbSpectralRegime } from './phbSpectralRegime.js';
 import { sktCelestialFrame } from './sktCelestialFrame.js';
 import { sktColorEncoding } from './sktColorEncoding.js';
 import { sktMapEncoding } from './sktMapEncoding.js';
 import { sktMapQuantity } from './sktMapQuantity.js';
+import { sktPartitionScheme } from './sktPartitionScheme.js';
 import { sktPayloadKind } from './sktPayloadKind.js';
 import { sktPlaceKind } from './sktPlaceKind.js';
 import { sktRefinement } from './sktRefinement.js';
@@ -18,7 +20,8 @@ import { sktStretchFunction } from './sktStretchFunction.js';
 
 
 /**
- * Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+ * Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+ * or diffuse-map layer.
  */
 export class SKT implements flatbuffers.IUnpackableObject<SKTT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -44,7 +47,7 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 
 /**
  * Stable identifier of the layer: equal across every tile of one
- * (producer, source catalogue or survey, band, place, epoch).
+ * (producer, source catalog or survey, band, place, epoch).
  */
 LAYER_ID():string
 LAYER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -54,7 +57,8 @@ LAYER_ID(optionalEncoding?:any):string|Uint8Array {
 }
 
 /**
- * Frame the HEALPix grid and the point positions are stated in.
+ * Frame the HEALPix grid and the point positions are stated in; ICRS for
+ * an OCTREE_HELIO_ICRS layer.
  */
 FRAME():sktCelestialFrame {
   const offset = this.bb!.__offset(this.bb_pos, 6);
@@ -78,8 +82,8 @@ PIXEL():bigint {
 }
 
 /**
- * Deepest order of the layer, when the producer knows it; 255 when
- * unstated.
+ * Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+ * producer knows it; 255 when unstated.
  */
 MAX_ORDER():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
@@ -87,8 +91,8 @@ MAX_ORDER():number {
 }
 
 /**
- * Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
- * a leaf.
+ * Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+ * 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
  */
 CHILD_MASK():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
@@ -131,7 +135,7 @@ BAND_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Effective wavelength of the band, nanometres (vacuum).
+ * Effective wavelength of the band, nanometers (vacuum).
  */
 WAVELENGTH_EFF_NM():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
@@ -139,7 +143,7 @@ WAVELENGTH_EFF_NM():number {
 }
 
 /**
- * Short edge of a band-integrated map, nanometres.
+ * Short edge of a band-integrated map, nanometers.
  */
 WAVELENGTH_MIN_NM():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
@@ -147,7 +151,7 @@ WAVELENGTH_MIN_NM():number {
 }
 
 /**
- * Long edge of a band-integrated map, nanometres.
+ * Long edge of a band-integrated map, nanometers.
  */
 WAVELENGTH_MAX_NM():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
@@ -180,7 +184,7 @@ EPOCH():number {
 
 /**
  * Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
- * spacecraft or the geocentre), as the producer names it.
+ * spacecraft or the geocenter), as the producer names it.
  */
 OBSERVER_ID():string|null
 OBSERVER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -190,7 +194,7 @@ OBSERVER_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Number of points in the payload.
+ * Number of points in the payload (POINTS or POINTS_3D).
  */
 POINT_COUNT():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
@@ -215,7 +219,7 @@ MAG_LIMIT():number {
 }
 
 /**
- * What each point's COLOR holds.
+ * What each point's COLOR holds (POINTS and POINTS_3D alike).
  */
 COLOR_ENCODING():sktColorEncoding {
   const offset = this.bb!.__offset(this.bb_pos, 44);
@@ -223,7 +227,7 @@ COLOR_ENCODING():sktColorEncoding {
 }
 
 /**
- * Bluer band of a COLOR_INDEX colour.
+ * Bluer band of a COLOR_INDEX color.
  */
 COLOR_BLUE_BAND_ID():string|null
 COLOR_BLUE_BAND_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -233,7 +237,7 @@ COLOR_BLUE_BAND_ID(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Redder band of a COLOR_INDEX colour.
+ * Redder band of a COLOR_INDEX color.
  */
 COLOR_RED_BAND_ID():string|null
 COLOR_RED_BAND_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -442,7 +446,7 @@ PAYLOAD_BYTES():bigint {
 }
 
 /**
- * Start of the observations the tile summarises, ISO 8601 UTC.
+ * Start of the observations the tile summarizes, ISO 8601 UTC.
  */
 OBSERVATION_START():string|null
 OBSERVATION_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -452,7 +456,7 @@ OBSERVATION_START(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * End of the observations the tile summarises, ISO 8601 UTC.
+ * End of the observations the tile summarizes, ISO 8601 UTC.
  */
 OBSERVATION_END():string|null
 OBSERVATION_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -462,7 +466,7 @@ OBSERVATION_END(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Verbatim names of the catalogues or surveys the tile was derived from.
+ * Verbatim names of the catalogs or surveys the tile was derived from.
  */
 SOURCE_NAMES(index: number):string
 SOURCE_NAMES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
@@ -517,7 +521,7 @@ CITATION(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * URL of the licence or terms of the source data.
+ * URL of the license or terms of the source data.
  */
 LICENSE_URL():string|null
 LICENSE_URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -526,8 +530,94 @@ LICENSE_URL(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * How the layer divides into tiles.
+ */
+PARTITION():sktPartitionScheme {
+  const offset = this.bb!.__offset(this.bb_pos, 104);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : sktPartitionScheme.HEALPIX;
+}
+
+/**
+ * Octree level of the node; the root is 0, at most 21.
+ */
+OCTREE_LEVEL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+ */
+OCTREE_KEY():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 108);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
+/**
+ * ICRS X of the node's center, parsecs from the Sun.
+ */
+CENTER_X_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 110);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ICRS Y of the node's center, parsecs from the Sun.
+ */
+CENTER_Y_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 112);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * ICRS Z of the node's center, parsecs from the Sun.
+ */
+CENTER_Z_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Half the edge length of the node's cube, parsecs.
+ */
+HALF_SIZE_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Brightest absolute magnitude in the node.
+ */
+ABS_MAG_BRIGHTEST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Faintest absolute magnitude in the node; with its ancestors, the layer
+ * is complete to this limit inside the node's cube.
+ */
+ABS_MAG_FAINTEST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Packed points of an octree node, brightest absolute magnitude first.
+ */
+POINTS_3D(index: number, obj?:SKTPoint3D):SKTPoint3D|null {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? (obj || new SKTPoint3D()).__init(this.bb!.__vector(this.bb_pos + offset) + index * 24, this.bb!) : null;
+}
+
+points3DLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startSKT(builder:flatbuffers.Builder) {
-  builder.startObject(50);
+  builder.startObject(60);
 }
 
 static addLayerId(builder:flatbuffers.Builder, LAYER_IDOffset:flatbuffers.Offset) {
@@ -792,6 +882,50 @@ static addLicenseUrl(builder:flatbuffers.Builder, LICENSE_URLOffset:flatbuffers.
   builder.addFieldOffset(49, LICENSE_URLOffset, 0);
 }
 
+static addPartition(builder:flatbuffers.Builder, PARTITION:sktPartitionScheme) {
+  builder.addFieldInt8(50, PARTITION, sktPartitionScheme.HEALPIX);
+}
+
+static addOctreeLevel(builder:flatbuffers.Builder, OCTREE_LEVEL:number) {
+  builder.addFieldInt8(51, OCTREE_LEVEL, 0);
+}
+
+static addOctreeKey(builder:flatbuffers.Builder, OCTREE_KEY:bigint) {
+  builder.addFieldInt64(52, OCTREE_KEY, BigInt('0'));
+}
+
+static addCenterXPc(builder:flatbuffers.Builder, CENTER_X_PC:number) {
+  builder.addFieldFloat64(53, CENTER_X_PC, NaN);
+}
+
+static addCenterYPc(builder:flatbuffers.Builder, CENTER_Y_PC:number) {
+  builder.addFieldFloat64(54, CENTER_Y_PC, NaN);
+}
+
+static addCenterZPc(builder:flatbuffers.Builder, CENTER_Z_PC:number) {
+  builder.addFieldFloat64(55, CENTER_Z_PC, NaN);
+}
+
+static addHalfSizePc(builder:flatbuffers.Builder, HALF_SIZE_PC:number) {
+  builder.addFieldFloat64(56, HALF_SIZE_PC, NaN);
+}
+
+static addAbsMagBrightest(builder:flatbuffers.Builder, ABS_MAG_BRIGHTEST:number) {
+  builder.addFieldFloat32(57, ABS_MAG_BRIGHTEST, NaN);
+}
+
+static addAbsMagFaintest(builder:flatbuffers.Builder, ABS_MAG_FAINTEST:number) {
+  builder.addFieldFloat32(58, ABS_MAG_FAINTEST, NaN);
+}
+
+static addPoints3D(builder:flatbuffers.Builder, POINTS_3DOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(59, POINTS_3DOffset, 0);
+}
+
+static startPoints3DVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(24, numElems, 4);
+}
+
 static endSKT(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // LAYER_ID
@@ -806,7 +940,7 @@ static finishSizePrefixedSKTBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SKT', true);
 }
 
-static createSKT(builder:flatbuffers.Builder, LAYER_IDOffset:flatbuffers.Offset, FRAME:sktCelestialFrame, ORDER:number, PIXEL:bigint, MAX_ORDER:number, CHILD_MASK:number, PAYLOAD_KIND:sktPayloadKind, REFINE:sktRefinement, SPECTRAL_REGIME:phbSpectralRegime, BAND_IDOffset:flatbuffers.Offset, WAVELENGTH_EFF_NM:number, WAVELENGTH_MIN_NM:number, WAVELENGTH_MAX_NM:number, MAGNITUDE_SYSTEM:phbMagnitudeSystem, PLACE:sktPlaceKind, EPOCH:number, OBSERVER_IDOffset:flatbuffers.Offset, POINT_COUNT:number, MAG_BRIGHTEST:number, MAG_LIMIT:number, COLOR_ENCODING:sktColorEncoding, COLOR_BLUE_BAND_IDOffset:flatbuffers.Offset, COLOR_RED_BAND_IDOffset:flatbuffers.Offset, POINTSOffset:flatbuffers.Offset, ROW_COLLECTION_CIDOffset:flatbuffers.Offset, MAP_DEPTH:number, MAP_ENCODING:sktMapEncoding, MAP_QUANTITY:sktMapQuantity, MAP_QUANTITY_NAMEOffset:flatbuffers.Offset, MAP_UNITSOffset:flatbuffers.Offset, MAP_SCALE:number, MAP_OFFSET:number, MAP_BLANK:number, MAP_VALUESOffset:flatbuffers.Offset, STRETCH:sktStretchFunction, BLACK_POINT:number, WHITE_POINT:number, STRETCH_SOFTENING:number, PERCENTILE_LEVELSOffset:flatbuffers.Offset, PERCENTILE_VALUESOffset:flatbuffers.Offset, PAYLOAD_CIDOffset:flatbuffers.Offset, PAYLOAD_BYTES:bigint, OBSERVATION_STARTOffset:flatbuffers.Offset, OBSERVATION_ENDOffset:flatbuffers.Offset, SOURCE_NAMESOffset:flatbuffers.Offset, PRODUCER_PEER_IDOffset:flatbuffers.Offset, PRODUCER_VERSIONOffset:flatbuffers.Offset, PRODUCED_ATOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset, LICENSE_URLOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSKT(builder:flatbuffers.Builder, LAYER_IDOffset:flatbuffers.Offset, FRAME:sktCelestialFrame, ORDER:number, PIXEL:bigint, MAX_ORDER:number, CHILD_MASK:number, PAYLOAD_KIND:sktPayloadKind, REFINE:sktRefinement, SPECTRAL_REGIME:phbSpectralRegime, BAND_IDOffset:flatbuffers.Offset, WAVELENGTH_EFF_NM:number, WAVELENGTH_MIN_NM:number, WAVELENGTH_MAX_NM:number, MAGNITUDE_SYSTEM:phbMagnitudeSystem, PLACE:sktPlaceKind, EPOCH:number, OBSERVER_IDOffset:flatbuffers.Offset, POINT_COUNT:number, MAG_BRIGHTEST:number, MAG_LIMIT:number, COLOR_ENCODING:sktColorEncoding, COLOR_BLUE_BAND_IDOffset:flatbuffers.Offset, COLOR_RED_BAND_IDOffset:flatbuffers.Offset, POINTSOffset:flatbuffers.Offset, ROW_COLLECTION_CIDOffset:flatbuffers.Offset, MAP_DEPTH:number, MAP_ENCODING:sktMapEncoding, MAP_QUANTITY:sktMapQuantity, MAP_QUANTITY_NAMEOffset:flatbuffers.Offset, MAP_UNITSOffset:flatbuffers.Offset, MAP_SCALE:number, MAP_OFFSET:number, MAP_BLANK:number, MAP_VALUESOffset:flatbuffers.Offset, STRETCH:sktStretchFunction, BLACK_POINT:number, WHITE_POINT:number, STRETCH_SOFTENING:number, PERCENTILE_LEVELSOffset:flatbuffers.Offset, PERCENTILE_VALUESOffset:flatbuffers.Offset, PAYLOAD_CIDOffset:flatbuffers.Offset, PAYLOAD_BYTES:bigint, OBSERVATION_STARTOffset:flatbuffers.Offset, OBSERVATION_ENDOffset:flatbuffers.Offset, SOURCE_NAMESOffset:flatbuffers.Offset, PRODUCER_PEER_IDOffset:flatbuffers.Offset, PRODUCER_VERSIONOffset:flatbuffers.Offset, PRODUCED_ATOffset:flatbuffers.Offset, CITATIONOffset:flatbuffers.Offset, LICENSE_URLOffset:flatbuffers.Offset, PARTITION:sktPartitionScheme, OCTREE_LEVEL:number, OCTREE_KEY:bigint, CENTER_X_PC:number, CENTER_Y_PC:number, CENTER_Z_PC:number, HALF_SIZE_PC:number, ABS_MAG_BRIGHTEST:number, ABS_MAG_FAINTEST:number, POINTS_3DOffset:flatbuffers.Offset):flatbuffers.Offset {
   SKT.startSKT(builder);
   SKT.addLayerId(builder, LAYER_IDOffset);
   SKT.addFrame(builder, FRAME);
@@ -858,6 +992,16 @@ static createSKT(builder:flatbuffers.Builder, LAYER_IDOffset:flatbuffers.Offset,
   SKT.addProducedAt(builder, PRODUCED_ATOffset);
   SKT.addCitation(builder, CITATIONOffset);
   SKT.addLicenseUrl(builder, LICENSE_URLOffset);
+  SKT.addPartition(builder, PARTITION);
+  SKT.addOctreeLevel(builder, OCTREE_LEVEL);
+  SKT.addOctreeKey(builder, OCTREE_KEY);
+  SKT.addCenterXPc(builder, CENTER_X_PC);
+  SKT.addCenterYPc(builder, CENTER_Y_PC);
+  SKT.addCenterZPc(builder, CENTER_Z_PC);
+  SKT.addHalfSizePc(builder, HALF_SIZE_PC);
+  SKT.addAbsMagBrightest(builder, ABS_MAG_BRIGHTEST);
+  SKT.addAbsMagFaintest(builder, ABS_MAG_FAINTEST);
+  SKT.addPoints3D(builder, POINTS_3DOffset);
   return SKT.endSKT(builder);
 }
 
@@ -912,7 +1056,17 @@ unpack(): SKTT {
     this.PRODUCER_VERSION(),
     this.PRODUCED_AT(),
     this.CITATION(),
-    this.LICENSE_URL()
+    this.LICENSE_URL(),
+    this.PARTITION(),
+    this.OCTREE_LEVEL(),
+    this.OCTREE_KEY(),
+    this.CENTER_X_PC(),
+    this.CENTER_Y_PC(),
+    this.CENTER_Z_PC(),
+    this.HALF_SIZE_PC(),
+    this.ABS_MAG_BRIGHTEST(),
+    this.ABS_MAG_FAINTEST(),
+    this.bb!.createObjList<SKTPoint3D, SKTPoint3DT>(this.POINTS_3D.bind(this), this.points3DLength())
   );
 }
 
@@ -968,6 +1122,16 @@ unpackTo(_o: SKTT): void {
   _o.PRODUCED_AT = this.PRODUCED_AT();
   _o.CITATION = this.CITATION();
   _o.LICENSE_URL = this.LICENSE_URL();
+  _o.PARTITION = this.PARTITION();
+  _o.OCTREE_LEVEL = this.OCTREE_LEVEL();
+  _o.OCTREE_KEY = this.OCTREE_KEY();
+  _o.CENTER_X_PC = this.CENTER_X_PC();
+  _o.CENTER_Y_PC = this.CENTER_Y_PC();
+  _o.CENTER_Z_PC = this.CENTER_Z_PC();
+  _o.HALF_SIZE_PC = this.HALF_SIZE_PC();
+  _o.ABS_MAG_BRIGHTEST = this.ABS_MAG_BRIGHTEST();
+  _o.ABS_MAG_FAINTEST = this.ABS_MAG_FAINTEST();
+  _o.POINTS_3D = this.bb!.createObjList<SKTPoint3D, SKTPoint3DT>(this.POINTS_3D.bind(this), this.points3DLength());
 }
 }
 
@@ -1022,7 +1186,17 @@ constructor(
   public PRODUCER_VERSION: string|Uint8Array|null = null,
   public PRODUCED_AT: string|Uint8Array|null = null,
   public CITATION: string|Uint8Array|null = null,
-  public LICENSE_URL: string|Uint8Array|null = null
+  public LICENSE_URL: string|Uint8Array|null = null,
+  public PARTITION: sktPartitionScheme = sktPartitionScheme.HEALPIX,
+  public OCTREE_LEVEL: number = 0,
+  public OCTREE_KEY: bigint = BigInt('0'),
+  public CENTER_X_PC: number = NaN,
+  public CENTER_Y_PC: number = NaN,
+  public CENTER_Z_PC: number = NaN,
+  public HALF_SIZE_PC: number = NaN,
+  public ABS_MAG_BRIGHTEST: number = NaN,
+  public ABS_MAG_FAINTEST: number = NaN,
+  public POINTS_3D: (SKTPoint3DT)[] = []
 ){}
 
 
@@ -1048,6 +1222,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PRODUCED_AT = (this.PRODUCED_AT !== null ? builder.createString(this.PRODUCED_AT!) : 0);
   const CITATION = (this.CITATION !== null ? builder.createString(this.CITATION!) : 0);
   const LICENSE_URL = (this.LICENSE_URL !== null ? builder.createString(this.LICENSE_URL!) : 0);
+  const POINTS_3D = builder.createStructOffsetList(this.POINTS_3D, SKT.startPoints3DVector);
 
   return SKT.createSKT(builder,
     LAYER_ID,
@@ -1099,7 +1274,17 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     PRODUCER_VERSION,
     PRODUCED_AT,
     CITATION,
-    LICENSE_URL
+    LICENSE_URL,
+    this.PARTITION,
+    this.OCTREE_LEVEL,
+    this.OCTREE_KEY,
+    this.CENTER_X_PC,
+    this.CENTER_Y_PC,
+    this.CENTER_Z_PC,
+    this.HALF_SIZE_PC,
+    this.ABS_MAG_BRIGHTEST,
+    this.ABS_MAG_FAINTEST,
+    POINTS_3D
   );
 }
 }

@@ -15,7 +15,7 @@ const (
 	sktStretchFunctionLOGARITHMIC         sktStretchFunction = 3
 	/// Inverse hyperbolic sine with softening STRETCH_SOFTENING.
 	sktStretchFunctionASINH               sktStretchFunction = 4
-	/// Histogram equalisation over PERCENTILE_VALUES.
+	/// Histogram equalization over PERCENTILE_VALUES.
 	sktStretchFunctionHISTOGRAM_EQUALIZED sktStretchFunction = 5
 )
 

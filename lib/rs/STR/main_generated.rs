@@ -3,6 +3,124 @@
 use crate::main_generated::*;
 extern crate alloc;
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_STR_DISTANCE_ESTIMATOR: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_STR_DISTANCE_ESTIMATOR: u8 = 4;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_STR_DISTANCE_ESTIMATOR: [strDistanceEstimator; 5] = [
+    strDistanceEstimator::UNSPECIFIED,
+    strDistanceEstimator::BAILER_JONES_2021_GEO,
+    strDistanceEstimator::BAILER_JONES_2021_PHOTOGEO,
+    strDistanceEstimator::EDSD_POSTERIOR,
+    strDistanceEstimator::PARALLAX_INVERSE,
+];
+
+/// How a star's distance was estimated.
+/// Append new values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct strDistanceEstimator(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl strDistanceEstimator {
+    /// No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN.
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Geometric distance: the median of the posterior from the parallax under a
+    /// direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147).
+    pub const BAILER_JONES_2021_GEO: Self = Self(1);
+    /// Photogeometric distance: the geometric posterior further constrained by the
+    /// star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147).
+    pub const BAILER_JONES_2021_PHOTOGEO: Self = Self(2);
+    /// Mode of the posterior from the parallax under the exponentially decreasing
+    /// space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994).
+    pub const EDSD_POSTERIOR: Self = Self(3);
+    /// Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the
+    /// fractional parallax uncertainty is small.
+    pub const PARALLAX_INVERSE: Self = Self(4);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 4;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::BAILER_JONES_2021_GEO,
+        Self::BAILER_JONES_2021_PHOTOGEO,
+        Self::EDSD_POSTERIOR,
+        Self::PARALLAX_INVERSE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::BAILER_JONES_2021_GEO => Some("BAILER_JONES_2021_GEO"),
+            Self::BAILER_JONES_2021_PHOTOGEO => Some("BAILER_JONES_2021_PHOTOGEO"),
+            Self::EDSD_POSTERIOR => Some("EDSD_POSTERIOR"),
+            Self::PARALLAX_INVERSE => Some("PARALLAX_INVERSE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for strDistanceEstimator {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for strDistanceEstimator {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for strDistanceEstimator {
+    type Output = strDistanceEstimator;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for strDistanceEstimator {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for strDistanceEstimator {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for strDistanceEstimator {}
+
 pub enum STROffset {}
 
 /// Star Catalog Entry
@@ -24,7 +142,7 @@ impl<'a> STR<'a> {
     pub const VT_ID: ::flatbuffers::VOffsetT = 4;
     pub const VT_CS_ID: ::flatbuffers::VOffsetT = 6;
     pub const VT_GNC_CAT_ID: ::flatbuffers::VOffsetT = 8;
-    pub const VT_GAIADR3_CAT_ID: ::flatbuffers::VOffsetT = 10;
+    pub const VT_GAIA_DR3_SOURCE_ID: ::flatbuffers::VOffsetT = 10;
     pub const VT_HIP_CAT_ID: ::flatbuffers::VOffsetT = 12;
     pub const VT_CAT_VERSION: ::flatbuffers::VOffsetT = 14;
     pub const VT_ASTROMETRY_ORIGIN: ::flatbuffers::VOffsetT = 16;
@@ -80,6 +198,11 @@ impl<'a> STR<'a> {
     pub const VT_VARIABILITY_AMPLITUDE: ::flatbuffers::VOffsetT = 116;
     pub const VT_VARIABILITY_EPOCH: ::flatbuffers::VOffsetT = 118;
     pub const VT_PHOTOMETRY: ::flatbuffers::VOffsetT = 120;
+    pub const VT_DISTANCE_PC: ::flatbuffers::VOffsetT = 122;
+    pub const VT_DISTANCE_LO_PC: ::flatbuffers::VOffsetT = 124;
+    pub const VT_DISTANCE_HI_PC: ::flatbuffers::VOffsetT = 126;
+    pub const VT_DISTANCE_METHOD: ::flatbuffers::VOffsetT = 128;
+    pub const VT_DISTANCE_REF: ::flatbuffers::VOffsetT = 130;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -92,6 +215,9 @@ impl<'a> STR<'a> {
         args: &'args STRArgs<'args>
     ) -> ::flatbuffers::WIPOffset<STR<'bldr>> {
         let mut builder = STRBuilder::new(_fbb);
+        builder.add_DISTANCE_HI_PC(args.DISTANCE_HI_PC);
+        builder.add_DISTANCE_LO_PC(args.DISTANCE_LO_PC);
+        builder.add_DISTANCE_PC(args.DISTANCE_PC);
         builder.add_VARIABILITY_EPOCH(args.VARIABILITY_EPOCH);
         builder.add_VARIABILITY_AMPLITUDE(args.VARIABILITY_AMPLITUDE);
         builder.add_VARIABILITY_PERIOD(args.VARIABILITY_PERIOD);
@@ -128,8 +254,9 @@ impl<'a> STR<'a> {
         builder.add_RA_UNC(args.RA_UNC);
         builder.add_RA(args.RA);
         builder.add_STAR_EPOCH(args.STAR_EPOCH);
-        builder.add_GAIADR3_CAT_ID(args.GAIADR3_CAT_ID);
+        builder.add_GAIA_DR3_SOURCE_ID(args.GAIA_DR3_SOURCE_ID);
         builder.add_CS_ID(args.CS_ID);
+        if let Some(x) = args.DISTANCE_REF { builder.add_DISTANCE_REF(x); }
         if let Some(x) = args.PHOTOMETRY { builder.add_PHOTOMETRY(x); }
         if let Some(x) = args.VARIABILITY_CLASS { builder.add_VARIABILITY_CLASS(x); }
         if let Some(x) = args.DESIGNATIONS { builder.add_DESIGNATIONS(x); }
@@ -145,6 +272,7 @@ impl<'a> STR<'a> {
         builder.add_HIP_CAT_ID(args.HIP_CAT_ID);
         builder.add_GNC_CAT_ID(args.GNC_CAT_ID);
         if let Some(x) = args.ID { builder.add_ID(x); }
+        builder.add_DISTANCE_METHOD(args.DISTANCE_METHOD);
         builder.add_SHIFT_FLAG(args.SHIFT_FLAG);
         builder.add_NEIGHBOR_FLAG(args.NEIGHBOR_FLAG);
         builder.add_MULT_FLAG(args.MULT_FLAG);
@@ -160,7 +288,7 @@ impl<'a> STR<'a> {
         });
         let CS_ID = self.CS_ID();
         let GNC_CAT_ID = self.GNC_CAT_ID();
-        let GAIADR3_CAT_ID = self.GAIADR3_CAT_ID();
+        let GAIA_DR3_SOURCE_ID = self.GAIA_DR3_SOURCE_ID();
         let HIP_CAT_ID = self.HIP_CAT_ID();
         let CAT_VERSION = self.CAT_VERSION().map(|x| {
             alloc::string::ToString::to_string(x)
@@ -234,11 +362,18 @@ impl<'a> STR<'a> {
         let PHOTOMETRY = self.PHOTOMETRY().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let DISTANCE_PC = self.DISTANCE_PC();
+        let DISTANCE_LO_PC = self.DISTANCE_LO_PC();
+        let DISTANCE_HI_PC = self.DISTANCE_HI_PC();
+        let DISTANCE_METHOD = self.DISTANCE_METHOD();
+        let DISTANCE_REF = self.DISTANCE_REF().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         STRT {
             ID,
             CS_ID,
             GNC_CAT_ID,
-            GAIADR3_CAT_ID,
+            GAIA_DR3_SOURCE_ID,
             HIP_CAT_ID,
             CAT_VERSION,
             ASTROMETRY_ORIGIN,
@@ -294,6 +429,11 @@ impl<'a> STR<'a> {
             VARIABILITY_AMPLITUDE,
             VARIABILITY_EPOCH,
             PHOTOMETRY,
+            DISTANCE_PC,
+            DISTANCE_LO_PC,
+            DISTANCE_HI_PC,
+            DISTANCE_METHOD,
+            DISTANCE_REF,
         }
     }
 
@@ -324,13 +464,14 @@ impl<'a> STR<'a> {
         unsafe { self._tab.get::<u32>(STR::VT_GNC_CAT_ID, Some(0)).unwrap()}
     }
 
-    /// Source identifier in the third data release of the all-sky space astrometry survey
+    /// Source identifier (source_id) in the third data release of the all-sky space astrometry
+    /// survey; 0 when the star has no match in that release
     #[inline]
-    pub fn GAIADR3_CAT_ID(&self) -> i64 {
+    pub fn GAIA_DR3_SOURCE_ID(&self) -> u64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<i64>(STR::VT_GAIADR3_CAT_ID, Some(0)).unwrap()}
+        unsafe { self._tab.get::<u64>(STR::VT_GAIA_DR3_SOURCE_ID, Some(0)).unwrap()}
     }
 
     /// Identifier in the first space astrometry mission's main catalog
@@ -729,7 +870,7 @@ impl<'a> STR<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STR::VT_SPECTRAL_TYPE, None)}
     }
 
-    /// Proper name as recognised by the astronomical naming authority
+    /// Proper name as recognized by the astronomical naming authority
     #[inline]
     pub fn PROPER_NAME(&self) -> Option<&'a str> {
         // Safety:
@@ -819,13 +960,64 @@ impl<'a> STR<'a> {
         unsafe { self._tab.get::<f64>(STR::VT_VARIABILITY_EPOCH, Some(f64::NAN)).unwrap()}
     }
 
-    /// Brightness in every band the star was measured or modelled in
+    /// Brightness in every band the star was measured or modeled in
     #[inline]
     pub fn PHOTOMETRY(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PHBMeasurement<'a>>>> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PHBMeasurement>>>>(STR::VT_PHOTOMETRY, None)}
+    }
+
+    /// Distance from the Sun (parsecs): the posterior median, or the mode for
+    /// EDSD_POSTERIOR, as DISTANCE_METHOD states
+    #[inline]
+    pub fn DISTANCE_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(STR::VT_DISTANCE_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+    /// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+    /// the 68% highest-density interval for EDSD_POSTERIOR, and
+    /// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+    #[inline]
+    pub fn DISTANCE_LO_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(STR::VT_DISTANCE_LO_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+    /// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+    /// DISTANCE_LO_PC; NaN when unbounded
+    #[inline]
+    pub fn DISTANCE_HI_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(STR::VT_DISTANCE_HI_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+    #[inline]
+    pub fn DISTANCE_METHOD(&self) -> strDistanceEstimator {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<strDistanceEstimator>(STR::VT_DISTANCE_METHOD, Some(strDistanceEstimator::UNSPECIFIED)).unwrap()}
+    }
+
+    /// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+    #[inline]
+    pub fn DISTANCE_REF(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(STR::VT_DISTANCE_REF, None)}
     }
 }
 
@@ -838,7 +1030,7 @@ impl ::flatbuffers::Verifiable for STR<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
             .visit_field::<i64>("CS_ID", Self::VT_CS_ID, false)?
             .visit_field::<u32>("GNC_CAT_ID", Self::VT_GNC_CAT_ID, false)?
-            .visit_field::<i64>("GAIADR3_CAT_ID", Self::VT_GAIADR3_CAT_ID, false)?
+            .visit_field::<u64>("GAIA_DR3_SOURCE_ID", Self::VT_GAIA_DR3_SOURCE_ID, false)?
             .visit_field::<u32>("HIP_CAT_ID", Self::VT_HIP_CAT_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CAT_VERSION", Self::VT_CAT_VERSION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ASTROMETRY_ORIGIN", Self::VT_ASTROMETRY_ORIGIN, false)?
@@ -894,6 +1086,11 @@ impl ::flatbuffers::Verifiable for STR<'_> {
             .visit_field::<f64>("VARIABILITY_AMPLITUDE", Self::VT_VARIABILITY_AMPLITUDE, false)?
             .visit_field::<f64>("VARIABILITY_EPOCH", Self::VT_VARIABILITY_EPOCH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PHBMeasurement>>>>("PHOTOMETRY", Self::VT_PHOTOMETRY, false)?
+            .visit_field::<f64>("DISTANCE_PC", Self::VT_DISTANCE_PC, false)?
+            .visit_field::<f64>("DISTANCE_LO_PC", Self::VT_DISTANCE_LO_PC, false)?
+            .visit_field::<f64>("DISTANCE_HI_PC", Self::VT_DISTANCE_HI_PC, false)?
+            .visit_field::<strDistanceEstimator>("DISTANCE_METHOD", Self::VT_DISTANCE_METHOD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DISTANCE_REF", Self::VT_DISTANCE_REF, false)?
             .finish();
         Ok(())
     }
@@ -903,7 +1100,7 @@ pub struct STRArgs<'a> {
     pub ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CS_ID: i64,
     pub GNC_CAT_ID: u32,
-    pub GAIADR3_CAT_ID: i64,
+    pub GAIA_DR3_SOURCE_ID: u64,
     pub HIP_CAT_ID: u32,
     pub CAT_VERSION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ASTROMETRY_ORIGIN: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -959,6 +1156,11 @@ pub struct STRArgs<'a> {
     pub VARIABILITY_AMPLITUDE: f64,
     pub VARIABILITY_EPOCH: f64,
     pub PHOTOMETRY: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PHBMeasurement<'a>>>>>,
+    pub DISTANCE_PC: f64,
+    pub DISTANCE_LO_PC: f64,
+    pub DISTANCE_HI_PC: f64,
+    pub DISTANCE_METHOD: strDistanceEstimator,
+    pub DISTANCE_REF: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for STRArgs<'a> {
@@ -968,7 +1170,7 @@ impl<'a> Default for STRArgs<'a> {
             ID: None,
             CS_ID: 0,
             GNC_CAT_ID: 0,
-            GAIADR3_CAT_ID: 0,
+            GAIA_DR3_SOURCE_ID: 0,
             HIP_CAT_ID: 0,
             CAT_VERSION: None,
             ASTROMETRY_ORIGIN: None,
@@ -1024,6 +1226,11 @@ impl<'a> Default for STRArgs<'a> {
             VARIABILITY_AMPLITUDE: f64::NAN,
             VARIABILITY_EPOCH: f64::NAN,
             PHOTOMETRY: None,
+            DISTANCE_PC: f64::NAN,
+            DISTANCE_LO_PC: f64::NAN,
+            DISTANCE_HI_PC: f64::NAN,
+            DISTANCE_METHOD: strDistanceEstimator::UNSPECIFIED,
+            DISTANCE_REF: None,
         }
     }
 }
@@ -1050,8 +1257,8 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> STRBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_GAIADR3_CAT_ID(&mut self, GAIADR3_CAT_ID: i64) {
-        self.fbb_.push_slot::<i64>(STR::VT_GAIADR3_CAT_ID, GAIADR3_CAT_ID, 0);
+    pub fn add_GAIA_DR3_SOURCE_ID(&mut self, GAIA_DR3_SOURCE_ID: u64) {
+        self.fbb_.push_slot::<u64>(STR::VT_GAIA_DR3_SOURCE_ID, GAIA_DR3_SOURCE_ID, 0);
     }
 
     #[inline]
@@ -1330,6 +1537,31 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> STRBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_DISTANCE_PC(&mut self, DISTANCE_PC: f64) {
+        self.fbb_.push_slot::<f64>(STR::VT_DISTANCE_PC, DISTANCE_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DISTANCE_LO_PC(&mut self, DISTANCE_LO_PC: f64) {
+        self.fbb_.push_slot::<f64>(STR::VT_DISTANCE_LO_PC, DISTANCE_LO_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DISTANCE_HI_PC(&mut self, DISTANCE_HI_PC: f64) {
+        self.fbb_.push_slot::<f64>(STR::VT_DISTANCE_HI_PC, DISTANCE_HI_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_DISTANCE_METHOD(&mut self, DISTANCE_METHOD: strDistanceEstimator) {
+        self.fbb_.push_slot::<strDistanceEstimator>(STR::VT_DISTANCE_METHOD, DISTANCE_METHOD, strDistanceEstimator::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_DISTANCE_REF(&mut self, DISTANCE_REF: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(STR::VT_DISTANCE_REF, DISTANCE_REF);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> STRBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         STRBuilder {
@@ -1351,7 +1583,7 @@ impl ::core::fmt::Debug for STR<'_> {
         ds.field("ID", &self.ID());
         ds.field("CS_ID", &self.CS_ID());
         ds.field("GNC_CAT_ID", &self.GNC_CAT_ID());
-        ds.field("GAIADR3_CAT_ID", &self.GAIADR3_CAT_ID());
+        ds.field("GAIA_DR3_SOURCE_ID", &self.GAIA_DR3_SOURCE_ID());
         ds.field("HIP_CAT_ID", &self.HIP_CAT_ID());
         ds.field("CAT_VERSION", &self.CAT_VERSION());
         ds.field("ASTROMETRY_ORIGIN", &self.ASTROMETRY_ORIGIN());
@@ -1407,6 +1639,11 @@ impl ::core::fmt::Debug for STR<'_> {
         ds.field("VARIABILITY_AMPLITUDE", &self.VARIABILITY_AMPLITUDE());
         ds.field("VARIABILITY_EPOCH", &self.VARIABILITY_EPOCH());
         ds.field("PHOTOMETRY", &self.PHOTOMETRY());
+        ds.field("DISTANCE_PC", &self.DISTANCE_PC());
+        ds.field("DISTANCE_LO_PC", &self.DISTANCE_LO_PC());
+        ds.field("DISTANCE_HI_PC", &self.DISTANCE_HI_PC());
+        ds.field("DISTANCE_METHOD", &self.DISTANCE_METHOD());
+        ds.field("DISTANCE_REF", &self.DISTANCE_REF());
         ds.finish()
     }
 }
@@ -1417,7 +1654,7 @@ pub struct STRT {
     pub ID: Option<alloc::string::String>,
     pub CS_ID: i64,
     pub GNC_CAT_ID: u32,
-    pub GAIADR3_CAT_ID: i64,
+    pub GAIA_DR3_SOURCE_ID: u64,
     pub HIP_CAT_ID: u32,
     pub CAT_VERSION: Option<alloc::string::String>,
     pub ASTROMETRY_ORIGIN: Option<alloc::string::String>,
@@ -1473,6 +1710,11 @@ pub struct STRT {
     pub VARIABILITY_AMPLITUDE: f64,
     pub VARIABILITY_EPOCH: f64,
     pub PHOTOMETRY: Option<alloc::vec::Vec<PHBMeasurementT>>,
+    pub DISTANCE_PC: f64,
+    pub DISTANCE_LO_PC: f64,
+    pub DISTANCE_HI_PC: f64,
+    pub DISTANCE_METHOD: strDistanceEstimator,
+    pub DISTANCE_REF: Option<alloc::string::String>,
 }
 
 impl Default for STRT {
@@ -1481,7 +1723,7 @@ impl Default for STRT {
             ID: None,
             CS_ID: 0,
             GNC_CAT_ID: 0,
-            GAIADR3_CAT_ID: 0,
+            GAIA_DR3_SOURCE_ID: 0,
             HIP_CAT_ID: 0,
             CAT_VERSION: None,
             ASTROMETRY_ORIGIN: None,
@@ -1537,6 +1779,11 @@ impl Default for STRT {
             VARIABILITY_AMPLITUDE: f64::NAN,
             VARIABILITY_EPOCH: f64::NAN,
             PHOTOMETRY: None,
+            DISTANCE_PC: f64::NAN,
+            DISTANCE_LO_PC: f64::NAN,
+            DISTANCE_HI_PC: f64::NAN,
+            DISTANCE_METHOD: strDistanceEstimator::UNSPECIFIED,
+            DISTANCE_REF: None,
         }
     }
 }
@@ -1551,7 +1798,7 @@ impl STRT {
         });
         let CS_ID = self.CS_ID;
         let GNC_CAT_ID = self.GNC_CAT_ID;
-        let GAIADR3_CAT_ID = self.GAIADR3_CAT_ID;
+        let GAIA_DR3_SOURCE_ID = self.GAIA_DR3_SOURCE_ID;
         let HIP_CAT_ID = self.HIP_CAT_ID;
         let CAT_VERSION = self.CAT_VERSION.as_ref().map(|x|{
             _fbb.create_string(x)
@@ -1625,11 +1872,18 @@ impl STRT {
         let PHOTOMETRY = self.PHOTOMETRY.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let DISTANCE_PC = self.DISTANCE_PC;
+        let DISTANCE_LO_PC = self.DISTANCE_LO_PC;
+        let DISTANCE_HI_PC = self.DISTANCE_HI_PC;
+        let DISTANCE_METHOD = self.DISTANCE_METHOD;
+        let DISTANCE_REF = self.DISTANCE_REF.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         STR::create(_fbb, &STRArgs{
             ID,
             CS_ID,
             GNC_CAT_ID,
-            GAIADR3_CAT_ID,
+            GAIA_DR3_SOURCE_ID,
             HIP_CAT_ID,
             CAT_VERSION,
             ASTROMETRY_ORIGIN,
@@ -1685,6 +1939,11 @@ impl STRT {
             VARIABILITY_AMPLITUDE,
             VARIABILITY_EPOCH,
             PHOTOMETRY,
+            DISTANCE_PC,
+            DISTANCE_LO_PC,
+            DISTANCE_HI_PC,
+            DISTANCE_METHOD,
+            DISTANCE_REF,
         })
     }
 }

@@ -6,4 +6,5 @@ export * from './PHBMeasurement.js';
 export * from './phbQuantity.js';
 export * from './phbSpectralRegime.js';
 export * from './STR.js';
+export * from './strDistanceEstimator.js';
 //# sourceMappingURL=main.d.ts.map

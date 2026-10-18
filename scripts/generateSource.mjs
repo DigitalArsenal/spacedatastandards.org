@@ -275,7 +275,21 @@ function fixPhpFloatConstants(source) {
   );
 }
 
-async function writeOutputs(baseDir, outputs, datatype) {
+// flatc names a C++ include guard after the file, and every standard's file
+// is main.fbs, so every header shared FLATBUFFERS_GENERATED_MAIN_H_: a header
+// that includes another (SKT -> PHB) skipped the included definitions, and no
+// two standards compiled in one unit. Scope the guard by standard (the name
+// downstream builds already used); --keep-prefix in datatypes.json keeps the
+// include's relative path, so `#include "../PHB/main_generated.h"` resolves
+// inside lib/cpp.
+function scopeCppIncludeGuard(source, schemaName) {
+  return source.replaceAll(
+    "FLATBUFFERS_GENERATED_MAIN_H_",
+    `FLATBUFFERS_GENERATED_SDS_${schemaName}_MAIN_H_`,
+  );
+}
+
+async function writeOutputs(baseDir, outputs, datatype, schemaName) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
     let normalizedSource = source
@@ -285,7 +299,10 @@ async function writeOutputs(baseDir, outputs, datatype) {
       normalizedSource = dedupeGoAccessors(normalizedSource, relativePath);
     }
     if (datatype?.ext === "cpp" && relativePath.endsWith(".h")) {
-      normalizedSource = dedupeCppEnumConstants(normalizedSource);
+      normalizedSource = scopeCppIncludeGuard(
+        dedupeCppEnumConstants(normalizedSource),
+        schemaName,
+      );
     }
     if (datatype?.ext === "sw" && relativePath.endsWith(".swift")) {
       normalizedSource = dedupeSwiftEnumStatics(normalizedSource);
@@ -310,7 +327,7 @@ async function main() {
     for (const datatype of datatypes) {
       const outputs = runCodeGeneration(flatc, schemaInput, datatype);
       const outputDir = path.join(LIB_DIR, datatype.ext, schemaName);
-      await writeOutputs(outputDir, outputs, datatype);
+      await writeOutputs(outputDir, outputs, datatype, schemaName);
     }
   }
 

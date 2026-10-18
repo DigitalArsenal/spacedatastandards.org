@@ -16,7 +16,7 @@ public final class sktStretchFunction {
    */
   public static final int ASINH = 4;
   /**
-   * Histogram equalisation over PERCENTILE_VALUES.
+   * Histogram equalization over PERCENTILE_VALUES.
    */
   public static final int HISTOGRAM_EQUALIZED = 5;
 

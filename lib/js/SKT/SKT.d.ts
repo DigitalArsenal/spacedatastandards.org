@@ -1,17 +1,20 @@
 import * as flatbuffers from 'flatbuffers';
 import { SKTPoint, SKTPointT } from './SKTPoint.js';
+import { SKTPoint3D, SKTPoint3DT } from './SKTPoint3D.js';
 import { phbMagnitudeSystem } from './phbMagnitudeSystem.js';
 import { phbSpectralRegime } from './phbSpectralRegime.js';
 import { sktCelestialFrame } from './sktCelestialFrame.js';
 import { sktColorEncoding } from './sktColorEncoding.js';
 import { sktMapEncoding } from './sktMapEncoding.js';
 import { sktMapQuantity } from './sktMapQuantity.js';
+import { sktPartitionScheme } from './sktPartitionScheme.js';
 import { sktPayloadKind } from './sktPayloadKind.js';
 import { sktPlaceKind } from './sktPlaceKind.js';
 import { sktRefinement } from './sktRefinement.js';
 import { sktStretchFunction } from './sktStretchFunction.js';
 /**
- * Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+ * Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+ * or diffuse-map layer.
  */
 export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -22,12 +25,13 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
     /**
      * Stable identifier of the layer: equal across every tile of one
-     * (producer, source catalogue or survey, band, place, epoch).
+     * (producer, source catalog or survey, band, place, epoch).
      */
     LAYER_ID(): string;
     LAYER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
     /**
-     * Frame the HEALPix grid and the point positions are stated in.
+     * Frame the HEALPix grid and the point positions are stated in; ICRS for
+     * an OCTREE_HELIO_ICRS layer.
      */
     FRAME(): sktCelestialFrame;
     /**
@@ -39,13 +43,13 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
      */
     PIXEL(): bigint;
     /**
-     * Deepest order of the layer, when the producer knows it; 255 when
-     * unstated.
+     * Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+     * producer knows it; 255 when unstated.
      */
     MAX_ORDER(): number;
     /**
-     * Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-     * a leaf.
+     * Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+     * 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
      */
     CHILD_MASK(): number;
     /**
@@ -67,15 +71,15 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
     BAND_ID(): string | null;
     BAND_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Effective wavelength of the band, nanometres (vacuum).
+     * Effective wavelength of the band, nanometers (vacuum).
      */
     WAVELENGTH_EFF_NM(): number;
     /**
-     * Short edge of a band-integrated map, nanometres.
+     * Short edge of a band-integrated map, nanometers.
      */
     WAVELENGTH_MIN_NM(): number;
     /**
-     * Long edge of a band-integrated map, nanometres.
+     * Long edge of a band-integrated map, nanometers.
      */
     WAVELENGTH_MAX_NM(): number;
     /**
@@ -92,12 +96,12 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
     EPOCH(): number;
     /**
      * Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-     * spacecraft or the geocentre), as the producer names it.
+     * spacecraft or the geocenter), as the producer names it.
      */
     OBSERVER_ID(): string | null;
     OBSERVER_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Number of points in the payload.
+     * Number of points in the payload (POINTS or POINTS_3D).
      */
     POINT_COUNT(): number;
     /**
@@ -110,16 +114,16 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
      */
     MAG_LIMIT(): number;
     /**
-     * What each point's COLOR holds.
+     * What each point's COLOR holds (POINTS and POINTS_3D alike).
      */
     COLOR_ENCODING(): sktColorEncoding;
     /**
-     * Bluer band of a COLOR_INDEX colour.
+     * Bluer band of a COLOR_INDEX color.
      */
     COLOR_BLUE_BAND_ID(): string | null;
     COLOR_BLUE_BAND_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Redder band of a COLOR_INDEX colour.
+     * Redder band of a COLOR_INDEX color.
      */
     COLOR_RED_BAND_ID(): string | null;
     COLOR_RED_BAND_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -215,17 +219,17 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
      */
     PAYLOAD_BYTES(): bigint;
     /**
-     * Start of the observations the tile summarises, ISO 8601 UTC.
+     * Start of the observations the tile summarizes, ISO 8601 UTC.
      */
     OBSERVATION_START(): string | null;
     OBSERVATION_START(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * End of the observations the tile summarises, ISO 8601 UTC.
+     * End of the observations the tile summarizes, ISO 8601 UTC.
      */
     OBSERVATION_END(): string | null;
     OBSERVATION_END(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Verbatim names of the catalogues or surveys the tile was derived from.
+     * Verbatim names of the catalogs or surveys the tile was derived from.
      */
     SOURCE_NAMES(index: number): string;
     SOURCE_NAMES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
@@ -251,10 +255,52 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
     CITATION(): string | null;
     CITATION(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * URL of the licence or terms of the source data.
+     * URL of the license or terms of the source data.
      */
     LICENSE_URL(): string | null;
     LICENSE_URL(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * How the layer divides into tiles.
+     */
+    PARTITION(): sktPartitionScheme;
+    /**
+     * Octree level of the node; the root is 0, at most 21.
+     */
+    OCTREE_LEVEL(): number;
+    /**
+     * Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+     */
+    OCTREE_KEY(): bigint;
+    /**
+     * ICRS X of the node's center, parsecs from the Sun.
+     */
+    CENTER_X_PC(): number;
+    /**
+     * ICRS Y of the node's center, parsecs from the Sun.
+     */
+    CENTER_Y_PC(): number;
+    /**
+     * ICRS Z of the node's center, parsecs from the Sun.
+     */
+    CENTER_Z_PC(): number;
+    /**
+     * Half the edge length of the node's cube, parsecs.
+     */
+    HALF_SIZE_PC(): number;
+    /**
+     * Brightest absolute magnitude in the node.
+     */
+    ABS_MAG_BRIGHTEST(): number;
+    /**
+     * Faintest absolute magnitude in the node; with its ancestors, the layer
+     * is complete to this limit inside the node's cube.
+     */
+    ABS_MAG_FAINTEST(): number;
+    /**
+     * Packed points of an octree node, brightest absolute magnitude first.
+     */
+    POINTS_3D(index: number, obj?: SKTPoint3D): SKTPoint3D | null;
+    points3DLength(): number;
     static startSKT(builder: flatbuffers.Builder): void;
     static addLayerId(builder: flatbuffers.Builder, LAYER_IDOffset: flatbuffers.Offset): void;
     static addFrame(builder: flatbuffers.Builder, FRAME: sktCelestialFrame): void;
@@ -323,10 +369,21 @@ export declare class SKT implements flatbuffers.IUnpackableObject<SKTT> {
     static addProducedAt(builder: flatbuffers.Builder, PRODUCED_ATOffset: flatbuffers.Offset): void;
     static addCitation(builder: flatbuffers.Builder, CITATIONOffset: flatbuffers.Offset): void;
     static addLicenseUrl(builder: flatbuffers.Builder, LICENSE_URLOffset: flatbuffers.Offset): void;
+    static addPartition(builder: flatbuffers.Builder, PARTITION: sktPartitionScheme): void;
+    static addOctreeLevel(builder: flatbuffers.Builder, OCTREE_LEVEL: number): void;
+    static addOctreeKey(builder: flatbuffers.Builder, OCTREE_KEY: bigint): void;
+    static addCenterXPc(builder: flatbuffers.Builder, CENTER_X_PC: number): void;
+    static addCenterYPc(builder: flatbuffers.Builder, CENTER_Y_PC: number): void;
+    static addCenterZPc(builder: flatbuffers.Builder, CENTER_Z_PC: number): void;
+    static addHalfSizePc(builder: flatbuffers.Builder, HALF_SIZE_PC: number): void;
+    static addAbsMagBrightest(builder: flatbuffers.Builder, ABS_MAG_BRIGHTEST: number): void;
+    static addAbsMagFaintest(builder: flatbuffers.Builder, ABS_MAG_FAINTEST: number): void;
+    static addPoints3D(builder: flatbuffers.Builder, POINTS_3DOffset: flatbuffers.Offset): void;
+    static startPoints3DVector(builder: flatbuffers.Builder, numElems: number): void;
     static endSKT(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSKTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSKTBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSKT(builder: flatbuffers.Builder, LAYER_IDOffset: flatbuffers.Offset, FRAME: sktCelestialFrame, ORDER: number, PIXEL: bigint, MAX_ORDER: number, CHILD_MASK: number, PAYLOAD_KIND: sktPayloadKind, REFINE: sktRefinement, SPECTRAL_REGIME: phbSpectralRegime, BAND_IDOffset: flatbuffers.Offset, WAVELENGTH_EFF_NM: number, WAVELENGTH_MIN_NM: number, WAVELENGTH_MAX_NM: number, MAGNITUDE_SYSTEM: phbMagnitudeSystem, PLACE: sktPlaceKind, EPOCH: number, OBSERVER_IDOffset: flatbuffers.Offset, POINT_COUNT: number, MAG_BRIGHTEST: number, MAG_LIMIT: number, COLOR_ENCODING: sktColorEncoding, COLOR_BLUE_BAND_IDOffset: flatbuffers.Offset, COLOR_RED_BAND_IDOffset: flatbuffers.Offset, POINTSOffset: flatbuffers.Offset, ROW_COLLECTION_CIDOffset: flatbuffers.Offset, MAP_DEPTH: number, MAP_ENCODING: sktMapEncoding, MAP_QUANTITY: sktMapQuantity, MAP_QUANTITY_NAMEOffset: flatbuffers.Offset, MAP_UNITSOffset: flatbuffers.Offset, MAP_SCALE: number, MAP_OFFSET: number, MAP_BLANK: number, MAP_VALUESOffset: flatbuffers.Offset, STRETCH: sktStretchFunction, BLACK_POINT: number, WHITE_POINT: number, STRETCH_SOFTENING: number, PERCENTILE_LEVELSOffset: flatbuffers.Offset, PERCENTILE_VALUESOffset: flatbuffers.Offset, PAYLOAD_CIDOffset: flatbuffers.Offset, PAYLOAD_BYTES: bigint, OBSERVATION_STARTOffset: flatbuffers.Offset, OBSERVATION_ENDOffset: flatbuffers.Offset, SOURCE_NAMESOffset: flatbuffers.Offset, PRODUCER_PEER_IDOffset: flatbuffers.Offset, PRODUCER_VERSIONOffset: flatbuffers.Offset, PRODUCED_ATOffset: flatbuffers.Offset, CITATIONOffset: flatbuffers.Offset, LICENSE_URLOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSKT(builder: flatbuffers.Builder, LAYER_IDOffset: flatbuffers.Offset, FRAME: sktCelestialFrame, ORDER: number, PIXEL: bigint, MAX_ORDER: number, CHILD_MASK: number, PAYLOAD_KIND: sktPayloadKind, REFINE: sktRefinement, SPECTRAL_REGIME: phbSpectralRegime, BAND_IDOffset: flatbuffers.Offset, WAVELENGTH_EFF_NM: number, WAVELENGTH_MIN_NM: number, WAVELENGTH_MAX_NM: number, MAGNITUDE_SYSTEM: phbMagnitudeSystem, PLACE: sktPlaceKind, EPOCH: number, OBSERVER_IDOffset: flatbuffers.Offset, POINT_COUNT: number, MAG_BRIGHTEST: number, MAG_LIMIT: number, COLOR_ENCODING: sktColorEncoding, COLOR_BLUE_BAND_IDOffset: flatbuffers.Offset, COLOR_RED_BAND_IDOffset: flatbuffers.Offset, POINTSOffset: flatbuffers.Offset, ROW_COLLECTION_CIDOffset: flatbuffers.Offset, MAP_DEPTH: number, MAP_ENCODING: sktMapEncoding, MAP_QUANTITY: sktMapQuantity, MAP_QUANTITY_NAMEOffset: flatbuffers.Offset, MAP_UNITSOffset: flatbuffers.Offset, MAP_SCALE: number, MAP_OFFSET: number, MAP_BLANK: number, MAP_VALUESOffset: flatbuffers.Offset, STRETCH: sktStretchFunction, BLACK_POINT: number, WHITE_POINT: number, STRETCH_SOFTENING: number, PERCENTILE_LEVELSOffset: flatbuffers.Offset, PERCENTILE_VALUESOffset: flatbuffers.Offset, PAYLOAD_CIDOffset: flatbuffers.Offset, PAYLOAD_BYTES: bigint, OBSERVATION_STARTOffset: flatbuffers.Offset, OBSERVATION_ENDOffset: flatbuffers.Offset, SOURCE_NAMESOffset: flatbuffers.Offset, PRODUCER_PEER_IDOffset: flatbuffers.Offset, PRODUCER_VERSIONOffset: flatbuffers.Offset, PRODUCED_ATOffset: flatbuffers.Offset, CITATIONOffset: flatbuffers.Offset, LICENSE_URLOffset: flatbuffers.Offset, PARTITION: sktPartitionScheme, OCTREE_LEVEL: number, OCTREE_KEY: bigint, CENTER_X_PC: number, CENTER_Y_PC: number, CENTER_Z_PC: number, HALF_SIZE_PC: number, ABS_MAG_BRIGHTEST: number, ABS_MAG_FAINTEST: number, POINTS_3DOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): SKTT;
     unpackTo(_o: SKTT): void;
 }
@@ -381,7 +438,17 @@ export declare class SKTT implements flatbuffers.IGeneratedObject {
     PRODUCED_AT: string | Uint8Array | null;
     CITATION: string | Uint8Array | null;
     LICENSE_URL: string | Uint8Array | null;
-    constructor(LAYER_ID?: string | Uint8Array | null, FRAME?: sktCelestialFrame, ORDER?: number, PIXEL?: bigint, MAX_ORDER?: number, CHILD_MASK?: number, PAYLOAD_KIND?: sktPayloadKind, REFINE?: sktRefinement, SPECTRAL_REGIME?: phbSpectralRegime, BAND_ID?: string | Uint8Array | null, WAVELENGTH_EFF_NM?: number, WAVELENGTH_MIN_NM?: number, WAVELENGTH_MAX_NM?: number, MAGNITUDE_SYSTEM?: phbMagnitudeSystem, PLACE?: sktPlaceKind, EPOCH?: number, OBSERVER_ID?: string | Uint8Array | null, POINT_COUNT?: number, MAG_BRIGHTEST?: number, MAG_LIMIT?: number, COLOR_ENCODING?: sktColorEncoding, COLOR_BLUE_BAND_ID?: string | Uint8Array | null, COLOR_RED_BAND_ID?: string | Uint8Array | null, POINTS?: (SKTPointT)[], ROW_COLLECTION_CID?: string | Uint8Array | null, MAP_DEPTH?: number, MAP_ENCODING?: sktMapEncoding, MAP_QUANTITY?: sktMapQuantity, MAP_QUANTITY_NAME?: string | Uint8Array | null, MAP_UNITS?: string | Uint8Array | null, MAP_SCALE?: number, MAP_OFFSET?: number, MAP_BLANK?: number, MAP_VALUES?: (number)[], STRETCH?: sktStretchFunction, BLACK_POINT?: number, WHITE_POINT?: number, STRETCH_SOFTENING?: number, PERCENTILE_LEVELS?: (number)[], PERCENTILE_VALUES?: (number)[], PAYLOAD_CID?: string | Uint8Array | null, PAYLOAD_BYTES?: bigint, OBSERVATION_START?: string | Uint8Array | null, OBSERVATION_END?: string | Uint8Array | null, SOURCE_NAMES?: (string)[], PRODUCER_PEER_ID?: string | Uint8Array | null, PRODUCER_VERSION?: string | Uint8Array | null, PRODUCED_AT?: string | Uint8Array | null, CITATION?: string | Uint8Array | null, LICENSE_URL?: string | Uint8Array | null);
+    PARTITION: sktPartitionScheme;
+    OCTREE_LEVEL: number;
+    OCTREE_KEY: bigint;
+    CENTER_X_PC: number;
+    CENTER_Y_PC: number;
+    CENTER_Z_PC: number;
+    HALF_SIZE_PC: number;
+    ABS_MAG_BRIGHTEST: number;
+    ABS_MAG_FAINTEST: number;
+    POINTS_3D: (SKTPoint3DT)[];
+    constructor(LAYER_ID?: string | Uint8Array | null, FRAME?: sktCelestialFrame, ORDER?: number, PIXEL?: bigint, MAX_ORDER?: number, CHILD_MASK?: number, PAYLOAD_KIND?: sktPayloadKind, REFINE?: sktRefinement, SPECTRAL_REGIME?: phbSpectralRegime, BAND_ID?: string | Uint8Array | null, WAVELENGTH_EFF_NM?: number, WAVELENGTH_MIN_NM?: number, WAVELENGTH_MAX_NM?: number, MAGNITUDE_SYSTEM?: phbMagnitudeSystem, PLACE?: sktPlaceKind, EPOCH?: number, OBSERVER_ID?: string | Uint8Array | null, POINT_COUNT?: number, MAG_BRIGHTEST?: number, MAG_LIMIT?: number, COLOR_ENCODING?: sktColorEncoding, COLOR_BLUE_BAND_ID?: string | Uint8Array | null, COLOR_RED_BAND_ID?: string | Uint8Array | null, POINTS?: (SKTPointT)[], ROW_COLLECTION_CID?: string | Uint8Array | null, MAP_DEPTH?: number, MAP_ENCODING?: sktMapEncoding, MAP_QUANTITY?: sktMapQuantity, MAP_QUANTITY_NAME?: string | Uint8Array | null, MAP_UNITS?: string | Uint8Array | null, MAP_SCALE?: number, MAP_OFFSET?: number, MAP_BLANK?: number, MAP_VALUES?: (number)[], STRETCH?: sktStretchFunction, BLACK_POINT?: number, WHITE_POINT?: number, STRETCH_SOFTENING?: number, PERCENTILE_LEVELS?: (number)[], PERCENTILE_VALUES?: (number)[], PAYLOAD_CID?: string | Uint8Array | null, PAYLOAD_BYTES?: bigint, OBSERVATION_START?: string | Uint8Array | null, OBSERVATION_END?: string | Uint8Array | null, SOURCE_NAMES?: (string)[], PRODUCER_PEER_ID?: string | Uint8Array | null, PRODUCER_VERSION?: string | Uint8Array | null, PRODUCED_AT?: string | Uint8Array | null, CITATION?: string | Uint8Array | null, LICENSE_URL?: string | Uint8Array | null, PARTITION?: sktPartitionScheme, OCTREE_LEVEL?: number, OCTREE_KEY?: bigint, CENTER_X_PC?: number, CENTER_Y_PC?: number, CENTER_Z_PC?: number, HALF_SIZE_PC?: number, ABS_MAG_BRIGHTEST?: number, ABS_MAG_FAINTEST?: number, POINTS_3D?: (SKTPoint3DT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SKT.d.ts.map

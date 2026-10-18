@@ -4,6 +4,106 @@ use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SKT_PARTITION_SCHEME: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SKT_PARTITION_SCHEME: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SKT_PARTITION_SCHEME: [sktPartitionScheme; 2] = [
+    sktPartitionScheme::HEALPIX,
+    sktPartitionScheme::OCTREE_HELIO_ICRS,
+];
+
+/// How a layer divides into tiles.
+/// Append new values only; never reorder or reuse existing values.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct sktPartitionScheme(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl sktPartitionScheme {
+    /// HEALPix pixels in the NESTED scheme, addressed by ORDER and PIXEL.
+    pub const HEALPIX: Self = Self(0);
+    /// Cubic nodes of an octree in heliocentric ICRS axes, parsecs, addressed
+    /// by OCTREE_LEVEL and OCTREE_KEY.
+    pub const OCTREE_HELIO_ICRS: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::HEALPIX,
+        Self::OCTREE_HELIO_ICRS,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::HEALPIX => Some("HEALPIX"),
+            Self::OCTREE_HELIO_ICRS => Some("OCTREE_HELIO_ICRS"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for sktPartitionScheme {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for sktPartitionScheme {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for sktPartitionScheme {
+    type Output = sktPartitionScheme;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for sktPartitionScheme {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for sktPartitionScheme {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for sktPartitionScheme {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_SKT_CELESTIAL_FRAME: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -18,7 +118,7 @@ pub const ENUM_VALUES_SKT_CELESTIAL_FRAME: [sktCelestialFrame; 4] = [
     sktCelestialFrame::ECLIPTIC_J2000,
 ];
 
-/// Celestial frame a tile's HEALPix grid is laid on.
+/// Celestial frame a tile's HEALPix grid and point positions are laid on.
 /// Append new values only; never reorder or reuse existing values.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
@@ -139,7 +239,7 @@ impl sktPayloadKind {
     pub const POINT_SOURCES: Self = Self(1);
     /// Pixel map of a diffuse quantity.
     pub const DIFFUSE_MAP: Self = Self(2);
-    /// Pixel map of localisation probability per pixel; the values of a
+    /// Pixel map of localization probability per pixel; the values of a
     /// complete layer at one order sum to 1.
     pub const PROBABILITY_MAP: Self = Self(3);
 
@@ -343,8 +443,8 @@ pub struct sktPlaceKind(pub u8);
 #[allow(non_upper_case_globals)]
 impl sktPlaceKind {
     pub const UNSPECIFIED: Self = Self(0);
-    /// Barycentric catalogue place at EPOCH: proper motion applied from the
-    /// catalogue epoch, nothing else.
+    /// Barycentric catalog place at EPOCH: proper motion applied from the
+    /// catalog epoch, nothing else.
     pub const CATALOG: Self = Self(1);
     /// Astrometric place for the observer named by OBSERVER_ID at EPOCH:
     /// space motion and parallax applied, no aberration or deflection.
@@ -453,9 +553,9 @@ pub struct sktColorEncoding(pub u8);
 
 #[allow(non_upper_case_globals)]
 impl sktColorEncoding {
-    /// No colour; COLOR is 0.
+    /// No color; COLOR is 0.
     pub const NONE: Self = Self(0);
-    /// Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
+    /// Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
     /// millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means
     /// unknown.
     pub const COLOR_INDEX: Self = Self(1);
@@ -818,7 +918,7 @@ impl sktStretchFunction {
     pub const LOGARITHMIC: Self = Self(3);
     /// Inverse hyperbolic sine with softening STRETCH_SOFTENING.
     pub const ASINH: Self = Self(4);
-    /// Histogram equalisation over PERCENTILE_VALUES.
+    /// Histogram equalization over PERCENTILE_VALUES.
     pub const HISTOGRAM_EQUALIZED: Self = Self(5);
 
     pub const ENUM_MIN: u8 = 0;
@@ -1184,7 +1284,7 @@ impl<'a> SKTPoint {
         }
     }
 
-    /// Colour, encoded as the tile's COLOR_ENCODING states.
+    /// Color, encoded as the tile's COLOR_ENCODING states.
     pub fn COLOR(&self) -> u16 {
         let mut mem = ::core::mem::MaybeUninit::<<u16 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
         // Safety:
@@ -1215,8 +1315,8 @@ impl<'a> SKTPoint {
     }
 
     /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-    /// not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-    /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+    /// not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+    /// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
     /// within the confusion radius. 7: extended source. 8-15: reserved, 0.
     pub fn FLAGS(&self) -> u16 {
         let mut mem = ::core::mem::MaybeUninit::<<u16 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
@@ -1337,9 +1437,409 @@ impl SKTPointT {
     }
 }
 
+/// One point source placed in 3D in an octree node, packed for drawing (24
+/// bytes).
+// struct SKTPoint3D, aligned to 4
+#[repr(transparent)]
+#[derive(Clone, Copy, PartialEq)]
+pub struct SKTPoint3D(pub [u8; 24]);
+
+impl Default for SKTPoint3D {
+    fn default() -> Self {
+        Self([0; 24])
+    }
+}
+
+impl ::core::fmt::Debug for SKTPoint3D {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        f.debug_struct("SKTPoint3D")
+            .field("X_PC", &self.X_PC())
+            .field("Y_PC", &self.Y_PC())
+            .field("Z_PC", &self.Z_PC())
+            .field("ABS_MAG", &self.ABS_MAG())
+            .field("COLOR", &self.COLOR())
+            .field("DIST_FRAC_UNC", &self.DIST_FRAC_UNC())
+            .field("FLAGS", &self.FLAGS())
+            .field("ROW", &self.ROW())
+            .finish()
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for SKTPoint3D {}
+
+impl<'a> ::flatbuffers::Follow<'a> for SKTPoint3D {
+    type Inner = &'a SKTPoint3D;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        unsafe { <&'a SKTPoint3D>::follow(buf, loc) }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for &'a SKTPoint3D {
+    type Inner = &'a SKTPoint3D;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        unsafe { ::flatbuffers::follow_cast_ref::<SKTPoint3D>(buf, loc) }
+    }
+}
+
+impl<'b> ::flatbuffers::Push for SKTPoint3D {
+    type Output = SKTPoint3D;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        let src = unsafe { ::core::slice::from_raw_parts(self as *const SKTPoint3D as *const u8, <Self as ::flatbuffers::Push>::size()) };
+        dst.copy_from_slice(src);
+    }
+
+    #[inline]
+    fn alignment() -> ::flatbuffers::PushAlignment {
+        ::flatbuffers::PushAlignment::new(4)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for SKTPoint3D {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.in_buffer::<Self>(pos)
+    }
+}
+
+impl<'a> SKTPoint3D {
+    #[allow(clippy::too_many_arguments)]
+    pub fn new(
+        X_PC: f32,
+        Y_PC: f32,
+        Z_PC: f32,
+        ABS_MAG: i16,
+        COLOR: u16,
+        DIST_FRAC_UNC: u16,
+        FLAGS: u16,
+        ROW: u32,
+    ) -> Self {
+        let mut s = Self([0; 24]);
+        s.set_X_PC(X_PC);
+        s.set_Y_PC(Y_PC);
+        s.set_Z_PC(Z_PC);
+        s.set_ABS_MAG(ABS_MAG);
+        s.set_COLOR(COLOR);
+        s.set_DIST_FRAC_UNC(DIST_FRAC_UNC);
+        s.set_FLAGS(FLAGS);
+        s.set_ROW(ROW);
+        s
+    }
+
+    /// ICRS X of the star minus the node's CENTER_X_PC, parsecs.
+    pub fn X_PC(&self) -> f32 {
+        let mut mem = ::core::mem::MaybeUninit::<<f32 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[0..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<f32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_X_PC(&mut self, x: f32) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[0..].as_mut_ptr(),
+                ::core::mem::size_of::<<f32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// ICRS Y of the star minus the node's CENTER_Y_PC, parsecs.
+    pub fn Y_PC(&self) -> f32 {
+        let mut mem = ::core::mem::MaybeUninit::<<f32 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[4..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<f32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_Y_PC(&mut self, x: f32) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[4..].as_mut_ptr(),
+                ::core::mem::size_of::<<f32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// ICRS Z of the star minus the node's CENTER_Z_PC, parsecs.
+    pub fn Z_PC(&self) -> f32 {
+        let mut mem = ::core::mem::MaybeUninit::<<f32 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[8..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<f32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_Z_PC(&mut self, x: f32) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[8..].as_mut_ptr(),
+                ::core::mem::size_of::<<f32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// Absolute magnitude in the tile's band, the magnitude at 10 parsecs with
+    /// extinction removed, millimagnitudes. -32768 when unknown.
+    pub fn ABS_MAG(&self) -> i16 {
+        let mut mem = ::core::mem::MaybeUninit::<<i16 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[12..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<i16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_ABS_MAG(&mut self, x: i16) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[12..].as_mut_ptr(),
+                ::core::mem::size_of::<<i16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:
+    /// COLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP).
+    pub fn COLOR(&self) -> u16 {
+        let mut mem = ::core::mem::MaybeUninit::<<u16 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[14..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<u16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_COLOR(&mut self, x: u16) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[14..].as_mut_ptr(),
+                ::core::mem::size_of::<<u16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -
+    /// DISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown
+    /// or 6.5535 or more.
+    pub fn DIST_FRAC_UNC(&self) -> u16 {
+        let mut mem = ::core::mem::MaybeUninit::<<u16 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[16..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<u16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_DIST_FRAC_UNC(&mut self, x: u16) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[16..].as_mut_ptr(),
+                ::core::mem::size_of::<<u16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a
+    /// multiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to
+    /// a `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion
+    /// radius. 7: extended source. 2, 3 and 8-15: reserved, 0.
+    pub fn FLAGS(&self) -> u16 {
+        let mut mem = ::core::mem::MaybeUninit::<<u16 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[18..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<u16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_FLAGS(&mut self, x: u16) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[18..].as_mut_ptr(),
+                ::core::mem::size_of::<<u16 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    /// Index of the source's full record in the tile's row collection
+    /// (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.
+    pub fn ROW(&self) -> u32 {
+        let mut mem = ::core::mem::MaybeUninit::<<u32 as ::flatbuffers::EndianScalar>::Scalar>::uninit();
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        ::flatbuffers::EndianScalar::from_little_endian(unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                self.0[20..].as_ptr(),
+                mem.as_mut_ptr() as *mut u8,
+                ::core::mem::size_of::<<u32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+            mem.assume_init()
+        })
+    }
+
+    pub fn set_ROW(&mut self, x: u32) {
+        let x_le = ::flatbuffers::EndianScalar::to_little_endian(x);
+        // Safety:
+        // Created from a valid Table for this object
+        // Which contains a valid value in this slot
+        unsafe {
+            ::core::ptr::copy_nonoverlapping(
+                &x_le as *const _ as *const u8,
+                self.0[20..].as_mut_ptr(),
+                ::core::mem::size_of::<<u32 as ::flatbuffers::EndianScalar>::Scalar>(),
+            );
+        }
+    }
+
+    pub fn unpack(&self) -> SKTPoint3DT {
+        SKTPoint3DT {
+            X_PC: self.X_PC(),
+            Y_PC: self.Y_PC(),
+            Z_PC: self.Z_PC(),
+            ABS_MAG: self.ABS_MAG(),
+            COLOR: self.COLOR(),
+            DIST_FRAC_UNC: self.DIST_FRAC_UNC(),
+            FLAGS: self.FLAGS(),
+            ROW: self.ROW(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SKTPoint3DT {
+    pub X_PC: f32,
+    pub Y_PC: f32,
+    pub Z_PC: f32,
+    pub ABS_MAG: i16,
+    pub COLOR: u16,
+    pub DIST_FRAC_UNC: u16,
+    pub FLAGS: u16,
+    pub ROW: u32,
+}
+impl Default for SKTPoint3DT {
+    fn default() -> Self {
+        Self {
+            X_PC: 0.0,
+            Y_PC: 0.0,
+            Z_PC: 0.0,
+            ABS_MAG: 0,
+            COLOR: 0,
+            DIST_FRAC_UNC: 0,
+            FLAGS: 0,
+            ROW: 0,
+        }
+    }
+}
+
+impl SKTPoint3DT {
+    pub fn pack(&self) -> SKTPoint3D {
+        SKTPoint3D::new(
+            self.X_PC,
+            self.Y_PC,
+            self.Z_PC,
+            self.ABS_MAG,
+            self.COLOR,
+            self.DIST_FRAC_UNC,
+            self.FLAGS,
+            self.ROW,
+        )
+    }
+}
+
 pub enum SKTOffset {}
 
-/// Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+/// Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+/// or diffuse-map layer.
 #[derive(Copy, Clone, PartialEq)]
 pub struct SKT<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1405,6 +1905,16 @@ impl<'a> SKT<'a> {
     pub const VT_PRODUCED_AT: ::flatbuffers::VOffsetT = 98;
     pub const VT_CITATION: ::flatbuffers::VOffsetT = 100;
     pub const VT_LICENSE_URL: ::flatbuffers::VOffsetT = 102;
+    pub const VT_PARTITION: ::flatbuffers::VOffsetT = 104;
+    pub const VT_OCTREE_LEVEL: ::flatbuffers::VOffsetT = 106;
+    pub const VT_OCTREE_KEY: ::flatbuffers::VOffsetT = 108;
+    pub const VT_CENTER_X_PC: ::flatbuffers::VOffsetT = 110;
+    pub const VT_CENTER_Y_PC: ::flatbuffers::VOffsetT = 112;
+    pub const VT_CENTER_Z_PC: ::flatbuffers::VOffsetT = 114;
+    pub const VT_HALF_SIZE_PC: ::flatbuffers::VOffsetT = 116;
+    pub const VT_ABS_MAG_BRIGHTEST: ::flatbuffers::VOffsetT = 118;
+    pub const VT_ABS_MAG_FAINTEST: ::flatbuffers::VOffsetT = 120;
+    pub const VT_POINTS_3D: ::flatbuffers::VOffsetT = 122;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1417,6 +1927,11 @@ impl<'a> SKT<'a> {
         args: &'args SKTArgs<'args>
     ) -> ::flatbuffers::WIPOffset<SKT<'bldr>> {
         let mut builder = SKTBuilder::new(_fbb);
+        builder.add_HALF_SIZE_PC(args.HALF_SIZE_PC);
+        builder.add_CENTER_Z_PC(args.CENTER_Z_PC);
+        builder.add_CENTER_Y_PC(args.CENTER_Y_PC);
+        builder.add_CENTER_X_PC(args.CENTER_X_PC);
+        builder.add_OCTREE_KEY(args.OCTREE_KEY);
         builder.add_PAYLOAD_BYTES(args.PAYLOAD_BYTES);
         builder.add_STRETCH_SOFTENING(args.STRETCH_SOFTENING);
         builder.add_WHITE_POINT(args.WHITE_POINT);
@@ -1428,6 +1943,9 @@ impl<'a> SKT<'a> {
         builder.add_WAVELENGTH_MIN_NM(args.WAVELENGTH_MIN_NM);
         builder.add_WAVELENGTH_EFF_NM(args.WAVELENGTH_EFF_NM);
         builder.add_PIXEL(args.PIXEL);
+        if let Some(x) = args.POINTS_3D { builder.add_POINTS_3D(x); }
+        builder.add_ABS_MAG_FAINTEST(args.ABS_MAG_FAINTEST);
+        builder.add_ABS_MAG_BRIGHTEST(args.ABS_MAG_BRIGHTEST);
         if let Some(x) = args.LICENSE_URL { builder.add_LICENSE_URL(x); }
         if let Some(x) = args.CITATION { builder.add_CITATION(x); }
         if let Some(x) = args.PRODUCED_AT { builder.add_PRODUCED_AT(x); }
@@ -1453,6 +1971,8 @@ impl<'a> SKT<'a> {
         if let Some(x) = args.OBSERVER_ID { builder.add_OBSERVER_ID(x); }
         if let Some(x) = args.BAND_ID { builder.add_BAND_ID(x); }
         if let Some(x) = args.LAYER_ID { builder.add_LAYER_ID(x); }
+        builder.add_OCTREE_LEVEL(args.OCTREE_LEVEL);
+        builder.add_PARTITION(args.PARTITION);
         builder.add_STRETCH(args.STRETCH);
         builder.add_MAP_QUANTITY(args.MAP_QUANTITY);
         builder.add_MAP_ENCODING(args.MAP_ENCODING);
@@ -1564,6 +2084,18 @@ impl<'a> SKT<'a> {
         let LICENSE_URL = self.LICENSE_URL().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let PARTITION = self.PARTITION();
+        let OCTREE_LEVEL = self.OCTREE_LEVEL();
+        let OCTREE_KEY = self.OCTREE_KEY();
+        let CENTER_X_PC = self.CENTER_X_PC();
+        let CENTER_Y_PC = self.CENTER_Y_PC();
+        let CENTER_Z_PC = self.CENTER_Z_PC();
+        let HALF_SIZE_PC = self.HALF_SIZE_PC();
+        let ABS_MAG_BRIGHTEST = self.ABS_MAG_BRIGHTEST();
+        let ABS_MAG_FAINTEST = self.ABS_MAG_FAINTEST();
+        let POINTS_3D = self.POINTS_3D().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         SKTT {
             LAYER_ID,
             FRAME,
@@ -1615,11 +2147,21 @@ impl<'a> SKT<'a> {
             PRODUCED_AT,
             CITATION,
             LICENSE_URL,
+            PARTITION,
+            OCTREE_LEVEL,
+            OCTREE_KEY,
+            CENTER_X_PC,
+            CENTER_Y_PC,
+            CENTER_Z_PC,
+            HALF_SIZE_PC,
+            ABS_MAG_BRIGHTEST,
+            ABS_MAG_FAINTEST,
+            POINTS_3D,
         }
     }
 
     /// Stable identifier of the layer: equal across every tile of one
-    /// (producer, source catalogue or survey, band, place, epoch).
+    /// (producer, source catalog or survey, band, place, epoch).
     #[inline]
     pub fn LAYER_ID(&self) -> &'a str {
         // Safety:
@@ -1628,7 +2170,8 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_LAYER_ID, None).unwrap()}
     }
 
-    /// Frame the HEALPix grid and the point positions are stated in.
+    /// Frame the HEALPix grid and the point positions are stated in; ICRS for
+    /// an OCTREE_HELIO_ICRS layer.
     #[inline]
     pub fn FRAME(&self) -> sktCelestialFrame {
         // Safety:
@@ -1655,8 +2198,8 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<u64>(SKT::VT_PIXEL, Some(0)).unwrap()}
     }
 
-    /// Deepest order of the layer, when the producer knows it; 255 when
-    /// unstated.
+    /// Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+    /// producer knows it; 255 when unstated.
     #[inline]
     pub fn MAX_ORDER(&self) -> u8 {
         // Safety:
@@ -1665,8 +2208,8 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<u8>(SKT::VT_MAX_ORDER, Some(255)).unwrap()}
     }
 
-    /// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-    /// a leaf.
+    /// Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+    /// 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
     #[inline]
     pub fn CHILD_MASK(&self) -> u8 {
         // Safety:
@@ -1712,7 +2255,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_BAND_ID, None)}
     }
 
-    /// Effective wavelength of the band, nanometres (vacuum).
+    /// Effective wavelength of the band, nanometers (vacuum).
     #[inline]
     pub fn WAVELENGTH_EFF_NM(&self) -> f64 {
         // Safety:
@@ -1721,7 +2264,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<f64>(SKT::VT_WAVELENGTH_EFF_NM, Some(f64::NAN)).unwrap()}
     }
 
-    /// Short edge of a band-integrated map, nanometres.
+    /// Short edge of a band-integrated map, nanometers.
     #[inline]
     pub fn WAVELENGTH_MIN_NM(&self) -> f64 {
         // Safety:
@@ -1730,7 +2273,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<f64>(SKT::VT_WAVELENGTH_MIN_NM, Some(f64::NAN)).unwrap()}
     }
 
-    /// Long edge of a band-integrated map, nanometres.
+    /// Long edge of a band-integrated map, nanometers.
     #[inline]
     pub fn WAVELENGTH_MAX_NM(&self) -> f64 {
         // Safety:
@@ -1767,7 +2310,7 @@ impl<'a> SKT<'a> {
     }
 
     /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-    /// spacecraft or the geocentre), as the producer names it.
+    /// spacecraft or the geocenter), as the producer names it.
     #[inline]
     pub fn OBSERVER_ID(&self) -> Option<&'a str> {
         // Safety:
@@ -1776,7 +2319,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_OBSERVER_ID, None)}
     }
 
-    /// Number of points in the payload.
+    /// Number of points in the payload (POINTS or POINTS_3D).
     #[inline]
     pub fn POINT_COUNT(&self) -> u32 {
         // Safety:
@@ -1804,7 +2347,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<f32>(SKT::VT_MAG_LIMIT, Some(f32::NAN)).unwrap()}
     }
 
-    /// What each point's COLOR holds.
+    /// What each point's COLOR holds (POINTS and POINTS_3D alike).
     #[inline]
     pub fn COLOR_ENCODING(&self) -> sktColorEncoding {
         // Safety:
@@ -1813,7 +2356,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<sktColorEncoding>(SKT::VT_COLOR_ENCODING, Some(sktColorEncoding::NONE)).unwrap()}
     }
 
-    /// Bluer band of a COLOR_INDEX colour.
+    /// Bluer band of a COLOR_INDEX color.
     #[inline]
     pub fn COLOR_BLUE_BAND_ID(&self) -> Option<&'a str> {
         // Safety:
@@ -1822,7 +2365,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_COLOR_BLUE_BAND_ID, None)}
     }
 
-    /// Redder band of a COLOR_INDEX colour.
+    /// Redder band of a COLOR_INDEX color.
     #[inline]
     pub fn COLOR_RED_BAND_ID(&self) -> Option<&'a str> {
         // Safety:
@@ -2006,7 +2549,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<u64>(SKT::VT_PAYLOAD_BYTES, Some(0)).unwrap()}
     }
 
-    /// Start of the observations the tile summarises, ISO 8601 UTC.
+    /// Start of the observations the tile summarizes, ISO 8601 UTC.
     #[inline]
     pub fn OBSERVATION_START(&self) -> Option<&'a str> {
         // Safety:
@@ -2015,7 +2558,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_OBSERVATION_START, None)}
     }
 
-    /// End of the observations the tile summarises, ISO 8601 UTC.
+    /// End of the observations the tile summarizes, ISO 8601 UTC.
     #[inline]
     pub fn OBSERVATION_END(&self) -> Option<&'a str> {
         // Safety:
@@ -2024,7 +2567,7 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_OBSERVATION_END, None)}
     }
 
-    /// Verbatim names of the catalogues or surveys the tile was derived from.
+    /// Verbatim names of the catalogs or surveys the tile was derived from.
     #[inline]
     pub fn SOURCE_NAMES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
         // Safety:
@@ -2069,13 +2612,104 @@ impl<'a> SKT<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_CITATION, None)}
     }
 
-    /// URL of the licence or terms of the source data.
+    /// URL of the license or terms of the source data.
     #[inline]
     pub fn LICENSE_URL(&self) -> Option<&'a str> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(SKT::VT_LICENSE_URL, None)}
+    }
+
+    /// How the layer divides into tiles.
+    #[inline]
+    pub fn PARTITION(&self) -> sktPartitionScheme {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<sktPartitionScheme>(SKT::VT_PARTITION, Some(sktPartitionScheme::HEALPIX)).unwrap()}
+    }
+
+    /// Octree level of the node; the root is 0, at most 21.
+    #[inline]
+    pub fn OCTREE_LEVEL(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(SKT::VT_OCTREE_LEVEL, Some(0)).unwrap()}
+    }
+
+    /// Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+    #[inline]
+    pub fn OCTREE_KEY(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(SKT::VT_OCTREE_KEY, Some(0)).unwrap()}
+    }
+
+    /// ICRS X of the node's center, parsecs from the Sun.
+    #[inline]
+    pub fn CENTER_X_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SKT::VT_CENTER_X_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ICRS Y of the node's center, parsecs from the Sun.
+    #[inline]
+    pub fn CENTER_Y_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SKT::VT_CENTER_Y_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// ICRS Z of the node's center, parsecs from the Sun.
+    #[inline]
+    pub fn CENTER_Z_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SKT::VT_CENTER_Z_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Half the edge length of the node's cube, parsecs.
+    #[inline]
+    pub fn HALF_SIZE_PC(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(SKT::VT_HALF_SIZE_PC, Some(f64::NAN)).unwrap()}
+    }
+
+    /// Brightest absolute magnitude in the node.
+    #[inline]
+    pub fn ABS_MAG_BRIGHTEST(&self) -> f32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f32>(SKT::VT_ABS_MAG_BRIGHTEST, Some(f32::NAN)).unwrap()}
+    }
+
+    /// Faintest absolute magnitude in the node; with its ancestors, the layer
+    /// is complete to this limit inside the node's cube.
+    #[inline]
+    pub fn ABS_MAG_FAINTEST(&self) -> f32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f32>(SKT::VT_ABS_MAG_FAINTEST, Some(f32::NAN)).unwrap()}
+    }
+
+    /// Packed points of an octree node, brightest absolute magnitude first.
+    #[inline]
+    pub fn POINTS_3D(&self) -> Option<::flatbuffers::Vector<'a, SKTPoint3D>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, SKTPoint3D>>>(SKT::VT_POINTS_3D, None)}
     }
 }
 
@@ -2135,6 +2769,16 @@ impl ::flatbuffers::Verifiable for SKT<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PRODUCED_AT", Self::VT_PRODUCED_AT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CITATION", Self::VT_CITATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("LICENSE_URL", Self::VT_LICENSE_URL, false)?
+            .visit_field::<sktPartitionScheme>("PARTITION", Self::VT_PARTITION, false)?
+            .visit_field::<u8>("OCTREE_LEVEL", Self::VT_OCTREE_LEVEL, false)?
+            .visit_field::<u64>("OCTREE_KEY", Self::VT_OCTREE_KEY, false)?
+            .visit_field::<f64>("CENTER_X_PC", Self::VT_CENTER_X_PC, false)?
+            .visit_field::<f64>("CENTER_Y_PC", Self::VT_CENTER_Y_PC, false)?
+            .visit_field::<f64>("CENTER_Z_PC", Self::VT_CENTER_Z_PC, false)?
+            .visit_field::<f64>("HALF_SIZE_PC", Self::VT_HALF_SIZE_PC, false)?
+            .visit_field::<f32>("ABS_MAG_BRIGHTEST", Self::VT_ABS_MAG_BRIGHTEST, false)?
+            .visit_field::<f32>("ABS_MAG_FAINTEST", Self::VT_ABS_MAG_FAINTEST, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, SKTPoint3D>>>("POINTS_3D", Self::VT_POINTS_3D, false)?
             .finish();
         Ok(())
     }
@@ -2191,6 +2835,16 @@ pub struct SKTArgs<'a> {
     pub PRODUCED_AT: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub LICENSE_URL: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub PARTITION: sktPartitionScheme,
+    pub OCTREE_LEVEL: u8,
+    pub OCTREE_KEY: u64,
+    pub CENTER_X_PC: f64,
+    pub CENTER_Y_PC: f64,
+    pub CENTER_Z_PC: f64,
+    pub HALF_SIZE_PC: f64,
+    pub ABS_MAG_BRIGHTEST: f32,
+    pub ABS_MAG_FAINTEST: f32,
+    pub POINTS_3D: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, SKTPoint3D>>>,
 }
 
 impl<'a> Default for SKTArgs<'a> {
@@ -2247,6 +2901,16 @@ impl<'a> Default for SKTArgs<'a> {
             PRODUCED_AT: None,
             CITATION: None,
             LICENSE_URL: None,
+            PARTITION: sktPartitionScheme::HEALPIX,
+            OCTREE_LEVEL: 0,
+            OCTREE_KEY: 0,
+            CENTER_X_PC: f64::NAN,
+            CENTER_Y_PC: f64::NAN,
+            CENTER_Z_PC: f64::NAN,
+            HALF_SIZE_PC: f64::NAN,
+            ABS_MAG_BRIGHTEST: f32::NAN,
+            ABS_MAG_FAINTEST: f32::NAN,
+            POINTS_3D: None,
         }
     }
 }
@@ -2508,6 +3172,56 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> SKTBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PARTITION(&mut self, PARTITION: sktPartitionScheme) {
+        self.fbb_.push_slot::<sktPartitionScheme>(SKT::VT_PARTITION, PARTITION, sktPartitionScheme::HEALPIX);
+    }
+
+    #[inline]
+    pub fn add_OCTREE_LEVEL(&mut self, OCTREE_LEVEL: u8) {
+        self.fbb_.push_slot::<u8>(SKT::VT_OCTREE_LEVEL, OCTREE_LEVEL, 0);
+    }
+
+    #[inline]
+    pub fn add_OCTREE_KEY(&mut self, OCTREE_KEY: u64) {
+        self.fbb_.push_slot::<u64>(SKT::VT_OCTREE_KEY, OCTREE_KEY, 0);
+    }
+
+    #[inline]
+    pub fn add_CENTER_X_PC(&mut self, CENTER_X_PC: f64) {
+        self.fbb_.push_slot::<f64>(SKT::VT_CENTER_X_PC, CENTER_X_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_CENTER_Y_PC(&mut self, CENTER_Y_PC: f64) {
+        self.fbb_.push_slot::<f64>(SKT::VT_CENTER_Y_PC, CENTER_Y_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_CENTER_Z_PC(&mut self, CENTER_Z_PC: f64) {
+        self.fbb_.push_slot::<f64>(SKT::VT_CENTER_Z_PC, CENTER_Z_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_HALF_SIZE_PC(&mut self, HALF_SIZE_PC: f64) {
+        self.fbb_.push_slot::<f64>(SKT::VT_HALF_SIZE_PC, HALF_SIZE_PC, f64::NAN);
+    }
+
+    #[inline]
+    pub fn add_ABS_MAG_BRIGHTEST(&mut self, ABS_MAG_BRIGHTEST: f32) {
+        self.fbb_.push_slot::<f32>(SKT::VT_ABS_MAG_BRIGHTEST, ABS_MAG_BRIGHTEST, f32::NAN);
+    }
+
+    #[inline]
+    pub fn add_ABS_MAG_FAINTEST(&mut self, ABS_MAG_FAINTEST: f32) {
+        self.fbb_.push_slot::<f32>(SKT::VT_ABS_MAG_FAINTEST, ABS_MAG_FAINTEST, f32::NAN);
+    }
+
+    #[inline]
+    pub fn add_POINTS_3D(&mut self, POINTS_3D: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , SKTPoint3D>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(SKT::VT_POINTS_3D, POINTS_3D);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> SKTBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         SKTBuilder {
@@ -2577,6 +3291,16 @@ impl ::core::fmt::Debug for SKT<'_> {
         ds.field("PRODUCED_AT", &self.PRODUCED_AT());
         ds.field("CITATION", &self.CITATION());
         ds.field("LICENSE_URL", &self.LICENSE_URL());
+        ds.field("PARTITION", &self.PARTITION());
+        ds.field("OCTREE_LEVEL", &self.OCTREE_LEVEL());
+        ds.field("OCTREE_KEY", &self.OCTREE_KEY());
+        ds.field("CENTER_X_PC", &self.CENTER_X_PC());
+        ds.field("CENTER_Y_PC", &self.CENTER_Y_PC());
+        ds.field("CENTER_Z_PC", &self.CENTER_Z_PC());
+        ds.field("HALF_SIZE_PC", &self.HALF_SIZE_PC());
+        ds.field("ABS_MAG_BRIGHTEST", &self.ABS_MAG_BRIGHTEST());
+        ds.field("ABS_MAG_FAINTEST", &self.ABS_MAG_FAINTEST());
+        ds.field("POINTS_3D", &self.POINTS_3D());
         ds.finish()
     }
 }
@@ -2634,6 +3358,16 @@ pub struct SKTT {
     pub PRODUCED_AT: Option<alloc::string::String>,
     pub CITATION: Option<alloc::string::String>,
     pub LICENSE_URL: Option<alloc::string::String>,
+    pub PARTITION: sktPartitionScheme,
+    pub OCTREE_LEVEL: u8,
+    pub OCTREE_KEY: u64,
+    pub CENTER_X_PC: f64,
+    pub CENTER_Y_PC: f64,
+    pub CENTER_Z_PC: f64,
+    pub HALF_SIZE_PC: f64,
+    pub ABS_MAG_BRIGHTEST: f32,
+    pub ABS_MAG_FAINTEST: f32,
+    pub POINTS_3D: Option<alloc::vec::Vec<SKTPoint3DT>>,
 }
 
 impl Default for SKTT {
@@ -2689,6 +3423,16 @@ impl Default for SKTT {
             PRODUCED_AT: None,
             CITATION: None,
             LICENSE_URL: None,
+            PARTITION: sktPartitionScheme::HEALPIX,
+            OCTREE_LEVEL: 0,
+            OCTREE_KEY: 0,
+            CENTER_X_PC: f64::NAN,
+            CENTER_Y_PC: f64::NAN,
+            CENTER_Z_PC: f64::NAN,
+            HALF_SIZE_PC: f64::NAN,
+            ABS_MAG_BRIGHTEST: f32::NAN,
+            ABS_MAG_FAINTEST: f32::NAN,
+            POINTS_3D: None,
         }
     }
 }
@@ -2791,6 +3535,18 @@ impl SKTT {
         let LICENSE_URL = self.LICENSE_URL.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let PARTITION = self.PARTITION;
+        let OCTREE_LEVEL = self.OCTREE_LEVEL;
+        let OCTREE_KEY = self.OCTREE_KEY;
+        let CENTER_X_PC = self.CENTER_X_PC;
+        let CENTER_Y_PC = self.CENTER_Y_PC;
+        let CENTER_Z_PC = self.CENTER_Z_PC;
+        let HALF_SIZE_PC = self.HALF_SIZE_PC;
+        let ABS_MAG_BRIGHTEST = self.ABS_MAG_BRIGHTEST;
+        let ABS_MAG_FAINTEST = self.ABS_MAG_FAINTEST;
+        let POINTS_3D = self.POINTS_3D.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack()).collect();_fbb.create_vector(&w)
+        });
         SKT::create(_fbb, &SKTArgs{
             LAYER_ID,
             FRAME,
@@ -2842,6 +3598,16 @@ impl SKTT {
             PRODUCED_AT,
             CITATION,
             LICENSE_URL,
+            PARTITION,
+            OCTREE_LEVEL,
+            OCTREE_KEY,
+            CENTER_X_PC,
+            CENTER_Y_PC,
+            CENTER_Z_PC,
+            HALF_SIZE_PC,
+            ABS_MAG_BRIGHTEST,
+            ABS_MAG_FAINTEST,
+            POINTS_3D,
         })
     }
 }

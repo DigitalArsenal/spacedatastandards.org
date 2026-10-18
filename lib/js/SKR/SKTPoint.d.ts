@@ -35,13 +35,13 @@ export declare class SKTPoint implements flatbuffers.IUnpackableObject<SKTPointT
      */
     MAG(): number;
     /**
-     * Colour, encoded as the tile's COLOR_ENCODING states.
+     * Color, encoded as the tile's COLOR_ENCODING states.
      */
     COLOR(): number;
     /**
      * Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-     * not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-     * 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+     * not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+     * 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
      * within the confusion radius. 7: extended source. 8-15: reserved, 0.
      */
     FLAGS(): number;

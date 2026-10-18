@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { PHBMeasurement, PHBMeasurementT } from './PHBMeasurement.js';
+import { strDistanceEstimator } from './strDistanceEstimator.js';
 /**
  * Star Catalog Entry
  */
@@ -24,9 +25,10 @@ export declare class STR implements flatbuffers.IUnpackableObject<STRT> {
      */
     GNC_CAT_ID(): number;
     /**
-     * Source identifier in the third data release of the all-sky space astrometry survey
+     * Source identifier (source_id) in the third data release of the all-sky space astrometry
+     * survey; 0 when the star has no match in that release
      */
-    GAIADR3_CAT_ID(): bigint;
+    GAIA_DR3_SOURCE_ID(): bigint;
     /**
      * Identifier in the first space astrometry mission's main catalog
      */
@@ -207,7 +209,7 @@ export declare class STR implements flatbuffers.IUnpackableObject<STRT> {
     SPECTRAL_TYPE(): string | null;
     SPECTRAL_TYPE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Proper name as recognised by the astronomical naming authority
+     * Proper name as recognized by the astronomical naming authority
      */
     PROPER_NAME(): string | null;
     PROPER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -253,15 +255,42 @@ export declare class STR implements flatbuffers.IUnpackableObject<STRT> {
      */
     VARIABILITY_EPOCH(): number;
     /**
-     * Brightness in every band the star was measured or modelled in
+     * Brightness in every band the star was measured or modeled in
      */
     PHOTOMETRY(index: number, obj?: PHBMeasurement): PHBMeasurement | null;
     photometryLength(): number;
+    /**
+     * Distance from the Sun (parsecs): the posterior median, or the mode for
+     * EDSD_POSTERIOR, as DISTANCE_METHOD states
+     */
+    DISTANCE_PC(): number;
+    /**
+     * Lower bound of the distance (parsecs): the 16th percentile of the posterior
+     * for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+     * the 68% highest-density interval for EDSD_POSTERIOR, and
+     * 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+     */
+    DISTANCE_LO_PC(): number;
+    /**
+     * Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+     * the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+     * DISTANCE_LO_PC; NaN when unbounded
+     */
+    DISTANCE_HI_PC(): number;
+    /**
+     * Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+     */
+    DISTANCE_METHOD(): strDistanceEstimator;
+    /**
+     * Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+     */
+    DISTANCE_REF(): string | null;
+    DISTANCE_REF(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startSTR(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addCsId(builder: flatbuffers.Builder, CS_ID: bigint): void;
     static addGncCatId(builder: flatbuffers.Builder, GNC_CAT_ID: number): void;
-    static addGaiadr3CatId(builder: flatbuffers.Builder, GAIADR3_CAT_ID: bigint): void;
+    static addGaiaDr3SourceId(builder: flatbuffers.Builder, GAIA_DR3_SOURCE_ID: bigint): void;
     static addHipCatId(builder: flatbuffers.Builder, HIP_CAT_ID: number): void;
     static addCatVersion(builder: flatbuffers.Builder, CAT_VERSIONOffset: flatbuffers.Offset): void;
     static addAstrometryOrigin(builder: flatbuffers.Builder, ASTROMETRY_ORIGINOffset: flatbuffers.Offset): void;
@@ -321,10 +350,15 @@ export declare class STR implements flatbuffers.IUnpackableObject<STRT> {
     static addPhotometry(builder: flatbuffers.Builder, PHOTOMETRYOffset: flatbuffers.Offset): void;
     static createPhotometryVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startPhotometryVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addDistancePc(builder: flatbuffers.Builder, DISTANCE_PC: number): void;
+    static addDistanceLoPc(builder: flatbuffers.Builder, DISTANCE_LO_PC: number): void;
+    static addDistanceHiPc(builder: flatbuffers.Builder, DISTANCE_HI_PC: number): void;
+    static addDistanceMethod(builder: flatbuffers.Builder, DISTANCE_METHOD: strDistanceEstimator): void;
+    static addDistanceRef(builder: flatbuffers.Builder, DISTANCE_REFOffset: flatbuffers.Offset): void;
     static endSTR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSTRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSTRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSTR(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CS_ID: bigint, GNC_CAT_ID: number, GAIADR3_CAT_ID: bigint, HIP_CAT_ID: number, CAT_VERSIONOffset: flatbuffers.Offset, ASTROMETRY_ORIGINOffset: flatbuffers.Offset, STAR_EPOCH: number, RA: number, RA_UNC: number, DEC: number, DEC_UNC: number, POS_UNC_FLAG: boolean, PARALLAX: number, PARALLAX_UNC: number, PMRA: number, PMRA_UNC: number, PMDEC: number, PMDEC_UNC: number, PM_UNC_FLAG: boolean, GMAG: number, GMAG_UNC: number, BPMAG: number, BPMAG_UNC: number, RPMAG: number, RPMAG_UNC: number, JMAG: number, JMAG_UNC: number, KMAG: number, KMAG_UNC: number, HMAG: number, HMAG_UNC: number, VAR_FLAG: boolean, MULT_FLAG: boolean, NEIGHBOR_ID: number, NEIGHBOR_FLAG: boolean, NEIGHBOR_DISTANCE: number, SHIFT_FLAG: boolean, SHIFT: number, TEFF: number, TEFF_UNC: number, LOGG: number, LOGG_UNC: number, METALLICITY: number, EXTINCTION_A0: number, RADIAL_VELOCITY: number, RADIAL_VELOCITY_UNC: number, SPECTRAL_TYPEOffset: flatbuffers.Offset, PROPER_NAMEOffset: flatbuffers.Offset, BAYER_FLAMSTEEDOffset: flatbuffers.Offset, CONSTELLATIONOffset: flatbuffers.Offset, HR_CAT_ID: number, HD_CAT_ID: number, DESIGNATIONSOffset: flatbuffers.Offset, VARIABILITY_CLASSOffset: flatbuffers.Offset, VARIABILITY_PERIOD: number, VARIABILITY_AMPLITUDE: number, VARIABILITY_EPOCH: number, PHOTOMETRYOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createSTR(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset, CS_ID: bigint, GNC_CAT_ID: number, GAIA_DR3_SOURCE_ID: bigint, HIP_CAT_ID: number, CAT_VERSIONOffset: flatbuffers.Offset, ASTROMETRY_ORIGINOffset: flatbuffers.Offset, STAR_EPOCH: number, RA: number, RA_UNC: number, DEC: number, DEC_UNC: number, POS_UNC_FLAG: boolean, PARALLAX: number, PARALLAX_UNC: number, PMRA: number, PMRA_UNC: number, PMDEC: number, PMDEC_UNC: number, PM_UNC_FLAG: boolean, GMAG: number, GMAG_UNC: number, BPMAG: number, BPMAG_UNC: number, RPMAG: number, RPMAG_UNC: number, JMAG: number, JMAG_UNC: number, KMAG: number, KMAG_UNC: number, HMAG: number, HMAG_UNC: number, VAR_FLAG: boolean, MULT_FLAG: boolean, NEIGHBOR_ID: number, NEIGHBOR_FLAG: boolean, NEIGHBOR_DISTANCE: number, SHIFT_FLAG: boolean, SHIFT: number, TEFF: number, TEFF_UNC: number, LOGG: number, LOGG_UNC: number, METALLICITY: number, EXTINCTION_A0: number, RADIAL_VELOCITY: number, RADIAL_VELOCITY_UNC: number, SPECTRAL_TYPEOffset: flatbuffers.Offset, PROPER_NAMEOffset: flatbuffers.Offset, BAYER_FLAMSTEEDOffset: flatbuffers.Offset, CONSTELLATIONOffset: flatbuffers.Offset, HR_CAT_ID: number, HD_CAT_ID: number, DESIGNATIONSOffset: flatbuffers.Offset, VARIABILITY_CLASSOffset: flatbuffers.Offset, VARIABILITY_PERIOD: number, VARIABILITY_AMPLITUDE: number, VARIABILITY_EPOCH: number, PHOTOMETRYOffset: flatbuffers.Offset, DISTANCE_PC: number, DISTANCE_LO_PC: number, DISTANCE_HI_PC: number, DISTANCE_METHOD: strDistanceEstimator, DISTANCE_REFOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): STRT;
     unpackTo(_o: STRT): void;
 }
@@ -332,7 +366,7 @@ export declare class STRT implements flatbuffers.IGeneratedObject {
     ID: string | Uint8Array | null;
     CS_ID: bigint;
     GNC_CAT_ID: number;
-    GAIADR3_CAT_ID: bigint;
+    GAIA_DR3_SOURCE_ID: bigint;
     HIP_CAT_ID: number;
     CAT_VERSION: string | Uint8Array | null;
     ASTROMETRY_ORIGIN: string | Uint8Array | null;
@@ -388,7 +422,12 @@ export declare class STRT implements flatbuffers.IGeneratedObject {
     VARIABILITY_AMPLITUDE: number;
     VARIABILITY_EPOCH: number;
     PHOTOMETRY: (PHBMeasurementT)[];
-    constructor(ID?: string | Uint8Array | null, CS_ID?: bigint, GNC_CAT_ID?: number, GAIADR3_CAT_ID?: bigint, HIP_CAT_ID?: number, CAT_VERSION?: string | Uint8Array | null, ASTROMETRY_ORIGIN?: string | Uint8Array | null, STAR_EPOCH?: number, RA?: number, RA_UNC?: number, DEC?: number, DEC_UNC?: number, POS_UNC_FLAG?: boolean, PARALLAX?: number, PARALLAX_UNC?: number, PMRA?: number, PMRA_UNC?: number, PMDEC?: number, PMDEC_UNC?: number, PM_UNC_FLAG?: boolean, GMAG?: number, GMAG_UNC?: number, BPMAG?: number, BPMAG_UNC?: number, RPMAG?: number, RPMAG_UNC?: number, JMAG?: number, JMAG_UNC?: number, KMAG?: number, KMAG_UNC?: number, HMAG?: number, HMAG_UNC?: number, VAR_FLAG?: boolean, MULT_FLAG?: boolean, NEIGHBOR_ID?: number, NEIGHBOR_FLAG?: boolean, NEIGHBOR_DISTANCE?: number, SHIFT_FLAG?: boolean, SHIFT?: number, TEFF?: number, TEFF_UNC?: number, LOGG?: number, LOGG_UNC?: number, METALLICITY?: number, EXTINCTION_A0?: number, RADIAL_VELOCITY?: number, RADIAL_VELOCITY_UNC?: number, SPECTRAL_TYPE?: string | Uint8Array | null, PROPER_NAME?: string | Uint8Array | null, BAYER_FLAMSTEED?: string | Uint8Array | null, CONSTELLATION?: string | Uint8Array | null, HR_CAT_ID?: number, HD_CAT_ID?: number, DESIGNATIONS?: (string)[], VARIABILITY_CLASS?: string | Uint8Array | null, VARIABILITY_PERIOD?: number, VARIABILITY_AMPLITUDE?: number, VARIABILITY_EPOCH?: number, PHOTOMETRY?: (PHBMeasurementT)[]);
+    DISTANCE_PC: number;
+    DISTANCE_LO_PC: number;
+    DISTANCE_HI_PC: number;
+    DISTANCE_METHOD: strDistanceEstimator;
+    DISTANCE_REF: string | Uint8Array | null;
+    constructor(ID?: string | Uint8Array | null, CS_ID?: bigint, GNC_CAT_ID?: number, GAIA_DR3_SOURCE_ID?: bigint, HIP_CAT_ID?: number, CAT_VERSION?: string | Uint8Array | null, ASTROMETRY_ORIGIN?: string | Uint8Array | null, STAR_EPOCH?: number, RA?: number, RA_UNC?: number, DEC?: number, DEC_UNC?: number, POS_UNC_FLAG?: boolean, PARALLAX?: number, PARALLAX_UNC?: number, PMRA?: number, PMRA_UNC?: number, PMDEC?: number, PMDEC_UNC?: number, PM_UNC_FLAG?: boolean, GMAG?: number, GMAG_UNC?: number, BPMAG?: number, BPMAG_UNC?: number, RPMAG?: number, RPMAG_UNC?: number, JMAG?: number, JMAG_UNC?: number, KMAG?: number, KMAG_UNC?: number, HMAG?: number, HMAG_UNC?: number, VAR_FLAG?: boolean, MULT_FLAG?: boolean, NEIGHBOR_ID?: number, NEIGHBOR_FLAG?: boolean, NEIGHBOR_DISTANCE?: number, SHIFT_FLAG?: boolean, SHIFT?: number, TEFF?: number, TEFF_UNC?: number, LOGG?: number, LOGG_UNC?: number, METALLICITY?: number, EXTINCTION_A0?: number, RADIAL_VELOCITY?: number, RADIAL_VELOCITY_UNC?: number, SPECTRAL_TYPE?: string | Uint8Array | null, PROPER_NAME?: string | Uint8Array | null, BAYER_FLAMSTEED?: string | Uint8Array | null, CONSTELLATION?: string | Uint8Array | null, HR_CAT_ID?: number, HD_CAT_ID?: number, DESIGNATIONS?: (string)[], VARIABILITY_CLASS?: string | Uint8Array | null, VARIABILITY_PERIOD?: number, VARIABILITY_AMPLITUDE?: number, VARIABILITY_EPOCH?: number, PHOTOMETRY?: (PHBMeasurementT)[], DISTANCE_PC?: number, DISTANCE_LO_PC?: number, DISTANCE_HI_PC?: number, DISTANCE_METHOD?: strDistanceEstimator, DISTANCE_REF?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=STR.d.ts.map

@@ -6,7 +6,8 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+/// Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+/// or diffuse-map layer.
 public struct SKT : IFlatbufferObject
 {
   private Table __p;
@@ -20,7 +21,7 @@ public struct SKT : IFlatbufferObject
   public SKT __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /// Stable identifier of the layer: equal across every tile of one
-  /// (producer, source catalogue or survey, band, place, epoch).
+  /// (producer, source catalog or survey, band, place, epoch).
   public string LAYER_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLAYER_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -28,17 +29,18 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetLAYER_IDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetLAYER_IDArray() { return __p.__vector_as_array<byte>(4); }
-  /// Frame the HEALPix grid and the point positions are stated in.
+  /// Frame the HEALPix grid and the point positions are stated in; ICRS for
+  /// an OCTREE_HELIO_ICRS layer.
   public sktCelestialFrame FRAME { get { int o = __p.__offset(6); return o != 0 ? (sktCelestialFrame)__p.bb.Get(o + __p.bb_pos) : sktCelestialFrame.ICRS; } }
   /// HEALPix order; NSIDE = 2^ORDER.
   public byte ORDER { get { int o = __p.__offset(8); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   /// Nested pixel index at ORDER.
   public ulong PIXEL { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
-  /// Deepest order of the layer, when the producer knows it; 255 when
-  /// unstated.
+  /// Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+  /// producer knows it; 255 when unstated.
   public byte MAX_ORDER { get { int o = __p.__offset(12); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)255; } }
-  /// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-  /// a leaf.
+  /// Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+  /// 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
   public byte CHILD_MASK { get { int o = __p.__offset(14); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   /// Payload the tile carries.
   public sktPayloadKind PAYLOAD_KIND { get { int o = __p.__offset(16); return o != 0 ? (sktPayloadKind)__p.bb.Get(o + __p.bb_pos) : sktPayloadKind.UNSPECIFIED; } }
@@ -55,11 +57,11 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetBAND_IDBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
   public byte[] GetBAND_IDArray() { return __p.__vector_as_array<byte>(22); }
-  /// Effective wavelength of the band, nanometres (vacuum).
+  /// Effective wavelength of the band, nanometers (vacuum).
   public double WAVELENGTH_EFF_NM { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
-  /// Short edge of a band-integrated map, nanometres.
+  /// Short edge of a band-integrated map, nanometers.
   public double WAVELENGTH_MIN_NM { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
-  /// Long edge of a band-integrated map, nanometres.
+  /// Long edge of a band-integrated map, nanometers.
   public double WAVELENGTH_MAX_NM { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// Calibration system of MAG.
   public phbMagnitudeSystem MAGNITUDE_SYSTEM { get { int o = __p.__offset(30); return o != 0 ? (phbMagnitudeSystem)__p.bb.Get(o + __p.bb_pos) : phbMagnitudeSystem.UNSPECIFIED; } }
@@ -68,7 +70,7 @@ public struct SKT : IFlatbufferObject
   /// Epoch of point positions, Julian years (TT).
   public double EPOCH { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-  /// spacecraft or the geocentre), as the producer names it.
+  /// spacecraft or the geocenter), as the producer names it.
   public string OBSERVER_ID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBSERVER_IDBytes() { return __p.__vector_as_span<byte>(36, 1); }
@@ -76,16 +78,16 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetOBSERVER_IDBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetOBSERVER_IDArray() { return __p.__vector_as_array<byte>(36); }
-  /// Number of points in the payload.
+  /// Number of points in the payload (POINTS or POINTS_3D).
   public uint POINT_COUNT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Brightest magnitude in the tile.
   public float MAG_BRIGHTEST { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)Single.NaN; } }
   /// Faintest magnitude in the tile; with the ancestors, the layer is
   /// complete to this limit inside the pixel.
   public float MAG_LIMIT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)Single.NaN; } }
-  /// What each point's COLOR holds.
+  /// What each point's COLOR holds (POINTS and POINTS_3D alike).
   public sktColorEncoding COLOR_ENCODING { get { int o = __p.__offset(44); return o != 0 ? (sktColorEncoding)__p.bb.Get(o + __p.bb_pos) : sktColorEncoding.NONE; } }
-  /// Bluer band of a COLOR_INDEX colour.
+  /// Bluer band of a COLOR_INDEX color.
   public string COLOR_BLUE_BAND_ID { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOLOR_BLUE_BAND_IDBytes() { return __p.__vector_as_span<byte>(46, 1); }
@@ -93,7 +95,7 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetCOLOR_BLUE_BAND_IDBytes() { return __p.__vector_as_arraysegment(46); }
 #endif
   public byte[] GetCOLOR_BLUE_BAND_IDArray() { return __p.__vector_as_array<byte>(46); }
-  /// Redder band of a COLOR_INDEX colour.
+  /// Redder band of a COLOR_INDEX color.
   public string COLOR_RED_BAND_ID { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCOLOR_RED_BAND_IDBytes() { return __p.__vector_as_span<byte>(48, 1); }
@@ -189,7 +191,7 @@ public struct SKT : IFlatbufferObject
   public byte[] GetPAYLOAD_CIDArray() { return __p.__vector_as_array<byte>(84); }
   /// Length of the payload at PAYLOAD_CID, bytes.
   public ulong PAYLOAD_BYTES { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
-  /// Start of the observations the tile summarises, ISO 8601 UTC.
+  /// Start of the observations the tile summarizes, ISO 8601 UTC.
   public string OBSERVATION_START { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBSERVATION_STARTBytes() { return __p.__vector_as_span<byte>(88, 1); }
@@ -197,7 +199,7 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetOBSERVATION_STARTBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
   public byte[] GetOBSERVATION_STARTArray() { return __p.__vector_as_array<byte>(88); }
-  /// End of the observations the tile summarises, ISO 8601 UTC.
+  /// End of the observations the tile summarizes, ISO 8601 UTC.
   public string OBSERVATION_END { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBSERVATION_ENDBytes() { return __p.__vector_as_span<byte>(90, 1); }
@@ -205,7 +207,7 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetOBSERVATION_ENDBytes() { return __p.__vector_as_arraysegment(90); }
 #endif
   public byte[] GetOBSERVATION_ENDArray() { return __p.__vector_as_array<byte>(90); }
-  /// Verbatim names of the catalogues or surveys the tile was derived from.
+  /// Verbatim names of the catalogs or surveys the tile was derived from.
   public string SOURCE_NAMES(int j) { int o = __p.__offset(92); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SOURCE_NAMESLength { get { int o = __p.__offset(92); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Peer identifier of the node that produced the tile.
@@ -240,7 +242,7 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetCITATIONBytes() { return __p.__vector_as_arraysegment(100); }
 #endif
   public byte[] GetCITATIONArray() { return __p.__vector_as_array<byte>(100); }
-  /// URL of the licence or terms of the source data.
+  /// URL of the license or terms of the source data.
   public string LICENSE_URL { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLICENSE_URLBytes() { return __p.__vector_as_span<byte>(102, 1); }
@@ -248,6 +250,28 @@ public struct SKT : IFlatbufferObject
   public ArraySegment<byte>? GetLICENSE_URLBytes() { return __p.__vector_as_arraysegment(102); }
 #endif
   public byte[] GetLICENSE_URLArray() { return __p.__vector_as_array<byte>(102); }
+  /// How the layer divides into tiles.
+  public sktPartitionScheme PARTITION { get { int o = __p.__offset(104); return o != 0 ? (sktPartitionScheme)__p.bb.Get(o + __p.bb_pos) : sktPartitionScheme.HEALPIX; } }
+  /// Octree level of the node; the root is 0, at most 21.
+  public byte OCTREE_LEVEL { get { int o = __p.__offset(106); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+  public ulong OCTREE_KEY { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// ICRS X of the node's center, parsecs from the Sun.
+  public double CENTER_X_PC { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ICRS Y of the node's center, parsecs from the Sun.
+  public double CENTER_Y_PC { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// ICRS Z of the node's center, parsecs from the Sun.
+  public double CENTER_Z_PC { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Half the edge length of the node's cube, parsecs.
+  public double HALF_SIZE_PC { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Brightest absolute magnitude in the node.
+  public float ABS_MAG_BRIGHTEST { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)Single.NaN; } }
+  /// Faintest absolute magnitude in the node; with its ancestors, the layer
+  /// is complete to this limit inside the node's cube.
+  public float ABS_MAG_FAINTEST { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)Single.NaN; } }
+  /// Packed points of an octree node, brightest absolute magnitude first.
+  public SKTPoint3D? POINTS_3D(int j) { int o = __p.__offset(122); return o != 0 ? (SKTPoint3D?)(new SKTPoint3D()).__assign(__p.__vector(o) + j * 24, __p.bb) : null; }
+  public int POINTS_3DLength { get { int o = __p.__offset(122); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<SKT> CreateSKT(FlatBufferBuilder builder,
       StringOffset LAYER_IDOffset = default(StringOffset),
@@ -299,8 +323,23 @@ public struct SKT : IFlatbufferObject
       StringOffset PRODUCER_VERSIONOffset = default(StringOffset),
       StringOffset PRODUCED_ATOffset = default(StringOffset),
       StringOffset CITATIONOffset = default(StringOffset),
-      StringOffset LICENSE_URLOffset = default(StringOffset)) {
-    builder.StartTable(50);
+      StringOffset LICENSE_URLOffset = default(StringOffset),
+      sktPartitionScheme PARTITION = sktPartitionScheme.HEALPIX,
+      byte OCTREE_LEVEL = 0,
+      ulong OCTREE_KEY = 0,
+      double CENTER_X_PC = Double.NaN,
+      double CENTER_Y_PC = Double.NaN,
+      double CENTER_Z_PC = Double.NaN,
+      double HALF_SIZE_PC = Double.NaN,
+      float ABS_MAG_BRIGHTEST = Single.NaN,
+      float ABS_MAG_FAINTEST = Single.NaN,
+      VectorOffset POINTS_3DOffset = default(VectorOffset)) {
+    builder.StartTable(60);
+    SKT.AddHALF_SIZE_PC(builder, HALF_SIZE_PC);
+    SKT.AddCENTER_Z_PC(builder, CENTER_Z_PC);
+    SKT.AddCENTER_Y_PC(builder, CENTER_Y_PC);
+    SKT.AddCENTER_X_PC(builder, CENTER_X_PC);
+    SKT.AddOCTREE_KEY(builder, OCTREE_KEY);
     SKT.AddPAYLOAD_BYTES(builder, PAYLOAD_BYTES);
     SKT.AddSTRETCH_SOFTENING(builder, STRETCH_SOFTENING);
     SKT.AddWHITE_POINT(builder, WHITE_POINT);
@@ -312,6 +351,9 @@ public struct SKT : IFlatbufferObject
     SKT.AddWAVELENGTH_MIN_NM(builder, WAVELENGTH_MIN_NM);
     SKT.AddWAVELENGTH_EFF_NM(builder, WAVELENGTH_EFF_NM);
     SKT.AddPIXEL(builder, PIXEL);
+    SKT.AddPOINTS_3D(builder, POINTS_3DOffset);
+    SKT.AddABS_MAG_FAINTEST(builder, ABS_MAG_FAINTEST);
+    SKT.AddABS_MAG_BRIGHTEST(builder, ABS_MAG_BRIGHTEST);
     SKT.AddLICENSE_URL(builder, LICENSE_URLOffset);
     SKT.AddCITATION(builder, CITATIONOffset);
     SKT.AddPRODUCED_AT(builder, PRODUCED_ATOffset);
@@ -337,6 +379,8 @@ public struct SKT : IFlatbufferObject
     SKT.AddOBSERVER_ID(builder, OBSERVER_IDOffset);
     SKT.AddBAND_ID(builder, BAND_IDOffset);
     SKT.AddLAYER_ID(builder, LAYER_IDOffset);
+    SKT.AddOCTREE_LEVEL(builder, OCTREE_LEVEL);
+    SKT.AddPARTITION(builder, PARTITION);
     SKT.AddSTRETCH(builder, STRETCH);
     SKT.AddMAP_QUANTITY(builder, MAP_QUANTITY);
     SKT.AddMAP_ENCODING(builder, MAP_ENCODING);
@@ -354,7 +398,7 @@ public struct SKT : IFlatbufferObject
     return SKT.EndSKT(builder);
   }
 
-  public static void StartSKT(FlatBufferBuilder builder) { builder.StartTable(50); }
+  public static void StartSKT(FlatBufferBuilder builder) { builder.StartTable(60); }
   public static void AddLAYER_ID(FlatBufferBuilder builder, StringOffset LAYER_IDOffset) { builder.AddOffset(0, LAYER_IDOffset.Value, 0); }
   public static void AddFRAME(FlatBufferBuilder builder, sktCelestialFrame FRAME) { builder.AddByte(1, (byte)FRAME, 1); }
   public static void AddORDER(FlatBufferBuilder builder, byte ORDER) { builder.AddByte(2, ORDER, 0); }
@@ -426,6 +470,17 @@ public struct SKT : IFlatbufferObject
   public static void AddPRODUCED_AT(FlatBufferBuilder builder, StringOffset PRODUCED_ATOffset) { builder.AddOffset(47, PRODUCED_ATOffset.Value, 0); }
   public static void AddCITATION(FlatBufferBuilder builder, StringOffset CITATIONOffset) { builder.AddOffset(48, CITATIONOffset.Value, 0); }
   public static void AddLICENSE_URL(FlatBufferBuilder builder, StringOffset LICENSE_URLOffset) { builder.AddOffset(49, LICENSE_URLOffset.Value, 0); }
+  public static void AddPARTITION(FlatBufferBuilder builder, sktPartitionScheme PARTITION) { builder.AddByte(50, (byte)PARTITION, 0); }
+  public static void AddOCTREE_LEVEL(FlatBufferBuilder builder, byte OCTREE_LEVEL) { builder.AddByte(51, OCTREE_LEVEL, 0); }
+  public static void AddOCTREE_KEY(FlatBufferBuilder builder, ulong OCTREE_KEY) { builder.AddUlong(52, OCTREE_KEY, 0); }
+  public static void AddCENTER_X_PC(FlatBufferBuilder builder, double CENTER_X_PC) { builder.AddDouble(53, CENTER_X_PC, Double.NaN); }
+  public static void AddCENTER_Y_PC(FlatBufferBuilder builder, double CENTER_Y_PC) { builder.AddDouble(54, CENTER_Y_PC, Double.NaN); }
+  public static void AddCENTER_Z_PC(FlatBufferBuilder builder, double CENTER_Z_PC) { builder.AddDouble(55, CENTER_Z_PC, Double.NaN); }
+  public static void AddHALF_SIZE_PC(FlatBufferBuilder builder, double HALF_SIZE_PC) { builder.AddDouble(56, HALF_SIZE_PC, Double.NaN); }
+  public static void AddABS_MAG_BRIGHTEST(FlatBufferBuilder builder, float ABS_MAG_BRIGHTEST) { builder.AddFloat(57, ABS_MAG_BRIGHTEST, Single.NaN); }
+  public static void AddABS_MAG_FAINTEST(FlatBufferBuilder builder, float ABS_MAG_FAINTEST) { builder.AddFloat(58, ABS_MAG_FAINTEST, Single.NaN); }
+  public static void AddPOINTS_3D(FlatBufferBuilder builder, VectorOffset POINTS_3DOffset) { builder.AddOffset(59, POINTS_3DOffset.Value, 0); }
+  public static void StartPOINTS_3DVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(24, numElems, 4); }
   public static Offset<SKT> EndSKT(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // LAYER_ID
@@ -494,6 +549,17 @@ public struct SKT : IFlatbufferObject
     _o.PRODUCED_AT = this.PRODUCED_AT;
     _o.CITATION = this.CITATION;
     _o.LICENSE_URL = this.LICENSE_URL;
+    _o.PARTITION = this.PARTITION;
+    _o.OCTREE_LEVEL = this.OCTREE_LEVEL;
+    _o.OCTREE_KEY = this.OCTREE_KEY;
+    _o.CENTER_X_PC = this.CENTER_X_PC;
+    _o.CENTER_Y_PC = this.CENTER_Y_PC;
+    _o.CENTER_Z_PC = this.CENTER_Z_PC;
+    _o.HALF_SIZE_PC = this.HALF_SIZE_PC;
+    _o.ABS_MAG_BRIGHTEST = this.ABS_MAG_BRIGHTEST;
+    _o.ABS_MAG_FAINTEST = this.ABS_MAG_FAINTEST;
+    _o.POINTS_3D = new List<SKTPoint3DT>();
+    for (var _j = 0; _j < this.POINTS_3DLength; ++_j) {_o.POINTS_3D.Add(this.POINTS_3D(_j).HasValue ? this.POINTS_3D(_j).Value.UnPack() : null);}
   }
   public static Offset<SKT> Pack(FlatBufferBuilder builder, SKTT _o) {
     if (_o == null) return default(Offset<SKT>);
@@ -540,6 +606,12 @@ public struct SKT : IFlatbufferObject
     var _PRODUCED_AT = _o.PRODUCED_AT == null ? default(StringOffset) : builder.CreateString(_o.PRODUCED_AT);
     var _CITATION = _o.CITATION == null ? default(StringOffset) : builder.CreateString(_o.CITATION);
     var _LICENSE_URL = _o.LICENSE_URL == null ? default(StringOffset) : builder.CreateString(_o.LICENSE_URL);
+    var _POINTS_3D = default(VectorOffset);
+    if (_o.POINTS_3D != null) {
+      StartPOINTS_3DVector(builder, _o.POINTS_3D.Count);
+      for (var _j = _o.POINTS_3D.Count - 1; _j >= 0; --_j) { SKTPoint3D.Pack(builder, _o.POINTS_3D[_j]); }
+      _POINTS_3D = builder.EndVector();
+    }
     return CreateSKT(
       builder,
       _LAYER_ID,
@@ -591,7 +663,17 @@ public struct SKT : IFlatbufferObject
       _PRODUCER_VERSION,
       _PRODUCED_AT,
       _CITATION,
-      _LICENSE_URL);
+      _LICENSE_URL,
+      _o.PARTITION,
+      _o.OCTREE_LEVEL,
+      _o.OCTREE_KEY,
+      _o.CENTER_X_PC,
+      _o.CENTER_Y_PC,
+      _o.CENTER_Z_PC,
+      _o.HALF_SIZE_PC,
+      _o.ABS_MAG_BRIGHTEST,
+      _o.ABS_MAG_FAINTEST,
+      _POINTS_3D);
   }
 }
 
@@ -647,6 +729,16 @@ public class SKTT
   public string PRODUCED_AT { get; set; }
   public string CITATION { get; set; }
   public string LICENSE_URL { get; set; }
+  public sktPartitionScheme PARTITION { get; set; }
+  public byte OCTREE_LEVEL { get; set; }
+  public ulong OCTREE_KEY { get; set; }
+  public double CENTER_X_PC { get; set; }
+  public double CENTER_Y_PC { get; set; }
+  public double CENTER_Z_PC { get; set; }
+  public double HALF_SIZE_PC { get; set; }
+  public float ABS_MAG_BRIGHTEST { get; set; }
+  public float ABS_MAG_FAINTEST { get; set; }
+  public List<SKTPoint3DT> POINTS_3D { get; set; }
 
   public SKTT() {
     this.LAYER_ID = null;
@@ -699,6 +791,16 @@ public class SKTT
     this.PRODUCED_AT = null;
     this.CITATION = null;
     this.LICENSE_URL = null;
+    this.PARTITION = sktPartitionScheme.HEALPIX;
+    this.OCTREE_LEVEL = 0;
+    this.OCTREE_KEY = 0;
+    this.CENTER_X_PC = Double.NaN;
+    this.CENTER_Y_PC = Double.NaN;
+    this.CENTER_Z_PC = Double.NaN;
+    this.HALF_SIZE_PC = Double.NaN;
+    this.ABS_MAG_BRIGHTEST = Single.NaN;
+    this.ABS_MAG_FAINTEST = Single.NaN;
+    this.POINTS_3D = null;
   }
   public static SKTT DeserializeFromBinary(byte[] fbBuffer) {
     return SKT.GetRootAsSKT(new ByteBuffer(fbBuffer)).UnPack();
@@ -766,6 +868,16 @@ static public class SKTVerify
       && verifier.VerifyString(tablePos, 98 /*PRODUCED_AT*/, false)
       && verifier.VerifyString(tablePos, 100 /*CITATION*/, false)
       && verifier.VerifyString(tablePos, 102 /*LICENSE_URL*/, false)
+      && verifier.VerifyField(tablePos, 104 /*PARTITION*/, 1 /*sktPartitionScheme*/, 1, false)
+      && verifier.VerifyField(tablePos, 106 /*OCTREE_LEVEL*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 108 /*OCTREE_KEY*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyField(tablePos, 110 /*CENTER_X_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 112 /*CENTER_Y_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 114 /*CENTER_Z_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 116 /*HALF_SIZE_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 118 /*ABS_MAG_BRIGHTEST*/, 4 /*float*/, 4, false)
+      && verifier.VerifyField(tablePos, 120 /*ABS_MAG_FAINTEST*/, 4 /*float*/, 4, false)
+      && verifier.VerifyVectorOfData(tablePos, 122 /*POINTS_3D*/, 24 /*SKTPoint3D*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

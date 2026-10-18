@@ -12,6 +12,6 @@ public enum sktStretchFunction : byte
   LOGARITHMIC = 3,
   /// Inverse hyperbolic sine with softening STRETCH_SOFTENING.
   ASINH = 4,
-  /// Histogram equalisation over PERCENTILE_VALUES.
+  /// Histogram equalization over PERCENTILE_VALUES.
   HISTOGRAM_EQUALIZED = 5,
 };

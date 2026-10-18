@@ -9,8 +9,8 @@ public final class sktPlaceKind {
   private sktPlaceKind() { }
   public static final int UNSPECIFIED = 0;
   /**
-   * Barycentric catalogue place at EPOCH: proper motion applied from the
-   * catalogue epoch, nothing else.
+   * Barycentric catalog place at EPOCH: proper motion applied from the
+   * catalog epoch, nothing else.
    */
   public static final int CATALOG = 1;
   /**

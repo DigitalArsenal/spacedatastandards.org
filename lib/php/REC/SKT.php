@@ -6,7 +6,8 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+/// Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+/// or diffuse-map layer.
 class SKT extends Table
 {
     /**
@@ -42,14 +43,15 @@ class SKT extends Table
     }
 
     /// Stable identifier of the layer: equal across every tile of one
-    /// (producer, source catalogue or survey, band, place, epoch).
+    /// (producer, source catalog or survey, band, place, epoch).
     public function getLAYER_ID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Frame the HEALPix grid and the point positions are stated in.
+    /// Frame the HEALPix grid and the point positions are stated in; ICRS for
+    /// an OCTREE_HELIO_ICRS layer.
     /**
      * @return byte
      */
@@ -79,8 +81,8 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
-    /// Deepest order of the layer, when the producer knows it; 255 when
-    /// unstated.
+    /// Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+    /// producer knows it; 255 when unstated.
     /**
      * @return byte
      */
@@ -90,8 +92,8 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 255;
     }
 
-    /// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-    /// a leaf.
+    /// Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+    /// 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
     /**
      * @return byte
      */
@@ -139,7 +141,7 @@ class SKT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Effective wavelength of the band, nanometres (vacuum).
+    /// Effective wavelength of the band, nanometers (vacuum).
     /**
      * @return double
      */
@@ -149,7 +151,7 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
-    /// Short edge of a band-integrated map, nanometres.
+    /// Short edge of a band-integrated map, nanometers.
     /**
      * @return double
      */
@@ -159,7 +161,7 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
-    /// Long edge of a band-integrated map, nanometres.
+    /// Long edge of a band-integrated map, nanometers.
     /**
      * @return double
      */
@@ -200,14 +202,14 @@ class SKT extends Table
     }
 
     /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-    /// spacecraft or the geocentre), as the producer names it.
+    /// spacecraft or the geocenter), as the producer names it.
     public function getOBSERVER_ID()
     {
         $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Number of points in the payload.
+    /// Number of points in the payload (POINTS or POINTS_3D).
     /**
      * @return uint
      */
@@ -238,7 +240,7 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : NAN;
     }
 
-    /// What each point's COLOR holds.
+    /// What each point's COLOR holds (POINTS and POINTS_3D alike).
     /**
      * @return byte
      */
@@ -248,14 +250,14 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \sktColorEncoding::NONE;
     }
 
-    /// Bluer band of a COLOR_INDEX colour.
+    /// Bluer band of a COLOR_INDEX color.
     public function getCOLOR_BLUE_BAND_ID()
     {
         $o = $this->__offset(46);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Redder band of a COLOR_INDEX colour.
+    /// Redder band of a COLOR_INDEX color.
     public function getCOLOR_RED_BAND_ID()
     {
         $o = $this->__offset(48);
@@ -492,21 +494,21 @@ class SKT extends Table
         return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
-    /// Start of the observations the tile summarises, ISO 8601 UTC.
+    /// Start of the observations the tile summarizes, ISO 8601 UTC.
     public function getOBSERVATION_START()
     {
         $o = $this->__offset(88);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// End of the observations the tile summarises, ISO 8601 UTC.
+    /// End of the observations the tile summarizes, ISO 8601 UTC.
     public function getOBSERVATION_END()
     {
         $o = $this->__offset(90);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Verbatim names of the catalogues or surveys the tile was derived from.
+    /// Verbatim names of the catalogs or surveys the tile was derived from.
     /**
      * @param int offset
      * @return string
@@ -554,11 +556,122 @@ class SKT extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// URL of the licence or terms of the source data.
+    /// URL of the license or terms of the source data.
     public function getLICENSE_URL()
     {
         $o = $this->__offset(102);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// How the layer divides into tiles.
+    /**
+     * @return byte
+     */
+    public function getPARTITION()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \sktPartitionScheme::HEALPIX;
+    }
+
+    /// Octree level of the node; the root is 0, at most 21.
+    /**
+     * @return byte
+     */
+    public function getOCTREE_LEVEL()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+    /**
+     * @return ulong
+     */
+    public function getOCTREE_KEY()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
+    /// ICRS X of the node's center, parsecs from the Sun.
+    /**
+     * @return double
+     */
+    public function getCENTER_X_PC()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ICRS Y of the node's center, parsecs from the Sun.
+    /**
+     * @return double
+     */
+    public function getCENTER_Y_PC()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// ICRS Z of the node's center, parsecs from the Sun.
+    /**
+     * @return double
+     */
+    public function getCENTER_Z_PC()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Half the edge length of the node's cube, parsecs.
+    /**
+     * @return double
+     */
+    public function getHALF_SIZE_PC()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Brightest absolute magnitude in the node.
+    /**
+     * @return float
+     */
+    public function getABS_MAG_BRIGHTEST()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : NAN;
+    }
+
+    /// Faintest absolute magnitude in the node; with its ancestors, the layer
+    /// is complete to this limit inside the node's cube.
+    /**
+     * @return float
+     */
+    public function getABS_MAG_FAINTEST()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : NAN;
+    }
+
+    /// Packed points of an octree node, brightest absolute magnitude first.
+    /**
+     * @returnVectorOffset
+     */
+    public function getPOINTS_3D($j)
+    {
+        $o = $this->__offset(122);
+        $obj = new SKTPoint3D();
+        return $o != 0 ? $obj->init($this->__vector($o) + $j *24, $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPOINTS_3DLength()
+    {
+        $o = $this->__offset(122);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -567,16 +680,16 @@ class SKT extends Table
      */
     public static function startSKT(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(50);
+        $builder->StartObject(60);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SKT
      */
-    public static function createSKT(FlatBufferBuilder $builder, $LAYER_ID, $FRAME, $ORDER, $PIXEL, $MAX_ORDER, $CHILD_MASK, $PAYLOAD_KIND, $REFINE, $SPECTRAL_REGIME, $BAND_ID, $WAVELENGTH_EFF_NM, $WAVELENGTH_MIN_NM, $WAVELENGTH_MAX_NM, $MAGNITUDE_SYSTEM, $PLACE, $EPOCH, $OBSERVER_ID, $POINT_COUNT, $MAG_BRIGHTEST, $MAG_LIMIT, $COLOR_ENCODING, $COLOR_BLUE_BAND_ID, $COLOR_RED_BAND_ID, $POINTS, $ROW_COLLECTION_CID, $MAP_DEPTH, $MAP_ENCODING, $MAP_QUANTITY, $MAP_QUANTITY_NAME, $MAP_UNITS, $MAP_SCALE, $MAP_OFFSET, $MAP_BLANK, $MAP_VALUES, $STRETCH, $BLACK_POINT, $WHITE_POINT, $STRETCH_SOFTENING, $PERCENTILE_LEVELS, $PERCENTILE_VALUES, $PAYLOAD_CID, $PAYLOAD_BYTES, $OBSERVATION_START, $OBSERVATION_END, $SOURCE_NAMES, $PRODUCER_PEER_ID, $PRODUCER_VERSION, $PRODUCED_AT, $CITATION, $LICENSE_URL)
+    public static function createSKT(FlatBufferBuilder $builder, $LAYER_ID, $FRAME, $ORDER, $PIXEL, $MAX_ORDER, $CHILD_MASK, $PAYLOAD_KIND, $REFINE, $SPECTRAL_REGIME, $BAND_ID, $WAVELENGTH_EFF_NM, $WAVELENGTH_MIN_NM, $WAVELENGTH_MAX_NM, $MAGNITUDE_SYSTEM, $PLACE, $EPOCH, $OBSERVER_ID, $POINT_COUNT, $MAG_BRIGHTEST, $MAG_LIMIT, $COLOR_ENCODING, $COLOR_BLUE_BAND_ID, $COLOR_RED_BAND_ID, $POINTS, $ROW_COLLECTION_CID, $MAP_DEPTH, $MAP_ENCODING, $MAP_QUANTITY, $MAP_QUANTITY_NAME, $MAP_UNITS, $MAP_SCALE, $MAP_OFFSET, $MAP_BLANK, $MAP_VALUES, $STRETCH, $BLACK_POINT, $WHITE_POINT, $STRETCH_SOFTENING, $PERCENTILE_LEVELS, $PERCENTILE_VALUES, $PAYLOAD_CID, $PAYLOAD_BYTES, $OBSERVATION_START, $OBSERVATION_END, $SOURCE_NAMES, $PRODUCER_PEER_ID, $PRODUCER_VERSION, $PRODUCED_AT, $CITATION, $LICENSE_URL, $PARTITION, $OCTREE_LEVEL, $OCTREE_KEY, $CENTER_X_PC, $CENTER_Y_PC, $CENTER_Z_PC, $HALF_SIZE_PC, $ABS_MAG_BRIGHTEST, $ABS_MAG_FAINTEST, $POINTS_3D)
     {
-        $builder->startObject(50);
+        $builder->startObject(60);
         self::addLAYER_ID($builder, $LAYER_ID);
         self::addFRAME($builder, $FRAME);
         self::addORDER($builder, $ORDER);
@@ -627,6 +740,16 @@ class SKT extends Table
         self::addPRODUCED_AT($builder, $PRODUCED_AT);
         self::addCITATION($builder, $CITATION);
         self::addLICENSE_URL($builder, $LICENSE_URL);
+        self::addPARTITION($builder, $PARTITION);
+        self::addOCTREE_LEVEL($builder, $OCTREE_LEVEL);
+        self::addOCTREE_KEY($builder, $OCTREE_KEY);
+        self::addCENTER_X_PC($builder, $CENTER_X_PC);
+        self::addCENTER_Y_PC($builder, $CENTER_Y_PC);
+        self::addCENTER_Z_PC($builder, $CENTER_Z_PC);
+        self::addHALF_SIZE_PC($builder, $HALF_SIZE_PC);
+        self::addABS_MAG_BRIGHTEST($builder, $ABS_MAG_BRIGHTEST);
+        self::addABS_MAG_FAINTEST($builder, $ABS_MAG_FAINTEST);
+        self::addPOINTS_3D($builder, $POINTS_3D);
         $o = $builder->endObject();
         $builder->required($o, 4);  // LAYER_ID
         return $o;
@@ -1250,6 +1373,130 @@ class SKT extends Table
     public static function addLICENSE_URL(FlatBufferBuilder $builder, $LICENSE_URL)
     {
         $builder->addOffsetX(49, $LICENSE_URL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addPARTITION(FlatBufferBuilder $builder, $PARTITION)
+    {
+        $builder->addByteX(50, $PARTITION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addOCTREE_LEVEL(FlatBufferBuilder $builder, $OCTREE_LEVEL)
+    {
+        $builder->addByteX(51, $OCTREE_LEVEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addOCTREE_KEY(FlatBufferBuilder $builder, $OCTREE_KEY)
+    {
+        $builder->addUlongX(52, $OCTREE_KEY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCENTER_X_PC(FlatBufferBuilder $builder, $CENTER_X_PC)
+    {
+        $builder->addDoubleX(53, $CENTER_X_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCENTER_Y_PC(FlatBufferBuilder $builder, $CENTER_Y_PC)
+    {
+        $builder->addDoubleX(54, $CENTER_Y_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCENTER_Z_PC(FlatBufferBuilder $builder, $CENTER_Z_PC)
+    {
+        $builder->addDoubleX(55, $CENTER_Z_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHALF_SIZE_PC(FlatBufferBuilder $builder, $HALF_SIZE_PC)
+    {
+        $builder->addDoubleX(56, $HALF_SIZE_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addABS_MAG_BRIGHTEST(FlatBufferBuilder $builder, $ABS_MAG_BRIGHTEST)
+    {
+        $builder->addFloatX(57, $ABS_MAG_BRIGHTEST, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param float
+     * @return void
+     */
+    public static function addABS_MAG_FAINTEST(FlatBufferBuilder $builder, $ABS_MAG_FAINTEST)
+    {
+        $builder->addFloatX(58, $ABS_MAG_FAINTEST, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPOINTS_3D(FlatBufferBuilder $builder, $POINTS_3D)
+    {
+        $builder->addOffsetX(59, $POINTS_3D, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPOINTS_3DVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(24, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPOINTS_3DVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(24, $numElems, 4);
     }
 
     /**

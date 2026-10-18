@@ -11,7 +11,7 @@ class sktStretchFunction
     const LOGARITHMIC = 3;
     /// Inverse hyperbolic sine with softening STRETCH_SOFTENING.
     const ASINH = 4;
-    /// Histogram equalisation over PERCENTILE_VALUES.
+    /// Histogram equalization over PERCENTILE_VALUES.
     const HISTOGRAM_EQUALIZED = 5;
 
     private static $names = array(

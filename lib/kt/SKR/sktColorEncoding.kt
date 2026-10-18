@@ -8,11 +8,11 @@
 class sktColorEncoding private constructor() {
     companion object {
         /**
-         * No colour; COLOR is 0.
+         * No color; COLOR is 0.
          */
         const val NONE: UByte = 0u
         /**
-         * Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
+         * Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
          * millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means
          * unknown.
          */

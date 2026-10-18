@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { PHBMeasurement, PHBMeasurementT } from './PHBMeasurement.js';
+import { strDistanceEstimator } from './strDistanceEstimator.js';
 
 
 /**
@@ -59,11 +60,12 @@ GNC_CAT_ID():number {
 }
 
 /**
- * Source identifier in the third data release of the all-sky space astrometry survey
+ * Source identifier (source_id) in the third data release of the all-sky space astrometry
+ * survey; 0 when the star has no match in that release
  */
-GAIADR3_CAT_ID():bigint {
+GAIA_DR3_SOURCE_ID():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
 }
 
 /**
@@ -425,7 +427,7 @@ SPECTRAL_TYPE(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Proper name as recognised by the astronomical naming authority
+ * Proper name as recognized by the astronomical naming authority
  */
 PROPER_NAME():string|null
 PROPER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -520,7 +522,7 @@ VARIABILITY_EPOCH():number {
 }
 
 /**
- * Brightness in every band the star was measured or modelled in
+ * Brightness in every band the star was measured or modeled in
  */
 PHOTOMETRY(index: number, obj?:PHBMeasurement):PHBMeasurement|null {
   const offset = this.bb!.__offset(this.bb_pos, 120);
@@ -532,8 +534,56 @@ photometryLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Distance from the Sun (parsecs): the posterior median, or the mode for
+ * EDSD_POSTERIOR, as DISTANCE_METHOD states
+ */
+DISTANCE_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Lower bound of the distance (parsecs): the 16th percentile of the posterior
+ * for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+ * the 68% highest-density interval for EDSD_POSTERIOR, and
+ * 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+ */
+DISTANCE_LO_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 124);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+ * the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+ * DISTANCE_LO_PC; NaN when unbounded
+ */
+DISTANCE_HI_PC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 126);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
+/**
+ * Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+ */
+DISTANCE_METHOD():strDistanceEstimator {
+  const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : strDistanceEstimator.UNSPECIFIED;
+}
+
+/**
+ * Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+ */
+DISTANCE_REF():string|null
+DISTANCE_REF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DISTANCE_REF(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startSTR(builder:flatbuffers.Builder) {
-  builder.startObject(59);
+  builder.startObject(64);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -548,8 +598,8 @@ static addGncCatId(builder:flatbuffers.Builder, GNC_CAT_ID:number) {
   builder.addFieldInt32(2, GNC_CAT_ID, 0);
 }
 
-static addGaiadr3CatId(builder:flatbuffers.Builder, GAIADR3_CAT_ID:bigint) {
-  builder.addFieldInt64(3, GAIADR3_CAT_ID, BigInt('0'));
+static addGaiaDr3SourceId(builder:flatbuffers.Builder, GAIA_DR3_SOURCE_ID:bigint) {
+  builder.addFieldInt64(3, GAIA_DR3_SOURCE_ID, BigInt('0'));
 }
 
 static addHipCatId(builder:flatbuffers.Builder, HIP_CAT_ID:number) {
@@ -796,6 +846,26 @@ static startPhotometryVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addDistancePc(builder:flatbuffers.Builder, DISTANCE_PC:number) {
+  builder.addFieldFloat64(59, DISTANCE_PC, NaN);
+}
+
+static addDistanceLoPc(builder:flatbuffers.Builder, DISTANCE_LO_PC:number) {
+  builder.addFieldFloat64(60, DISTANCE_LO_PC, NaN);
+}
+
+static addDistanceHiPc(builder:flatbuffers.Builder, DISTANCE_HI_PC:number) {
+  builder.addFieldFloat64(61, DISTANCE_HI_PC, NaN);
+}
+
+static addDistanceMethod(builder:flatbuffers.Builder, DISTANCE_METHOD:strDistanceEstimator) {
+  builder.addFieldInt8(62, DISTANCE_METHOD, strDistanceEstimator.UNSPECIFIED);
+}
+
+static addDistanceRef(builder:flatbuffers.Builder, DISTANCE_REFOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(63, DISTANCE_REFOffset, 0);
+}
+
 static endSTR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -809,12 +879,12 @@ static finishSizePrefixedSTRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$STR', true);
 }
 
-static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID:bigint, GNC_CAT_ID:number, GAIADR3_CAT_ID:bigint, HIP_CAT_ID:number, CAT_VERSIONOffset:flatbuffers.Offset, ASTROMETRY_ORIGINOffset:flatbuffers.Offset, STAR_EPOCH:number, RA:number, RA_UNC:number, DEC:number, DEC_UNC:number, POS_UNC_FLAG:boolean, PARALLAX:number, PARALLAX_UNC:number, PMRA:number, PMRA_UNC:number, PMDEC:number, PMDEC_UNC:number, PM_UNC_FLAG:boolean, GMAG:number, GMAG_UNC:number, BPMAG:number, BPMAG_UNC:number, RPMAG:number, RPMAG_UNC:number, JMAG:number, JMAG_UNC:number, KMAG:number, KMAG_UNC:number, HMAG:number, HMAG_UNC:number, VAR_FLAG:boolean, MULT_FLAG:boolean, NEIGHBOR_ID:number, NEIGHBOR_FLAG:boolean, NEIGHBOR_DISTANCE:number, SHIFT_FLAG:boolean, SHIFT:number, TEFF:number, TEFF_UNC:number, LOGG:number, LOGG_UNC:number, METALLICITY:number, EXTINCTION_A0:number, RADIAL_VELOCITY:number, RADIAL_VELOCITY_UNC:number, SPECTRAL_TYPEOffset:flatbuffers.Offset, PROPER_NAMEOffset:flatbuffers.Offset, BAYER_FLAMSTEEDOffset:flatbuffers.Offset, CONSTELLATIONOffset:flatbuffers.Offset, HR_CAT_ID:number, HD_CAT_ID:number, DESIGNATIONSOffset:flatbuffers.Offset, VARIABILITY_CLASSOffset:flatbuffers.Offset, VARIABILITY_PERIOD:number, VARIABILITY_AMPLITUDE:number, VARIABILITY_EPOCH:number, PHOTOMETRYOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID:bigint, GNC_CAT_ID:number, GAIA_DR3_SOURCE_ID:bigint, HIP_CAT_ID:number, CAT_VERSIONOffset:flatbuffers.Offset, ASTROMETRY_ORIGINOffset:flatbuffers.Offset, STAR_EPOCH:number, RA:number, RA_UNC:number, DEC:number, DEC_UNC:number, POS_UNC_FLAG:boolean, PARALLAX:number, PARALLAX_UNC:number, PMRA:number, PMRA_UNC:number, PMDEC:number, PMDEC_UNC:number, PM_UNC_FLAG:boolean, GMAG:number, GMAG_UNC:number, BPMAG:number, BPMAG_UNC:number, RPMAG:number, RPMAG_UNC:number, JMAG:number, JMAG_UNC:number, KMAG:number, KMAG_UNC:number, HMAG:number, HMAG_UNC:number, VAR_FLAG:boolean, MULT_FLAG:boolean, NEIGHBOR_ID:number, NEIGHBOR_FLAG:boolean, NEIGHBOR_DISTANCE:number, SHIFT_FLAG:boolean, SHIFT:number, TEFF:number, TEFF_UNC:number, LOGG:number, LOGG_UNC:number, METALLICITY:number, EXTINCTION_A0:number, RADIAL_VELOCITY:number, RADIAL_VELOCITY_UNC:number, SPECTRAL_TYPEOffset:flatbuffers.Offset, PROPER_NAMEOffset:flatbuffers.Offset, BAYER_FLAMSTEEDOffset:flatbuffers.Offset, CONSTELLATIONOffset:flatbuffers.Offset, HR_CAT_ID:number, HD_CAT_ID:number, DESIGNATIONSOffset:flatbuffers.Offset, VARIABILITY_CLASSOffset:flatbuffers.Offset, VARIABILITY_PERIOD:number, VARIABILITY_AMPLITUDE:number, VARIABILITY_EPOCH:number, PHOTOMETRYOffset:flatbuffers.Offset, DISTANCE_PC:number, DISTANCE_LO_PC:number, DISTANCE_HI_PC:number, DISTANCE_METHOD:strDistanceEstimator, DISTANCE_REFOffset:flatbuffers.Offset):flatbuffers.Offset {
   STR.startSTR(builder);
   STR.addId(builder, IDOffset);
   STR.addCsId(builder, CS_ID);
   STR.addGncCatId(builder, GNC_CAT_ID);
-  STR.addGaiadr3CatId(builder, GAIADR3_CAT_ID);
+  STR.addGaiaDr3SourceId(builder, GAIA_DR3_SOURCE_ID);
   STR.addHipCatId(builder, HIP_CAT_ID);
   STR.addCatVersion(builder, CAT_VERSIONOffset);
   STR.addAstrometryOrigin(builder, ASTROMETRY_ORIGINOffset);
@@ -870,6 +940,11 @@ static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID
   STR.addVariabilityAmplitude(builder, VARIABILITY_AMPLITUDE);
   STR.addVariabilityEpoch(builder, VARIABILITY_EPOCH);
   STR.addPhotometry(builder, PHOTOMETRYOffset);
+  STR.addDistancePc(builder, DISTANCE_PC);
+  STR.addDistanceLoPc(builder, DISTANCE_LO_PC);
+  STR.addDistanceHiPc(builder, DISTANCE_HI_PC);
+  STR.addDistanceMethod(builder, DISTANCE_METHOD);
+  STR.addDistanceRef(builder, DISTANCE_REFOffset);
   return STR.endSTR(builder);
 }
 
@@ -878,7 +953,7 @@ unpack(): STRT {
     this.ID(),
     this.CS_ID(),
     this.GNC_CAT_ID(),
-    this.GAIADR3_CAT_ID(),
+    this.GAIA_DR3_SOURCE_ID(),
     this.HIP_CAT_ID(),
     this.CAT_VERSION(),
     this.ASTROMETRY_ORIGIN(),
@@ -933,7 +1008,12 @@ unpack(): STRT {
     this.VARIABILITY_PERIOD(),
     this.VARIABILITY_AMPLITUDE(),
     this.VARIABILITY_EPOCH(),
-    this.bb!.createObjList<PHBMeasurement, PHBMeasurementT>(this.PHOTOMETRY.bind(this), this.photometryLength())
+    this.bb!.createObjList<PHBMeasurement, PHBMeasurementT>(this.PHOTOMETRY.bind(this), this.photometryLength()),
+    this.DISTANCE_PC(),
+    this.DISTANCE_LO_PC(),
+    this.DISTANCE_HI_PC(),
+    this.DISTANCE_METHOD(),
+    this.DISTANCE_REF()
   );
 }
 
@@ -942,7 +1022,7 @@ unpackTo(_o: STRT): void {
   _o.ID = this.ID();
   _o.CS_ID = this.CS_ID();
   _o.GNC_CAT_ID = this.GNC_CAT_ID();
-  _o.GAIADR3_CAT_ID = this.GAIADR3_CAT_ID();
+  _o.GAIA_DR3_SOURCE_ID = this.GAIA_DR3_SOURCE_ID();
   _o.HIP_CAT_ID = this.HIP_CAT_ID();
   _o.CAT_VERSION = this.CAT_VERSION();
   _o.ASTROMETRY_ORIGIN = this.ASTROMETRY_ORIGIN();
@@ -998,6 +1078,11 @@ unpackTo(_o: STRT): void {
   _o.VARIABILITY_AMPLITUDE = this.VARIABILITY_AMPLITUDE();
   _o.VARIABILITY_EPOCH = this.VARIABILITY_EPOCH();
   _o.PHOTOMETRY = this.bb!.createObjList<PHBMeasurement, PHBMeasurementT>(this.PHOTOMETRY.bind(this), this.photometryLength());
+  _o.DISTANCE_PC = this.DISTANCE_PC();
+  _o.DISTANCE_LO_PC = this.DISTANCE_LO_PC();
+  _o.DISTANCE_HI_PC = this.DISTANCE_HI_PC();
+  _o.DISTANCE_METHOD = this.DISTANCE_METHOD();
+  _o.DISTANCE_REF = this.DISTANCE_REF();
 }
 }
 
@@ -1006,7 +1091,7 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public CS_ID: bigint = BigInt('0'),
   public GNC_CAT_ID: number = 0,
-  public GAIADR3_CAT_ID: bigint = BigInt('0'),
+  public GAIA_DR3_SOURCE_ID: bigint = BigInt('0'),
   public HIP_CAT_ID: number = 0,
   public CAT_VERSION: string|Uint8Array|null = null,
   public ASTROMETRY_ORIGIN: string|Uint8Array|null = null,
@@ -1061,7 +1146,12 @@ constructor(
   public VARIABILITY_PERIOD: number = NaN,
   public VARIABILITY_AMPLITUDE: number = NaN,
   public VARIABILITY_EPOCH: number = NaN,
-  public PHOTOMETRY: (PHBMeasurementT)[] = []
+  public PHOTOMETRY: (PHBMeasurementT)[] = [],
+  public DISTANCE_PC: number = NaN,
+  public DISTANCE_LO_PC: number = NaN,
+  public DISTANCE_HI_PC: number = NaN,
+  public DISTANCE_METHOD: strDistanceEstimator = strDistanceEstimator.UNSPECIFIED,
+  public DISTANCE_REF: string|Uint8Array|null = null
 ){}
 
 
@@ -1076,12 +1166,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DESIGNATIONS = STR.createDesignationsVector(builder, builder.createObjectOffsetList(this.DESIGNATIONS));
   const VARIABILITY_CLASS = (this.VARIABILITY_CLASS !== null ? builder.createString(this.VARIABILITY_CLASS!) : 0);
   const PHOTOMETRY = STR.createPhotometryVector(builder, builder.createObjectOffsetList(this.PHOTOMETRY));
+  const DISTANCE_REF = (this.DISTANCE_REF !== null ? builder.createString(this.DISTANCE_REF!) : 0);
 
   return STR.createSTR(builder,
     ID,
     this.CS_ID,
     this.GNC_CAT_ID,
-    this.GAIADR3_CAT_ID,
+    this.GAIA_DR3_SOURCE_ID,
     this.HIP_CAT_ID,
     CAT_VERSION,
     ASTROMETRY_ORIGIN,
@@ -1136,7 +1227,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.VARIABILITY_PERIOD,
     this.VARIABILITY_AMPLITUDE,
     this.VARIABILITY_EPOCH,
-    PHOTOMETRY
+    PHOTOMETRY,
+    this.DISTANCE_PC,
+    this.DISTANCE_LO_PC,
+    this.DISTANCE_HI_PC,
+    this.DISTANCE_METHOD,
+    DISTANCE_REF
   );
 }
 }

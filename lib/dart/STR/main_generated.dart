@@ -7,6 +7,48 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
+///  How a star's distance was estimated.
+///  Append new values only; never reorder or reuse existing values.
+enum strDistanceEstimator {
+  UNSPECIFIED(0),
+  BAILER_JONES_2021_GEO(1),
+  BAILER_JONES_2021_PHOTOGEO(2),
+  EDSD_POSTERIOR(3),
+  PARALLAX_INVERSE(4);
+
+  final int value;
+  const strDistanceEstimator(this.value);
+
+  factory strDistanceEstimator.fromValue(int value) {
+    switch (value) {
+      case 0: return strDistanceEstimator.UNSPECIFIED;
+      case 1: return strDistanceEstimator.BAILER_JONES_2021_GEO;
+      case 2: return strDistanceEstimator.BAILER_JONES_2021_PHOTOGEO;
+      case 3: return strDistanceEstimator.EDSD_POSTERIOR;
+      case 4: return strDistanceEstimator.PARALLAX_INVERSE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static strDistanceEstimator? _createOrNull(int? value) =>
+      value == null ? null : strDistanceEstimator.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<strDistanceEstimator> reader = _strDistanceEstimatorReader();
+}
+
+class _strDistanceEstimatorReader extends fb.Reader<strDistanceEstimator> {
+  const _strDistanceEstimatorReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  strDistanceEstimator read(fb.BufferContext bc, int offset) =>
+      strDistanceEstimator.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 ///  Star Catalog Entry
 class STR {
   STR._(this._bc, this._bcOffset);
@@ -28,9 +70,10 @@ class STR {
   ///  GNC star catalog identifier
   int get GNC_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
   int get gncCatId => GNC_CAT_ID;
-  ///  Source identifier in the third data release of the all-sky space astrometry survey
-  int get GAIADR3_CAT_ID => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get gaiadr3CatId => GAIADR3_CAT_ID;
+  ///  Source identifier (source_id) in the third data release of the all-sky space astrometry
+  ///  survey; 0 when the star has no match in that release
+  int get GAIA_DR3_SOURCE_ID => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  int get gaiaDr3SourceId => GAIA_DR3_SOURCE_ID;
   ///  Identifier in the first space astrometry mission's main catalog
   int get HIP_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
   int get hipCatId => HIP_CAT_ID;
@@ -148,7 +191,7 @@ class STR {
   ///  Spectral type in the MK system, e.g. "A1 V"
   String? get SPECTRAL_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 98);
   String? get spectralType => SPECTRAL_TYPE;
-  ///  Proper name as recognised by the astronomical naming authority
+  ///  Proper name as recognized by the astronomical naming authority
   String? get PROPER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
   String? get properName => PROPER_NAME;
   ///  Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
@@ -176,12 +219,33 @@ class STR {
   ///  Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
   double get VARIABILITY_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 118, double.nan);
   double get variabilityEpoch => VARIABILITY_EPOCH;
-  ///  Brightness in every band the star was measured or modelled in
+  ///  Brightness in every band the star was measured or modeled in
   List<PHBMeasurement>? get PHOTOMETRY => const fb.ListReader<PHBMeasurement>(PHBMeasurement.reader).vTableGetNullable(_bc, _bcOffset, 120);
+  ///  Distance from the Sun (parsecs): the posterior median, or the mode for
+  ///  EDSD_POSTERIOR, as DISTANCE_METHOD states
+  double get DISTANCE_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, double.nan);
+  double get distancePc => DISTANCE_PC;
+  ///  Lower bound of the distance (parsecs): the 16th percentile of the posterior
+  ///  for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+  ///  the 68% highest-density interval for EDSD_POSTERIOR, and
+  ///  1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+  double get DISTANCE_LO_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 124, double.nan);
+  double get distanceLoPc => DISTANCE_LO_PC;
+  ///  Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+  ///  the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+  ///  DISTANCE_LO_PC; NaN when unbounded
+  double get DISTANCE_HI_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 126, double.nan);
+  double get distanceHiPc => DISTANCE_HI_PC;
+  ///  Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+  strDistanceEstimator get DISTANCE_METHOD => strDistanceEstimator.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 128, 0));
+  strDistanceEstimator get distanceMethod => DISTANCE_METHOD;
+  ///  Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+  String? get DISTANCE_REF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 130);
+  String? get distanceRef => DISTANCE_REF;
 
   @override
   String toString() {
-    return 'STR{ID: ${ID}, csId: ${csId}, gncCatId: ${gncCatId}, gaiadr3CatId: ${gaiadr3CatId}, hipCatId: ${hipCatId}, catVersion: ${catVersion}, astrometryOrigin: ${astrometryOrigin}, starEpoch: ${starEpoch}, RA: ${RA}, raUnc: ${raUnc}, DEC: ${DEC}, decUnc: ${decUnc}, posUncFlag: ${posUncFlag}, PARALLAX: ${PARALLAX}, parallaxUnc: ${parallaxUnc}, PMRA: ${PMRA}, pmraUnc: ${pmraUnc}, PMDEC: ${PMDEC}, pmdecUnc: ${pmdecUnc}, pmUncFlag: ${pmUncFlag}, GMAG: ${GMAG}, gmagUnc: ${gmagUnc}, BPMAG: ${BPMAG}, bpmagUnc: ${bpmagUnc}, RPMAG: ${RPMAG}, rpmagUnc: ${rpmagUnc}, JMAG: ${JMAG}, jmagUnc: ${jmagUnc}, KMAG: ${KMAG}, kmagUnc: ${kmagUnc}, HMAG: ${HMAG}, hmagUnc: ${hmagUnc}, varFlag: ${varFlag}, multFlag: ${multFlag}, neighborId: ${neighborId}, neighborFlag: ${neighborFlag}, neighborDistance: ${neighborDistance}, shiftFlag: ${shiftFlag}, SHIFT: ${SHIFT}, TEFF: ${TEFF}, teffUnc: ${teffUnc}, LOGG: ${LOGG}, loggUnc: ${loggUnc}, METALLICITY: ${METALLICITY}, extinctionA0: ${extinctionA0}, radialVelocity: ${radialVelocity}, radialVelocityUnc: ${radialVelocityUnc}, spectralType: ${spectralType}, properName: ${properName}, bayerFlamsteed: ${bayerFlamsteed}, CONSTELLATION: ${CONSTELLATION}, hrCatId: ${hrCatId}, hdCatId: ${hdCatId}, DESIGNATIONS: ${DESIGNATIONS}, variabilityClass: ${variabilityClass}, variabilityPeriod: ${variabilityPeriod}, variabilityAmplitude: ${variabilityAmplitude}, variabilityEpoch: ${variabilityEpoch}, PHOTOMETRY: ${PHOTOMETRY}}';
+    return 'STR{ID: ${ID}, csId: ${csId}, gncCatId: ${gncCatId}, gaiaDr3SourceId: ${gaiaDr3SourceId}, hipCatId: ${hipCatId}, catVersion: ${catVersion}, astrometryOrigin: ${astrometryOrigin}, starEpoch: ${starEpoch}, RA: ${RA}, raUnc: ${raUnc}, DEC: ${DEC}, decUnc: ${decUnc}, posUncFlag: ${posUncFlag}, PARALLAX: ${PARALLAX}, parallaxUnc: ${parallaxUnc}, PMRA: ${PMRA}, pmraUnc: ${pmraUnc}, PMDEC: ${PMDEC}, pmdecUnc: ${pmdecUnc}, pmUncFlag: ${pmUncFlag}, GMAG: ${GMAG}, gmagUnc: ${gmagUnc}, BPMAG: ${BPMAG}, bpmagUnc: ${bpmagUnc}, RPMAG: ${RPMAG}, rpmagUnc: ${rpmagUnc}, JMAG: ${JMAG}, jmagUnc: ${jmagUnc}, KMAG: ${KMAG}, kmagUnc: ${kmagUnc}, HMAG: ${HMAG}, hmagUnc: ${hmagUnc}, varFlag: ${varFlag}, multFlag: ${multFlag}, neighborId: ${neighborId}, neighborFlag: ${neighborFlag}, neighborDistance: ${neighborDistance}, shiftFlag: ${shiftFlag}, SHIFT: ${SHIFT}, TEFF: ${TEFF}, teffUnc: ${teffUnc}, LOGG: ${LOGG}, loggUnc: ${loggUnc}, METALLICITY: ${METALLICITY}, extinctionA0: ${extinctionA0}, radialVelocity: ${radialVelocity}, radialVelocityUnc: ${radialVelocityUnc}, spectralType: ${spectralType}, properName: ${properName}, bayerFlamsteed: ${bayerFlamsteed}, CONSTELLATION: ${CONSTELLATION}, hrCatId: ${hrCatId}, hdCatId: ${hdCatId}, DESIGNATIONS: ${DESIGNATIONS}, variabilityClass: ${variabilityClass}, variabilityPeriod: ${variabilityPeriod}, variabilityAmplitude: ${variabilityAmplitude}, variabilityEpoch: ${variabilityEpoch}, PHOTOMETRY: ${PHOTOMETRY}, distancePc: ${distancePc}, distanceLoPc: ${distanceLoPc}, distanceHiPc: ${distanceHiPc}, distanceMethod: ${distanceMethod}, distanceRef: ${distanceRef}}';
   }
 }
 
@@ -199,7 +263,7 @@ class STRBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(59);
+    fbBuilder.startTable(64);
   }
 
   int addIdOffset(int? offset) {
@@ -214,8 +278,8 @@ class STRBuilder {
     fbBuilder.addUint32(2, GNC_CAT_ID);
     return fbBuilder.offset;
   }
-  int addGaiadr3CatId(int? GAIADR3_CAT_ID) {
-    fbBuilder.addInt64(3, GAIADR3_CAT_ID);
+  int addGaiaDr3SourceId(int? GAIA_DR3_SOURCE_ID) {
+    fbBuilder.addUint64(3, GAIA_DR3_SOURCE_ID);
     return fbBuilder.offset;
   }
   int addHipCatId(int? HIP_CAT_ID) {
@@ -438,6 +502,26 @@ class STRBuilder {
     fbBuilder.addOffset(58, offset);
     return fbBuilder.offset;
   }
+  int addDistancePc(double? DISTANCE_PC) {
+    fbBuilder.addFloat64(59, DISTANCE_PC);
+    return fbBuilder.offset;
+  }
+  int addDistanceLoPc(double? DISTANCE_LO_PC) {
+    fbBuilder.addFloat64(60, DISTANCE_LO_PC);
+    return fbBuilder.offset;
+  }
+  int addDistanceHiPc(double? DISTANCE_HI_PC) {
+    fbBuilder.addFloat64(61, DISTANCE_HI_PC);
+    return fbBuilder.offset;
+  }
+  int addDistanceMethod(strDistanceEstimator? DISTANCE_METHOD) {
+    fbBuilder.addUint8(62, DISTANCE_METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addDistanceRefOffset(int? offset) {
+    fbBuilder.addOffset(63, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -448,7 +532,7 @@ class STRObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final int? _CS_ID;
   final int? _GNC_CAT_ID;
-  final int? _GAIADR3_CAT_ID;
+  final int? _GAIA_DR3_SOURCE_ID;
   final int? _HIP_CAT_ID;
   final String? _CAT_VERSION;
   final String? _ASTROMETRY_ORIGIN;
@@ -504,6 +588,11 @@ class STRObjectBuilder extends fb.ObjectBuilder {
   final double? _VARIABILITY_AMPLITUDE;
   final double? _VARIABILITY_EPOCH;
   final List<PHBMeasurementObjectBuilder>? _PHOTOMETRY;
+  final double? _DISTANCE_PC;
+  final double? _DISTANCE_LO_PC;
+  final double? _DISTANCE_HI_PC;
+  final strDistanceEstimator? _DISTANCE_METHOD;
+  final String? _DISTANCE_REF;
 
   STRObjectBuilder({
     String? ID,
@@ -511,8 +600,8 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     int? csId,
     int? GNC_CAT_ID,
     int? gncCatId,
-    int? GAIADR3_CAT_ID,
-    int? gaiadr3CatId,
+    int? GAIA_DR3_SOURCE_ID,
+    int? gaiaDr3SourceId,
     int? HIP_CAT_ID,
     int? hipCatId,
     String? CAT_VERSION,
@@ -605,11 +694,21 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     double? VARIABILITY_EPOCH,
     double? variabilityEpoch,
     List<PHBMeasurementObjectBuilder>? PHOTOMETRY,
+    double? DISTANCE_PC,
+    double? distancePc,
+    double? DISTANCE_LO_PC,
+    double? distanceLoPc,
+    double? DISTANCE_HI_PC,
+    double? distanceHiPc,
+    strDistanceEstimator? DISTANCE_METHOD,
+    strDistanceEstimator? distanceMethod,
+    String? DISTANCE_REF,
+    String? distanceRef,
   })
       : _ID = ID,
         _CS_ID = csId ?? CS_ID,
         _GNC_CAT_ID = gncCatId ?? GNC_CAT_ID,
-        _GAIADR3_CAT_ID = gaiadr3CatId ?? GAIADR3_CAT_ID,
+        _GAIA_DR3_SOURCE_ID = gaiaDr3SourceId ?? GAIA_DR3_SOURCE_ID,
         _HIP_CAT_ID = hipCatId ?? HIP_CAT_ID,
         _CAT_VERSION = catVersion ?? CAT_VERSION,
         _ASTROMETRY_ORIGIN = astrometryOrigin ?? ASTROMETRY_ORIGIN,
@@ -664,7 +763,12 @@ class STRObjectBuilder extends fb.ObjectBuilder {
         _VARIABILITY_PERIOD = variabilityPeriod ?? VARIABILITY_PERIOD,
         _VARIABILITY_AMPLITUDE = variabilityAmplitude ?? VARIABILITY_AMPLITUDE,
         _VARIABILITY_EPOCH = variabilityEpoch ?? VARIABILITY_EPOCH,
-        _PHOTOMETRY = PHOTOMETRY;
+        _PHOTOMETRY = PHOTOMETRY,
+        _DISTANCE_PC = distancePc ?? DISTANCE_PC,
+        _DISTANCE_LO_PC = distanceLoPc ?? DISTANCE_LO_PC,
+        _DISTANCE_HI_PC = distanceHiPc ?? DISTANCE_HI_PC,
+        _DISTANCE_METHOD = distanceMethod ?? DISTANCE_METHOD,
+        _DISTANCE_REF = distanceRef ?? DISTANCE_REF;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -689,11 +793,13 @@ class STRObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_VARIABILITY_CLASS!);
     final int? PHOTOMETRYOffset = _PHOTOMETRY == null ? null
         : fbBuilder.writeList(_PHOTOMETRY!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(59);
+    final int? DISTANCE_REFOffset = _DISTANCE_REF == null ? null
+        : fbBuilder.writeString(_DISTANCE_REF!);
+    fbBuilder.startTable(64);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addInt64(1, _CS_ID);
     fbBuilder.addUint32(2, _GNC_CAT_ID);
-    fbBuilder.addInt64(3, _GAIADR3_CAT_ID);
+    fbBuilder.addUint64(3, _GAIA_DR3_SOURCE_ID);
     fbBuilder.addUint32(4, _HIP_CAT_ID);
     fbBuilder.addOffset(5, CAT_VERSIONOffset);
     fbBuilder.addOffset(6, ASTROMETRY_ORIGINOffset);
@@ -749,6 +855,11 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(56, _VARIABILITY_AMPLITUDE);
     fbBuilder.addFloat64(57, _VARIABILITY_EPOCH);
     fbBuilder.addOffset(58, PHOTOMETRYOffset);
+    fbBuilder.addFloat64(59, _DISTANCE_PC);
+    fbBuilder.addFloat64(60, _DISTANCE_LO_PC);
+    fbBuilder.addFloat64(61, _DISTANCE_HI_PC);
+    fbBuilder.addUint8(62, _DISTANCE_METHOD?.value);
+    fbBuilder.addOffset(63, DISTANCE_REFOffset);
     return fbBuilder.endTable();
   }
 

@@ -7,7 +7,8 @@ import (
 	"math"
 )
 
-/// Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+/// Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+/// or diffuse-map layer.
 type SKT struct {
 	_tab flatbuffers.Table
 }
@@ -56,7 +57,7 @@ func (rcv *SKT) Table() flatbuffers.Table {
 }
 
 /// Stable identifier of the layer: equal across every tile of one
-/// (producer, source catalogue or survey, band, place, epoch).
+/// (producer, source catalog or survey, band, place, epoch).
 func (rcv *SKT) LAYER_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -70,8 +71,9 @@ func (rcv *SKT) LayerId() []byte {
 }
 
 /// Stable identifier of the layer: equal across every tile of one
-/// (producer, source catalogue or survey, band, place, epoch).
-/// Frame the HEALPix grid and the point positions are stated in.
+/// (producer, source catalog or survey, band, place, epoch).
+/// Frame the HEALPix grid and the point positions are stated in; ICRS for
+/// an OCTREE_HELIO_ICRS layer.
 func (rcv *SKT) FRAME() sktCelestialFrame {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -84,7 +86,8 @@ func (rcv *SKT) Frame() sktCelestialFrame {
 	return rcv.FRAME()
 }
 
-/// Frame the HEALPix grid and the point positions are stated in.
+/// Frame the HEALPix grid and the point positions are stated in; ICRS for
+/// an OCTREE_HELIO_ICRS layer.
 func (rcv *SKT) MutateFRAME(n sktCelestialFrame) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
@@ -137,8 +140,8 @@ func (rcv *SKT) MutatePixel(n uint64) bool {
 	return rcv.MutatePIXEL(n)
 }
 
-/// Deepest order of the layer, when the producer knows it; 255 when
-/// unstated.
+/// Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+/// producer knows it; 255 when unstated.
 func (rcv *SKT) MAX_ORDER() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -151,8 +154,8 @@ func (rcv *SKT) MaxOrder() byte {
 	return rcv.MAX_ORDER()
 }
 
-/// Deepest order of the layer, when the producer knows it; 255 when
-/// unstated.
+/// Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+/// producer knows it; 255 when unstated.
 func (rcv *SKT) MutateMAX_ORDER(n byte) bool {
 	return rcv._tab.MutateByteSlot(12, n)
 }
@@ -161,8 +164,8 @@ func (rcv *SKT) MutateMaxOrder(n byte) bool {
 	return rcv.MutateMAX_ORDER(n)
 }
 
-/// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-/// a leaf.
+/// Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+/// 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
 func (rcv *SKT) CHILD_MASK() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -175,8 +178,8 @@ func (rcv *SKT) ChildMask() byte {
 	return rcv.CHILD_MASK()
 }
 
-/// Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-/// a leaf.
+/// Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+/// 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
 func (rcv *SKT) MutateCHILD_MASK(n byte) bool {
 	return rcv._tab.MutateByteSlot(14, n)
 }
@@ -267,7 +270,7 @@ func (rcv *SKT) BandId() []byte {
 
 /// Band identifier; resolves to a `$PHB` BAND_ID. MAG and map values are
 /// in this band.
-/// Effective wavelength of the band, nanometres (vacuum).
+/// Effective wavelength of the band, nanometers (vacuum).
 func (rcv *SKT) WAVELENGTH_EFF_NM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -280,7 +283,7 @@ func (rcv *SKT) WavelengthEffNm() float64 {
 	return rcv.WAVELENGTH_EFF_NM()
 }
 
-/// Effective wavelength of the band, nanometres (vacuum).
+/// Effective wavelength of the band, nanometers (vacuum).
 func (rcv *SKT) MutateWAVELENGTH_EFF_NM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
 }
@@ -289,7 +292,7 @@ func (rcv *SKT) MutateWavelengthEffNm(n float64) bool {
 	return rcv.MutateWAVELENGTH_EFF_NM(n)
 }
 
-/// Short edge of a band-integrated map, nanometres.
+/// Short edge of a band-integrated map, nanometers.
 func (rcv *SKT) WAVELENGTH_MIN_NM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -302,7 +305,7 @@ func (rcv *SKT) WavelengthMinNm() float64 {
 	return rcv.WAVELENGTH_MIN_NM()
 }
 
-/// Short edge of a band-integrated map, nanometres.
+/// Short edge of a band-integrated map, nanometers.
 func (rcv *SKT) MutateWAVELENGTH_MIN_NM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
 }
@@ -311,7 +314,7 @@ func (rcv *SKT) MutateWavelengthMinNm(n float64) bool {
 	return rcv.MutateWAVELENGTH_MIN_NM(n)
 }
 
-/// Long edge of a band-integrated map, nanometres.
+/// Long edge of a band-integrated map, nanometers.
 func (rcv *SKT) WAVELENGTH_MAX_NM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -324,7 +327,7 @@ func (rcv *SKT) WavelengthMaxNm() float64 {
 	return rcv.WAVELENGTH_MAX_NM()
 }
 
-/// Long edge of a band-integrated map, nanometres.
+/// Long edge of a band-integrated map, nanometers.
 func (rcv *SKT) MutateWAVELENGTH_MAX_NM(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
 }
@@ -400,7 +403,7 @@ func (rcv *SKT) MutateEpoch(n float64) bool {
 }
 
 /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-/// spacecraft or the geocentre), as the producer names it.
+/// spacecraft or the geocenter), as the producer names it.
 func (rcv *SKT) OBSERVER_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -414,8 +417,8 @@ func (rcv *SKT) ObserverId() []byte {
 }
 
 /// Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-/// spacecraft or the geocentre), as the producer names it.
-/// Number of points in the payload.
+/// spacecraft or the geocenter), as the producer names it.
+/// Number of points in the payload (POINTS or POINTS_3D).
 func (rcv *SKT) POINT_COUNT() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -428,7 +431,7 @@ func (rcv *SKT) PointCount() uint32 {
 	return rcv.POINT_COUNT()
 }
 
-/// Number of points in the payload.
+/// Number of points in the payload (POINTS or POINTS_3D).
 func (rcv *SKT) MutatePOINT_COUNT(n uint32) bool {
 	return rcv._tab.MutateUint32Slot(38, n)
 }
@@ -483,7 +486,7 @@ func (rcv *SKT) MutateMagLimit(n float32) bool {
 	return rcv.MutateMAG_LIMIT(n)
 }
 
-/// What each point's COLOR holds.
+/// What each point's COLOR holds (POINTS and POINTS_3D alike).
 func (rcv *SKT) COLOR_ENCODING() sktColorEncoding {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -496,7 +499,7 @@ func (rcv *SKT) ColorEncoding() sktColorEncoding {
 	return rcv.COLOR_ENCODING()
 }
 
-/// What each point's COLOR holds.
+/// What each point's COLOR holds (POINTS and POINTS_3D alike).
 func (rcv *SKT) MutateCOLOR_ENCODING(n sktColorEncoding) bool {
 	return rcv._tab.MutateByteSlot(44, byte(n))
 }
@@ -505,7 +508,7 @@ func (rcv *SKT) MutateColorEncoding(n sktColorEncoding) bool {
 	return rcv.MutateCOLOR_ENCODING(n)
 }
 
-/// Bluer band of a COLOR_INDEX colour.
+/// Bluer band of a COLOR_INDEX color.
 func (rcv *SKT) COLOR_BLUE_BAND_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -518,8 +521,8 @@ func (rcv *SKT) ColorBlueBandId() []byte {
 	return rcv.COLOR_BLUE_BAND_ID()
 }
 
-/// Bluer band of a COLOR_INDEX colour.
-/// Redder band of a COLOR_INDEX colour.
+/// Bluer band of a COLOR_INDEX color.
+/// Redder band of a COLOR_INDEX color.
 func (rcv *SKT) COLOR_RED_BAND_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -532,7 +535,7 @@ func (rcv *SKT) ColorRedBandId() []byte {
 	return rcv.COLOR_RED_BAND_ID()
 }
 
-/// Redder band of a COLOR_INDEX colour.
+/// Redder band of a COLOR_INDEX color.
 /// Packed points, brightest first.
 func (rcv *SKT) POINTS(obj *SKTPoint, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
@@ -1003,7 +1006,7 @@ func (rcv *SKT) MutatePayloadBytes(n uint64) bool {
 	return rcv.MutatePAYLOAD_BYTES(n)
 }
 
-/// Start of the observations the tile summarises, ISO 8601 UTC.
+/// Start of the observations the tile summarizes, ISO 8601 UTC.
 func (rcv *SKT) OBSERVATION_START() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
@@ -1016,8 +1019,8 @@ func (rcv *SKT) ObservationStart() []byte {
 	return rcv.OBSERVATION_START()
 }
 
-/// Start of the observations the tile summarises, ISO 8601 UTC.
-/// End of the observations the tile summarises, ISO 8601 UTC.
+/// Start of the observations the tile summarizes, ISO 8601 UTC.
+/// End of the observations the tile summarizes, ISO 8601 UTC.
 func (rcv *SKT) OBSERVATION_END() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
@@ -1030,8 +1033,8 @@ func (rcv *SKT) ObservationEnd() []byte {
 	return rcv.OBSERVATION_END()
 }
 
-/// End of the observations the tile summarises, ISO 8601 UTC.
-/// Verbatim names of the catalogues or surveys the tile was derived from.
+/// End of the observations the tile summarizes, ISO 8601 UTC.
+/// Verbatim names of the catalogs or surveys the tile was derived from.
 func (rcv *SKT) SOURCE_NAMES(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
@@ -1057,7 +1060,7 @@ func (rcv *SKT) SourceNamesLength() int {
 	return rcv.SOURCE_NAMESLength()
 }
 
-/// Verbatim names of the catalogues or surveys the tile was derived from.
+/// Verbatim names of the catalogs or surveys the tile was derived from.
 /// Peer identifier of the node that produced the tile.
 func (rcv *SKT) PRODUCER_PEER_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
@@ -1114,7 +1117,7 @@ func (rcv *SKT) Citation() []byte {
 }
 
 /// Citation the upstream publishers ask for.
-/// URL of the licence or terms of the source data.
+/// URL of the license or terms of the source data.
 func (rcv *SKT) LICENSE_URL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
@@ -1127,9 +1130,241 @@ func (rcv *SKT) LicenseUrl() []byte {
 	return rcv.LICENSE_URL()
 }
 
-/// URL of the licence or terms of the source data.
+/// URL of the license or terms of the source data.
+/// How the layer divides into tiles.
+func (rcv *SKT) PARTITION() sktPartitionScheme {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
+	if o != 0 {
+		return sktPartitionScheme(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *SKT) Partition() sktPartitionScheme {
+	return rcv.PARTITION()
+}
+
+/// How the layer divides into tiles.
+func (rcv *SKT) MutatePARTITION(n sktPartitionScheme) bool {
+	return rcv._tab.MutateByteSlot(104, byte(n))
+}
+
+func (rcv *SKT) MutatePartition(n sktPartitionScheme) bool {
+	return rcv.MutatePARTITION(n)
+}
+
+/// Octree level of the node; the root is 0, at most 21.
+func (rcv *SKT) OCTREE_LEVEL() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SKT) OctreeLevel() byte {
+	return rcv.OCTREE_LEVEL()
+}
+
+/// Octree level of the node; the root is 0, at most 21.
+func (rcv *SKT) MutateOCTREE_LEVEL(n byte) bool {
+	return rcv._tab.MutateByteSlot(106, n)
+}
+
+func (rcv *SKT) MutateOctreeLevel(n byte) bool {
+	return rcv.MutateOCTREE_LEVEL(n)
+}
+
+/// Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+func (rcv *SKT) OCTREE_KEY() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *SKT) OctreeKey() uint64 {
+	return rcv.OCTREE_KEY()
+}
+
+/// Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+func (rcv *SKT) MutateOCTREE_KEY(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(108, n)
+}
+
+func (rcv *SKT) MutateOctreeKey(n uint64) bool {
+	return rcv.MutateOCTREE_KEY(n)
+}
+
+/// ICRS X of the node's center, parsecs from the Sun.
+func (rcv *SKT) CENTER_X_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *SKT) CenterXPc() float64 {
+	return rcv.CENTER_X_PC()
+}
+
+/// ICRS X of the node's center, parsecs from the Sun.
+func (rcv *SKT) MutateCENTER_X_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(110, n)
+}
+
+func (rcv *SKT) MutateCenterXPc(n float64) bool {
+	return rcv.MutateCENTER_X_PC(n)
+}
+
+/// ICRS Y of the node's center, parsecs from the Sun.
+func (rcv *SKT) CENTER_Y_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *SKT) CenterYPc() float64 {
+	return rcv.CENTER_Y_PC()
+}
+
+/// ICRS Y of the node's center, parsecs from the Sun.
+func (rcv *SKT) MutateCENTER_Y_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(112, n)
+}
+
+func (rcv *SKT) MutateCenterYPc(n float64) bool {
+	return rcv.MutateCENTER_Y_PC(n)
+}
+
+/// ICRS Z of the node's center, parsecs from the Sun.
+func (rcv *SKT) CENTER_Z_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *SKT) CenterZPc() float64 {
+	return rcv.CENTER_Z_PC()
+}
+
+/// ICRS Z of the node's center, parsecs from the Sun.
+func (rcv *SKT) MutateCENTER_Z_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(114, n)
+}
+
+func (rcv *SKT) MutateCenterZPc(n float64) bool {
+	return rcv.MutateCENTER_Z_PC(n)
+}
+
+/// Half the edge length of the node's cube, parsecs.
+func (rcv *SKT) HALF_SIZE_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *SKT) HalfSizePc() float64 {
+	return rcv.HALF_SIZE_PC()
+}
+
+/// Half the edge length of the node's cube, parsecs.
+func (rcv *SKT) MutateHALF_SIZE_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(116, n)
+}
+
+func (rcv *SKT) MutateHalfSizePc(n float64) bool {
+	return rcv.MutateHALF_SIZE_PC(n)
+}
+
+/// Brightest absolute magnitude in the node.
+func (rcv *SKT) ABS_MAG_BRIGHTEST() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return float32(math.NaN())
+}
+
+func (rcv *SKT) AbsMagBrightest() float32 {
+	return rcv.ABS_MAG_BRIGHTEST()
+}
+
+/// Brightest absolute magnitude in the node.
+func (rcv *SKT) MutateABS_MAG_BRIGHTEST(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(118, n)
+}
+
+func (rcv *SKT) MutateAbsMagBrightest(n float32) bool {
+	return rcv.MutateABS_MAG_BRIGHTEST(n)
+}
+
+/// Faintest absolute magnitude in the node; with its ancestors, the layer
+/// is complete to this limit inside the node's cube.
+func (rcv *SKT) ABS_MAG_FAINTEST() float32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
+	}
+	return float32(math.NaN())
+}
+
+func (rcv *SKT) AbsMagFaintest() float32 {
+	return rcv.ABS_MAG_FAINTEST()
+}
+
+/// Faintest absolute magnitude in the node; with its ancestors, the layer
+/// is complete to this limit inside the node's cube.
+func (rcv *SKT) MutateABS_MAG_FAINTEST(n float32) bool {
+	return rcv._tab.MutateFloat32Slot(120, n)
+}
+
+func (rcv *SKT) MutateAbsMagFaintest(n float32) bool {
+	return rcv.MutateABS_MAG_FAINTEST(n)
+}
+
+/// Packed points of an octree node, brightest absolute magnitude first.
+func (rcv *SKT) POINTS_3D(obj *SKTPoint3D, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 24
+		if obj == nil {
+			obj = new(SKTPoint3D)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *SKT) Points3d(obj *SKTPoint3D, j int) bool {
+	return rcv.POINTS_3D(obj, j)
+}
+
+func (rcv *SKT) POINTS_3DLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *SKT) Points3dLength() int {
+	return rcv.POINTS_3DLength()
+}
+
+/// Packed points of an octree node, brightest absolute magnitude first.
 func SKTStart(builder *flatbuffers.Builder) {
-	builder.StartObject(50)
+	builder.StartObject(60)
 }
 func SKTAddLAYER_ID(builder *flatbuffers.Builder, LAYER_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(LAYER_ID), 0)
@@ -1460,6 +1695,72 @@ func SKTAddLICENSE_URL(builder *flatbuffers.Builder, LICENSE_URL flatbuffers.UOf
 }
 func SKTAddLicenseUrl(builder *flatbuffers.Builder, LICENSE_URL flatbuffers.UOffsetT) {
 	SKTAddLICENSE_URL(builder, LICENSE_URL)
+}
+func SKTAddPARTITION(builder *flatbuffers.Builder, PARTITION sktPartitionScheme) {
+	builder.PrependByteSlot(50, byte(PARTITION), 0)
+}
+func SKTAddPartition(builder *flatbuffers.Builder, PARTITION sktPartitionScheme) {
+	SKTAddPARTITION(builder, PARTITION)
+}
+func SKTAddOCTREE_LEVEL(builder *flatbuffers.Builder, OCTREE_LEVEL byte) {
+	builder.PrependByteSlot(51, OCTREE_LEVEL, 0)
+}
+func SKTAddOctreeLevel(builder *flatbuffers.Builder, OCTREE_LEVEL byte) {
+	SKTAddOCTREE_LEVEL(builder, OCTREE_LEVEL)
+}
+func SKTAddOCTREE_KEY(builder *flatbuffers.Builder, OCTREE_KEY uint64) {
+	builder.PrependUint64Slot(52, OCTREE_KEY, 0)
+}
+func SKTAddOctreeKey(builder *flatbuffers.Builder, OCTREE_KEY uint64) {
+	SKTAddOCTREE_KEY(builder, OCTREE_KEY)
+}
+func SKTAddCENTER_X_PC(builder *flatbuffers.Builder, CENTER_X_PC float64) {
+	builder.PrependFloat64Slot(53, CENTER_X_PC, float64(math.NaN()))
+}
+func SKTAddCenterXPc(builder *flatbuffers.Builder, CENTER_X_PC float64) {
+	SKTAddCENTER_X_PC(builder, CENTER_X_PC)
+}
+func SKTAddCENTER_Y_PC(builder *flatbuffers.Builder, CENTER_Y_PC float64) {
+	builder.PrependFloat64Slot(54, CENTER_Y_PC, float64(math.NaN()))
+}
+func SKTAddCenterYPc(builder *flatbuffers.Builder, CENTER_Y_PC float64) {
+	SKTAddCENTER_Y_PC(builder, CENTER_Y_PC)
+}
+func SKTAddCENTER_Z_PC(builder *flatbuffers.Builder, CENTER_Z_PC float64) {
+	builder.PrependFloat64Slot(55, CENTER_Z_PC, float64(math.NaN()))
+}
+func SKTAddCenterZPc(builder *flatbuffers.Builder, CENTER_Z_PC float64) {
+	SKTAddCENTER_Z_PC(builder, CENTER_Z_PC)
+}
+func SKTAddHALF_SIZE_PC(builder *flatbuffers.Builder, HALF_SIZE_PC float64) {
+	builder.PrependFloat64Slot(56, HALF_SIZE_PC, float64(math.NaN()))
+}
+func SKTAddHalfSizePc(builder *flatbuffers.Builder, HALF_SIZE_PC float64) {
+	SKTAddHALF_SIZE_PC(builder, HALF_SIZE_PC)
+}
+func SKTAddABS_MAG_BRIGHTEST(builder *flatbuffers.Builder, ABS_MAG_BRIGHTEST float32) {
+	builder.PrependFloat32Slot(57, ABS_MAG_BRIGHTEST, float32(math.NaN()))
+}
+func SKTAddAbsMagBrightest(builder *flatbuffers.Builder, ABS_MAG_BRIGHTEST float32) {
+	SKTAddABS_MAG_BRIGHTEST(builder, ABS_MAG_BRIGHTEST)
+}
+func SKTAddABS_MAG_FAINTEST(builder *flatbuffers.Builder, ABS_MAG_FAINTEST float32) {
+	builder.PrependFloat32Slot(58, ABS_MAG_FAINTEST, float32(math.NaN()))
+}
+func SKTAddAbsMagFaintest(builder *flatbuffers.Builder, ABS_MAG_FAINTEST float32) {
+	SKTAddABS_MAG_FAINTEST(builder, ABS_MAG_FAINTEST)
+}
+func SKTAddPOINTS_3D(builder *flatbuffers.Builder, POINTS_3D flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(59, flatbuffers.UOffsetT(POINTS_3D), 0)
+}
+func SKTAddPoints3d(builder *flatbuffers.Builder, POINTS_3D flatbuffers.UOffsetT) {
+	SKTAddPOINTS_3D(builder, POINTS_3D)
+}
+func SKTStartPOINTS_3DVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(24, numElems, 4)
+}
+func SKTStartPoints3dVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return SKTStartPOINTS_3DVector(builder, numElems)
 }
 func SKTEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

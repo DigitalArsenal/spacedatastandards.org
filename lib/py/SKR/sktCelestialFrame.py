@@ -2,7 +2,7 @@
 
 # namespace:
 
-# Celestial frame a tile's HEALPix grid is laid on.
+# Celestial frame a tile's HEALPix grid and point positions are laid on.
 # Append new values only; never reorder or reuse existing values.
 class sktCelestialFrame(object):
     UNSPECIFIED = 0

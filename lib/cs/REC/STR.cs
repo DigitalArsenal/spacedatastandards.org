@@ -31,8 +31,9 @@ public struct STR : IFlatbufferObject
   public long CS_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   /// GNC star catalog identifier
   public uint GNC_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  /// Source identifier in the third data release of the all-sky space astrometry survey
-  public long GAIADR3_CAT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// Source identifier (source_id) in the third data release of the all-sky space astrometry
+  /// survey; 0 when the star has no match in that release
+  public ulong GAIA_DR3_SOURCE_ID { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   /// Identifier in the first space astrometry mission's main catalog
   public uint HIP_CAT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// Catalog version string
@@ -139,7 +140,7 @@ public struct STR : IFlatbufferObject
   public ArraySegment<byte>? GetSPECTRAL_TYPEBytes() { return __p.__vector_as_arraysegment(98); }
 #endif
   public byte[] GetSPECTRAL_TYPEArray() { return __p.__vector_as_array<byte>(98); }
-  /// Proper name as recognised by the astronomical naming authority
+  /// Proper name as recognized by the astronomical naming authority
   public string PROPER_NAME { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPROPER_NAMEBytes() { return __p.__vector_as_span<byte>(100, 1); }
@@ -184,15 +185,37 @@ public struct STR : IFlatbufferObject
   public double VARIABILITY_AMPLITUDE { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
   public double VARIABILITY_EPOCH { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
-  /// Brightness in every band the star was measured or modelled in
+  /// Brightness in every band the star was measured or modeled in
   public PHBMeasurement? PHOTOMETRY(int j) { int o = __p.__offset(120); return o != 0 ? (PHBMeasurement?)(new PHBMeasurement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int PHOTOMETRYLength { get { int o = __p.__offset(120); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Distance from the Sun (parsecs): the posterior median, or the mode for
+  /// EDSD_POSTERIOR, as DISTANCE_METHOD states
+  public double DISTANCE_PC { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+  /// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+  /// the 68% highest-density interval for EDSD_POSTERIOR, and
+  /// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+  public double DISTANCE_LO_PC { get { int o = __p.__offset(124); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+  /// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+  /// DISTANCE_LO_PC; NaN when unbounded
+  public double DISTANCE_HI_PC { get { int o = __p.__offset(126); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
+  /// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+  public strDistanceEstimator DISTANCE_METHOD { get { int o = __p.__offset(128); return o != 0 ? (strDistanceEstimator)__p.bb.Get(o + __p.bb_pos) : strDistanceEstimator.UNSPECIFIED; } }
+  /// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+  public string DISTANCE_REF { get { int o = __p.__offset(130); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDISTANCE_REFBytes() { return __p.__vector_as_span<byte>(130, 1); }
+#else
+  public ArraySegment<byte>? GetDISTANCE_REFBytes() { return __p.__vector_as_arraysegment(130); }
+#endif
+  public byte[] GetDISTANCE_REFArray() { return __p.__vector_as_array<byte>(130); }
 
   public static Offset<STR> CreateSTR(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       long CS_ID = 0,
       uint GNC_CAT_ID = 0,
-      long GAIADR3_CAT_ID = 0,
+      ulong GAIA_DR3_SOURCE_ID = 0,
       uint HIP_CAT_ID = 0,
       StringOffset CAT_VERSIONOffset = default(StringOffset),
       StringOffset ASTROMETRY_ORIGINOffset = default(StringOffset),
@@ -247,8 +270,16 @@ public struct STR : IFlatbufferObject
       double VARIABILITY_PERIOD = Double.NaN,
       double VARIABILITY_AMPLITUDE = Double.NaN,
       double VARIABILITY_EPOCH = Double.NaN,
-      VectorOffset PHOTOMETRYOffset = default(VectorOffset)) {
-    builder.StartTable(59);
+      VectorOffset PHOTOMETRYOffset = default(VectorOffset),
+      double DISTANCE_PC = Double.NaN,
+      double DISTANCE_LO_PC = Double.NaN,
+      double DISTANCE_HI_PC = Double.NaN,
+      strDistanceEstimator DISTANCE_METHOD = strDistanceEstimator.UNSPECIFIED,
+      StringOffset DISTANCE_REFOffset = default(StringOffset)) {
+    builder.StartTable(64);
+    STR.AddDISTANCE_HI_PC(builder, DISTANCE_HI_PC);
+    STR.AddDISTANCE_LO_PC(builder, DISTANCE_LO_PC);
+    STR.AddDISTANCE_PC(builder, DISTANCE_PC);
     STR.AddVARIABILITY_EPOCH(builder, VARIABILITY_EPOCH);
     STR.AddVARIABILITY_AMPLITUDE(builder, VARIABILITY_AMPLITUDE);
     STR.AddVARIABILITY_PERIOD(builder, VARIABILITY_PERIOD);
@@ -285,8 +316,9 @@ public struct STR : IFlatbufferObject
     STR.AddRA_UNC(builder, RA_UNC);
     STR.AddRA(builder, RA);
     STR.AddSTAR_EPOCH(builder, STAR_EPOCH);
-    STR.AddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID);
+    STR.AddGAIA_DR3_SOURCE_ID(builder, GAIA_DR3_SOURCE_ID);
     STR.AddCS_ID(builder, CS_ID);
+    STR.AddDISTANCE_REF(builder, DISTANCE_REFOffset);
     STR.AddPHOTOMETRY(builder, PHOTOMETRYOffset);
     STR.AddVARIABILITY_CLASS(builder, VARIABILITY_CLASSOffset);
     STR.AddDESIGNATIONS(builder, DESIGNATIONSOffset);
@@ -302,6 +334,7 @@ public struct STR : IFlatbufferObject
     STR.AddHIP_CAT_ID(builder, HIP_CAT_ID);
     STR.AddGNC_CAT_ID(builder, GNC_CAT_ID);
     STR.AddID(builder, IDOffset);
+    STR.AddDISTANCE_METHOD(builder, DISTANCE_METHOD);
     STR.AddSHIFT_FLAG(builder, SHIFT_FLAG);
     STR.AddNEIGHBOR_FLAG(builder, NEIGHBOR_FLAG);
     STR.AddMULT_FLAG(builder, MULT_FLAG);
@@ -311,11 +344,11 @@ public struct STR : IFlatbufferObject
     return STR.EndSTR(builder);
   }
 
-  public static void StartSTR(FlatBufferBuilder builder) { builder.StartTable(59); }
+  public static void StartSTR(FlatBufferBuilder builder) { builder.StartTable(64); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCS_ID(FlatBufferBuilder builder, long CS_ID) { builder.AddLong(1, CS_ID, 0); }
   public static void AddGNC_CAT_ID(FlatBufferBuilder builder, uint GNC_CAT_ID) { builder.AddUint(2, GNC_CAT_ID, 0); }
-  public static void AddGAIADR3_CAT_ID(FlatBufferBuilder builder, long GAIADR3_CAT_ID) { builder.AddLong(3, GAIADR3_CAT_ID, 0); }
+  public static void AddGAIA_DR3_SOURCE_ID(FlatBufferBuilder builder, ulong GAIA_DR3_SOURCE_ID) { builder.AddUlong(3, GAIA_DR3_SOURCE_ID, 0); }
   public static void AddHIP_CAT_ID(FlatBufferBuilder builder, uint HIP_CAT_ID) { builder.AddUint(4, HIP_CAT_ID, 0); }
   public static void AddCAT_VERSION(FlatBufferBuilder builder, StringOffset CAT_VERSIONOffset) { builder.AddOffset(5, CAT_VERSIONOffset.Value, 0); }
   public static void AddASTROMETRY_ORIGIN(FlatBufferBuilder builder, StringOffset ASTROMETRY_ORIGINOffset) { builder.AddOffset(6, ASTROMETRY_ORIGINOffset.Value, 0); }
@@ -381,6 +414,11 @@ public struct STR : IFlatbufferObject
   public static VectorOffset CreatePHOTOMETRYVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PHBMeasurement>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePHOTOMETRYVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PHBMeasurement>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPHOTOMETRYVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddDISTANCE_PC(FlatBufferBuilder builder, double DISTANCE_PC) { builder.AddDouble(59, DISTANCE_PC, Double.NaN); }
+  public static void AddDISTANCE_LO_PC(FlatBufferBuilder builder, double DISTANCE_LO_PC) { builder.AddDouble(60, DISTANCE_LO_PC, Double.NaN); }
+  public static void AddDISTANCE_HI_PC(FlatBufferBuilder builder, double DISTANCE_HI_PC) { builder.AddDouble(61, DISTANCE_HI_PC, Double.NaN); }
+  public static void AddDISTANCE_METHOD(FlatBufferBuilder builder, strDistanceEstimator DISTANCE_METHOD) { builder.AddByte(62, (byte)DISTANCE_METHOD, 0); }
+  public static void AddDISTANCE_REF(FlatBufferBuilder builder, StringOffset DISTANCE_REFOffset) { builder.AddOffset(63, DISTANCE_REFOffset.Value, 0); }
   public static Offset<STR> EndSTR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<STR>(o);
@@ -396,7 +434,7 @@ public struct STR : IFlatbufferObject
     _o.ID = this.ID;
     _o.CS_ID = this.CS_ID;
     _o.GNC_CAT_ID = this.GNC_CAT_ID;
-    _o.GAIADR3_CAT_ID = this.GAIADR3_CAT_ID;
+    _o.GAIA_DR3_SOURCE_ID = this.GAIA_DR3_SOURCE_ID;
     _o.HIP_CAT_ID = this.HIP_CAT_ID;
     _o.CAT_VERSION = this.CAT_VERSION;
     _o.ASTROMETRY_ORIGIN = this.ASTROMETRY_ORIGIN;
@@ -454,6 +492,11 @@ public struct STR : IFlatbufferObject
     _o.VARIABILITY_EPOCH = this.VARIABILITY_EPOCH;
     _o.PHOTOMETRY = new List<PHBMeasurementT>();
     for (var _j = 0; _j < this.PHOTOMETRYLength; ++_j) {_o.PHOTOMETRY.Add(this.PHOTOMETRY(_j).HasValue ? this.PHOTOMETRY(_j).Value.UnPack() : null);}
+    _o.DISTANCE_PC = this.DISTANCE_PC;
+    _o.DISTANCE_LO_PC = this.DISTANCE_LO_PC;
+    _o.DISTANCE_HI_PC = this.DISTANCE_HI_PC;
+    _o.DISTANCE_METHOD = this.DISTANCE_METHOD;
+    _o.DISTANCE_REF = this.DISTANCE_REF;
   }
   public static Offset<STR> Pack(FlatBufferBuilder builder, STRT _o) {
     if (_o == null) return default(Offset<STR>);
@@ -477,12 +520,13 @@ public struct STR : IFlatbufferObject
       for (var _j = 0; _j < __PHOTOMETRY.Length; ++_j) { __PHOTOMETRY[_j] = PHBMeasurement.Pack(builder, _o.PHOTOMETRY[_j]); }
       _PHOTOMETRY = CreatePHOTOMETRYVector(builder, __PHOTOMETRY);
     }
+    var _DISTANCE_REF = _o.DISTANCE_REF == null ? default(StringOffset) : builder.CreateString(_o.DISTANCE_REF);
     return CreateSTR(
       builder,
       _ID,
       _o.CS_ID,
       _o.GNC_CAT_ID,
-      _o.GAIADR3_CAT_ID,
+      _o.GAIA_DR3_SOURCE_ID,
       _o.HIP_CAT_ID,
       _CAT_VERSION,
       _ASTROMETRY_ORIGIN,
@@ -537,7 +581,12 @@ public struct STR : IFlatbufferObject
       _o.VARIABILITY_PERIOD,
       _o.VARIABILITY_AMPLITUDE,
       _o.VARIABILITY_EPOCH,
-      _PHOTOMETRY);
+      _PHOTOMETRY,
+      _o.DISTANCE_PC,
+      _o.DISTANCE_LO_PC,
+      _o.DISTANCE_HI_PC,
+      _o.DISTANCE_METHOD,
+      _DISTANCE_REF);
   }
 }
 
@@ -546,7 +595,7 @@ public class STRT
   public string ID { get; set; }
   public long CS_ID { get; set; }
   public uint GNC_CAT_ID { get; set; }
-  public long GAIADR3_CAT_ID { get; set; }
+  public ulong GAIA_DR3_SOURCE_ID { get; set; }
   public uint HIP_CAT_ID { get; set; }
   public string CAT_VERSION { get; set; }
   public string ASTROMETRY_ORIGIN { get; set; }
@@ -602,12 +651,17 @@ public class STRT
   public double VARIABILITY_AMPLITUDE { get; set; }
   public double VARIABILITY_EPOCH { get; set; }
   public List<PHBMeasurementT> PHOTOMETRY { get; set; }
+  public double DISTANCE_PC { get; set; }
+  public double DISTANCE_LO_PC { get; set; }
+  public double DISTANCE_HI_PC { get; set; }
+  public strDistanceEstimator DISTANCE_METHOD { get; set; }
+  public string DISTANCE_REF { get; set; }
 
   public STRT() {
     this.ID = null;
     this.CS_ID = 0;
     this.GNC_CAT_ID = 0;
-    this.GAIADR3_CAT_ID = 0;
+    this.GAIA_DR3_SOURCE_ID = 0;
     this.HIP_CAT_ID = 0;
     this.CAT_VERSION = null;
     this.ASTROMETRY_ORIGIN = null;
@@ -663,6 +717,11 @@ public class STRT
     this.VARIABILITY_AMPLITUDE = Double.NaN;
     this.VARIABILITY_EPOCH = Double.NaN;
     this.PHOTOMETRY = null;
+    this.DISTANCE_PC = Double.NaN;
+    this.DISTANCE_LO_PC = Double.NaN;
+    this.DISTANCE_HI_PC = Double.NaN;
+    this.DISTANCE_METHOD = strDistanceEstimator.UNSPECIFIED;
+    this.DISTANCE_REF = null;
   }
   public static STRT DeserializeFromBinary(byte[] fbBuffer) {
     return STR.GetRootAsSTR(new ByteBuffer(fbBuffer)).UnPack();
@@ -683,7 +742,7 @@ static public class STRVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyField(tablePos, 6 /*CS_ID*/, 8 /*long*/, 8, false)
       && verifier.VerifyField(tablePos, 8 /*GNC_CAT_ID*/, 4 /*uint*/, 4, false)
-      && verifier.VerifyField(tablePos, 10 /*GAIADR3_CAT_ID*/, 8 /*long*/, 8, false)
+      && verifier.VerifyField(tablePos, 10 /*GAIA_DR3_SOURCE_ID*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 12 /*HIP_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 14 /*CAT_VERSION*/, false)
       && verifier.VerifyString(tablePos, 16 /*ASTROMETRY_ORIGIN*/, false)
@@ -739,6 +798,11 @@ static public class STRVerify
       && verifier.VerifyField(tablePos, 116 /*VARIABILITY_AMPLITUDE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 118 /*VARIABILITY_EPOCH*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfTables(tablePos, 120 /*PHOTOMETRY*/, PHBMeasurementVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 122 /*DISTANCE_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 124 /*DISTANCE_LO_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 126 /*DISTANCE_HI_PC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 128 /*DISTANCE_METHOD*/, 1 /*strDistanceEstimator*/, 1, false)
+      && verifier.VerifyString(tablePos, 130 /*DISTANCE_REF*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

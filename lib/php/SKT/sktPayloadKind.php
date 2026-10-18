@@ -10,7 +10,7 @@ class sktPayloadKind
     const POINT_SOURCES = 1;
     /// Pixel map of a diffuse quantity.
     const DIFFUSE_MAP = 2;
-    /// Pixel map of localisation probability per pixel; the values of a
+    /// Pixel map of localization probability per pixel; the values of a
     /// complete layer at one order sum to 1.
     const PROBABILITY_MAP = 3;
 

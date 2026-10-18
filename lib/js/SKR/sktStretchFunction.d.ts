@@ -12,7 +12,7 @@ export declare enum sktStretchFunction {
      */
     ASINH = 4,
     /**
-     * Histogram equalisation over PERCENTILE_VALUES.
+     * Histogram equalization over PERCENTILE_VALUES.
      */
     HISTOGRAM_EQUALIZED = 5
 }

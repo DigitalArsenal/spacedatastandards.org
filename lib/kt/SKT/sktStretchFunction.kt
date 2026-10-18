@@ -16,7 +16,7 @@ class sktStretchFunction private constructor() {
          */
         const val ASINH: UByte = 4u
         /**
-         * Histogram equalisation over PERCENTILE_VALUES.
+         * Histogram equalization over PERCENTILE_VALUES.
          */
         const val HISTOGRAM_EQUALIZED: UByte = 5u
     }

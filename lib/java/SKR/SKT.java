@@ -17,7 +17,8 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+ * Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+ * or diffuse-map layer.
  */
 @SuppressWarnings("unused")
 public final class SKT extends com.google.flatbuffers.Table {
@@ -30,13 +31,14 @@ public final class SKT extends com.google.flatbuffers.Table {
 
   /**
    * Stable identifier of the layer: equal across every tile of one
-   * (producer, source catalogue or survey, band, place, epoch).
+   * (producer, source catalog or survey, band, place, epoch).
    */
   public String LAYER_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LAYER_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer LAYER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
-   * Frame the HEALPix grid and the point positions are stated in.
+   * Frame the HEALPix grid and the point positions are stated in; ICRS for
+   * an OCTREE_HELIO_ICRS layer.
    */
   public int FRAME() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1; }
   /**
@@ -48,13 +50,13 @@ public final class SKT extends com.google.flatbuffers.Table {
    */
   public long PIXEL() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
-   * Deepest order of the layer, when the producer knows it; 255 when
-   * unstated.
+   * Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+   * producer knows it; 255 when unstated.
    */
   public int MAX_ORDER() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 255; }
   /**
-   * Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-   * a leaf.
+   * Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+   * 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
    */
   public int CHILD_MASK() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
@@ -77,15 +79,15 @@ public final class SKT extends com.google.flatbuffers.Table {
   public ByteBuffer BAND_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer BAND_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
   /**
-   * Effective wavelength of the band, nanometres (vacuum).
+   * Effective wavelength of the band, nanometers (vacuum).
    */
   public double WAVELENGTH_EFF_NM() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
-   * Short edge of a band-integrated map, nanometres.
+   * Short edge of a band-integrated map, nanometers.
    */
   public double WAVELENGTH_MIN_NM() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
-   * Long edge of a band-integrated map, nanometres.
+   * Long edge of a band-integrated map, nanometers.
    */
   public double WAVELENGTH_MAX_NM() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
@@ -102,13 +104,13 @@ public final class SKT extends com.google.flatbuffers.Table {
   public double EPOCH() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
   /**
    * Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-   * spacecraft or the geocentre), as the producer names it.
+   * spacecraft or the geocenter), as the producer names it.
    */
   public String OBSERVER_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBSERVER_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer OBSERVER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
   /**
-   * Number of points in the payload.
+   * Number of points in the payload (POINTS or POINTS_3D).
    */
   public long POINT_COUNT() { int o = __offset(38); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
   /**
@@ -121,17 +123,17 @@ public final class SKT extends com.google.flatbuffers.Table {
    */
   public float MAG_LIMIT() { int o = __offset(42); return o != 0 ? bb.getFloat(o + bb_pos) : Float.NaN; }
   /**
-   * What each point's COLOR holds.
+   * What each point's COLOR holds (POINTS and POINTS_3D alike).
    */
   public int COLOR_ENCODING() { int o = __offset(44); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * Bluer band of a COLOR_INDEX colour.
+   * Bluer band of a COLOR_INDEX color.
    */
   public String COLOR_BLUE_BAND_ID() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COLOR_BLUE_BAND_IDAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
   public ByteBuffer COLOR_BLUE_BAND_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
   /**
-   * Redder band of a COLOR_INDEX colour.
+   * Redder band of a COLOR_INDEX color.
    */
   public String COLOR_RED_BAND_ID() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COLOR_RED_BAND_IDAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
@@ -244,19 +246,19 @@ public final class SKT extends com.google.flatbuffers.Table {
    */
   public long PAYLOAD_BYTES() { int o = __offset(86); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
   /**
-   * Start of the observations the tile summarises, ISO 8601 UTC.
+   * Start of the observations the tile summarizes, ISO 8601 UTC.
    */
   public String OBSERVATION_START() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBSERVATION_STARTAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
   public ByteBuffer OBSERVATION_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
   /**
-   * End of the observations the tile summarises, ISO 8601 UTC.
+   * End of the observations the tile summarizes, ISO 8601 UTC.
    */
   public String OBSERVATION_END() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBSERVATION_ENDAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
   public ByteBuffer OBSERVATION_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
   /**
-   * Verbatim names of the catalogues or surveys the tile was derived from.
+   * Verbatim names of the catalogs or surveys the tile was derived from.
    */
   public String SOURCE_NAMES(int j) { int o = __offset(92); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SOURCE_NAMESLength() { int o = __offset(92); return o != 0 ? __vector_len(o) : 0; }
@@ -287,11 +289,56 @@ public final class SKT extends com.google.flatbuffers.Table {
   public ByteBuffer CITATIONAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
   public ByteBuffer CITATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
   /**
-   * URL of the licence or terms of the source data.
+   * URL of the license or terms of the source data.
    */
   public String LICENSE_URL() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LICENSE_URLAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
   public ByteBuffer LICENSE_URLInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * How the layer divides into tiles.
+   */
+  public int PARTITION() { int o = __offset(104); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Octree level of the node; the root is 0, at most 21.
+   */
+  public int OCTREE_LEVEL() { int o = __offset(106); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+   */
+  public long OCTREE_KEY() { int o = __offset(108); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * ICRS X of the node's center, parsecs from the Sun.
+   */
+  public double CENTER_X_PC() { int o = __offset(110); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ICRS Y of the node's center, parsecs from the Sun.
+   */
+  public double CENTER_Y_PC() { int o = __offset(112); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * ICRS Z of the node's center, parsecs from the Sun.
+   */
+  public double CENTER_Z_PC() { int o = __offset(114); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Half the edge length of the node's cube, parsecs.
+   */
+  public double HALF_SIZE_PC() { int o = __offset(116); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
+  /**
+   * Brightest absolute magnitude in the node.
+   */
+  public float ABS_MAG_BRIGHTEST() { int o = __offset(118); return o != 0 ? bb.getFloat(o + bb_pos) : Float.NaN; }
+  /**
+   * Faintest absolute magnitude in the node; with its ancestors, the layer
+   * is complete to this limit inside the node's cube.
+   */
+  public float ABS_MAG_FAINTEST() { int o = __offset(120); return o != 0 ? bb.getFloat(o + bb_pos) : Float.NaN; }
+  /**
+   * Packed points of an octree node, brightest absolute magnitude first.
+   */
+  public SKTPoint3D POINTS_3D(int j) { return POINTS_3D(new SKTPoint3D(), j); }
+  public SKTPoint3D POINTS_3D(SKTPoint3D obj, int j) { int o = __offset(122); return o != 0 ? obj.__assign(__vector(o) + j * 24, bb) : null; }
+  public int POINTS_3DLength() { int o = __offset(122); return o != 0 ? __vector_len(o) : 0; }
+  public SKTPoint3D.Vector points3DVector() { return points3DVector(new SKTPoint3D.Vector()); }
+  public SKTPoint3D.Vector points3DVector(SKTPoint3D.Vector obj) { int o = __offset(122); return o != 0 ? obj.__assign(__vector(o), 24, bb) : null; }
 
   public static int createSKT(FlatBufferBuilder builder,
       int LAYER_IDOffset,
@@ -343,8 +390,23 @@ public final class SKT extends com.google.flatbuffers.Table {
       int PRODUCER_VERSIONOffset,
       int PRODUCED_ATOffset,
       int CITATIONOffset,
-      int LICENSE_URLOffset) {
-    builder.startTable(50);
+      int LICENSE_URLOffset,
+      int PARTITION,
+      int OCTREE_LEVEL,
+      long OCTREE_KEY,
+      double CENTER_X_PC,
+      double CENTER_Y_PC,
+      double CENTER_Z_PC,
+      double HALF_SIZE_PC,
+      float ABS_MAG_BRIGHTEST,
+      float ABS_MAG_FAINTEST,
+      int POINTS_3DOffset) {
+    builder.startTable(60);
+    SKT.addHalfSizePc(builder, HALF_SIZE_PC);
+    SKT.addCenterZPc(builder, CENTER_Z_PC);
+    SKT.addCenterYPc(builder, CENTER_Y_PC);
+    SKT.addCenterXPc(builder, CENTER_X_PC);
+    SKT.addOctreeKey(builder, OCTREE_KEY);
     SKT.addPayloadBytes(builder, PAYLOAD_BYTES);
     SKT.addStretchSoftening(builder, STRETCH_SOFTENING);
     SKT.addWhitePoint(builder, WHITE_POINT);
@@ -356,6 +418,9 @@ public final class SKT extends com.google.flatbuffers.Table {
     SKT.addWavelengthMinNm(builder, WAVELENGTH_MIN_NM);
     SKT.addWavelengthEffNm(builder, WAVELENGTH_EFF_NM);
     SKT.addPixel(builder, PIXEL);
+    SKT.addPoints3D(builder, POINTS_3DOffset);
+    SKT.addAbsMagFaintest(builder, ABS_MAG_FAINTEST);
+    SKT.addAbsMagBrightest(builder, ABS_MAG_BRIGHTEST);
     SKT.addLicenseUrl(builder, LICENSE_URLOffset);
     SKT.addCitation(builder, CITATIONOffset);
     SKT.addProducedAt(builder, PRODUCED_ATOffset);
@@ -381,6 +446,8 @@ public final class SKT extends com.google.flatbuffers.Table {
     SKT.addObserverId(builder, OBSERVER_IDOffset);
     SKT.addBandId(builder, BAND_IDOffset);
     SKT.addLayerId(builder, LAYER_IDOffset);
+    SKT.addOctreeLevel(builder, OCTREE_LEVEL);
+    SKT.addPartition(builder, PARTITION);
     SKT.addStretch(builder, STRETCH);
     SKT.addMapQuantity(builder, MAP_QUANTITY);
     SKT.addMapEncoding(builder, MAP_ENCODING);
@@ -398,7 +465,7 @@ public final class SKT extends com.google.flatbuffers.Table {
     return SKT.endSKT(builder);
   }
 
-  public static void startSKT(FlatBufferBuilder builder) { builder.startTable(50); }
+  public static void startSKT(FlatBufferBuilder builder) { builder.startTable(60); }
   public static void addLayerId(FlatBufferBuilder builder, int LAYER_IDOffset) { builder.addOffset(0, LAYER_IDOffset, 0); }
   public static void addFrame(FlatBufferBuilder builder, int FRAME) { builder.addByte(1, (byte) FRAME, (byte) 1); }
   public static void addOrder(FlatBufferBuilder builder, int ORDER) { builder.addByte(2, (byte) ORDER, (byte) 0); }
@@ -459,6 +526,17 @@ public final class SKT extends com.google.flatbuffers.Table {
   public static void addProducedAt(FlatBufferBuilder builder, int PRODUCED_ATOffset) { builder.addOffset(47, PRODUCED_ATOffset, 0); }
   public static void addCitation(FlatBufferBuilder builder, int CITATIONOffset) { builder.addOffset(48, CITATIONOffset, 0); }
   public static void addLicenseUrl(FlatBufferBuilder builder, int LICENSE_URLOffset) { builder.addOffset(49, LICENSE_URLOffset, 0); }
+  public static void addPartition(FlatBufferBuilder builder, int PARTITION) { builder.addByte(50, (byte) PARTITION, (byte) 0); }
+  public static void addOctreeLevel(FlatBufferBuilder builder, int OCTREE_LEVEL) { builder.addByte(51, (byte) OCTREE_LEVEL, (byte) 0); }
+  public static void addOctreeKey(FlatBufferBuilder builder, long OCTREE_KEY) { builder.addLong(52, OCTREE_KEY, 0L); }
+  public static void addCenterXPc(FlatBufferBuilder builder, double CENTER_X_PC) { builder.addDouble(53, CENTER_X_PC, Double.NaN); }
+  public static void addCenterYPc(FlatBufferBuilder builder, double CENTER_Y_PC) { builder.addDouble(54, CENTER_Y_PC, Double.NaN); }
+  public static void addCenterZPc(FlatBufferBuilder builder, double CENTER_Z_PC) { builder.addDouble(55, CENTER_Z_PC, Double.NaN); }
+  public static void addHalfSizePc(FlatBufferBuilder builder, double HALF_SIZE_PC) { builder.addDouble(56, HALF_SIZE_PC, Double.NaN); }
+  public static void addAbsMagBrightest(FlatBufferBuilder builder, float ABS_MAG_BRIGHTEST) { builder.addFloat(57, ABS_MAG_BRIGHTEST, Float.NaN); }
+  public static void addAbsMagFaintest(FlatBufferBuilder builder, float ABS_MAG_FAINTEST) { builder.addFloat(58, ABS_MAG_FAINTEST, Float.NaN); }
+  public static void addPoints3D(FlatBufferBuilder builder, int POINTS_3DOffset) { builder.addOffset(59, POINTS_3DOffset, 0); }
+  public static void startPoints3DVector(FlatBufferBuilder builder, int numElems) { builder.startVector(24, numElems, 4); }
   public static int endSKT(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // LAYER_ID

@@ -60,12 +60,13 @@ class STR : Table() {
             return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
     /**
-     * Source identifier in the third data release of the all-sky space astrometry survey
+     * Source identifier (source_id) in the third data release of the all-sky space astrometry
+     * survey; 0 when the star has no match in that release
      */
-    val gaiadr3CatId : Long
+    val gaiaDr3SourceId : ULong
         get() {
             val o = __offset(10)
-            return if(o != 0) bb.getLong(o + bb_pos) else 0L
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
      * Identifier in the first space astrometry mission's main catalog
@@ -438,7 +439,7 @@ class STR : Table() {
     val spectralTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(98, 1)
     fun spectralTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 98, 1)
     /**
-     * Proper name as recognised by the astronomical naming authority
+     * Proper name as recognized by the astronomical naming authority
      */
     val properName : String?
         get() {
@@ -549,7 +550,7 @@ class STR : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
-     * Brightness in every band the star was measured or modelled in
+     * Brightness in every band the star was measured or modeled in
      */
     fun photometry(j: Int) : PHBMeasurement? = photometry(PHBMeasurement(), j)
     fun photometry(obj: PHBMeasurement, j: Int) : PHBMeasurement? {
@@ -564,6 +565,58 @@ class STR : Table() {
         get() {
             val o = __offset(120); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Distance from the Sun (parsecs): the posterior median, or the mode for
+     * EDSD_POSTERIOR, as DISTANCE_METHOD states
+     */
+    val distancePc : Double
+        get() {
+            val o = __offset(122)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Lower bound of the distance (parsecs): the 16th percentile of the posterior
+     * for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+     * the 68% highest-density interval for EDSD_POSTERIOR, and
+     * 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+     */
+    val distanceLoPc : Double
+        get() {
+            val o = __offset(124)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+     * the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+     * DISTANCE_LO_PC; NaN when unbounded
+     */
+    val distanceHiPc : Double
+        get() {
+            val o = __offset(126)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+     */
+    val distanceMethod : UByte
+        get() {
+            val o = __offset(128)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+     */
+    val distanceRef : String?
+        get() {
+            val o = __offset(130)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val distanceRefAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(130, 1)
+    fun distanceRefInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 130, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSTR(_bb: ByteBuffer): STR = getRootAsSTR(_bb, STR())
@@ -572,8 +625,11 @@ class STR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STR")
-        fun createSTR(builder: FlatBufferBuilder, idOffset: Int, csId: Long, gncCatId: UInt, gaiadr3CatId: Long, hipCatId: UInt, catVersionOffset: Int, astrometryOriginOffset: Int, starEpoch: Double, ra: Double, raUnc: Double, dec: Double, decUnc: Double, posUncFlag: Boolean, parallax: Double, parallaxUnc: Double, pmra: Double, pmraUnc: Double, pmdec: Double, pmdecUnc: Double, pmUncFlag: Boolean, gmag: Double, gmagUnc: Double, bpmag: Double, bpmagUnc: Double, rpmag: Double, rpmagUnc: Double, jmag: Double, jmagUnc: Double, kmag: Double, kmagUnc: Double, hmag: Double, hmagUnc: Double, varFlag: Boolean, multFlag: Boolean, neighborId: UInt, neighborFlag: Boolean, neighborDistance: Double, shiftFlag: Boolean, shift: Double, teff: Double, teffUnc: Double, logg: Double, loggUnc: Double, metallicity: Double, extinctionA0: Double, radialVelocity: Double, radialVelocityUnc: Double, spectralTypeOffset: Int, properNameOffset: Int, bayerFlamsteedOffset: Int, constellationOffset: Int, hrCatId: UInt, hdCatId: UInt, designationsOffset: Int, variabilityClassOffset: Int, variabilityPeriod: Double, variabilityAmplitude: Double, variabilityEpoch: Double, photometryOffset: Int) : Int {
-            builder.startTable(59)
+        fun createSTR(builder: FlatBufferBuilder, idOffset: Int, csId: Long, gncCatId: UInt, gaiaDr3SourceId: ULong, hipCatId: UInt, catVersionOffset: Int, astrometryOriginOffset: Int, starEpoch: Double, ra: Double, raUnc: Double, dec: Double, decUnc: Double, posUncFlag: Boolean, parallax: Double, parallaxUnc: Double, pmra: Double, pmraUnc: Double, pmdec: Double, pmdecUnc: Double, pmUncFlag: Boolean, gmag: Double, gmagUnc: Double, bpmag: Double, bpmagUnc: Double, rpmag: Double, rpmagUnc: Double, jmag: Double, jmagUnc: Double, kmag: Double, kmagUnc: Double, hmag: Double, hmagUnc: Double, varFlag: Boolean, multFlag: Boolean, neighborId: UInt, neighborFlag: Boolean, neighborDistance: Double, shiftFlag: Boolean, shift: Double, teff: Double, teffUnc: Double, logg: Double, loggUnc: Double, metallicity: Double, extinctionA0: Double, radialVelocity: Double, radialVelocityUnc: Double, spectralTypeOffset: Int, properNameOffset: Int, bayerFlamsteedOffset: Int, constellationOffset: Int, hrCatId: UInt, hdCatId: UInt, designationsOffset: Int, variabilityClassOffset: Int, variabilityPeriod: Double, variabilityAmplitude: Double, variabilityEpoch: Double, photometryOffset: Int, distancePc: Double, distanceLoPc: Double, distanceHiPc: Double, distanceMethod: UByte, distanceRefOffset: Int) : Int {
+            builder.startTable(64)
+            addDISTANCEHIPC(builder, distanceHiPc)
+            addDISTANCELOPC(builder, distanceLoPc)
+            addDISTANCEPC(builder, distancePc)
             addVARIABILITYEPOCH(builder, variabilityEpoch)
             addVARIABILITYAMPLITUDE(builder, variabilityAmplitude)
             addVARIABILITYPERIOD(builder, variabilityPeriod)
@@ -610,8 +666,9 @@ class STR : Table() {
             addRAUNC(builder, raUnc)
             addRA(builder, ra)
             addSTAREPOCH(builder, starEpoch)
-            addGAIADR3CATID(builder, gaiadr3CatId)
+            addGAIADR3SOURCEID(builder, gaiaDr3SourceId)
             addCSID(builder, csId)
+            addDISTANCEREF(builder, distanceRefOffset)
             addPHOTOMETRY(builder, photometryOffset)
             addVARIABILITYCLASS(builder, variabilityClassOffset)
             addDESIGNATIONS(builder, designationsOffset)
@@ -627,6 +684,7 @@ class STR : Table() {
             addHIPCATID(builder, hipCatId)
             addGNCCATID(builder, gncCatId)
             addID(builder, idOffset)
+            addDISTANCEMETHOD(builder, distanceMethod)
             addSHIFTFLAG(builder, shiftFlag)
             addNEIGHBORFLAG(builder, neighborFlag)
             addMULTFLAG(builder, multFlag)
@@ -635,11 +693,11 @@ class STR : Table() {
             addPOSUNCFLAG(builder, posUncFlag)
             return endSTR(builder)
         }
-        fun startSTR(builder: FlatBufferBuilder) = builder.startTable(59)
+        fun startSTR(builder: FlatBufferBuilder) = builder.startTable(64)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addCSID(builder: FlatBufferBuilder, csId: Long) = builder.addLong(1, csId, 0L)
         fun addGNCCATID(builder: FlatBufferBuilder, gncCatId: UInt) = builder.addInt(2, gncCatId.toInt(), 0)
-        fun addGAIADR3CATID(builder: FlatBufferBuilder, gaiadr3CatId: Long) = builder.addLong(3, gaiadr3CatId, 0L)
+        fun addGAIADR3SOURCEID(builder: FlatBufferBuilder, gaiaDr3SourceId: ULong) = builder.addLong(3, gaiaDr3SourceId.toLong(), 0)
         fun addHIPCATID(builder: FlatBufferBuilder, hipCatId: UInt) = builder.addInt(4, hipCatId.toInt(), 0)
         fun addCATVERSION(builder: FlatBufferBuilder, catVersion: Int) = builder.addOffset(5, catVersion, 0)
         fun addASTROMETRYORIGIN(builder: FlatBufferBuilder, astrometryOrigin: Int) = builder.addOffset(6, astrometryOrigin, 0)
@@ -711,6 +769,11 @@ class STR : Table() {
             return builder.endVector()
         }
         fun startPhotometryVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addDISTANCEPC(builder: FlatBufferBuilder, distancePc: Double) = builder.addDouble(59, distancePc, Double.NaN)
+        fun addDISTANCELOPC(builder: FlatBufferBuilder, distanceLoPc: Double) = builder.addDouble(60, distanceLoPc, Double.NaN)
+        fun addDISTANCEHIPC(builder: FlatBufferBuilder, distanceHiPc: Double) = builder.addDouble(61, distanceHiPc, Double.NaN)
+        fun addDISTANCEMETHOD(builder: FlatBufferBuilder, distanceMethod: UByte) = builder.addByte(62, distanceMethod.toByte(), 0)
+        fun addDISTANCEREF(builder: FlatBufferBuilder, distanceRef: Int) = builder.addOffset(63, distanceRef, 0)
         fun endSTR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

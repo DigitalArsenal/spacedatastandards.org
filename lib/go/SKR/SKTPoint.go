@@ -130,7 +130,7 @@ func (rcv *SKTPoint) MutateMag(n int16) bool {
 	return rcv.MutateMAG(n)
 }
 
-/// Colour, encoded as the tile's COLOR_ENCODING states.
+/// Color, encoded as the tile's COLOR_ENCODING states.
 func (rcv *SKTPoint) COLOR() uint16 {
 	return rcv._tab.GetUint16(rcv._tab.Pos + flatbuffers.UOffsetT(16))
 }
@@ -138,7 +138,7 @@ func (rcv *SKTPoint) COLOR() uint16 {
 func (rcv *SKTPoint) Color() uint16 {
 	return rcv.COLOR()
 }
-/// Colour, encoded as the tile's COLOR_ENCODING states.
+/// Color, encoded as the tile's COLOR_ENCODING states.
 func (rcv *SKTPoint) MutateCOLOR(n uint16) bool {
 	return rcv._tab.MutateUint16(rcv._tab.Pos+flatbuffers.UOffsetT(16), n)
 }
@@ -148,8 +148,8 @@ func (rcv *SKTPoint) MutateColor(n uint16) bool {
 }
 
 /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-/// not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-/// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+/// not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+/// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
 /// within the confusion radius. 7: extended source. 8-15: reserved, 0.
 func (rcv *SKTPoint) FLAGS() uint16 {
 	return rcv._tab.GetUint16(rcv._tab.Pos + flatbuffers.UOffsetT(18))
@@ -159,8 +159,8 @@ func (rcv *SKTPoint) Flags() uint16 {
 	return rcv.FLAGS()
 }
 /// Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-/// not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-/// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+/// not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+/// 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
 /// within the confusion radius. 7: extended source. 8-15: reserved, 0.
 func (rcv *SKTPoint) MutateFLAGS(n uint16) bool {
 	return rcv._tab.MutateUint16(rcv._tab.Pos+flatbuffers.UOffsetT(18), n)

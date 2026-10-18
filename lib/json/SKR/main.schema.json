@@ -21,6 +21,10 @@
       "type" : "string",
       "enum": ["DETECTION", "UPPER_LIMIT", "LOWER_LIMIT"]
     },
+    "sktPartitionScheme" : {
+      "type" : "string",
+      "enum": ["HEALPIX", "OCTREE_HELIO_ICRS"]
+    },
     "sktCelestialFrame" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "ICRS", "GALACTIC", "ECLIPTIC_J2000"]
@@ -206,11 +210,50 @@
               },
         "COLOR" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 65535,
-                "description" : "Colour, encoded as the tile's COLOR_ENCODING states."
+                "description" : "Color, encoded as the tile's COLOR_ENCODING states."
               },
         "FLAGS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 65535,
-                "description" : "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+                "description" : "Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC\nnot usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.\n5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies\nwithin the confusion radius. 7: extended source. 8-15: reserved, 0."
+              },
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index of the source's full record in the tile's row collection\n(ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SKTPoint3D" : {
+      "type" : "object",
+      "description" : "One point source placed in 3D in an octree node, packed for drawing (24\nbytes).",
+      "properties" : {
+        "X_PC" : {
+                "type" : "number",
+                "description" : "ICRS X of the star minus the node's CENTER_X_PC, parsecs."
+              },
+        "Y_PC" : {
+                "type" : "number",
+                "description" : "ICRS Y of the star minus the node's CENTER_Y_PC, parsecs."
+              },
+        "Z_PC" : {
+                "type" : "number",
+                "description" : "ICRS Z of the star minus the node's CENTER_Z_PC, parsecs."
+              },
+        "ABS_MAG" : {
+                "type" : "integer", "minimum" : -32768, "maximum" : 32767,
+                "description" : "Absolute magnitude in the tile's band, the magnitude at 10 parsecs with\nextinction removed, millimagnitudes. -32768 when unknown."
+              },
+        "COLOR" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:\nCOLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP)."
+              },
+        "DIST_FRAC_UNC" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -\nDISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown\nor 6.5535 or more."
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a\nmultiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to\na `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion\nradius. 7: extended source. 2, 3 and 8-15: reserved, 0."
               },
         "ROW" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -221,15 +264,15 @@
     },
     "SKT" : {
       "type" : "object",
-      "description" : "Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.",
+      "description" : "Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source\nor diffuse-map layer.",
       "properties" : {
         "LAYER_ID" : {
                 "type" : "string",
-                "description" : "Stable identifier of the layer: equal across every tile of one\n(producer, source catalogue or survey, band, place, epoch)."
+                "description" : "Stable identifier of the layer: equal across every tile of one\n(producer, source catalog or survey, band, place, epoch)."
               },
         "FRAME" : {
                 "$ref" : "#/definitions/sktCelestialFrame",
-                "description" : "Frame the HEALPix grid and the point positions are stated in."
+                "description" : "Frame the HEALPix grid and the point positions are stated in; ICRS for\nan OCTREE_HELIO_ICRS layer."
               },
         "ORDER" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
@@ -241,11 +284,11 @@
               },
         "MAX_ORDER" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
-                "description" : "Deepest order of the layer, when the producer knows it; 255 when\nunstated."
+                "description" : "Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the\nproducer knows it; 255 when unstated."
               },
         "CHILD_MASK" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
-                "description" : "Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on\na leaf."
+                "description" : "Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits\n0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf."
               },
         "PAYLOAD_KIND" : {
                 "$ref" : "#/definitions/sktPayloadKind",
@@ -265,15 +308,15 @@
               },
         "WAVELENGTH_EFF_NM" : {
                 "type" : "number",
-                "description" : "Effective wavelength of the band, nanometres (vacuum)."
+                "description" : "Effective wavelength of the band, nanometers (vacuum)."
               },
         "WAVELENGTH_MIN_NM" : {
                 "type" : "number",
-                "description" : "Short edge of a band-integrated map, nanometres."
+                "description" : "Short edge of a band-integrated map, nanometers."
               },
         "WAVELENGTH_MAX_NM" : {
                 "type" : "number",
-                "description" : "Long edge of a band-integrated map, nanometres."
+                "description" : "Long edge of a band-integrated map, nanometers."
               },
         "MAGNITUDE_SYSTEM" : {
                 "$ref" : "#/definitions/phbMagnitudeSystem",
@@ -289,11 +332,11 @@
               },
         "OBSERVER_ID" : {
                 "type" : "string",
-                "description" : "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocentre), as the producer names it."
+                "description" : "Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a\nspacecraft or the geocenter), as the producer names it."
               },
         "POINT_COUNT" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Number of points in the payload."
+                "description" : "Number of points in the payload (POINTS or POINTS_3D)."
               },
         "MAG_BRIGHTEST" : {
                 "type" : "number",
@@ -305,15 +348,15 @@
               },
         "COLOR_ENCODING" : {
                 "$ref" : "#/definitions/sktColorEncoding",
-                "description" : "What each point's COLOR holds."
+                "description" : "What each point's COLOR holds (POINTS and POINTS_3D alike)."
               },
         "COLOR_BLUE_BAND_ID" : {
                 "type" : "string",
-                "description" : "Bluer band of a COLOR_INDEX colour."
+                "description" : "Bluer band of a COLOR_INDEX color."
               },
         "COLOR_RED_BAND_ID" : {
                 "type" : "string",
-                "description" : "Redder band of a COLOR_INDEX colour."
+                "description" : "Redder band of a COLOR_INDEX color."
               },
         "POINTS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/SKTPoint"},
@@ -393,15 +436,15 @@
               },
         "OBSERVATION_START" : {
                 "type" : "string",
-                "description" : "Start of the observations the tile summarises, ISO 8601 UTC."
+                "description" : "Start of the observations the tile summarizes, ISO 8601 UTC."
               },
         "OBSERVATION_END" : {
                 "type" : "string",
-                "description" : "End of the observations the tile summarises, ISO 8601 UTC."
+                "description" : "End of the observations the tile summarizes, ISO 8601 UTC."
               },
         "SOURCE_NAMES" : {
                 "type" : "array", "items" : {"type" : "string"},
-                "description" : "Verbatim names of the catalogues or surveys the tile was derived from."
+                "description" : "Verbatim names of the catalogs or surveys the tile was derived from."
               },
         "PRODUCER_PEER_ID" : {
                 "type" : "string",
@@ -421,7 +464,47 @@
               },
         "LICENSE_URL" : {
                 "type" : "string",
-                "description" : "URL of the licence or terms of the source data."
+                "description" : "URL of the license or terms of the source data."
+              },
+        "PARTITION" : {
+                "$ref" : "#/definitions/sktPartitionScheme",
+                "description" : "How the layer divides into tiles."
+              },
+        "OCTREE_LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Octree level of the node; the root is 0, at most 21."
+              },
+        "OCTREE_KEY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Morton key of the node at OCTREE_LEVEL, 3 bits per level."
+              },
+        "CENTER_X_PC" : {
+                "type" : "number",
+                "description" : "ICRS X of the node's center, parsecs from the Sun."
+              },
+        "CENTER_Y_PC" : {
+                "type" : "number",
+                "description" : "ICRS Y of the node's center, parsecs from the Sun."
+              },
+        "CENTER_Z_PC" : {
+                "type" : "number",
+                "description" : "ICRS Z of the node's center, parsecs from the Sun."
+              },
+        "HALF_SIZE_PC" : {
+                "type" : "number",
+                "description" : "Half the edge length of the node's cube, parsecs."
+              },
+        "ABS_MAG_BRIGHTEST" : {
+                "type" : "number",
+                "description" : "Brightest absolute magnitude in the node."
+              },
+        "ABS_MAG_FAINTEST" : {
+                "type" : "number",
+                "description" : "Faintest absolute magnitude in the node; with its ancestors, the layer\nis complete to this limit inside the node's cube."
+              },
+        "POINTS_3D" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SKTPoint3D"},
+                "description" : "Packed points of an octree node, brightest absolute magnitude first."
               }
       },
       "required" : ["LAYER_ID"],

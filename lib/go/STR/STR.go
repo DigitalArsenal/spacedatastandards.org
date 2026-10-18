@@ -113,26 +113,28 @@ func (rcv *STR) MutateGncCatId(n uint32) bool {
 	return rcv.MutateGNC_CAT_ID(n)
 }
 
-/// Source identifier in the third data release of the all-sky space astrometry survey
-func (rcv *STR) GAIADR3_CAT_ID() int64 {
+/// Source identifier (source_id) in the third data release of the all-sky space astrometry
+/// survey; 0 when the star has no match in that release
+func (rcv *STR) GAIA_DR3_SOURCE_ID() uint64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return rcv._tab.GetInt64(o + rcv._tab.Pos)
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *STR) Gaiadr3CatId() int64 {
-	return rcv.GAIADR3_CAT_ID()
+func (rcv *STR) GaiaDr3SourceId() uint64 {
+	return rcv.GAIA_DR3_SOURCE_ID()
 }
 
-/// Source identifier in the third data release of the all-sky space astrometry survey
-func (rcv *STR) MutateGAIADR3_CAT_ID(n int64) bool {
-	return rcv._tab.MutateInt64Slot(10, n)
+/// Source identifier (source_id) in the third data release of the all-sky space astrometry
+/// survey; 0 when the star has no match in that release
+func (rcv *STR) MutateGAIA_DR3_SOURCE_ID(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(10, n)
 }
 
-func (rcv *STR) MutateGaiadr3CatId(n int64) bool {
-	return rcv.MutateGAIADR3_CAT_ID(n)
+func (rcv *STR) MutateGaiaDr3SourceId(n uint64) bool {
+	return rcv.MutateGAIA_DR3_SOURCE_ID(n)
 }
 
 /// Identifier in the first space astrometry mission's main catalog
@@ -1079,7 +1081,7 @@ func (rcv *STR) SpectralType() []byte {
 }
 
 /// Spectral type in the MK system, e.g. "A1 V"
-/// Proper name as recognised by the astronomical naming authority
+/// Proper name as recognized by the astronomical naming authority
 func (rcv *STR) PROPER_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
@@ -1092,7 +1094,7 @@ func (rcv *STR) ProperName() []byte {
 	return rcv.PROPER_NAME()
 }
 
-/// Proper name as recognised by the astronomical naming authority
+/// Proper name as recognized by the astronomical naming authority
 /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
 func (rcv *STR) BAYER_FLAMSTEED() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
@@ -1272,7 +1274,7 @@ func (rcv *STR) MutateVariabilityEpoch(n float64) bool {
 	return rcv.MutateVARIABILITY_EPOCH(n)
 }
 
-/// Brightness in every band the star was measured or modelled in
+/// Brightness in every band the star was measured or modeled in
 func (rcv *STR) PHOTOMETRY(obj *PHBMeasurement, j int) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
 	if o != 0 {
@@ -1304,9 +1306,123 @@ func (rcv *STR) PhotometryLength() int {
 	return rcv.PHOTOMETRYLength()
 }
 
-/// Brightness in every band the star was measured or modelled in
+/// Brightness in every band the star was measured or modeled in
+/// Distance from the Sun (parsecs): the posterior median, or the mode for
+/// EDSD_POSTERIOR, as DISTANCE_METHOD states
+func (rcv *STR) DISTANCE_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) DistancePc() float64 {
+	return rcv.DISTANCE_PC()
+}
+
+/// Distance from the Sun (parsecs): the posterior median, or the mode for
+/// EDSD_POSTERIOR, as DISTANCE_METHOD states
+func (rcv *STR) MutateDISTANCE_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(122, n)
+}
+
+func (rcv *STR) MutateDistancePc(n float64) bool {
+	return rcv.MutateDISTANCE_PC(n)
+}
+
+/// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+/// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+/// the 68% highest-density interval for EDSD_POSTERIOR, and
+/// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+func (rcv *STR) DISTANCE_LO_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) DistanceLoPc() float64 {
+	return rcv.DISTANCE_LO_PC()
+}
+
+/// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+/// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+/// the 68% highest-density interval for EDSD_POSTERIOR, and
+/// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+func (rcv *STR) MutateDISTANCE_LO_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(124, n)
+}
+
+func (rcv *STR) MutateDistanceLoPc(n float64) bool {
+	return rcv.MutateDISTANCE_LO_PC(n)
+}
+
+/// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+/// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+/// DISTANCE_LO_PC; NaN when unbounded
+func (rcv *STR) DISTANCE_HI_PC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *STR) DistanceHiPc() float64 {
+	return rcv.DISTANCE_HI_PC()
+}
+
+/// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+/// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+/// DISTANCE_LO_PC; NaN when unbounded
+func (rcv *STR) MutateDISTANCE_HI_PC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(126, n)
+}
+
+func (rcv *STR) MutateDistanceHiPc(n float64) bool {
+	return rcv.MutateDISTANCE_HI_PC(n)
+}
+
+/// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+func (rcv *STR) DISTANCE_METHOD() strDistanceEstimator {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		return strDistanceEstimator(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *STR) DistanceMethod() strDistanceEstimator {
+	return rcv.DISTANCE_METHOD()
+}
+
+/// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+func (rcv *STR) MutateDISTANCE_METHOD(n strDistanceEstimator) bool {
+	return rcv._tab.MutateByteSlot(128, byte(n))
+}
+
+func (rcv *STR) MutateDistanceMethod(n strDistanceEstimator) bool {
+	return rcv.MutateDISTANCE_METHOD(n)
+}
+
+/// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+func (rcv *STR) DISTANCE_REF() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *STR) DistanceRef() []byte {
+	return rcv.DISTANCE_REF()
+}
+
+/// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
 func STRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(59)
+	builder.StartObject(64)
 }
 func STRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -1326,11 +1442,11 @@ func STRAddGNC_CAT_ID(builder *flatbuffers.Builder, GNC_CAT_ID uint32) {
 func STRAddGncCatId(builder *flatbuffers.Builder, GNC_CAT_ID uint32) {
 	STRAddGNC_CAT_ID(builder, GNC_CAT_ID)
 }
-func STRAddGAIADR3_CAT_ID(builder *flatbuffers.Builder, GAIADR3_CAT_ID int64) {
-	builder.PrependInt64Slot(3, GAIADR3_CAT_ID, 0)
+func STRAddGAIA_DR3_SOURCE_ID(builder *flatbuffers.Builder, GAIA_DR3_SOURCE_ID uint64) {
+	builder.PrependUint64Slot(3, GAIA_DR3_SOURCE_ID, 0)
 }
-func STRAddGaiadr3CatId(builder *flatbuffers.Builder, GAIADR3_CAT_ID int64) {
-	STRAddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID)
+func STRAddGaiaDr3SourceId(builder *flatbuffers.Builder, GAIA_DR3_SOURCE_ID uint64) {
+	STRAddGAIA_DR3_SOURCE_ID(builder, GAIA_DR3_SOURCE_ID)
 }
 func STRAddHIP_CAT_ID(builder *flatbuffers.Builder, HIP_CAT_ID uint32) {
 	builder.PrependUint32Slot(4, HIP_CAT_ID, 0)
@@ -1673,6 +1789,36 @@ func STRStartPHOTOMETRYVector(builder *flatbuffers.Builder, numElems int) flatbu
 }
 func STRStartPhotometryVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return STRStartPHOTOMETRYVector(builder, numElems)
+}
+func STRAddDISTANCE_PC(builder *flatbuffers.Builder, DISTANCE_PC float64) {
+	builder.PrependFloat64Slot(59, DISTANCE_PC, float64(math.NaN()))
+}
+func STRAddDistancePc(builder *flatbuffers.Builder, DISTANCE_PC float64) {
+	STRAddDISTANCE_PC(builder, DISTANCE_PC)
+}
+func STRAddDISTANCE_LO_PC(builder *flatbuffers.Builder, DISTANCE_LO_PC float64) {
+	builder.PrependFloat64Slot(60, DISTANCE_LO_PC, float64(math.NaN()))
+}
+func STRAddDistanceLoPc(builder *flatbuffers.Builder, DISTANCE_LO_PC float64) {
+	STRAddDISTANCE_LO_PC(builder, DISTANCE_LO_PC)
+}
+func STRAddDISTANCE_HI_PC(builder *flatbuffers.Builder, DISTANCE_HI_PC float64) {
+	builder.PrependFloat64Slot(61, DISTANCE_HI_PC, float64(math.NaN()))
+}
+func STRAddDistanceHiPc(builder *flatbuffers.Builder, DISTANCE_HI_PC float64) {
+	STRAddDISTANCE_HI_PC(builder, DISTANCE_HI_PC)
+}
+func STRAddDISTANCE_METHOD(builder *flatbuffers.Builder, DISTANCE_METHOD strDistanceEstimator) {
+	builder.PrependByteSlot(62, byte(DISTANCE_METHOD), 0)
+}
+func STRAddDistanceMethod(builder *flatbuffers.Builder, DISTANCE_METHOD strDistanceEstimator) {
+	STRAddDISTANCE_METHOD(builder, DISTANCE_METHOD)
+}
+func STRAddDISTANCE_REF(builder *flatbuffers.Builder, DISTANCE_REF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(63, flatbuffers.UOffsetT(DISTANCE_REF), 0)
+}
+func STRAddDistanceRef(builder *flatbuffers.Builder, DISTANCE_REF flatbuffers.UOffsetT) {
+	STRAddDISTANCE_REF(builder, DISTANCE_REF)
 }
 func STREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -6,7 +6,8 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+# Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+# or diffuse-map layer.
 class SKT(object):
     __slots__ = ['_tab']
 
@@ -30,7 +31,7 @@ class SKT(object):
         self._tab = flatbuffers.table.Table(buf, pos)
 
     # Stable identifier of the layer: equal across every tile of one
-    # (producer, source catalogue or survey, band, place, epoch).
+    # (producer, source catalog or survey, band, place, epoch).
     # SKT
     def LAYER_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -38,7 +39,8 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Frame the HEALPix grid and the point positions are stated in.
+    # Frame the HEALPix grid and the point positions are stated in; ICRS for
+    # an OCTREE_HELIO_ICRS layer.
     # SKT
     def FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -62,8 +64,8 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
-    # Deepest order of the layer, when the producer knows it; 255 when
-    # unstated.
+    # Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+    # producer knows it; 255 when unstated.
     # SKT
     def MAX_ORDER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -71,8 +73,8 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 255
 
-    # Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-    # a leaf.
+    # Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+    # 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
     # SKT
     def CHILD_MASK(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -113,7 +115,7 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Effective wavelength of the band, nanometres (vacuum).
+    # Effective wavelength of the band, nanometers (vacuum).
     # SKT
     def WAVELENGTH_EFF_NM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -121,7 +123,7 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
-    # Short edge of a band-integrated map, nanometres.
+    # Short edge of a band-integrated map, nanometers.
     # SKT
     def WAVELENGTH_MIN_NM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -129,7 +131,7 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
-    # Long edge of a band-integrated map, nanometres.
+    # Long edge of a band-integrated map, nanometers.
     # SKT
     def WAVELENGTH_MAX_NM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
@@ -162,7 +164,7 @@ class SKT(object):
         return float('nan')
 
     # Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-    # spacecraft or the geocentre), as the producer names it.
+    # spacecraft or the geocenter), as the producer names it.
     # SKT
     def OBSERVER_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -170,7 +172,7 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Number of points in the payload.
+    # Number of points in the payload (POINTS or POINTS_3D).
     # SKT
     def POINT_COUNT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -195,7 +197,7 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return float('nan')
 
-    # What each point's COLOR holds.
+    # What each point's COLOR holds (POINTS and POINTS_3D alike).
     # SKT
     def COLOR_ENCODING(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
@@ -203,7 +205,7 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # Bluer band of a COLOR_INDEX colour.
+    # Bluer band of a COLOR_INDEX color.
     # SKT
     def COLOR_BLUE_BAND_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -211,7 +213,7 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Redder band of a COLOR_INDEX colour.
+    # Redder band of a COLOR_INDEX color.
     # SKT
     def COLOR_RED_BAND_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -452,7 +454,7 @@ class SKT(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
-    # Start of the observations the tile summarises, ISO 8601 UTC.
+    # Start of the observations the tile summarizes, ISO 8601 UTC.
     # SKT
     def OBSERVATION_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
@@ -460,7 +462,7 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # End of the observations the tile summarises, ISO 8601 UTC.
+    # End of the observations the tile summarizes, ISO 8601 UTC.
     # SKT
     def OBSERVATION_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
@@ -468,7 +470,7 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Verbatim names of the catalogues or surveys the tile was derived from.
+    # Verbatim names of the catalogs or surveys the tile was derived from.
     # SKT
     def SOURCE_NAMES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
@@ -521,7 +523,7 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # URL of the licence or terms of the source data.
+    # URL of the license or terms of the source data.
     # SKT
     def LICENSE_URL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
@@ -529,8 +531,106 @@ class SKT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # How the layer divides into tiles.
+    # SKT
+    def PARTITION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Octree level of the node; the root is 0, at most 21.
+    # SKT
+    def OCTREE_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+    # SKT
+    def OCTREE_KEY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
+    # ICRS X of the node's center, parsecs from the Sun.
+    # SKT
+    def CENTER_X_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ICRS Y of the node's center, parsecs from the Sun.
+    # SKT
+    def CENTER_Y_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # ICRS Z of the node's center, parsecs from the Sun.
+    # SKT
+    def CENTER_Z_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Half the edge length of the node's cube, parsecs.
+    # SKT
+    def HALF_SIZE_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Brightest absolute magnitude in the node.
+    # SKT
+    def ABS_MAG_BRIGHTEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Faintest absolute magnitude in the node; with its ancestors, the layer
+    # is complete to this limit inside the node's cube.
+    # SKT
+    def ABS_MAG_FAINTEST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Packed points of an octree node, brightest absolute magnitude first.
+    # SKT
+    def POINTS_3D(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 24
+            from SKTPoint3D import SKTPoint3D
+            obj = SKTPoint3D()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # SKT
+    def POINTS_3DLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SKT
+    def POINTS_3DIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        return o == 0
+
 def SKTStart(builder):
-    builder.StartObject(50)
+    builder.StartObject(60)
 
 def Start(builder):
     SKTStart(builder)
@@ -911,6 +1011,82 @@ def SKTAddLICENSE_URL(builder, LICENSE_URL):
 def AddLICENSE_URL(builder, LICENSE_URL):
     SKTAddLICENSE_URL(builder, LICENSE_URL)
 
+def SKTAddPARTITION(builder, PARTITION):
+    builder.PrependUint8Slot(50, PARTITION, 0)
+
+def AddPARTITION(builder, PARTITION):
+    SKTAddPARTITION(builder, PARTITION)
+
+def SKTAddOCTREE_LEVEL(builder, OCTREE_LEVEL):
+    builder.PrependUint8Slot(51, OCTREE_LEVEL, 0)
+
+def AddOCTREE_LEVEL(builder, OCTREE_LEVEL):
+    SKTAddOCTREE_LEVEL(builder, OCTREE_LEVEL)
+
+def SKTAddOCTREE_KEY(builder, OCTREE_KEY):
+    builder.PrependUint64Slot(52, OCTREE_KEY, 0)
+
+def AddOCTREE_KEY(builder, OCTREE_KEY):
+    SKTAddOCTREE_KEY(builder, OCTREE_KEY)
+
+def SKTAddCENTER_X_PC(builder, CENTER_X_PC):
+    builder.PrependFloat64Slot(53, CENTER_X_PC, float('nan'))
+
+def AddCENTER_X_PC(builder, CENTER_X_PC):
+    SKTAddCENTER_X_PC(builder, CENTER_X_PC)
+
+def SKTAddCENTER_Y_PC(builder, CENTER_Y_PC):
+    builder.PrependFloat64Slot(54, CENTER_Y_PC, float('nan'))
+
+def AddCENTER_Y_PC(builder, CENTER_Y_PC):
+    SKTAddCENTER_Y_PC(builder, CENTER_Y_PC)
+
+def SKTAddCENTER_Z_PC(builder, CENTER_Z_PC):
+    builder.PrependFloat64Slot(55, CENTER_Z_PC, float('nan'))
+
+def AddCENTER_Z_PC(builder, CENTER_Z_PC):
+    SKTAddCENTER_Z_PC(builder, CENTER_Z_PC)
+
+def SKTAddHALF_SIZE_PC(builder, HALF_SIZE_PC):
+    builder.PrependFloat64Slot(56, HALF_SIZE_PC, float('nan'))
+
+def AddHALF_SIZE_PC(builder, HALF_SIZE_PC):
+    SKTAddHALF_SIZE_PC(builder, HALF_SIZE_PC)
+
+def SKTAddABS_MAG_BRIGHTEST(builder, ABS_MAG_BRIGHTEST):
+    builder.PrependFloat32Slot(57, ABS_MAG_BRIGHTEST, float('nan'))
+
+def AddABS_MAG_BRIGHTEST(builder, ABS_MAG_BRIGHTEST):
+    SKTAddABS_MAG_BRIGHTEST(builder, ABS_MAG_BRIGHTEST)
+
+def SKTAddABS_MAG_FAINTEST(builder, ABS_MAG_FAINTEST):
+    builder.PrependFloat32Slot(58, ABS_MAG_FAINTEST, float('nan'))
+
+def AddABS_MAG_FAINTEST(builder, ABS_MAG_FAINTEST):
+    SKTAddABS_MAG_FAINTEST(builder, ABS_MAG_FAINTEST)
+
+def SKTAddPOINTS_3D(builder, POINTS_3D):
+    builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(POINTS_3D), 0)
+
+def AddPOINTS_3D(builder, POINTS_3D):
+    SKTAddPOINTS_3D(builder, POINTS_3D)
+
+def SKTStartPOINTS_3DVector(builder, numElems):
+    return builder.StartVector(24, numElems, 4)
+
+def StartPOINTS_3DVector(builder, numElems):
+    return SKTStartPOINTS_3DVector(builder, numElems)
+
+def SKTCreatePOINTS_3DVector(builder, data):
+    data = list(data)
+    builder.StartVector(24, len(data), 4)
+    for item in reversed(data):
+        item.Pack(builder)
+    return builder.EndVector()
+
+def CreatePOINTS_3DVector(builder, data):
+    return SKTCreatePOINTS_3DVector(builder, data)
+
 def SKTEnd(builder):
     return builder.EndObject()
 
@@ -918,6 +1094,7 @@ def End(builder):
     return SKTEnd(builder)
 
 import SKTPoint
+import SKTPoint3D
 try:
     from typing import List
 except:
@@ -978,6 +1155,16 @@ class SKTT(object):
         PRODUCED_AT = None,
         CITATION = None,
         LICENSE_URL = None,
+        PARTITION = 0,
+        OCTREE_LEVEL = 0,
+        OCTREE_KEY = 0,
+        CENTER_X_PC = float('nan'),
+        CENTER_Y_PC = float('nan'),
+        CENTER_Z_PC = float('nan'),
+        HALF_SIZE_PC = float('nan'),
+        ABS_MAG_BRIGHTEST = float('nan'),
+        ABS_MAG_FAINTEST = float('nan'),
+        POINTS_3D = None,
     ):
         self.LAYER_ID = LAYER_ID  # type: Optional[str]
         self.FRAME = FRAME  # type: int
@@ -1029,6 +1216,16 @@ class SKTT(object):
         self.PRODUCED_AT = PRODUCED_AT  # type: Optional[str]
         self.CITATION = CITATION  # type: Optional[str]
         self.LICENSE_URL = LICENSE_URL  # type: Optional[str]
+        self.PARTITION = PARTITION  # type: int
+        self.OCTREE_LEVEL = OCTREE_LEVEL  # type: int
+        self.OCTREE_KEY = OCTREE_KEY  # type: int
+        self.CENTER_X_PC = CENTER_X_PC  # type: float
+        self.CENTER_Y_PC = CENTER_Y_PC  # type: float
+        self.CENTER_Z_PC = CENTER_Z_PC  # type: float
+        self.HALF_SIZE_PC = HALF_SIZE_PC  # type: float
+        self.ABS_MAG_BRIGHTEST = ABS_MAG_BRIGHTEST  # type: float
+        self.ABS_MAG_FAINTEST = ABS_MAG_FAINTEST  # type: float
+        self.POINTS_3D = POINTS_3D  # type: Optional[List[SKTPoint3D.SKTPoint3DT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1129,6 +1326,23 @@ class SKTT(object):
         self.PRODUCED_AT = SKT.PRODUCED_AT()
         self.CITATION = SKT.CITATION()
         self.LICENSE_URL = SKT.LICENSE_URL()
+        self.PARTITION = SKT.PARTITION()
+        self.OCTREE_LEVEL = SKT.OCTREE_LEVEL()
+        self.OCTREE_KEY = SKT.OCTREE_KEY()
+        self.CENTER_X_PC = SKT.CENTER_X_PC()
+        self.CENTER_Y_PC = SKT.CENTER_Y_PC()
+        self.CENTER_Z_PC = SKT.CENTER_Z_PC()
+        self.HALF_SIZE_PC = SKT.HALF_SIZE_PC()
+        self.ABS_MAG_BRIGHTEST = SKT.ABS_MAG_BRIGHTEST()
+        self.ABS_MAG_FAINTEST = SKT.ABS_MAG_FAINTEST()
+        if not SKT.POINTS_3DIsNone():
+            self.POINTS_3D = []
+            for i in range(SKT.POINTS_3DLength()):
+                if SKT.POINTS_3D(i) is None:
+                    self.POINTS_3D.append(None)
+                else:
+                    sKTPoint3D_ = SKTPoint3D.SKTPoint3DT.InitFromObj(SKT.POINTS_3D(i))
+                    self.POINTS_3D.append(sKTPoint3D_)
 
     # SKTT
     def Pack(self, builder):
@@ -1201,6 +1415,11 @@ class SKTT(object):
             CITATION = builder.CreateString(self.CITATION)
         if self.LICENSE_URL is not None:
             LICENSE_URL = builder.CreateString(self.LICENSE_URL)
+        if self.POINTS_3D is not None:
+            SKTStartPOINTS_3DVector(builder, len(self.POINTS_3D))
+            for i in reversed(range(len(self.POINTS_3D))):
+                self.POINTS_3D[i].Pack(builder)
+            POINTS_3D = builder.EndVector()
         SKTStart(builder)
         if self.LAYER_ID is not None:
             SKTAddLAYER_ID(builder, LAYER_ID)
@@ -1273,5 +1492,16 @@ class SKTT(object):
             SKTAddCITATION(builder, CITATION)
         if self.LICENSE_URL is not None:
             SKTAddLICENSE_URL(builder, LICENSE_URL)
+        SKTAddPARTITION(builder, self.PARTITION)
+        SKTAddOCTREE_LEVEL(builder, self.OCTREE_LEVEL)
+        SKTAddOCTREE_KEY(builder, self.OCTREE_KEY)
+        SKTAddCENTER_X_PC(builder, self.CENTER_X_PC)
+        SKTAddCENTER_Y_PC(builder, self.CENTER_Y_PC)
+        SKTAddCENTER_Z_PC(builder, self.CENTER_Z_PC)
+        SKTAddHALF_SIZE_PC(builder, self.HALF_SIZE_PC)
+        SKTAddABS_MAG_BRIGHTEST(builder, self.ABS_MAG_BRIGHTEST)
+        SKTAddABS_MAG_FAINTEST(builder, self.ABS_MAG_FAINTEST)
+        if self.POINTS_3D is not None:
+            SKTAddPOINTS_3D(builder, POINTS_3D)
         SKT = SKTEnd(builder)
         return SKT

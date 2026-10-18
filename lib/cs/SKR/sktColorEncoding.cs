@@ -6,9 +6,9 @@
 /// Append new values only; never reorder or reuse existing values.
 public enum sktColorEncoding : byte
 {
-  /// No colour; COLOR is 0.
+  /// No color; COLOR is 0.
   NONE = 0,
-  /// Colour index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
+  /// Color index COLOR_BLUE_BAND_ID minus COLOR_RED_BAND_ID in
   /// millimagnitudes, offset by 32768 (COLOR = index_mmag + 32768). 0 means
   /// unknown.
   COLOR_INDEX = 1,

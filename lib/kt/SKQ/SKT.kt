@@ -17,7 +17,8 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+ * Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+ * or diffuse-map layer.
  */
 @Suppress("unused")
 class SKT : Table() {
@@ -31,7 +32,7 @@ class SKT : Table() {
     }
     /**
      * Stable identifier of the layer: equal across every tile of one
-     * (producer, source catalogue or survey, band, place, epoch).
+     * (producer, source catalog or survey, band, place, epoch).
      */
     val layerId : String
         get() {
@@ -45,7 +46,8 @@ class SKT : Table() {
     val layerIdAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun layerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Frame the HEALPix grid and the point positions are stated in.
+     * Frame the HEALPix grid and the point positions are stated in; ICRS for
+     * an OCTREE_HELIO_ICRS layer.
      */
     val frame : UByte
         get() {
@@ -69,8 +71,8 @@ class SKT : Table() {
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
-     * Deepest order of the layer, when the producer knows it; 255 when
-     * unstated.
+     * Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+     * producer knows it; 255 when unstated.
      */
     val maxOrder : UByte
         get() {
@@ -78,8 +80,8 @@ class SKT : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 255u
         }
     /**
-     * Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-     * a leaf.
+     * Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+     * 0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
      */
     val childMask : UByte
         get() {
@@ -126,7 +128,7 @@ class SKT : Table() {
     val bandIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(22, 1)
     fun bandIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 22, 1)
     /**
-     * Effective wavelength of the band, nanometres (vacuum).
+     * Effective wavelength of the band, nanometers (vacuum).
      */
     val wavelengthEffNm : Double
         get() {
@@ -134,7 +136,7 @@ class SKT : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
-     * Short edge of a band-integrated map, nanometres.
+     * Short edge of a band-integrated map, nanometers.
      */
     val wavelengthMinNm : Double
         get() {
@@ -142,7 +144,7 @@ class SKT : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
         }
     /**
-     * Long edge of a band-integrated map, nanometres.
+     * Long edge of a band-integrated map, nanometers.
      */
     val wavelengthMaxNm : Double
         get() {
@@ -175,7 +177,7 @@ class SKT : Table() {
         }
     /**
      * Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-     * spacecraft or the geocentre), as the producer names it.
+     * spacecraft or the geocenter), as the producer names it.
      */
     val observerId : String?
         get() {
@@ -189,7 +191,7 @@ class SKT : Table() {
     val observerIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
     fun observerIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
     /**
-     * Number of points in the payload.
+     * Number of points in the payload (POINTS or POINTS_3D).
      */
     val pointCount : UInt
         get() {
@@ -214,7 +216,7 @@ class SKT : Table() {
             return if(o != 0) bb.getFloat(o + bb_pos) else Float.NaN
         }
     /**
-     * What each point's COLOR holds.
+     * What each point's COLOR holds (POINTS and POINTS_3D alike).
      */
     val colorEncoding : UByte
         get() {
@@ -222,7 +224,7 @@ class SKT : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
-     * Bluer band of a COLOR_INDEX colour.
+     * Bluer band of a COLOR_INDEX color.
      */
     val colorBlueBandId : String?
         get() {
@@ -236,7 +238,7 @@ class SKT : Table() {
     val colorBlueBandIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
     fun colorBlueBandIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
     /**
-     * Redder band of a COLOR_INDEX colour.
+     * Redder band of a COLOR_INDEX color.
      */
     val colorRedBandId : String?
         get() {
@@ -465,7 +467,7 @@ class SKT : Table() {
             return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
         }
     /**
-     * Start of the observations the tile summarises, ISO 8601 UTC.
+     * Start of the observations the tile summarizes, ISO 8601 UTC.
      */
     val observationStart : String?
         get() {
@@ -479,7 +481,7 @@ class SKT : Table() {
     val observationStartAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(88, 1)
     fun observationStartInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 88, 1)
     /**
-     * End of the observations the tile summarises, ISO 8601 UTC.
+     * End of the observations the tile summarizes, ISO 8601 UTC.
      */
     val observationEnd : String?
         get() {
@@ -493,7 +495,7 @@ class SKT : Table() {
     val observationEndAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(90, 1)
     fun observationEndInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 90, 1)
     /**
-     * Verbatim names of the catalogues or surveys the tile was derived from.
+     * Verbatim names of the catalogs or surveys the tile was derived from.
      */
     fun sourceNames(j: Int) : String? {
         val o = __offset(92)
@@ -564,7 +566,7 @@ class SKT : Table() {
     val citationAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(100, 1)
     fun citationInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 100, 1)
     /**
-     * URL of the licence or terms of the source data.
+     * URL of the license or terms of the source data.
      */
     val licenseUrl : String?
         get() {
@@ -577,6 +579,95 @@ class SKT : Table() {
         }
     val licenseUrlAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(102, 1)
     fun licenseUrlInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 102, 1)
+    /**
+     * How the layer divides into tiles.
+     */
+    val partition : UByte
+        get() {
+            val o = __offset(104)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Octree level of the node; the root is 0, at most 21.
+     */
+    val octreeLevel : UByte
+        get() {
+            val o = __offset(106)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+     */
+    val octreeKey : ULong
+        get() {
+            val o = __offset(108)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
+    /**
+     * ICRS X of the node's center, parsecs from the Sun.
+     */
+    val centerXPc : Double
+        get() {
+            val o = __offset(110)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ICRS Y of the node's center, parsecs from the Sun.
+     */
+    val centerYPc : Double
+        get() {
+            val o = __offset(112)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * ICRS Z of the node's center, parsecs from the Sun.
+     */
+    val centerZPc : Double
+        get() {
+            val o = __offset(114)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Half the edge length of the node's cube, parsecs.
+     */
+    val halfSizePc : Double
+        get() {
+            val o = __offset(116)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
+    /**
+     * Brightest absolute magnitude in the node.
+     */
+    val absMagBrightest : Float
+        get() {
+            val o = __offset(118)
+            return if(o != 0) bb.getFloat(o + bb_pos) else Float.NaN
+        }
+    /**
+     * Faintest absolute magnitude in the node; with its ancestors, the layer
+     * is complete to this limit inside the node's cube.
+     */
+    val absMagFaintest : Float
+        get() {
+            val o = __offset(120)
+            return if(o != 0) bb.getFloat(o + bb_pos) else Float.NaN
+        }
+    /**
+     * Packed points of an octree node, brightest absolute magnitude first.
+     */
+    fun points3D(j: Int) : SKTPoint3D? = points3D(SKTPoint3D(), j)
+    fun points3D(obj: SKTPoint3D, j: Int) : SKTPoint3D? {
+        val o = __offset(122)
+        return if (o != 0) {
+            obj.__assign(__vector(o) + j * 24, bb)
+        } else {
+            null
+        }
+    }
+    val points3DLength : Int
+        get() {
+            val o = __offset(122); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSKT(_bb: ByteBuffer): SKT = getRootAsSKT(_bb, SKT())
@@ -585,8 +676,13 @@ class SKT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SKTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SKT")
-        fun createSKT(builder: FlatBufferBuilder, layerIdOffset: Int, frame: UByte, order: UByte, pixel: ULong, maxOrder: UByte, childMask: UByte, payloadKind: UByte, refine: UByte, spectralRegime: UByte, bandIdOffset: Int, wavelengthEffNm: Double, wavelengthMinNm: Double, wavelengthMaxNm: Double, magnitudeSystem: UByte, place: UByte, epoch: Double, observerIdOffset: Int, pointCount: UInt, magBrightest: Float, magLimit: Float, colorEncoding: UByte, colorBlueBandIdOffset: Int, colorRedBandIdOffset: Int, pointsOffset: Int, rowCollectionCidOffset: Int, mapDepth: UByte, mapEncoding: UByte, mapQuantity: UByte, mapQuantityNameOffset: Int, mapUnitsOffset: Int, mapScale: Double, mapOffset: Double, mapBlank: UInt, mapValuesOffset: Int, stretch: UByte, blackPoint: Double, whitePoint: Double, stretchSoftening: Double, percentileLevelsOffset: Int, percentileValuesOffset: Int, payloadCidOffset: Int, payloadBytes: ULong, observationStartOffset: Int, observationEndOffset: Int, sourceNamesOffset: Int, producerPeerIdOffset: Int, producerVersionOffset: Int, producedAtOffset: Int, citationOffset: Int, licenseUrlOffset: Int) : Int {
-            builder.startTable(50)
+        fun createSKT(builder: FlatBufferBuilder, layerIdOffset: Int, frame: UByte, order: UByte, pixel: ULong, maxOrder: UByte, childMask: UByte, payloadKind: UByte, refine: UByte, spectralRegime: UByte, bandIdOffset: Int, wavelengthEffNm: Double, wavelengthMinNm: Double, wavelengthMaxNm: Double, magnitudeSystem: UByte, place: UByte, epoch: Double, observerIdOffset: Int, pointCount: UInt, magBrightest: Float, magLimit: Float, colorEncoding: UByte, colorBlueBandIdOffset: Int, colorRedBandIdOffset: Int, pointsOffset: Int, rowCollectionCidOffset: Int, mapDepth: UByte, mapEncoding: UByte, mapQuantity: UByte, mapQuantityNameOffset: Int, mapUnitsOffset: Int, mapScale: Double, mapOffset: Double, mapBlank: UInt, mapValuesOffset: Int, stretch: UByte, blackPoint: Double, whitePoint: Double, stretchSoftening: Double, percentileLevelsOffset: Int, percentileValuesOffset: Int, payloadCidOffset: Int, payloadBytes: ULong, observationStartOffset: Int, observationEndOffset: Int, sourceNamesOffset: Int, producerPeerIdOffset: Int, producerVersionOffset: Int, producedAtOffset: Int, citationOffset: Int, licenseUrlOffset: Int, partition: UByte, octreeLevel: UByte, octreeKey: ULong, centerXPc: Double, centerYPc: Double, centerZPc: Double, halfSizePc: Double, absMagBrightest: Float, absMagFaintest: Float, points3DOffset: Int) : Int {
+            builder.startTable(60)
+            addHALFSIZEPC(builder, halfSizePc)
+            addCENTERZPC(builder, centerZPc)
+            addCENTERYPC(builder, centerYPc)
+            addCENTERXPC(builder, centerXPc)
+            addOCTREEKEY(builder, octreeKey)
             addPAYLOADBYTES(builder, payloadBytes)
             addSTRETCHSOFTENING(builder, stretchSoftening)
             addWHITEPOINT(builder, whitePoint)
@@ -598,6 +694,9 @@ class SKT : Table() {
             addWAVELENGTHMINNM(builder, wavelengthMinNm)
             addWAVELENGTHEFFNM(builder, wavelengthEffNm)
             addPIXEL(builder, pixel)
+            addPOINTS3D(builder, points3DOffset)
+            addABSMAGFAINTEST(builder, absMagFaintest)
+            addABSMAGBRIGHTEST(builder, absMagBrightest)
             addLICENSEURL(builder, licenseUrlOffset)
             addCITATION(builder, citationOffset)
             addPRODUCEDAT(builder, producedAtOffset)
@@ -623,6 +722,8 @@ class SKT : Table() {
             addOBSERVERID(builder, observerIdOffset)
             addBANDID(builder, bandIdOffset)
             addLAYERID(builder, layerIdOffset)
+            addOCTREELEVEL(builder, octreeLevel)
+            addPARTITION(builder, partition)
             addSTRETCH(builder, stretch)
             addMAPQUANTITY(builder, mapQuantity)
             addMAPENCODING(builder, mapEncoding)
@@ -639,7 +740,7 @@ class SKT : Table() {
             addFRAME(builder, frame)
             return endSKT(builder)
         }
-        fun startSKT(builder: FlatBufferBuilder) = builder.startTable(50)
+        fun startSKT(builder: FlatBufferBuilder) = builder.startTable(60)
         fun addLAYERID(builder: FlatBufferBuilder, layerId: Int) = builder.addOffset(0, layerId, 0)
         fun addFRAME(builder: FlatBufferBuilder, frame: UByte) = builder.addByte(1, frame.toByte(), 1)
         fun addORDER(builder: FlatBufferBuilder, order: UByte) = builder.addByte(2, order.toByte(), 0)
@@ -724,6 +825,17 @@ class SKT : Table() {
         fun addPRODUCEDAT(builder: FlatBufferBuilder, producedAt: Int) = builder.addOffset(47, producedAt, 0)
         fun addCITATION(builder: FlatBufferBuilder, citation: Int) = builder.addOffset(48, citation, 0)
         fun addLICENSEURL(builder: FlatBufferBuilder, licenseUrl: Int) = builder.addOffset(49, licenseUrl, 0)
+        fun addPARTITION(builder: FlatBufferBuilder, partition: UByte) = builder.addByte(50, partition.toByte(), 0)
+        fun addOCTREELEVEL(builder: FlatBufferBuilder, octreeLevel: UByte) = builder.addByte(51, octreeLevel.toByte(), 0)
+        fun addOCTREEKEY(builder: FlatBufferBuilder, octreeKey: ULong) = builder.addLong(52, octreeKey.toLong(), 0)
+        fun addCENTERXPC(builder: FlatBufferBuilder, centerXPc: Double) = builder.addDouble(53, centerXPc, Double.NaN)
+        fun addCENTERYPC(builder: FlatBufferBuilder, centerYPc: Double) = builder.addDouble(54, centerYPc, Double.NaN)
+        fun addCENTERZPC(builder: FlatBufferBuilder, centerZPc: Double) = builder.addDouble(55, centerZPc, Double.NaN)
+        fun addHALFSIZEPC(builder: FlatBufferBuilder, halfSizePc: Double) = builder.addDouble(56, halfSizePc, Double.NaN)
+        fun addABSMAGBRIGHTEST(builder: FlatBufferBuilder, absMagBrightest: Float) = builder.addFloat(57, absMagBrightest, Double.NaN)
+        fun addABSMAGFAINTEST(builder: FlatBufferBuilder, absMagFaintest: Float) = builder.addFloat(58, absMagFaintest, Double.NaN)
+        fun addPOINTS3D(builder: FlatBufferBuilder, points3D: Int) = builder.addOffset(59, points3D, 0)
+        fun startPoints3DVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(24, numElems, 4)
         fun endSKT(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

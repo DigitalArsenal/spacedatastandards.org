@@ -68,14 +68,15 @@ class STR extends Table
         return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    /// Source identifier in the third data release of the all-sky space astrometry survey
+    /// Source identifier (source_id) in the third data release of the all-sky space astrometry
+    /// survey; 0 when the star has no match in that release
     /**
-     * @return long
+     * @return ulong
      */
-    public function getGAIADR3_CAT_ID()
+    public function getGAIA_DR3_SOURCE_ID()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
     }
 
     /// Identifier in the first space astrometry mission's main catalog
@@ -509,7 +510,7 @@ class STR extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Proper name as recognised by the astronomical naming authority
+    /// Proper name as recognized by the astronomical naming authority
     public function getPROPER_NAME()
     {
         $o = $this->__offset(100);
@@ -607,7 +608,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
     }
 
-    /// Brightness in every band the star was measured or modelled in
+    /// Brightness in every band the star was measured or modeled in
     /**
      * @returnVectorOffset
      */
@@ -627,26 +628,79 @@ class STR extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Distance from the Sun (parsecs): the posterior median, or the mode for
+    /// EDSD_POSTERIOR, as DISTANCE_METHOD states
+    /**
+     * @return double
+     */
+    public function getDISTANCE_PC()
+    {
+        $o = $this->__offset(122);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+    /// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+    /// the 68% highest-density interval for EDSD_POSTERIOR, and
+    /// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+    /**
+     * @return double
+     */
+    public function getDISTANCE_LO_PC()
+    {
+        $o = $this->__offset(124);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+    /// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+    /// DISTANCE_LO_PC; NaN when unbounded
+    /**
+     * @return double
+     */
+    public function getDISTANCE_HI_PC()
+    {
+        $o = $this->__offset(126);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
+    /// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+    /**
+     * @return byte
+     */
+    public function getDISTANCE_METHOD()
+    {
+        $o = $this->__offset(128);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \strDistanceEstimator::UNSPECIFIED;
+    }
+
+    /// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+    public function getDISTANCE_REF()
+    {
+        $o = $this->__offset(130);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSTR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(59);
+        $builder->StartObject(64);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return STR
      */
-    public static function createSTR(FlatBufferBuilder $builder, $ID, $CS_ID, $GNC_CAT_ID, $GAIADR3_CAT_ID, $HIP_CAT_ID, $CAT_VERSION, $ASTROMETRY_ORIGIN, $STAR_EPOCH, $RA, $RA_UNC, $DEC, $DEC_UNC, $POS_UNC_FLAG, $PARALLAX, $PARALLAX_UNC, $PMRA, $PMRA_UNC, $PMDEC, $PMDEC_UNC, $PM_UNC_FLAG, $GMAG, $GMAG_UNC, $BPMAG, $BPMAG_UNC, $RPMAG, $RPMAG_UNC, $JMAG, $JMAG_UNC, $KMAG, $KMAG_UNC, $HMAG, $HMAG_UNC, $VAR_FLAG, $MULT_FLAG, $NEIGHBOR_ID, $NEIGHBOR_FLAG, $NEIGHBOR_DISTANCE, $SHIFT_FLAG, $SHIFT, $TEFF, $TEFF_UNC, $LOGG, $LOGG_UNC, $METALLICITY, $EXTINCTION_A0, $RADIAL_VELOCITY, $RADIAL_VELOCITY_UNC, $SPECTRAL_TYPE, $PROPER_NAME, $BAYER_FLAMSTEED, $CONSTELLATION, $HR_CAT_ID, $HD_CAT_ID, $DESIGNATIONS, $VARIABILITY_CLASS, $VARIABILITY_PERIOD, $VARIABILITY_AMPLITUDE, $VARIABILITY_EPOCH, $PHOTOMETRY)
+    public static function createSTR(FlatBufferBuilder $builder, $ID, $CS_ID, $GNC_CAT_ID, $GAIA_DR3_SOURCE_ID, $HIP_CAT_ID, $CAT_VERSION, $ASTROMETRY_ORIGIN, $STAR_EPOCH, $RA, $RA_UNC, $DEC, $DEC_UNC, $POS_UNC_FLAG, $PARALLAX, $PARALLAX_UNC, $PMRA, $PMRA_UNC, $PMDEC, $PMDEC_UNC, $PM_UNC_FLAG, $GMAG, $GMAG_UNC, $BPMAG, $BPMAG_UNC, $RPMAG, $RPMAG_UNC, $JMAG, $JMAG_UNC, $KMAG, $KMAG_UNC, $HMAG, $HMAG_UNC, $VAR_FLAG, $MULT_FLAG, $NEIGHBOR_ID, $NEIGHBOR_FLAG, $NEIGHBOR_DISTANCE, $SHIFT_FLAG, $SHIFT, $TEFF, $TEFF_UNC, $LOGG, $LOGG_UNC, $METALLICITY, $EXTINCTION_A0, $RADIAL_VELOCITY, $RADIAL_VELOCITY_UNC, $SPECTRAL_TYPE, $PROPER_NAME, $BAYER_FLAMSTEED, $CONSTELLATION, $HR_CAT_ID, $HD_CAT_ID, $DESIGNATIONS, $VARIABILITY_CLASS, $VARIABILITY_PERIOD, $VARIABILITY_AMPLITUDE, $VARIABILITY_EPOCH, $PHOTOMETRY, $DISTANCE_PC, $DISTANCE_LO_PC, $DISTANCE_HI_PC, $DISTANCE_METHOD, $DISTANCE_REF)
     {
-        $builder->startObject(59);
+        $builder->startObject(64);
         self::addID($builder, $ID);
         self::addCS_ID($builder, $CS_ID);
         self::addGNC_CAT_ID($builder, $GNC_CAT_ID);
-        self::addGAIADR3_CAT_ID($builder, $GAIADR3_CAT_ID);
+        self::addGAIA_DR3_SOURCE_ID($builder, $GAIA_DR3_SOURCE_ID);
         self::addHIP_CAT_ID($builder, $HIP_CAT_ID);
         self::addCAT_VERSION($builder, $CAT_VERSION);
         self::addASTROMETRY_ORIGIN($builder, $ASTROMETRY_ORIGIN);
@@ -702,6 +756,11 @@ class STR extends Table
         self::addVARIABILITY_AMPLITUDE($builder, $VARIABILITY_AMPLITUDE);
         self::addVARIABILITY_EPOCH($builder, $VARIABILITY_EPOCH);
         self::addPHOTOMETRY($builder, $PHOTOMETRY);
+        self::addDISTANCE_PC($builder, $DISTANCE_PC);
+        self::addDISTANCE_LO_PC($builder, $DISTANCE_LO_PC);
+        self::addDISTANCE_HI_PC($builder, $DISTANCE_HI_PC);
+        self::addDISTANCE_METHOD($builder, $DISTANCE_METHOD);
+        self::addDISTANCE_REF($builder, $DISTANCE_REF);
         $o = $builder->endObject();
         return $o;
     }
@@ -738,12 +797,12 @@ class STR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param long
+     * @param ulong
      * @return void
      */
-    public static function addGAIADR3_CAT_ID(FlatBufferBuilder $builder, $GAIADR3_CAT_ID)
+    public static function addGAIA_DR3_SOURCE_ID(FlatBufferBuilder $builder, $GAIA_DR3_SOURCE_ID)
     {
-        $builder->addLongX(3, $GAIADR3_CAT_ID, 0);
+        $builder->addUlongX(3, $GAIA_DR3_SOURCE_ID, 0);
     }
 
     /**
@@ -1342,6 +1401,56 @@ class STR extends Table
     public static function startPHOTOMETRYVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_PC(FlatBufferBuilder $builder, $DISTANCE_PC)
+    {
+        $builder->addDoubleX(59, $DISTANCE_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_LO_PC(FlatBufferBuilder $builder, $DISTANCE_LO_PC)
+    {
+        $builder->addDoubleX(60, $DISTANCE_LO_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDISTANCE_HI_PC(FlatBufferBuilder $builder, $DISTANCE_HI_PC)
+    {
+        $builder->addDoubleX(61, $DISTANCE_HI_PC, NAN);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addDISTANCE_METHOD(FlatBufferBuilder $builder, $DISTANCE_METHOD)
+    {
+        $builder->addByteX(62, $DISTANCE_METHOD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDISTANCE_REF(FlatBufferBuilder $builder, $DISTANCE_REF)
+    {
+        $builder->addOffsetX(63, $DISTANCE_REF, 0);
     }
 
     /**

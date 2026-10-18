@@ -7,7 +7,43 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 import './main_generated.dart';
 
-///  Celestial frame a tile's HEALPix grid is laid on.
+///  How a layer divides into tiles.
+///  Append new values only; never reorder or reuse existing values.
+enum sktPartitionScheme {
+  HEALPIX(0),
+  OCTREE_HELIO_ICRS(1);
+
+  final int value;
+  const sktPartitionScheme(this.value);
+
+  factory sktPartitionScheme.fromValue(int value) {
+    switch (value) {
+      case 0: return sktPartitionScheme.HEALPIX;
+      case 1: return sktPartitionScheme.OCTREE_HELIO_ICRS;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static sktPartitionScheme? _createOrNull(int? value) =>
+      value == null ? null : sktPartitionScheme.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<sktPartitionScheme> reader = _sktPartitionSchemeReader();
+}
+
+class _sktPartitionSchemeReader extends fb.Reader<sktPartitionScheme> {
+  const _sktPartitionSchemeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  sktPartitionScheme read(fb.BufferContext bc, int offset) =>
+      sktPartitionScheme.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Celestial frame a tile's HEALPix grid and point positions are laid on.
 ///  Append new values only; never reorder or reuse existing values.
 enum sktCelestialFrame {
   UNSPECIFIED(0),
@@ -364,11 +400,11 @@ class SKTPoint {
   int get PARALLAX => const fb.Uint16Reader().read(_bc, _bcOffset + 12);
   ///  Magnitude in the tile's band, millimagnitudes. -32768 when unknown.
   int get MAG => const fb.Int16Reader().read(_bc, _bcOffset + 14);
-  ///  Colour, encoded as the tile's COLOR_ENCODING states.
+  ///  Color, encoded as the tile's COLOR_ENCODING states.
   int get COLOR => const fb.Uint16Reader().read(_bc, _bcOffset + 16);
   ///  Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-  ///  not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-  ///  5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+  ///  not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+  ///  5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
   ///  within the confusion radius. 7: extended source. 8-15: reserved, 0.
   int get FLAGS => const fb.Uint16Reader().read(_bc, _bcOffset + 18);
   ///  Index of the source's full record in the tile's row collection
@@ -469,7 +505,140 @@ class SKTPointObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Sky Tile: one HEALPix tile of an all-sky point-source or diffuse-map layer.
+///  One point source placed in 3D in an octree node, packed for drawing (24
+///  bytes).
+class SKTPoint3D {
+  SKTPoint3D._(this._bc, this._bcOffset);
+
+  static const fb.Reader<SKTPoint3D> reader = _SKTPoint3DReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  ICRS X of the star minus the node's CENTER_X_PC, parsecs.
+  double get X_PC => const fb.Float32Reader().read(_bc, _bcOffset + 0);
+  double get xPc => X_PC;
+  ///  ICRS Y of the star minus the node's CENTER_Y_PC, parsecs.
+  double get Y_PC => const fb.Float32Reader().read(_bc, _bcOffset + 4);
+  double get yPc => Y_PC;
+  ///  ICRS Z of the star minus the node's CENTER_Z_PC, parsecs.
+  double get Z_PC => const fb.Float32Reader().read(_bc, _bcOffset + 8);
+  double get zPc => Z_PC;
+  ///  Absolute magnitude in the tile's band, the magnitude at 10 parsecs with
+  ///  extinction removed, millimagnitudes. -32768 when unknown.
+  int get ABS_MAG => const fb.Int16Reader().read(_bc, _bcOffset + 12);
+  int get absMag => ABS_MAG;
+  ///  Color, encoded as the tile's COLOR_ENCODING states (for BP - RP:
+  ///  COLOR_INDEX with COLOR_BLUE_BAND_ID BP and COLOR_RED_BAND_ID RP).
+  int get COLOR => const fb.Uint16Reader().read(_bc, _bcOffset + 14);
+  ///  Fractional distance uncertainty, the `$STR` (DISTANCE_HI_PC -
+  ///  DISTANCE_LO_PC) / DISTANCE_PC, in units of 1/10000. 65535 when unknown
+  ///  or 6.5535 or more.
+  int get DIST_FRAC_UNC => const fb.Uint16Reader().read(_bc, _bcOffset + 16);
+  int get distFracUnc => DIST_FRAC_UNC;
+  ///  Bit flags, with SKTPoint's meanings. 0: variable. 1: member of a
+  ///  multiple system. 4: ABS_MAG is modeled, not measured. 5: ROW refers to
+  ///  a `$CSO` rather than a `$STR`. 6: a neighbor lies within the confusion
+  ///  radius. 7: extended source. 2, 3 and 8-15: reserved, 0.
+  int get FLAGS => const fb.Uint16Reader().read(_bc, _bcOffset + 18);
+  ///  Index of the source's full record in the tile's row collection
+  ///  (ROW_COLLECTION_CID), from 0. 0xFFFFFFFF when the tile has none.
+  int get ROW => const fb.Uint32Reader().read(_bc, _bcOffset + 20);
+
+  @override
+  String toString() {
+    return 'SKTPoint3D{xPc: ${xPc}, yPc: ${yPc}, zPc: ${zPc}, absMag: ${absMag}, COLOR: ${COLOR}, distFracUnc: ${distFracUnc}, FLAGS: ${FLAGS}, ROW: ${ROW}}';
+  }
+}
+
+class _SKTPoint3DReader extends fb.StructReader<SKTPoint3D> {
+  const _SKTPoint3DReader();
+
+  @override
+  int get size => 24;
+
+  @override
+  SKTPoint3D createObject(fb.BufferContext bc, int offset) =>
+    SKTPoint3D._(bc, offset);
+}
+
+class SKTPoint3DBuilder {
+  SKTPoint3DBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  int finish(double X_PC, double Y_PC, double Z_PC, int ABS_MAG, int COLOR, int DIST_FRAC_UNC, int FLAGS, int ROW) {
+    fbBuilder.putUint32(ROW);
+    fbBuilder.putUint16(FLAGS);
+    fbBuilder.putUint16(DIST_FRAC_UNC);
+    fbBuilder.putUint16(COLOR);
+    fbBuilder.putInt16(ABS_MAG);
+    fbBuilder.putFloat32(Z_PC);
+    fbBuilder.putFloat32(Y_PC);
+    fbBuilder.putFloat32(X_PC);
+    return fbBuilder.offset;
+  }
+
+}
+
+class SKTPoint3DObjectBuilder extends fb.ObjectBuilder {
+  final double _X_PC;
+  final double _Y_PC;
+  final double _Z_PC;
+  final int _ABS_MAG;
+  final int _COLOR;
+  final int _DIST_FRAC_UNC;
+  final int _FLAGS;
+  final int _ROW;
+
+  SKTPoint3DObjectBuilder({
+    double X_PC,
+    double? xPc,
+    double Y_PC,
+    double? yPc,
+    double Z_PC,
+    double? zPc,
+    int ABS_MAG,
+    int? absMag,
+    required int COLOR,
+    int DIST_FRAC_UNC,
+    int? distFracUnc,
+    required int FLAGS,
+    required int ROW,
+  })
+      : _X_PC = xPc ?? X_PC,
+        _Y_PC = yPc ?? Y_PC,
+        _Z_PC = zPc ?? Z_PC,
+        _ABS_MAG = absMag ?? ABS_MAG,
+        _COLOR = COLOR,
+        _DIST_FRAC_UNC = distFracUnc ?? DIST_FRAC_UNC,
+        _FLAGS = FLAGS,
+        _ROW = ROW;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.putUint32(_ROW);
+    fbBuilder.putUint16(_FLAGS);
+    fbBuilder.putUint16(_DIST_FRAC_UNC);
+    fbBuilder.putUint16(_COLOR);
+    fbBuilder.putInt16(_ABS_MAG);
+    fbBuilder.putFloat32(_Z_PC);
+    fbBuilder.putFloat32(_Y_PC);
+    fbBuilder.putFloat32(_X_PC);
+    return fbBuilder.offset;
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Sky Tile: one HEALPix pixel or heliocentric octree node of a point-source
+///  or diffuse-map layer.
 class SKT {
   SKT._(this._bc, this._bcOffset);
   factory SKT(List<int> bytes) {
@@ -483,21 +652,22 @@ class SKT {
   final int _bcOffset;
 
   ///  Stable identifier of the layer: equal across every tile of one
-  ///  (producer, source catalogue or survey, band, place, epoch).
+  ///  (producer, source catalog or survey, band, place, epoch).
   String? get LAYER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
   String? get layerId => LAYER_ID;
-  ///  Frame the HEALPix grid and the point positions are stated in.
+  ///  Frame the HEALPix grid and the point positions are stated in; ICRS for
+  ///  an OCTREE_HELIO_ICRS layer.
   sktCelestialFrame get FRAME => sktCelestialFrame.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 1));
   ///  HEALPix order; NSIDE = 2^ORDER.
   int get ORDER => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0);
   ///  Nested pixel index at ORDER.
   int get PIXEL => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  ///  Deepest order of the layer, when the producer knows it; 255 when
-  ///  unstated.
+  ///  Deepest ORDER (HEALPix) or OCTREE_LEVEL (octree) of the layer, when the
+  ///  producer knows it; 255 when unstated.
   int get MAX_ORDER => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 255);
   int get maxOrder => MAX_ORDER;
-  ///  Which of the four children exist (bit i for child 4 * PIXEL + i). 0 on
-  ///  a leaf.
+  ///  Which children exist: bit i for HEALPix child 4 * PIXEL + i (bits
+  ///  0-3), or for octree child 8 * OCTREE_KEY + i (bits 0-7). 0 on a leaf.
   int get CHILD_MASK => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0);
   int get childMask => CHILD_MASK;
   ///  Payload the tile carries.
@@ -512,13 +682,13 @@ class SKT {
   ///  in this band.
   String? get BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
   String? get bandId => BAND_ID;
-  ///  Effective wavelength of the band, nanometres (vacuum).
+  ///  Effective wavelength of the band, nanometers (vacuum).
   double get WAVELENGTH_EFF_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, double.nan);
   double get wavelengthEffNm => WAVELENGTH_EFF_NM;
-  ///  Short edge of a band-integrated map, nanometres.
+  ///  Short edge of a band-integrated map, nanometers.
   double get WAVELENGTH_MIN_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, double.nan);
   double get wavelengthMinNm => WAVELENGTH_MIN_NM;
-  ///  Long edge of a band-integrated map, nanometres.
+  ///  Long edge of a band-integrated map, nanometers.
   double get WAVELENGTH_MAX_NM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, double.nan);
   double get wavelengthMaxNm => WAVELENGTH_MAX_NM;
   ///  Calibration system of MAG.
@@ -529,10 +699,10 @@ class SKT {
   ///  Epoch of point positions, Julian years (TT).
   double get EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, double.nan);
   ///  Observer an ASTROMETRIC or APPARENT tile was computed for (a site, a
-  ///  spacecraft or the geocentre), as the producer names it.
+  ///  spacecraft or the geocenter), as the producer names it.
   String? get OBSERVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   String? get observerId => OBSERVER_ID;
-  ///  Number of points in the payload.
+  ///  Number of points in the payload (POINTS or POINTS_3D).
   int get POINT_COUNT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 38, 0);
   int get pointCount => POINT_COUNT;
   ///  Brightest magnitude in the tile.
@@ -542,13 +712,13 @@ class SKT {
   ///  complete to this limit inside the pixel.
   double get MAG_LIMIT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 42, double.nan);
   double get magLimit => MAG_LIMIT;
-  ///  What each point's COLOR holds.
+  ///  What each point's COLOR holds (POINTS and POINTS_3D alike).
   sktColorEncoding get COLOR_ENCODING => sktColorEncoding.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 44, 0));
   sktColorEncoding get colorEncoding => COLOR_ENCODING;
-  ///  Bluer band of a COLOR_INDEX colour.
+  ///  Bluer band of a COLOR_INDEX color.
   String? get COLOR_BLUE_BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
   String? get colorBlueBandId => COLOR_BLUE_BAND_ID;
-  ///  Redder band of a COLOR_INDEX colour.
+  ///  Redder band of a COLOR_INDEX color.
   String? get COLOR_RED_BAND_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
   String? get colorRedBandId => COLOR_RED_BAND_ID;
   ///  Packed points, brightest first.
@@ -610,13 +780,13 @@ class SKT {
   ///  Length of the payload at PAYLOAD_CID, bytes.
   int get PAYLOAD_BYTES => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 86, 0);
   int get payloadBytes => PAYLOAD_BYTES;
-  ///  Start of the observations the tile summarises, ISO 8601 UTC.
+  ///  Start of the observations the tile summarizes, ISO 8601 UTC.
   String? get OBSERVATION_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
   String? get observationStart => OBSERVATION_START;
-  ///  End of the observations the tile summarises, ISO 8601 UTC.
+  ///  End of the observations the tile summarizes, ISO 8601 UTC.
   String? get OBSERVATION_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
   String? get observationEnd => OBSERVATION_END;
-  ///  Verbatim names of the catalogues or surveys the tile was derived from.
+  ///  Verbatim names of the catalogs or surveys the tile was derived from.
   List<String>? get SOURCE_NAMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 92);
   List<String>? get sourceNames => SOURCE_NAMES;
   ///  Peer identifier of the node that produced the tile.
@@ -630,13 +800,43 @@ class SKT {
   String? get producedAt => PRODUCED_AT;
   ///  Citation the upstream publishers ask for.
   String? get CITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
-  ///  URL of the licence or terms of the source data.
+  ///  URL of the license or terms of the source data.
   String? get LICENSE_URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
   String? get licenseUrl => LICENSE_URL;
+  ///  How the layer divides into tiles.
+  sktPartitionScheme get PARTITION => sktPartitionScheme.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 104, 0));
+  ///  Octree level of the node; the root is 0, at most 21.
+  int get OCTREE_LEVEL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 106, 0);
+  int get octreeLevel => OCTREE_LEVEL;
+  ///  Morton key of the node at OCTREE_LEVEL, 3 bits per level.
+  int get OCTREE_KEY => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 108, 0);
+  int get octreeKey => OCTREE_KEY;
+  ///  ICRS X of the node's center, parsecs from the Sun.
+  double get CENTER_X_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, double.nan);
+  double get centerXPc => CENTER_X_PC;
+  ///  ICRS Y of the node's center, parsecs from the Sun.
+  double get CENTER_Y_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, double.nan);
+  double get centerYPc => CENTER_Y_PC;
+  ///  ICRS Z of the node's center, parsecs from the Sun.
+  double get CENTER_Z_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, double.nan);
+  double get centerZPc => CENTER_Z_PC;
+  ///  Half the edge length of the node's cube, parsecs.
+  double get HALF_SIZE_PC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 116, double.nan);
+  double get halfSizePc => HALF_SIZE_PC;
+  ///  Brightest absolute magnitude in the node.
+  double get ABS_MAG_BRIGHTEST => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 118, double.nan);
+  double get absMagBrightest => ABS_MAG_BRIGHTEST;
+  ///  Faintest absolute magnitude in the node; with its ancestors, the layer
+  ///  is complete to this limit inside the node's cube.
+  double get ABS_MAG_FAINTEST => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 120, double.nan);
+  double get absMagFaintest => ABS_MAG_FAINTEST;
+  ///  Packed points of an octree node, brightest absolute magnitude first.
+  List<SKTPoint3D>? get POINTS_3D => const fb.ListReader<SKTPoint3D>(SKTPoint3D.reader).vTableGetNullable(_bc, _bcOffset, 122);
+  List<SKTPoint3D>? get points3d => POINTS_3D;
 
   @override
   String toString() {
-    return 'SKT{layerId: ${layerId}, FRAME: ${FRAME}, ORDER: ${ORDER}, PIXEL: ${PIXEL}, maxOrder: ${maxOrder}, childMask: ${childMask}, payloadKind: ${payloadKind}, REFINE: ${REFINE}, spectralRegime: ${spectralRegime}, bandId: ${bandId}, wavelengthEffNm: ${wavelengthEffNm}, wavelengthMinNm: ${wavelengthMinNm}, wavelengthMaxNm: ${wavelengthMaxNm}, magnitudeSystem: ${magnitudeSystem}, PLACE: ${PLACE}, EPOCH: ${EPOCH}, observerId: ${observerId}, pointCount: ${pointCount}, magBrightest: ${magBrightest}, magLimit: ${magLimit}, colorEncoding: ${colorEncoding}, colorBlueBandId: ${colorBlueBandId}, colorRedBandId: ${colorRedBandId}, POINTS: ${POINTS}, rowCollectionCid: ${rowCollectionCid}, mapDepth: ${mapDepth}, mapEncoding: ${mapEncoding}, mapQuantity: ${mapQuantity}, mapQuantityName: ${mapQuantityName}, mapUnits: ${mapUnits}, mapScale: ${mapScale}, mapOffset: ${mapOffset}, mapBlank: ${mapBlank}, mapValues: ${mapValues}, STRETCH: ${STRETCH}, blackPoint: ${blackPoint}, whitePoint: ${whitePoint}, stretchSoftening: ${stretchSoftening}, percentileLevels: ${percentileLevels}, percentileValues: ${percentileValues}, payloadCid: ${payloadCid}, payloadBytes: ${payloadBytes}, observationStart: ${observationStart}, observationEnd: ${observationEnd}, sourceNames: ${sourceNames}, producerPeerId: ${producerPeerId}, producerVersion: ${producerVersion}, producedAt: ${producedAt}, CITATION: ${CITATION}, licenseUrl: ${licenseUrl}}';
+    return 'SKT{layerId: ${layerId}, FRAME: ${FRAME}, ORDER: ${ORDER}, PIXEL: ${PIXEL}, maxOrder: ${maxOrder}, childMask: ${childMask}, payloadKind: ${payloadKind}, REFINE: ${REFINE}, spectralRegime: ${spectralRegime}, bandId: ${bandId}, wavelengthEffNm: ${wavelengthEffNm}, wavelengthMinNm: ${wavelengthMinNm}, wavelengthMaxNm: ${wavelengthMaxNm}, magnitudeSystem: ${magnitudeSystem}, PLACE: ${PLACE}, EPOCH: ${EPOCH}, observerId: ${observerId}, pointCount: ${pointCount}, magBrightest: ${magBrightest}, magLimit: ${magLimit}, colorEncoding: ${colorEncoding}, colorBlueBandId: ${colorBlueBandId}, colorRedBandId: ${colorRedBandId}, POINTS: ${POINTS}, rowCollectionCid: ${rowCollectionCid}, mapDepth: ${mapDepth}, mapEncoding: ${mapEncoding}, mapQuantity: ${mapQuantity}, mapQuantityName: ${mapQuantityName}, mapUnits: ${mapUnits}, mapScale: ${mapScale}, mapOffset: ${mapOffset}, mapBlank: ${mapBlank}, mapValues: ${mapValues}, STRETCH: ${STRETCH}, blackPoint: ${blackPoint}, whitePoint: ${whitePoint}, stretchSoftening: ${stretchSoftening}, percentileLevels: ${percentileLevels}, percentileValues: ${percentileValues}, payloadCid: ${payloadCid}, payloadBytes: ${payloadBytes}, observationStart: ${observationStart}, observationEnd: ${observationEnd}, sourceNames: ${sourceNames}, producerPeerId: ${producerPeerId}, producerVersion: ${producerVersion}, producedAt: ${producedAt}, CITATION: ${CITATION}, licenseUrl: ${licenseUrl}, PARTITION: ${PARTITION}, octreeLevel: ${octreeLevel}, octreeKey: ${octreeKey}, centerXPc: ${centerXPc}, centerYPc: ${centerYPc}, centerZPc: ${centerZPc}, halfSizePc: ${halfSizePc}, absMagBrightest: ${absMagBrightest}, absMagFaintest: ${absMagFaintest}, points3d: ${points3d}}';
   }
 }
 
@@ -654,7 +854,7 @@ class SKTBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(50);
+    fbBuilder.startTable(60);
   }
 
   int addLayerIdOffset(int? offset) {
@@ -857,6 +1057,46 @@ class SKTBuilder {
     fbBuilder.addOffset(49, offset);
     return fbBuilder.offset;
   }
+  int addPartition(sktPartitionScheme? PARTITION) {
+    fbBuilder.addUint8(50, PARTITION?.value);
+    return fbBuilder.offset;
+  }
+  int addOctreeLevel(int? OCTREE_LEVEL) {
+    fbBuilder.addUint8(51, OCTREE_LEVEL);
+    return fbBuilder.offset;
+  }
+  int addOctreeKey(int? OCTREE_KEY) {
+    fbBuilder.addUint64(52, OCTREE_KEY);
+    return fbBuilder.offset;
+  }
+  int addCenterXPc(double? CENTER_X_PC) {
+    fbBuilder.addFloat64(53, CENTER_X_PC);
+    return fbBuilder.offset;
+  }
+  int addCenterYPc(double? CENTER_Y_PC) {
+    fbBuilder.addFloat64(54, CENTER_Y_PC);
+    return fbBuilder.offset;
+  }
+  int addCenterZPc(double? CENTER_Z_PC) {
+    fbBuilder.addFloat64(55, CENTER_Z_PC);
+    return fbBuilder.offset;
+  }
+  int addHalfSizePc(double? HALF_SIZE_PC) {
+    fbBuilder.addFloat64(56, HALF_SIZE_PC);
+    return fbBuilder.offset;
+  }
+  int addAbsMagBrightest(double? ABS_MAG_BRIGHTEST) {
+    fbBuilder.addFloat32(57, ABS_MAG_BRIGHTEST);
+    return fbBuilder.offset;
+  }
+  int addAbsMagFaintest(double? ABS_MAG_FAINTEST) {
+    fbBuilder.addFloat32(58, ABS_MAG_FAINTEST);
+    return fbBuilder.offset;
+  }
+  int addPoints3DOffset(int? offset) {
+    fbBuilder.addOffset(59, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -914,6 +1154,16 @@ class SKTObjectBuilder extends fb.ObjectBuilder {
   final String? _PRODUCED_AT;
   final String? _CITATION;
   final String? _LICENSE_URL;
+  final sktPartitionScheme? _PARTITION;
+  final int? _OCTREE_LEVEL;
+  final int? _OCTREE_KEY;
+  final double? _CENTER_X_PC;
+  final double? _CENTER_Y_PC;
+  final double? _CENTER_Z_PC;
+  final double? _HALF_SIZE_PC;
+  final double? _ABS_MAG_BRIGHTEST;
+  final double? _ABS_MAG_FAINTEST;
+  final List<SKTPoint3DObjectBuilder>? _POINTS_3D;
 
   SKTObjectBuilder({
     String? LAYER_ID,
@@ -1007,6 +1257,25 @@ class SKTObjectBuilder extends fb.ObjectBuilder {
     String? CITATION,
     String? LICENSE_URL,
     String? licenseUrl,
+    sktPartitionScheme? PARTITION,
+    int? OCTREE_LEVEL,
+    int? octreeLevel,
+    int? OCTREE_KEY,
+    int? octreeKey,
+    double? CENTER_X_PC,
+    double? centerXPc,
+    double? CENTER_Y_PC,
+    double? centerYPc,
+    double? CENTER_Z_PC,
+    double? centerZPc,
+    double? HALF_SIZE_PC,
+    double? halfSizePc,
+    double? ABS_MAG_BRIGHTEST,
+    double? absMagBrightest,
+    double? ABS_MAG_FAINTEST,
+    double? absMagFaintest,
+    List<SKTPoint3DObjectBuilder>? POINTS_3D,
+    List<SKTPoint3DObjectBuilder>? points3d,
   })
       : _LAYER_ID = layerId ?? LAYER_ID,
         _FRAME = FRAME,
@@ -1057,7 +1326,17 @@ class SKTObjectBuilder extends fb.ObjectBuilder {
         _PRODUCER_VERSION = producerVersion ?? PRODUCER_VERSION,
         _PRODUCED_AT = producedAt ?? PRODUCED_AT,
         _CITATION = CITATION,
-        _LICENSE_URL = licenseUrl ?? LICENSE_URL;
+        _LICENSE_URL = licenseUrl ?? LICENSE_URL,
+        _PARTITION = PARTITION,
+        _OCTREE_LEVEL = octreeLevel ?? OCTREE_LEVEL,
+        _OCTREE_KEY = octreeKey ?? OCTREE_KEY,
+        _CENTER_X_PC = centerXPc ?? CENTER_X_PC,
+        _CENTER_Y_PC = centerYPc ?? CENTER_Y_PC,
+        _CENTER_Z_PC = centerZPc ?? CENTER_Z_PC,
+        _HALF_SIZE_PC = halfSizePc ?? HALF_SIZE_PC,
+        _ABS_MAG_BRIGHTEST = absMagBrightest ?? ABS_MAG_BRIGHTEST,
+        _ABS_MAG_FAINTEST = absMagFaintest ?? ABS_MAG_FAINTEST,
+        _POINTS_3D = points3d ?? POINTS_3D;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1104,7 +1383,9 @@ class SKTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_CITATION!);
     final int? LICENSE_URLOffset = _LICENSE_URL == null ? null
         : fbBuilder.writeString(_LICENSE_URL!);
-    fbBuilder.startTable(50);
+    final int? POINTS_3DOffset = _POINTS_3D == null ? null
+        : fbBuilder.writeListOfStructs(_POINTS_3D!);
+    fbBuilder.startTable(60);
     fbBuilder.addOffset(0, LAYER_IDOffset);
     fbBuilder.addUint8(1, _FRAME?.value);
     fbBuilder.addUint8(2, _ORDER);
@@ -1155,6 +1436,16 @@ class SKTObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(47, PRODUCED_ATOffset);
     fbBuilder.addOffset(48, CITATIONOffset);
     fbBuilder.addOffset(49, LICENSE_URLOffset);
+    fbBuilder.addUint8(50, _PARTITION?.value);
+    fbBuilder.addUint8(51, _OCTREE_LEVEL);
+    fbBuilder.addUint64(52, _OCTREE_KEY);
+    fbBuilder.addFloat64(53, _CENTER_X_PC);
+    fbBuilder.addFloat64(54, _CENTER_Y_PC);
+    fbBuilder.addFloat64(55, _CENTER_Z_PC);
+    fbBuilder.addFloat64(56, _HALF_SIZE_PC);
+    fbBuilder.addFloat32(57, _ABS_MAG_BRIGHTEST);
+    fbBuilder.addFloat32(58, _ABS_MAG_FAINTEST);
+    fbBuilder.addOffset(59, POINTS_3DOffset);
     return fbBuilder.endTable();
   }
 

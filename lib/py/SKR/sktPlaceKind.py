@@ -6,8 +6,8 @@
 # Append new values only; never reorder or reuse existing values.
 class sktPlaceKind(object):
     UNSPECIFIED = 0
-    # Barycentric catalogue place at EPOCH: proper motion applied from the
-    # catalogue epoch, nothing else.
+    # Barycentric catalog place at EPOCH: proper motion applied from the
+    # catalog epoch, nothing else.
     CATALOG = 1
     # Astrometric place for the observer named by OBSERVER_ID at EPOCH:
     # space motion and parallax applied, no aberration or deflection.

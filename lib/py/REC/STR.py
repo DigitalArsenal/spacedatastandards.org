@@ -53,12 +53,13 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # Source identifier in the third data release of the all-sky space astrometry survey
+    # Source identifier (source_id) in the third data release of the all-sky space astrometry
+    # survey; 0 when the star has no match in that release
     # STR
-    def GAIADR3_CAT_ID(self):
+    def GAIA_DR3_SOURCE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
     # Identifier in the first space astrometry mission's main catalog
@@ -413,7 +414,7 @@ class STR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Proper name as recognised by the astronomical naming authority
+    # Proper name as recognized by the astronomical naming authority
     # STR
     def PROPER_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
@@ -506,7 +507,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return float('nan')
 
-    # Brightness in every band the star was measured or modelled in
+    # Brightness in every band the star was measured or modeled in
     # STR
     def PHOTOMETRY(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
@@ -532,8 +533,54 @@ class STR(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         return o == 0
 
+    # Distance from the Sun (parsecs): the posterior median, or the mode for
+    # EDSD_POSTERIOR, as DISTANCE_METHOD states
+    # STR
+    def DISTANCE_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Lower bound of the distance (parsecs): the 16th percentile of the posterior
+    # for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+    # the 68% highest-density interval for EDSD_POSTERIOR, and
+    # 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+    # STR
+    def DISTANCE_LO_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+    # the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+    # DISTANCE_LO_PC; NaN when unbounded
+    # STR
+    def DISTANCE_HI_PC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
+    # Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+    # STR
+    def DISTANCE_METHOD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+    # STR
+    def DISTANCE_REF(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def STRStart(builder):
-    builder.StartObject(59)
+    builder.StartObject(64)
 
 def Start(builder):
     STRStart(builder)
@@ -556,11 +603,11 @@ def STRAddGNC_CAT_ID(builder, GNC_CAT_ID):
 def AddGNC_CAT_ID(builder, GNC_CAT_ID):
     STRAddGNC_CAT_ID(builder, GNC_CAT_ID)
 
-def STRAddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID):
-    builder.PrependInt64Slot(3, GAIADR3_CAT_ID, 0)
+def STRAddGAIA_DR3_SOURCE_ID(builder, GAIA_DR3_SOURCE_ID):
+    builder.PrependUint64Slot(3, GAIA_DR3_SOURCE_ID, 0)
 
-def AddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID):
-    STRAddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID)
+def AddGAIA_DR3_SOURCE_ID(builder, GAIA_DR3_SOURCE_ID):
+    STRAddGAIA_DR3_SOURCE_ID(builder, GAIA_DR3_SOURCE_ID)
 
 def STRAddHIP_CAT_ID(builder, HIP_CAT_ID):
     builder.PrependUint32Slot(4, HIP_CAT_ID, 0)
@@ -916,6 +963,36 @@ def STRCreatePHOTOMETRYVector(builder, data):
 def CreatePHOTOMETRYVector(builder, data):
     return STRCreatePHOTOMETRYVector(builder, data)
 
+def STRAddDISTANCE_PC(builder, DISTANCE_PC):
+    builder.PrependFloat64Slot(59, DISTANCE_PC, float('nan'))
+
+def AddDISTANCE_PC(builder, DISTANCE_PC):
+    STRAddDISTANCE_PC(builder, DISTANCE_PC)
+
+def STRAddDISTANCE_LO_PC(builder, DISTANCE_LO_PC):
+    builder.PrependFloat64Slot(60, DISTANCE_LO_PC, float('nan'))
+
+def AddDISTANCE_LO_PC(builder, DISTANCE_LO_PC):
+    STRAddDISTANCE_LO_PC(builder, DISTANCE_LO_PC)
+
+def STRAddDISTANCE_HI_PC(builder, DISTANCE_HI_PC):
+    builder.PrependFloat64Slot(61, DISTANCE_HI_PC, float('nan'))
+
+def AddDISTANCE_HI_PC(builder, DISTANCE_HI_PC):
+    STRAddDISTANCE_HI_PC(builder, DISTANCE_HI_PC)
+
+def STRAddDISTANCE_METHOD(builder, DISTANCE_METHOD):
+    builder.PrependUint8Slot(62, DISTANCE_METHOD, 0)
+
+def AddDISTANCE_METHOD(builder, DISTANCE_METHOD):
+    STRAddDISTANCE_METHOD(builder, DISTANCE_METHOD)
+
+def STRAddDISTANCE_REF(builder, DISTANCE_REF):
+    builder.PrependUOffsetTRelativeSlot(63, flatbuffers.number_types.UOffsetTFlags.py_type(DISTANCE_REF), 0)
+
+def AddDISTANCE_REF(builder, DISTANCE_REF):
+    STRAddDISTANCE_REF(builder, DISTANCE_REF)
+
 def STREnd(builder):
     return builder.EndObject()
 
@@ -936,7 +1013,7 @@ class STRT(object):
         ID = None,
         CS_ID = 0,
         GNC_CAT_ID = 0,
-        GAIADR3_CAT_ID = 0,
+        GAIA_DR3_SOURCE_ID = 0,
         HIP_CAT_ID = 0,
         CAT_VERSION = None,
         ASTROMETRY_ORIGIN = None,
@@ -992,11 +1069,16 @@ class STRT(object):
         VARIABILITY_AMPLITUDE = float('nan'),
         VARIABILITY_EPOCH = float('nan'),
         PHOTOMETRY = None,
+        DISTANCE_PC = float('nan'),
+        DISTANCE_LO_PC = float('nan'),
+        DISTANCE_HI_PC = float('nan'),
+        DISTANCE_METHOD = 0,
+        DISTANCE_REF = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.CS_ID = CS_ID  # type: int
         self.GNC_CAT_ID = GNC_CAT_ID  # type: int
-        self.GAIADR3_CAT_ID = GAIADR3_CAT_ID  # type: int
+        self.GAIA_DR3_SOURCE_ID = GAIA_DR3_SOURCE_ID  # type: int
         self.HIP_CAT_ID = HIP_CAT_ID  # type: int
         self.CAT_VERSION = CAT_VERSION  # type: Optional[str]
         self.ASTROMETRY_ORIGIN = ASTROMETRY_ORIGIN  # type: Optional[str]
@@ -1052,6 +1134,11 @@ class STRT(object):
         self.VARIABILITY_AMPLITUDE = VARIABILITY_AMPLITUDE  # type: float
         self.VARIABILITY_EPOCH = VARIABILITY_EPOCH  # type: float
         self.PHOTOMETRY = PHOTOMETRY  # type: Optional[List[PHBMeasurement.PHBMeasurementT]]
+        self.DISTANCE_PC = DISTANCE_PC  # type: float
+        self.DISTANCE_LO_PC = DISTANCE_LO_PC  # type: float
+        self.DISTANCE_HI_PC = DISTANCE_HI_PC  # type: float
+        self.DISTANCE_METHOD = DISTANCE_METHOD  # type: int
+        self.DISTANCE_REF = DISTANCE_REF  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1077,7 +1164,7 @@ class STRT(object):
         self.ID = STR.ID()
         self.CS_ID = STR.CS_ID()
         self.GNC_CAT_ID = STR.GNC_CAT_ID()
-        self.GAIADR3_CAT_ID = STR.GAIADR3_CAT_ID()
+        self.GAIA_DR3_SOURCE_ID = STR.GAIA_DR3_SOURCE_ID()
         self.HIP_CAT_ID = STR.HIP_CAT_ID()
         self.CAT_VERSION = STR.CAT_VERSION()
         self.ASTROMETRY_ORIGIN = STR.ASTROMETRY_ORIGIN()
@@ -1143,6 +1230,11 @@ class STRT(object):
                 else:
                     pHBMeasurement_ = PHBMeasurement.PHBMeasurementT.InitFromObj(STR.PHOTOMETRY(i))
                     self.PHOTOMETRY.append(pHBMeasurement_)
+        self.DISTANCE_PC = STR.DISTANCE_PC()
+        self.DISTANCE_LO_PC = STR.DISTANCE_LO_PC()
+        self.DISTANCE_HI_PC = STR.DISTANCE_HI_PC()
+        self.DISTANCE_METHOD = STR.DISTANCE_METHOD()
+        self.DISTANCE_REF = STR.DISTANCE_REF()
 
     # STRT
     def Pack(self, builder):
@@ -1178,12 +1270,14 @@ class STRT(object):
             for i in reversed(range(len(self.PHOTOMETRY))):
                 builder.PrependUOffsetTRelative(PHOTOMETRYlist[i])
             PHOTOMETRY = builder.EndVector()
+        if self.DISTANCE_REF is not None:
+            DISTANCE_REF = builder.CreateString(self.DISTANCE_REF)
         STRStart(builder)
         if self.ID is not None:
             STRAddID(builder, ID)
         STRAddCS_ID(builder, self.CS_ID)
         STRAddGNC_CAT_ID(builder, self.GNC_CAT_ID)
-        STRAddGAIADR3_CAT_ID(builder, self.GAIADR3_CAT_ID)
+        STRAddGAIA_DR3_SOURCE_ID(builder, self.GAIA_DR3_SOURCE_ID)
         STRAddHIP_CAT_ID(builder, self.HIP_CAT_ID)
         if self.CAT_VERSION is not None:
             STRAddCAT_VERSION(builder, CAT_VERSION)
@@ -1248,5 +1342,11 @@ class STRT(object):
         STRAddVARIABILITY_EPOCH(builder, self.VARIABILITY_EPOCH)
         if self.PHOTOMETRY is not None:
             STRAddPHOTOMETRY(builder, PHOTOMETRY)
+        STRAddDISTANCE_PC(builder, self.DISTANCE_PC)
+        STRAddDISTANCE_LO_PC(builder, self.DISTANCE_LO_PC)
+        STRAddDISTANCE_HI_PC(builder, self.DISTANCE_HI_PC)
+        STRAddDISTANCE_METHOD(builder, self.DISTANCE_METHOD)
+        if self.DISTANCE_REF is not None:
+            STRAddDISTANCE_REF(builder, DISTANCE_REF)
         STR = STREnd(builder)
         return STR

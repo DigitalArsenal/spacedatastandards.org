@@ -40,12 +40,12 @@ class SKTPoint(object):
     # Magnitude in the tile's band, millimagnitudes. -32768 when unknown.
     # SKTPoint
     def MAG(self): return self._tab.Get(flatbuffers.number_types.Int16Flags, self._tab.Pos + flatbuffers.number_types.UOffsetTFlags.py_type(14))
-    # Colour, encoded as the tile's COLOR_ENCODING states.
+    # Color, encoded as the tile's COLOR_ENCODING states.
     # SKTPoint
     def COLOR(self): return self._tab.Get(flatbuffers.number_types.Uint16Flags, self._tab.Pos + flatbuffers.number_types.UOffsetTFlags.py_type(16))
     # Bit flags. 0: variable. 1: member of a multiple system. 2: PMRA/PMDEC
-    # not usable. 3: PARALLAX not usable. 4: MAG is modelled, not measured.
-    # 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbour lies
+    # not usable. 3: PARALLAX not usable. 4: MAG is modeled, not measured.
+    # 5: ROW refers to a `$CSO` rather than a `$STR`. 6: a neighbor lies
     # within the confusion radius. 7: extended source. 8-15: reserved, 0.
     # SKTPoint
     def FLAGS(self): return self._tab.Get(flatbuffers.number_types.Uint16Flags, self._tab.Pos + flatbuffers.number_types.UOffsetTFlags.py_type(18))

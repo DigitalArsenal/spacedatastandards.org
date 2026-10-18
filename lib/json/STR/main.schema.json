@@ -21,6 +21,10 @@
       "type" : "string",
       "enum": ["DETECTION", "UPPER_LIMIT", "LOWER_LIMIT"]
     },
+    "strDistanceEstimator" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "BAILER_JONES_2021_GEO", "BAILER_JONES_2021_PHOTOGEO", "EDSD_POSTERIOR", "PARALLAX_INVERSE"]
+    },
     "PHBMeasurement" : {
       "type" : "object",
       "description" : "One source's brightness in one band.",
@@ -152,9 +156,9 @@
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
                 "description" : "GNC star catalog identifier"
               },
-        "GAIADR3_CAT_ID" : {
-                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
-                "description" : "Source identifier in the third data release of the all-sky space astrometry survey"
+        "GAIA_DR3_SOURCE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Source identifier (source_id) in the third data release of the all-sky space astrometry\nsurvey; 0 when the star has no match in that release"
               },
         "HIP_CAT_ID" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
@@ -334,7 +338,7 @@
               },
         "PROPER_NAME" : {
                 "type" : "string",
-                "description" : "Proper name as recognised by the astronomical naming authority"
+                "description" : "Proper name as recognized by the astronomical naming authority"
               },
         "BAYER_FLAMSTEED" : {
                 "type" : "string",
@@ -374,7 +378,27 @@
               },
         "PHOTOMETRY" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/PHBMeasurement"},
-                "description" : "Brightness in every band the star was measured or modelled in"
+                "description" : "Brightness in every band the star was measured or modeled in"
+              },
+        "DISTANCE_PC" : {
+                "type" : "number",
+                "description" : "Distance from the Sun (parsecs): the posterior median, or the mode for\nEDSD_POSTERIOR, as DISTANCE_METHOD states"
+              },
+        "DISTANCE_LO_PC" : {
+                "type" : "number",
+                "description" : "Lower bound of the distance (parsecs): the 16th percentile of the posterior\nfor BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of\nthe 68% highest-density interval for EDSD_POSTERIOR, and\n1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE"
+              },
+        "DISTANCE_HI_PC" : {
+                "type" : "number",
+                "description" : "Upper bound of the distance (parsecs): the 84th percentile, the upper edge of\nthe 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for\nDISTANCE_LO_PC; NaN when unbounded"
+              },
+        "DISTANCE_METHOD" : {
+                "$ref" : "#/definitions/strDistanceEstimator",
+                "description" : "Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC"
+              },
+        "DISTANCE_REF" : {
+                "type" : "string",
+                "description" : "Bibliographic code of the distance catalog or method, e.g. \"2021AJ....161..147B\""
               }
       },
       "additionalProperties" : false

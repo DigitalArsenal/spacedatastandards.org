@@ -10,8 +10,8 @@ export enum sktPlaceKind {
   UNSPECIFIED = 0,
 
   /**
-   * Barycentric catalogue place at EPOCH: proper motion applied from the
-   * catalogue epoch, nothing else.
+   * Barycentric catalog place at EPOCH: proper motion applied from the
+   * catalog epoch, nothing else.
    */
   CATALOG = 1,
 

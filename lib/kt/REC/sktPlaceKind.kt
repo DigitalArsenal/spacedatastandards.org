@@ -9,8 +9,8 @@ class sktPlaceKind private constructor() {
     companion object {
         const val UNSPECIFIED: UByte = 0u
         /**
-         * Barycentric catalogue place at EPOCH: proper motion applied from the
-         * catalogue epoch, nothing else.
+         * Barycentric catalog place at EPOCH: proper motion applied from the
+         * catalog epoch, nothing else.
          */
         const val CATALOG: UByte = 1u
         /**

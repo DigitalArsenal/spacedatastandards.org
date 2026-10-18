@@ -1,7 +1,26 @@
-// Hash: a91bc7e3dfc7de45ddd363f255af99d395bf9104ea0febddc2ce05e0d480ea4c
-// Version: 0.0.5
+// Hash: b4e03e434a6d3e5d9b864939985996c05a742bb5efa7ee6f53f847592011b64a
+// Version: 0.0.6
 // -----------------------------------END_HEADER
 include "../PHB/main.fbs";
+
+/// How a star's distance was estimated.
+/// Append new values only; never reorder or reuse existing values.
+enum strDistanceEstimator : ubyte {
+  /// No distance; DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC are NaN.
+  UNSPECIFIED = 0,
+  /// Geometric distance: the median of the posterior from the parallax under a
+  /// direction-dependent prior (Bailer-Jones et al. 2021, AJ 161, 147).
+  BAILER_JONES_2021_GEO = 1,
+  /// Photogeometric distance: the geometric posterior further constrained by the
+  /// star's color and magnitude (Bailer-Jones et al. 2021, AJ 161, 147).
+  BAILER_JONES_2021_PHOTOGEO = 2,
+  /// Mode of the posterior from the parallax under the exponentially decreasing
+  /// space density prior with its length scale (Bailer-Jones 2015, PASP 127, 994).
+  EDSD_POSTERIOR = 3,
+  /// Inverse parallax, DISTANCE_PC = 1000 / PARALLAX; meaningful only when the
+  /// fractional parallax uncertainty is small.
+  PARALLAX_INVERSE = 4
+}
 
 /// Star Catalog Entry
 table STR {
@@ -11,8 +30,9 @@ table STR {
   CS_ID:long;
   /// GNC star catalog identifier
   GNC_CAT_ID:uint32;
-  /// Source identifier in the third data release of the all-sky space astrometry survey
-  GAIADR3_CAT_ID:long;
+  /// Source identifier (source_id) in the third data release of the all-sky space astrometry
+  /// survey; 0 when the star has no match in that release
+  GAIA_DR3_SOURCE_ID:ulong;
   /// Identifier in the first space astrometry mission's main catalog
   HIP_CAT_ID:uint32;
   /// Catalog version string
@@ -105,7 +125,7 @@ table STR {
   RADIAL_VELOCITY_UNC:double = nan;
   /// Spectral type in the MK system, e.g. "A1 V"
   SPECTRAL_TYPE:string;
-  /// Proper name as recognised by the astronomical naming authority
+  /// Proper name as recognized by the astronomical naming authority
   PROPER_NAME:string;
   /// Bayer or Flamsteed designation with its constellation, e.g. "alf CMa" or "9 CMa"
   BAYER_FLAMSTEED:string;
@@ -125,8 +145,28 @@ table STR {
   VARIABILITY_AMPLITUDE:double = nan;
   /// Epoch of maximum light (or minimum, for eclipsing systems), Modified Julian Date (TT)
   VARIABILITY_EPOCH:double = nan;
-  /// Brightness in every band the star was measured or modelled in
+  /// Brightness in every band the star was measured or modeled in
   PHOTOMETRY:[PHBMeasurement];
+
+  // Appended 2026-10-18: distance. DISTANCE_METHOD names the estimator; a
+  // distance is never derived from PARALLAX unless it says PARALLAX_INVERSE.
+
+  /// Distance from the Sun (parsecs): the posterior median, or the mode for
+  /// EDSD_POSTERIOR, as DISTANCE_METHOD states
+  DISTANCE_PC:double = nan;
+  /// Lower bound of the distance (parsecs): the 16th percentile of the posterior
+  /// for BAILER_JONES_2021_GEO and BAILER_JONES_2021_PHOTOGEO, the lower edge of
+  /// the 68% highest-density interval for EDSD_POSTERIOR, and
+  /// 1000 / (PARALLAX + PARALLAX_UNC) for PARALLAX_INVERSE
+  DISTANCE_LO_PC:double = nan;
+  /// Upper bound of the distance (parsecs): the 84th percentile, the upper edge of
+  /// the 68% highest-density interval, or 1000 / (PARALLAX - PARALLAX_UNC), as for
+  /// DISTANCE_LO_PC; NaN when unbounded
+  DISTANCE_HI_PC:double = nan;
+  /// Estimator that produced DISTANCE_PC, DISTANCE_LO_PC and DISTANCE_HI_PC
+  DISTANCE_METHOD:strDistanceEstimator = UNSPECIFIED;
+  /// Bibliographic code of the distance catalog or method, e.g. "2021AJ....161..147B"
+  DISTANCE_REF:string;
 }
 
 root_type STR;
