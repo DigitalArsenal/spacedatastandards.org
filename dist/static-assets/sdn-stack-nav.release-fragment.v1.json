@@ -1,18 +1,18 @@
 {
   "schemaVersion": 1,
-  "navVersion": "1.0.0",
+  "navVersion": "1.0.1",
   "assets": {
     "navScript": {
-      "bytes": 9976,
-      "sha256": "d781c774994cb21b63423fa746e2926071941a5d1621fe82d4ede1a63a46929c",
-      "sha384": "sha384-nMJ3fIR3tuVLflioLM7yjuLgSCNRN3JcwHtIvZmjmoE2y9n0b+yqkCvQFgnWLpzN",
-      "url": "https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.d781c774994cb21b63423fa746e2926071941a5d1621fe82d4ede1a63a46929c.js"
+      "bytes": 10015,
+      "sha256": "24eb3001afc5448a90cef87e53bb4e599c0ae4dc9e14bafb6d1236e0233c6008",
+      "sha384": "sha384-g8NCFtcgbsW5bHeGiPtPb2Q+NJVlJLfwbaAZ7/Ium1YAVtxE/SqawvG/Ny0iMl56",
+      "url": "/assets/vendor/sdn-stack-nav/1.0.1/sdn-stack-nav.24eb3001afc5448a90cef87e53bb4e599c0ae4dc9e14bafb6d1236e0233c6008.js"
     },
     "navStyle": {
       "bytes": 2217,
       "sha256": "36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7",
       "sha384": "sha384-c4M8Fg+kYaeOYYtJVr7jJsde24IhSWkWaRyAOHEZU9jozhRck089aw+mnHwxymds",
-      "url": "https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css"
+      "url": "/assets/vendor/sdn-stack-nav/1.0.1/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css"
     }
   },
   "linksSha256": "1538ef56567b745a666a7bc1302c6b11116b09745956e92052fd2f6a80c17a0f"

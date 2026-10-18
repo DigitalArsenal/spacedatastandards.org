@@ -39,7 +39,7 @@
   const sha256 = /^[0-9a-f]{64}$/u;
   const sha384 = /^sha384-[A-Za-z0-9+/]{64}$/u;
   const clientId = /^[a-z0-9]+(?:-[a-z0-9]+)*-v[0-9]+$/u;
-  const vendorPath = /^\/assets\/vendor\/[a-z0-9][a-z0-9.-]*\/[0-9]+(?:\.[0-9]+)*\/[a-z0-9-]+\.[0-9a-f]{64}\.[a-z]+$/u;
+  const vendorPath = /^(?:\/(?!\.\.?(?:\/|$))[A-Za-z0-9._-]+)?\/assets\/vendor\/[a-z0-9][a-z0-9.-]*\/[0-9]+(?:\.[0-9]+)*\/[a-z0-9-]+\.[0-9a-f]{64}\.[a-z]+$/u;
 
   function attribute(element, name) {
     if (!element || typeof element.getAttribute !== "function") return null;
