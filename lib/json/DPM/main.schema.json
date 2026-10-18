@@ -3,7 +3,7 @@
   "definitions": {
     "publicationAssetKind" : {
       "type" : "string",
-      "enum": ["DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL"]
+      "enum": ["DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL", "CAR_ARCHIVE"]
     },
     "dpmTransportKind" : {
       "type" : "string",
@@ -91,6 +91,10 @@
         "CONTENT_KEY_ID" : {
                 "type" : "string",
                 "description" : "Optional content-key identifier for encrypted artifacts."
+              },
+        "THROUGH_SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
               }
       },
       "additionalProperties" : false

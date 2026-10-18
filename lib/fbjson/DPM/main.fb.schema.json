@@ -9,7 +9,8 @@
         "MANIFEST",
         "OTHER",
         "EMBEDDING_SHARD",
-        "QUERY_ENCODER_MODEL"
+        "QUERY_ENCODER_MODEL",
+        "CAR_ARCHIVE"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -33,6 +34,10 @@
         "QUERY_ENCODER_MODEL": {
           "value": 5,
           "description": "A $QEM query encoder model (pruned static token-embedding table)."
+        },
+        "CAR_ARCHIVE": {
+          "value": 6,
+          "description": "An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ is its as-of point."
         }
       }
     },
@@ -121,6 +126,10 @@
             "QUERY_ENCODER_MODEL": {
               "value": 5,
               "description": "A $QEM query encoder model (pruned static token-embedding table)."
+            },
+            "CAR_ARCHIVE": {
+              "value": 6,
+              "description": "An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ is its as-of point."
             }
           },
           "x-flatbuffer-default": "OTHER"
@@ -192,6 +201,12 @@
         "CONTENT_KEY_ID": {
           "type": "string",
           "description": "Optional content-key identifier for encrypted artifacts."
+        },
+        "THROUGH_SEQ": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
         }
       },
       "additionalProperties": false

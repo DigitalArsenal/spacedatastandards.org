@@ -35,6 +35,9 @@ export declare enum RecordTypeExtended {
     WHA = 279,
     XMT = 280,
     EXO = 281,
-    GLX = 282
+    GLX = 282,
+    FCK = 283,
+    FMB = 284,
+    FSG = 285
 }
 //# sourceMappingURL=RecordTypeExtended.d.ts.map

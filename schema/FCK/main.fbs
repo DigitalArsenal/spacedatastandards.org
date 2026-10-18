@@ -1,0 +1,104 @@
+// Hash: 36630fab896394528790381dac848135eb9cd4d131a51850fb29af00591f6562
+// Version: 1.254.0
+// -----------------------------------END_HEADER
+/// FlatSQL Checkpoint.
+///
+/// A checkpoint frame in a FlatSQL feed stream (store format 5). The first frame
+/// of every stream is a genesis FCK naming the feed. Later FCKs list the live
+/// state segments ($FSG) and the feed's counters, so a feed opens from its newest
+/// FCK plus the FMB frames after APPLIED_THROUGH. Segment state is a derived
+/// snapshot; the records and their FMB frames are authoritative. Spec: flatsql
+/// cpp/src/p4/FORMAT.md section 3.2.
+
+/// The kind of a state segment ($FSG).
+enum fckSegmentKind : ubyte {
+  /// Dictionary entries (FSG.ENTRIES).
+  DICTIONARY = 0,
+  /// Latest record per object (FSG.LATEST); the newest entry wins across segments.
+  LATEST = 1,
+  /// Per-instance counters (FSG.INSTANCES).
+  INSTANCES = 2,
+  /// Per-producer-token counters (FSG.TOKENS).
+  TOKENS = 3,
+  /// Removed rows (FSG.PAIRS, KEY_HI = rid).
+  TOMBSTONES = 4,
+  /// Row orders (FSG.PAIRS).
+  ROWS_BY_SEQ = 5,
+  ROWS_BY_OBJECT_EPOCH = 6,
+  ROWS_BY_CID = 7,
+  ROWS_BY_W = 8,
+  ROWS_BY_AT = 9,
+  /// Reserved for analytics column segments (64..127).
+  COLUMN = 64,
+  ZONE_MAP = 65,
+  ROLLUP = 66
+}
+
+/// The feed's counters.
+struct FCKCounters {
+  ROWS: ulong;
+  RECORDS: ulong;
+  BYTES: ulong;
+  RECORDS_NO_EPOCH: ulong;
+  COPIES: ulong;
+  COPY_BYTES: ulong;
+  LIVE_FRAME_BYTES: ulong;
+  MIN_SEQ: ulong;
+  MAX_SEQ: ulong;
+  MIN_EPOCH: long;
+  MAX_EPOCH: long;
+  MIN_TS: long;
+  MAX_TS: long;
+  MIN_AT: long;
+  MAX_AT: long;
+}
+
+/// One live state segment. 48 bytes.
+struct FCKSegment {
+  /// Stream offset of the segment frame's size prefix.
+  OFFSET: ulong;
+  /// Size of its FlatBuffer.
+  LENGTH: uint;
+  KIND: fckSegmentKind;
+  /// LSM level (0 = written at a checkpoint).
+  LEVEL: ubyte;
+  /// 0.
+  RESERVED: ushort;
+  MIN_SEQ: ulong;
+  MAX_SEQ: ulong;
+  /// End offset of the last FMB the segment folds in.
+  COVERS_THROUGH: ulong;
+  ENTRIES: ulong;
+}
+
+/// FlatSQL Checkpoint.
+table FCK {
+  /// Stream offset of this frame's size prefix.
+  SELF_OFFSET: ulong;
+  /// Stream offset of the previous non-record frame; 0xFFFFFFFFFFFFFFFF in genesis.
+  PREVIOUS: ulong;
+  FEED_ID: uint;
+  /// The feed's identity: its record type, provider and source.
+  TYPE: string;
+  PROVIDER: string;
+  SOURCE: string;
+  /// The stream generation (compactions write the next one).
+  GENERATION: uint;
+  /// Unix seconds.
+  COMMITTED_AT: long;
+  /// End offset of the last FMB folded into the segments.
+  APPLIED_THROUGH: ulong;
+  /// The type's highest seq issued so far.
+  TYPE_SEQ_HIGH: ulong;
+  COUNTERS: FCKCounters;
+  SEGMENTS: [FCKSegment];
+  /// sha2-256 of each segment frame, 32 bytes each, in SEGMENTS order.
+  SEGMENT_DIGESTS: [ubyte];
+  /// Binary CID of the commits tree as of APPLIED_THROUGH.
+  COMMITS_ROOT_CID: [ubyte];
+  /// Binary CID of the previous feed root.
+  PREVIOUS_FEED_ROOT_CID: [ubyte];
+}
+
+root_type FCK;
+file_identifier "$FCK";

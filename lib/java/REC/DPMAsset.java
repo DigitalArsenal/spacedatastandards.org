@@ -119,6 +119,11 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
   public String CONTENT_KEY_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CONTENT_KEY_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
   public ByteBuffer CONTENT_KEY_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+   * assets of a FlatSQL feed; 0 when not applicable.
+   */
+  public long THROUGH_SEQ() { int o = __offset(30); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
 
   public static int createDPMAsset(FlatBufferBuilder builder,
       byte ASSET_KIND,
@@ -133,8 +138,10 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
       int DATA_ROOTOffset,
       int SCHEMA_NAMEOffset,
       int SCHEMA_HASHOffset,
-      int CONTENT_KEY_IDOffset) {
-    builder.startTable(13);
+      int CONTENT_KEY_IDOffset,
+      long THROUGH_SEQ) {
+    builder.startTable(14);
+    DPMAsset.addThroughSeq(builder, THROUGH_SEQ);
     DPMAsset.addByteLength(builder, BYTE_LENGTH);
     DPMAsset.addContentKeyId(builder, CONTENT_KEY_IDOffset);
     DPMAsset.addSchemaHash(builder, SCHEMA_HASHOffset);
@@ -151,7 +158,7 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
     return DPMAsset.endDPMAsset(builder);
   }
 
-  public static void startDPMAsset(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startDPMAsset(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addAssetKind(FlatBufferBuilder builder, byte ASSET_KIND) { builder.addByte(0, ASSET_KIND, 3); }
   public static void addTransportKind(FlatBufferBuilder builder, byte TRANSPORT_KIND) { builder.addByte(1, TRANSPORT_KIND, 0); }
   public static void addCid(FlatBufferBuilder builder, int CIDOffset) { builder.addOffset(2, CIDOffset, 0); }
@@ -165,6 +172,7 @@ public final class DPMAsset extends com.google.flatbuffers.Table {
   public static void addSchemaName(FlatBufferBuilder builder, int SCHEMA_NAMEOffset) { builder.addOffset(10, SCHEMA_NAMEOffset, 0); }
   public static void addSchemaHash(FlatBufferBuilder builder, int SCHEMA_HASHOffset) { builder.addOffset(11, SCHEMA_HASHOffset, 0); }
   public static void addContentKeyId(FlatBufferBuilder builder, int CONTENT_KEY_IDOffset) { builder.addOffset(12, CONTENT_KEY_IDOffset, 0); }
+  public static void addThroughSeq(FlatBufferBuilder builder, long THROUGH_SEQ) { builder.addLong(13, THROUGH_SEQ, 0L); }
   public static int endDPMAsset(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

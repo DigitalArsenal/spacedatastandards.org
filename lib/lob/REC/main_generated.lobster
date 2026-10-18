@@ -688,6 +688,9 @@ enum RecordTypeExtended:
     RecordTypeExtended_XMT = 280
     RecordTypeExtended_EXO = 281
     RecordTypeExtended_GLX = 282
+    RecordTypeExtended_FCK = 283
+    RecordTypeExtended_FMB = 284
+    RecordTypeExtended_FSG = 285
 
 class Record
 

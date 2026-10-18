@@ -332,8 +332,11 @@ public enum RecordTypeExtended: UInt16, FlatbuffersVectorInitializable, Enum, Ve
   case xmt = 280
   case exo = 281
   case glx = 282
+  case fck = 283
+  case fmb = 284
+  case fsg = 285
 
-  public static var max: RecordTypeExtended { return .glx }
+  public static var max: RecordTypeExtended { return .fsg }
   public static var min: RecordTypeExtended { return .none_ }
 }
 

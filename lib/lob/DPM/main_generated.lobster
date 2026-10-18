@@ -30,6 +30,10 @@ enum publicationAssetKind:
     publicationAssetKind_EMBEDDING_SHARD = 4
     /// A $QEM query encoder model (pruned static token-embedding table).
     publicationAssetKind_QUERY_ENCODER_MODEL = 5
+    /// An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+    /// DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+    /// is its as-of point.
+    publicationAssetKind_CAR_ARCHIVE = 6
 
 /// Transport profile used to resolve a dataset update asset.
 enum dpmTransportKind:
@@ -176,13 +180,17 @@ class DPMAsset : flatbuffers.handle
     /// Optional content-key identifier for encrypted artifacts.
     def CONTENT_KEY_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 28)
+    /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+    /// assets of a FlatSQL feed; 0 when not applicable.
+    def THROUGH_SEQ() -> int:
+        return flatbuffers.field_uint64(buf_, pos_, 30, 0)
 
 def GetRootAsDPMAsset(buf:string): return DPMAsset { buf, flatbuffers.indirect(buf, 0) }
 
 struct DPMAssetBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(14)
         return this
     def add_ASSET_KIND(ASSET_KIND:publicationAssetKind):
         b_.PrependInt8Slot(0, ASSET_KIND, 3)
@@ -222,6 +230,9 @@ struct DPMAssetBuilder:
         return this
     def add_CONTENT_KEY_ID(CONTENT_KEY_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, CONTENT_KEY_ID)
+        return this
+    def add_THROUGH_SEQ(THROUGH_SEQ:int):
+        b_.PrependUint64Slot(13, THROUGH_SEQ, 0)
         return this
     def end():
         return b_.EndObject()

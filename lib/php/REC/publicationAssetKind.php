@@ -31,6 +31,10 @@ class publicationAssetKind
     const EMBEDDING_SHARD = 4;
     /// A $QEM query encoder model (pruned static token-embedding table).
     const QUERY_ENCODER_MODEL = 5;
+    /// An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+    /// DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+    /// is its as-of point.
+    const CAR_ARCHIVE = 6;
 
     private static $names = array(
         publicationAssetKind::DATA_SHARD=>"DATA_SHARD",
@@ -39,6 +43,7 @@ class publicationAssetKind
         publicationAssetKind::OTHER=>"OTHER",
         publicationAssetKind::EMBEDDING_SHARD=>"EMBEDDING_SHARD",
         publicationAssetKind::QUERY_ENCODER_MODEL=>"QUERY_ENCODER_MODEL",
+        publicationAssetKind::CAR_ARCHIVE=>"CAR_ARCHIVE",
     );
 
     public static function Name($e)

@@ -123,6 +123,9 @@ public struct DPMAsset : IFlatbufferObject
   public ArraySegment<byte>? GetCONTENT_KEY_IDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
   public byte[] GetCONTENT_KEY_IDArray() { return __p.__vector_as_array<byte>(28); }
+  /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+  /// assets of a FlatSQL feed; 0 when not applicable.
+  public ulong THROUGH_SEQ { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
 
   public static Offset<DPMAsset> CreateDPMAsset(FlatBufferBuilder builder,
       publicationAssetKind ASSET_KIND = publicationAssetKind.OTHER,
@@ -137,8 +140,10 @@ public struct DPMAsset : IFlatbufferObject
       StringOffset DATA_ROOTOffset = default(StringOffset),
       StringOffset SCHEMA_NAMEOffset = default(StringOffset),
       StringOffset SCHEMA_HASHOffset = default(StringOffset),
-      StringOffset CONTENT_KEY_IDOffset = default(StringOffset)) {
-    builder.StartTable(13);
+      StringOffset CONTENT_KEY_IDOffset = default(StringOffset),
+      ulong THROUGH_SEQ = 0) {
+    builder.StartTable(14);
+    DPMAsset.AddTHROUGH_SEQ(builder, THROUGH_SEQ);
     DPMAsset.AddBYTE_LENGTH(builder, BYTE_LENGTH);
     DPMAsset.AddCONTENT_KEY_ID(builder, CONTENT_KEY_IDOffset);
     DPMAsset.AddSCHEMA_HASH(builder, SCHEMA_HASHOffset);
@@ -155,7 +160,7 @@ public struct DPMAsset : IFlatbufferObject
     return DPMAsset.EndDPMAsset(builder);
   }
 
-  public static void StartDPMAsset(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartDPMAsset(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddASSET_KIND(FlatBufferBuilder builder, publicationAssetKind ASSET_KIND) { builder.AddSbyte(0, (sbyte)ASSET_KIND, 3); }
   public static void AddTRANSPORT_KIND(FlatBufferBuilder builder, dpmTransportKind TRANSPORT_KIND) { builder.AddSbyte(1, (sbyte)TRANSPORT_KIND, 0); }
   public static void AddCID(FlatBufferBuilder builder, StringOffset CIDOffset) { builder.AddOffset(2, CIDOffset.Value, 0); }
@@ -169,6 +174,7 @@ public struct DPMAsset : IFlatbufferObject
   public static void AddSCHEMA_NAME(FlatBufferBuilder builder, StringOffset SCHEMA_NAMEOffset) { builder.AddOffset(10, SCHEMA_NAMEOffset.Value, 0); }
   public static void AddSCHEMA_HASH(FlatBufferBuilder builder, StringOffset SCHEMA_HASHOffset) { builder.AddOffset(11, SCHEMA_HASHOffset.Value, 0); }
   public static void AddCONTENT_KEY_ID(FlatBufferBuilder builder, StringOffset CONTENT_KEY_IDOffset) { builder.AddOffset(12, CONTENT_KEY_IDOffset.Value, 0); }
+  public static void AddTHROUGH_SEQ(FlatBufferBuilder builder, ulong THROUGH_SEQ) { builder.AddUlong(13, THROUGH_SEQ, 0); }
   public static Offset<DPMAsset> EndDPMAsset(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DPMAsset>(o);
@@ -192,6 +198,7 @@ public struct DPMAsset : IFlatbufferObject
     _o.SCHEMA_NAME = this.SCHEMA_NAME;
     _o.SCHEMA_HASH = this.SCHEMA_HASH;
     _o.CONTENT_KEY_ID = this.CONTENT_KEY_ID;
+    _o.THROUGH_SEQ = this.THROUGH_SEQ;
   }
   public static Offset<DPMAsset> Pack(FlatBufferBuilder builder, DPMAssetT _o) {
     if (_o == null) return default(Offset<DPMAsset>);
@@ -219,7 +226,8 @@ public struct DPMAsset : IFlatbufferObject
       _DATA_ROOT,
       _SCHEMA_NAME,
       _SCHEMA_HASH,
-      _CONTENT_KEY_ID);
+      _CONTENT_KEY_ID,
+      _o.THROUGH_SEQ);
   }
 }
 
@@ -238,6 +246,7 @@ public class DPMAssetT
   public string SCHEMA_NAME { get; set; }
   public string SCHEMA_HASH { get; set; }
   public string CONTENT_KEY_ID { get; set; }
+  public ulong THROUGH_SEQ { get; set; }
 
   public DPMAssetT() {
     this.ASSET_KIND = publicationAssetKind.OTHER;
@@ -253,6 +262,7 @@ public class DPMAssetT
     this.SCHEMA_NAME = null;
     this.SCHEMA_HASH = null;
     this.CONTENT_KEY_ID = null;
+    this.THROUGH_SEQ = 0;
   }
 }
 
@@ -275,6 +285,7 @@ static public class DPMAssetVerify
       && verifier.VerifyString(tablePos, 24 /*SCHEMA_NAME*/, false)
       && verifier.VerifyString(tablePos, 26 /*SCHEMA_HASH*/, false)
       && verifier.VerifyString(tablePos, 28 /*CONTENT_KEY_ID*/, false)
+      && verifier.VerifyField(tablePos, 30 /*THROUGH_SEQ*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

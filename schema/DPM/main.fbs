@@ -1,5 +1,5 @@
-// Hash: bef01cefae37f338f92f8bdf2332978f3e95ab7f95c1fe3c7f2bf9f54b31d526
-// Version: 1.0.9
+// Hash: 231f0ff5c6cbd375903ddba46e10a17b76c44639b82d8e3b4a0fbd24c8efe112
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 /// Dataset Publication Manifest.
 ///
@@ -30,7 +30,11 @@ enum publicationAssetKind : byte {
   /// A $CES catalog embedding shard (dense per-object vector table).
   EMBEDDING_SHARD,
   /// A $QEM query encoder model (pruned static token-embedding table).
-  QUERY_ENCODER_MODEL
+  QUERY_ENCODER_MODEL,
+  /// An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+  /// DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+  /// is its as-of point.
+  CAR_ARCHIVE
 }
 
 /// Transport profile used to resolve a dataset update asset.
@@ -125,6 +129,9 @@ table DPMAsset {
   SCHEMA_HASH: string;
   /// Optional content-key identifier for encrypted artifacts.
   CONTENT_KEY_ID: string;
+  /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+  /// assets of a FlatSQL feed; 0 when not applicable.
+  THROUGH_SEQ: ulong;
 }
 
 /// Source batch metadata bound into the dataset publication.

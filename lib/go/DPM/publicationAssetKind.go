@@ -35,6 +35,10 @@ const (
 	publicationAssetKindEMBEDDING_SHARD     publicationAssetKind = 4
 	/// A $QEM query encoder model (pruned static token-embedding table).
 	publicationAssetKindQUERY_ENCODER_MODEL publicationAssetKind = 5
+	/// An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+	/// DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+	/// is its as-of point.
+	publicationAssetKindCAR_ARCHIVE         publicationAssetKind = 6
 )
 
 var EnumNamespublicationAssetKind = map[publicationAssetKind]string{
@@ -44,6 +48,7 @@ var EnumNamespublicationAssetKind = map[publicationAssetKind]string{
 	publicationAssetKindOTHER:               "OTHER",
 	publicationAssetKindEMBEDDING_SHARD:     "EMBEDDING_SHARD",
 	publicationAssetKindQUERY_ENCODER_MODEL: "QUERY_ENCODER_MODEL",
+	publicationAssetKindCAR_ARCHIVE:         "CAR_ARCHIVE",
 }
 
 var EnumValuespublicationAssetKind = map[string]publicationAssetKind{
@@ -53,6 +58,7 @@ var EnumValuespublicationAssetKind = map[string]publicationAssetKind{
 	"OTHER":               publicationAssetKindOTHER,
 	"EMBEDDING_SHARD":     publicationAssetKindEMBEDDING_SHARD,
 	"QUERY_ENCODER_MODEL": publicationAssetKindQUERY_ENCODER_MODEL,
+	"CAR_ARCHIVE":         publicationAssetKindCAR_ARCHIVE,
 }
 
 func (v publicationAssetKind) String() string {

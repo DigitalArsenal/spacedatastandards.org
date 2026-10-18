@@ -161,22 +161,33 @@ class DPMAsset extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+    /// assets of a FlatSQL feed; 0 when not applicable.
+    /**
+     * @return ulong
+     */
+    public function getTHROUGH_SEQ()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getUlong($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDPMAsset(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DPMAsset
      */
-    public static function createDPMAsset(FlatBufferBuilder $builder, $ASSET_KIND, $TRANSPORT_KIND, $CID, $MULTIFORMAT_ADDRESS, $FILE_NAME, $FILE_ID, $TRANSPORT_PROTOCOL, $BYTE_LENGTH, $BYTE_SHA256, $DATA_ROOT, $SCHEMA_NAME, $SCHEMA_HASH, $CONTENT_KEY_ID)
+    public static function createDPMAsset(FlatBufferBuilder $builder, $ASSET_KIND, $TRANSPORT_KIND, $CID, $MULTIFORMAT_ADDRESS, $FILE_NAME, $FILE_ID, $TRANSPORT_PROTOCOL, $BYTE_LENGTH, $BYTE_SHA256, $DATA_ROOT, $SCHEMA_NAME, $SCHEMA_HASH, $CONTENT_KEY_ID, $THROUGH_SEQ)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addASSET_KIND($builder, $ASSET_KIND);
         self::addTRANSPORT_KIND($builder, $TRANSPORT_KIND);
         self::addCID($builder, $CID);
@@ -190,6 +201,7 @@ class DPMAsset extends Table
         self::addSCHEMA_NAME($builder, $SCHEMA_NAME);
         self::addSCHEMA_HASH($builder, $SCHEMA_HASH);
         self::addCONTENT_KEY_ID($builder, $CONTENT_KEY_ID);
+        self::addTHROUGH_SEQ($builder, $THROUGH_SEQ);
         $o = $builder->endObject();
         return $o;
     }
@@ -322,6 +334,16 @@ class DPMAsset extends Table
     public static function addCONTENT_KEY_ID(FlatBufferBuilder $builder, $CONTENT_KEY_ID)
     {
         $builder->addOffsetX(12, $CONTENT_KEY_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ulong
+     * @return void
+     */
+    public static function addTHROUGH_SEQ(FlatBufferBuilder $builder, $THROUGH_SEQ)
+    {
+        $builder->addUlongX(13, $THROUGH_SEQ, 0);
     }
 
     /**

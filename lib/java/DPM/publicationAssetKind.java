@@ -37,8 +37,14 @@ public final class publicationAssetKind {
    * A $QEM query encoder model (pruned static token-embedding table).
    */
   public static final byte QUERY_ENCODER_MODEL = 5;
+  /**
+   * An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+   * DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+   * is its as-of point.
+   */
+  public static final byte CAR_ARCHIVE = 6;
 
-  public static final String[] names = { "DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL", };
+  public static final String[] names = { "DATA_SHARD", "QUERY_INDEX", "MANIFEST", "OTHER", "EMBEDDING_SHARD", "QUERY_ENCODER_MODEL", "CAR_ARCHIVE", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -40,4 +40,7 @@ public final class RecordTypeExtended {
   public static final int XMT = 280;
   public static final int EXO = 281;
   public static final int GLX = 282;
+  public static final int FCK = 283;
+  public static final int FMB = 284;
+  public static final int FSG = 285;
 }

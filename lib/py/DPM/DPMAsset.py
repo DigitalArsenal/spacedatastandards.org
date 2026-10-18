@@ -153,8 +153,17 @@ class DPMAsset(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+    # assets of a FlatSQL feed; 0 when not applicable.
+    # DPMAsset
+    def THROUGH_SEQ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
+        return 0
+
 def DPMAssetStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(14)
 
 def Start(builder):
     DPMAssetStart(builder)
@@ -237,6 +246,12 @@ def DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID):
 def AddCONTENT_KEY_ID(builder, CONTENT_KEY_ID):
     DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID)
 
+def DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ):
+    builder.PrependUint64Slot(13, THROUGH_SEQ, 0)
+
+def AddTHROUGH_SEQ(builder, THROUGH_SEQ):
+    DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ)
+
 def DPMAssetEnd(builder):
     return builder.EndObject()
 
@@ -262,6 +277,7 @@ class DPMAssetT(object):
         SCHEMA_NAME = None,
         SCHEMA_HASH = None,
         CONTENT_KEY_ID = None,
+        THROUGH_SEQ = 0,
     ):
         self.ASSET_KIND = ASSET_KIND  # type: int
         self.TRANSPORT_KIND = TRANSPORT_KIND  # type: int
@@ -276,6 +292,7 @@ class DPMAssetT(object):
         self.SCHEMA_NAME = SCHEMA_NAME  # type: Optional[str]
         self.SCHEMA_HASH = SCHEMA_HASH  # type: Optional[str]
         self.CONTENT_KEY_ID = CONTENT_KEY_ID  # type: Optional[str]
+        self.THROUGH_SEQ = THROUGH_SEQ  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -311,6 +328,7 @@ class DPMAssetT(object):
         self.SCHEMA_NAME = DPMAsset.SCHEMA_NAME()
         self.SCHEMA_HASH = DPMAsset.SCHEMA_HASH()
         self.CONTENT_KEY_ID = DPMAsset.CONTENT_KEY_ID()
+        self.THROUGH_SEQ = DPMAsset.THROUGH_SEQ()
 
     # DPMAssetT
     def Pack(self, builder):
@@ -358,5 +376,6 @@ class DPMAssetT(object):
             DPMAssetAddSCHEMA_HASH(builder, SCHEMA_HASH)
         if self.CONTENT_KEY_ID is not None:
             DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID)
+        DPMAssetAddTHROUGH_SEQ(builder, self.THROUGH_SEQ)
         DPMAsset = DPMAssetEnd(builder)
         return DPMAsset

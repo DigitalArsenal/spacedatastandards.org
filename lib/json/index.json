@@ -94447,7 +94447,8 @@
                         "MANIFEST",
                         "OTHER",
                         "EMBEDDING_SHARD",
-                        "QUERY_ENCODER_MODEL"
+                        "QUERY_ENCODER_MODEL",
+                        "CAR_ARCHIVE"
                     ]
                 },
                 "dpmTransportKind": {
@@ -95138,6 +95139,24 @@
                         "RETRACTED"
                     ]
                 },
+                "fckSegmentKind": {
+                    "type": "string",
+                    "enum": [
+                        "DICTIONARY",
+                        "LATEST",
+                        "INSTANCES",
+                        "TOKENS",
+                        "TOMBSTONES",
+                        "ROWS_BY_SEQ",
+                        "ROWS_BY_OBJECT_EPOCH",
+                        "ROWS_BY_CID",
+                        "ROWS_BY_W",
+                        "ROWS_BY_AT",
+                        "COLUMN",
+                        "ZONE_MAP",
+                        "ROLLUP"
+                    ]
+                },
                 "FCSMode": {
                     "type": "string",
                     "enum": [
@@ -95187,6 +95206,28 @@
                         "SHA256",
                         "SHA512",
                         "BLAKE3"
+                    ]
+                },
+                "fmbDictKind": {
+                    "type": "string",
+                    "enum": [
+                        "TOKEN",
+                        "NODE",
+                        "BATCH",
+                        "CONTENT_KEY",
+                        "URL",
+                        "OBJECT_KEY"
+                    ]
+                },
+                "fmbRemoveReason": {
+                    "type": "string",
+                    "enum": [
+                        "DELETE",
+                        "SUPERSEDE",
+                        "CAT_SUPERSEDE",
+                        "QUOTA",
+                        "RETENTION",
+                        "MOVED_OUT"
                     ]
                 },
                 "shortestPathAlgorithm": {
@@ -100106,7 +100147,10 @@
                         "WHA",
                         "XMT",
                         "EXO",
-                        "GLX"
+                        "GLX",
+                        "FCK",
+                        "FMB",
+                        "FSG"
                     ]
                 },
                 "ABA": {
@@ -123268,6 +123312,12 @@
                         "CONTENT_KEY_ID": {
                             "type": "string",
                             "description": "Optional content-key identifier for encrypted artifacts."
+                        },
+                        "THROUGH_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
                         }
                     },
                     "additionalProperties": false
@@ -130737,6 +130787,237 @@
                     ],
                     "additionalProperties": false
                 },
+                "FCKCounters": {
+                    "type": "object",
+                    "description": "The feed's counters.",
+                    "properties": {
+                        "ROWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RECORDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RECORDS_NO_EPOCH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COPIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COPY_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "LIVE_FRAME_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCKSegment": {
+                    "type": "object",
+                    "description": "One live state segment. 48 bytes.",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the segment frame's size prefix."
+                        },
+                        "LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Size of its FlatBuffer."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/fckSegmentKind"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "LSM level (0 = written at a checkpoint)."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "0."
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COVERS_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB the segment folds in."
+                        },
+                        "ENTRIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCK": {
+                    "type": "object",
+                    "description": "FlatSQL Checkpoint.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame; 0xFFFFFFFFFFFFFFFF in genesis."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TYPE": {
+                            "type": "string",
+                            "description": "The feed's identity: its record type, provider and source."
+                        },
+                        "PROVIDER": {
+                            "type": "string"
+                        },
+                        "SOURCE": {
+                            "type": "string"
+                        },
+                        "GENERATION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The stream generation (compactions write the next one)."
+                        },
+                        "COMMITTED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Unix seconds."
+                        },
+                        "APPLIED_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB folded into the segments."
+                        },
+                        "TYPE_SEQ_HIGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The type's highest seq issued so far."
+                        },
+                        "COUNTERS": {
+                            "$ref": "#/definitions/FCKCounters"
+                        },
+                        "SEGMENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FCKSegment"
+                            }
+                        },
+                        "SEGMENT_DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of each segment frame, 32 bytes each, in SEGMENTS order."
+                        },
+                        "COMMITS_ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the commits tree as of APPLIED_THROUGH."
+                        },
+                        "PREVIOUS_FEED_ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the previous feed root."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "FCS": {
                     "type": "object",
                     "description": "Fire Control Systems",
@@ -130892,6 +131173,387 @@
                                 "$ref": "#/definitions/FILEntry"
                             },
                             "description": "Entries of a directory listing, sorted by NAME."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBRow": {
+                    "type": "object",
+                    "description": "One delivery of one record to the feed; its rid is SEQ << 16 | ROW_J.\n40 bytes. Epoch and object key are not stored: they are re-extracted from\nthe record bytes (sealed rows carry theirs in FMBSealed).",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the record frame's size prefix (this round's frame, or\nan earlier frame with the same bytes)."
+                        },
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The record's arrival number in the type's seq space."
+                        },
+                        "SOURCE_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The copy's source timestamp, as supplied with the write."
+                        },
+                        "LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Size of the record frame's FlatBuffer (size prefix excluded)."
+                        },
+                        "GROUP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Index into FMB.GROUPS."
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The row's j within the record's rows."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "bit0 NEW_FRAME (the frame was written by this round), bit1 SEALED,\nbit2 LARGE (over 1 MiB: see FMB.LARGE), bit3 MOVED_IN (seq kept from\nlocal), bit4 COMPACTED (re-emitted by a compaction), bit5 COPY,\nbit6 RETAG; other bits 0."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "0."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBGroup": {
+                    "type": "object",
+                    "description": "What one call's rows share. 24 bytes.",
+                    "properties": {
+                        "DELIVERED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "When this feed delivered the rows (Unix seconds)."
+                        },
+                        "NODE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NODE dictionary id; 0 none."
+                        },
+                        "BATCH_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "BATCH dictionary id; 0 none."
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "CONTENT_KEY dictionary id; 0 none."
+                        },
+                        "URL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "URL dictionary id; 0 none."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBRemove": {
+                    "type": "object",
+                    "description": "Rows that leave the feed. ROW_J 0xFFFFFFFF removes every row of SEQ.",
+                    "properties": {
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REASON": {
+                            "$ref": "#/definitions/fmbRemoveReason"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBUrl": {
+                    "type": "object",
+                    "description": "A repeat delivery that moves a row's url.",
+                    "properties": {
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "URL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBEntry": {
+                    "type": "object",
+                    "description": "A dictionary entry first used by this round.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/fmbDictKind"
+                        },
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBSignature": {
+                    "type": "object",
+                    "description": "A row's signature bytes.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBSealed": {
+                    "type": "object",
+                    "description": "What a sealed (encrypted) row needs beyond FMBRow: its ciphertext cannot be\nre-extracted.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The plaintext's epoch (Unix seconds); INT64_MIN when none."
+                        },
+                        "OBJECT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "OBJECT_KEY dictionary id; 0 none."
+                        },
+                        "LEAF_DIGEST": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of the ciphertext range (32 bytes): its IPFS leaf."
+                        },
+                        "COLUMNS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The sealed record's extracted column values."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBIdentity": {
+                    "type": "object",
+                    "description": "An ingest identity registered by a row (32-byte hash).",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBLarge": {
+                    "type": "object",
+                    "description": "A record over 1 MiB: a UnixFS file DAG of 1 MiB raw leaves over its range.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the dag-pb UnixFS root."
+                        },
+                        "ROOT_NODE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The root node's dag-pb bytes."
+                        },
+                        "LEAF_DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of each leaf, 32 bytes each, in order."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMB": {
+                    "type": "object",
+                    "description": "FlatSQL Batch Metadata: one per feed per commit round.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame (the commit chain)."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The feed's id in its type."
+                        },
+                        "COMMITTED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The round's clock (Unix seconds)."
+                        },
+                        "TYPE_SEQ_HIGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The type's highest seq issued so far."
+                        },
+                        "ROWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBRow"
+                            },
+                            "description": "The rows, in plan order; at most 65,536."
+                        },
+                        "DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of the record bytes, 32 bytes per NEW_FRAME row, in row order\n(for a sealed row, the plaintext's: its record CID)."
+                        },
+                        "GROUPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBGroup"
+                            }
+                        },
+                        "DICTIONARY": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            }
+                        },
+                        "REMOVALS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBRemove"
+                            }
+                        },
+                        "URLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBUrl"
+                            }
+                        },
+                        "SIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBSignature"
+                            }
+                        },
+                        "SEALED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBSealed"
+                            }
+                        },
+                        "IDENTITIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBIdentity"
+                            }
+                        },
+                        "LARGE": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBLarge"
+                            }
                         }
                     },
                     "additionalProperties": false
@@ -131182,6 +131844,235 @@
                                 "minimum": 0,
                                 "maximum": 255
                             }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSGPair": {
+                    "type": "object",
+                    "description": "FlatSQL Segment.\n\nAn immutable, sorted state segment in a FlatSQL feed stream (store format 5),\nlisted by a checkpoint ($FCK). Segments are written at checkpoints and merged\nLSM-style (REPLACES names the inputs); retention by arrival drops whole\nsegments. KIND says which vector is filled. Spec: flatsql cpp/src/p4/FORMAT.md\nsection 3.3.\nThe one sorted entry shape of row orders and tombstones. 32 bytes.",
+                    "properties": {
+                        "KEY_HI": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "KEY_LO": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "SEQ << 16 | ROW_J."
+                        },
+                        "ROW_REF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "(stream offset of the FMB holding the row) << 16 | the row's index in it."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSGLatest": {
+                    "type": "object",
+                    "description": "Latest record of one object. 32 bytes.",
+                    "properties": {
+                        "OBJECT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "RID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_REF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSGInstance": {
+                    "type": "object",
+                    "description": "One instance's counters. 88 bytes.",
+                    "properties": {
+                        "BATCH_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RECORDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "FIRST": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "UPDATED": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSG": {
+                    "type": "object",
+                    "description": "FlatSQL Segment.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/fckSegmentKind"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COVERS_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB the segment folds in."
+                        },
+                        "REPLACES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 18446744073709551615
+                            },
+                            "description": "Stream offsets of the segments an LSM merge replaced."
+                        },
+                        "ENTRIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            },
+                            "description": "DICTIONARY: sorted by (KIND, ID)."
+                        },
+                        "LATEST": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FSGLatest"
+                            },
+                            "description": "LATEST: sorted by OBJECT_KEY_ID."
+                        },
+                        "INSTANCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FSGInstance"
+                            },
+                            "description": "INSTANCES: sorted by (BATCH_ID, CONTENT_KEY_ID)."
+                        },
+                        "TOKENS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            },
+                            "description": "TOKENS: TEXT [token, records, bytes, min ts, max ts, max seq]."
+                        },
+                        "PAIRS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FSGPair"
+                            },
+                            "description": "TOMBSTONES and ROWS_BY_*: sorted by (KEY_HI, KEY_LO, RID)."
+                        },
+                        "COLUMN": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for analytics column segments."
                         }
                     },
                     "additionalProperties": false
@@ -211690,6 +212581,261 @@
             },
             "$ref": "#/definitions/NEV"
         },
+        "FCK": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "fckSegmentKind": {
+                    "type": "string",
+                    "enum": [
+                        "DICTIONARY",
+                        "LATEST",
+                        "INSTANCES",
+                        "TOKENS",
+                        "TOMBSTONES",
+                        "ROWS_BY_SEQ",
+                        "ROWS_BY_OBJECT_EPOCH",
+                        "ROWS_BY_CID",
+                        "ROWS_BY_W",
+                        "ROWS_BY_AT",
+                        "COLUMN",
+                        "ZONE_MAP",
+                        "ROLLUP"
+                    ]
+                },
+                "FCKCounters": {
+                    "type": "object",
+                    "description": "The feed's counters.",
+                    "properties": {
+                        "ROWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RECORDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RECORDS_NO_EPOCH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COPIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COPY_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "LIVE_FRAME_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCKSegment": {
+                    "type": "object",
+                    "description": "One live state segment. 48 bytes.",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the segment frame's size prefix."
+                        },
+                        "LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Size of its FlatBuffer."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/fckSegmentKind"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "LSM level (0 = written at a checkpoint)."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "0."
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COVERS_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB the segment folds in."
+                        },
+                        "ENTRIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCK": {
+                    "type": "object",
+                    "description": "FlatSQL Checkpoint.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame; 0xFFFFFFFFFFFFFFFF in genesis."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TYPE": {
+                            "type": "string",
+                            "description": "The feed's identity: its record type, provider and source."
+                        },
+                        "PROVIDER": {
+                            "type": "string"
+                        },
+                        "SOURCE": {
+                            "type": "string"
+                        },
+                        "GENERATION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The stream generation (compactions write the next one)."
+                        },
+                        "COMMITTED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Unix seconds."
+                        },
+                        "APPLIED_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB folded into the segments."
+                        },
+                        "TYPE_SEQ_HIGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The type's highest seq issued so far."
+                        },
+                        "COUNTERS": {
+                            "$ref": "#/definitions/FCKCounters"
+                        },
+                        "SEGMENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FCKSegment"
+                            }
+                        },
+                        "SEGMENT_DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of each segment frame, 32 bytes each, in SEGMENTS order."
+                        },
+                        "COMMITS_ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the commits tree as of APPLIED_THROUGH."
+                        },
+                        "PREVIOUS_FEED_ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the previous feed root."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/FCK"
+        },
         "TRK": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
@@ -213884,6 +215030,415 @@
                 }
             },
             "$ref": "#/definitions/IRO"
+        },
+        "FMB": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "fmbDictKind": {
+                    "type": "string",
+                    "enum": [
+                        "TOKEN",
+                        "NODE",
+                        "BATCH",
+                        "CONTENT_KEY",
+                        "URL",
+                        "OBJECT_KEY"
+                    ]
+                },
+                "fmbRemoveReason": {
+                    "type": "string",
+                    "enum": [
+                        "DELETE",
+                        "SUPERSEDE",
+                        "CAT_SUPERSEDE",
+                        "QUOTA",
+                        "RETENTION",
+                        "MOVED_OUT"
+                    ]
+                },
+                "FMBRow": {
+                    "type": "object",
+                    "description": "One delivery of one record to the feed; its rid is SEQ << 16 | ROW_J.\n40 bytes. Epoch and object key are not stored: they are re-extracted from\nthe record bytes (sealed rows carry theirs in FMBSealed).",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the record frame's size prefix (this round's frame, or\nan earlier frame with the same bytes)."
+                        },
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The record's arrival number in the type's seq space."
+                        },
+                        "SOURCE_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The copy's source timestamp, as supplied with the write."
+                        },
+                        "LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Size of the record frame's FlatBuffer (size prefix excluded)."
+                        },
+                        "GROUP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Index into FMB.GROUPS."
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The row's j within the record's rows."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "bit0 NEW_FRAME (the frame was written by this round), bit1 SEALED,\nbit2 LARGE (over 1 MiB: see FMB.LARGE), bit3 MOVED_IN (seq kept from\nlocal), bit4 COMPACTED (re-emitted by a compaction), bit5 COPY,\nbit6 RETAG; other bits 0."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "0."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBGroup": {
+                    "type": "object",
+                    "description": "What one call's rows share. 24 bytes.",
+                    "properties": {
+                        "DELIVERED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "When this feed delivered the rows (Unix seconds)."
+                        },
+                        "NODE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NODE dictionary id; 0 none."
+                        },
+                        "BATCH_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "BATCH dictionary id; 0 none."
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "CONTENT_KEY dictionary id; 0 none."
+                        },
+                        "URL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "URL dictionary id; 0 none."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBRemove": {
+                    "type": "object",
+                    "description": "Rows that leave the feed. ROW_J 0xFFFFFFFF removes every row of SEQ.",
+                    "properties": {
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REASON": {
+                            "$ref": "#/definitions/fmbRemoveReason"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBUrl": {
+                    "type": "object",
+                    "description": "A repeat delivery that moves a row's url.",
+                    "properties": {
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "URL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBEntry": {
+                    "type": "object",
+                    "description": "A dictionary entry first used by this round.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/fmbDictKind"
+                        },
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBSignature": {
+                    "type": "object",
+                    "description": "A row's signature bytes.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBSealed": {
+                    "type": "object",
+                    "description": "What a sealed (encrypted) row needs beyond FMBRow: its ciphertext cannot be\nre-extracted.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The plaintext's epoch (Unix seconds); INT64_MIN when none."
+                        },
+                        "OBJECT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "OBJECT_KEY dictionary id; 0 none."
+                        },
+                        "LEAF_DIGEST": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of the ciphertext range (32 bytes): its IPFS leaf."
+                        },
+                        "COLUMNS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The sealed record's extracted column values."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBIdentity": {
+                    "type": "object",
+                    "description": "An ingest identity registered by a row (32-byte hash).",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBLarge": {
+                    "type": "object",
+                    "description": "A record over 1 MiB: a UnixFS file DAG of 1 MiB raw leaves over its range.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the dag-pb UnixFS root."
+                        },
+                        "ROOT_NODE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The root node's dag-pb bytes."
+                        },
+                        "LEAF_DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of each leaf, 32 bytes each, in order."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMB": {
+                    "type": "object",
+                    "description": "FlatSQL Batch Metadata: one per feed per commit round.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame (the commit chain)."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The feed's id in its type."
+                        },
+                        "COMMITTED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The round's clock (Unix seconds)."
+                        },
+                        "TYPE_SEQ_HIGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The type's highest seq issued so far."
+                        },
+                        "ROWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBRow"
+                            },
+                            "description": "The rows, in plan order; at most 65,536."
+                        },
+                        "DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of the record bytes, 32 bytes per NEW_FRAME row, in row order\n(for a sealed row, the plaintext's: its record CID)."
+                        },
+                        "GROUPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBGroup"
+                            }
+                        },
+                        "DICTIONARY": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            }
+                        },
+                        "REMOVALS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBRemove"
+                            }
+                        },
+                        "URLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBUrl"
+                            }
+                        },
+                        "SIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBSignature"
+                            }
+                        },
+                        "SEALED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBSealed"
+                            }
+                        },
+                        "IDENTITIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBIdentity"
+                            }
+                        },
+                        "LARGE": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBLarge"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/FMB"
         },
         "TPN": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
@@ -255694,7 +257249,8 @@
                         "MANIFEST",
                         "OTHER",
                         "EMBEDDING_SHARD",
-                        "QUERY_ENCODER_MODEL"
+                        "QUERY_ENCODER_MODEL",
+                        "CAR_ARCHIVE"
                     ]
                 },
                 "dpmTransportKind": {
@@ -255789,6 +257345,12 @@
                         "CONTENT_KEY_ID": {
                             "type": "string",
                             "description": "Optional content-key identifier for encrypted artifacts."
+                        },
+                        "THROUGH_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE\nassets of a FlatSQL feed; 0 when not applicable."
                         }
                     },
                     "additionalProperties": false
@@ -262949,6 +264511,893 @@
                 }
             },
             "$ref": "#/definitions/OIL"
+        },
+        "FSG": {
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "definitions": {
+                "fmbDictKind": {
+                    "type": "string",
+                    "enum": [
+                        "TOKEN",
+                        "NODE",
+                        "BATCH",
+                        "CONTENT_KEY",
+                        "URL",
+                        "OBJECT_KEY"
+                    ]
+                },
+                "fmbRemoveReason": {
+                    "type": "string",
+                    "enum": [
+                        "DELETE",
+                        "SUPERSEDE",
+                        "CAT_SUPERSEDE",
+                        "QUOTA",
+                        "RETENTION",
+                        "MOVED_OUT"
+                    ]
+                },
+                "fckSegmentKind": {
+                    "type": "string",
+                    "enum": [
+                        "DICTIONARY",
+                        "LATEST",
+                        "INSTANCES",
+                        "TOKENS",
+                        "TOMBSTONES",
+                        "ROWS_BY_SEQ",
+                        "ROWS_BY_OBJECT_EPOCH",
+                        "ROWS_BY_CID",
+                        "ROWS_BY_W",
+                        "ROWS_BY_AT",
+                        "COLUMN",
+                        "ZONE_MAP",
+                        "ROLLUP"
+                    ]
+                },
+                "FMBRow": {
+                    "type": "object",
+                    "description": "One delivery of one record to the feed; its rid is SEQ << 16 | ROW_J.\n40 bytes. Epoch and object key are not stored: they are re-extracted from\nthe record bytes (sealed rows carry theirs in FMBSealed).",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the record frame's size prefix (this round's frame, or\nan earlier frame with the same bytes)."
+                        },
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The record's arrival number in the type's seq space."
+                        },
+                        "SOURCE_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The copy's source timestamp, as supplied with the write."
+                        },
+                        "LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Size of the record frame's FlatBuffer (size prefix excluded)."
+                        },
+                        "GROUP": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Index into FMB.GROUPS."
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "The row's j within the record's rows."
+                        },
+                        "FLAGS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "bit0 NEW_FRAME (the frame was written by this round), bit1 SEALED,\nbit2 LARGE (over 1 MiB: see FMB.LARGE), bit3 MOVED_IN (seq kept from\nlocal), bit4 COMPACTED (re-emitted by a compaction), bit5 COPY,\nbit6 RETAG; other bits 0."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "0."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBGroup": {
+                    "type": "object",
+                    "description": "What one call's rows share. 24 bytes.",
+                    "properties": {
+                        "DELIVERED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "When this feed delivered the rows (Unix seconds)."
+                        },
+                        "NODE_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "NODE dictionary id; 0 none."
+                        },
+                        "BATCH_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "BATCH dictionary id; 0 none."
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "CONTENT_KEY dictionary id; 0 none."
+                        },
+                        "URL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "URL dictionary id; 0 none."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBRemove": {
+                    "type": "object",
+                    "description": "Rows that leave the feed. ROW_J 0xFFFFFFFF removes every row of SEQ.",
+                    "properties": {
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "REASON": {
+                            "$ref": "#/definitions/fmbRemoveReason"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBUrl": {
+                    "type": "object",
+                    "description": "A repeat delivery that moves a row's url.",
+                    "properties": {
+                        "SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_J": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "URL_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBEntry": {
+                    "type": "object",
+                    "description": "A dictionary entry first used by this round.",
+                    "properties": {
+                        "KIND": {
+                            "$ref": "#/definitions/fmbDictKind"
+                        },
+                        "ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TEXT": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBSignature": {
+                    "type": "object",
+                    "description": "A row's signature bytes.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "BYTES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBSealed": {
+                    "type": "object",
+                    "description": "What a sealed (encrypted) row needs beyond FMBRow: its ciphertext cannot be\nre-extracted.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The plaintext's epoch (Unix seconds); INT64_MIN when none."
+                        },
+                        "OBJECT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "OBJECT_KEY dictionary id; 0 none."
+                        },
+                        "LEAF_DIGEST": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of the ciphertext range (32 bytes): its IPFS leaf."
+                        },
+                        "COLUMNS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The sealed record's extracted column values."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBIdentity": {
+                    "type": "object",
+                    "description": "An ingest identity registered by a row (32-byte hash).",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "HASH": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMBLarge": {
+                    "type": "object",
+                    "description": "A record over 1 MiB: a UnixFS file DAG of 1 MiB raw leaves over its range.",
+                    "properties": {
+                        "ROW": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Index into FMB.ROWS."
+                        },
+                        "ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the dag-pb UnixFS root."
+                        },
+                        "ROOT_NODE": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "The root node's dag-pb bytes."
+                        },
+                        "LEAF_DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of each leaf, 32 bytes each, in order."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FMB": {
+                    "type": "object",
+                    "description": "FlatSQL Batch Metadata: one per feed per commit round.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame (the commit chain)."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The feed's id in its type."
+                        },
+                        "COMMITTED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "The round's clock (Unix seconds)."
+                        },
+                        "TYPE_SEQ_HIGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The type's highest seq issued so far."
+                        },
+                        "ROWS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBRow"
+                            },
+                            "description": "The rows, in plan order; at most 65,536."
+                        },
+                        "DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of the record bytes, 32 bytes per NEW_FRAME row, in row order\n(for a sealed row, the plaintext's: its record CID)."
+                        },
+                        "GROUPS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBGroup"
+                            }
+                        },
+                        "DICTIONARY": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            }
+                        },
+                        "REMOVALS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBRemove"
+                            }
+                        },
+                        "URLS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBUrl"
+                            }
+                        },
+                        "SIGNATURES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBSignature"
+                            }
+                        },
+                        "SEALED": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBSealed"
+                            }
+                        },
+                        "IDENTITIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBIdentity"
+                            }
+                        },
+                        "LARGE": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBLarge"
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCKCounters": {
+                    "type": "object",
+                    "description": "The feed's counters.",
+                    "properties": {
+                        "ROWS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RECORDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RECORDS_NO_EPOCH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COPIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COPY_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "LIVE_FRAME_BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCKSegment": {
+                    "type": "object",
+                    "description": "One live state segment. 48 bytes.",
+                    "properties": {
+                        "OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the segment frame's size prefix."
+                        },
+                        "LENGTH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "Size of its FlatBuffer."
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/fckSegmentKind"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255,
+                            "description": "LSM level (0 = written at a checkpoint)."
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "0."
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COVERS_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB the segment folds in."
+                        },
+                        "ENTRIES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FCK": {
+                    "type": "object",
+                    "description": "FlatSQL Checkpoint.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame; 0xFFFFFFFFFFFFFFFF in genesis."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "TYPE": {
+                            "type": "string",
+                            "description": "The feed's identity: its record type, provider and source."
+                        },
+                        "PROVIDER": {
+                            "type": "string"
+                        },
+                        "SOURCE": {
+                            "type": "string"
+                        },
+                        "GENERATION": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295,
+                            "description": "The stream generation (compactions write the next one)."
+                        },
+                        "COMMITTED_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807,
+                            "description": "Unix seconds."
+                        },
+                        "APPLIED_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB folded into the segments."
+                        },
+                        "TYPE_SEQ_HIGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "The type's highest seq issued so far."
+                        },
+                        "COUNTERS": {
+                            "$ref": "#/definitions/FCKCounters"
+                        },
+                        "SEGMENTS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FCKSegment"
+                            }
+                        },
+                        "SEGMENT_DIGESTS": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "sha2-256 of each segment frame, 32 bytes each, in SEGMENTS order."
+                        },
+                        "COMMITS_ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the commits tree as of APPLIED_THROUGH."
+                        },
+                        "PREVIOUS_FEED_ROOT_CID": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Binary CID of the previous feed root."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSGPair": {
+                    "type": "object",
+                    "description": "FlatSQL Segment.\n\nAn immutable, sorted state segment in a FlatSQL feed stream (store format 5),\nlisted by a checkpoint ($FCK). Segments are written at checkpoints and merged\nLSM-style (REPLACES names the inputs); retention by arrival drops whole\nsegments. KIND says which vector is filled. Spec: flatsql cpp/src/p4/FORMAT.md\nsection 3.3.\nThe one sorted entry shape of row orders and tombstones. 32 bytes.",
+                    "properties": {
+                        "KEY_HI": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "KEY_LO": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "RID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "SEQ << 16 | ROW_J."
+                        },
+                        "ROW_REF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "(stream offset of the FMB holding the row) << 16 | the row's index in it."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSGLatest": {
+                    "type": "object",
+                    "description": "Latest record of one object. 32 bytes.",
+                    "properties": {
+                        "OBJECT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RESERVED": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "EPOCH": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "RID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "ROW_REF": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSGInstance": {
+                    "type": "object",
+                    "description": "One instance's counters. 88 bytes.",
+                    "properties": {
+                        "BATCH_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "CONTENT_KEY_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "RECORDS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "BYTES": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MIN_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_W": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "FIRST": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "UPDATED": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_AT": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        },
+                        "MAX_TS": {
+                            "type": "integer",
+                            "minimum": -9223372036854775808,
+                            "maximum": 9223372036854775807
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "FSG": {
+                    "type": "object",
+                    "description": "FlatSQL Segment.",
+                    "properties": {
+                        "SELF_OFFSET": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of this frame's size prefix."
+                        },
+                        "PREVIOUS": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "Stream offset of the previous non-record frame."
+                        },
+                        "FEED_ID": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 4294967295
+                        },
+                        "KIND": {
+                            "$ref": "#/definitions/fckSegmentKind"
+                        },
+                        "LEVEL": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 255
+                        },
+                        "MIN_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "MAX_SEQ": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615
+                        },
+                        "COVERS_THROUGH": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 18446744073709551615,
+                            "description": "End offset of the last FMB the segment folds in."
+                        },
+                        "REPLACES": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 18446744073709551615
+                            },
+                            "description": "Stream offsets of the segments an LSM merge replaced."
+                        },
+                        "ENTRIES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            },
+                            "description": "DICTIONARY: sorted by (KIND, ID)."
+                        },
+                        "LATEST": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FSGLatest"
+                            },
+                            "description": "LATEST: sorted by OBJECT_KEY_ID."
+                        },
+                        "INSTANCES": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FSGInstance"
+                            },
+                            "description": "INSTANCES: sorted by (BATCH_ID, CONTENT_KEY_ID)."
+                        },
+                        "TOKENS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FMBEntry"
+                            },
+                            "description": "TOKENS: TEXT [token, records, bytes, min ts, max ts, max seq]."
+                        },
+                        "PAIRS": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FSGPair"
+                            },
+                            "description": "TOMBSTONES and ROWS_BY_*: sorted by (KEY_HI, KEY_LO, RID)."
+                        },
+                        "COLUMN": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 255
+                            },
+                            "description": "Reserved for analytics column segments."
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "$ref": "#/definitions/FSG"
         },
         "AOF": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",

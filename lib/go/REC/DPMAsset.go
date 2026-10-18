@@ -287,8 +287,32 @@ func (rcv *DPMAsset) ContentKeyId() []byte {
 }
 
 /// Optional content-key identifier for encrypted artifacts.
+/// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+/// assets of a FlatSQL feed; 0 when not applicable.
+func (rcv *DPMAsset) THROUGH_SEQ() uint64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetUint64(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *DPMAsset) ThroughSeq() uint64 {
+	return rcv.THROUGH_SEQ()
+}
+
+/// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+/// assets of a FlatSQL feed; 0 when not applicable.
+func (rcv *DPMAsset) MutateTHROUGH_SEQ(n uint64) bool {
+	return rcv._tab.MutateUint64Slot(30, n)
+}
+
+func (rcv *DPMAsset) MutateThroughSeq(n uint64) bool {
+	return rcv.MutateTHROUGH_SEQ(n)
+}
+
 func DPMAssetStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func DPMAssetAddASSET_KIND(builder *flatbuffers.Builder, ASSET_KIND publicationAssetKind) {
 	builder.PrependInt8Slot(0, int8(ASSET_KIND), 3)
@@ -367,6 +391,12 @@ func DPMAssetAddCONTENT_KEY_ID(builder *flatbuffers.Builder, CONTENT_KEY_ID flat
 }
 func DPMAssetAddContentKeyId(builder *flatbuffers.Builder, CONTENT_KEY_ID flatbuffers.UOffsetT) {
 	DPMAssetAddCONTENT_KEY_ID(builder, CONTENT_KEY_ID)
+}
+func DPMAssetAddTHROUGH_SEQ(builder *flatbuffers.Builder, THROUGH_SEQ uint64) {
+	builder.PrependUint64Slot(13, THROUGH_SEQ, 0)
+}
+func DPMAssetAddThroughSeq(builder *flatbuffers.Builder, THROUGH_SEQ uint64) {
+	DPMAssetAddTHROUGH_SEQ(builder, THROUGH_SEQ)
 }
 func DPMAssetEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

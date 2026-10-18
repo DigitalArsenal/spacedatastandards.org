@@ -1,0 +1,80 @@
+// Hash: 0617bb29e5dde24d15fbc3c0ea899edeb7978879036307bfc0fcc33575a8bb4f
+// Version: 1.254.0
+// -----------------------------------END_HEADER
+include "../FMB/main.fbs";
+include "../FCK/main.fbs";
+
+/// FlatSQL Segment.
+///
+/// An immutable, sorted state segment in a FlatSQL feed stream (store format 5),
+/// listed by a checkpoint ($FCK). Segments are written at checkpoints and merged
+/// LSM-style (REPLACES names the inputs); retention by arrival drops whole
+/// segments. KIND says which vector is filled. Spec: flatsql cpp/src/p4/FORMAT.md
+/// section 3.3.
+
+/// The one sorted entry shape of row orders and tombstones. 32 bytes.
+struct FSGPair {
+  KEY_HI: ulong;
+  KEY_LO: ulong;
+  /// SEQ << 16 | ROW_J.
+  RID: ulong;
+  /// (stream offset of the FMB holding the row) << 16 | the row's index in it.
+  ROW_REF: ulong;
+}
+
+/// Latest record of one object. 32 bytes.
+struct FSGLatest {
+  OBJECT_KEY_ID: uint;
+  RESERVED: uint;
+  EPOCH: long;
+  RID: ulong;
+  ROW_REF: ulong;
+}
+
+/// One instance's counters. 88 bytes.
+struct FSGInstance {
+  BATCH_ID: uint;
+  CONTENT_KEY_ID: uint;
+  RECORDS: ulong;
+  BYTES: ulong;
+  MIN_W: long;
+  MAX_W: long;
+  MIN_SEQ: ulong;
+  MAX_SEQ: ulong;
+  FIRST: long;
+  UPDATED: long;
+  MAX_AT: long;
+  MAX_TS: long;
+}
+
+/// FlatSQL Segment.
+table FSG {
+  /// Stream offset of this frame's size prefix.
+  SELF_OFFSET: ulong;
+  /// Stream offset of the previous non-record frame.
+  PREVIOUS: ulong;
+  FEED_ID: uint;
+  KIND: fckSegmentKind;
+  LEVEL: ubyte;
+  MIN_SEQ: ulong;
+  MAX_SEQ: ulong;
+  /// End offset of the last FMB the segment folds in.
+  COVERS_THROUGH: ulong;
+  /// Stream offsets of the segments an LSM merge replaced.
+  REPLACES: [ulong];
+  /// DICTIONARY: sorted by (KIND, ID).
+  ENTRIES: [FMBEntry];
+  /// LATEST: sorted by OBJECT_KEY_ID.
+  LATEST: [FSGLatest];
+  /// INSTANCES: sorted by (BATCH_ID, CONTENT_KEY_ID).
+  INSTANCES: [FSGInstance];
+  /// TOKENS: TEXT [token, records, bytes, min ts, max ts, max seq].
+  TOKENS: [FMBEntry];
+  /// TOMBSTONES and ROWS_BY_*: sorted by (KEY_HI, KEY_LO, RID).
+  PAIRS: [FSGPair];
+  /// Reserved for analytics column segments.
+  COLUMN: [ubyte];
+}
+
+root_type FSG;
+file_identifier "$FSG";

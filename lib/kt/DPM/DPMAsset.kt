@@ -213,6 +213,15 @@ class DPMAsset : Table() {
         }
     val contentKeyIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(28, 1)
     fun contentKeyIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+     * assets of a FlatSQL feed; 0 when not applicable.
+     */
+    val throughSeq : ULong
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getLong(o + bb_pos).toULong() else 0UL
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDPMAsset(_bb: ByteBuffer): DPMAsset = getRootAsDPMAsset(_bb, DPMAsset())
@@ -220,8 +229,9 @@ class DPMAsset : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int) : Int {
-            builder.startTable(13)
+        fun createDPMAsset(builder: FlatBufferBuilder, assetKind: Byte, transportKind: Byte, cidOffset: Int, multiformatAddressOffset: Int, fileNameOffset: Int, fileIdOffset: Int, transportProtocolOffset: Int, byteLength: ULong, byteSha256Offset: Int, dataRootOffset: Int, schemaNameOffset: Int, schemaHashOffset: Int, contentKeyIdOffset: Int, throughSeq: ULong) : Int {
+            builder.startTable(14)
+            addTHROUGHSEQ(builder, throughSeq)
             addBYTELENGTH(builder, byteLength)
             addCONTENTKEYID(builder, contentKeyIdOffset)
             addSCHEMAHASH(builder, schemaHashOffset)
@@ -237,7 +247,7 @@ class DPMAsset : Table() {
             addASSETKIND(builder, assetKind)
             return endDPMAsset(builder)
         }
-        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startDPMAsset(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addASSETKIND(builder: FlatBufferBuilder, assetKind: Byte) = builder.addByte(0, assetKind, 3)
         fun addTRANSPORTKIND(builder: FlatBufferBuilder, transportKind: Byte) = builder.addByte(1, transportKind, 0)
         fun addCID(builder: FlatBufferBuilder, cid: Int) = builder.addOffset(2, cid, 0)
@@ -251,6 +261,7 @@ class DPMAsset : Table() {
         fun addSCHEMANAME(builder: FlatBufferBuilder, schemaName: Int) = builder.addOffset(10, schemaName, 0)
         fun addSCHEMAHASH(builder: FlatBufferBuilder, schemaHash: Int) = builder.addOffset(11, schemaHash, 0)
         fun addCONTENTKEYID(builder: FlatBufferBuilder, contentKeyId: Int) = builder.addOffset(12, contentKeyId, 0)
+        fun addTHROUGHSEQ(builder: FlatBufferBuilder, throughSeq: ULong) = builder.addLong(13, throughSeq.toLong(), 0)
         fun endDPMAsset(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

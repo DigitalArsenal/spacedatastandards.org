@@ -6,17 +6,18 @@ extern crate alloc;
 pub const ENUM_MIN_PUBLICATION_ASSET_KIND: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PUBLICATION_ASSET_KIND: i8 = 5;
+pub const ENUM_MAX_PUBLICATION_ASSET_KIND: i8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PUBLICATION_ASSET_KIND: [publicationAssetKind; 6] = [
+pub const ENUM_VALUES_PUBLICATION_ASSET_KIND: [publicationAssetKind; 7] = [
     publicationAssetKind::DATA_SHARD,
     publicationAssetKind::QUERY_INDEX,
     publicationAssetKind::MANIFEST,
     publicationAssetKind::OTHER,
     publicationAssetKind::EMBEDDING_SHARD,
     publicationAssetKind::QUERY_ENCODER_MODEL,
+    publicationAssetKind::CAR_ARCHIVE,
 ];
 
 /// Dataset Publication Manifest.
@@ -53,9 +54,13 @@ impl publicationAssetKind {
     pub const EMBEDDING_SHARD: Self = Self(4);
     /// A $QEM query encoder model (pruned static token-embedding table).
     pub const QUERY_ENCODER_MODEL: Self = Self(5);
+    /// An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+    /// DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+    /// is its as-of point.
+    pub const CAR_ARCHIVE: Self = Self(6);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 5;
+    pub const ENUM_MAX: i8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::DATA_SHARD,
         Self::QUERY_INDEX,
@@ -63,6 +68,7 @@ impl publicationAssetKind {
         Self::OTHER,
         Self::EMBEDDING_SHARD,
         Self::QUERY_ENCODER_MODEL,
+        Self::CAR_ARCHIVE,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -74,6 +80,7 @@ impl publicationAssetKind {
             Self::OTHER => Some("OTHER"),
             Self::EMBEDDING_SHARD => Some("EMBEDDING_SHARD"),
             Self::QUERY_ENCODER_MODEL => Some("QUERY_ENCODER_MODEL"),
+            Self::CAR_ARCHIVE => Some("CAR_ARCHIVE"),
             _ => None,
         }
     }
@@ -548,6 +555,7 @@ impl<'a> DPMAsset<'a> {
     pub const VT_SCHEMA_NAME: ::flatbuffers::VOffsetT = 24;
     pub const VT_SCHEMA_HASH: ::flatbuffers::VOffsetT = 26;
     pub const VT_CONTENT_KEY_ID: ::flatbuffers::VOffsetT = 28;
+    pub const VT_THROUGH_SEQ: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -560,6 +568,7 @@ impl<'a> DPMAsset<'a> {
         args: &'args DPMAssetArgs<'args>
     ) -> ::flatbuffers::WIPOffset<DPMAsset<'bldr>> {
         let mut builder = DPMAssetBuilder::new(_fbb);
+        builder.add_THROUGH_SEQ(args.THROUGH_SEQ);
         builder.add_BYTE_LENGTH(args.BYTE_LENGTH);
         if let Some(x) = args.CONTENT_KEY_ID { builder.add_CONTENT_KEY_ID(x); }
         if let Some(x) = args.SCHEMA_HASH { builder.add_SCHEMA_HASH(x); }
@@ -610,6 +619,7 @@ impl<'a> DPMAsset<'a> {
         let CONTENT_KEY_ID = self.CONTENT_KEY_ID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let THROUGH_SEQ = self.THROUGH_SEQ();
         DPMAssetT {
             ASSET_KIND,
             TRANSPORT_KIND,
@@ -624,6 +634,7 @@ impl<'a> DPMAsset<'a> {
             SCHEMA_NAME,
             SCHEMA_HASH,
             CONTENT_KEY_ID,
+            THROUGH_SEQ,
         }
     }
 
@@ -762,6 +773,16 @@ impl<'a> DPMAsset<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DPMAsset::VT_CONTENT_KEY_ID, None)}
     }
+
+    /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+    /// assets of a FlatSQL feed; 0 when not applicable.
+    #[inline]
+    pub fn THROUGH_SEQ(&self) -> u64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u64>(DPMAsset::VT_THROUGH_SEQ, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for DPMAsset<'_> {
@@ -783,6 +804,7 @@ impl ::flatbuffers::Verifiable for DPMAsset<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_NAME", Self::VT_SCHEMA_NAME, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SCHEMA_HASH", Self::VT_SCHEMA_HASH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("CONTENT_KEY_ID", Self::VT_CONTENT_KEY_ID, false)?
+            .visit_field::<u64>("THROUGH_SEQ", Self::VT_THROUGH_SEQ, false)?
             .finish();
         Ok(())
     }
@@ -802,6 +824,7 @@ pub struct DPMAssetArgs<'a> {
     pub SCHEMA_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SCHEMA_HASH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub CONTENT_KEY_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub THROUGH_SEQ: u64,
 }
 
 impl<'a> Default for DPMAssetArgs<'a> {
@@ -821,6 +844,7 @@ impl<'a> Default for DPMAssetArgs<'a> {
             SCHEMA_NAME: None,
             SCHEMA_HASH: None,
             CONTENT_KEY_ID: None,
+            THROUGH_SEQ: 0,
         }
     }
 }
@@ -897,6 +921,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DPMAssetBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_THROUGH_SEQ(&mut self, THROUGH_SEQ: u64) {
+        self.fbb_.push_slot::<u64>(DPMAsset::VT_THROUGH_SEQ, THROUGH_SEQ, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DPMAssetBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         DPMAssetBuilder {
@@ -928,6 +957,7 @@ impl ::core::fmt::Debug for DPMAsset<'_> {
         ds.field("SCHEMA_NAME", &self.SCHEMA_NAME());
         ds.field("SCHEMA_HASH", &self.SCHEMA_HASH());
         ds.field("CONTENT_KEY_ID", &self.CONTENT_KEY_ID());
+        ds.field("THROUGH_SEQ", &self.THROUGH_SEQ());
         ds.finish()
     }
 }
@@ -948,6 +978,7 @@ pub struct DPMAssetT {
     pub SCHEMA_NAME: Option<alloc::string::String>,
     pub SCHEMA_HASH: Option<alloc::string::String>,
     pub CONTENT_KEY_ID: Option<alloc::string::String>,
+    pub THROUGH_SEQ: u64,
 }
 
 impl Default for DPMAssetT {
@@ -966,6 +997,7 @@ impl Default for DPMAssetT {
             SCHEMA_NAME: None,
             SCHEMA_HASH: None,
             CONTENT_KEY_ID: None,
+            THROUGH_SEQ: 0,
         }
     }
 }
@@ -1008,6 +1040,7 @@ impl DPMAssetT {
         let CONTENT_KEY_ID = self.CONTENT_KEY_ID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let THROUGH_SEQ = self.THROUGH_SEQ;
         DPMAsset::create(_fbb, &DPMAssetArgs{
             ASSET_KIND,
             TRANSPORT_KIND,
@@ -1022,6 +1055,7 @@ impl DPMAssetT {
             SCHEMA_NAME,
             SCHEMA_HASH,
             CONTENT_KEY_ID,
+            THROUGH_SEQ,
         })
     }
 }

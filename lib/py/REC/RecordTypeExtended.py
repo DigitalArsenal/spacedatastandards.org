@@ -38,3 +38,6 @@ class RecordTypeExtended(object):
     XMT = 280
     EXO = 281
     GLX = 282
+    FCK = 283
+    FMB = 284
+    FSG = 285

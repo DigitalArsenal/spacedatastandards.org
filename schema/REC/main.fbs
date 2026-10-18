@@ -1,5 +1,5 @@
-// Hash: b552bfc1ebf8f8357e4c657891509d6ad5faa86c1b00db921f9ccf2593c27ee6
-// Version: 1.44.83
+// Hash: ce5d342221072b1f7dbf4ee13cd2c038795a48f1863be2bd690e470a57234228
+// Version: 1.44.84
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -80,11 +80,14 @@ include "../ETS/main.fbs";
 include "../EVL/main.fbs";
 include "../EWR/main.fbs";
 include "../EXO/main.fbs";
+include "../FCK/main.fbs";
 include "../FCS/main.fbs";
 include "../FIL/main.fbs";
+include "../FMB/main.fbs";
 include "../FPC/main.fbs";
 include "../FRM/main.fbs";
 include "../FSB/main.fbs";
+include "../FSG/main.fbs";
 include "../FSM/main.fbs";
 include "../FSO/main.fbs";
 include "../FSP/main.fbs";
@@ -400,7 +403,10 @@ enum RecordTypeExtended : ushort {
   WHA = 279,
   XMT = 280,
   EXO = 281,
-  GLX = 282
+  GLX = 282,
+  FCK = 283,
+  FMB = 284,
+  FSG = 285
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

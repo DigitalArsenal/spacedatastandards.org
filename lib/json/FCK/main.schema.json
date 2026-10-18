@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fckSegmentKind" : {
+      "type" : "string",
+      "enum": ["DICTIONARY", "LATEST", "INSTANCES", "TOKENS", "TOMBSTONES", "ROWS_BY_SEQ", "ROWS_BY_OBJECT_EPOCH", "ROWS_BY_CID", "ROWS_BY_W", "ROWS_BY_AT", "COLUMN", "ZONE_MAP", "ROLLUP"]
+    },
+    "FCKCounters" : {
+      "type" : "object",
+      "description" : "The feed's counters.",
+      "properties" : {
+        "ROWS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "RECORDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "RECORDS_NO_EPOCH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "COPIES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "COPY_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "LIVE_FRAME_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MIN_SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MAX_SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MIN_EPOCH" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MAX_EPOCH" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MIN_TS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MAX_TS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MIN_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              },
+        "MAX_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FCKSegment" : {
+      "type" : "object",
+      "description" : "One live state segment. 48 bytes.",
+      "properties" : {
+        "OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Stream offset of the segment frame's size prefix."
+              },
+        "LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Size of its FlatBuffer."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/fckSegmentKind"
+              },
+        "LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "LSM level (0 = written at a checkpoint)."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "0."
+              },
+        "MIN_SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "MAX_SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "COVERS_THROUGH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "End offset of the last FMB the segment folds in."
+              },
+        "ENTRIES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FCK" : {
+      "type" : "object",
+      "description" : "FlatSQL Checkpoint.",
+      "properties" : {
+        "SELF_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Stream offset of this frame's size prefix."
+              },
+        "PREVIOUS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Stream offset of the previous non-record frame; 0xFFFFFFFFFFFFFFFF in genesis."
+              },
+        "FEED_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "The feed's identity: its record type, provider and source."
+              },
+        "PROVIDER" : {
+                "type" : "string"
+              },
+        "SOURCE" : {
+                "type" : "string"
+              },
+        "GENERATION" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The stream generation (compactions write the next one)."
+              },
+        "COMMITTED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Unix seconds."
+              },
+        "APPLIED_THROUGH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "End offset of the last FMB folded into the segments."
+              },
+        "TYPE_SEQ_HIGH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "The type's highest seq issued so far."
+              },
+        "COUNTERS" : {
+                "$ref" : "#/definitions/FCKCounters"
+              },
+        "SEGMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FCKSegment"}
+              },
+        "SEGMENT_DIGESTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "sha2-256 of each segment frame, 32 bytes each, in SEGMENTS order."
+              },
+        "COMMITS_ROOT_CID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Binary CID of the commits tree as of APPLIED_THROUGH."
+              },
+        "PREVIOUS_FEED_ROOT_CID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Binary CID of the previous feed root."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FCK"
+}

@@ -37,5 +37,11 @@ class publicationAssetKind private constructor() {
          * A $QEM query encoder model (pruned static token-embedding table).
          */
         const val QUERY_ENCODER_MODEL: Byte = 5
+        /**
+         * An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+         * DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+         * is its as-of point.
+         */
+        const val CAR_ARCHIVE: Byte = 6
     }
 }

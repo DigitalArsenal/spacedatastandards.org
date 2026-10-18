@@ -173,8 +173,17 @@ CONTENT_KEY_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+ * assets of a FlatSQL feed; 0 when not applicable.
+ */
+THROUGH_SEQ():bigint {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt('0');
+}
+
 static startDPMAsset(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 }
 
 static addAssetKind(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind) {
@@ -229,12 +238,16 @@ static addContentKeyId(builder:flatbuffers.Builder, CONTENT_KEY_IDOffset:flatbuf
   builder.addFieldOffset(12, CONTENT_KEY_IDOffset, 0);
 }
 
+static addThroughSeq(builder:flatbuffers.Builder, THROUGH_SEQ:bigint) {
+  builder.addFieldInt64(13, THROUGH_SEQ, BigInt('0'));
+}
+
 static endDPMAsset(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind, TRANSPORT_KIND:dpmTransportKind, CIDOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, FILE_NAMEOffset:flatbuffers.Offset, FILE_IDOffset:flatbuffers.Offset, TRANSPORT_PROTOCOLOffset:flatbuffers.Offset, BYTE_LENGTH:bigint, BYTE_SHA256Offset:flatbuffers.Offset, DATA_ROOTOffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, CONTENT_KEY_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKind, TRANSPORT_KIND:dpmTransportKind, CIDOffset:flatbuffers.Offset, MULTIFORMAT_ADDRESSOffset:flatbuffers.Offset, FILE_NAMEOffset:flatbuffers.Offset, FILE_IDOffset:flatbuffers.Offset, TRANSPORT_PROTOCOLOffset:flatbuffers.Offset, BYTE_LENGTH:bigint, BYTE_SHA256Offset:flatbuffers.Offset, DATA_ROOTOffset:flatbuffers.Offset, SCHEMA_NAMEOffset:flatbuffers.Offset, SCHEMA_HASHOffset:flatbuffers.Offset, CONTENT_KEY_IDOffset:flatbuffers.Offset, THROUGH_SEQ:bigint):flatbuffers.Offset {
   DPMAsset.startDPMAsset(builder);
   DPMAsset.addAssetKind(builder, ASSET_KIND);
   DPMAsset.addTransportKind(builder, TRANSPORT_KIND);
@@ -249,6 +262,7 @@ static createDPMAsset(builder:flatbuffers.Builder, ASSET_KIND:publicationAssetKi
   DPMAsset.addSchemaName(builder, SCHEMA_NAMEOffset);
   DPMAsset.addSchemaHash(builder, SCHEMA_HASHOffset);
   DPMAsset.addContentKeyId(builder, CONTENT_KEY_IDOffset);
+  DPMAsset.addThroughSeq(builder, THROUGH_SEQ);
   return DPMAsset.endDPMAsset(builder);
 }
 
@@ -266,7 +280,8 @@ unpack(): DPMAssetT {
     this.DATA_ROOT(),
     this.SCHEMA_NAME(),
     this.SCHEMA_HASH(),
-    this.CONTENT_KEY_ID()
+    this.CONTENT_KEY_ID(),
+    this.THROUGH_SEQ()
   );
 }
 
@@ -285,6 +300,7 @@ unpackTo(_o: DPMAssetT): void {
   _o.SCHEMA_NAME = this.SCHEMA_NAME();
   _o.SCHEMA_HASH = this.SCHEMA_HASH();
   _o.CONTENT_KEY_ID = this.CONTENT_KEY_ID();
+  _o.THROUGH_SEQ = this.THROUGH_SEQ();
 }
 }
 
@@ -302,7 +318,8 @@ constructor(
   public DATA_ROOT: string|Uint8Array|null = null,
   public SCHEMA_NAME: string|Uint8Array|null = null,
   public SCHEMA_HASH: string|Uint8Array|null = null,
-  public CONTENT_KEY_ID: string|Uint8Array|null = null
+  public CONTENT_KEY_ID: string|Uint8Array|null = null,
+  public THROUGH_SEQ: bigint = BigInt('0')
 ){}
 
 
@@ -331,7 +348,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     DATA_ROOT,
     SCHEMA_NAME,
     SCHEMA_HASH,
-    CONTENT_KEY_ID
+    CONTENT_KEY_ID,
+    this.THROUGH_SEQ
   );
 }
 }

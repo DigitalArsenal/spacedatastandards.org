@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fckSegmentKind": {
+      "type": "string",
+      "enum": [
+        "DICTIONARY",
+        "LATEST",
+        "INSTANCES",
+        "TOKENS",
+        "TOMBSTONES",
+        "ROWS_BY_SEQ",
+        "ROWS_BY_OBJECT_EPOCH",
+        "ROWS_BY_CID",
+        "ROWS_BY_W",
+        "ROWS_BY_AT",
+        "COLUMN",
+        "ZONE_MAP",
+        "ROLLUP"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "DICTIONARY": {
+          "value": 0,
+          "description": "Dictionary entries (FSG.ENTRIES)."
+        },
+        "LATEST": {
+          "value": 1,
+          "description": "Latest record per object (FSG.LATEST); the newest entry wins across segments."
+        },
+        "INSTANCES": {
+          "value": 2,
+          "description": "Per-instance counters (FSG.INSTANCES)."
+        },
+        "TOKENS": {
+          "value": 3,
+          "description": "Per-producer-token counters (FSG.TOKENS)."
+        },
+        "TOMBSTONES": {
+          "value": 4,
+          "description": "Removed rows (FSG.PAIRS, KEY_HI = rid)."
+        },
+        "ROWS_BY_SEQ": {
+          "value": 5,
+          "description": "Row orders (FSG.PAIRS)."
+        },
+        "ROWS_BY_OBJECT_EPOCH": {
+          "value": 6
+        },
+        "ROWS_BY_CID": {
+          "value": 7
+        },
+        "ROWS_BY_W": {
+          "value": 8
+        },
+        "ROWS_BY_AT": {
+          "value": 9
+        },
+        "COLUMN": {
+          "value": 64,
+          "description": "Reserved for analytics column segments (64..127)."
+        },
+        "ZONE_MAP": {
+          "value": 65
+        },
+        "ROLLUP": {
+          "value": 66
+        }
+      }
+    },
+    "FCKCounters": {
+      "type": "object",
+      "description": "The feed's counters.",
+      "properties": {
+        "ROWS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "RECORDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "RECORDS_NO_EPOCH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "COPIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "COPY_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "LIVE_FRAME_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "MIN_SEQ": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "MAX_SEQ": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "MIN_EPOCH": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "MAX_EPOCH": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "MIN_TS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "MAX_TS": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "MIN_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        },
+        "MAX_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        }
+      },
+      "additionalProperties": false
+    },
+    "FCKSegment": {
+      "type": "object",
+      "description": "One live state segment. 48 bytes.",
+      "properties": {
+        "OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Stream offset of the segment frame's size prefix."
+        },
+        "LENGTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Size of its FlatBuffer."
+        },
+        "KIND": {
+          "$ref": "#/definitions/fckSegmentKind"
+        },
+        "LEVEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "LSM level (0 = written at a checkpoint)."
+        },
+        "RESERVED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "0."
+        },
+        "MIN_SEQ": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "MAX_SEQ": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        },
+        "COVERS_THROUGH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "End offset of the last FMB the segment folds in."
+        },
+        "ENTRIES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615
+        }
+      },
+      "additionalProperties": false
+    },
+    "FCK": {
+      "type": "object",
+      "description": "FlatSQL Checkpoint.",
+      "properties": {
+        "SELF_OFFSET": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Stream offset of this frame's size prefix.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "PREVIOUS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Stream offset of the previous non-record frame; 0xFFFFFFFFFFFFFFFF in genesis.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "FEED_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "x-flatbuffer-type": "uint"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "The feed's identity: its record type, provider and source.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "GENERATION": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "The stream generation (compactions write the next one).",
+          "x-flatbuffer-type": "uint"
+        },
+        "COMMITTED_AT": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "Unix seconds.",
+          "x-flatbuffer-type": "long"
+        },
+        "APPLIED_THROUGH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "End offset of the last FMB folded into the segments.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "TYPE_SEQ_HIGH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "The type's highest seq issued so far.",
+          "x-flatbuffer-type": "ulong"
+        },
+        "COUNTERS": {
+          "$ref": "#/definitions/FCKCounters",
+          "x-flatbuffer-type": "FCKCounters"
+        },
+        "SEGMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FCKSegment"
+          },
+          "x-flatbuffer-type": "[FCKSegment]"
+        },
+        "SEGMENT_DIGESTS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "sha2-256 of each segment frame, 32 bytes each, in SEGMENTS order.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "COMMITS_ROOT_CID": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Binary CID of the commits tree as of APPLIED_THROUGH.",
+          "x-flatbuffer-type": "[ubyte]"
+        },
+        "PREVIOUS_FEED_ROOT_CID": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          },
+          "description": "Binary CID of the previous feed root.",
+          "x-flatbuffer-type": "[ubyte]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/FCK",
+  "x-flatbuffer-root-type": "FCK",
+  "x-flatbuffer-file-identifier": "$FCK"
+}

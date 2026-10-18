@@ -40,8 +40,12 @@ public enum publicationAssetKind: Int8, FlatbuffersVectorInitializable, Enum, Ve
   case embeddingShard = 4
   ///  A $QEM query encoder model (pruned static token-embedding table).
   case queryEncoderModel = 5
+  ///  An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+  ///  DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+  ///  is its as-of point.
+  case carArchive = 6
 
-  public static var max: publicationAssetKind { return .queryEncoderModel }
+  public static var max: publicationAssetKind { return .carArchive }
   public static var min: publicationAssetKind { return .dataShard }
 }
 
@@ -180,6 +184,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     static let SCHEMA_NAME: VOffset = 24
     static let SCHEMA_HASH: VOffset = 26
     static let CONTENT_KEY_ID: VOffset = 28
+    static let THROUGH_SEQ: VOffset = 30
   }
 
   ///  Asset role.
@@ -237,7 +242,10 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   ///  Optional content-key identifier for encrypted artifacts.
   public var CONTENT_KEY_ID: String? { let o = _accessor.offset(VT.CONTENT_KEY_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONTENT_KEY_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONTENT_KEY_ID) }
-  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+  ///  assets of a FlatSQL feed; 0 when not applicable.
+  public var THROUGH_SEQ: UInt64 { let o = _accessor.offset(VT.THROUGH_SEQ); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
+  public static func startDPMAsset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(ASSET_KIND: publicationAssetKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ASSET_KIND.rawValue, def: 3, at: VT.ASSET_KIND) }
   public static func add(TRANSPORT_KIND: dpmTransportKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRANSPORT_KIND.rawValue, def: 0, at: VT.TRANSPORT_KIND) }
   public static func add(CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CID, at: VT.CID) }
@@ -251,6 +259,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   public static func add(SCHEMA_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_NAME, at: VT.SCHEMA_NAME) }
   public static func add(SCHEMA_HASH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SCHEMA_HASH, at: VT.SCHEMA_HASH) }
   public static func add(CONTENT_KEY_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTENT_KEY_ID, at: VT.CONTENT_KEY_ID) }
+  public static func add(THROUGH_SEQ: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THROUGH_SEQ, def: 0, at: VT.THROUGH_SEQ) }
   public static func endDPMAsset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDPMAsset(
     _ fbb: inout FlatBufferBuilder,
@@ -266,7 +275,8 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     DATA_ROOTOffset DATA_ROOT: Offset = Offset(),
     SCHEMA_NAMEOffset SCHEMA_NAME: Offset = Offset(),
     SCHEMA_HASHOffset SCHEMA_HASH: Offset = Offset(),
-    CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset()
+    CONTENT_KEY_IDOffset CONTENT_KEY_ID: Offset = Offset(),
+    THROUGH_SEQ: UInt64 = 0
   ) -> Offset {
     let __start = DPMAsset.startDPMAsset(&fbb)
     DPMAsset.add(ASSET_KIND: ASSET_KIND, &fbb)
@@ -282,6 +292,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     DPMAsset.add(SCHEMA_NAME: SCHEMA_NAME, &fbb)
     DPMAsset.add(SCHEMA_HASH: SCHEMA_HASH, &fbb)
     DPMAsset.add(CONTENT_KEY_ID: CONTENT_KEY_ID, &fbb)
+    DPMAsset.add(THROUGH_SEQ: THROUGH_SEQ, &fbb)
     return DPMAsset.endDPMAsset(&fbb, start: __start)
   }
 
@@ -300,6 +311,7 @@ public struct DPMAsset: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
     try _v.visit(field: VT.SCHEMA_NAME, fieldName: "SCHEMA_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SCHEMA_HASH, fieldName: "SCHEMA_HASH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.CONTENT_KEY_ID, fieldName: "CONTENT_KEY_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THROUGH_SEQ, fieldName: "THROUGH_SEQ", required: false, type: UInt64.self)
     _v.finish()
   }
 }

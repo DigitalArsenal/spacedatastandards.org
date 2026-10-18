@@ -38,6 +38,9 @@ class RecordTypeExtended
     const XMT = 280;
     const EXO = 281;
     const GLX = 282;
+    const FCK = 283;
+    const FMB = 284;
+    const FSG = 285;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
@@ -68,6 +71,9 @@ class RecordTypeExtended
         RecordTypeExtended::XMT=>"XMT",
         RecordTypeExtended::EXO=>"EXO",
         RecordTypeExtended::GLX=>"GLX",
+        RecordTypeExtended::FCK=>"FCK",
+        RecordTypeExtended::FMB=>"FMB",
+        RecordTypeExtended::FSG=>"FSG",
     );
 
     public static function Name($e)

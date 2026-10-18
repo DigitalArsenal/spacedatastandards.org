@@ -32,6 +32,12 @@ export declare enum publicationAssetKind {
     /**
      * A $QEM query encoder model (pruned static token-embedding table).
      */
-    QUERY_ENCODER_MODEL = 5
+    QUERY_ENCODER_MODEL = 5,
+    /**
+     * An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+     * DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+     * is its as-of point.
+     */
+    CAR_ARCHIVE = 6
 }
 //# sourceMappingURL=publicationAssetKind.d.ts.map

@@ -598,7 +598,10 @@ enum RecordTypeExtended {
   WHA(279),
   XMT(280),
   EXO(281),
-  GLX(282);
+  GLX(282),
+  FCK(283),
+  FMB(284),
+  FSG(285);
 
   final int value;
   const RecordTypeExtended(this.value);
@@ -633,6 +636,9 @@ enum RecordTypeExtended {
       case 280: return RecordTypeExtended.XMT;
       case 281: return RecordTypeExtended.EXO;
       case 282: return RecordTypeExtended.GLX;
+      case 283: return RecordTypeExtended.FCK;
+      case 284: return RecordTypeExtended.FMB;
+      case 285: return RecordTypeExtended.FSG;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -641,7 +647,7 @@ enum RecordTypeExtended {
       value == null ? null : RecordTypeExtended.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 282;
+  static const int maxValue = 285;
   static const fb.Reader<RecordTypeExtended> reader = _RecordTypeExtendedReader();
 }
 

@@ -60,37 +60,43 @@ enum publicationAssetKind : int8_t {
   publicationAssetKind_EMBEDDING_SHARD = 4,
   /// A $QEM query encoder model (pruned static token-embedding table).
   publicationAssetKind_QUERY_ENCODER_MODEL = 5,
+  /// An IPLD CARv2 archive of a FlatSQL feed root DAG (a feed backup). CID and
+  /// DATA_ROOT name the feed root; BYTE_LENGTH is the CAR's size; THROUGH_SEQ
+  /// is its as-of point.
+  publicationAssetKind_CAR_ARCHIVE = 6,
   publicationAssetKind_MIN = publicationAssetKind_DATA_SHARD,
-  publicationAssetKind_MAX = publicationAssetKind_QUERY_ENCODER_MODEL
+  publicationAssetKind_MAX = publicationAssetKind_CAR_ARCHIVE
 };
 
-inline const publicationAssetKind (&EnumValuespublicationAssetKind())[6] {
+inline const publicationAssetKind (&EnumValuespublicationAssetKind())[7] {
   static const publicationAssetKind values[] = {
     publicationAssetKind_DATA_SHARD,
     publicationAssetKind_QUERY_INDEX,
     publicationAssetKind_MANIFEST,
     publicationAssetKind_OTHER,
     publicationAssetKind_EMBEDDING_SHARD,
-    publicationAssetKind_QUERY_ENCODER_MODEL
+    publicationAssetKind_QUERY_ENCODER_MODEL,
+    publicationAssetKind_CAR_ARCHIVE
   };
   return values;
 }
 
 inline const char * const *EnumNamespublicationAssetKind() {
-  static const char * const names[7] = {
+  static const char * const names[8] = {
     "DATA_SHARD",
     "QUERY_INDEX",
     "MANIFEST",
     "OTHER",
     "EMBEDDING_SHARD",
     "QUERY_ENCODER_MODEL",
+    "CAR_ARCHIVE",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepublicationAssetKind(publicationAssetKind e) {
-  if (::flatbuffers::IsOutRange(e, publicationAssetKind_DATA_SHARD, publicationAssetKind_QUERY_ENCODER_MODEL)) return "";
+  if (::flatbuffers::IsOutRange(e, publicationAssetKind_DATA_SHARD, publicationAssetKind_CAR_ARCHIVE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespublicationAssetKind()[index];
 }
@@ -281,7 +287,8 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DATA_ROOT = 22,
     VT_SCHEMA_NAME = 24,
     VT_SCHEMA_HASH = 26,
-    VT_CONTENT_KEY_ID = 28
+    VT_CONTENT_KEY_ID = 28,
+    VT_THROUGH_SEQ = 30
   };
   /// Asset role.
   publicationAssetKind ASSET_KIND() const {
@@ -354,6 +361,11 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *CONTENT_KEY_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CONTENT_KEY_ID);
   }
+  /// Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+  /// assets of a FlatSQL feed; 0 when not applicable.
+  uint64_t THROUGH_SEQ() const {
+    return GetField<uint64_t>(VT_THROUGH_SEQ, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -380,6 +392,7 @@ struct DPMAsset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SCHEMA_HASH()) &&
            VerifyOffset(verifier, VT_CONTENT_KEY_ID) &&
            verifier.VerifyString(CONTENT_KEY_ID()) &&
+           VerifyField<uint64_t>(verifier, VT_THROUGH_SEQ, 8) &&
            verifier.EndTable();
   }
 };
@@ -427,6 +440,9 @@ struct DPMAssetBuilder {
   void add_CONTENT_KEY_ID(::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID) {
     fbb_.AddOffset(DPMAsset::VT_CONTENT_KEY_ID, CONTENT_KEY_ID);
   }
+  void add_THROUGH_SEQ(uint64_t THROUGH_SEQ) {
+    fbb_.AddElement<uint64_t>(DPMAsset::VT_THROUGH_SEQ, THROUGH_SEQ, 0);
+  }
   explicit DPMAssetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -452,8 +468,10 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAsset(
     ::flatbuffers::Offset<::flatbuffers::String> DATA_ROOT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SCHEMA_HASH = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> CONTENT_KEY_ID = 0,
+    uint64_t THROUGH_SEQ = 0) {
   DPMAssetBuilder builder_(_fbb);
+  builder_.add_THROUGH_SEQ(THROUGH_SEQ);
   builder_.add_BYTE_LENGTH(BYTE_LENGTH);
   builder_.add_CONTENT_KEY_ID(CONTENT_KEY_ID);
   builder_.add_SCHEMA_HASH(SCHEMA_HASH);
@@ -484,7 +502,8 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
     const char *DATA_ROOT = nullptr,
     const char *SCHEMA_NAME = nullptr,
     const char *SCHEMA_HASH = nullptr,
-    const char *CONTENT_KEY_ID = nullptr) {
+    const char *CONTENT_KEY_ID = nullptr,
+    uint64_t THROUGH_SEQ = 0) {
   auto CID__ = CID ? _fbb.CreateString(CID) : 0;
   auto MULTIFORMAT_ADDRESS__ = MULTIFORMAT_ADDRESS ? _fbb.CreateString(MULTIFORMAT_ADDRESS) : 0;
   auto FILE_NAME__ = FILE_NAME ? _fbb.CreateString(FILE_NAME) : 0;
@@ -509,7 +528,8 @@ inline ::flatbuffers::Offset<DPMAsset> CreateDPMAssetDirect(
       DATA_ROOT__,
       SCHEMA_NAME__,
       SCHEMA_HASH__,
-      CONTENT_KEY_ID__);
+      CONTENT_KEY_ID__,
+      THROUGH_SEQ);
 }
 
 /// Source batch metadata bound into the dataset publication.

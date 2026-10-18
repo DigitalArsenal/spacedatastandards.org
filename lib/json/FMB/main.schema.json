@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "fmbDictKind" : {
+      "type" : "string",
+      "enum": ["TOKEN", "NODE", "BATCH", "CONTENT_KEY", "URL", "OBJECT_KEY"]
+    },
+    "fmbRemoveReason" : {
+      "type" : "string",
+      "enum": ["DELETE", "SUPERSEDE", "CAT_SUPERSEDE", "QUOTA", "RETENTION", "MOVED_OUT"]
+    },
+    "FMBRow" : {
+      "type" : "object",
+      "description" : "One delivery of one record to the feed; its rid is SEQ << 16 | ROW_J.\n40 bytes. Epoch and object key are not stored: they are re-extracted from\nthe record bytes (sealed rows carry theirs in FMBSealed).",
+      "properties" : {
+        "OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Stream offset of the record frame's size prefix (this round's frame, or\nan earlier frame with the same bytes)."
+              },
+        "SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "The record's arrival number in the type's seq space."
+              },
+        "SOURCE_TS" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "The copy's source timestamp, as supplied with the write."
+              },
+        "LENGTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Size of the record frame's FlatBuffer (size prefix excluded)."
+              },
+        "GROUP" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Index into FMB.GROUPS."
+              },
+        "ROW_J" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "The row's j within the record's rows."
+              },
+        "FLAGS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "bit0 NEW_FRAME (the frame was written by this round), bit1 SEALED,\nbit2 LARGE (over 1 MiB: see FMB.LARGE), bit3 MOVED_IN (seq kept from\nlocal), bit4 COMPACTED (re-emitted by a compaction), bit5 COPY,\nbit6 RETAG; other bits 0."
+              },
+        "RESERVED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "0."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBGroup" : {
+      "type" : "object",
+      "description" : "What one call's rows share. 24 bytes.",
+      "properties" : {
+        "DELIVERED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "When this feed delivered the rows (Unix seconds)."
+              },
+        "NODE_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NODE dictionary id; 0 none."
+              },
+        "BATCH_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "BATCH dictionary id; 0 none."
+              },
+        "CONTENT_KEY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "CONTENT_KEY dictionary id; 0 none."
+              },
+        "URL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "URL dictionary id; 0 none."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBRemove" : {
+      "type" : "object",
+      "description" : "Rows that leave the feed. ROW_J 0xFFFFFFFF removes every row of SEQ.",
+      "properties" : {
+        "SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "ROW_J" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "REASON" : {
+                "$ref" : "#/definitions/fmbRemoveReason"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBUrl" : {
+      "type" : "object",
+      "description" : "A repeat delivery that moves a row's url.",
+      "properties" : {
+        "SEQ" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615
+              },
+        "ROW_J" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "URL_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBEntry" : {
+      "type" : "object",
+      "description" : "A dictionary entry first used by this round.",
+      "properties" : {
+        "KIND" : {
+                "$ref" : "#/definitions/fmbDictKind"
+              },
+        "ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295
+              },
+        "TEXT" : {
+                "type" : "array", "items" : {"type" : "string"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBSignature" : {
+      "type" : "object",
+      "description" : "A row's signature bytes.",
+      "properties" : {
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into FMB.ROWS."
+              },
+        "BYTES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBSealed" : {
+      "type" : "object",
+      "description" : "What a sealed (encrypted) row needs beyond FMBRow: its ciphertext cannot be\nre-extracted.",
+      "properties" : {
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into FMB.ROWS."
+              },
+        "EPOCH" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "The plaintext's epoch (Unix seconds); INT64_MIN when none."
+              },
+        "OBJECT_KEY_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "OBJECT_KEY dictionary id; 0 none."
+              },
+        "LEAF_DIGEST" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "sha2-256 of the ciphertext range (32 bytes): its IPFS leaf."
+              },
+        "COLUMNS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The sealed record's extracted column values."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBIdentity" : {
+      "type" : "object",
+      "description" : "An ingest identity registered by a row (32-byte hash).",
+      "properties" : {
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into FMB.ROWS."
+              },
+        "HASH" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMBLarge" : {
+      "type" : "object",
+      "description" : "A record over 1 MiB: a UnixFS file DAG of 1 MiB raw leaves over its range.",
+      "properties" : {
+        "ROW" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into FMB.ROWS."
+              },
+        "ROOT_CID" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "Binary CID of the dag-pb UnixFS root."
+              },
+        "ROOT_NODE" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "The root node's dag-pb bytes."
+              },
+        "LEAF_DIGESTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "sha2-256 of each leaf, 32 bytes each, in order."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "FMB" : {
+      "type" : "object",
+      "description" : "FlatSQL Batch Metadata: one per feed per commit round.",
+      "properties" : {
+        "SELF_OFFSET" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Stream offset of this frame's size prefix."
+              },
+        "PREVIOUS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Stream offset of the previous non-record frame (the commit chain)."
+              },
+        "FEED_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The feed's id in its type."
+              },
+        "COMMITTED_AT" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "The round's clock (Unix seconds)."
+              },
+        "TYPE_SEQ_HIGH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "The type's highest seq issued so far."
+              },
+        "ROWS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBRow"},
+                "description" : "The rows, in plan order; at most 65,536."
+              },
+        "DIGESTS" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" :255},
+                "description" : "sha2-256 of the record bytes, 32 bytes per NEW_FRAME row, in row order\n(for a sealed row, the plaintext's: its record CID)."
+              },
+        "GROUPS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBGroup"}
+              },
+        "DICTIONARY" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBEntry"}
+              },
+        "REMOVALS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBRemove"}
+              },
+        "URLS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBUrl"}
+              },
+        "SIGNATURES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBSignature"}
+              },
+        "SEALED" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBSealed"}
+              },
+        "IDENTITIES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBIdentity"}
+              },
+        "LARGE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/FMBLarge"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/FMB"
+}

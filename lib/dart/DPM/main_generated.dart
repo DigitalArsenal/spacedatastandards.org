@@ -32,7 +32,8 @@ enum publicationAssetKind {
   MANIFEST(2),
   OTHER(3),
   EMBEDDING_SHARD(4),
-  QUERY_ENCODER_MODEL(5);
+  QUERY_ENCODER_MODEL(5),
+  CAR_ARCHIVE(6);
 
   final int value;
   const publicationAssetKind(this.value);
@@ -45,6 +46,7 @@ enum publicationAssetKind {
       case 3: return publicationAssetKind.OTHER;
       case 4: return publicationAssetKind.EMBEDDING_SHARD;
       case 5: return publicationAssetKind.QUERY_ENCODER_MODEL;
+      case 6: return publicationAssetKind.CAR_ARCHIVE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -53,7 +55,7 @@ enum publicationAssetKind {
       value == null ? null : publicationAssetKind.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 5;
+  static const int maxValue = 6;
   static const fb.Reader<publicationAssetKind> reader = _publicationAssetKindReader();
 }
 
@@ -325,10 +327,14 @@ class DPMAsset {
   ///  Optional content-key identifier for encrypted artifacts.
   String? get CONTENT_KEY_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
   String? get contentKeyId => CONTENT_KEY_ID;
+  ///  Highest record seq the asset covers (its as-of point), for CAR_ARCHIVE
+  ///  assets of a FlatSQL feed; 0 when not applicable.
+  int get THROUGH_SEQ => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  int get throughSeq => THROUGH_SEQ;
 
   @override
   String toString() {
-    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}}';
+    return 'DPMAsset{assetKind: ${assetKind}, transportKind: ${transportKind}, CID: ${CID}, multiformatAddress: ${multiformatAddress}, fileName: ${fileName}, fileId: ${fileId}, transportProtocol: ${transportProtocol}, byteLength: ${byteLength}, byteSha256: ${byteSha256}, dataRoot: ${dataRoot}, schemaName: ${schemaName}, schemaHash: ${schemaHash}, contentKeyId: ${contentKeyId}, throughSeq: ${throughSeq}}';
   }
 }
 
@@ -346,7 +352,7 @@ class DPMAssetBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(14);
   }
 
   int addAssetKind(publicationAssetKind? ASSET_KIND) {
@@ -401,6 +407,10 @@ class DPMAssetBuilder {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+  int addThroughSeq(int? THROUGH_SEQ) {
+    fbBuilder.addUint64(13, THROUGH_SEQ);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -421,6 +431,7 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
   final String? _SCHEMA_NAME;
   final String? _SCHEMA_HASH;
   final String? _CONTENT_KEY_ID;
+  final int? _THROUGH_SEQ;
 
   DPMAssetObjectBuilder({
     publicationAssetKind? ASSET_KIND,
@@ -448,6 +459,8 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     String? schemaHash,
     String? CONTENT_KEY_ID,
     String? contentKeyId,
+    int? THROUGH_SEQ,
+    int? throughSeq,
   })
       : _ASSET_KIND = assetKind ?? ASSET_KIND,
         _TRANSPORT_KIND = transportKind ?? TRANSPORT_KIND,
@@ -461,7 +474,8 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         _DATA_ROOT = dataRoot ?? DATA_ROOT,
         _SCHEMA_NAME = schemaName ?? SCHEMA_NAME,
         _SCHEMA_HASH = schemaHash ?? SCHEMA_HASH,
-        _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID;
+        _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
+        _THROUGH_SEQ = throughSeq ?? THROUGH_SEQ;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -486,7 +500,7 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SCHEMA_HASH!);
     final int? CONTENT_KEY_IDOffset = _CONTENT_KEY_ID == null ? null
         : fbBuilder.writeString(_CONTENT_KEY_ID!);
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(14);
     fbBuilder.addInt8(0, _ASSET_KIND?.value);
     fbBuilder.addInt8(1, _TRANSPORT_KIND?.value);
     fbBuilder.addOffset(2, CIDOffset);
@@ -500,6 +514,7 @@ class DPMAssetObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, SCHEMA_NAMEOffset);
     fbBuilder.addOffset(11, SCHEMA_HASHOffset);
     fbBuilder.addOffset(12, CONTENT_KEY_IDOffset);
+    fbBuilder.addUint64(13, _THROUGH_SEQ);
     return fbBuilder.endTable();
   }
 
