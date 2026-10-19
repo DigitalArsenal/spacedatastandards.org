@@ -221,6 +221,16 @@ public struct QRP : IFlatbufferObject
   /// (single use), and the byte size of what it refers to. 0 = inline.
   public ulong BODY_REF_TOKEN { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
   public ulong BODY_REF_SIZE { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetUlong(o + __p.bb_pos) : (ulong)0; } }
+  /// Opaque cursor that resumes after the last row of this complete scan;
+  /// present on the last page; a request with it returns only rows stored
+  /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+  public string RESUME_CURSOR { get { int o = __p.__offset(102); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetRESUME_CURSORBytes() { return __p.__vector_as_span<byte>(102, 1); }
+#else
+  public ArraySegment<byte>? GetRESUME_CURSORBytes() { return __p.__vector_as_arraysegment(102); }
+#endif
+  public byte[] GetRESUME_CURSORArray() { return __p.__vector_as_array<byte>(102); }
 
   public static Offset<QRP> CreateQRP(FlatBufferBuilder builder,
       qrpKind KIND = qrpKind.Request,
@@ -271,8 +281,9 @@ public struct QRP : IFlatbufferObject
       ulong MAX_BYTES = 0,
       ushort HTTP_STATUS = 0,
       ulong BODY_REF_TOKEN = 0,
-      ulong BODY_REF_SIZE = 0) {
-    builder.StartTable(49);
+      ulong BODY_REF_SIZE = 0,
+      StringOffset RESUME_CURSOROffset = default(StringOffset)) {
+    builder.StartTable(50);
     QRP.AddBODY_REF_SIZE(builder, BODY_REF_SIZE);
     QRP.AddBODY_REF_TOKEN(builder, BODY_REF_TOKEN);
     QRP.AddMAX_BYTES(builder, MAX_BYTES);
@@ -285,6 +296,7 @@ public struct QRP : IFlatbufferObject
     QRP.AddTOTAL_COUNT(builder, TOTAL_COUNT);
     QRP.AddTO_EPOCH_MS(builder, TO_EPOCH_MS);
     QRP.AddFROM_EPOCH_MS(builder, FROM_EPOCH_MS);
+    QRP.AddRESUME_CURSOR(builder, RESUME_CURSOROffset);
     QRP.AddMAX_ELAPSED_MS(builder, MAX_ELAPSED_MS);
     QRP.AddTABLES(builder, TABLESOffset);
     QRP.AddROWS(builder, ROWSOffset);
@@ -325,7 +337,7 @@ public struct QRP : IFlatbufferObject
     return QRP.EndQRP(builder);
   }
 
-  public static void StartQRP(FlatBufferBuilder builder) { builder.StartTable(49); }
+  public static void StartQRP(FlatBufferBuilder builder) { builder.StartTable(50); }
   public static void AddKIND(FlatBufferBuilder builder, qrpKind KIND) { builder.AddSbyte(0, (sbyte)KIND, 0); }
   public static void AddSTATUS(FlatBufferBuilder builder, qrpStatus STATUS) { builder.AddSbyte(1, (sbyte)STATUS, 0); }
   public static void AddERROR_CODE(FlatBufferBuilder builder, StringOffset ERROR_CODEOffset) { builder.AddOffset(2, ERROR_CODEOffset.Value, 0); }
@@ -400,6 +412,7 @@ public struct QRP : IFlatbufferObject
   public static void AddHTTP_STATUS(FlatBufferBuilder builder, ushort HTTP_STATUS) { builder.AddUshort(46, HTTP_STATUS, 0); }
   public static void AddBODY_REF_TOKEN(FlatBufferBuilder builder, ulong BODY_REF_TOKEN) { builder.AddUlong(47, BODY_REF_TOKEN, 0); }
   public static void AddBODY_REF_SIZE(FlatBufferBuilder builder, ulong BODY_REF_SIZE) { builder.AddUlong(48, BODY_REF_SIZE, 0); }
+  public static void AddRESUME_CURSOR(FlatBufferBuilder builder, StringOffset RESUME_CURSOROffset) { builder.AddOffset(49, RESUME_CURSOROffset.Value, 0); }
   public static Offset<QRP> EndQRP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<QRP>(o);
@@ -466,6 +479,7 @@ public struct QRP : IFlatbufferObject
     _o.HTTP_STATUS = this.HTTP_STATUS;
     _o.BODY_REF_TOKEN = this.BODY_REF_TOKEN;
     _o.BODY_REF_SIZE = this.BODY_REF_SIZE;
+    _o.RESUME_CURSOR = this.RESUME_CURSOR;
   }
   public static Offset<QRP> Pack(FlatBufferBuilder builder, QRPT _o) {
     if (_o == null) return default(Offset<QRP>);
@@ -516,6 +530,7 @@ public struct QRP : IFlatbufferObject
       for (var _j = 0; _j < __TABLES.Length; ++_j) { __TABLES[_j] = QRPTable.Pack(builder, _o.TABLES[_j]); }
       _TABLES = CreateTABLESVector(builder, __TABLES);
     }
+    var _RESUME_CURSOR = _o.RESUME_CURSOR == null ? default(StringOffset) : builder.CreateString(_o.RESUME_CURSOR);
     return CreateQRP(
       builder,
       _o.KIND,
@@ -566,7 +581,8 @@ public struct QRP : IFlatbufferObject
       _o.MAX_BYTES,
       _o.HTTP_STATUS,
       _o.BODY_REF_TOKEN,
-      _o.BODY_REF_SIZE);
+      _o.BODY_REF_SIZE,
+      _RESUME_CURSOR);
   }
 }
 
@@ -621,6 +637,7 @@ public class QRPT
   public ushort HTTP_STATUS { get; set; }
   public ulong BODY_REF_TOKEN { get; set; }
   public ulong BODY_REF_SIZE { get; set; }
+  public string RESUME_CURSOR { get; set; }
 
   public QRPT() {
     this.KIND = qrpKind.Request;
@@ -672,6 +689,7 @@ public class QRPT
     this.HTTP_STATUS = 0;
     this.BODY_REF_TOKEN = 0;
     this.BODY_REF_SIZE = 0;
+    this.RESUME_CURSOR = null;
   }
   public static QRPT DeserializeFromBinary(byte[] fbBuffer) {
     return QRP.GetRootAsQRP(new ByteBuffer(fbBuffer)).UnPack();
@@ -738,6 +756,7 @@ static public class QRPVerify
       && verifier.VerifyField(tablePos, 96 /*HTTP_STATUS*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyField(tablePos, 98 /*BODY_REF_TOKEN*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyField(tablePos, 100 /*BODY_REF_SIZE*/, 8 /*ulong*/, 8, false)
+      && verifier.VerifyString(tablePos, 102 /*RESUME_CURSOR*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

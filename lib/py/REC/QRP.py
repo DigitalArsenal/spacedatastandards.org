@@ -508,8 +508,18 @@ class QRP(object):
             return self._tab.Get(flatbuffers.number_types.Uint64Flags, o + self._tab.Pos)
         return 0
 
+    # Opaque cursor that resumes after the last row of this complete scan;
+    # present on the last page; a request with it returns only rows stored
+    # after that point, and its own last page carries a fresh RESUME_CURSOR.
+    # QRP
+    def RESUME_CURSOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def QRPStart(builder):
-    builder.StartObject(49)
+    builder.StartObject(50)
 
 def Start(builder):
     QRPStart(builder)
@@ -868,6 +878,12 @@ def QRPAddBODY_REF_SIZE(builder, BODY_REF_SIZE):
 def AddBODY_REF_SIZE(builder, BODY_REF_SIZE):
     QRPAddBODY_REF_SIZE(builder, BODY_REF_SIZE)
 
+def QRPAddRESUME_CURSOR(builder, RESUME_CURSOR):
+    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(RESUME_CURSOR), 0)
+
+def AddRESUME_CURSOR(builder, RESUME_CURSOR):
+    QRPAddRESUME_CURSOR(builder, RESUME_CURSOR)
+
 def QRPEnd(builder):
     return builder.EndObject()
 
@@ -938,6 +954,7 @@ class QRPT(object):
         HTTP_STATUS = 0,
         BODY_REF_TOKEN = 0,
         BODY_REF_SIZE = 0,
+        RESUME_CURSOR = None,
     ):
         self.KIND = KIND  # type: int
         self.STATUS = STATUS  # type: int
@@ -988,6 +1005,7 @@ class QRPT(object):
         self.HTTP_STATUS = HTTP_STATUS  # type: int
         self.BODY_REF_TOKEN = BODY_REF_TOKEN  # type: int
         self.BODY_REF_SIZE = BODY_REF_SIZE  # type: int
+        self.RESUME_CURSOR = RESUME_CURSOR  # type: Optional[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -1094,6 +1112,7 @@ class QRPT(object):
         self.HTTP_STATUS = QRP.HTTP_STATUS()
         self.BODY_REF_TOKEN = QRP.BODY_REF_TOKEN()
         self.BODY_REF_SIZE = QRP.BODY_REF_SIZE()
+        self.RESUME_CURSOR = QRP.RESUME_CURSOR()
 
     # QRPT
     def Pack(self, builder):
@@ -1171,6 +1190,8 @@ class QRPT(object):
             for i in reversed(range(len(self.TABLES))):
                 builder.PrependUOffsetTRelative(TABLESlist[i])
             TABLES = builder.EndVector()
+        if self.RESUME_CURSOR is not None:
+            RESUME_CURSOR = builder.CreateString(self.RESUME_CURSOR)
         QRPStart(builder)
         QRPAddKIND(builder, self.KIND)
         QRPAddSTATUS(builder, self.STATUS)
@@ -1243,5 +1264,7 @@ class QRPT(object):
         QRPAddHTTP_STATUS(builder, self.HTTP_STATUS)
         QRPAddBODY_REF_TOKEN(builder, self.BODY_REF_TOKEN)
         QRPAddBODY_REF_SIZE(builder, self.BODY_REF_SIZE)
+        if self.RESUME_CURSOR is not None:
+            QRPAddRESUME_CURSOR(builder, RESUME_CURSOR)
         QRP = QRPEnd(builder)
         return QRP

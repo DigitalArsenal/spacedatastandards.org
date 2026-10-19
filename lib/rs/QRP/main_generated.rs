@@ -1881,6 +1881,7 @@ impl<'a> QRP<'a> {
     pub const VT_HTTP_STATUS: ::flatbuffers::VOffsetT = 96;
     pub const VT_BODY_REF_TOKEN: ::flatbuffers::VOffsetT = 98;
     pub const VT_BODY_REF_SIZE: ::flatbuffers::VOffsetT = 100;
+    pub const VT_RESUME_CURSOR: ::flatbuffers::VOffsetT = 102;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1905,6 +1906,7 @@ impl<'a> QRP<'a> {
         builder.add_TOTAL_COUNT(args.TOTAL_COUNT);
         builder.add_TO_EPOCH_MS(args.TO_EPOCH_MS);
         builder.add_FROM_EPOCH_MS(args.FROM_EPOCH_MS);
+        if let Some(x) = args.RESUME_CURSOR { builder.add_RESUME_CURSOR(x); }
         builder.add_MAX_ELAPSED_MS(args.MAX_ELAPSED_MS);
         if let Some(x) = args.TABLES { builder.add_TABLES(x); }
         if let Some(x) = args.ROWS { builder.add_ROWS(x); }
@@ -2039,6 +2041,9 @@ impl<'a> QRP<'a> {
         let HTTP_STATUS = self.HTTP_STATUS();
         let BODY_REF_TOKEN = self.BODY_REF_TOKEN();
         let BODY_REF_SIZE = self.BODY_REF_SIZE();
+        let RESUME_CURSOR = self.RESUME_CURSOR().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
         QRPT {
             KIND,
             STATUS,
@@ -2089,6 +2094,7 @@ impl<'a> QRP<'a> {
             HTTP_STATUS,
             BODY_REF_TOKEN,
             BODY_REF_SIZE,
+            RESUME_CURSOR,
         }
     }
 
@@ -2529,6 +2535,17 @@ impl<'a> QRP<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<u64>(QRP::VT_BODY_REF_SIZE, Some(0)).unwrap()}
     }
+
+    /// Opaque cursor that resumes after the last row of this complete scan;
+    /// present on the last page; a request with it returns only rows stored
+    /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+    #[inline]
+    pub fn RESUME_CURSOR(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(QRP::VT_RESUME_CURSOR, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for QRP<'_> {
@@ -2586,6 +2603,7 @@ impl ::flatbuffers::Verifiable for QRP<'_> {
             .visit_field::<u16>("HTTP_STATUS", Self::VT_HTTP_STATUS, false)?
             .visit_field::<u64>("BODY_REF_TOKEN", Self::VT_BODY_REF_TOKEN, false)?
             .visit_field::<u64>("BODY_REF_SIZE", Self::VT_BODY_REF_SIZE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("RESUME_CURSOR", Self::VT_RESUME_CURSOR, false)?
             .finish();
         Ok(())
     }
@@ -2641,6 +2659,7 @@ pub struct QRPArgs<'a> {
     pub HTTP_STATUS: u16,
     pub BODY_REF_TOKEN: u64,
     pub BODY_REF_SIZE: u64,
+    pub RESUME_CURSOR: Option<::flatbuffers::WIPOffset<&'a str>>,
 }
 
 impl<'a> Default for QRPArgs<'a> {
@@ -2696,6 +2715,7 @@ impl<'a> Default for QRPArgs<'a> {
             HTTP_STATUS: 0,
             BODY_REF_TOKEN: 0,
             BODY_REF_SIZE: 0,
+            RESUME_CURSOR: None,
         }
     }
 }
@@ -2952,6 +2972,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> QRPBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_RESUME_CURSOR(&mut self, RESUME_CURSOR: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(QRP::VT_RESUME_CURSOR, RESUME_CURSOR);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> QRPBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         QRPBuilder {
@@ -3019,6 +3044,7 @@ impl ::core::fmt::Debug for QRP<'_> {
         ds.field("HTTP_STATUS", &self.HTTP_STATUS());
         ds.field("BODY_REF_TOKEN", &self.BODY_REF_TOKEN());
         ds.field("BODY_REF_SIZE", &self.BODY_REF_SIZE());
+        ds.field("RESUME_CURSOR", &self.RESUME_CURSOR());
         ds.finish()
     }
 }
@@ -3075,6 +3101,7 @@ pub struct QRPT {
     pub HTTP_STATUS: u16,
     pub BODY_REF_TOKEN: u64,
     pub BODY_REF_SIZE: u64,
+    pub RESUME_CURSOR: Option<alloc::string::String>,
 }
 
 impl Default for QRPT {
@@ -3129,6 +3156,7 @@ impl Default for QRPT {
             HTTP_STATUS: 0,
             BODY_REF_TOKEN: 0,
             BODY_REF_SIZE: 0,
+            RESUME_CURSOR: None,
         }
     }
 }
@@ -3231,6 +3259,9 @@ impl QRPT {
         let HTTP_STATUS = self.HTTP_STATUS;
         let BODY_REF_TOKEN = self.BODY_REF_TOKEN;
         let BODY_REF_SIZE = self.BODY_REF_SIZE;
+        let RESUME_CURSOR = self.RESUME_CURSOR.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
         QRP::create(_fbb, &QRPArgs{
             KIND,
             STATUS,
@@ -3281,6 +3312,7 @@ impl QRPT {
             HTTP_STATUS,
             BODY_REF_TOKEN,
             BODY_REF_SIZE,
+            RESUME_CURSOR,
         })
     }
 }

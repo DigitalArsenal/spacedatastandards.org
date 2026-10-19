@@ -462,13 +462,18 @@ class QRP : flatbuffers.handle
         return flatbuffers.field_uint64(buf_, pos_, 98, 0)
     def BODY_REF_SIZE() -> int:
         return flatbuffers.field_uint64(buf_, pos_, 100, 0)
+    /// Opaque cursor that resumes after the last row of this complete scan;
+    /// present on the last page; a request with it returns only rows stored
+    /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+    def RESUME_CURSOR() -> string:
+        return flatbuffers.field_string(buf_, pos_, 102)
 
 def GetRootAsQRP(buf:string): return QRP { buf, flatbuffers.indirect(buf, 0) }
 
 struct QRPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(49)
+        b_.StartObject(50)
         return this
     def add_KIND(KIND:qrpKind):
         b_.PrependInt8Slot(0, KIND, 0)
@@ -616,6 +621,9 @@ struct QRPBuilder:
         return this
     def add_BODY_REF_SIZE(BODY_REF_SIZE:int):
         b_.PrependUint64Slot(48, BODY_REF_SIZE, 0)
+        return this
+    def add_RESUME_CURSOR(RESUME_CURSOR:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(49, RESUME_CURSOR)
         return this
     def end():
         return b_.EndObject()

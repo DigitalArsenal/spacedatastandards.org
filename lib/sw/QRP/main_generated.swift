@@ -502,6 +502,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let HTTP_STATUS: VOffset = 96
     static let BODY_REF_TOKEN: VOffset = 98
     static let BODY_REF_SIZE: VOffset = 100
+    static let RESUME_CURSOR: VOffset = 102
   }
 
   public var KIND: qrpKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .request : qrpKind(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .request }
@@ -616,7 +617,12 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  (single use), and the byte size of what it refers to. 0 = inline.
   public var BODY_REF_TOKEN: UInt64 { let o = _accessor.offset(VT.BODY_REF_TOKEN); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
   public var BODY_REF_SIZE: UInt64 { let o = _accessor.offset(VT.BODY_REF_SIZE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt64.self, at: o) }
-  public static func startQRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 49) }
+  ///  Opaque cursor that resumes after the last row of this complete scan;
+  ///  present on the last page; a request with it returns only rows stored
+  ///  after that point, and its own last page carries a fresh RESUME_CURSOR.
+  public var RESUME_CURSOR: String? { let o = _accessor.offset(VT.RESUME_CURSOR); return o == 0 ? nil : _accessor.string(at: o) }
+  public var RESUME_CURSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.RESUME_CURSOR) }
+  public static func startQRP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 50) }
   public static func add(KIND: qrpKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
   public static func add(STATUS: qrpStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VT.STATUS) }
   public static func add(ERROR_CODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ERROR_CODE, at: VT.ERROR_CODE) }
@@ -670,6 +676,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(HTTP_STATUS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HTTP_STATUS, def: 0, at: VT.HTTP_STATUS) }
   public static func add(BODY_REF_TOKEN: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_REF_TOKEN, def: 0, at: VT.BODY_REF_TOKEN) }
   public static func add(BODY_REF_SIZE: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BODY_REF_SIZE, def: 0, at: VT.BODY_REF_SIZE) }
+  public static func add(RESUME_CURSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESUME_CURSOR, at: VT.RESUME_CURSOR) }
   public static func endQRP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createQRP(
     _ fbb: inout FlatBufferBuilder,
@@ -721,7 +728,8 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MAX_BYTES: UInt64 = 0,
     HTTP_STATUS: UInt16 = 0,
     BODY_REF_TOKEN: UInt64 = 0,
-    BODY_REF_SIZE: UInt64 = 0
+    BODY_REF_SIZE: UInt64 = 0,
+    RESUME_CURSOROffset RESUME_CURSOR: Offset = Offset()
   ) -> Offset {
     let __start = QRP.startQRP(&fbb)
     QRP.add(KIND: KIND, &fbb)
@@ -773,6 +781,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     QRP.add(HTTP_STATUS: HTTP_STATUS, &fbb)
     QRP.add(BODY_REF_TOKEN: BODY_REF_TOKEN, &fbb)
     QRP.add(BODY_REF_SIZE: BODY_REF_SIZE, &fbb)
+    QRP.add(RESUME_CURSOR: RESUME_CURSOR, &fbb)
     return QRP.endQRP(&fbb, start: __start)
   }
 
@@ -827,6 +836,7 @@ public struct QRP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.HTTP_STATUS, fieldName: "HTTP_STATUS", required: false, type: UInt16.self)
     try _v.visit(field: VT.BODY_REF_TOKEN, fieldName: "BODY_REF_TOKEN", required: false, type: UInt64.self)
     try _v.visit(field: VT.BODY_REF_SIZE, fieldName: "BODY_REF_SIZE", required: false, type: UInt64.self)
+    try _v.visit(field: VT.RESUME_CURSOR, fieldName: "RESUME_CURSOR", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

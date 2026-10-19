@@ -839,7 +839,8 @@ struct QRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MAX_BYTES = 94,
     VT_HTTP_STATUS = 96,
     VT_BODY_REF_TOKEN = 98,
-    VT_BODY_REF_SIZE = 100
+    VT_BODY_REF_SIZE = 100,
+    VT_RESUME_CURSOR = 102
   };
   qrpKind KIND() const {
     return static_cast<qrpKind>(GetField<int8_t>(VT_KIND, 0));
@@ -1034,6 +1035,12 @@ struct QRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint64_t BODY_REF_SIZE() const {
     return GetField<uint64_t>(VT_BODY_REF_SIZE, 0);
   }
+  /// Opaque cursor that resumes after the last row of this complete scan;
+  /// present on the last page; a request with it returns only rows stored
+  /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+  const ::flatbuffers::String *RESUME_CURSOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RESUME_CURSOR);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1113,6 +1120,8 @@ struct QRP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint16_t>(verifier, VT_HTTP_STATUS, 2) &&
            VerifyField<uint64_t>(verifier, VT_BODY_REF_TOKEN, 8) &&
            VerifyField<uint64_t>(verifier, VT_BODY_REF_SIZE, 8) &&
+           VerifyOffset(verifier, VT_RESUME_CURSOR) &&
+           verifier.VerifyString(RESUME_CURSOR()) &&
            verifier.EndTable();
   }
 };
@@ -1268,6 +1277,9 @@ struct QRPBuilder {
   void add_BODY_REF_SIZE(uint64_t BODY_REF_SIZE) {
     fbb_.AddElement<uint64_t>(QRP::VT_BODY_REF_SIZE, BODY_REF_SIZE, 0);
   }
+  void add_RESUME_CURSOR(::flatbuffers::Offset<::flatbuffers::String> RESUME_CURSOR) {
+    fbb_.AddOffset(QRP::VT_RESUME_CURSOR, RESUME_CURSOR);
+  }
   explicit QRPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1329,7 +1341,8 @@ inline ::flatbuffers::Offset<QRP> CreateQRP(
     uint64_t MAX_BYTES = 0,
     uint16_t HTTP_STATUS = 0,
     uint64_t BODY_REF_TOKEN = 0,
-    uint64_t BODY_REF_SIZE = 0) {
+    uint64_t BODY_REF_SIZE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RESUME_CURSOR = 0) {
   QRPBuilder builder_(_fbb);
   builder_.add_BODY_REF_SIZE(BODY_REF_SIZE);
   builder_.add_BODY_REF_TOKEN(BODY_REF_TOKEN);
@@ -1343,6 +1356,7 @@ inline ::flatbuffers::Offset<QRP> CreateQRP(
   builder_.add_TOTAL_COUNT(TOTAL_COUNT);
   builder_.add_TO_EPOCH_MS(TO_EPOCH_MS);
   builder_.add_FROM_EPOCH_MS(FROM_EPOCH_MS);
+  builder_.add_RESUME_CURSOR(RESUME_CURSOR);
   builder_.add_MAX_ELAPSED_MS(MAX_ELAPSED_MS);
   builder_.add_TABLES(TABLES);
   builder_.add_ROWS(ROWS);
@@ -1433,7 +1447,8 @@ inline ::flatbuffers::Offset<QRP> CreateQRPDirect(
     uint64_t MAX_BYTES = 0,
     uint16_t HTTP_STATUS = 0,
     uint64_t BODY_REF_TOKEN = 0,
-    uint64_t BODY_REF_SIZE = 0) {
+    uint64_t BODY_REF_SIZE = 0,
+    const char *RESUME_CURSOR = nullptr) {
   auto ERROR_CODE__ = ERROR_CODE ? _fbb.CreateString(ERROR_CODE) : 0;
   auto MESSAGE__ = MESSAGE ? _fbb.CreateString(MESSAGE) : 0;
   auto SCHEMA_NAME__ = SCHEMA_NAME ? _fbb.CreateString(SCHEMA_NAME) : 0;
@@ -1456,6 +1471,7 @@ inline ::flatbuffers::Offset<QRP> CreateQRPDirect(
   auto PARAMETERS__ = PARAMETERS ? _fbb.CreateVector<::flatbuffers::Offset<QRPValue>>(*PARAMETERS) : 0;
   auto ROWS__ = ROWS ? _fbb.CreateVector<::flatbuffers::Offset<QRPRow>>(*ROWS) : 0;
   auto TABLES__ = TABLES ? _fbb.CreateVector<::flatbuffers::Offset<QRPTable>>(*TABLES) : 0;
+  auto RESUME_CURSOR__ = RESUME_CURSOR ? _fbb.CreateString(RESUME_CURSOR) : 0;
   return CreateQRP(
       _fbb,
       KIND,
@@ -1506,7 +1522,8 @@ inline ::flatbuffers::Offset<QRP> CreateQRPDirect(
       MAX_BYTES,
       HTTP_STATUS,
       BODY_REF_TOKEN,
-      BODY_REF_SIZE);
+      BODY_REF_SIZE,
+      RESUME_CURSOR__);
 }
 
 inline const QRP *GetQRP(const void *buf) {

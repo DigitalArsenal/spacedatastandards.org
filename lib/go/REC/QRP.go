@@ -1045,8 +1045,26 @@ func (rcv *QRP) MutateBodyRefSize(n uint64) bool {
 	return rcv.MutateBODY_REF_SIZE(n)
 }
 
+/// Opaque cursor that resumes after the last row of this complete scan;
+/// present on the last page; a request with it returns only rows stored
+/// after that point, and its own last page carries a fresh RESUME_CURSOR.
+func (rcv *QRP) RESUME_CURSOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *QRP) ResumeCursor() []byte {
+	return rcv.RESUME_CURSOR()
+}
+
+/// Opaque cursor that resumes after the last row of this complete scan;
+/// present on the last page; a request with it returns only rows stored
+/// after that point, and its own last page carries a fresh RESUME_CURSOR.
 func QRPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(49)
+	builder.StartObject(50)
 }
 func QRPAddKIND(builder *flatbuffers.Builder, KIND qrpKind) {
 	builder.PrependInt8Slot(0, int8(KIND), 0)
@@ -1371,6 +1389,12 @@ func QRPAddBODY_REF_SIZE(builder *flatbuffers.Builder, BODY_REF_SIZE uint64) {
 }
 func QRPAddBodyRefSize(builder *flatbuffers.Builder, BODY_REF_SIZE uint64) {
 	QRPAddBODY_REF_SIZE(builder, BODY_REF_SIZE)
+}
+func QRPAddRESUME_CURSOR(builder *flatbuffers.Builder, RESUME_CURSOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(RESUME_CURSOR), 0)
+}
+func QRPAddResumeCursor(builder *flatbuffers.Builder, RESUME_CURSOR flatbuffers.UOffsetT) {
+	QRPAddRESUME_CURSOR(builder, RESUME_CURSOR)
 }
 func QRPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

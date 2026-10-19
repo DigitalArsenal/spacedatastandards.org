@@ -1,5 +1,5 @@
-// Hash: 2d18a83cad64a1abffaa368ca93009937c79b93213588b234eb9a2e8f936f4ed
-// Version: 1.207.1
+// Hash: faf94c0cd27f0784520811b831f838cb9ed01b2b70c6e84a687b29ba29d721ed
+// Version: 1.207.2
 // -----------------------------------END_HEADER
 /// Query Page (QRP)
 /// Description
@@ -241,6 +241,10 @@ table QRP {
   /// (single use), and the byte size of what it refers to. 0 = inline.
   BODY_REF_TOKEN: uint64;
   BODY_REF_SIZE: uint64;
+  /// Opaque cursor that resumes after the last row of this complete scan;
+  /// present on the last page; a request with it returns only rows stored
+  /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+  RESUME_CURSOR: string;
 }
 
 root_type QRP;

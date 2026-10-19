@@ -67263,6 +67263,10 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615
+                        },
+                        "RESUME_CURSOR": {
+                            "type": "string",
+                            "description": "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
                         }
                     },
                     "additionalProperties": false
@@ -151872,6 +151876,10 @@
                             "type": "integer",
                             "minimum": 0,
                             "maximum": 18446744073709551615
+                        },
+                        "RESUME_CURSOR": {
+                            "type": "string",
+                            "description": "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
                         }
                     },
                     "additionalProperties": false

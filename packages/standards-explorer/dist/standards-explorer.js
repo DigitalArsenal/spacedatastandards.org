@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.256.1+1792361612000",
+  version: "1.257.0+1792374864021",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -9310,8 +9310,8 @@ file_identifier "$PAP";`,
       ]
     },
     QRP: {
-      IDL: `// Hash: 2d18a83cad64a1abffaa368ca93009937c79b93213588b234eb9a2e8f936f4ed
-// Version: 1.207.1
+      IDL: `// Hash: faf94c0cd27f0784520811b831f838cb9ed01b2b70c6e84a687b29ba29d721ed
+// Version: 1.207.2
 // -----------------------------------END_HEADER
 /// Query Page (QRP)
 /// Description
@@ -9553,6 +9553,10 @@ table QRP {
   /// (single use), and the byte size of what it refers to. 0 = inline.
   BODY_REF_TOKEN: uint64;
   BODY_REF_SIZE: uint64;
+  /// Opaque cursor that resumes after the last row of this complete scan;
+  /// present on the last page; a request with it returns only rows stored
+  /// after that point, and its own last page carries a fresh RESUME_CURSOR.
+  RESUME_CURSOR: string;
 }
 
 root_type QRP;
@@ -99589,6 +99593,10 @@ verbatim what that source states about itself.`,
               type: "integer",
               minimum: 0,
               maximum: 18446744073709552e3
+            },
+            RESUME_CURSOR: {
+              type: "string",
+              description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
             }
           },
           additionalProperties: false
@@ -184320,6 +184328,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
               type: "integer",
               minimum: 0,
               maximum: 18446744073709552e3
+            },
+            RESUME_CURSOR: {
+              type: "string",
+              description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR."
             }
           },
           additionalProperties: false
@@ -473966,6 +473978,11 @@ verbatim what that source states about itself.`,
               minimum: 0,
               maximum: 18446744073709552e3,
               "x-flatbuffer-type": "uint64"
+            },
+            RESUME_CURSOR: {
+              type: "string",
+              description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false
@@ -640379,6 +640396,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               minimum: 0,
               maximum: 18446744073709552e3,
               "x-flatbuffer-type": "uint64"
+            },
+            RESUME_CURSOR: {
+              type: "string",
+              description: "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
+              "x-flatbuffer-type": "string"
             }
           },
           additionalProperties: false

@@ -750,6 +750,11 @@
           "minimum": 0,
           "maximum": 18446744073709551615,
           "x-flatbuffer-type": "uint64"
+        },
+        "RESUME_CURSOR": {
+          "type": "string",
+          "description": "Opaque cursor that resumes after the last row of this complete scan;\npresent on the last page; a request with it returns only rows stored\nafter that point, and its own last page carries a fresh RESUME_CURSOR.",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

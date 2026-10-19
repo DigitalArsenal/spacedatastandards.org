@@ -957,10 +957,15 @@ class QRP {
   int get bodyRefToken => BODY_REF_TOKEN;
   int get BODY_REF_SIZE => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 100, 0);
   int get bodyRefSize => BODY_REF_SIZE;
+  ///  Opaque cursor that resumes after the last row of this complete scan;
+  ///  present on the last page; a request with it returns only rows stored
+  ///  after that point, and its own last page carries a fresh RESUME_CURSOR.
+  String? get RESUME_CURSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  String? get resumeCursor => RESUME_CURSOR;
 
   @override
   String toString() {
-    return 'QRP{KIND: ${KIND}, STATUS: ${STATUS}, errorCode: ${errorCode}, MESSAGE: ${MESSAGE}, retryAfterMs: ${retryAfterMs}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, SQL: ${SQL}, SEARCH: ${SEARCH}, FILTERS: ${FILTERS}, sortField: ${sortField}, sortDesc: ${sortDesc}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}, producerPeerId: ${producerPeerId}, originId: ${originId}, fromEpochMs: ${fromEpochMs}, toEpochMs: ${toEpochMs}, PAGE: ${PAGE}, LIMIT: ${LIMIT}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, recordCount: ${recordCount}, totalCount: ${totalCount}, SCANNED: ${SCANNED}, STORED: ${STORED}, PARTIAL: ${PARTIAL}, TRUNCATED: ${TRUNCATED}, asOfMs: ${asOfMs}, STALE: ${STALE}, elapsedMs: ${elapsedMs}, generatedAtMs: ${generatedAtMs}, ETAG: ${ETAG}, CID: ${CID}, archiveId: ${archiveId}, COLUMNS: ${COLUMNS}, timeProfile: ${timeProfile}, profileEpochMs: ${profileEpochMs}, REPRESENTATION: ${REPRESENTATION}, PARAMETERS: ${PARAMETERS}, ROWS: ${ROWS}, TABLES: ${TABLES}, maxElapsedMs: ${maxElapsedMs}, maxRows: ${maxRows}, maxBytes: ${maxBytes}, httpStatus: ${httpStatus}, bodyRefToken: ${bodyRefToken}, bodyRefSize: ${bodyRefSize}}';
+    return 'QRP{KIND: ${KIND}, STATUS: ${STATUS}, errorCode: ${errorCode}, MESSAGE: ${MESSAGE}, retryAfterMs: ${retryAfterMs}, schemaName: ${schemaName}, fileIdentifier: ${fileIdentifier}, SQL: ${SQL}, SEARCH: ${SEARCH}, FILTERS: ${FILTERS}, sortField: ${sortField}, sortDesc: ${sortDesc}, providerId: ${providerId}, sourceName: ${sourceName}, batchId: ${batchId}, producerPeerId: ${producerPeerId}, originId: ${originId}, fromEpochMs: ${fromEpochMs}, toEpochMs: ${toEpochMs}, PAGE: ${PAGE}, LIMIT: ${LIMIT}, CURSOR: ${CURSOR}, nextCursor: ${nextCursor}, recordCount: ${recordCount}, totalCount: ${totalCount}, SCANNED: ${SCANNED}, STORED: ${STORED}, PARTIAL: ${PARTIAL}, TRUNCATED: ${TRUNCATED}, asOfMs: ${asOfMs}, STALE: ${STALE}, elapsedMs: ${elapsedMs}, generatedAtMs: ${generatedAtMs}, ETAG: ${ETAG}, CID: ${CID}, archiveId: ${archiveId}, COLUMNS: ${COLUMNS}, timeProfile: ${timeProfile}, profileEpochMs: ${profileEpochMs}, REPRESENTATION: ${REPRESENTATION}, PARAMETERS: ${PARAMETERS}, ROWS: ${ROWS}, TABLES: ${TABLES}, maxElapsedMs: ${maxElapsedMs}, maxRows: ${maxRows}, maxBytes: ${maxBytes}, httpStatus: ${httpStatus}, bodyRefToken: ${bodyRefToken}, bodyRefSize: ${bodyRefSize}, resumeCursor: ${resumeCursor}}';
   }
 }
 
@@ -978,7 +983,7 @@ class QRPBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(49);
+    fbBuilder.startTable(50);
   }
 
   int addKind(qrpKind? KIND) {
@@ -1177,6 +1182,10 @@ class QRPBuilder {
     fbBuilder.addUint64(48, BODY_REF_SIZE);
     return fbBuilder.offset;
   }
+  int addResumeCursorOffset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1233,6 +1242,7 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
   final int? _HTTP_STATUS;
   final int? _BODY_REF_TOKEN;
   final int? _BODY_REF_SIZE;
+  final String? _RESUME_CURSOR;
 
   QRPObjectBuilder({
     qrpKind? KIND,
@@ -1312,6 +1322,8 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
     int? bodyRefToken,
     int? BODY_REF_SIZE,
     int? bodyRefSize,
+    String? RESUME_CURSOR,
+    String? resumeCursor,
   })
       : _KIND = KIND,
         _STATUS = STATUS,
@@ -1361,7 +1373,8 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
         _MAX_BYTES = maxBytes ?? MAX_BYTES,
         _HTTP_STATUS = httpStatus ?? HTTP_STATUS,
         _BODY_REF_TOKEN = bodyRefToken ?? BODY_REF_TOKEN,
-        _BODY_REF_SIZE = bodyRefSize ?? BODY_REF_SIZE;
+        _BODY_REF_SIZE = bodyRefSize ?? BODY_REF_SIZE,
+        _RESUME_CURSOR = resumeCursor ?? RESUME_CURSOR;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1410,7 +1423,9 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_ROWS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? TABLESOffset = _TABLES == null ? null
         : fbBuilder.writeList(_TABLES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(49);
+    final int? RESUME_CURSOROffset = _RESUME_CURSOR == null ? null
+        : fbBuilder.writeString(_RESUME_CURSOR!);
+    fbBuilder.startTable(50);
     fbBuilder.addInt8(0, _KIND?.value);
     fbBuilder.addInt8(1, _STATUS?.value);
     fbBuilder.addOffset(2, ERROR_CODEOffset);
@@ -1460,6 +1475,7 @@ class QRPObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint16(46, _HTTP_STATUS);
     fbBuilder.addUint64(47, _BODY_REF_TOKEN);
     fbBuilder.addUint64(48, _BODY_REF_SIZE);
+    fbBuilder.addOffset(49, RESUME_CURSOROffset);
     return fbBuilder.endTable();
   }
 
