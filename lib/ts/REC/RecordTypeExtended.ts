@@ -42,5 +42,6 @@ export enum RecordTypeExtended {
   GLX = 282,
   FCK = 283,
   FMB = 284,
-  FSG = 285
+  FSG = 285,
+  PIN = 286
 }

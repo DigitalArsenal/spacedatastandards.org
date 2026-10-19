@@ -1,5 +1,5 @@
-// Hash: ce5d342221072b1f7dbf4ee13cd2c038795a48f1863be2bd690e470a57234228
-// Version: 1.44.84
+// Hash: 4874b302d263125763061797cded99feb7a396f49259c955feec74ea952d4ff5
+// Version: 1.44.85
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -176,6 +176,7 @@ include "../PCF/main.fbs";
 include "../PGM/main.fbs";
 include "../PHB/main.fbs";
 include "../PHY/main.fbs";
+include "../PIN/main.fbs";
 include "../PIV/main.fbs";
 include "../PKB/main.fbs";
 include "../PLD/main.fbs";
@@ -406,7 +407,8 @@ enum RecordTypeExtended : ushort {
   GLX = 282,
   FCK = 283,
   FMB = 284,
-  FSG = 285
+  FSG = 285,
+  PIN = 286
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

@@ -691,6 +691,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_FCK = 283
     RecordTypeExtended_FMB = 284
     RecordTypeExtended_FSG = 285
+    RecordTypeExtended_PIN = 286
 
 class Record
 

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.257.0+1792374864021",
+  version: "1.258.0+1792404106059",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -3002,6 +3002,92 @@ file_identifier "$GNP";`,
         "./dist/GNP/GNP.cpp.tar.gz",
         "./dist/GNP/GNP.kt.tar.gz",
         "./dist/GNP/GNP.ts.tar.gz"
+      ]
+    },
+    PIN: {
+      IDL: `// Hash: b0a5adc097df2ba861c36e21cf84b9c8d4d19e43751cddebdb889d84af2d5a22
+// Version: 1.257.0
+// -----------------------------------END_HEADER
+/// Node Pin Policy ($PIN)
+///
+/// What an SDN node keeps pinned in its IPFS blockstore. A pin keeps bytes out
+/// of IPFS garbage collection and lets other peers fetch them from the node by
+/// CID. Pinning is separate from storage: the node's own store keeps and serves
+/// its records and files by CID whether or not they are pinned.
+///
+/// The node's own $EPM and its account $EPMs are always pinned. Every other
+/// class is off until an operator turns it on. A rule names a class and,
+/// optionally, one feed within it; a feed rule overrides its class rule.
+///
+/// The node answers with its whole policy and what each rule holds. A client
+/// changes rules by sending a $PIN whose RULES carry only the rules to change
+/// (CLASS, FEED, ENABLED). The node applies them, pins or unpins the content
+/// they cover, and answers with its whole policy.
+
+/// What a pin holds. Append new values only; never reorder or reuse values.
+enum pinClass : ubyte {
+  /// The node's own $EPM. Always pinned.
+  NODE_EPM,
+  /// The $EPMs of the node's accounts. Always pinned.
+  ACCOUNT_EPM,
+  /// Dataset publications of a lane: manifests, shards, indexes, $PNM and
+  /// CAR archives. FEED is "<standard>/<provider>/<source>".
+  PUBLICATION,
+  /// Records published as open shares (share links).
+  SHARE,
+  /// Files a flow or module pins through its IPFS capability, such as star
+  /// catalogs, error models and ephemerides. FEED is the flow or module id.
+  FLOW_ASSET,
+  /// Content announced to the node in pubsub tips. FEED is the topic.
+  TIP,
+  /// Storefront listings and their artifacts.
+  STOREFRONT,
+  /// 3D asset models.
+  ASSET_MODEL,
+  /// Homepage site assets.
+  SITE_ASSET,
+  /// Profile photos of the node and its accounts.
+  PROFILE_PHOTO
+}
+
+/// One rule of the policy.
+table PINRule {
+  CLASS: pinClass = NODE_EPM;
+  /// Feed within the class; absent for the whole class.
+  FEED: string;
+  /// True when the node pins the content the rule covers.
+  ENABLED: bool;
+  /// True for a rule a client cannot change (NODE_EPM and ACCOUNT_EPM).
+  LOCKED: bool;
+  /// Root CIDs the node holds pinned under the rule.
+  PINNED_ROOTS: ulong;
+  /// Bytes the node holds pinned under the rule.
+  PINNED_BYTES: ulong;
+}
+
+table PIN {
+  RULES: [PINRule];
+  /// Unix milliseconds of the last change to the policy; 0 = never changed.
+  UPDATED_AT: ulong;
+}
+
+root_type PIN;
+file_identifier "$PIN";`,
+      files: [
+        "./dist/PIN/PIN.sw.tar.gz",
+        "./dist/PIN/PIN.py.tar.gz",
+        "./dist/PIN/PIN.lob.tar.gz",
+        "./dist/PIN/PIN.go.tar.gz",
+        "./dist/PIN/PIN.js.tar.gz",
+        "./dist/PIN/PIN.dart.tar.gz",
+        "./dist/PIN/PIN.cs.tar.gz",
+        "./dist/PIN/PIN.java.tar.gz",
+        "./dist/PIN/PIN.rs.tar.gz",
+        "./dist/PIN/PIN.php.tar.gz",
+        "./dist/PIN/PIN.json.tar.gz",
+        "./dist/PIN/PIN.cpp.tar.gz",
+        "./dist/PIN/PIN.kt.tar.gz",
+        "./dist/PIN/PIN.ts.tar.gz"
       ]
     },
     MST: {
@@ -12879,8 +12965,8 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: ce5d342221072b1f7dbf4ee13cd2c038795a48f1863be2bd690e470a57234228
-// Version: 1.44.84
+      IDL: `// Hash: 4874b302d263125763061797cded99feb7a396f49259c955feec74ea952d4ff5
+// Version: 1.44.85
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -13057,6 +13143,7 @@ include "../PCF/main.fbs";
 include "../PGM/main.fbs";
 include "../PHB/main.fbs";
 include "../PHY/main.fbs";
+include "../PIN/main.fbs";
 include "../PIV/main.fbs";
 include "../PKB/main.fbs";
 include "../PLD/main.fbs";
@@ -13287,7 +13374,8 @@ enum RecordTypeExtended : ushort {
   GLX = 282,
   FCK = 283,
   FMB = 284,
-  FSG = 285
+  FSG = 285,
+  PIN = 286
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -44859,6 +44947,79 @@ Decoding applies the inverses from the last back.`
         }
       },
       $ref: "#/definitions/GNP"
+    },
+    PIN: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pinClass: {
+          type: "string",
+          enum: [
+            "NODE_EPM",
+            "ACCOUNT_EPM",
+            "PUBLICATION",
+            "SHARE",
+            "FLOW_ASSET",
+            "TIP",
+            "STOREFRONT",
+            "ASSET_MODEL",
+            "SITE_ASSET",
+            "PROFILE_PHOTO"
+          ]
+        },
+        PINRule: {
+          type: "object",
+          description: "One rule of the policy.",
+          properties: {
+            CLASS: {
+              $ref: "#/definitions/pinClass"
+            },
+            FEED: {
+              type: "string",
+              description: "Feed within the class; absent for the whole class."
+            },
+            ENABLED: {
+              type: "boolean",
+              description: "True when the node pins the content the rule covers."
+            },
+            LOCKED: {
+              type: "boolean",
+              description: "True for a rule a client cannot change (NODE_EPM and ACCOUNT_EPM)."
+            },
+            PINNED_ROOTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Root CIDs the node holds pinned under the rule."
+            },
+            PINNED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Bytes the node holds pinned under the rule."
+            }
+          },
+          additionalProperties: false
+        },
+        PIN: {
+          type: "object",
+          properties: {
+            RULES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PINRule"
+              }
+            },
+            UPDATED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix milliseconds of the last change to the policy; 0 = never changed."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/PIN"
     },
     MST: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -129617,6 +129778,21 @@ format class are named by $NCD's container format.`
             "CUSTOM"
           ]
         },
+        pinClass: {
+          type: "string",
+          enum: [
+            "NODE_EPM",
+            "ACCOUNT_EPM",
+            "PUBLICATION",
+            "SHARE",
+            "FLOW_ASSET",
+            "TIP",
+            "STOREFRONT",
+            "ASSET_MODEL",
+            "SITE_ASSET",
+            "PROFILE_PHOTO"
+          ]
+        },
         pivStatus: {
           type: "string",
           enum: [
@@ -132533,7 +132709,8 @@ format class are named by $NCD's container format.`
             "GLX",
             "FCK",
             "FMB",
-            "FSG"
+            "FSG",
+            "PIN"
           ]
         },
         ABA: {
@@ -182297,6 +182474,58 @@ turned into a number.`
             },
             THERMAL_STATE: {
               type: "string"
+            }
+          },
+          additionalProperties: false
+        },
+        PINRule: {
+          type: "object",
+          description: "One rule of the policy.",
+          properties: {
+            CLASS: {
+              $ref: "#/definitions/pinClass"
+            },
+            FEED: {
+              type: "string",
+              description: "Feed within the class; absent for the whole class."
+            },
+            ENABLED: {
+              type: "boolean",
+              description: "True when the node pins the content the rule covers."
+            },
+            LOCKED: {
+              type: "boolean",
+              description: "True for a rule a client cannot change (NODE_EPM and ACCOUNT_EPM)."
+            },
+            PINNED_ROOTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Root CIDs the node holds pinned under the rule."
+            },
+            PINNED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Bytes the node holds pinned under the rule."
+            }
+          },
+          additionalProperties: false
+        },
+        PIN: {
+          type: "object",
+          properties: {
+            RULES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PINRule"
+              }
+            },
+            UPDATED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix milliseconds of the last change to the policy; 0 = never changed."
             }
           },
           additionalProperties: false
@@ -342563,6 +342792,177 @@ Decoding applies the inverses from the last back.`,
       $ref: "#/definitions/GNP",
       "x-flatbuffer-root-type": "GNP",
       "x-flatbuffer-file-identifier": "$GNP"
+    },
+    PIN: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pinClass: {
+          type: "string",
+          enum: [
+            "NODE_EPM",
+            "ACCOUNT_EPM",
+            "PUBLICATION",
+            "SHARE",
+            "FLOW_ASSET",
+            "TIP",
+            "STOREFRONT",
+            "ASSET_MODEL",
+            "SITE_ASSET",
+            "PROFILE_PHOTO"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NODE_EPM: {
+              value: 0,
+              description: "The node's own $EPM. Always pinned."
+            },
+            ACCOUNT_EPM: {
+              value: 1,
+              description: "The $EPMs of the node's accounts. Always pinned."
+            },
+            PUBLICATION: {
+              value: 2,
+              description: 'Dataset publications of a lane: manifests, shards, indexes, $PNM and CAR archives. FEED is "<standard>/<provider>/<source>".'
+            },
+            SHARE: {
+              value: 3,
+              description: "Records published as open shares (share links)."
+            },
+            FLOW_ASSET: {
+              value: 4,
+              description: "Files a flow or module pins through its IPFS capability, such as star catalogs, error models and ephemerides. FEED is the flow or module id."
+            },
+            TIP: {
+              value: 5,
+              description: "Content announced to the node in pubsub tips. FEED is the topic."
+            },
+            STOREFRONT: {
+              value: 6,
+              description: "Storefront listings and their artifacts."
+            },
+            ASSET_MODEL: {
+              value: 7,
+              description: "3D asset models."
+            },
+            SITE_ASSET: {
+              value: 8,
+              description: "Homepage site assets."
+            },
+            PROFILE_PHOTO: {
+              value: 9,
+              description: "Profile photos of the node and its accounts."
+            }
+          }
+        },
+        PINRule: {
+          type: "object",
+          description: "One rule of the policy.",
+          properties: {
+            CLASS: {
+              $ref: "#/definitions/pinClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NODE_EPM: {
+                  value: 0,
+                  description: "The node's own $EPM. Always pinned."
+                },
+                ACCOUNT_EPM: {
+                  value: 1,
+                  description: "The $EPMs of the node's accounts. Always pinned."
+                },
+                PUBLICATION: {
+                  value: 2,
+                  description: 'Dataset publications of a lane: manifests, shards, indexes, $PNM and CAR archives. FEED is "<standard>/<provider>/<source>".'
+                },
+                SHARE: {
+                  value: 3,
+                  description: "Records published as open shares (share links)."
+                },
+                FLOW_ASSET: {
+                  value: 4,
+                  description: "Files a flow or module pins through its IPFS capability, such as star catalogs, error models and ephemerides. FEED is the flow or module id."
+                },
+                TIP: {
+                  value: 5,
+                  description: "Content announced to the node in pubsub tips. FEED is the topic."
+                },
+                STOREFRONT: {
+                  value: 6,
+                  description: "Storefront listings and their artifacts."
+                },
+                ASSET_MODEL: {
+                  value: 7,
+                  description: "3D asset models."
+                },
+                SITE_ASSET: {
+                  value: 8,
+                  description: "Homepage site assets."
+                },
+                PROFILE_PHOTO: {
+                  value: 9,
+                  description: "Profile photos of the node and its accounts."
+                }
+              },
+              "x-flatbuffer-default": "NODE_EPM"
+            },
+            FEED: {
+              type: "string",
+              description: "Feed within the class; absent for the whole class.",
+              "x-flatbuffer-type": "string"
+            },
+            ENABLED: {
+              type: "boolean",
+              description: "True when the node pins the content the rule covers.",
+              "x-flatbuffer-type": "bool"
+            },
+            LOCKED: {
+              type: "boolean",
+              description: "True for a rule a client cannot change (NODE_EPM and ACCOUNT_EPM).",
+              "x-flatbuffer-type": "bool"
+            },
+            PINNED_ROOTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Root CIDs the node holds pinned under the rule.",
+              "x-flatbuffer-type": "ulong"
+            },
+            PINNED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Bytes the node holds pinned under the rule.",
+              "x-flatbuffer-type": "ulong"
+            }
+          },
+          additionalProperties: false
+        },
+        PIN: {
+          type: "object",
+          properties: {
+            RULES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PINRule"
+              },
+              "x-flatbuffer-type": "[PINRule]"
+            },
+            UPDATED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix milliseconds of the last change to the policy; 0 = never changed.",
+              "x-flatbuffer-type": "ulong"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/PIN",
+      "x-flatbuffer-root-type": "PIN",
+      "x-flatbuffer-file-identifier": "$PIN"
     },
     MST: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -547228,6 +547628,65 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        pinClass: {
+          type: "string",
+          enum: [
+            "NODE_EPM",
+            "ACCOUNT_EPM",
+            "PUBLICATION",
+            "SHARE",
+            "FLOW_ASSET",
+            "TIP",
+            "STOREFRONT",
+            "ASSET_MODEL",
+            "SITE_ASSET",
+            "PROFILE_PHOTO"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            NODE_EPM: {
+              value: 0,
+              description: "The node's own $EPM. Always pinned."
+            },
+            ACCOUNT_EPM: {
+              value: 1,
+              description: "The $EPMs of the node's accounts. Always pinned."
+            },
+            PUBLICATION: {
+              value: 2,
+              description: 'Dataset publications of a lane: manifests, shards, indexes, $PNM and CAR archives. FEED is "<standard>/<provider>/<source>".'
+            },
+            SHARE: {
+              value: 3,
+              description: "Records published as open shares (share links)."
+            },
+            FLOW_ASSET: {
+              value: 4,
+              description: "Files a flow or module pins through its IPFS capability, such as star catalogs, error models and ephemerides. FEED is the flow or module id."
+            },
+            TIP: {
+              value: 5,
+              description: "Content announced to the node in pubsub tips. FEED is the topic."
+            },
+            STOREFRONT: {
+              value: 6,
+              description: "Storefront listings and their artifacts."
+            },
+            ASSET_MODEL: {
+              value: 7,
+              description: "3D asset models."
+            },
+            SITE_ASSET: {
+              value: 8,
+              description: "Homepage site assets."
+            },
+            PROFILE_PHOTO: {
+              value: 9,
+              description: "Profile photos of the node and its accounts."
+            }
+          }
+        },
         pivStatus: {
           type: "string",
           enum: [
@@ -555954,7 +556413,8 @@ format class are named by $NCD's container format.`,
             "GLX",
             "FCK",
             "FMB",
-            "FSG"
+            "FSG",
+            "PIN"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -556051,6 +556511,9 @@ format class are named by $NCD's container format.`,
             },
             FSG: {
               value: 285
+            },
+            PIN: {
+              value: 286
             }
           }
         },
@@ -637269,6 +637732,110 @@ turned into a number.`,
           },
           additionalProperties: false
         },
+        PINRule: {
+          type: "object",
+          description: "One rule of the policy.",
+          properties: {
+            CLASS: {
+              $ref: "#/definitions/pinClass",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "ubyte",
+              "x-flatbuffer-enum-values": {
+                NODE_EPM: {
+                  value: 0,
+                  description: "The node's own $EPM. Always pinned."
+                },
+                ACCOUNT_EPM: {
+                  value: 1,
+                  description: "The $EPMs of the node's accounts. Always pinned."
+                },
+                PUBLICATION: {
+                  value: 2,
+                  description: 'Dataset publications of a lane: manifests, shards, indexes, $PNM and CAR archives. FEED is "<standard>/<provider>/<source>".'
+                },
+                SHARE: {
+                  value: 3,
+                  description: "Records published as open shares (share links)."
+                },
+                FLOW_ASSET: {
+                  value: 4,
+                  description: "Files a flow or module pins through its IPFS capability, such as star catalogs, error models and ephemerides. FEED is the flow or module id."
+                },
+                TIP: {
+                  value: 5,
+                  description: "Content announced to the node in pubsub tips. FEED is the topic."
+                },
+                STOREFRONT: {
+                  value: 6,
+                  description: "Storefront listings and their artifacts."
+                },
+                ASSET_MODEL: {
+                  value: 7,
+                  description: "3D asset models."
+                },
+                SITE_ASSET: {
+                  value: 8,
+                  description: "Homepage site assets."
+                },
+                PROFILE_PHOTO: {
+                  value: 9,
+                  description: "Profile photos of the node and its accounts."
+                }
+              },
+              "x-flatbuffer-default": "NODE_EPM"
+            },
+            FEED: {
+              type: "string",
+              description: "Feed within the class; absent for the whole class.",
+              "x-flatbuffer-type": "string"
+            },
+            ENABLED: {
+              type: "boolean",
+              description: "True when the node pins the content the rule covers.",
+              "x-flatbuffer-type": "bool"
+            },
+            LOCKED: {
+              type: "boolean",
+              description: "True for a rule a client cannot change (NODE_EPM and ACCOUNT_EPM).",
+              "x-flatbuffer-type": "bool"
+            },
+            PINNED_ROOTS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Root CIDs the node holds pinned under the rule.",
+              "x-flatbuffer-type": "ulong"
+            },
+            PINNED_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Bytes the node holds pinned under the rule.",
+              "x-flatbuffer-type": "ulong"
+            }
+          },
+          additionalProperties: false
+        },
+        PIN: {
+          type: "object",
+          properties: {
+            RULES: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/PINRule"
+              },
+              "x-flatbuffer-type": "[PINRule]"
+            },
+            UPDATED_AT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Unix milliseconds of the last change to the policy; 0 = never changed.",
+              "x-flatbuffer-type": "ulong"
+            }
+          },
+          additionalProperties: false
+        },
         PIVRequest: {
           type: "object",
           description: "Request envelope carried by `plugin_invoke_stream`.",
@@ -673812,6 +674379,9 @@ balance service's own rate.`,
                 },
                 FSG: {
                   value: 285
+                },
+                PIN: {
+                  value: 286
                 }
               },
               "x-flatbuffer-default": "NONE"
@@ -908878,7 +909448,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

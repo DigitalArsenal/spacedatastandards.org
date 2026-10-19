@@ -42,4 +42,5 @@ public enum RecordTypeExtended : ushort
   FCK = 283,
   FMB = 284,
   FSG = 285,
+  PIN = 286,
 };

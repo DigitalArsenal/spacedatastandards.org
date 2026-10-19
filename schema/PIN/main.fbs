@@ -1,0 +1,68 @@
+// Hash: b0a5adc097df2ba861c36e21cf84b9c8d4d19e43751cddebdb889d84af2d5a22
+// Version: 1.257.0
+// -----------------------------------END_HEADER
+/// Node Pin Policy ($PIN)
+///
+/// What an SDN node keeps pinned in its IPFS blockstore. A pin keeps bytes out
+/// of IPFS garbage collection and lets other peers fetch them from the node by
+/// CID. Pinning is separate from storage: the node's own store keeps and serves
+/// its records and files by CID whether or not they are pinned.
+///
+/// The node's own $EPM and its account $EPMs are always pinned. Every other
+/// class is off until an operator turns it on. A rule names a class and,
+/// optionally, one feed within it; a feed rule overrides its class rule.
+///
+/// The node answers with its whole policy and what each rule holds. A client
+/// changes rules by sending a $PIN whose RULES carry only the rules to change
+/// (CLASS, FEED, ENABLED). The node applies them, pins or unpins the content
+/// they cover, and answers with its whole policy.
+
+/// What a pin holds. Append new values only; never reorder or reuse values.
+enum pinClass : ubyte {
+  /// The node's own $EPM. Always pinned.
+  NODE_EPM,
+  /// The $EPMs of the node's accounts. Always pinned.
+  ACCOUNT_EPM,
+  /// Dataset publications of a lane: manifests, shards, indexes, $PNM and
+  /// CAR archives. FEED is "<standard>/<provider>/<source>".
+  PUBLICATION,
+  /// Records published as open shares (share links).
+  SHARE,
+  /// Files a flow or module pins through its IPFS capability, such as star
+  /// catalogs, error models and ephemerides. FEED is the flow or module id.
+  FLOW_ASSET,
+  /// Content announced to the node in pubsub tips. FEED is the topic.
+  TIP,
+  /// Storefront listings and their artifacts.
+  STOREFRONT,
+  /// 3D asset models.
+  ASSET_MODEL,
+  /// Homepage site assets.
+  SITE_ASSET,
+  /// Profile photos of the node and its accounts.
+  PROFILE_PHOTO
+}
+
+/// One rule of the policy.
+table PINRule {
+  CLASS: pinClass = NODE_EPM;
+  /// Feed within the class; absent for the whole class.
+  FEED: string;
+  /// True when the node pins the content the rule covers.
+  ENABLED: bool;
+  /// True for a rule a client cannot change (NODE_EPM and ACCOUNT_EPM).
+  LOCKED: bool;
+  /// Root CIDs the node holds pinned under the rule.
+  PINNED_ROOTS: ulong;
+  /// Bytes the node holds pinned under the rule.
+  PINNED_BYTES: ulong;
+}
+
+table PIN {
+  RULES: [PINRule];
+  /// Unix milliseconds of the last change to the policy; 0 = never changed.
+  UPDATED_AT: ulong;
+}
+
+root_type PIN;
+file_identifier "$PIN";

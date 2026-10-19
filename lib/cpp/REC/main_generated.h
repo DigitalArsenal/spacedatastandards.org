@@ -188,6 +188,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../PGM/main_generated.h"
 #include "../PHB/main_generated.h"
 #include "../PHY/main_generated.h"
+#include "../PIN/main_generated.h"
 #include "../PIV/main_generated.h"
 #include "../PKB/main_generated.h"
 #include "../PLD/main_generated.h"
@@ -2179,11 +2180,12 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_FCK = 283,
   RecordTypeExtended_FMB = 284,
   RecordTypeExtended_FSG = 285,
+  RecordTypeExtended_PIN = 286,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_FSG
+  RecordTypeExtended_MAX = RecordTypeExtended_PIN
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[31] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[32] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2215,7 +2217,8 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[31] {
     RecordTypeExtended_GLX,
     RecordTypeExtended_FCK,
     RecordTypeExtended_FMB,
-    RecordTypeExtended_FSG
+    RecordTypeExtended_FSG,
+    RecordTypeExtended_PIN
   };
   return values;
 }
@@ -2253,6 +2256,7 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_FCK: return "FCK";
     case RecordTypeExtended_FMB: return "FMB";
     case RecordTypeExtended_FSG: return "FSG";
+    case RecordTypeExtended_PIN: return "PIN";
     default: return "";
   }
 }

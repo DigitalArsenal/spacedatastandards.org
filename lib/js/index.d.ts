@@ -173,6 +173,7 @@ export * as PCF from './PCF/main.js';
 export * as PGM from './PGM/main.js';
 export * as PHB from './PHB/main.js';
 export * as PHY from './PHY/main.js';
+export * as PIN from './PIN/main.js';
 export * as PIV from './PIV/main.js';
 export * as PKB from './PKB/main.js';
 export * as PLD from './PLD/main.js';

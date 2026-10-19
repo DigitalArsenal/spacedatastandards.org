@@ -285,6 +285,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8789,11 +8790,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 285;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 286;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 31] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 32] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8825,6 +8826,7 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 31] = [
     RecordTypeExtended::FCK,
     RecordTypeExtended::FMB,
     RecordTypeExtended::FSG,
+    RecordTypeExtended::PIN,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8871,9 +8873,10 @@ impl RecordTypeExtended {
     pub const FCK: Self = Self(283);
     pub const FMB: Self = Self(284);
     pub const FSG: Self = Self(285);
+    pub const PIN: Self = Self(286);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 285;
+    pub const ENUM_MAX: u16 = 286;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8906,6 +8909,7 @@ impl RecordTypeExtended {
         Self::FCK,
         Self::FMB,
         Self::FSG,
+        Self::PIN,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -8942,6 +8946,7 @@ impl RecordTypeExtended {
             Self::FCK => Some("FCK"),
             Self::FMB => Some("FMB"),
             Self::FSG => Some("FSG"),
+            Self::PIN => Some("PIN"),
             _ => None,
         }
     }
