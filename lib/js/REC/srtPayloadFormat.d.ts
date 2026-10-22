@@ -1,0 +1,19 @@
+/**
+ * Encoding of PAYLOAD.
+ */
+export declare enum srtPayloadFormat {
+    UNSPECIFIED = 0,
+    /**
+     * A GeoTIFF file, verbatim.
+     */
+    RASTER_GEOTIFF = 1,
+    /**
+     * Bare samples, rows from the north-west corner, little-endian.
+     */
+    SAMPLES_ROW_MAJOR_LE = 2,
+    /**
+     * A format this enum does not model; PAYLOAD.MEDIA_TYPE names it.
+     */
+    CUSTOM = 3
+}
+//# sourceMappingURL=srtPayloadFormat.d.ts.map

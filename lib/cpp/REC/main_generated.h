@@ -237,11 +237,13 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../SCV/main_generated.h"
 #include "../SCX/main_generated.h"
 #include "../SDF/main_generated.h"
+#include "../SDI/main_generated.h"
 #include "../SDL/main_generated.h"
 #include "../SDR/main_generated.h"
 #include "../SEN/main_generated.h"
 #include "../SEO/main_generated.h"
 #include "../SEV/main_generated.h"
+#include "../SFE/main_generated.h"
 #include "../SHC/main_generated.h"
 #include "../SHW/main_generated.h"
 #include "../SIT/main_generated.h"
@@ -258,6 +260,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../SPW/main_generated.h"
 #include "../SRG/main_generated.h"
 #include "../SRI/main_generated.h"
+#include "../SRO/main_generated.h"
+#include "../SRT/main_generated.h"
 #include "../STF/main_generated.h"
 #include "../STO/main_generated.h"
 #include "../STR/main_generated.h"
@@ -2181,11 +2185,15 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_FMB = 284,
   RecordTypeExtended_FSG = 285,
   RecordTypeExtended_PIN = 286,
+  RecordTypeExtended_SDI = 287,
+  RecordTypeExtended_SFE = 288,
+  RecordTypeExtended_SRO = 289,
+  RecordTypeExtended_SRT = 290,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_PIN
+  RecordTypeExtended_MAX = RecordTypeExtended_SRT
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[32] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[36] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2218,7 +2226,11 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[32] {
     RecordTypeExtended_FCK,
     RecordTypeExtended_FMB,
     RecordTypeExtended_FSG,
-    RecordTypeExtended_PIN
+    RecordTypeExtended_PIN,
+    RecordTypeExtended_SDI,
+    RecordTypeExtended_SFE,
+    RecordTypeExtended_SRO,
+    RecordTypeExtended_SRT
   };
   return values;
 }
@@ -2257,6 +2269,10 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_FMB: return "FMB";
     case RecordTypeExtended_FSG: return "FSG";
     case RecordTypeExtended_PIN: return "PIN";
+    case RecordTypeExtended_SDI: return "SDI";
+    case RecordTypeExtended_SFE: return "SFE";
+    case RecordTypeExtended_SRO: return "SRO";
+    case RecordTypeExtended_SRT: return "SRT";
     default: return "";
   }
 }

@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SDI" : {
+      "type" : "object",
+      "description" : "Solar Disk Image",
+      "properties" : {
+        "OBSERVATORY" : {
+                "type" : "string",
+                "description" : "Observatory or mission, verbatim (FITS TELESCOP)."
+              },
+        "INSTRUMENT" : {
+                "type" : "string",
+                "description" : "Instrument, verbatim (FITS INSTRUME)."
+              },
+        "MEASUREMENT" : {
+                "type" : "string",
+                "description" : "Measurement, verbatim (FITS WAVELNTH token or continuum label)."
+              },
+        "WAVELENGTH_NM" : {
+                "type" : "number",
+                "description" : "Wavelength in nm."
+              },
+        "IMAGE_ID" : {
+                "type" : "string",
+                "description" : "The source's image identity, verbatim."
+              },
+        "REQUESTED_AT" : {
+                "type" : "string",
+                "description" : "When this image was requested from the source, RFC 3339 UTC."
+              },
+        "OBSERVED_AT" : {
+                "type" : "string",
+                "description" : "Observation time normalized to RFC 3339 UTC."
+              },
+        "DATE_OBS" : {
+                "type" : "string",
+                "description" : "FITS DATE-OBS, verbatim."
+              },
+        "TIME_SCALE" : {
+                "type" : "string",
+                "description" : "FITS TIMESYS, verbatim."
+              },
+        "CADENCE_S" : {
+                "type" : "number",
+                "description" : "Source cadence in seconds."
+              },
+        "EXPOSURE_S" : {
+                "type" : "number",
+                "description" : "Exposure time in seconds (FITS EXPTIME)."
+              },
+        "IMAGE_CID" : {
+                "type" : "string",
+                "description" : "CID of the image bytes."
+              },
+        "IMAGE_MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type of the image bytes (e.g. image/jp2, application/fits)."
+              },
+        "IMAGE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the image bytes, lowercase hex."
+              },
+        "IMAGE_SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of the image bytes."
+              },
+        "HEADER_CID" : {
+                "type" : "string",
+                "description" : "CID of the verbatim FITS header."
+              },
+        "WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Image width in pixels (FITS NAXIS1)."
+              },
+        "HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Image height in pixels (FITS NAXIS2)."
+              },
+        "CTYPE1" : {
+                "type" : "string",
+                "description" : "FITS CTYPE1, verbatim (e.g. HPLN-TAN)."
+              },
+        "CTYPE2" : {
+                "type" : "string",
+                "description" : "FITS CTYPE2, verbatim (e.g. HPLT-TAN)."
+              },
+        "CUNIT1" : {
+                "type" : "string",
+                "description" : "FITS CUNIT1, verbatim."
+              },
+        "CUNIT2" : {
+                "type" : "string",
+                "description" : "FITS CUNIT2, verbatim."
+              },
+        "CRPIX1" : {
+                "type" : "number",
+                "description" : "FITS CRPIX1, one-based."
+              },
+        "CRPIX2" : {
+                "type" : "number",
+                "description" : "FITS CRPIX2, one-based."
+              },
+        "CRVAL1" : {
+                "type" : "number",
+                "description" : "FITS CRVAL1 in CUNIT1."
+              },
+        "CRVAL2" : {
+                "type" : "number",
+                "description" : "FITS CRVAL2 in CUNIT2."
+              },
+        "CDELT1" : {
+                "type" : "number",
+                "description" : "FITS CDELT1 in CUNIT1 per pixel."
+              },
+        "CDELT2" : {
+                "type" : "number",
+                "description" : "FITS CDELT2 in CUNIT2 per pixel."
+              },
+        "CROTA2" : {
+                "type" : "number",
+                "description" : "FITS CROTA2 in degrees."
+              },
+        "PC" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them."
+              },
+        "RSUN_OBS_ARCSEC" : {
+                "type" : "number",
+                "description" : "Observed solar radius in arcseconds (FITS RSUN_OBS)."
+              },
+        "RSUN_REF_M" : {
+                "type" : "number",
+                "description" : "Reference solar radius in meters (FITS RSUN_REF)."
+              },
+        "DSUN_OBS_M" : {
+                "type" : "number",
+                "description" : "Observer distance from Sun center in meters (FITS DSUN_OBS)."
+              },
+        "CRLN_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Carrington longitude in degrees (FITS CRLN_OBS)."
+              },
+        "CRLT_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Carrington latitude in degrees (FITS CRLT_OBS)."
+              },
+        "HGLN_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS)."
+              },
+        "HGLT_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS)."
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "FITS QUALITY bitmask; meaningful only when HAS_QUALITY."
+              },
+        "HAS_QUALITY" : {
+                "type" : "boolean",
+                "description" : "True when the source states QUALITY."
+              },
+        "PROCESSING" : {
+                "type" : "string",
+                "description" : "Processing description, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "CID of the original source bytes this record was parsed from."
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the original source bytes, lowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "When the source bytes were retrieved, RFC 3339 UTC."
+              }
+      },
+      "required" : ["OBSERVED_AT", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SDICOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SDI"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SDI"
+}

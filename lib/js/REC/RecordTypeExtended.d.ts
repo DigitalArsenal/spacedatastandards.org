@@ -39,6 +39,10 @@ export declare enum RecordTypeExtended {
     FCK = 283,
     FMB = 284,
     FSG = 285,
-    PIN = 286
+    PIN = 286,
+    SDI = 287,
+    SFE = 288,
+    SRO = 289,
+    SRT = 290
 }
 //# sourceMappingURL=RecordTypeExtended.d.ts.map

@@ -1,5 +1,5 @@
-// Hash: 4874b302d263125763061797cded99feb7a396f49259c955feec74ea952d4ff5
-// Version: 1.44.85
+// Hash: 4d2b71fa2721b495b3187b60d8174c7fa680883806134da87dde827ca35ed82c
+// Version: 1.44.86
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -225,11 +225,13 @@ include "../SCR/main.fbs";
 include "../SCV/main.fbs";
 include "../SCX/main.fbs";
 include "../SDF/main.fbs";
+include "../SDI/main.fbs";
 include "../SDL/main.fbs";
 include "../SDR/main.fbs";
 include "../SEN/main.fbs";
 include "../SEO/main.fbs";
 include "../SEV/main.fbs";
+include "../SFE/main.fbs";
 include "../SHC/main.fbs";
 include "../SHW/main.fbs";
 include "../SIT/main.fbs";
@@ -246,6 +248,8 @@ include "../SPP/main.fbs";
 include "../SPW/main.fbs";
 include "../SRG/main.fbs";
 include "../SRI/main.fbs";
+include "../SRO/main.fbs";
+include "../SRT/main.fbs";
 include "../STF/main.fbs";
 include "../STO/main.fbs";
 include "../STR/main.fbs";
@@ -408,7 +412,11 @@ enum RecordTypeExtended : ushort {
   FCK = 283,
   FMB = 284,
   FSG = 285,
-  PIN = 286
+  PIN = 286,
+  SDI = 287,
+  SFE = 288,
+  SRO = 289,
+  SRT = 290
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

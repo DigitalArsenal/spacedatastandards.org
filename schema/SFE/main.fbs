@@ -1,0 +1,91 @@
+// Hash: f14a7ff6de691dc76148f690059fc0baa38f933015cf98f28f0da39e19442274
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+// Solar Flare Event (SFE)
+//
+// One solar event report (X-ray, optical or radio) as published by its
+// source. Identity, times, qualifiers and classes are verbatim. An absent
+// double is NaN. REGION_NUMBER is set only when the source itself states the
+// association; it is never inferred from time or position proximity.
+
+/// Observing domain of the event.
+enum sfeEventKind : byte {
+  /// Not stated. Ordinal 0 so an unset field is never read as a real kind.
+  UNSPECIFIED,
+  /// Soft X-ray flare (e.g. event type XRA).
+  XRAY,
+  /// Optical flare (e.g. event type FLA).
+  OPTICAL,
+  /// Radio burst or sweep.
+  RADIO,
+  /// A kind this enum does not model; EVENT_TYPE_CODE carries the source token.
+  CUSTOM
+}
+
+/// Solar Flare Event
+table SFE {
+  /// The source's own event identity, verbatim.
+  EVENT_ID: string (required);
+  /// Source product name, verbatim.
+  PRODUCT: string;
+  /// Reporting observatory, verbatim.
+  OBSERVATORY: string;
+  /// Observing platform or satellite, verbatim.
+  PLATFORM: string;
+  /// Observing domain.
+  EVENT_KIND: sfeEventKind;
+  /// Source event type code, verbatim (e.g. XRA, FLA).
+  EVENT_TYPE_CODE: string;
+  /// Event begin time, RFC 3339 UTC.
+  BEGIN_TIME: string;
+  /// Event peak time, RFC 3339 UTC.
+  PEAK_TIME: string;
+  /// Event end time, RFC 3339 UTC.
+  END_TIME: string;
+  /// Qualifier on BEGIN_TIME, verbatim (e.g. B for before).
+  BEGIN_QUALIFIER: string;
+  /// Qualifier on PEAK_TIME, verbatim.
+  PEAK_QUALIFIER: string;
+  /// Qualifier on END_TIME, verbatim (e.g. A for after).
+  END_QUALIFIER: string;
+  /// Soft X-ray class, verbatim (e.g. C1.4).
+  XRAY_CLASS: string;
+  /// Optical importance, verbatim (e.g. SF).
+  OPTICAL_IMPORTANCE: string;
+  /// Peak flux in W/m^2.
+  PEAK_FLUX_W_M2: double = nan;
+  /// Integrated flux (fluence) in J/m^2.
+  INTEGRATED_FLUX_J_M2: double = nan;
+  /// Lower edge of the observing passband in nm.
+  PASSBAND_MIN_NM: double = nan;
+  /// Upper edge of the observing passband in nm.
+  PASSBAND_MAX_NM: double = nan;
+  /// Associated region number; meaningful only when HAS_REGION_NUMBER.
+  REGION_NUMBER: uint32;
+  /// True only when the source explicitly states the region association.
+  HAS_REGION_NUMBER: bool = false;
+  /// Heliographic latitude in degrees, north positive, when stated.
+  HG_LATITUDE_DEG: double = nan;
+  /// Stonyhurst heliographic longitude in degrees, west positive, when stated.
+  HG_LONGITUDE_DEG: double = nan;
+  /// Source status of the report, verbatim.
+  STATUS: string;
+  /// Source revision or change flag, verbatim.
+  REVISION: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  /// CID of the original source bytes this record was parsed from.
+  SOURCE_CID: string;
+  /// SHA-256 of the original source bytes, lowercase hex.
+  SOURCE_DIGEST: string;
+  /// When the source bytes were retrieved, RFC 3339 UTC.
+  RETRIEVED_AT: string;
+}
+
+table SFECOLLECTION {
+  RECORDS: [SFE];
+}
+
+root_type SFE;
+file_identifier "$SFE";

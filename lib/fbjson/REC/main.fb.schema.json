@@ -24112,6 +24112,40 @@
         }
       }
     },
+    "sfeEventKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "XRAY",
+        "OPTICAL",
+        "RADIO",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+        },
+        "XRAY": {
+          "value": 1,
+          "description": "Soft X-ray flare (e.g. event type XRA)."
+        },
+        "OPTICAL": {
+          "value": 2,
+          "description": "Optical flare (e.g. event type FLA)."
+        },
+        "RADIO": {
+          "value": 3,
+          "description": "Radio burst or sweep."
+        },
+        "CUSTOM": {
+          "value": 4,
+          "description": "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+        }
+      }
+    },
     "shcNormalization": {
       "type": "string",
       "enum": [
@@ -25522,6 +25556,160 @@
         "Failed": {
           "value": 9,
           "description": "Retrieval failed (NOTE says why)."
+        }
+      }
+    },
+    "sroRegionKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SUNSPOT_GROUP",
+        "PLAGE",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+        },
+        "SUNSPOT_GROUP": {
+          "value": 1,
+          "description": "A sunspot group (e.g. SRS Part I)."
+        },
+        "PLAGE": {
+          "value": 2,
+          "description": "A plage region without spots (e.g. SRS Part IA)."
+        },
+        "CUSTOM": {
+          "value": 3,
+          "description": "A kind this enum does not model."
+        }
+      }
+    },
+    "srtQuantity": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CATEGORICAL_CLASS",
+        "HEIGHT_ABOVE_GROUND",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated. Ordinal 0 so an unset field is never read as a real quantity."
+        },
+        "CATEGORICAL_CLASS": {
+          "value": 1,
+          "description": "Integer class codes resolved by CLASS_LEGEND."
+        },
+        "HEIGHT_ABOVE_GROUND": {
+          "value": 2,
+          "description": "Height above local ground (e.g. canopy height), never terrain."
+        },
+        "CUSTOM": {
+          "value": 3,
+          "description": "A quantity this enum does not model; QUANTITY_NAME names it."
+        }
+      }
+    },
+    "srtSampleType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "UINT8",
+        "INT8",
+        "UINT16",
+        "INT16",
+        "UINT32",
+        "INT32",
+        "FLOAT32",
+        "FLOAT64"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "UINT8": {
+          "value": 1
+        },
+        "INT8": {
+          "value": 2
+        },
+        "UINT16": {
+          "value": 3
+        },
+        "INT16": {
+          "value": 4
+        },
+        "UINT32": {
+          "value": 5
+        },
+        "INT32": {
+          "value": 6
+        },
+        "FLOAT32": {
+          "value": 7
+        },
+        "FLOAT64": {
+          "value": 8
+        }
+      }
+    },
+    "srtPixelRegistration": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "AREA",
+        "POINT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "AREA": {
+          "value": 1,
+          "description": "Sample represents the whole cell area (GDAL PixelIsArea)."
+        },
+        "POINT": {
+          "value": 2,
+          "description": "Sample represents the point at the cell corner (GDAL PixelIsPoint)."
+        }
+      }
+    },
+    "srtPayloadFormat": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RASTER_GEOTIFF",
+        "SAMPLES_ROW_MAJOR_LE",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "RASTER_GEOTIFF": {
+          "value": 1,
+          "description": "A GeoTIFF file, verbatim."
+        },
+        "SAMPLES_ROW_MAJOR_LE": {
+          "value": 2,
+          "description": "Bare samples, rows from the north-west corner, little-endian."
+        },
+        "CUSTOM": {
+          "value": 3,
+          "description": "A format this enum does not model; PAYLOAD.MEDIA_TYPE names it."
         }
       }
     },
@@ -29603,7 +29791,11 @@
         "FCK",
         "FMB",
         "FSG",
-        "PIN"
+        "PIN",
+        "SDI",
+        "SFE",
+        "SRO",
+        "SRT"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ushort",
@@ -29703,6 +29895,18 @@
         },
         "PIN": {
           "value": 286
+        },
+        "SDI": {
+          "value": 287
+        },
+        "SFE": {
+          "value": 288
+        },
+        "SRO": {
+          "value": 289
+        },
+        "SRT": {
+          "value": 290
         }
       }
     },
@@ -123690,6 +123894,281 @@
       },
       "additionalProperties": false
     },
+    "SDI": {
+      "type": "object",
+      "description": "Solar Disk Image",
+      "properties": {
+        "OBSERVATORY": {
+          "type": "string",
+          "description": "Observatory or mission, verbatim (FITS TELESCOP).",
+          "x-flatbuffer-type": "string"
+        },
+        "INSTRUMENT": {
+          "type": "string",
+          "description": "Instrument, verbatim (FITS INSTRUME).",
+          "x-flatbuffer-type": "string"
+        },
+        "MEASUREMENT": {
+          "type": "string",
+          "description": "Measurement, verbatim (FITS WAVELNTH token or continuum label).",
+          "x-flatbuffer-type": "string"
+        },
+        "WAVELENGTH_NM": {
+          "type": "number",
+          "description": "Wavelength in nm.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "IMAGE_ID": {
+          "type": "string",
+          "description": "The source's image identity, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "REQUESTED_AT": {
+          "type": "string",
+          "description": "When this image was requested from the source, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVED_AT": {
+          "type": "string",
+          "description": "Observation time normalized to RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "DATE_OBS": {
+          "type": "string",
+          "description": "FITS DATE-OBS, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SCALE": {
+          "type": "string",
+          "description": "FITS TIMESYS, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "CADENCE_S": {
+          "type": "number",
+          "description": "Source cadence in seconds.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EXPOSURE_S": {
+          "type": "number",
+          "description": "Exposure time in seconds (FITS EXPTIME).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "IMAGE_CID": {
+          "type": "string",
+          "description": "CID of the image bytes.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_MEDIA_TYPE": {
+          "type": "string",
+          "description": "Media type of the image bytes (e.g. image/jp2, application/fits).",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_DIGEST": {
+          "type": "string",
+          "description": "SHA-256 of the image bytes, lowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "IMAGE_SIZE_BYTES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 18446744073709551615,
+          "description": "Size of the image bytes.",
+          "x-flatbuffer-type": "uint64"
+        },
+        "HEADER_CID": {
+          "type": "string",
+          "description": "CID of the verbatim FITS header.",
+          "x-flatbuffer-type": "string"
+        },
+        "WIDTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Image width in pixels (FITS NAXIS1).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HEIGHT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Image height in pixels (FITS NAXIS2).",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CTYPE1": {
+          "type": "string",
+          "description": "FITS CTYPE1, verbatim (e.g. HPLN-TAN).",
+          "x-flatbuffer-type": "string"
+        },
+        "CTYPE2": {
+          "type": "string",
+          "description": "FITS CTYPE2, verbatim (e.g. HPLT-TAN).",
+          "x-flatbuffer-type": "string"
+        },
+        "CUNIT1": {
+          "type": "string",
+          "description": "FITS CUNIT1, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "CUNIT2": {
+          "type": "string",
+          "description": "FITS CUNIT2, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "CRPIX1": {
+          "type": "number",
+          "description": "FITS CRPIX1, one-based.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CRPIX2": {
+          "type": "number",
+          "description": "FITS CRPIX2, one-based.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CRVAL1": {
+          "type": "number",
+          "description": "FITS CRVAL1 in CUNIT1.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CRVAL2": {
+          "type": "number",
+          "description": "FITS CRVAL2 in CUNIT2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CDELT1": {
+          "type": "number",
+          "description": "FITS CDELT1 in CUNIT1 per pixel.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CDELT2": {
+          "type": "number",
+          "description": "FITS CDELT2 in CUNIT2 per pixel.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CROTA2": {
+          "type": "number",
+          "description": "FITS CROTA2 in degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PC": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "RSUN_OBS_ARCSEC": {
+          "type": "number",
+          "description": "Observed solar radius in arcseconds (FITS RSUN_OBS).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "RSUN_REF_M": {
+          "type": "number",
+          "description": "Reference solar radius in meters (FITS RSUN_REF).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DSUN_OBS_M": {
+          "type": "number",
+          "description": "Observer distance from Sun center in meters (FITS DSUN_OBS).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CRLN_OBS_DEG": {
+          "type": "number",
+          "description": "Observer Carrington longitude in degrees (FITS CRLN_OBS).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CRLT_OBS_DEG": {
+          "type": "number",
+          "description": "Observer Carrington latitude in degrees (FITS CRLT_OBS).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HGLN_OBS_DEG": {
+          "type": "number",
+          "description": "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HGLT_OBS_DEG": {
+          "type": "number",
+          "description": "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "QUALITY": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "FITS QUALITY bitmask; meaningful only when HAS_QUALITY.",
+          "x-flatbuffer-type": "int64"
+        },
+        "HAS_QUALITY": {
+          "type": "boolean",
+          "description": "True when the source states QUALITY.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "PROCESSING": {
+          "type": "string",
+          "description": "Processing description, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "description": "CID of the original source bytes this record was parsed from.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "description": "SHA-256 of the original source bytes, lowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "When the source bytes were retrieved, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "OBSERVED_AT",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SDICOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SDI"
+          },
+          "x-flatbuffer-type": "[SDI]"
+        }
+      },
+      "additionalProperties": false
+    },
     "SDL": {
       "type": "object",
       "description": "Space Data Link Security (CCSDS 355.0-B-1)",
@@ -124526,6 +125005,204 @@
         "OB_DESCRIPTION": {
           "type": "string",
           "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SFE": {
+      "type": "object",
+      "description": "Solar Flare Event",
+      "properties": {
+        "EVENT_ID": {
+          "type": "string",
+          "description": "The source's own event identity, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PRODUCT": {
+          "type": "string",
+          "description": "Source product name, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATORY": {
+          "type": "string",
+          "description": "Reporting observatory, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PLATFORM": {
+          "type": "string",
+          "description": "Observing platform or satellite, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_KIND": {
+          "$ref": "#/definitions/sfeEventKind",
+          "description": "Observing domain.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            "XRAY": {
+              "value": 1,
+              "description": "Soft X-ray flare (e.g. event type XRA)."
+            },
+            "OPTICAL": {
+              "value": 2,
+              "description": "Optical flare (e.g. event type FLA)."
+            },
+            "RADIO": {
+              "value": 3,
+              "description": "Radio burst or sweep."
+            },
+            "CUSTOM": {
+              "value": 4,
+              "description": "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+            }
+          }
+        },
+        "EVENT_TYPE_CODE": {
+          "type": "string",
+          "description": "Source event type code, verbatim (e.g. XRA, FLA).",
+          "x-flatbuffer-type": "string"
+        },
+        "BEGIN_TIME": {
+          "type": "string",
+          "description": "Event begin time, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_TIME": {
+          "type": "string",
+          "description": "Event peak time, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "Event end time, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "BEGIN_QUALIFIER": {
+          "type": "string",
+          "description": "Qualifier on BEGIN_TIME, verbatim (e.g. B for before).",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_QUALIFIER": {
+          "type": "string",
+          "description": "Qualifier on PEAK_TIME, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_QUALIFIER": {
+          "type": "string",
+          "description": "Qualifier on END_TIME, verbatim (e.g. A for after).",
+          "x-flatbuffer-type": "string"
+        },
+        "XRAY_CLASS": {
+          "type": "string",
+          "description": "Soft X-ray class, verbatim (e.g. C1.4).",
+          "x-flatbuffer-type": "string"
+        },
+        "OPTICAL_IMPORTANCE": {
+          "type": "string",
+          "description": "Optical importance, verbatim (e.g. SF).",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_FLUX_W_M2": {
+          "type": "number",
+          "description": "Peak flux in W/m^2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "INTEGRATED_FLUX_J_M2": {
+          "type": "number",
+          "description": "Integrated flux (fluence) in J/m^2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PASSBAND_MIN_NM": {
+          "type": "number",
+          "description": "Lower edge of the observing passband in nm.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PASSBAND_MAX_NM": {
+          "type": "number",
+          "description": "Upper edge of the observing passband in nm.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REGION_NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Associated region number; meaningful only when HAS_REGION_NUMBER.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HAS_REGION_NUMBER": {
+          "type": "boolean",
+          "description": "True only when the source explicitly states the region association.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "HG_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Heliographic latitude in degrees, north positive, when stated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Stonyhurst heliographic longitude in degrees, west positive, when stated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "Source status of the report, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "REVISION": {
+          "type": "string",
+          "description": "Source revision or change flag, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "description": "CID of the original source bytes this record was parsed from.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "description": "SHA-256 of the original source bytes, lowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "When the source bytes were retrieved, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "EVENT_ID",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SFECOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SFE"
+          },
+          "x-flatbuffer-type": "[SFE]"
         }
       },
       "additionalProperties": false
@@ -131504,6 +132181,493 @@
           "x-flatbuffer-type": "string"
         }
       },
+      "additionalProperties": false
+    },
+    "SRO": {
+      "type": "object",
+      "description": "Solar Region Observation",
+      "properties": {
+        "REGION_NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Region number, verbatim, with no solar cycle prefix added or removed.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REGION_AUTHORITY": {
+          "type": "string",
+          "description": "The numbering authority, verbatim (e.g. NOAA/SWPC).",
+          "x-flatbuffer-type": "string"
+        },
+        "ISSUED_AT": {
+          "type": "string",
+          "description": "When the source issued this report, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVED_DATE": {
+          "type": "string",
+          "description": "The source's observation date label, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_EPOCH": {
+          "type": "string",
+          "description": "The instant the position below refers to, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REGION_KIND": {
+          "$ref": "#/definitions/sroRegionKind",
+          "description": "Region kind as listed by the source.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            "SUNSPOT_GROUP": {
+              "value": 1,
+              "description": "A sunspot group (e.g. SRS Part I)."
+            },
+            "PLAGE": {
+              "value": 2,
+              "description": "A plage region without spots (e.g. SRS Part IA)."
+            },
+            "CUSTOM": {
+              "value": 3,
+              "description": "A kind this enum does not model."
+            }
+          }
+        },
+        "LOCATION_TOKEN": {
+          "type": "string",
+          "description": "Heliographic location token, verbatim (e.g. N14W32).",
+          "x-flatbuffer-type": "string"
+        },
+        "HG_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Heliographic latitude in degrees, north positive.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CARRINGTON_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Carrington longitude in degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AREA_MSH": {
+          "type": "number",
+          "description": "Corrected area in millionths of the solar hemisphere.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LONGITUDINAL_EXTENT_DEG": {
+          "type": "number",
+          "description": "Longitudinal extent in degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPOT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of spots in the region; meaningful only when HAS_SPOT_COUNT.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HAS_SPOT_COUNT": {
+          "type": "boolean",
+          "description": "True when the source states SPOT_COUNT.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MCINTOSH_CLASS": {
+          "type": "string",
+          "description": "McIntosh classification, verbatim (e.g. Dao).",
+          "x-flatbuffer-type": "string"
+        },
+        "MAGNETIC_CLASS": {
+          "type": "string",
+          "description": "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma).",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "description": "CID of the original source bytes this record was parsed from.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "description": "SHA-256 of the original source bytes, lowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "When the source bytes were retrieved, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "POSITION_EPOCH",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SROCOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SRO"
+          },
+          "x-flatbuffer-type": "[SRO]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRTClass": {
+      "type": "object",
+      "description": "One class of a categorical raster.",
+      "properties": {
+        "CODE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Sample value of the class.",
+          "x-flatbuffer-type": "int32"
+        },
+        "LABEL": {
+          "type": "string",
+          "description": "Source label, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "COLOR_RGBA": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Source display color, 0xRRGGBBAA.",
+          "x-flatbuffer-type": "uint32"
+        }
+      },
+      "required": [
+        "LABEL"
+      ],
+      "additionalProperties": false
+    },
+    "SRT": {
+      "type": "object",
+      "description": "Surface Raster Tile",
+      "properties": {
+        "TILESET_ID": {
+          "type": "string",
+          "description": "Stable identity of the tileset this tile belongs to.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "TILESET_NAME": {
+          "type": "string",
+          "description": "Human-readable tileset name.",
+          "x-flatbuffer-type": "string"
+        },
+        "QUANTITY": {
+          "$ref": "#/definitions/srtQuantity",
+          "description": "What the samples measure.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated. Ordinal 0 so an unset field is never read as a real quantity."
+            },
+            "CATEGORICAL_CLASS": {
+              "value": 1,
+              "description": "Integer class codes resolved by CLASS_LEGEND."
+            },
+            "HEIGHT_ABOVE_GROUND": {
+              "value": 2,
+              "description": "Height above local ground (e.g. canopy height), never terrain."
+            },
+            "CUSTOM": {
+              "value": 3,
+              "description": "A quantity this enum does not model; QUANTITY_NAME names it."
+            }
+          }
+        },
+        "QUANTITY_NAME": {
+          "type": "string",
+          "description": "Source quantity name, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "UNIT": {
+          "type": "string",
+          "description": "UCUM unit of the scaled value (m for canopy height); absent for classes.",
+          "x-flatbuffer-type": "string"
+        },
+        "SAMPLE_TYPE": {
+          "$ref": "#/definitions/srtSampleType",
+          "description": "Stored sample type.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "UINT8": {
+              "value": 1
+            },
+            "INT8": {
+              "value": 2
+            },
+            "UINT16": {
+              "value": 3
+            },
+            "INT16": {
+              "value": 4
+            },
+            "UINT32": {
+              "value": 5
+            },
+            "INT32": {
+              "value": 6
+            },
+            "FLOAT32": {
+              "value": 7
+            },
+            "FLOAT64": {
+              "value": 8
+            }
+          }
+        },
+        "SCALE_FACTOR": {
+          "type": "number",
+          "description": "value = sample * SCALE_FACTOR + ADD_OFFSET.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.0"
+        },
+        "ADD_OFFSET": {
+          "type": "number",
+          "description": "value = sample * SCALE_FACTOR + ADD_OFFSET.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.0"
+        },
+        "NO_DATA_VALUE": {
+          "type": "number",
+          "description": "Stored sample value meaning no data (WorldCover: 0).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CLASS_LEGEND": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SRTClass"
+          },
+          "description": "Class legend; required when QUANTITY = CATEGORICAL_CLASS.",
+          "x-flatbuffer-type": "[SRTClass]"
+        },
+        "CRS": {
+          "type": "string",
+          "description": "Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857).",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "AFFINE_TRANSFORM": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "GDAL geotransform, 6 values, mapping pixel corners to CRS units.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PIXEL_REGISTRATION": {
+          "$ref": "#/definitions/srtPixelRegistration",
+          "description": "Pixel registration.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "AREA": {
+              "value": 1,
+              "description": "Sample represents the whole cell area (GDAL PixelIsArea)."
+            },
+            "POINT": {
+              "value": 2,
+              "description": "Sample represents the point at the cell corner (GDAL PixelIsPoint)."
+            }
+          }
+        },
+        "GRID_WIDTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Grid width in samples.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "GRID_HEIGHT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Grid height in samples.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "TILING_SCHEME": {
+          "$ref": "#/definitions/dttTilingScheme",
+          "description": "Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+            },
+            "GEOGRAPHIC_WGS84": {
+              "value": 1,
+              "description": "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+            },
+            "GEOGRAPHIC_SINGLE_ROOT": {
+              "value": 2,
+              "description": "Single-root equirectangular geographic scheme, one root tile at level 0."
+            },
+            "WEB_MERCATOR": {
+              "value": 3,
+              "description": "Spherical Mercator scheme, one square root tile at level 0."
+            },
+            "CUSTOM": {
+              "value": 4,
+              "description": "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+            },
+            "GEOGRAPHIC_TWO_ROOT_BODY": {
+              "value": 5,
+              "description": "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
+            }
+          }
+        },
+        "LEVEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Pyramid level.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "X": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Pyramid column.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "Y": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Pyramid row.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WEST_DEG": {
+          "type": "number",
+          "description": "Geographic bounding box, west edge in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "SOUTH_DEG": {
+          "type": "number",
+          "description": "Geographic bounding box, south edge in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "EAST_DEG": {
+          "type": "number",
+          "description": "Geographic bounding box, east edge in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "NORTH_DEG": {
+          "type": "number",
+          "description": "Geographic bounding box, north edge in degrees.",
+          "x-flatbuffer-type": "double"
+        },
+        "HORIZONTAL_DATUM_NAME": {
+          "type": "string",
+          "description": "Horizontal datum name, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PAYLOAD_FORMAT": {
+          "$ref": "#/definitions/srtPayloadFormat",
+          "description": "Encoding of PAYLOAD.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "RASTER_GEOTIFF": {
+              "value": 1,
+              "description": "A GeoTIFF file, verbatim."
+            },
+            "SAMPLES_ROW_MAJOR_LE": {
+              "value": 2,
+              "description": "Bare samples, rows from the north-west corner, little-endian."
+            },
+            "CUSTOM": {
+              "value": 3,
+              "description": "A format this enum does not model; PAYLOAD.MEDIA_TYPE names it."
+            }
+          }
+        },
+        "PAYLOAD": {
+          "$ref": "#/definitions/DTTPayloadRef",
+          "description": "Native samples only: no palette conversion, resampling or rounding.",
+          "x-flatbuffer-type": "DTTPayloadRef",
+          "x-flatbuffer-required": true
+        },
+        "MIN_VALUE": {
+          "type": "number",
+          "description": "Minimum scaled value in the tile.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "MAX_VALUE": {
+          "type": "number",
+          "description": "Maximum scaled value in the tile.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "DATA_COVERAGE_FRACTION": {
+          "type": "number",
+          "description": "Fraction of samples that are not NO_DATA_VALUE, 0 to 1.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Dataset epoch of the samples, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/DTTProvenance",
+          "description": "Dataset, retrieval and license lineage.",
+          "x-flatbuffer-type": "DTTProvenance",
+          "x-flatbuffer-required": true
+        }
+      },
+      "required": [
+        "TILESET_ID",
+        "CRS",
+        "PAYLOAD",
+        "PROVENANCE"
+      ],
       "additionalProperties": false
     },
     "STOModuleRef": {
@@ -147503,6 +148667,18 @@
             },
             "PIN": {
               "value": 286
+            },
+            "SDI": {
+              "value": 287
+            },
+            "SFE": {
+              "value": 288
+            },
+            "SRO": {
+              "value": 289
+            },
+            "SRT": {
+              "value": 290
             }
           },
           "x-flatbuffer-default": "NONE"

@@ -2409,6 +2409,10 @@
       "type" : "string",
       "enum": ["GROUND", "LEO", "GEO", "L1", "L2", "INTERPLANETARY", "SOLAR"]
     },
+    "sfeEventKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "XRAY", "OPTICAL", "RADIO", "CUSTOM"]
+    },
     "shcNormalization" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "FULLY_NORMALIZED", "UNNORMALIZED"]
@@ -2564,6 +2568,26 @@
     "srgRetrievalState" : {
       "type" : "string",
       "enum": ["Unknown", "Configured", "Disabled", "CredentialUnavailable", "WaitingRefresh", "InProgress", "Complete", "ArchiveBudgetReached", "ProviderPageOnly", "Failed"]
+    },
+    "sroRegionKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "SUNSPOT_GROUP", "PLAGE", "CUSTOM"]
+    },
+    "srtQuantity" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CATEGORICAL_CLASS", "HEIGHT_ABOVE_GROUND", "CUSTOM"]
+    },
+    "srtSampleType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "UINT8", "INT8", "UINT16", "INT16", "UINT32", "INT32", "FLOAT32", "FLOAT64"]
+    },
+    "srtPixelRegistration" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "AREA", "POINT"]
+    },
+    "srtPayloadFormat" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "RASTER_GEOTIFF", "SAMPLES_ROW_MAJOR_LE", "CUSTOM"]
     },
     "strDistanceEstimator" : {
       "type" : "string",
@@ -2979,7 +3003,7 @@
     },
     "RecordTypeExtended" : {
       "type" : "string",
-      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN"]
+      "enum": ["NONE", "ABA", "CVR", "PVN", "SBD", "APR", "ASG", "DAV", "DCL", "ERM", "FIL", "LFV", "MDE", "MPL", "NEV", "NHS", "OIL", "PNV", "PPS", "RND", "SBC", "SCR", "SRG", "TBP", "WHA", "XMT", "EXO", "GLX", "FCK", "FMB", "FSG", "PIN", "SDI", "SFE", "SRO", "SRT"]
     },
     "ABA" : {
       "type" : "object",
@@ -52529,6 +52553,199 @@
       },
       "additionalProperties" : false
     },
+    "SDI" : {
+      "type" : "object",
+      "description" : "Solar Disk Image",
+      "properties" : {
+        "OBSERVATORY" : {
+                "type" : "string",
+                "description" : "Observatory or mission, verbatim (FITS TELESCOP)."
+              },
+        "INSTRUMENT" : {
+                "type" : "string",
+                "description" : "Instrument, verbatim (FITS INSTRUME)."
+              },
+        "MEASUREMENT" : {
+                "type" : "string",
+                "description" : "Measurement, verbatim (FITS WAVELNTH token or continuum label)."
+              },
+        "WAVELENGTH_NM" : {
+                "type" : "number",
+                "description" : "Wavelength in nm."
+              },
+        "IMAGE_ID" : {
+                "type" : "string",
+                "description" : "The source's image identity, verbatim."
+              },
+        "REQUESTED_AT" : {
+                "type" : "string",
+                "description" : "When this image was requested from the source, RFC 3339 UTC."
+              },
+        "OBSERVED_AT" : {
+                "type" : "string",
+                "description" : "Observation time normalized to RFC 3339 UTC."
+              },
+        "DATE_OBS" : {
+                "type" : "string",
+                "description" : "FITS DATE-OBS, verbatim."
+              },
+        "TIME_SCALE" : {
+                "type" : "string",
+                "description" : "FITS TIMESYS, verbatim."
+              },
+        "CADENCE_S" : {
+                "type" : "number",
+                "description" : "Source cadence in seconds."
+              },
+        "EXPOSURE_S" : {
+                "type" : "number",
+                "description" : "Exposure time in seconds (FITS EXPTIME)."
+              },
+        "IMAGE_CID" : {
+                "type" : "string",
+                "description" : "CID of the image bytes."
+              },
+        "IMAGE_MEDIA_TYPE" : {
+                "type" : "string",
+                "description" : "Media type of the image bytes (e.g. image/jp2, application/fits)."
+              },
+        "IMAGE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the image bytes, lowercase hex."
+              },
+        "IMAGE_SIZE_BYTES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 18446744073709551615,
+                "description" : "Size of the image bytes."
+              },
+        "HEADER_CID" : {
+                "type" : "string",
+                "description" : "CID of the verbatim FITS header."
+              },
+        "WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Image width in pixels (FITS NAXIS1)."
+              },
+        "HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Image height in pixels (FITS NAXIS2)."
+              },
+        "CTYPE1" : {
+                "type" : "string",
+                "description" : "FITS CTYPE1, verbatim (e.g. HPLN-TAN)."
+              },
+        "CTYPE2" : {
+                "type" : "string",
+                "description" : "FITS CTYPE2, verbatim (e.g. HPLT-TAN)."
+              },
+        "CUNIT1" : {
+                "type" : "string",
+                "description" : "FITS CUNIT1, verbatim."
+              },
+        "CUNIT2" : {
+                "type" : "string",
+                "description" : "FITS CUNIT2, verbatim."
+              },
+        "CRPIX1" : {
+                "type" : "number",
+                "description" : "FITS CRPIX1, one-based."
+              },
+        "CRPIX2" : {
+                "type" : "number",
+                "description" : "FITS CRPIX2, one-based."
+              },
+        "CRVAL1" : {
+                "type" : "number",
+                "description" : "FITS CRVAL1 in CUNIT1."
+              },
+        "CRVAL2" : {
+                "type" : "number",
+                "description" : "FITS CRVAL2 in CUNIT2."
+              },
+        "CDELT1" : {
+                "type" : "number",
+                "description" : "FITS CDELT1 in CUNIT1 per pixel."
+              },
+        "CDELT2" : {
+                "type" : "number",
+                "description" : "FITS CDELT2 in CUNIT2 per pixel."
+              },
+        "CROTA2" : {
+                "type" : "number",
+                "description" : "FITS CROTA2 in degrees."
+              },
+        "PC" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them."
+              },
+        "RSUN_OBS_ARCSEC" : {
+                "type" : "number",
+                "description" : "Observed solar radius in arcseconds (FITS RSUN_OBS)."
+              },
+        "RSUN_REF_M" : {
+                "type" : "number",
+                "description" : "Reference solar radius in meters (FITS RSUN_REF)."
+              },
+        "DSUN_OBS_M" : {
+                "type" : "number",
+                "description" : "Observer distance from Sun center in meters (FITS DSUN_OBS)."
+              },
+        "CRLN_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Carrington longitude in degrees (FITS CRLN_OBS)."
+              },
+        "CRLT_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Carrington latitude in degrees (FITS CRLT_OBS)."
+              },
+        "HGLN_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS)."
+              },
+        "HGLT_OBS_DEG" : {
+                "type" : "number",
+                "description" : "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS)."
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "FITS QUALITY bitmask; meaningful only when HAS_QUALITY."
+              },
+        "HAS_QUALITY" : {
+                "type" : "boolean",
+                "description" : "True when the source states QUALITY."
+              },
+        "PROCESSING" : {
+                "type" : "string",
+                "description" : "Processing description, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "CID of the original source bytes this record was parsed from."
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the original source bytes, lowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "When the source bytes were retrieved, RFC 3339 UTC."
+              }
+      },
+      "required" : ["OBSERVED_AT", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SDICOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SDI"}
+              }
+      },
+      "additionalProperties" : false
+    },
     "SDL" : {
       "type" : "object",
       "description" : "Space Data Link Security (CCSDS 355.0-B-1)",
@@ -53078,6 +53295,135 @@
               },
         "OB_DESCRIPTION" : {
                 "type" : "string"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SFE" : {
+      "type" : "object",
+      "description" : "Solar Flare Event",
+      "properties" : {
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "The source's own event identity, verbatim."
+              },
+        "PRODUCT" : {
+                "type" : "string",
+                "description" : "Source product name, verbatim."
+              },
+        "OBSERVATORY" : {
+                "type" : "string",
+                "description" : "Reporting observatory, verbatim."
+              },
+        "PLATFORM" : {
+                "type" : "string",
+                "description" : "Observing platform or satellite, verbatim."
+              },
+        "EVENT_KIND" : {
+                "$ref" : "#/definitions/sfeEventKind",
+                "description" : "Observing domain."
+              },
+        "EVENT_TYPE_CODE" : {
+                "type" : "string",
+                "description" : "Source event type code, verbatim (e.g. XRA, FLA)."
+              },
+        "BEGIN_TIME" : {
+                "type" : "string",
+                "description" : "Event begin time, RFC 3339 UTC."
+              },
+        "PEAK_TIME" : {
+                "type" : "string",
+                "description" : "Event peak time, RFC 3339 UTC."
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "Event end time, RFC 3339 UTC."
+              },
+        "BEGIN_QUALIFIER" : {
+                "type" : "string",
+                "description" : "Qualifier on BEGIN_TIME, verbatim (e.g. B for before)."
+              },
+        "PEAK_QUALIFIER" : {
+                "type" : "string",
+                "description" : "Qualifier on PEAK_TIME, verbatim."
+              },
+        "END_QUALIFIER" : {
+                "type" : "string",
+                "description" : "Qualifier on END_TIME, verbatim (e.g. A for after)."
+              },
+        "XRAY_CLASS" : {
+                "type" : "string",
+                "description" : "Soft X-ray class, verbatim (e.g. C1.4)."
+              },
+        "OPTICAL_IMPORTANCE" : {
+                "type" : "string",
+                "description" : "Optical importance, verbatim (e.g. SF)."
+              },
+        "PEAK_FLUX_W_M2" : {
+                "type" : "number",
+                "description" : "Peak flux in W/m^2."
+              },
+        "INTEGRATED_FLUX_J_M2" : {
+                "type" : "number",
+                "description" : "Integrated flux (fluence) in J/m^2."
+              },
+        "PASSBAND_MIN_NM" : {
+                "type" : "number",
+                "description" : "Lower edge of the observing passband in nm."
+              },
+        "PASSBAND_MAX_NM" : {
+                "type" : "number",
+                "description" : "Upper edge of the observing passband in nm."
+              },
+        "REGION_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Associated region number; meaningful only when HAS_REGION_NUMBER."
+              },
+        "HAS_REGION_NUMBER" : {
+                "type" : "boolean",
+                "description" : "True only when the source explicitly states the region association."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Heliographic latitude in degrees, north positive, when stated."
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Stonyhurst heliographic longitude in degrees, west positive, when stated."
+              },
+        "STATUS" : {
+                "type" : "string",
+                "description" : "Source status of the report, verbatim."
+              },
+        "REVISION" : {
+                "type" : "string",
+                "description" : "Source revision or change flag, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "CID of the original source bytes this record was parsed from."
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the original source bytes, lowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "When the source bytes were retrieved, RFC 3339 UTC."
+              }
+      },
+      "required" : ["EVENT_ID", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SFECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SFE"}
               }
       },
       "additionalProperties" : false
@@ -55311,6 +55657,255 @@
                 "type" : "string"
               }
       },
+      "additionalProperties" : false
+    },
+    "SRO" : {
+      "type" : "object",
+      "description" : "Solar Region Observation",
+      "properties" : {
+        "REGION_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Region number, verbatim, with no solar cycle prefix added or removed."
+              },
+        "REGION_AUTHORITY" : {
+                "type" : "string",
+                "description" : "The numbering authority, verbatim (e.g. NOAA/SWPC)."
+              },
+        "ISSUED_AT" : {
+                "type" : "string",
+                "description" : "When the source issued this report, RFC 3339 UTC."
+              },
+        "OBSERVED_DATE" : {
+                "type" : "string",
+                "description" : "The source's observation date label, verbatim."
+              },
+        "POSITION_EPOCH" : {
+                "type" : "string",
+                "description" : "The instant the position below refers to, RFC 3339 UTC."
+              },
+        "REGION_KIND" : {
+                "$ref" : "#/definitions/sroRegionKind",
+                "description" : "Region kind as listed by the source."
+              },
+        "LOCATION_TOKEN" : {
+                "type" : "string",
+                "description" : "Heliographic location token, verbatim (e.g. N14W32)."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Heliographic latitude in degrees, north positive."
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive."
+              },
+        "CARRINGTON_LONGITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Carrington longitude in degrees."
+              },
+        "AREA_MSH" : {
+                "type" : "number",
+                "description" : "Corrected area in millionths of the solar hemisphere."
+              },
+        "LONGITUDINAL_EXTENT_DEG" : {
+                "type" : "number",
+                "description" : "Longitudinal extent in degrees."
+              },
+        "SPOT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of spots in the region; meaningful only when HAS_SPOT_COUNT."
+              },
+        "HAS_SPOT_COUNT" : {
+                "type" : "boolean",
+                "description" : "True when the source states SPOT_COUNT."
+              },
+        "MCINTOSH_CLASS" : {
+                "type" : "string",
+                "description" : "McIntosh classification, verbatim (e.g. Dao)."
+              },
+        "MAGNETIC_CLASS" : {
+                "type" : "string",
+                "description" : "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma)."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "CID of the original source bytes this record was parsed from."
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the original source bytes, lowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "When the source bytes were retrieved, RFC 3339 UTC."
+              }
+      },
+      "required" : ["POSITION_EPOCH", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SROCOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SRO"}
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SRTClass" : {
+      "type" : "object",
+      "description" : "One class of a categorical raster.",
+      "properties" : {
+        "CODE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Sample value of the class."
+              },
+        "LABEL" : {
+                "type" : "string",
+                "description" : "Source label, verbatim."
+              },
+        "COLOR_RGBA" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Source display color, 0xRRGGBBAA."
+              }
+      },
+      "required" : ["LABEL"],
+      "additionalProperties" : false
+    },
+    "SRT" : {
+      "type" : "object",
+      "description" : "Surface Raster Tile",
+      "properties" : {
+        "TILESET_ID" : {
+                "type" : "string",
+                "description" : "Stable identity of the tileset this tile belongs to."
+              },
+        "TILESET_NAME" : {
+                "type" : "string",
+                "description" : "Human-readable tileset name."
+              },
+        "QUANTITY" : {
+                "$ref" : "#/definitions/srtQuantity",
+                "description" : "What the samples measure."
+              },
+        "QUANTITY_NAME" : {
+                "type" : "string",
+                "description" : "Source quantity name, verbatim."
+              },
+        "UNIT" : {
+                "type" : "string",
+                "description" : "UCUM unit of the scaled value (m for canopy height); absent for classes."
+              },
+        "SAMPLE_TYPE" : {
+                "$ref" : "#/definitions/srtSampleType",
+                "description" : "Stored sample type."
+              },
+        "SCALE_FACTOR" : {
+                "type" : "number",
+                "description" : "value = sample * SCALE_FACTOR + ADD_OFFSET."
+              },
+        "ADD_OFFSET" : {
+                "type" : "number",
+                "description" : "value = sample * SCALE_FACTOR + ADD_OFFSET."
+              },
+        "NO_DATA_VALUE" : {
+                "type" : "number",
+                "description" : "Stored sample value meaning no data (WorldCover: 0)."
+              },
+        "CLASS_LEGEND" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SRTClass"},
+                "description" : "Class legend; required when QUANTITY = CATEGORICAL_CLASS."
+              },
+        "CRS" : {
+                "type" : "string",
+                "description" : "Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857)."
+              },
+        "AFFINE_TRANSFORM" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "GDAL geotransform, 6 values, mapping pixel corners to CRS units."
+              },
+        "PIXEL_REGISTRATION" : {
+                "$ref" : "#/definitions/srtPixelRegistration",
+                "description" : "Pixel registration."
+              },
+        "GRID_WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Grid width in samples."
+              },
+        "GRID_HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Grid height in samples."
+              },
+        "TILING_SCHEME" : {
+                "$ref" : "#/definitions/dttTilingScheme",
+                "description" : "Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR)."
+              },
+        "LEVEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Pyramid level."
+              },
+        "X" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Pyramid column."
+              },
+        "Y" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Pyramid row."
+              },
+        "WEST_DEG" : {
+                "type" : "number",
+                "description" : "Geographic bounding box, west edge in degrees."
+              },
+        "SOUTH_DEG" : {
+                "type" : "number",
+                "description" : "Geographic bounding box, south edge in degrees."
+              },
+        "EAST_DEG" : {
+                "type" : "number",
+                "description" : "Geographic bounding box, east edge in degrees."
+              },
+        "NORTH_DEG" : {
+                "type" : "number",
+                "description" : "Geographic bounding box, north edge in degrees."
+              },
+        "HORIZONTAL_DATUM_NAME" : {
+                "type" : "string",
+                "description" : "Horizontal datum name, verbatim."
+              },
+        "PAYLOAD_FORMAT" : {
+                "$ref" : "#/definitions/srtPayloadFormat",
+                "description" : "Encoding of PAYLOAD."
+              },
+        "PAYLOAD" : {
+                "$ref" : "#/definitions/DTTPayloadRef",
+                "description" : "Native samples only: no palette conversion, resampling or rounding."
+              },
+        "MIN_VALUE" : {
+                "type" : "number",
+                "description" : "Minimum scaled value in the tile."
+              },
+        "MAX_VALUE" : {
+                "type" : "number",
+                "description" : "Maximum scaled value in the tile."
+              },
+        "DATA_COVERAGE_FRACTION" : {
+                "type" : "number",
+                "description" : "Fraction of samples that are not NO_DATA_VALUE, 0 to 1."
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Dataset epoch of the samples, RFC 3339 UTC."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/DTTProvenance",
+                "description" : "Dataset, retrieval and license lineage."
+              }
+      },
+      "required" : ["TILESET_ID", "CRS", "PAYLOAD", "PROVENANCE"],
       "additionalProperties" : false
     },
     "STOModuleRef" : {

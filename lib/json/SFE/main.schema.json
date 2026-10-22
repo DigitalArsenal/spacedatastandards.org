@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
+    "sfeEventKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "XRAY", "OPTICAL", "RADIO", "CUSTOM"]
+    },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SFE" : {
+      "type" : "object",
+      "description" : "Solar Flare Event",
+      "properties" : {
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "The source's own event identity, verbatim."
+              },
+        "PRODUCT" : {
+                "type" : "string",
+                "description" : "Source product name, verbatim."
+              },
+        "OBSERVATORY" : {
+                "type" : "string",
+                "description" : "Reporting observatory, verbatim."
+              },
+        "PLATFORM" : {
+                "type" : "string",
+                "description" : "Observing platform or satellite, verbatim."
+              },
+        "EVENT_KIND" : {
+                "$ref" : "#/definitions/sfeEventKind",
+                "description" : "Observing domain."
+              },
+        "EVENT_TYPE_CODE" : {
+                "type" : "string",
+                "description" : "Source event type code, verbatim (e.g. XRA, FLA)."
+              },
+        "BEGIN_TIME" : {
+                "type" : "string",
+                "description" : "Event begin time, RFC 3339 UTC."
+              },
+        "PEAK_TIME" : {
+                "type" : "string",
+                "description" : "Event peak time, RFC 3339 UTC."
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "Event end time, RFC 3339 UTC."
+              },
+        "BEGIN_QUALIFIER" : {
+                "type" : "string",
+                "description" : "Qualifier on BEGIN_TIME, verbatim (e.g. B for before)."
+              },
+        "PEAK_QUALIFIER" : {
+                "type" : "string",
+                "description" : "Qualifier on PEAK_TIME, verbatim."
+              },
+        "END_QUALIFIER" : {
+                "type" : "string",
+                "description" : "Qualifier on END_TIME, verbatim (e.g. A for after)."
+              },
+        "XRAY_CLASS" : {
+                "type" : "string",
+                "description" : "Soft X-ray class, verbatim (e.g. C1.4)."
+              },
+        "OPTICAL_IMPORTANCE" : {
+                "type" : "string",
+                "description" : "Optical importance, verbatim (e.g. SF)."
+              },
+        "PEAK_FLUX_W_M2" : {
+                "type" : "number",
+                "description" : "Peak flux in W/m^2."
+              },
+        "INTEGRATED_FLUX_J_M2" : {
+                "type" : "number",
+                "description" : "Integrated flux (fluence) in J/m^2."
+              },
+        "PASSBAND_MIN_NM" : {
+                "type" : "number",
+                "description" : "Lower edge of the observing passband in nm."
+              },
+        "PASSBAND_MAX_NM" : {
+                "type" : "number",
+                "description" : "Upper edge of the observing passband in nm."
+              },
+        "REGION_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Associated region number; meaningful only when HAS_REGION_NUMBER."
+              },
+        "HAS_REGION_NUMBER" : {
+                "type" : "boolean",
+                "description" : "True only when the source explicitly states the region association."
+              },
+        "HG_LATITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Heliographic latitude in degrees, north positive, when stated."
+              },
+        "HG_LONGITUDE_DEG" : {
+                "type" : "number",
+                "description" : "Stonyhurst heliographic longitude in degrees, west positive, when stated."
+              },
+        "STATUS" : {
+                "type" : "string",
+                "description" : "Source status of the report, verbatim."
+              },
+        "REVISION" : {
+                "type" : "string",
+                "description" : "Source revision or change flag, verbatim."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
+              },
+        "SOURCE_CID" : {
+                "type" : "string",
+                "description" : "CID of the original source bytes this record was parsed from."
+              },
+        "SOURCE_DIGEST" : {
+                "type" : "string",
+                "description" : "SHA-256 of the original source bytes, lowercase hex."
+              },
+        "RETRIEVED_AT" : {
+                "type" : "string",
+                "description" : "When the source bytes were retrieved, RFC 3339 UTC."
+              }
+      },
+      "required" : ["EVENT_ID", "PROVENANCE"],
+      "additionalProperties" : false
+    },
+    "SFECOLLECTION" : {
+      "type" : "object",
+      "properties" : {
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/SFE"}
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SFE"
+}

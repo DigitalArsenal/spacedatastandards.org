@@ -1,0 +1,403 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ElementSet",
+        "Ephemeris",
+        "Observation",
+        "Reference"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "ElementSet": {
+          "value": 1,
+          "description": "Element sets of a catalog"
+        },
+        "Ephemeris": {
+          "value": 2,
+          "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+        },
+        "Observation": {
+          "value": 3,
+          "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        },
+        "Reference": {
+          "value": 4,
+          "description": "Reference registers of sites and facilities (status, dates, identity)"
+        }
+      }
+    },
+    "pvnLicenseClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Reproducible",
+        "CiteOnly",
+        "ShareAlike",
+        "NonCommercial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated. Never a grant: treated as CiteOnly."
+        },
+        "Reproducible": {
+          "value": 1,
+          "description": "The records may be republished, with the credit the terms ask."
+        },
+        "CiteOnly": {
+          "value": 2,
+          "description": "The records are computed on and cited, never republished."
+        },
+        "ShareAlike": {
+          "value": 3,
+          "description": "The records may be republished under the same terms, which every derived record carries."
+        },
+        "NonCommercial": {
+          "value": 4,
+          "description": "The records may be republished for non-commercial use only."
+        }
+      }
+    },
+    "sfeEventKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "XRAY",
+        "OPTICAL",
+        "RADIO",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+        },
+        "XRAY": {
+          "value": 1,
+          "description": "Soft X-ray flare (e.g. event type XRA)."
+        },
+        "OPTICAL": {
+          "value": 2,
+          "description": "Optical flare (e.g. event type FLA)."
+        },
+        "RADIO": {
+          "value": 3,
+          "description": "Radio burst or sweep."
+        },
+        "CUSTOM": {
+          "value": 4,
+          "description": "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+        }
+      }
+    },
+    "PVN": {
+      "type": "object",
+      "description": "Product Provenance",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_KIND": {
+          "$ref": "#/definitions/pvnSourceKind",
+          "description": "What kind of data the source supplies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "ElementSet": {
+              "value": 1,
+              "description": "Element sets of a catalog"
+            },
+            "Ephemeris": {
+              "value": 2,
+              "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            "Observation": {
+              "value": 3,
+              "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            "Reference": {
+              "value": 4,
+              "description": "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/pvnLicenseClass",
+          "description": "What the source's terms permit for the product.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated. Never a grant: treated as CiteOnly."
+            },
+            "Reproducible": {
+              "value": 1,
+              "description": "The records may be republished, with the credit the terms ask."
+            },
+            "CiteOnly": {
+              "value": 2,
+              "description": "The records are computed on and cited, never republished."
+            },
+            "ShareAlike": {
+              "value": 3,
+              "description": "The records may be republished under the same terms, which every derived record carries."
+            },
+            "NonCommercial": {
+              "value": 4,
+              "description": "The records may be republished for non-commercial use only."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINEAGE": {
+          "type": "string",
+          "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SFE": {
+      "type": "object",
+      "description": "Solar Flare Event",
+      "properties": {
+        "EVENT_ID": {
+          "type": "string",
+          "description": "The source's own event identity, verbatim.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "PRODUCT": {
+          "type": "string",
+          "description": "Source product name, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVATORY": {
+          "type": "string",
+          "description": "Reporting observatory, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PLATFORM": {
+          "type": "string",
+          "description": "Observing platform or satellite, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_KIND": {
+          "$ref": "#/definitions/sfeEventKind",
+          "description": "Observing domain.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            "XRAY": {
+              "value": 1,
+              "description": "Soft X-ray flare (e.g. event type XRA)."
+            },
+            "OPTICAL": {
+              "value": 2,
+              "description": "Optical flare (e.g. event type FLA)."
+            },
+            "RADIO": {
+              "value": 3,
+              "description": "Radio burst or sweep."
+            },
+            "CUSTOM": {
+              "value": 4,
+              "description": "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+            }
+          }
+        },
+        "EVENT_TYPE_CODE": {
+          "type": "string",
+          "description": "Source event type code, verbatim (e.g. XRA, FLA).",
+          "x-flatbuffer-type": "string"
+        },
+        "BEGIN_TIME": {
+          "type": "string",
+          "description": "Event begin time, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_TIME": {
+          "type": "string",
+          "description": "Event peak time, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "Event end time, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "BEGIN_QUALIFIER": {
+          "type": "string",
+          "description": "Qualifier on BEGIN_TIME, verbatim (e.g. B for before).",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_QUALIFIER": {
+          "type": "string",
+          "description": "Qualifier on PEAK_TIME, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "END_QUALIFIER": {
+          "type": "string",
+          "description": "Qualifier on END_TIME, verbatim (e.g. A for after).",
+          "x-flatbuffer-type": "string"
+        },
+        "XRAY_CLASS": {
+          "type": "string",
+          "description": "Soft X-ray class, verbatim (e.g. C1.4).",
+          "x-flatbuffer-type": "string"
+        },
+        "OPTICAL_IMPORTANCE": {
+          "type": "string",
+          "description": "Optical importance, verbatim (e.g. SF).",
+          "x-flatbuffer-type": "string"
+        },
+        "PEAK_FLUX_W_M2": {
+          "type": "number",
+          "description": "Peak flux in W/m^2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "INTEGRATED_FLUX_J_M2": {
+          "type": "number",
+          "description": "Integrated flux (fluence) in J/m^2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PASSBAND_MIN_NM": {
+          "type": "number",
+          "description": "Lower edge of the observing passband in nm.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "PASSBAND_MAX_NM": {
+          "type": "number",
+          "description": "Upper edge of the observing passband in nm.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "REGION_NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Associated region number; meaningful only when HAS_REGION_NUMBER.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HAS_REGION_NUMBER": {
+          "type": "boolean",
+          "description": "True only when the source explicitly states the region association.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "HG_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Heliographic latitude in degrees, north positive, when stated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Stonyhurst heliographic longitude in degrees, west positive, when stated.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "STATUS": {
+          "type": "string",
+          "description": "Source status of the report, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "REVISION": {
+          "type": "string",
+          "description": "Source revision or change flag, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "description": "CID of the original source bytes this record was parsed from.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "description": "SHA-256 of the original source bytes, lowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "When the source bytes were retrieved, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "EVENT_ID",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SFECOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SFE"
+          },
+          "x-flatbuffer-type": "[SFE]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SFE",
+  "x-flatbuffer-root-type": "SFE",
+  "x-flatbuffer-file-identifier": "$SFE"
+}

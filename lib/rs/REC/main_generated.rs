@@ -286,6 +286,10 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8790,11 +8794,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 286;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 290;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 32] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 36] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8827,6 +8831,10 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 32] = [
     RecordTypeExtended::FMB,
     RecordTypeExtended::FSG,
     RecordTypeExtended::PIN,
+    RecordTypeExtended::SDI,
+    RecordTypeExtended::SFE,
+    RecordTypeExtended::SRO,
+    RecordTypeExtended::SRT,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8874,9 +8882,13 @@ impl RecordTypeExtended {
     pub const FMB: Self = Self(284);
     pub const FSG: Self = Self(285);
     pub const PIN: Self = Self(286);
+    pub const SDI: Self = Self(287);
+    pub const SFE: Self = Self(288);
+    pub const SRO: Self = Self(289);
+    pub const SRT: Self = Self(290);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 286;
+    pub const ENUM_MAX: u16 = 290;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8910,6 +8922,10 @@ impl RecordTypeExtended {
         Self::FMB,
         Self::FSG,
         Self::PIN,
+        Self::SDI,
+        Self::SFE,
+        Self::SRO,
+        Self::SRT,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -8947,6 +8963,10 @@ impl RecordTypeExtended {
             Self::FMB => Some("FMB"),
             Self::FSG => Some("FSG"),
             Self::PIN => Some("PIN"),
+            Self::SDI => Some("SDI"),
+            Self::SFE => Some("SFE"),
+            Self::SRO => Some("SRO"),
+            Self::SRT => Some("SRT"),
             _ => None,
         }
     }

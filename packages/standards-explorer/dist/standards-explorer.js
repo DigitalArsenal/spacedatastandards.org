@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.258.0+1792404106059",
+  version: "1.260.0+1792703163789",
   STANDARDS: {
     PCF: {
       IDL: '// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum IntegratorType : ubyte {\n  RK4 = 0,            // Classical Runge-Kutta 4th order\n  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)\n  RK78 = 2,           // Runge-Kutta 7(8)\n  DOPRI5 = 3,         // Dormand-Prince 5(4)\n  DOPRI853 = 4,       // Dormand-Prince 8(5,3)\n  ABM = 5,            // Adams-Bashforth-Moulton\n  BS = 6,             // Bulirsch-Stoer\n  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)\n}\n\n/// Propagator Configuration\ntable PCF {\n  STEP_SIZE:double;\n  TOLERANCE:double;\n  MIN_STEP:double;\n  MAX_STEP:double;\n  MAX_ITERATIONS:uint;\n  GRAVITY_DEGREE:ushort;\n  GRAVITY_ORDER:ushort;\n  INTEGRATOR:ubyte;\n  OUTPUT_FRAME:ubyte;\n  FORCE_FLAGS:ushort;\n  DRAG_COEFFICIENT:float;\n  SRP_COEFFICIENT:float;\n  AREA_MASS_RATIO:float;\n  RESERVED:[uint8];\n}\n\nroot_type PCF;\nfile_identifier "$PCF";',
@@ -431,7 +431,7 @@ file_identifier "$PLK";`,
       ]
     },
     SPW: {
-      IDL: '// Hash: f450aecfc546934b6b8e2b4a62dca10cef82be302c5f7e5c3ea025a7ba2a1abe\n// Version: 1.0.3\n// -----------------------------------END_HEADER\nenum FluxQualifier: byte {\n  OBSERVED = 0,\n  BURST_ADJUSTED = 1,\n  INTERPOLATED_EXTRAPOLATED = 2,\n  NO_OBSERVATION = 3,\n  /// Interpolated by the upstream data provider rather than the issuing\n  /// observatory. Wire value 4 is unchanged from prior releases.\n  PROVIDER_INTERPOLATED = 4\n}\n\nenum F107DataType: byte {\n  OBS = 0,  // Observed flux measurement\n  INT = 1,  // Provider linear interpolation\n  PRD = 2,  // 45-Day predicted flux\n  PRM = 3   // Monthly predicted flux\n}\n\n/// Space Weather Data Record\ntable SPW {\n  /// Date in ISO 8601 format\n  DATE: string;\n  \n  /// Bartels Solar Rotation Number\n  BSRN: int;\n  \n  /// Day within Bartels cycle (1-27)\n  ND: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10\n  KP1: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10\n  KP2: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10\n  KP3: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10\n  KP4: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10\n  KP5: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10\n  KP6: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10\n  KP7: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10\n  KP8: int;\n  \n  /// Sum of the 8 Kp indices for the day\n  KP_SUM: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT\n  AP1: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT\n  AP2: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT\n  AP3: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT\n  AP4: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT\n  AP5: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT\n  AP6: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT\n  AP7: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT\n  AP8: int;\n  \n  /// Arithmetic average of the 8 Ap indices for the day\n  AP_AVG: int;\n  \n  /// Planetary Daily Character Figure (0.0 to 2.5)\n  CP: float;\n  \n  /// C9 index (0-9)\n  C9: int;\n  \n  /// International Sunspot Number\n  ISN: int;\n  \n  /// Observed 10.7cm Solar Radio Flux\n  F107_OBS: float;\n  \n  /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)\n  F107_ADJ: float;\n  \n  /// F10.7 Data Type\n  F107_DATA_TYPE: F107DataType;\n  \n  /// 81-day centered average of observed F10.7\n  F107_OBS_CENTER81: float;\n  \n  /// 81-day trailing average of observed F10.7\n  F107_OBS_LAST81: float;\n  \n  /// 81-day centered average of adjusted F10.7\n  F107_ADJ_CENTER81: float;\n  \n  /// 81-day trailing average of adjusted F10.7\n  F107_ADJ_LAST81: float;\n}\n\ntable SPWCOLLECTION {\n  RECORDS: [SPW];\n}\n\nroot_type SPW;\nfile_identifier "$SPW";',
+      IDL: '// Hash: bdd9ea316a17a3be4f05ecae2a52ccf639e6283a13f5f43d3b72e1cf1a8b5aac\n// Version: 1.0.4\n// -----------------------------------END_HEADER\ninclude "../PVN/main.fbs";\nenum FluxQualifier: byte {\n  OBSERVED = 0,\n  BURST_ADJUSTED = 1,\n  INTERPOLATED_EXTRAPOLATED = 2,\n  NO_OBSERVATION = 3,\n  /// Interpolated by the upstream data provider rather than the issuing\n  /// observatory. Wire value 4 is unchanged from prior releases.\n  PROVIDER_INTERPOLATED = 4\n}\n\nenum F107DataType: byte {\n  OBS = 0,  // Observed flux measurement\n  INT = 1,  // Provider linear interpolation\n  PRD = 2,  // 45-Day predicted flux\n  PRM = 3   // Monthly predicted flux\n}\n\n/// Space Weather Data Record\ntable SPW {\n  /// Date in ISO 8601 format\n  DATE: string;\n  \n  /// Bartels Solar Rotation Number\n  BSRN: int;\n  \n  /// Day within Bartels cycle (1-27)\n  ND: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0000-0300 UT, multiplied by 10\n  KP1: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0300-0600 UT, multiplied by 10\n  KP2: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0600-0900 UT, multiplied by 10\n  KP3: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 0900-1200 UT, multiplied by 10\n  KP4: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1200-1500 UT, multiplied by 10\n  KP5: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1500-1800 UT, multiplied by 10\n  KP6: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 1800-2100 UT, multiplied by 10\n  KP7: int;\n  \n  /// Planetary 3-hour Range Index (Kp) for 2100-0000 UT, multiplied by 10\n  KP8: int;\n  \n  /// Sum of the 8 Kp indices for the day\n  KP_SUM: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0000-0300 UT\n  AP1: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0300-0600 UT\n  AP2: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0600-0900 UT\n  AP3: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 0900-1200 UT\n  AP4: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1200-1500 UT\n  AP5: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1500-1800 UT\n  AP6: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 1800-2100 UT\n  AP7: int;\n  \n  /// Planetary Equivalent Amplitude (Ap) for 2100-0000 UT\n  AP8: int;\n  \n  /// Arithmetic average of the 8 Ap indices for the day\n  AP_AVG: int;\n  \n  /// Planetary Daily Character Figure (0.0 to 2.5)\n  CP: float;\n  \n  /// C9 index (0-9)\n  C9: int;\n  \n  /// International Sunspot Number\n  ISN: int;\n  \n  /// Observed 10.7cm Solar Radio Flux\n  F107_OBS: float;\n  \n  /// Adjusted 10.7cm Solar Radio Flux (to 1 AU)\n  F107_ADJ: float;\n  \n  /// F10.7 Data Type\n  F107_DATA_TYPE: F107DataType;\n  \n  /// 81-day centered average of observed F10.7\n  F107_OBS_CENTER81: float;\n  \n  /// 81-day trailing average of observed F10.7\n  F107_OBS_LAST81: float;\n  \n  /// 81-day centered average of adjusted F10.7\n  F107_ADJ_CENTER81: float;\n  \n  /// 81-day trailing average of adjusted F10.7\n  F107_ADJ_LAST81: float;\n\n  /// Per-record source, provider, software, license terms and lineage.\n  PROVENANCE: PVN;\n}\n\ntable SPWCOLLECTION {\n  RECORDS: [SPW];\n}\n\nroot_type SPW;\nfile_identifier "$SPW";',
       files: [
         "./dist/SPW/SPW.sw.tar.gz",
         "./dist/SPW/SPW.py.tar.gz",
@@ -469,8 +469,8 @@ file_identifier "$PLK";`,
       ]
     },
     DTT: {
-      IDL: `// Hash: 00f13f0a331557b828913f0ab311ac6e383d167ff1c9da6006e0a3be3eacc09e
-// Version: 1.191.0
+      IDL: `// Hash: ac6c7610099a25322059064b5a706e6549dac6ecae1d8ffbc31dc8d69ff2f3c6
+// Version: 1.191.1
 // -----------------------------------END_HEADER
 /// Scheme that maps a LEVEL/X/Y address to a region of the ellipsoid. The
 /// scheme is stated, never inferred from tile counts. Ordinals are wire
@@ -609,7 +609,16 @@ table DTTPayloadRef {
   /// one independently of the CID.
   DIGEST:string;
   /// Content encoding applied to the block before hashing, verbatim, when the
-  /// bytes are stored compressed.
+  /// bytes are stored compressed or re-encoded. The token is an HTTP
+  /// content-coding (for example gzip) or a publisher-named lossless
+  /// re-encoding of the PAYLOAD_FORMAT bytes (for example
+  /// qm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt
+  /// from a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT
+  /// bytes exactly; a consumer that does not know the token refuses the block.
+  /// SIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed
+  /// records may itself be stored compressed as a whole (for example gzip,
+  /// named with a .gz suffix); that wrapping belongs to the file, not to the
+  /// block, and is not stated here.
   CONTENT_ENCODING:string;
   /// Media type of the block as the publisher serves it.
   MEDIA_TYPE:string;
@@ -6293,18 +6302,20 @@ file_identifier "$OPP";`,
       ]
     },
     DCL: {
-      IDL: `// Hash: 07794b8e3c8163b382c7de0f1c5fd10ce18e1347bcecbfb107f6c19e65cb3ee3
-// Version: 1.248.0
+      IDL: `// Hash: 5f6683a555aa0be32ed6a000c4515059647c1ef3415d02427dd3dcd197093931
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
 include "../OEM/main.fbs";
+include "../PVN/main.fbs";
 
 /// Density Calibration (DCL)
 /// Description
 /// A calibration of a thermospheric density model and the results computed
-/// with it. A calibration is a correction to the model's exospheric
+/// with it. A calibration may be a dimensionless common-mode log-density
+/// scale for NRLMSISE-00, or a correction to the model's exospheric
 /// temperature (added where the model adds its geomagnetic term, so a
 /// constant correction is the same as raising every hourly Dst-derived
 /// temperature change by that amount), estimated either from observed
@@ -6333,7 +6344,8 @@ include "../OEM/main.fbs";
 /// (density, Mach, heating) along an entry trajectory; a DCL density
 /// evaluation along the same trajectory supplies its calibrated density.
 ///
-/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+/// log-density scales are dimensionless ln(corrected density / model density).
 
 /// What a record computes. Append new values only; never reorder or reuse
 /// existing values.
@@ -6354,15 +6366,18 @@ enum dclProduct : ubyte {
   DragWork
 }
 
-/// Form of a temperature correction. Append new values only; never reorder or
+/// Form of a density-model correction. Append new values only; never reorder or
 /// reuse existing values.
 enum dclCorrectionForm : ubyte {
   /// No correction (dT = 0).
   None,
   /// Spherical harmonics in latitude and local solar time per time segment.
   Harmonic,
-  /// Values at time nodes, optionally at altitude nodes.
-  Nodes
+  /// Temperature values, K, at time nodes, optionally at altitude nodes.
+  Nodes,
+  /// Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+  /// Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+  LogDensityNodes
 }
 
 /// Outcome. Append new values only; never reorder or reuse existing values.
@@ -6424,7 +6439,7 @@ table dclLevel {
   SIGMA_K: double = nan;
 }
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 table dclCorrection {
   FORM: dclCorrectionForm = None;
   /// Harmonic: the degree (0 = a global constant per segment).
@@ -6432,8 +6447,9 @@ table dclCorrection {
   /// Harmonic: segments in time order, not overlapping; an instant in no
   /// segment has dT = 0.
   SEGMENTS: [dclHarmonicSegment];
-  /// Nodes: node times, strictly increasing. dT is linear in time between
-  /// nodes and held outside them.
+  /// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+  /// The selected correction is linear in time between nodes and held at the
+  /// first/last value outside the node span.
   NODE_TIMES_MS: [int64];
   /// Nodes: altitude nodes, km, strictly increasing; empty = one global
   /// value per time node (at least two otherwise). dT is linear in altitude
@@ -6446,6 +6462,15 @@ table dclCorrection {
   /// Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not
   /// estimated.
   NODE_SIGMAS_K: [double];
+  /// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+  /// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+  /// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+  /// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+  /// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+  /// include the producer's forecast decay through at least 48 hours after
+  /// that epoch. Interpolate those nodes; do not apply another decay in the
+  /// consumer. After the final published node, hold its value.
+  NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: [double];
 }
 
 /// Points, column-major and parallel (one entry per point; vectors as
@@ -6718,6 +6743,8 @@ table DCL {
   MEAN_LEVEL_SIGMA_K: double = nan;
   /// OrbitalEnergy and DragWork: the states and their results.
   STATES: dclStates;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN;
 }
 
 root_type DCL;
@@ -6832,6 +6859,135 @@ file_identifier "$DCL";`,
         "./dist/OSM/OSM.cpp.tar.gz",
         "./dist/OSM/OSM.kt.tar.gz",
         "./dist/OSM/OSM.ts.tar.gz"
+      ]
+    },
+    SDI: {
+      IDL: `// Hash: f5030fa426c48c2b77c2002390a9ed78fb150d6f2295e21d9fc580fe1a4b2dfd
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+// Solar Disk Image (SDI)
+//
+// One full-disk solar image and the FITS World Coordinate System that places
+// its pixels on the Sun. The pixels themselves are referenced by CID, never
+// embedded. WCS keywords are copied verbatim from the source header; an
+// absent double is NaN. A viewer's display scale that is not WCS is never
+// stored as CDELT.
+
+/// Solar Disk Image
+table SDI {
+  /// Observatory or mission, verbatim (FITS TELESCOP).
+  OBSERVATORY: string;
+  /// Instrument, verbatim (FITS INSTRUME).
+  INSTRUMENT: string;
+  /// Measurement, verbatim (FITS WAVELNTH token or continuum label).
+  MEASUREMENT: string;
+  /// Wavelength in nm.
+  WAVELENGTH_NM: double = nan;
+  /// The source's image identity, verbatim.
+  IMAGE_ID: string;
+  /// When this image was requested from the source, RFC 3339 UTC.
+  REQUESTED_AT: string;
+  /// Observation time normalized to RFC 3339 UTC.
+  OBSERVED_AT: string (required);
+  /// FITS DATE-OBS, verbatim.
+  DATE_OBS: string;
+  /// FITS TIMESYS, verbatim.
+  TIME_SCALE: string;
+  /// Source cadence in seconds.
+  CADENCE_S: double = nan;
+  /// Exposure time in seconds (FITS EXPTIME).
+  EXPOSURE_S: double = nan;
+  /// CID of the image bytes.
+  IMAGE_CID: string;
+  /// Media type of the image bytes (e.g. image/jp2, application/fits).
+  IMAGE_MEDIA_TYPE: string;
+  /// SHA-256 of the image bytes, lowercase hex.
+  IMAGE_DIGEST: string;
+  /// Size of the image bytes.
+  IMAGE_SIZE_BYTES: uint64;
+  /// CID of the verbatim FITS header.
+  HEADER_CID: string;
+  /// Image width in pixels (FITS NAXIS1).
+  WIDTH: uint32;
+  /// Image height in pixels (FITS NAXIS2).
+  HEIGHT: uint32;
+  /// FITS CTYPE1, verbatim (e.g. HPLN-TAN).
+  CTYPE1: string;
+  /// FITS CTYPE2, verbatim (e.g. HPLT-TAN).
+  CTYPE2: string;
+  /// FITS CUNIT1, verbatim.
+  CUNIT1: string;
+  /// FITS CUNIT2, verbatim.
+  CUNIT2: string;
+  /// FITS CRPIX1, one-based.
+  CRPIX1: double = nan;
+  /// FITS CRPIX2, one-based.
+  CRPIX2: double = nan;
+  /// FITS CRVAL1 in CUNIT1.
+  CRVAL1: double = nan;
+  /// FITS CRVAL2 in CUNIT2.
+  CRVAL2: double = nan;
+  /// FITS CDELT1 in CUNIT1 per pixel.
+  CDELT1: double = nan;
+  /// FITS CDELT2 in CUNIT2 per pixel.
+  CDELT2: double = nan;
+  /// FITS CROTA2 in degrees.
+  CROTA2: double = nan;
+  /// FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),
+  /// present only when the source supplies them.
+  PC: [double];
+  /// Observed solar radius in arcseconds (FITS RSUN_OBS).
+  RSUN_OBS_ARCSEC: double = nan;
+  /// Reference solar radius in meters (FITS RSUN_REF).
+  RSUN_REF_M: double = nan;
+  /// Observer distance from Sun center in meters (FITS DSUN_OBS).
+  DSUN_OBS_M: double = nan;
+  /// Observer Carrington longitude in degrees (FITS CRLN_OBS).
+  CRLN_OBS_DEG: double = nan;
+  /// Observer Carrington latitude in degrees (FITS CRLT_OBS).
+  CRLT_OBS_DEG: double = nan;
+  /// Observer Stonyhurst longitude in degrees (FITS HGLN_OBS).
+  HGLN_OBS_DEG: double = nan;
+  /// Observer Stonyhurst latitude in degrees (FITS HGLT_OBS).
+  HGLT_OBS_DEG: double = nan;
+  /// FITS QUALITY bitmask; meaningful only when HAS_QUALITY.
+  QUALITY: int64;
+  /// True when the source states QUALITY.
+  HAS_QUALITY: bool = false;
+  /// Processing description, verbatim.
+  PROCESSING: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  /// CID of the original source bytes this record was parsed from.
+  SOURCE_CID: string;
+  /// SHA-256 of the original source bytes, lowercase hex.
+  SOURCE_DIGEST: string;
+  /// When the source bytes were retrieved, RFC 3339 UTC.
+  RETRIEVED_AT: string;
+}
+
+table SDICOLLECTION {
+  RECORDS: [SDI];
+}
+
+root_type SDI;
+file_identifier "$SDI";`,
+      files: [
+        "./dist/SDI/SDI.sw.tar.gz",
+        "./dist/SDI/SDI.py.tar.gz",
+        "./dist/SDI/SDI.lob.tar.gz",
+        "./dist/SDI/SDI.go.tar.gz",
+        "./dist/SDI/SDI.js.tar.gz",
+        "./dist/SDI/SDI.dart.tar.gz",
+        "./dist/SDI/SDI.cs.tar.gz",
+        "./dist/SDI/SDI.java.tar.gz",
+        "./dist/SDI/SDI.rs.tar.gz",
+        "./dist/SDI/SDI.php.tar.gz",
+        "./dist/SDI/SDI.json.tar.gz",
+        "./dist/SDI/SDI.cpp.tar.gz",
+        "./dist/SDI/SDI.kt.tar.gz",
+        "./dist/SDI/SDI.ts.tar.gz"
       ]
     },
     PRG: {
@@ -7193,6 +7349,115 @@ file_identifier "$PPE";`,
         "./dist/PPE/PPE.cpp.tar.gz",
         "./dist/PPE/PPE.kt.tar.gz",
         "./dist/PPE/PPE.ts.tar.gz"
+      ]
+    },
+    SFE: {
+      IDL: `// Hash: f14a7ff6de691dc76148f690059fc0baa38f933015cf98f28f0da39e19442274
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+// Solar Flare Event (SFE)
+//
+// One solar event report (X-ray, optical or radio) as published by its
+// source. Identity, times, qualifiers and classes are verbatim. An absent
+// double is NaN. REGION_NUMBER is set only when the source itself states the
+// association; it is never inferred from time or position proximity.
+
+/// Observing domain of the event.
+enum sfeEventKind : byte {
+  /// Not stated. Ordinal 0 so an unset field is never read as a real kind.
+  UNSPECIFIED,
+  /// Soft X-ray flare (e.g. event type XRA).
+  XRAY,
+  /// Optical flare (e.g. event type FLA).
+  OPTICAL,
+  /// Radio burst or sweep.
+  RADIO,
+  /// A kind this enum does not model; EVENT_TYPE_CODE carries the source token.
+  CUSTOM
+}
+
+/// Solar Flare Event
+table SFE {
+  /// The source's own event identity, verbatim.
+  EVENT_ID: string (required);
+  /// Source product name, verbatim.
+  PRODUCT: string;
+  /// Reporting observatory, verbatim.
+  OBSERVATORY: string;
+  /// Observing platform or satellite, verbatim.
+  PLATFORM: string;
+  /// Observing domain.
+  EVENT_KIND: sfeEventKind;
+  /// Source event type code, verbatim (e.g. XRA, FLA).
+  EVENT_TYPE_CODE: string;
+  /// Event begin time, RFC 3339 UTC.
+  BEGIN_TIME: string;
+  /// Event peak time, RFC 3339 UTC.
+  PEAK_TIME: string;
+  /// Event end time, RFC 3339 UTC.
+  END_TIME: string;
+  /// Qualifier on BEGIN_TIME, verbatim (e.g. B for before).
+  BEGIN_QUALIFIER: string;
+  /// Qualifier on PEAK_TIME, verbatim.
+  PEAK_QUALIFIER: string;
+  /// Qualifier on END_TIME, verbatim (e.g. A for after).
+  END_QUALIFIER: string;
+  /// Soft X-ray class, verbatim (e.g. C1.4).
+  XRAY_CLASS: string;
+  /// Optical importance, verbatim (e.g. SF).
+  OPTICAL_IMPORTANCE: string;
+  /// Peak flux in W/m^2.
+  PEAK_FLUX_W_M2: double = nan;
+  /// Integrated flux (fluence) in J/m^2.
+  INTEGRATED_FLUX_J_M2: double = nan;
+  /// Lower edge of the observing passband in nm.
+  PASSBAND_MIN_NM: double = nan;
+  /// Upper edge of the observing passband in nm.
+  PASSBAND_MAX_NM: double = nan;
+  /// Associated region number; meaningful only when HAS_REGION_NUMBER.
+  REGION_NUMBER: uint32;
+  /// True only when the source explicitly states the region association.
+  HAS_REGION_NUMBER: bool = false;
+  /// Heliographic latitude in degrees, north positive, when stated.
+  HG_LATITUDE_DEG: double = nan;
+  /// Stonyhurst heliographic longitude in degrees, west positive, when stated.
+  HG_LONGITUDE_DEG: double = nan;
+  /// Source status of the report, verbatim.
+  STATUS: string;
+  /// Source revision or change flag, verbatim.
+  REVISION: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  /// CID of the original source bytes this record was parsed from.
+  SOURCE_CID: string;
+  /// SHA-256 of the original source bytes, lowercase hex.
+  SOURCE_DIGEST: string;
+  /// When the source bytes were retrieved, RFC 3339 UTC.
+  RETRIEVED_AT: string;
+}
+
+table SFECOLLECTION {
+  RECORDS: [SFE];
+}
+
+root_type SFE;
+file_identifier "$SFE";`,
+      files: [
+        "./dist/SFE/SFE.sw.tar.gz",
+        "./dist/SFE/SFE.py.tar.gz",
+        "./dist/SFE/SFE.lob.tar.gz",
+        "./dist/SFE/SFE.go.tar.gz",
+        "./dist/SFE/SFE.js.tar.gz",
+        "./dist/SFE/SFE.dart.tar.gz",
+        "./dist/SFE/SFE.cs.tar.gz",
+        "./dist/SFE/SFE.java.tar.gz",
+        "./dist/SFE/SFE.rs.tar.gz",
+        "./dist/SFE/SFE.php.tar.gz",
+        "./dist/SFE/SFE.json.tar.gz",
+        "./dist/SFE/SFE.cpp.tar.gz",
+        "./dist/SFE/SFE.kt.tar.gz",
+        "./dist/SFE/SFE.ts.tar.gz"
       ]
     },
     LMS: {
@@ -9319,6 +9584,99 @@ file_identifier "$PAP";`,
         "./dist/PAP/PAP.ts.tar.gz"
       ]
     },
+    SRO: {
+      IDL: `// Hash: fcf879081f4b71283f41907791dd7175eb4bc16332210a38c9ed6b83328c015b
+// Version: 1.259.0
+// -----------------------------------END_HEADER
+include "../PVN/main.fbs";
+// Solar Region Observation (SRO)
+//
+// One numbered solar active region as stated by its numbering authority on
+// one issue. Every value is copied verbatim from the source or left absent:
+// an absent double is NaN, an absent count has HAS_SPOT_COUNT = false.
+// Positions are heliographic; sign conversions from a source whose longitude
+// sign is opposite happen in the producer, never in this schema.
+
+/// What kind of region the source lists.
+enum sroRegionKind : byte {
+  /// Not stated. Ordinal 0 so an unset field is never read as a real kind.
+  UNSPECIFIED,
+  /// A sunspot group (e.g. SRS Part I).
+  SUNSPOT_GROUP,
+  /// A plage region without spots (e.g. SRS Part IA).
+  PLAGE,
+  /// A kind this enum does not model.
+  CUSTOM
+}
+
+/// Solar Region Observation
+table SRO {
+  /// Region number, verbatim, with no solar cycle prefix added or removed.
+  REGION_NUMBER: uint32;
+  /// The numbering authority, verbatim (e.g. NOAA/SWPC).
+  REGION_AUTHORITY: string;
+  /// When the source issued this report, RFC 3339 UTC.
+  ISSUED_AT: string;
+  /// The source's observation date label, verbatim.
+  OBSERVED_DATE: string;
+  /// The instant the position below refers to, RFC 3339 UTC.
+  POSITION_EPOCH: string (required);
+  /// Region kind as listed by the source.
+  REGION_KIND: sroRegionKind;
+  /// Heliographic location token, verbatim (e.g. N14W32).
+  LOCATION_TOKEN: string;
+  /// Heliographic latitude in degrees, north positive.
+  HG_LATITUDE_DEG: double = nan;
+  /// Stonyhurst heliographic longitude in degrees: 0 is the central meridian
+  /// as seen from Earth, west positive.
+  HG_LONGITUDE_DEG: double = nan;
+  /// Carrington longitude in degrees.
+  CARRINGTON_LONGITUDE_DEG: double = nan;
+  /// Corrected area in millionths of the solar hemisphere.
+  AREA_MSH: double = nan;
+  /// Longitudinal extent in degrees.
+  LONGITUDINAL_EXTENT_DEG: double = nan;
+  /// Number of spots in the region; meaningful only when HAS_SPOT_COUNT.
+  SPOT_COUNT: uint32;
+  /// True when the source states SPOT_COUNT.
+  HAS_SPOT_COUNT: bool = false;
+  /// McIntosh classification, verbatim (e.g. Dao).
+  MCINTOSH_CLASS: string;
+  /// Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma).
+  MAGNETIC_CLASS: string;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN (required);
+  /// CID of the original source bytes this record was parsed from.
+  SOURCE_CID: string;
+  /// SHA-256 of the original source bytes, lowercase hex.
+  SOURCE_DIGEST: string;
+  /// When the source bytes were retrieved, RFC 3339 UTC.
+  RETRIEVED_AT: string;
+}
+
+table SROCOLLECTION {
+  RECORDS: [SRO];
+}
+
+root_type SRO;
+file_identifier "$SRO";`,
+      files: [
+        "./dist/SRO/SRO.sw.tar.gz",
+        "./dist/SRO/SRO.py.tar.gz",
+        "./dist/SRO/SRO.lob.tar.gz",
+        "./dist/SRO/SRO.go.tar.gz",
+        "./dist/SRO/SRO.js.tar.gz",
+        "./dist/SRO/SRO.dart.tar.gz",
+        "./dist/SRO/SRO.cs.tar.gz",
+        "./dist/SRO/SRO.java.tar.gz",
+        "./dist/SRO/SRO.rs.tar.gz",
+        "./dist/SRO/SRO.php.tar.gz",
+        "./dist/SRO/SRO.json.tar.gz",
+        "./dist/SRO/SRO.cpp.tar.gz",
+        "./dist/SRO/SRO.kt.tar.gz",
+        "./dist/SRO/SRO.ts.tar.gz"
+      ]
+    },
     STV: {
       IDL: '// Hash: 5685ddaa732fdb6703aa0c0e862b2af1f11fbd7933bca131181b30ce678d1c16\n// Version: 0.0.2\n// -----------------------------------END_HEADER\nenum STVReferenceFrame : byte {\n  GCRF = 0,       // Geocentric Celestial Reference Frame\n  ITRF = 1,       // International Terrestrial Reference Frame\n  EME2000 = 2,    // Earth Mean Equator J2000\n  TEME = 3,       // True Equator Mean Equinox\n  ICRF = 4,       // International Celestial Reference Frame\n  MOON_CI = 5,    // Moon-centered inertial\n  MARS_CI = 6,    // Mars-centered inertial\n}\n\n/// State Vector\ntable STV {\n  EPOCH:double;\n  POS_X:double;\n  POS_Y:double;\n  POS_Z:double;\n  VEL_X:double;\n  VEL_Y:double;\n  VEL_Z:double;\n  REF_FRAME:ubyte;\n  FLAGS:ubyte;\n  RESERVED:[uint8];\n}\n\nroot_type STV;\nfile_identifier "$STV";',
       files: [
@@ -10658,6 +11016,25 @@ file_identifier "$DSS";`,
         "./dist/DSS/DSS.cpp.tar.gz",
         "./dist/DSS/DSS.kt.tar.gz",
         "./dist/DSS/DSS.ts.tar.gz"
+      ]
+    },
+    SRT: {
+      IDL: '// Hash: 37bc242ee6a02e6599223023b33a6bd0a0ce9fb31fbd605a47a4a8810e915a59\n// Version: 1.259.0\n// -----------------------------------END_HEADER\ninclude "../DTT/main.fbs";\n// Surface Raster Tile (SRT)\n//\n// One tile or window of a gridded surface quantity that is not terrain:\n// categorical classes (land cover) or height above ground (canopy height).\n// PAYLOAD carries the native samples only, with no palette conversion,\n// resampling or rounding. Payload reference, provenance and tiling scheme are\n// shared with DTT; DTT is unchanged.\n\n/// What the samples measure. Append only.\nenum srtQuantity : byte {\n  /// Not stated. Ordinal 0 so an unset field is never read as a real quantity.\n  UNSPECIFIED,\n  /// Integer class codes resolved by CLASS_LEGEND.\n  CATEGORICAL_CLASS,\n  /// Height above local ground (e.g. canopy height), never terrain.\n  HEIGHT_ABOVE_GROUND,\n  /// A quantity this enum does not model; QUANTITY_NAME names it.\n  CUSTOM\n}\n\n/// Stored sample type, before SCALE_FACTOR and ADD_OFFSET.\nenum srtSampleType : byte {\n  UNSPECIFIED,\n  UINT8,\n  INT8,\n  UINT16,\n  INT16,\n  UINT32,\n  INT32,\n  FLOAT32,\n  FLOAT64\n}\n\n/// Whether a sample is the cell area or the cell corner point.\nenum srtPixelRegistration : byte {\n  UNSPECIFIED,\n  /// Sample represents the whole cell area (GDAL PixelIsArea).\n  AREA,\n  /// Sample represents the point at the cell corner (GDAL PixelIsPoint).\n  POINT\n}\n\n/// Encoding of PAYLOAD.\nenum srtPayloadFormat : byte {\n  UNSPECIFIED,\n  /// A GeoTIFF file, verbatim.\n  RASTER_GEOTIFF,\n  /// Bare samples, rows from the north-west corner, little-endian.\n  SAMPLES_ROW_MAJOR_LE,\n  /// A format this enum does not model; PAYLOAD.MEDIA_TYPE names it.\n  CUSTOM\n}\n\n/// One class of a categorical raster.\ntable SRTClass {\n  /// Sample value of the class.\n  CODE: int32;\n  /// Source label, verbatim.\n  LABEL: string (required);\n  /// Source display color, 0xRRGGBBAA.\n  COLOR_RGBA: uint32;\n}\n\n/// Surface Raster Tile\ntable SRT {\n  /// Stable identity of the tileset this tile belongs to.\n  TILESET_ID: string (required);\n  /// Human-readable tileset name.\n  TILESET_NAME: string;\n  /// What the samples measure.\n  QUANTITY: srtQuantity;\n  /// Source quantity name, verbatim.\n  QUANTITY_NAME: string;\n  /// UCUM unit of the scaled value (m for canopy height); absent for classes.\n  UNIT: string;\n  /// Stored sample type.\n  SAMPLE_TYPE: srtSampleType;\n  /// value = sample * SCALE_FACTOR + ADD_OFFSET.\n  SCALE_FACTOR: double = 1.0;\n  /// value = sample * SCALE_FACTOR + ADD_OFFSET.\n  ADD_OFFSET: double = 0.0;\n  /// Stored sample value meaning no data (WorldCover: 0).\n  NO_DATA_VALUE: double = nan;\n  /// Class legend; required when QUANTITY = CATEGORICAL_CLASS.\n  CLASS_LEGEND: [SRTClass];\n  /// Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857).\n  CRS: string (required);\n  /// GDAL geotransform, 6 values, mapping pixel corners to CRS units.\n  AFFINE_TRANSFORM: [double];\n  /// Pixel registration.\n  PIXEL_REGISTRATION: srtPixelRegistration;\n  /// Grid width in samples.\n  GRID_WIDTH: uint32;\n  /// Grid height in samples.\n  GRID_HEIGHT: uint32;\n  /// Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR).\n  TILING_SCHEME: dttTilingScheme;\n  /// Pyramid level.\n  LEVEL: uint32;\n  /// Pyramid column.\n  X: uint32;\n  /// Pyramid row.\n  Y: uint32;\n  /// Geographic bounding box, west edge in degrees.\n  WEST_DEG: double;\n  /// Geographic bounding box, south edge in degrees.\n  SOUTH_DEG: double;\n  /// Geographic bounding box, east edge in degrees.\n  EAST_DEG: double;\n  /// Geographic bounding box, north edge in degrees.\n  NORTH_DEG: double;\n  /// Horizontal datum name, verbatim.\n  HORIZONTAL_DATUM_NAME: string;\n  /// Encoding of PAYLOAD.\n  PAYLOAD_FORMAT: srtPayloadFormat;\n  /// Native samples only: no palette conversion, resampling or rounding.\n  PAYLOAD: DTTPayloadRef (required);\n  /// Minimum scaled value in the tile.\n  MIN_VALUE: double = nan;\n  /// Maximum scaled value in the tile.\n  MAX_VALUE: double = nan;\n  /// Fraction of samples that are not NO_DATA_VALUE, 0 to 1.\n  DATA_COVERAGE_FRACTION: double = nan;\n  /// Dataset epoch of the samples, RFC 3339 UTC.\n  EPOCH: string;\n  /// Dataset, retrieval and license lineage.\n  PROVENANCE: DTTProvenance (required);\n}\n\nroot_type SRT;\nfile_identifier "$SRT";',
+      files: [
+        "./dist/SRT/SRT.sw.tar.gz",
+        "./dist/SRT/SRT.py.tar.gz",
+        "./dist/SRT/SRT.lob.tar.gz",
+        "./dist/SRT/SRT.go.tar.gz",
+        "./dist/SRT/SRT.js.tar.gz",
+        "./dist/SRT/SRT.dart.tar.gz",
+        "./dist/SRT/SRT.cs.tar.gz",
+        "./dist/SRT/SRT.java.tar.gz",
+        "./dist/SRT/SRT.rs.tar.gz",
+        "./dist/SRT/SRT.php.tar.gz",
+        "./dist/SRT/SRT.json.tar.gz",
+        "./dist/SRT/SRT.cpp.tar.gz",
+        "./dist/SRT/SRT.kt.tar.gz",
+        "./dist/SRT/SRT.ts.tar.gz"
       ]
     },
     ACT: {
@@ -12965,8 +13342,8 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 4874b302d263125763061797cded99feb7a396f49259c955feec74ea952d4ff5
-// Version: 1.44.85
+      IDL: `// Hash: 4d2b71fa2721b495b3187b60d8174c7fa680883806134da87dde827ca35ed82c
+// Version: 1.44.86
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -13192,11 +13569,13 @@ include "../SCR/main.fbs";
 include "../SCV/main.fbs";
 include "../SCX/main.fbs";
 include "../SDF/main.fbs";
+include "../SDI/main.fbs";
 include "../SDL/main.fbs";
 include "../SDR/main.fbs";
 include "../SEN/main.fbs";
 include "../SEO/main.fbs";
 include "../SEV/main.fbs";
+include "../SFE/main.fbs";
 include "../SHC/main.fbs";
 include "../SHW/main.fbs";
 include "../SIT/main.fbs";
@@ -13213,6 +13592,8 @@ include "../SPP/main.fbs";
 include "../SPW/main.fbs";
 include "../SRG/main.fbs";
 include "../SRI/main.fbs";
+include "../SRO/main.fbs";
+include "../SRT/main.fbs";
 include "../STF/main.fbs";
 include "../STO/main.fbs";
 include "../STR/main.fbs";
@@ -13375,7 +13756,11 @@ enum RecordTypeExtended : ushort {
   FCK = 283,
   FMB = 284,
   FSG = 285,
-  PIN = 286
+  PIN = 286,
+  SDI = 287,
+  SFE = 288,
+  SRO = 289,
+  SRT = 290
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -36346,6 +36731,26 @@ var json_default = {
     SPW: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -36364,6 +36769,45 @@ var json_default = {
             "PRD",
             "PRM"
           ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
         },
         SPW: {
           type: "object",
@@ -36536,6 +36980,10 @@ var json_default = {
             F107_ADJ_LAST81: {
               type: "number",
               description: "81-day trailing average of adjusted F10.7"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -37799,7 +38247,7 @@ var json_default = {
             },
             CONTENT_ENCODING: {
               type: "string",
-              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed."
+              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here."
             },
             MEDIA_TYPE: {
               type: "string",
@@ -67148,6 +67596,26 @@ verbatim what that source states about itself.`,
             "IAU_2006"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -67409,26 +67877,6 @@ verbatim what that source states about itself.`,
             "PooledModel"
           ]
         },
-        pvnSourceKind: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "ElementSet",
-            "Ephemeris",
-            "Observation",
-            "Reference"
-          ]
-        },
-        pvnLicenseClass: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Reproducible",
-            "CiteOnly",
-            "ShareAlike",
-            "NonCommercial"
-          ]
-        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -67456,7 +67904,8 @@ verbatim what that source states about itself.`,
           enum: [
             "None",
             "Harmonic",
-            "Nodes"
+            "Nodes",
+            "LogDensityNodes"
           ]
         },
         dclStatus: {
@@ -69829,6 +70278,45 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -70000,6 +70488,10 @@ verbatim what that source states about itself.`,
             F107_ADJ_LAST81: {
               type: "number",
               description: "81-day trailing average of adjusted F10.7"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -71752,45 +72244,6 @@ empty = the provider's native frame.`
           },
           additionalProperties: false
         },
-        PVN: {
-          type: "object",
-          description: "Product Provenance",
-          properties: {
-            SOURCE_ID: {
-              type: "string",
-              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-            },
-            SOURCE_KIND: {
-              $ref: "#/definitions/pvnSourceKind",
-              description: "What kind of data the source supplies."
-            },
-            ORIGINATOR: {
-              type: "string",
-              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-            },
-            PROVIDER_ID: {
-              type: "string",
-              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-            },
-            PRODUCER: {
-              type: "string",
-              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-            },
-            LICENSE_CLASS: {
-              $ref: "#/definitions/pvnLicenseClass",
-              description: "What the source's terms permit for the product."
-            },
-            LICENSE_ID: {
-              type: "string",
-              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-            },
-            LINEAGE: {
-              type: "string",
-              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
-            }
-          },
-          additionalProperties: false
-        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -72451,7 +72904,7 @@ empty = the provider's native frame.`
         },
         dclCorrection: {
           type: "object",
-          description: "An exospheric-temperature correction.",
+          description: "An exospheric-temperature correction or a dimensionless log-density scale.",
           properties: {
             FORM: {
               $ref: "#/definitions/dclCorrectionForm"
@@ -72476,7 +72929,7 @@ empty = the provider's native frame.`
                 minimum: -9223372036854776e3,
                 maximum: 9223372036854776e3
               },
-              description: "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them."
+              description: "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span."
             },
             NODE_ALTITUDES_KM: {
               type: "array",
@@ -72498,6 +72951,13 @@ empty = the provider's native frame.`
                 type: "number"
               },
               description: "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated."
+            },
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value."
             }
           },
           additionalProperties: false
@@ -73241,6 +73701,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             STATES: {
               $ref: "#/definitions/dclStates",
               description: "OrbitalEnergy and DragWork: the states and their results."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -73958,6 +74422,281 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
         }
       },
       $ref: "#/definitions/OSM"
+    },
+    SDI: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SDI: {
+          type: "object",
+          description: "Solar Disk Image",
+          properties: {
+            OBSERVATORY: {
+              type: "string",
+              description: "Observatory or mission, verbatim (FITS TELESCOP)."
+            },
+            INSTRUMENT: {
+              type: "string",
+              description: "Instrument, verbatim (FITS INSTRUME)."
+            },
+            MEASUREMENT: {
+              type: "string",
+              description: "Measurement, verbatim (FITS WAVELNTH token or continuum label)."
+            },
+            WAVELENGTH_NM: {
+              type: "number",
+              description: "Wavelength in nm."
+            },
+            IMAGE_ID: {
+              type: "string",
+              description: "The source's image identity, verbatim."
+            },
+            REQUESTED_AT: {
+              type: "string",
+              description: "When this image was requested from the source, RFC 3339 UTC."
+            },
+            OBSERVED_AT: {
+              type: "string",
+              description: "Observation time normalized to RFC 3339 UTC."
+            },
+            DATE_OBS: {
+              type: "string",
+              description: "FITS DATE-OBS, verbatim."
+            },
+            TIME_SCALE: {
+              type: "string",
+              description: "FITS TIMESYS, verbatim."
+            },
+            CADENCE_S: {
+              type: "number",
+              description: "Source cadence in seconds."
+            },
+            EXPOSURE_S: {
+              type: "number",
+              description: "Exposure time in seconds (FITS EXPTIME)."
+            },
+            IMAGE_CID: {
+              type: "string",
+              description: "CID of the image bytes."
+            },
+            IMAGE_MEDIA_TYPE: {
+              type: "string",
+              description: "Media type of the image bytes (e.g. image/jp2, application/fits)."
+            },
+            IMAGE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the image bytes, lowercase hex."
+            },
+            IMAGE_SIZE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Size of the image bytes."
+            },
+            HEADER_CID: {
+              type: "string",
+              description: "CID of the verbatim FITS header."
+            },
+            WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image width in pixels (FITS NAXIS1)."
+            },
+            HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image height in pixels (FITS NAXIS2)."
+            },
+            CTYPE1: {
+              type: "string",
+              description: "FITS CTYPE1, verbatim (e.g. HPLN-TAN)."
+            },
+            CTYPE2: {
+              type: "string",
+              description: "FITS CTYPE2, verbatim (e.g. HPLT-TAN)."
+            },
+            CUNIT1: {
+              type: "string",
+              description: "FITS CUNIT1, verbatim."
+            },
+            CUNIT2: {
+              type: "string",
+              description: "FITS CUNIT2, verbatim."
+            },
+            CRPIX1: {
+              type: "number",
+              description: "FITS CRPIX1, one-based."
+            },
+            CRPIX2: {
+              type: "number",
+              description: "FITS CRPIX2, one-based."
+            },
+            CRVAL1: {
+              type: "number",
+              description: "FITS CRVAL1 in CUNIT1."
+            },
+            CRVAL2: {
+              type: "number",
+              description: "FITS CRVAL2 in CUNIT2."
+            },
+            CDELT1: {
+              type: "number",
+              description: "FITS CDELT1 in CUNIT1 per pixel."
+            },
+            CDELT2: {
+              type: "number",
+              description: "FITS CDELT2 in CUNIT2 per pixel."
+            },
+            CROTA2: {
+              type: "number",
+              description: "FITS CROTA2 in degrees."
+            },
+            PC: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them."
+            },
+            RSUN_OBS_ARCSEC: {
+              type: "number",
+              description: "Observed solar radius in arcseconds (FITS RSUN_OBS)."
+            },
+            RSUN_REF_M: {
+              type: "number",
+              description: "Reference solar radius in meters (FITS RSUN_REF)."
+            },
+            DSUN_OBS_M: {
+              type: "number",
+              description: "Observer distance from Sun center in meters (FITS DSUN_OBS)."
+            },
+            CRLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington longitude in degrees (FITS CRLN_OBS)."
+            },
+            CRLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington latitude in degrees (FITS CRLT_OBS)."
+            },
+            HGLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS)."
+            },
+            HGLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS)."
+            },
+            QUALITY: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "FITS QUALITY bitmask; meaningful only when HAS_QUALITY."
+            },
+            HAS_QUALITY: {
+              type: "boolean",
+              description: "True when the source states QUALITY."
+            },
+            PROCESSING: {
+              type: "string",
+              description: "Processing description, verbatim."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from."
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC."
+            }
+          },
+          required: [
+            "OBSERVED_AT",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SDICOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SDI"
+              }
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SDI"
     },
     PRG: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -75844,6 +76583,218 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
         }
       },
       $ref: "#/definitions/PPE"
+    },
+    SFE: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
+        sfeEventKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "XRAY",
+            "OPTICAL",
+            "RADIO",
+            "CUSTOM"
+          ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SFE: {
+          type: "object",
+          description: "Solar Flare Event",
+          properties: {
+            EVENT_ID: {
+              type: "string",
+              description: "The source's own event identity, verbatim."
+            },
+            PRODUCT: {
+              type: "string",
+              description: "Source product name, verbatim."
+            },
+            OBSERVATORY: {
+              type: "string",
+              description: "Reporting observatory, verbatim."
+            },
+            PLATFORM: {
+              type: "string",
+              description: "Observing platform or satellite, verbatim."
+            },
+            EVENT_KIND: {
+              $ref: "#/definitions/sfeEventKind",
+              description: "Observing domain."
+            },
+            EVENT_TYPE_CODE: {
+              type: "string",
+              description: "Source event type code, verbatim (e.g. XRA, FLA)."
+            },
+            BEGIN_TIME: {
+              type: "string",
+              description: "Event begin time, RFC 3339 UTC."
+            },
+            PEAK_TIME: {
+              type: "string",
+              description: "Event peak time, RFC 3339 UTC."
+            },
+            END_TIME: {
+              type: "string",
+              description: "Event end time, RFC 3339 UTC."
+            },
+            BEGIN_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on BEGIN_TIME, verbatim (e.g. B for before)."
+            },
+            PEAK_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on PEAK_TIME, verbatim."
+            },
+            END_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on END_TIME, verbatim (e.g. A for after)."
+            },
+            XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class, verbatim (e.g. C1.4)."
+            },
+            OPTICAL_IMPORTANCE: {
+              type: "string",
+              description: "Optical importance, verbatim (e.g. SF)."
+            },
+            PEAK_FLUX_W_M2: {
+              type: "number",
+              description: "Peak flux in W/m^2."
+            },
+            INTEGRATED_FLUX_J_M2: {
+              type: "number",
+              description: "Integrated flux (fluence) in J/m^2."
+            },
+            PASSBAND_MIN_NM: {
+              type: "number",
+              description: "Lower edge of the observing passband in nm."
+            },
+            PASSBAND_MAX_NM: {
+              type: "number",
+              description: "Upper edge of the observing passband in nm."
+            },
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Associated region number; meaningful only when HAS_REGION_NUMBER."
+            },
+            HAS_REGION_NUMBER: {
+              type: "boolean",
+              description: "True only when the source explicitly states the region association."
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive, when stated."
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees, west positive, when stated."
+            },
+            STATUS: {
+              type: "string",
+              description: "Source status of the report, verbatim."
+            },
+            REVISION: {
+              type: "string",
+              description: "Source revision or change flag, verbatim."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from."
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC."
+            }
+          },
+          required: [
+            "EVENT_ID",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SFECOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SFE"
+              }
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SFE"
     },
     LMS: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -98835,6 +99786,187 @@ verbatim what that source states about itself.`,
       },
       $ref: "#/definitions/PAP"
     },
+    SRO: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
+        sroRegionKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "SUNSPOT_GROUP",
+            "PLAGE",
+            "CUSTOM"
+          ]
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
+        SRO: {
+          type: "object",
+          description: "Solar Region Observation",
+          properties: {
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Region number, verbatim, with no solar cycle prefix added or removed."
+            },
+            REGION_AUTHORITY: {
+              type: "string",
+              description: "The numbering authority, verbatim (e.g. NOAA/SWPC)."
+            },
+            ISSUED_AT: {
+              type: "string",
+              description: "When the source issued this report, RFC 3339 UTC."
+            },
+            OBSERVED_DATE: {
+              type: "string",
+              description: "The source's observation date label, verbatim."
+            },
+            POSITION_EPOCH: {
+              type: "string",
+              description: "The instant the position below refers to, RFC 3339 UTC."
+            },
+            REGION_KIND: {
+              $ref: "#/definitions/sroRegionKind",
+              description: "Region kind as listed by the source."
+            },
+            LOCATION_TOKEN: {
+              type: "string",
+              description: "Heliographic location token, verbatim (e.g. N14W32)."
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive."
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive."
+            },
+            CARRINGTON_LONGITUDE_DEG: {
+              type: "number",
+              description: "Carrington longitude in degrees."
+            },
+            AREA_MSH: {
+              type: "number",
+              description: "Corrected area in millionths of the solar hemisphere."
+            },
+            LONGITUDINAL_EXTENT_DEG: {
+              type: "number",
+              description: "Longitudinal extent in degrees."
+            },
+            SPOT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of spots in the region; meaningful only when HAS_SPOT_COUNT."
+            },
+            HAS_SPOT_COUNT: {
+              type: "boolean",
+              description: "True when the source states SPOT_COUNT."
+            },
+            MCINTOSH_CLASS: {
+              type: "string",
+              description: "McIntosh classification, verbatim (e.g. Dao)."
+            },
+            MAGNETIC_CLASS: {
+              type: "string",
+              description: "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma)."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from."
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC."
+            }
+          },
+          required: [
+            "POSITION_EPOCH",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SROCOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRO"
+              }
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SRO"
+    },
     STV: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -106781,6 +107913,629 @@ compressed). Nothing hashes the payload before the protocol hash.`
         }
       },
       $ref: "#/definitions/DSS"
+    },
+    SRT: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        dttTilingScheme: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "GEOGRAPHIC_WGS84",
+            "GEOGRAPHIC_SINGLE_ROOT",
+            "WEB_MERCATOR",
+            "CUSTOM",
+            "GEOGRAPHIC_TWO_ROOT_BODY"
+          ]
+        },
+        dttPayloadFormat: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "QUANTIZED_MESH",
+            "HEIGHTMAP_UINT16",
+            "HEIGHTMAP_FLOAT32",
+            "RASTER_GEOTIFF",
+            "RASTER_RGB_ENCODED",
+            "CUSTOM"
+          ]
+        },
+        dttVerticalDatum: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELLIPSOIDAL_WGS84",
+            "GEOID",
+            "MEAN_SEA_LEVEL",
+            "REGIONAL_DATUM",
+            "CUSTOM",
+            "REFERENCE_SPHERE"
+          ]
+        },
+        dttSourceClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "SPACEBORNE_RADAR_INTERFEROMETRIC",
+            "SPACEBORNE_OPTICAL_STEREO",
+            "SPACEBORNE_ALTIMETRIC",
+            "AIRBORNE_LIDAR",
+            "AIRBORNE_RADAR",
+            "PHOTOGRAMMETRIC",
+            "GROUND_SURVEY",
+            "BATHYMETRIC_SOUNDING",
+            "CARTOGRAPHIC_CONTOUR",
+            "FUSED_MULTI_SOURCE",
+            "SYNTHETIC"
+          ]
+        },
+        dttWaterMask: {
+          type: "string",
+          enum: [
+            "NONE",
+            "UNIFORM_LAND",
+            "UNIFORM_WATER",
+            "RASTER"
+          ]
+        },
+        srtQuantity: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CATEGORICAL_CLASS",
+            "HEIGHT_ABOVE_GROUND",
+            "CUSTOM"
+          ]
+        },
+        srtSampleType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "UINT8",
+            "INT8",
+            "UINT16",
+            "INT16",
+            "UINT32",
+            "INT32",
+            "FLOAT32",
+            "FLOAT64"
+          ]
+        },
+        srtPixelRegistration: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AREA",
+            "POINT"
+          ]
+        },
+        srtPayloadFormat: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RASTER_GEOTIFF",
+            "SAMPLES_ROW_MAJOR_LE",
+            "CUSTOM"
+          ]
+        },
+        DTTPayloadRef: {
+          type: "object",
+          description: "Where a block of bytes lives and how it is verified. The payload lane is\nCID-first: a tile record addresses its bytes so an epoch can be verified\nrather than trusted, and carries them inline only when the block is small\nenough that a second fetch costs more than it saves. Exactly one of CID or\nBYTES is the authority for a given ref; when both are present the bytes\nMUST hash to the CID.",
+          properties: {
+            CID: {
+              type: "string",
+              description: "Content identifier of the block in the dataset lane."
+            },
+            BYTES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "The block inline. Reserved for small blocks; a tile pyramid is\ndistributed by CID, never by embedding megabytes per record."
+            },
+            SIZE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Length of the block in bytes, whether inline or referenced, so a\nconsumer can budget a fetch before making it."
+            },
+            DIGEST: {
+              type: "string",
+              description: "Multihash of the block, lowercase hexadecimal, when the publisher states\none independently of the CID."
+            },
+            CONTENT_ENCODING: {
+              type: "string",
+              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here."
+            },
+            MEDIA_TYPE: {
+              type: "string",
+              description: "Media type of the block as the publisher serves it."
+            }
+          },
+          additionalProperties: false
+        },
+        DTTProvenance: {
+          type: "object",
+          description: "Dataset lineage and redistribution terms for one terrain tile.\n\nRequired on every record: a redistributed elevation tile whose dataset,\nepoch, and licence are unstated is not publishable. Dataset identity is\nDATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the\nsource states about itself. The standard names no dataset, mission, agency,\nor vendor.",
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier for the elevation dataset this\ntile was derived from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL."
+            },
+            DATASET_NAME: {
+              type: "string",
+              description: "The dataset's own name, verbatim as its publisher states it."
+            },
+            DATASET_URL: {
+              type: "string",
+              description: "Replayable URL of the dataset as published."
+            },
+            DATASET_EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this tile was\nderived from. The edition boundary, not the fetch: two tiles carrying the\nsame DATASET_ID and DATASET_EPOCH were cut from the same bytes."
+            },
+            DATASET_CID: {
+              type: "string",
+              description: "Content identifier of the exact dataset artifact, when the publisher\ndistributes one."
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL identifying the source material within the dataset."
+            },
+            SOURCE_QUERY: {
+              type: "string",
+              description: "The exact tile, granule, or file selection used, so the same source\nbytes can be recovered by repeating the fetch."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond retrieval timestamp."
+            },
+            LICENSE: {
+              type: "string",
+              description: "Redistribution terms verbatim. Required: unknown terms are never public\ndomain and never an implied grant."
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "URL of the full licence text as that dataset publishes it."
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution text the licence requires a redistributor to display,\ncarried verbatim so a surface can render it without composing its own\ncredit line."
+            },
+            NON_COMMERCIAL_ONLY: {
+              type: "boolean",
+              description: "The licence forbids commercial use."
+            },
+            SHARE_ALIKE: {
+              type: "boolean",
+              description: "The licence obliges derived works to carry the same terms."
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "The source's own identifier for the granule this tile was cut from,\nverbatim. The join key back to the source dataset."
+            },
+            GENERATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC timestamp at which this tile's bytes were produced by the\npublisher, as distinct from the dataset edition they were cut from."
+            },
+            PROCESSOR: {
+              type: "string",
+              description: "Identifier of the processing pipeline and its version that produced the\ntile bytes, so two tiles from one edition but different pipelines are\ndistinguishable."
+            }
+          },
+          required: [
+            "DATASET_ID",
+            "DATASET_EPOCH",
+            "RETRIEVED_AT",
+            "LICENSE"
+          ],
+          additionalProperties: false
+        },
+        DTT: {
+          type: "object",
+          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+          properties: {
+            TILESET_ID: {
+              type: "string",
+              description: "Publisher-stable identifier for the tile pyramid (the tileset) this tile\nbelongs to. Tiles of one pyramid share a scheme, format, and datum."
+            },
+            TILESET_NAME: {
+              type: "string",
+              description: "The tileset's own name, verbatim, for display."
+            },
+            TILING_SCHEME: {
+              $ref: "#/definitions/dttTilingScheme",
+              description: "Scheme the address below is expressed in."
+            },
+            LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zoom level of the tile, 0 at the pyramid root."
+            },
+            X: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Column index within LEVEL, increasing eastward from the scheme origin."
+            },
+            Y: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Row index within LEVEL, increasing in the scheme's own row direction;\nROW_ORIGIN_NORTH states which."
+            },
+            ROW_ORIGIN_NORTH: {
+              type: "boolean",
+              description: "Row index 0 lies at the north edge of the scheme. When false, row 0 lies\nat the south edge."
+            },
+            WEST_DEG: {
+              type: "number",
+              description: "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body)."
+            },
+            SOUTH_DEG: {
+              type: "number",
+              description: "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH)."
+            },
+            EAST_DEG: {
+              type: "number",
+              description: "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive."
+            },
+            NORTH_DEG: {
+              type: "number",
+              description: "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH)."
+            },
+            MIN_HEIGHT_M: {
+              type: "number",
+              description: "Lowest height present in the tile, metres above VERTICAL_DATUM. Stated\nso a consumer can build a bounding volume without decoding the payload."
+            },
+            MAX_HEIGHT_M: {
+              type: "number",
+              description: "Highest height present in the tile, metres above VERTICAL_DATUM."
+            },
+            PAYLOAD_FORMAT: {
+              $ref: "#/definitions/dttPayloadFormat",
+              description: "Encoding of the payload bytes."
+            },
+            PAYLOAD_FORMAT_VERSION: {
+              type: "string",
+              description: "Version of PAYLOAD_FORMAT the bytes conform to, verbatim, when the\nformat is versioned."
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "The tile's elevation bytes."
+            },
+            GRID_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of height posts across the tile for gridded formats. Unset for\nmesh formats, whose vertex count varies."
+            },
+            GRID_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of height posts down the tile for gridded formats."
+            },
+            POST_SPACING_M: {
+              type: "number",
+              description: "Nominal ground distance between adjacent height posts at the tile\ncentre, metres. The tile's effective resolution as served, which is not\nnecessarily the source dataset's native post spacing."
+            },
+            SOURCE_POST_SPACING_M: {
+              type: "number",
+              description: "Native post spacing of the source elevations, metres, when the tile was\nresampled from a coarser or finer grid."
+            },
+            VERTICAL_DATUM: {
+              $ref: "#/definitions/dttVerticalDatum",
+              description: "Surface the heights are measured from."
+            },
+            VERTICAL_DATUM_NAME: {
+              type: "string",
+              description: "The datum, geoid model, or vertical reference frame named verbatim as\nits authority states it."
+            },
+            HORIZONTAL_DATUM_NAME: {
+              type: "string",
+              description: "Horizontal reference frame the extent is expressed in, verbatim, when it\nis not WGS 84."
+            },
+            VERTICAL_ACCURACY_M: {
+              type: "number",
+              description: "Vertical accuracy the publisher states for this tile, metres, at the\nconfidence level stated in ACCURACY_CONFIDENCE."
+            },
+            ACCURACY_CONFIDENCE: {
+              type: "number",
+              description: "Confidence level the accuracy figures are stated at, as a fraction\nbetween 0 and 1."
+            },
+            HORIZONTAL_ACCURACY_M: {
+              type: "number",
+              description: "Horizontal accuracy the publisher states for this tile, metres."
+            },
+            DATA_COVERAGE_FRACTION: {
+              type: "number",
+              description: "Fraction of the tile extent covered by real measurements rather than\ninterpolated or filled values, between 0 and 1."
+            },
+            NO_DATA_VALUE: {
+              type: "number",
+              description: "Height value used to mark absent samples in gridded payloads."
+            },
+            WATER_MASK_KIND: {
+              $ref: "#/definitions/dttWaterMask",
+              description: "What the tile states about water cover."
+            },
+            WATER_MASK: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "The per-sample water mask bytes when WATER_MASK_KIND is RASTER: one\nunsigned byte per sample, 255 fully water, 0 fully land."
+            },
+            WATER_MASK_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of mask samples across and down the tile when WATER_MASK_KIND is\nRASTER. Independent of GRID_WIDTH/GRID_HEIGHT: a mask is commonly\ncarried at a different resolution than the heights."
+            },
+            WATER_MASK_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295
+            },
+            WATER_MASK_PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset the water mask was derived from, when it is not the elevation\ndataset. A separate lineage because a mask carries its own licence."
+            },
+            VERTEX_NORMALS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Per-sample surface normals accompanying the tile, when the publisher\nserves them, so a consumer need not derive lighting from heights."
+            },
+            LAND_COVER: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Per-sample land-cover classification accompanying the tile, when the\npublisher serves one."
+            },
+            CHILD_AVAILABILITY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Availability of the four child tiles at LEVEL+1, as the low four bits:\nbit 0 south-west, bit 1 south-east, bit 2 north-west, bit 3 north-east.\nA set bit states the child exists in this tileset."
+            },
+            MAX_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The deepest level this tileset serves anywhere. A consumer stops\nrequesting below it rather than discovering absence by failed fetches."
+            },
+            SOURCE_CLASS: {
+              $ref: "#/definitions/dttSourceClass",
+              description: "Production technique class of the source elevations."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset lineage and redistribution terms. Required."
+            },
+            EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond epoch the elevations represent, when the\ndataset states an observation epoch distinct from its edition. Terrain\nchanges; a tile compared across time is compared at this epoch."
+            },
+            ETAG: {
+              type: "string",
+              description: "Entity tag for the served bytes, verbatim, so a cache can revalidate."
+            },
+            EXPIRES: {
+              type: "string",
+              description: "RFC 3339 UTC timestamp after which this tile should be revalidated."
+            },
+            REMARKS: {
+              type: "string",
+              description: "Free-form publisher notes about this tile. Never a substitute for a\nstated field."
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged."
+            },
+            REFERENCE_RADII_M: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value."
+            },
+            HORIZON_ELEVATIONS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0."
+            },
+            HORIZON_SECTORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent)."
+            }
+          },
+          required: [
+            "TILESET_ID",
+            "PAYLOAD",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SRTClass: {
+          type: "object",
+          description: "One class of a categorical raster.",
+          properties: {
+            CODE: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Sample value of the class."
+            },
+            LABEL: {
+              type: "string",
+              description: "Source label, verbatim."
+            },
+            COLOR_RGBA: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Source display color, 0xRRGGBBAA."
+            }
+          },
+          required: [
+            "LABEL"
+          ],
+          additionalProperties: false
+        },
+        SRT: {
+          type: "object",
+          description: "Surface Raster Tile",
+          properties: {
+            TILESET_ID: {
+              type: "string",
+              description: "Stable identity of the tileset this tile belongs to."
+            },
+            TILESET_NAME: {
+              type: "string",
+              description: "Human-readable tileset name."
+            },
+            QUANTITY: {
+              $ref: "#/definitions/srtQuantity",
+              description: "What the samples measure."
+            },
+            QUANTITY_NAME: {
+              type: "string",
+              description: "Source quantity name, verbatim."
+            },
+            UNIT: {
+              type: "string",
+              description: "UCUM unit of the scaled value (m for canopy height); absent for classes."
+            },
+            SAMPLE_TYPE: {
+              $ref: "#/definitions/srtSampleType",
+              description: "Stored sample type."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET."
+            },
+            ADD_OFFSET: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET."
+            },
+            NO_DATA_VALUE: {
+              type: "number",
+              description: "Stored sample value meaning no data (WorldCover: 0)."
+            },
+            CLASS_LEGEND: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRTClass"
+              },
+              description: "Class legend; required when QUANTITY = CATEGORICAL_CLASS."
+            },
+            CRS: {
+              type: "string",
+              description: "Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857)."
+            },
+            AFFINE_TRANSFORM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "GDAL geotransform, 6 values, mapping pixel corners to CRS units."
+            },
+            PIXEL_REGISTRATION: {
+              $ref: "#/definitions/srtPixelRegistration",
+              description: "Pixel registration."
+            },
+            GRID_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid width in samples."
+            },
+            GRID_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid height in samples."
+            },
+            TILING_SCHEME: {
+              $ref: "#/definitions/dttTilingScheme",
+              description: "Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR)."
+            },
+            LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid level."
+            },
+            X: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid column."
+            },
+            Y: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid row."
+            },
+            WEST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, west edge in degrees."
+            },
+            SOUTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, south edge in degrees."
+            },
+            EAST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, east edge in degrees."
+            },
+            NORTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, north edge in degrees."
+            },
+            HORIZONTAL_DATUM_NAME: {
+              type: "string",
+              description: "Horizontal datum name, verbatim."
+            },
+            PAYLOAD_FORMAT: {
+              $ref: "#/definitions/srtPayloadFormat",
+              description: "Encoding of PAYLOAD."
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Native samples only: no palette conversion, resampling or rounding."
+            },
+            MIN_VALUE: {
+              type: "number",
+              description: "Minimum scaled value in the tile."
+            },
+            MAX_VALUE: {
+              type: "number",
+              description: "Maximum scaled value in the tile."
+            },
+            DATA_COVERAGE_FRACTION: {
+              type: "number",
+              description: "Fraction of samples that are not NO_DATA_VALUE, 0 to 1."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Dataset epoch of the samples, RFC 3339 UTC."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset, retrieval and license lineage."
+            }
+          },
+          required: [
+            "TILESET_ID",
+            "CRS",
+            "PAYLOAD",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SRT"
     },
     ACT: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -126099,6 +127854,26 @@ format class are named by $NCD's container format.`
             "PROVIDER_DEFINED"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -126358,26 +128133,6 @@ format class are named by $NCD's container format.`
             "ScaledFit",
             "SourceModel",
             "PooledModel"
-          ]
-        },
-        pvnSourceKind: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "ElementSet",
-            "Ephemeris",
-            "Observation",
-            "Reference"
-          ]
-        },
-        pvnLicenseClass: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Reproducible",
-            "CiteOnly",
-            "ShareAlike",
-            "NonCommercial"
           ]
         },
         ephemerisFormat: {
@@ -126874,7 +128629,8 @@ format class are named by $NCD's container format.`
           enum: [
             "None",
             "Harmonic",
-            "Nodes"
+            "Nodes",
+            "LogDensityNodes"
           ]
         },
         dclStatus: {
@@ -130813,6 +132569,16 @@ format class are named by $NCD's container format.`
             "SOLAR"
           ]
         },
+        sfeEventKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "XRAY",
+            "OPTICAL",
+            "RADIO",
+            "CUSTOM"
+          ]
+        },
         shcNormalization: {
           type: "string",
           enum: [
@@ -131258,6 +133024,55 @@ format class are named by $NCD's container format.`
             "ArchiveBudgetReached",
             "ProviderPageOnly",
             "Failed"
+          ]
+        },
+        sroRegionKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "SUNSPOT_GROUP",
+            "PLAGE",
+            "CUSTOM"
+          ]
+        },
+        srtQuantity: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CATEGORICAL_CLASS",
+            "HEIGHT_ABOVE_GROUND",
+            "CUSTOM"
+          ]
+        },
+        srtSampleType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "UINT8",
+            "INT8",
+            "UINT16",
+            "INT16",
+            "UINT32",
+            "INT32",
+            "FLOAT32",
+            "FLOAT64"
+          ]
+        },
+        srtPixelRegistration: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AREA",
+            "POINT"
+          ]
+        },
+        srtPayloadFormat: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RASTER_GEOTIFF",
+            "SAMPLES_ROW_MAJOR_LE",
+            "CUSTOM"
           ]
         },
         strDistanceEstimator: {
@@ -132710,7 +134525,11 @@ format class are named by $NCD's container format.`
             "FCK",
             "FMB",
             "FSG",
-            "PIN"
+            "PIN",
+            "SDI",
+            "SFE",
+            "SRO",
+            "SRT"
           ]
         },
         ABA: {
@@ -145975,6 +147794,45 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -146146,6 +148004,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             F107_ADJ_LAST81: {
               type: "number",
               description: "81-day trailing average of adjusted F10.7"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -147894,45 +149756,6 @@ empty = the provider's native frame.`
             EVIDENCE: {
               type: "string",
               description: "Identifier of the report or record that holds the test."
-            }
-          },
-          additionalProperties: false
-        },
-        PVN: {
-          type: "object",
-          description: "Product Provenance",
-          properties: {
-            SOURCE_ID: {
-              type: "string",
-              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-            },
-            SOURCE_KIND: {
-              $ref: "#/definitions/pvnSourceKind",
-              description: "What kind of data the source supplies."
-            },
-            ORIGINATOR: {
-              type: "string",
-              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-            },
-            PROVIDER_ID: {
-              type: "string",
-              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-            },
-            PRODUCER: {
-              type: "string",
-              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-            },
-            LICENSE_CLASS: {
-              $ref: "#/definitions/pvnLicenseClass",
-              description: "What the source's terms permit for the product."
-            },
-            LICENSE_ID: {
-              type: "string",
-              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-            },
-            LINEAGE: {
-              type: "string",
-              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
             }
           },
           additionalProperties: false
@@ -154696,7 +156519,7 @@ assumptions".`
         },
         dclCorrection: {
           type: "object",
-          description: "An exospheric-temperature correction.",
+          description: "An exospheric-temperature correction or a dimensionless log-density scale.",
           properties: {
             FORM: {
               $ref: "#/definitions/dclCorrectionForm"
@@ -154721,7 +156544,7 @@ assumptions".`
                 minimum: -9223372036854776e3,
                 maximum: 9223372036854776e3
               },
-              description: "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them."
+              description: "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span."
             },
             NODE_ALTITUDES_KM: {
               type: "array",
@@ -154743,6 +156566,13 @@ assumptions".`
                 type: "number"
               },
               description: "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated."
+            },
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value."
             }
           },
           additionalProperties: false
@@ -155486,6 +157316,10 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             STATES: {
               $ref: "#/definitions/dclStates",
               description: "OrbitalEnergy and DragWork: the states and their results."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -156420,7 +158254,7 @@ rotation rate (rad/s; 0 = 7.292115e-5).`
             },
             CONTENT_ENCODING: {
               type: "string",
-              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed."
+              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here."
             },
             MEDIA_TYPE: {
               type: "string",
@@ -190885,6 +192719,216 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
           },
           additionalProperties: false
         },
+        SDI: {
+          type: "object",
+          description: "Solar Disk Image",
+          properties: {
+            OBSERVATORY: {
+              type: "string",
+              description: "Observatory or mission, verbatim (FITS TELESCOP)."
+            },
+            INSTRUMENT: {
+              type: "string",
+              description: "Instrument, verbatim (FITS INSTRUME)."
+            },
+            MEASUREMENT: {
+              type: "string",
+              description: "Measurement, verbatim (FITS WAVELNTH token or continuum label)."
+            },
+            WAVELENGTH_NM: {
+              type: "number",
+              description: "Wavelength in nm."
+            },
+            IMAGE_ID: {
+              type: "string",
+              description: "The source's image identity, verbatim."
+            },
+            REQUESTED_AT: {
+              type: "string",
+              description: "When this image was requested from the source, RFC 3339 UTC."
+            },
+            OBSERVED_AT: {
+              type: "string",
+              description: "Observation time normalized to RFC 3339 UTC."
+            },
+            DATE_OBS: {
+              type: "string",
+              description: "FITS DATE-OBS, verbatim."
+            },
+            TIME_SCALE: {
+              type: "string",
+              description: "FITS TIMESYS, verbatim."
+            },
+            CADENCE_S: {
+              type: "number",
+              description: "Source cadence in seconds."
+            },
+            EXPOSURE_S: {
+              type: "number",
+              description: "Exposure time in seconds (FITS EXPTIME)."
+            },
+            IMAGE_CID: {
+              type: "string",
+              description: "CID of the image bytes."
+            },
+            IMAGE_MEDIA_TYPE: {
+              type: "string",
+              description: "Media type of the image bytes (e.g. image/jp2, application/fits)."
+            },
+            IMAGE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the image bytes, lowercase hex."
+            },
+            IMAGE_SIZE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Size of the image bytes."
+            },
+            HEADER_CID: {
+              type: "string",
+              description: "CID of the verbatim FITS header."
+            },
+            WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image width in pixels (FITS NAXIS1)."
+            },
+            HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image height in pixels (FITS NAXIS2)."
+            },
+            CTYPE1: {
+              type: "string",
+              description: "FITS CTYPE1, verbatim (e.g. HPLN-TAN)."
+            },
+            CTYPE2: {
+              type: "string",
+              description: "FITS CTYPE2, verbatim (e.g. HPLT-TAN)."
+            },
+            CUNIT1: {
+              type: "string",
+              description: "FITS CUNIT1, verbatim."
+            },
+            CUNIT2: {
+              type: "string",
+              description: "FITS CUNIT2, verbatim."
+            },
+            CRPIX1: {
+              type: "number",
+              description: "FITS CRPIX1, one-based."
+            },
+            CRPIX2: {
+              type: "number",
+              description: "FITS CRPIX2, one-based."
+            },
+            CRVAL1: {
+              type: "number",
+              description: "FITS CRVAL1 in CUNIT1."
+            },
+            CRVAL2: {
+              type: "number",
+              description: "FITS CRVAL2 in CUNIT2."
+            },
+            CDELT1: {
+              type: "number",
+              description: "FITS CDELT1 in CUNIT1 per pixel."
+            },
+            CDELT2: {
+              type: "number",
+              description: "FITS CDELT2 in CUNIT2 per pixel."
+            },
+            CROTA2: {
+              type: "number",
+              description: "FITS CROTA2 in degrees."
+            },
+            PC: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them."
+            },
+            RSUN_OBS_ARCSEC: {
+              type: "number",
+              description: "Observed solar radius in arcseconds (FITS RSUN_OBS)."
+            },
+            RSUN_REF_M: {
+              type: "number",
+              description: "Reference solar radius in meters (FITS RSUN_REF)."
+            },
+            DSUN_OBS_M: {
+              type: "number",
+              description: "Observer distance from Sun center in meters (FITS DSUN_OBS)."
+            },
+            CRLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington longitude in degrees (FITS CRLN_OBS)."
+            },
+            CRLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington latitude in degrees (FITS CRLT_OBS)."
+            },
+            HGLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS)."
+            },
+            HGLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS)."
+            },
+            QUALITY: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "FITS QUALITY bitmask; meaningful only when HAS_QUALITY."
+            },
+            HAS_QUALITY: {
+              type: "boolean",
+              description: "True when the source states QUALITY."
+            },
+            PROCESSING: {
+              type: "string",
+              description: "Processing description, verbatim."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from."
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC."
+            }
+          },
+          required: [
+            "OBSERVED_AT",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SDICOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SDI"
+              }
+            }
+          },
+          additionalProperties: false
+        },
         SDL: {
           type: "object",
           description: "Space Data Link Security (CCSDS 355.0-B-1)",
@@ -191512,6 +193556,143 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             OB_DESCRIPTION: {
               type: "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SFE: {
+          type: "object",
+          description: "Solar Flare Event",
+          properties: {
+            EVENT_ID: {
+              type: "string",
+              description: "The source's own event identity, verbatim."
+            },
+            PRODUCT: {
+              type: "string",
+              description: "Source product name, verbatim."
+            },
+            OBSERVATORY: {
+              type: "string",
+              description: "Reporting observatory, verbatim."
+            },
+            PLATFORM: {
+              type: "string",
+              description: "Observing platform or satellite, verbatim."
+            },
+            EVENT_KIND: {
+              $ref: "#/definitions/sfeEventKind",
+              description: "Observing domain."
+            },
+            EVENT_TYPE_CODE: {
+              type: "string",
+              description: "Source event type code, verbatim (e.g. XRA, FLA)."
+            },
+            BEGIN_TIME: {
+              type: "string",
+              description: "Event begin time, RFC 3339 UTC."
+            },
+            PEAK_TIME: {
+              type: "string",
+              description: "Event peak time, RFC 3339 UTC."
+            },
+            END_TIME: {
+              type: "string",
+              description: "Event end time, RFC 3339 UTC."
+            },
+            BEGIN_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on BEGIN_TIME, verbatim (e.g. B for before)."
+            },
+            PEAK_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on PEAK_TIME, verbatim."
+            },
+            END_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on END_TIME, verbatim (e.g. A for after)."
+            },
+            XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class, verbatim (e.g. C1.4)."
+            },
+            OPTICAL_IMPORTANCE: {
+              type: "string",
+              description: "Optical importance, verbatim (e.g. SF)."
+            },
+            PEAK_FLUX_W_M2: {
+              type: "number",
+              description: "Peak flux in W/m^2."
+            },
+            INTEGRATED_FLUX_J_M2: {
+              type: "number",
+              description: "Integrated flux (fluence) in J/m^2."
+            },
+            PASSBAND_MIN_NM: {
+              type: "number",
+              description: "Lower edge of the observing passband in nm."
+            },
+            PASSBAND_MAX_NM: {
+              type: "number",
+              description: "Upper edge of the observing passband in nm."
+            },
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Associated region number; meaningful only when HAS_REGION_NUMBER."
+            },
+            HAS_REGION_NUMBER: {
+              type: "boolean",
+              description: "True only when the source explicitly states the region association."
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive, when stated."
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees, west positive, when stated."
+            },
+            STATUS: {
+              type: "string",
+              description: "Source status of the report, verbatim."
+            },
+            REVISION: {
+              type: "string",
+              description: "Source revision or change flag, verbatim."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from."
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC."
+            }
+          },
+          required: [
+            "EVENT_ID",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SFECOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SFE"
+              }
             }
           },
           additionalProperties: false
@@ -194207,6 +196388,292 @@ format class are named by $NCD's container format.`
               type: "string"
             }
           },
+          additionalProperties: false
+        },
+        SRO: {
+          type: "object",
+          description: "Solar Region Observation",
+          properties: {
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Region number, verbatim, with no solar cycle prefix added or removed."
+            },
+            REGION_AUTHORITY: {
+              type: "string",
+              description: "The numbering authority, verbatim (e.g. NOAA/SWPC)."
+            },
+            ISSUED_AT: {
+              type: "string",
+              description: "When the source issued this report, RFC 3339 UTC."
+            },
+            OBSERVED_DATE: {
+              type: "string",
+              description: "The source's observation date label, verbatim."
+            },
+            POSITION_EPOCH: {
+              type: "string",
+              description: "The instant the position below refers to, RFC 3339 UTC."
+            },
+            REGION_KIND: {
+              $ref: "#/definitions/sroRegionKind",
+              description: "Region kind as listed by the source."
+            },
+            LOCATION_TOKEN: {
+              type: "string",
+              description: "Heliographic location token, verbatim (e.g. N14W32)."
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive."
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive."
+            },
+            CARRINGTON_LONGITUDE_DEG: {
+              type: "number",
+              description: "Carrington longitude in degrees."
+            },
+            AREA_MSH: {
+              type: "number",
+              description: "Corrected area in millionths of the solar hemisphere."
+            },
+            LONGITUDINAL_EXTENT_DEG: {
+              type: "number",
+              description: "Longitudinal extent in degrees."
+            },
+            SPOT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of spots in the region; meaningful only when HAS_SPOT_COUNT."
+            },
+            HAS_SPOT_COUNT: {
+              type: "boolean",
+              description: "True when the source states SPOT_COUNT."
+            },
+            MCINTOSH_CLASS: {
+              type: "string",
+              description: "McIntosh classification, verbatim (e.g. Dao)."
+            },
+            MAGNETIC_CLASS: {
+              type: "string",
+              description: "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma)."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from."
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex."
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC."
+            }
+          },
+          required: [
+            "POSITION_EPOCH",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SROCOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRO"
+              }
+            }
+          },
+          additionalProperties: false
+        },
+        SRTClass: {
+          type: "object",
+          description: "One class of a categorical raster.",
+          properties: {
+            CODE: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Sample value of the class."
+            },
+            LABEL: {
+              type: "string",
+              description: "Source label, verbatim."
+            },
+            COLOR_RGBA: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Source display color, 0xRRGGBBAA."
+            }
+          },
+          required: [
+            "LABEL"
+          ],
+          additionalProperties: false
+        },
+        SRT: {
+          type: "object",
+          description: "Surface Raster Tile",
+          properties: {
+            TILESET_ID: {
+              type: "string",
+              description: "Stable identity of the tileset this tile belongs to."
+            },
+            TILESET_NAME: {
+              type: "string",
+              description: "Human-readable tileset name."
+            },
+            QUANTITY: {
+              $ref: "#/definitions/srtQuantity",
+              description: "What the samples measure."
+            },
+            QUANTITY_NAME: {
+              type: "string",
+              description: "Source quantity name, verbatim."
+            },
+            UNIT: {
+              type: "string",
+              description: "UCUM unit of the scaled value (m for canopy height); absent for classes."
+            },
+            SAMPLE_TYPE: {
+              $ref: "#/definitions/srtSampleType",
+              description: "Stored sample type."
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET."
+            },
+            ADD_OFFSET: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET."
+            },
+            NO_DATA_VALUE: {
+              type: "number",
+              description: "Stored sample value meaning no data (WorldCover: 0)."
+            },
+            CLASS_LEGEND: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRTClass"
+              },
+              description: "Class legend; required when QUANTITY = CATEGORICAL_CLASS."
+            },
+            CRS: {
+              type: "string",
+              description: "Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857)."
+            },
+            AFFINE_TRANSFORM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "GDAL geotransform, 6 values, mapping pixel corners to CRS units."
+            },
+            PIXEL_REGISTRATION: {
+              $ref: "#/definitions/srtPixelRegistration",
+              description: "Pixel registration."
+            },
+            GRID_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid width in samples."
+            },
+            GRID_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid height in samples."
+            },
+            TILING_SCHEME: {
+              $ref: "#/definitions/dttTilingScheme",
+              description: "Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR)."
+            },
+            LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid level."
+            },
+            X: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid column."
+            },
+            Y: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid row."
+            },
+            WEST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, west edge in degrees."
+            },
+            SOUTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, south edge in degrees."
+            },
+            EAST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, east edge in degrees."
+            },
+            NORTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, north edge in degrees."
+            },
+            HORIZONTAL_DATUM_NAME: {
+              type: "string",
+              description: "Horizontal datum name, verbatim."
+            },
+            PAYLOAD_FORMAT: {
+              $ref: "#/definitions/srtPayloadFormat",
+              description: "Encoding of PAYLOAD."
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Native samples only: no palette conversion, resampling or rounding."
+            },
+            MIN_VALUE: {
+              type: "number",
+              description: "Minimum scaled value in the tile."
+            },
+            MAX_VALUE: {
+              type: "number",
+              description: "Maximum scaled value in the tile."
+            },
+            DATA_COVERAGE_FRACTION: {
+              type: "number",
+              description: "Fraction of samples that are not NO_DATA_VALUE, 0 to 1."
+            },
+            EPOCH: {
+              type: "string",
+              description: "Dataset epoch of the samples, RFC 3339 UTC."
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset, retrieval and license lineage."
+            }
+          },
+          required: [
+            "TILESET_ID",
+            "CRS",
+            "PAYLOAD",
+            "PROVENANCE"
+          ],
           additionalProperties: false
         },
         STOModuleRef: {
@@ -224097,6 +226564,26 @@ balance service's own rate.`
             "IAU_2006"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -226673,6 +229160,45 @@ balance service's own rate.`
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -226844,6 +229370,10 @@ balance service's own rate.`
             F107_ADJ_LAST81: {
               type: "number",
               description: "81-day trailing average of adjusted F10.7"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -258179,6 +260709,26 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "IAU_2006"
           ]
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ]
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ]
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -258438,26 +260988,6 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "ScaledFit",
             "SourceModel",
             "PooledModel"
-          ]
-        },
-        pvnSourceKind: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "ElementSet",
-            "Ephemeris",
-            "Observation",
-            "Reference"
-          ]
-        },
-        pvnLicenseClass: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Reproducible",
-            "CiteOnly",
-            "ShareAlike",
-            "NonCommercial"
           ]
         },
         ephemerisFormat: {
@@ -261033,6 +263563,45 @@ compressed). Nothing hashes the payload before the protocol hash.`
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies."
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product."
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -261204,6 +263773,10 @@ compressed). Nothing hashes the payload before the protocol hash.`
             F107_ADJ_LAST81: {
               type: "number",
               description: "81-day trailing average of adjusted F10.7"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -262952,45 +265525,6 @@ empty = the provider's native frame.`
             EVIDENCE: {
               type: "string",
               description: "Identifier of the report or record that holds the test."
-            }
-          },
-          additionalProperties: false
-        },
-        PVN: {
-          type: "object",
-          description: "Product Provenance",
-          properties: {
-            SOURCE_ID: {
-              type: "string",
-              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-            },
-            SOURCE_KIND: {
-              $ref: "#/definitions/pvnSourceKind",
-              description: "What kind of data the source supplies."
-            },
-            ORIGINATOR: {
-              type: "string",
-              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-            },
-            PROVIDER_ID: {
-              type: "string",
-              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-            },
-            PRODUCER: {
-              type: "string",
-              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-            },
-            LICENSE_CLASS: {
-              $ref: "#/definitions/pvnLicenseClass",
-              description: "What the source's terms permit for the product."
-            },
-            LICENSE_ID: {
-              type: "string",
-              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-            },
-            LINEAGE: {
-              type: "string",
-              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
             }
           },
           additionalProperties: false
@@ -303917,6 +306451,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             F107_ADJ_LAST81: {
               type: "number",
               description: "81-day trailing average of adjusted F10.7"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage."
             }
           },
           additionalProperties: false
@@ -323140,6 +325678,74 @@ var fbjson_default = {
     SPW: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -323194,6 +325800,101 @@ var fbjson_default = {
               value: 3
             }
           }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
         },
         SPW: {
           type: "object",
@@ -323412,6 +326113,11 @@ var fbjson_default = {
               type: "number",
               description: "81-day trailing average of adjusted F10.7",
               "x-flatbuffer-type": "float"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -327131,7 +329837,7 @@ var fbjson_default = {
             },
             CONTENT_ENCODING: {
               type: "string",
-              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here.",
               "x-flatbuffer-type": "string"
             },
             MEDIA_TYPE: {
@@ -394172,6 +396878,74 @@ verbatim what that source states about itself.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -394757,74 +397531,6 @@ verbatim what that source states about itself.`,
             }
           }
         },
-        pvnSourceKind: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "ElementSet",
-            "Ephemeris",
-            "Observation",
-            "Reference"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Not stated"
-            },
-            ElementSet: {
-              value: 1,
-              description: "Element sets of a catalog"
-            },
-            Ephemeris: {
-              value: 2,
-              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
-            },
-            Observation: {
-              value: 3,
-              description: "Observations (ranges, angles, other measurements) that states are estimated from"
-            },
-            Reference: {
-              value: 4,
-              description: "Reference registers of sites and facilities (status, dates, identity)"
-            }
-          }
-        },
-        pvnLicenseClass: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Reproducible",
-            "CiteOnly",
-            "ShareAlike",
-            "NonCommercial"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Not stated. Never a grant: treated as CiteOnly."
-            },
-            Reproducible: {
-              value: 1,
-              description: "The records may be republished, with the credit the terms ask."
-            },
-            CiteOnly: {
-              value: 2,
-              description: "The records are computed on and cited, never republished."
-            },
-            ShareAlike: {
-              value: 3,
-              description: "The records may be republished under the same terms, which every derived record carries."
-            },
-            NonCommercial: {
-              value: 4,
-              description: "The records may be republished for non-commercial use only."
-            }
-          }
-        },
         ephemerisFormat: {
           type: "string",
           enum: [
@@ -394908,7 +397614,8 @@ verbatim what that source states about itself.`,
           enum: [
             "None",
             "Harmonic",
-            "Nodes"
+            "Nodes",
+            "LogDensityNodes"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -394923,7 +397630,11 @@ verbatim what that source states about itself.`,
             },
             Nodes: {
               value: 2,
-              description: "Values at time nodes, optionally at altitude nodes."
+              description: "Temperature values, K, at time nodes, optionally at altitude nodes."
+            },
+            LogDensityNodes: {
+              value: 3,
+              description: "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
             }
           }
         },
@@ -404555,6 +407266,101 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -404772,6 +407578,11 @@ verbatim what that source states about itself.`,
               type: "number",
               description: "81-day trailing average of adjusted F10.7",
               "x-flatbuffer-type": "float"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -407285,101 +410096,6 @@ empty = the provider's native frame.`,
           },
           additionalProperties: false
         },
-        PVN: {
-          type: "object",
-          description: "Product Provenance",
-          properties: {
-            SOURCE_ID: {
-              type: "string",
-              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
-              "x-flatbuffer-type": "string"
-            },
-            SOURCE_KIND: {
-              $ref: "#/definitions/pvnSourceKind",
-              description: "What kind of data the source supplies.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
-              "x-flatbuffer-enum-values": {
-                Unspecified: {
-                  value: 0,
-                  description: "Not stated"
-                },
-                ElementSet: {
-                  value: 1,
-                  description: "Element sets of a catalog"
-                },
-                Ephemeris: {
-                  value: 2,
-                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
-                },
-                Observation: {
-                  value: 3,
-                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
-                },
-                Reference: {
-                  value: 4,
-                  description: "Reference registers of sites and facilities (status, dates, identity)"
-                }
-              },
-              "x-flatbuffer-default": "Unspecified"
-            },
-            ORIGINATOR: {
-              type: "string",
-              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
-              "x-flatbuffer-type": "string"
-            },
-            PROVIDER_ID: {
-              type: "string",
-              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
-              "x-flatbuffer-type": "string"
-            },
-            PRODUCER: {
-              type: "string",
-              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
-              "x-flatbuffer-type": "string"
-            },
-            LICENSE_CLASS: {
-              $ref: "#/definitions/pvnLicenseClass",
-              description: "What the source's terms permit for the product.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
-              "x-flatbuffer-enum-values": {
-                Unspecified: {
-                  value: 0,
-                  description: "Not stated. Never a grant: treated as CiteOnly."
-                },
-                Reproducible: {
-                  value: 1,
-                  description: "The records may be republished, with the credit the terms ask."
-                },
-                CiteOnly: {
-                  value: 2,
-                  description: "The records are computed on and cited, never republished."
-                },
-                ShareAlike: {
-                  value: 3,
-                  description: "The records may be republished under the same terms, which every derived record carries."
-                },
-                NonCommercial: {
-                  value: 4,
-                  description: "The records may be republished for non-commercial use only."
-                }
-              },
-              "x-flatbuffer-default": "Unspecified"
-            },
-            LICENSE_ID: {
-              type: "string",
-              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
-              "x-flatbuffer-type": "string"
-            },
-            LINEAGE: {
-              type: "string",
-              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
-              "x-flatbuffer-type": "string"
-            }
-          },
-          additionalProperties: false
-        },
         OMM: {
           type: "object",
           description: "Orbit Mean Elements Message",
@@ -408381,7 +411097,7 @@ empty = the provider's native frame.`,
         },
         dclCorrection: {
           type: "object",
-          description: "An exospheric-temperature correction.",
+          description: "An exospheric-temperature correction or a dimensionless log-density scale.",
           properties: {
             FORM: {
               $ref: "#/definitions/dclCorrectionForm",
@@ -408398,7 +411114,11 @@ empty = the provider's native frame.`,
                 },
                 Nodes: {
                   value: 2,
-                  description: "Values at time nodes, optionally at altitude nodes."
+                  description: "Temperature values, K, at time nodes, optionally at altitude nodes."
+                },
+                LogDensityNodes: {
+                  value: 3,
+                  description: "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
                 }
               },
               "x-flatbuffer-default": "None"
@@ -408425,7 +411145,7 @@ empty = the provider's native frame.`,
                 minimum: -9223372036854776e3,
                 maximum: 9223372036854776e3
               },
-              description: "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them.",
+              description: "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span.",
               "x-flatbuffer-type": "[int64]"
             },
             NODE_ALTITUDES_KM: {
@@ -408450,6 +411170,14 @@ empty = the provider's native frame.`,
                 type: "number"
               },
               description: "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value.",
               "x-flatbuffer-type": "[double]"
             }
           },
@@ -409387,6 +412115,11 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               $ref: "#/definitions/dclStates",
               description: "OrbitalEnergy and DragWork: the states and their results.",
               "x-flatbuffer-type": "dclStates"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -410580,6 +413313,452 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
       $ref: "#/definitions/OSM",
       "x-flatbuffer-root-type": "OSM",
       "x-flatbuffer-file-identifier": "$OSM"
+    },
+    SDI: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SDI: {
+          type: "object",
+          description: "Solar Disk Image",
+          properties: {
+            OBSERVATORY: {
+              type: "string",
+              description: "Observatory or mission, verbatim (FITS TELESCOP).",
+              "x-flatbuffer-type": "string"
+            },
+            INSTRUMENT: {
+              type: "string",
+              description: "Instrument, verbatim (FITS INSTRUME).",
+              "x-flatbuffer-type": "string"
+            },
+            MEASUREMENT: {
+              type: "string",
+              description: "Measurement, verbatim (FITS WAVELNTH token or continuum label).",
+              "x-flatbuffer-type": "string"
+            },
+            WAVELENGTH_NM: {
+              type: "number",
+              description: "Wavelength in nm.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMAGE_ID: {
+              type: "string",
+              description: "The source's image identity, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            REQUESTED_AT: {
+              type: "string",
+              description: "When this image was requested from the source, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVED_AT: {
+              type: "string",
+              description: "Observation time normalized to RFC 3339 UTC.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DATE_OBS: {
+              type: "string",
+              description: "FITS DATE-OBS, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SCALE: {
+              type: "string",
+              description: "FITS TIMESYS, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            CADENCE_S: {
+              type: "number",
+              description: "Source cadence in seconds.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            EXPOSURE_S: {
+              type: "number",
+              description: "Exposure time in seconds (FITS EXPTIME).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMAGE_CID: {
+              type: "string",
+              description: "CID of the image bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            IMAGE_MEDIA_TYPE: {
+              type: "string",
+              description: "Media type of the image bytes (e.g. image/jp2, application/fits).",
+              "x-flatbuffer-type": "string"
+            },
+            IMAGE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the image bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            IMAGE_SIZE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Size of the image bytes.",
+              "x-flatbuffer-type": "uint64"
+            },
+            HEADER_CID: {
+              type: "string",
+              description: "CID of the verbatim FITS header.",
+              "x-flatbuffer-type": "string"
+            },
+            WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image width in pixels (FITS NAXIS1).",
+              "x-flatbuffer-type": "uint32"
+            },
+            HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image height in pixels (FITS NAXIS2).",
+              "x-flatbuffer-type": "uint32"
+            },
+            CTYPE1: {
+              type: "string",
+              description: "FITS CTYPE1, verbatim (e.g. HPLN-TAN).",
+              "x-flatbuffer-type": "string"
+            },
+            CTYPE2: {
+              type: "string",
+              description: "FITS CTYPE2, verbatim (e.g. HPLT-TAN).",
+              "x-flatbuffer-type": "string"
+            },
+            CUNIT1: {
+              type: "string",
+              description: "FITS CUNIT1, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            CUNIT2: {
+              type: "string",
+              description: "FITS CUNIT2, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            CRPIX1: {
+              type: "number",
+              description: "FITS CRPIX1, one-based.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRPIX2: {
+              type: "number",
+              description: "FITS CRPIX2, one-based.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRVAL1: {
+              type: "number",
+              description: "FITS CRVAL1 in CUNIT1.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRVAL2: {
+              type: "number",
+              description: "FITS CRVAL2 in CUNIT2.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CDELT1: {
+              type: "number",
+              description: "FITS CDELT1 in CUNIT1 per pixel.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CDELT2: {
+              type: "number",
+              description: "FITS CDELT2 in CUNIT2 per pixel.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CROTA2: {
+              type: "number",
+              description: "FITS CROTA2 in degrees.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PC: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them.",
+              "x-flatbuffer-type": "[double]"
+            },
+            RSUN_OBS_ARCSEC: {
+              type: "number",
+              description: "Observed solar radius in arcseconds (FITS RSUN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RSUN_REF_M: {
+              type: "number",
+              description: "Reference solar radius in meters (FITS RSUN_REF).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DSUN_OBS_M: {
+              type: "number",
+              description: "Observer distance from Sun center in meters (FITS DSUN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington longitude in degrees (FITS CRLN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington latitude in degrees (FITS CRLT_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HGLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HGLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            QUALITY: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "FITS QUALITY bitmask; meaningful only when HAS_QUALITY.",
+              "x-flatbuffer-type": "int64"
+            },
+            HAS_QUALITY: {
+              type: "boolean",
+              description: "True when the source states QUALITY.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            PROCESSING: {
+              type: "string",
+              description: "Processing description, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "OBSERVED_AT",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SDICOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SDI"
+              },
+              "x-flatbuffer-type": "[SDI]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SDI",
+      "x-flatbuffer-root-type": "SDI",
+      "x-flatbuffer-file-identifier": "$SDI"
     },
     PRG: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -417134,6 +420313,409 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
       $ref: "#/definitions/PPE",
       "x-flatbuffer-root-type": "PPE",
       "x-flatbuffer-file-identifier": "$PPE"
+    },
+    SFE: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
+        sfeEventKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "XRAY",
+            "OPTICAL",
+            "RADIO",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            XRAY: {
+              value: 1,
+              description: "Soft X-ray flare (e.g. event type XRA)."
+            },
+            OPTICAL: {
+              value: 2,
+              description: "Optical flare (e.g. event type FLA)."
+            },
+            RADIO: {
+              value: 3,
+              description: "Radio burst or sweep."
+            },
+            CUSTOM: {
+              value: 4,
+              description: "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+            }
+          }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SFE: {
+          type: "object",
+          description: "Solar Flare Event",
+          properties: {
+            EVENT_ID: {
+              type: "string",
+              description: "The source's own event identity, verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PRODUCT: {
+              type: "string",
+              description: "Source product name, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVATORY: {
+              type: "string",
+              description: "Reporting observatory, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PLATFORM: {
+              type: "string",
+              description: "Observing platform or satellite, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_KIND: {
+              $ref: "#/definitions/sfeEventKind",
+              description: "Observing domain.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+                },
+                XRAY: {
+                  value: 1,
+                  description: "Soft X-ray flare (e.g. event type XRA)."
+                },
+                OPTICAL: {
+                  value: 2,
+                  description: "Optical flare (e.g. event type FLA)."
+                },
+                RADIO: {
+                  value: 3,
+                  description: "Radio burst or sweep."
+                },
+                CUSTOM: {
+                  value: 4,
+                  description: "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+                }
+              }
+            },
+            EVENT_TYPE_CODE: {
+              type: "string",
+              description: "Source event type code, verbatim (e.g. XRA, FLA).",
+              "x-flatbuffer-type": "string"
+            },
+            BEGIN_TIME: {
+              type: "string",
+              description: "Event begin time, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_TIME: {
+              type: "string",
+              description: "Event peak time, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            END_TIME: {
+              type: "string",
+              description: "Event end time, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            BEGIN_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on BEGIN_TIME, verbatim (e.g. B for before).",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on PEAK_TIME, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            END_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on END_TIME, verbatim (e.g. A for after).",
+              "x-flatbuffer-type": "string"
+            },
+            XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class, verbatim (e.g. C1.4).",
+              "x-flatbuffer-type": "string"
+            },
+            OPTICAL_IMPORTANCE: {
+              type: "string",
+              description: "Optical importance, verbatim (e.g. SF).",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_FLUX_W_M2: {
+              type: "number",
+              description: "Peak flux in W/m^2.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            INTEGRATED_FLUX_J_M2: {
+              type: "number",
+              description: "Integrated flux (fluence) in J/m^2.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PASSBAND_MIN_NM: {
+              type: "number",
+              description: "Lower edge of the observing passband in nm.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PASSBAND_MAX_NM: {
+              type: "number",
+              description: "Upper edge of the observing passband in nm.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Associated region number; meaningful only when HAS_REGION_NUMBER.",
+              "x-flatbuffer-type": "uint32"
+            },
+            HAS_REGION_NUMBER: {
+              type: "boolean",
+              description: "True only when the source explicitly states the region association.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive, when stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees, west positive, when stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            STATUS: {
+              type: "string",
+              description: "Source status of the report, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            REVISION: {
+              type: "string",
+              description: "Source revision or change flag, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "EVENT_ID",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SFECOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SFE"
+              },
+              "x-flatbuffer-type": "[SFE]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SFE",
+      "x-flatbuffer-root-type": "SFE",
+      "x-flatbuffer-file-identifier": "$SFE"
     },
     LMS: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -472732,6 +476314,361 @@ verbatim what that source states about itself.`,
       "x-flatbuffer-root-type": "PAP",
       "x-flatbuffer-file-identifier": "$PAP"
     },
+    SRO: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
+        sroRegionKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "SUNSPOT_GROUP",
+            "PLAGE",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            SUNSPOT_GROUP: {
+              value: 1,
+              description: "A sunspot group (e.g. SRS Part I)."
+            },
+            PLAGE: {
+              value: 2,
+              description: "A plage region without spots (e.g. SRS Part IA)."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "A kind this enum does not model."
+            }
+          }
+        },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SRO: {
+          type: "object",
+          description: "Solar Region Observation",
+          properties: {
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Region number, verbatim, with no solar cycle prefix added or removed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            REGION_AUTHORITY: {
+              type: "string",
+              description: "The numbering authority, verbatim (e.g. NOAA/SWPC).",
+              "x-flatbuffer-type": "string"
+            },
+            ISSUED_AT: {
+              type: "string",
+              description: "When the source issued this report, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVED_DATE: {
+              type: "string",
+              description: "The source's observation date label, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            POSITION_EPOCH: {
+              type: "string",
+              description: "The instant the position below refers to, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            REGION_KIND: {
+              $ref: "#/definitions/sroRegionKind",
+              description: "Region kind as listed by the source.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+                },
+                SUNSPOT_GROUP: {
+                  value: 1,
+                  description: "A sunspot group (e.g. SRS Part I)."
+                },
+                PLAGE: {
+                  value: 2,
+                  description: "A plage region without spots (e.g. SRS Part IA)."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "A kind this enum does not model."
+                }
+              }
+            },
+            LOCATION_TOKEN: {
+              type: "string",
+              description: "Heliographic location token, verbatim (e.g. N14W32).",
+              "x-flatbuffer-type": "string"
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CARRINGTON_LONGITUDE_DEG: {
+              type: "number",
+              description: "Carrington longitude in degrees.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MSH: {
+              type: "number",
+              description: "Corrected area in millionths of the solar hemisphere.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            LONGITUDINAL_EXTENT_DEG: {
+              type: "number",
+              description: "Longitudinal extent in degrees.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SPOT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of spots in the region; meaningful only when HAS_SPOT_COUNT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            HAS_SPOT_COUNT: {
+              type: "boolean",
+              description: "True when the source states SPOT_COUNT.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            MCINTOSH_CLASS: {
+              type: "string",
+              description: "McIntosh classification, verbatim (e.g. Dao).",
+              "x-flatbuffer-type": "string"
+            },
+            MAGNETIC_CLASS: {
+              type: "string",
+              description: "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma).",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "POSITION_EPOCH",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SROCOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRO"
+              },
+              "x-flatbuffer-type": "[SRO]"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SRO",
+      "x-flatbuffer-root-type": "SRO",
+      "x-flatbuffer-file-identifier": "$SRO"
+    },
     STV: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -489436,6 +493373,1276 @@ compressed). Nothing hashes the payload before the protocol hash.`,
       $ref: "#/definitions/DSS",
       "x-flatbuffer-root-type": "DSS",
       "x-flatbuffer-file-identifier": "$DSS"
+    },
+    SRT: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        dttTilingScheme: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "GEOGRAPHIC_WGS84",
+            "GEOGRAPHIC_SINGLE_ROOT",
+            "WEB_MERCATOR",
+            "CUSTOM",
+            "GEOGRAPHIC_TWO_ROOT_BODY"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+            },
+            GEOGRAPHIC_WGS84: {
+              value: 1,
+              description: "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+            },
+            GEOGRAPHIC_SINGLE_ROOT: {
+              value: 2,
+              description: "Single-root equirectangular geographic scheme, one root tile at level 0."
+            },
+            WEB_MERCATOR: {
+              value: 3,
+              description: "Spherical Mercator scheme, one square root tile at level 0."
+            },
+            CUSTOM: {
+              value: 4,
+              description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+            },
+            GEOGRAPHIC_TWO_ROOT_BODY: {
+              value: 5,
+              description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
+            }
+          }
+        },
+        dttPayloadFormat: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "QUANTIZED_MESH",
+            "HEIGHTMAP_UINT16",
+            "HEIGHTMAP_FLOAT32",
+            "RASTER_GEOTIFF",
+            "RASTER_RGB_ENCODED",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The payload encoding is not stated. The tile is undecodable."
+            },
+            QUANTIZED_MESH: {
+              value: 1,
+              description: "Quantized triangle mesh with 16-bit normalized vertex coordinates and an indexed triangle list, plus optional extension chunks."
+            },
+            HEIGHTMAP_UINT16: {
+              value: 2,
+              description: "Regular grid of 16-bit unsigned height posts with a stated child-tile availability byte."
+            },
+            HEIGHTMAP_FLOAT32: {
+              value: 3,
+              description: "Regular grid of 32-bit float height posts, row-major from the north-west post."
+            },
+            RASTER_GEOTIFF: {
+              value: 4,
+              description: "Tagged image raster carrying elevation samples with its own georeference."
+            },
+            RASTER_RGB_ENCODED: {
+              value: 5,
+              description: "Lossless RGB image raster whose channels encode elevation."
+            },
+            CUSTOM: {
+              value: 6,
+              description: "A format this enum does not model; the publisher states it out of band."
+            }
+          }
+        },
+        dttVerticalDatum: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "ELLIPSOIDAL_WGS84",
+            "GEOID",
+            "MEAN_SEA_LEVEL",
+            "REGIONAL_DATUM",
+            "CUSTOM",
+            "REFERENCE_SPHERE"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The datum is not stated. Heights are not comparable across tiles."
+            },
+            ELLIPSOIDAL_WGS84: {
+              value: 1,
+              description: "Heights above the WGS 84 reference ellipsoid."
+            },
+            GEOID: {
+              value: 2,
+              description: "Heights above a gravimetric geoid model; the model edition is carried verbatim in VERTICAL_DATUM_NAME."
+            },
+            MEAN_SEA_LEVEL: {
+              value: 3,
+              description: "Heights above a tidal mean-sea-level surface; the realization is carried verbatim in VERTICAL_DATUM_NAME."
+            },
+            REGIONAL_DATUM: {
+              value: 4,
+              description: "Heights above a national or regional vertical reference frame, named verbatim in VERTICAL_DATUM_NAME."
+            },
+            CUSTOM: {
+              value: 5,
+              description: "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+            },
+            REFERENCE_SPHERE: {
+              value: 6,
+              description: "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
+            }
+          }
+        },
+        dttSourceClass: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "SPACEBORNE_RADAR_INTERFEROMETRIC",
+            "SPACEBORNE_OPTICAL_STEREO",
+            "SPACEBORNE_ALTIMETRIC",
+            "AIRBORNE_LIDAR",
+            "AIRBORNE_RADAR",
+            "PHOTOGRAMMETRIC",
+            "GROUND_SURVEY",
+            "BATHYMETRIC_SOUNDING",
+            "CARTOGRAPHIC_CONTOUR",
+            "FUSED_MULTI_SOURCE",
+            "SYNTHETIC"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "The production technique is not stated."
+            },
+            SPACEBORNE_RADAR_INTERFEROMETRIC: {
+              value: 1,
+              description: "Spaceborne radar interferometry."
+            },
+            SPACEBORNE_OPTICAL_STEREO: {
+              value: 2,
+              description: "Spaceborne optical stereo photogrammetry."
+            },
+            SPACEBORNE_ALTIMETRIC: {
+              value: 3,
+              description: "Spaceborne laser or radar altimetry."
+            },
+            AIRBORNE_LIDAR: {
+              value: 4,
+              description: "Airborne laser scanning."
+            },
+            AIRBORNE_RADAR: {
+              value: 5,
+              description: "Airborne radar, including interferometric and synthetic-aperture radar."
+            },
+            PHOTOGRAMMETRIC: {
+              value: 6,
+              description: "Airborne or terrestrial optical photogrammetry."
+            },
+            GROUND_SURVEY: {
+              value: 7,
+              description: "Ground survey, including levelling and kinematic positioning."
+            },
+            BATHYMETRIC_SOUNDING: {
+              value: 8,
+              description: "Acoustic or altimetric depth sounding of water-covered surface."
+            },
+            CARTOGRAPHIC_CONTOUR: {
+              value: 9,
+              description: "Digitized from a published contour or hypsographic map."
+            },
+            FUSED_MULTI_SOURCE: {
+              value: 10,
+              description: "Merged from two or more classes above; the contributing datasets are carried in DTTProvenance."
+            },
+            SYNTHETIC: {
+              value: 11,
+              description: "Synthesized rather than measured: interpolated fill, procedural relief, or a model output. Never to be presented as a measurement."
+            }
+          }
+        },
+        dttWaterMask: {
+          type: "string",
+          enum: [
+            "NONE",
+            "UNIFORM_LAND",
+            "UNIFORM_WATER",
+            "RASTER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            NONE: {
+              value: 0,
+              description: "The tile states nothing about water cover."
+            },
+            UNIFORM_LAND: {
+              value: 1,
+              description: "The whole tile extent is land."
+            },
+            UNIFORM_WATER: {
+              value: 2,
+              description: "The whole tile extent is water."
+            },
+            RASTER: {
+              value: 3,
+              description: "A per-sample mask accompanies the tile, referenced by WATER_MASK."
+            }
+          }
+        },
+        srtQuantity: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CATEGORICAL_CLASS",
+            "HEIGHT_ABOVE_GROUND",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Ordinal 0 so an unset field is never read as a real quantity."
+            },
+            CATEGORICAL_CLASS: {
+              value: 1,
+              description: "Integer class codes resolved by CLASS_LEGEND."
+            },
+            HEIGHT_ABOVE_GROUND: {
+              value: 2,
+              description: "Height above local ground (e.g. canopy height), never terrain."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "A quantity this enum does not model; QUANTITY_NAME names it."
+            }
+          }
+        },
+        srtSampleType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "UINT8",
+            "INT8",
+            "UINT16",
+            "INT16",
+            "UINT32",
+            "INT32",
+            "FLOAT32",
+            "FLOAT64"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            UINT8: {
+              value: 1
+            },
+            INT8: {
+              value: 2
+            },
+            UINT16: {
+              value: 3
+            },
+            INT16: {
+              value: 4
+            },
+            UINT32: {
+              value: 5
+            },
+            INT32: {
+              value: 6
+            },
+            FLOAT32: {
+              value: 7
+            },
+            FLOAT64: {
+              value: 8
+            }
+          }
+        },
+        srtPixelRegistration: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AREA",
+            "POINT"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            AREA: {
+              value: 1,
+              description: "Sample represents the whole cell area (GDAL PixelIsArea)."
+            },
+            POINT: {
+              value: 2,
+              description: "Sample represents the point at the cell corner (GDAL PixelIsPoint)."
+            }
+          }
+        },
+        srtPayloadFormat: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RASTER_GEOTIFF",
+            "SAMPLES_ROW_MAJOR_LE",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RASTER_GEOTIFF: {
+              value: 1,
+              description: "A GeoTIFF file, verbatim."
+            },
+            SAMPLES_ROW_MAJOR_LE: {
+              value: 2,
+              description: "Bare samples, rows from the north-west corner, little-endian."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "A format this enum does not model; PAYLOAD.MEDIA_TYPE names it."
+            }
+          }
+        },
+        DTTPayloadRef: {
+          type: "object",
+          description: "Where a block of bytes lives and how it is verified. The payload lane is\nCID-first: a tile record addresses its bytes so an epoch can be verified\nrather than trusted, and carries them inline only when the block is small\nenough that a second fetch costs more than it saves. Exactly one of CID or\nBYTES is the authority for a given ref; when both are present the bytes\nMUST hash to the CID.",
+          properties: {
+            CID: {
+              type: "string",
+              description: "Content identifier of the block in the dataset lane.",
+              "x-flatbuffer-type": "string"
+            },
+            BYTES: {
+              type: "array",
+              items: {
+                type: "integer",
+                minimum: 0,
+                maximum: 255
+              },
+              description: "The block inline. Reserved for small blocks; a tile pyramid is\ndistributed by CID, never by embedding megabytes per record.",
+              "x-flatbuffer-type": "[ubyte]"
+            },
+            SIZE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Length of the block in bytes, whether inline or referenced, so a\nconsumer can budget a fetch before making it.",
+              "x-flatbuffer-type": "uint64"
+            },
+            DIGEST: {
+              type: "string",
+              description: "Multihash of the block, lowercase hexadecimal, when the publisher states\none independently of the CID.",
+              "x-flatbuffer-type": "string"
+            },
+            CONTENT_ENCODING: {
+              type: "string",
+              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here.",
+              "x-flatbuffer-type": "string"
+            },
+            MEDIA_TYPE: {
+              type: "string",
+              description: "Media type of the block as the publisher serves it.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        DTTProvenance: {
+          type: "object",
+          description: "Dataset lineage and redistribution terms for one terrain tile.\n\nRequired on every record: a redistributed elevation tile whose dataset,\nepoch, and licence are unstated is not publishable. Dataset identity is\nDATA: DATASET_ID, DATASET_NAME, and ATTRIBUTION carry verbatim what the\nsource states about itself. The standard names no dataset, mission, agency,\nor vendor.",
+          properties: {
+            DATASET_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier for the elevation dataset this\ntile was derived from, unique within the publisher's own dataset\nregistry. Never a display name and never a URL.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DATASET_NAME: {
+              type: "string",
+              description: "The dataset's own name, verbatim as its publisher states it.",
+              "x-flatbuffer-type": "string"
+            },
+            DATASET_URL: {
+              type: "string",
+              description: "Replayable URL of the dataset as published.",
+              "x-flatbuffer-type": "string"
+            },
+            DATASET_EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond epoch of the dataset edition this tile was\nderived from. The edition boundary, not the fetch: two tiles carrying the\nsame DATASET_ID and DATASET_EPOCH were cut from the same bytes.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DATASET_CID: {
+              type: "string",
+              description: "Content identifier of the exact dataset artifact, when the publisher\ndistributes one.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_URL: {
+              type: "string",
+              description: "Replayable URL identifying the source material within the dataset.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_QUERY: {
+              type: "string",
+              description: "The exact tile, granule, or file selection used, so the same source\nbytes can be recovered by repeating the fetch.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond retrieval timestamp.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            LICENSE: {
+              type: "string",
+              description: "Redistribution terms verbatim. Required: unknown terms are never public\ndomain and never an implied grant.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            LICENSE_URL: {
+              type: "string",
+              description: "URL of the full licence text as that dataset publishes it.",
+              "x-flatbuffer-type": "string"
+            },
+            ATTRIBUTION: {
+              type: "string",
+              description: "Attribution text the licence requires a redistributor to display,\ncarried verbatim so a surface can render it without composing its own\ncredit line.",
+              "x-flatbuffer-type": "string"
+            },
+            NON_COMMERCIAL_ONLY: {
+              type: "boolean",
+              description: "The licence forbids commercial use.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            SHARE_ALIKE: {
+              type: "boolean",
+              description: "The licence obliges derived works to carry the same terms.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            NATIVE_ID: {
+              type: "string",
+              description: "The source's own identifier for the granule this tile was cut from,\nverbatim. The join key back to the source dataset.",
+              "x-flatbuffer-type": "string"
+            },
+            GENERATED_AT: {
+              type: "string",
+              description: "RFC 3339 UTC timestamp at which this tile's bytes were produced by the\npublisher, as distinct from the dataset edition they were cut from.",
+              "x-flatbuffer-type": "string"
+            },
+            PROCESSOR: {
+              type: "string",
+              description: "Identifier of the processing pipeline and its version that produced the\ntile bytes, so two tiles from one edition but different pipelines are\ndistinguishable.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "DATASET_ID",
+            "DATASET_EPOCH",
+            "RETRIEVED_AT",
+            "LICENSE"
+          ],
+          additionalProperties: false
+        },
+        DTT: {
+          type: "object",
+          description: "Digital Terrain Tile\n\nOne addressable tile of a terrain elevation pyramid: its address in a\nstated tiling scheme, its geographic extent, its payload encoding and where\nthose bytes live, the vertical datum its heights are measured from, what it\nstates about water cover, and the dataset edition and licence it was\nredistributed under.\n\n$DTT is the SERVED ARTIFACT of a terrain lane and is deliberately not\n$TRN, which configures how a consumer uses terrain (sources, interpolation,\ncache size, exaggeration) and holds no elevation; nor $TRS, which is a\nradio-propagation solve over terrain heights. A terrain service publishes\n$DTT records, is configured by $TRN, and its heights may be consumed by\n$TRS.\n\nAngles are decimal degrees on WGS 84 and heights are metres. A tile of\nanother body names it in CENTER_NAME; its angles are then planetocentric\ndegrees on that body's reference body (REFERENCE_RADII_M), not WGS 84. Tile bytes are\nreferenced by content identifier by default; see DTTPayloadRef.",
+          properties: {
+            TILESET_ID: {
+              type: "string",
+              description: "Publisher-stable identifier for the tile pyramid (the tileset) this tile\nbelongs to. Tiles of one pyramid share a scheme, format, and datum.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            TILESET_NAME: {
+              type: "string",
+              description: "The tileset's own name, verbatim, for display.",
+              "x-flatbuffer-type": "string"
+            },
+            TILING_SCHEME: {
+              $ref: "#/definitions/dttTilingScheme",
+              description: "Scheme the address below is expressed in.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                },
+                GEOGRAPHIC_WGS84: {
+                  value: 1,
+                  description: "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                },
+                GEOGRAPHIC_SINGLE_ROOT: {
+                  value: 2,
+                  description: "Single-root equirectangular geographic scheme, one root tile at level 0."
+                },
+                WEB_MERCATOR: {
+                  value: 3,
+                  description: "Spherical Mercator scheme, one square root tile at level 0."
+                },
+                CUSTOM: {
+                  value: 4,
+                  description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                },
+                GEOGRAPHIC_TWO_ROOT_BODY: {
+                  value: 5,
+                  description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Zoom level of the tile, 0 at the pyramid root.",
+              "x-flatbuffer-type": "uint32"
+            },
+            X: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Column index within LEVEL, increasing eastward from the scheme origin.",
+              "x-flatbuffer-type": "uint32"
+            },
+            Y: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Row index within LEVEL, increasing in the scheme's own row direction;\nROW_ORIGIN_NORTH states which.",
+              "x-flatbuffer-type": "uint32"
+            },
+            ROW_ORIGIN_NORTH: {
+              type: "boolean",
+              description: "Row index 0 lies at the north edge of the scheme. When false, row 0 lies\nat the south edge.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            WEST_DEG: {
+              type: "number",
+              description: "Western extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (WGS 84 for EARTH; planetocentric for any other body).",
+              "x-flatbuffer-type": "double"
+            },
+            SOUTH_DEG: {
+              type: "number",
+              description: "Southern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
+              "x-flatbuffer-type": "double"
+            },
+            EAST_DEG: {
+              type: "number",
+              description: "Eastern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH), east positive.",
+              "x-flatbuffer-type": "double"
+            },
+            NORTH_DEG: {
+              type: "number",
+              description: "Northern extent of the tile, decimal degrees on CENTER_NAME's reference\nbody (planetocentric for any body other than EARTH).",
+              "x-flatbuffer-type": "double"
+            },
+            MIN_HEIGHT_M: {
+              type: "number",
+              description: "Lowest height present in the tile, metres above VERTICAL_DATUM. Stated\nso a consumer can build a bounding volume without decoding the payload.",
+              "x-flatbuffer-type": "double"
+            },
+            MAX_HEIGHT_M: {
+              type: "number",
+              description: "Highest height present in the tile, metres above VERTICAL_DATUM.",
+              "x-flatbuffer-type": "double"
+            },
+            PAYLOAD_FORMAT: {
+              $ref: "#/definitions/dttPayloadFormat",
+              description: "Encoding of the payload bytes.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The payload encoding is not stated. The tile is undecodable."
+                },
+                QUANTIZED_MESH: {
+                  value: 1,
+                  description: "Quantized triangle mesh with 16-bit normalized vertex coordinates and an indexed triangle list, plus optional extension chunks."
+                },
+                HEIGHTMAP_UINT16: {
+                  value: 2,
+                  description: "Regular grid of 16-bit unsigned height posts with a stated child-tile availability byte."
+                },
+                HEIGHTMAP_FLOAT32: {
+                  value: 3,
+                  description: "Regular grid of 32-bit float height posts, row-major from the north-west post."
+                },
+                RASTER_GEOTIFF: {
+                  value: 4,
+                  description: "Tagged image raster carrying elevation samples with its own georeference."
+                },
+                RASTER_RGB_ENCODED: {
+                  value: 5,
+                  description: "Lossless RGB image raster whose channels encode elevation."
+                },
+                CUSTOM: {
+                  value: 6,
+                  description: "A format this enum does not model; the publisher states it out of band."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PAYLOAD_FORMAT_VERSION: {
+              type: "string",
+              description: "Version of PAYLOAD_FORMAT the bytes conform to, verbatim, when the\nformat is versioned.",
+              "x-flatbuffer-type": "string"
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "The tile's elevation bytes.",
+              "x-flatbuffer-type": "DTTPayloadRef",
+              "x-flatbuffer-required": true
+            },
+            GRID_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of height posts across the tile for gridded formats. Unset for\nmesh formats, whose vertex count varies.",
+              "x-flatbuffer-type": "uint32"
+            },
+            GRID_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of height posts down the tile for gridded formats.",
+              "x-flatbuffer-type": "uint32"
+            },
+            POST_SPACING_M: {
+              type: "number",
+              description: "Nominal ground distance between adjacent height posts at the tile\ncentre, metres. The tile's effective resolution as served, which is not\nnecessarily the source dataset's native post spacing.",
+              "x-flatbuffer-type": "double"
+            },
+            SOURCE_POST_SPACING_M: {
+              type: "number",
+              description: "Native post spacing of the source elevations, metres, when the tile was\nresampled from a coarser or finer grid.",
+              "x-flatbuffer-type": "double"
+            },
+            VERTICAL_DATUM: {
+              $ref: "#/definitions/dttVerticalDatum",
+              description: "Surface the heights are measured from.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The datum is not stated. Heights are not comparable across tiles."
+                },
+                ELLIPSOIDAL_WGS84: {
+                  value: 1,
+                  description: "Heights above the WGS 84 reference ellipsoid."
+                },
+                GEOID: {
+                  value: 2,
+                  description: "Heights above a gravimetric geoid model; the model edition is carried verbatim in VERTICAL_DATUM_NAME."
+                },
+                MEAN_SEA_LEVEL: {
+                  value: 3,
+                  description: "Heights above a tidal mean-sea-level surface; the realization is carried verbatim in VERTICAL_DATUM_NAME."
+                },
+                REGIONAL_DATUM: {
+                  value: 4,
+                  description: "Heights above a national or regional vertical reference frame, named verbatim in VERTICAL_DATUM_NAME."
+                },
+                CUSTOM: {
+                  value: 5,
+                  description: "A datum this enum does not model, named verbatim in VERTICAL_DATUM_NAME."
+                },
+                REFERENCE_SPHERE: {
+                  value: 6,
+                  description: "Heights above the reference sphere of CENTER_NAME's body, whose radius is REFERENCE_RADII_M (one value). The datum of a planetary DEM published against a stated sphere rather than an ellipsoid or geoid. Added in 1.191.0."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            VERTICAL_DATUM_NAME: {
+              type: "string",
+              description: "The datum, geoid model, or vertical reference frame named verbatim as\nits authority states it.",
+              "x-flatbuffer-type": "string"
+            },
+            HORIZONTAL_DATUM_NAME: {
+              type: "string",
+              description: "Horizontal reference frame the extent is expressed in, verbatim, when it\nis not WGS 84.",
+              "x-flatbuffer-type": "string"
+            },
+            VERTICAL_ACCURACY_M: {
+              type: "number",
+              description: "Vertical accuracy the publisher states for this tile, metres, at the\nconfidence level stated in ACCURACY_CONFIDENCE.",
+              "x-flatbuffer-type": "double"
+            },
+            ACCURACY_CONFIDENCE: {
+              type: "number",
+              description: "Confidence level the accuracy figures are stated at, as a fraction\nbetween 0 and 1.",
+              "x-flatbuffer-type": "double"
+            },
+            HORIZONTAL_ACCURACY_M: {
+              type: "number",
+              description: "Horizontal accuracy the publisher states for this tile, metres.",
+              "x-flatbuffer-type": "double"
+            },
+            DATA_COVERAGE_FRACTION: {
+              type: "number",
+              description: "Fraction of the tile extent covered by real measurements rather than\ninterpolated or filled values, between 0 and 1.",
+              "x-flatbuffer-type": "double"
+            },
+            NO_DATA_VALUE: {
+              type: "number",
+              description: "Height value used to mark absent samples in gridded payloads.",
+              "x-flatbuffer-type": "double"
+            },
+            WATER_MASK_KIND: {
+              $ref: "#/definitions/dttWaterMask",
+              description: "What the tile states about water cover.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                NONE: {
+                  value: 0,
+                  description: "The tile states nothing about water cover."
+                },
+                UNIFORM_LAND: {
+                  value: 1,
+                  description: "The whole tile extent is land."
+                },
+                UNIFORM_WATER: {
+                  value: 2,
+                  description: "The whole tile extent is water."
+                },
+                RASTER: {
+                  value: 3,
+                  description: "A per-sample mask accompanies the tile, referenced by WATER_MASK."
+                }
+              },
+              "x-flatbuffer-default": "NONE"
+            },
+            WATER_MASK: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "The per-sample water mask bytes when WATER_MASK_KIND is RASTER: one\nunsigned byte per sample, 255 fully water, 0 fully land.",
+              "x-flatbuffer-type": "DTTPayloadRef"
+            },
+            WATER_MASK_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of mask samples across and down the tile when WATER_MASK_KIND is\nRASTER. Independent of GRID_WIDTH/GRID_HEIGHT: a mask is commonly\ncarried at a different resolution than the heights.",
+              "x-flatbuffer-type": "uint32"
+            },
+            WATER_MASK_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              "x-flatbuffer-type": "uint32"
+            },
+            WATER_MASK_PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset the water mask was derived from, when it is not the elevation\ndataset. A separate lineage because a mask carries its own licence.",
+              "x-flatbuffer-type": "DTTProvenance"
+            },
+            VERTEX_NORMALS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Per-sample surface normals accompanying the tile, when the publisher\nserves them, so a consumer need not derive lighting from heights.",
+              "x-flatbuffer-type": "DTTPayloadRef"
+            },
+            LAND_COVER: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Per-sample land-cover classification accompanying the tile, when the\npublisher serves one.",
+              "x-flatbuffer-type": "DTTPayloadRef"
+            },
+            CHILD_AVAILABILITY: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Availability of the four child tiles at LEVEL+1, as the low four bits:\nbit 0 south-west, bit 1 south-east, bit 2 north-west, bit 3 north-east.\nA set bit states the child exists in this tileset.",
+              "x-flatbuffer-type": "uint8"
+            },
+            MAX_LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The deepest level this tileset serves anywhere. A consumer stops\nrequesting below it rather than discovering absence by failed fetches.",
+              "x-flatbuffer-type": "uint32"
+            },
+            SOURCE_CLASS: {
+              $ref: "#/definitions/dttSourceClass",
+              description: "Production technique class of the source elevations.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The production technique is not stated."
+                },
+                SPACEBORNE_RADAR_INTERFEROMETRIC: {
+                  value: 1,
+                  description: "Spaceborne radar interferometry."
+                },
+                SPACEBORNE_OPTICAL_STEREO: {
+                  value: 2,
+                  description: "Spaceborne optical stereo photogrammetry."
+                },
+                SPACEBORNE_ALTIMETRIC: {
+                  value: 3,
+                  description: "Spaceborne laser or radar altimetry."
+                },
+                AIRBORNE_LIDAR: {
+                  value: 4,
+                  description: "Airborne laser scanning."
+                },
+                AIRBORNE_RADAR: {
+                  value: 5,
+                  description: "Airborne radar, including interferometric and synthetic-aperture radar."
+                },
+                PHOTOGRAMMETRIC: {
+                  value: 6,
+                  description: "Airborne or terrestrial optical photogrammetry."
+                },
+                GROUND_SURVEY: {
+                  value: 7,
+                  description: "Ground survey, including levelling and kinematic positioning."
+                },
+                BATHYMETRIC_SOUNDING: {
+                  value: 8,
+                  description: "Acoustic or altimetric depth sounding of water-covered surface."
+                },
+                CARTOGRAPHIC_CONTOUR: {
+                  value: 9,
+                  description: "Digitized from a published contour or hypsographic map."
+                },
+                FUSED_MULTI_SOURCE: {
+                  value: 10,
+                  description: "Merged from two or more classes above; the contributing datasets are carried in DTTProvenance."
+                },
+                SYNTHETIC: {
+                  value: 11,
+                  description: "Synthesized rather than measured: interpolated fill, procedural relief, or a model output. Never to be presented as a measurement."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset lineage and redistribution terms. Required.",
+              "x-flatbuffer-type": "DTTProvenance",
+              "x-flatbuffer-required": true
+            },
+            EPOCH: {
+              type: "string",
+              description: "RFC 3339 UTC fixed-millisecond epoch the elevations represent, when the\ndataset states an observation epoch distinct from its edition. Terrain\nchanges; a tile compared across time is compared at this epoch.",
+              "x-flatbuffer-type": "string"
+            },
+            ETAG: {
+              type: "string",
+              description: "Entity tag for the served bytes, verbatim, so a cache can revalidate.",
+              "x-flatbuffer-type": "string"
+            },
+            EXPIRES: {
+              type: "string",
+              description: "RFC 3339 UTC timestamp after which this tile should be revalidated.",
+              "x-flatbuffer-type": "string"
+            },
+            REMARKS: {
+              type: "string",
+              description: "Free-form publisher notes about this tile. Never a substitute for a\nstated field.",
+              "x-flatbuffer-type": "string"
+            },
+            CENTER_NAME: {
+              type: "string",
+              description: "The body the tile describes, spelled as the CCSDS ODM/OMM CENTER_NAME\nkeyword (SANA celestial body registry: EARTH, MOON, MARS). Absent means\nEARTH, so every tile published before 1.191.0 reads unchanged.",
+              "x-flatbuffer-type": "string"
+            },
+            REFERENCE_RADII_M: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Radii of CENTER_NAME's reference body, metres. One value is a sphere;\ntwo are equatorial then polar (a spheroid); three are the semi-axes a\n(towards 0 degrees longitude), b (towards 90 degrees east) and c (polar).\nEmpty for EARTH, whose shape is WGS 84. Required for a REFERENCE_SPHERE\ndatum, which reads the first value.",
+              "x-flatbuffer-type": "[double]"
+            },
+            HORIZON_ELEVATIONS: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Horizon elevation angles the publisher precomputed for the tile's posts,\nfor lighting and visibility without a height search. One unsigned byte\nper post and sector: posts in the order of PAYLOAD's grid (row-major from\nthe north-west post), sector the fastest index. Sector k is centred on\nazimuth k*360/HORIZON_SECTORS degrees, clockwise from north. A byte v is\nthe elevation angle of the terrain horizon above the local horizontal at\nthe post, v*90/255 degrees; a horizon at or below the horizontal is 0.",
+              "x-flatbuffer-type": "DTTPayloadRef"
+            },
+            HORIZON_SECTORS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Number of azimuth sectors in HORIZON_ELEVATIONS (0 when it is absent).",
+              "x-flatbuffer-type": "uint8"
+            }
+          },
+          required: [
+            "TILESET_ID",
+            "PAYLOAD",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SRTClass: {
+          type: "object",
+          description: "One class of a categorical raster.",
+          properties: {
+            CODE: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Sample value of the class.",
+              "x-flatbuffer-type": "int32"
+            },
+            LABEL: {
+              type: "string",
+              description: "Source label, verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COLOR_RGBA: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Source display color, 0xRRGGBBAA.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "LABEL"
+          ],
+          additionalProperties: false
+        },
+        SRT: {
+          type: "object",
+          description: "Surface Raster Tile",
+          properties: {
+            TILESET_ID: {
+              type: "string",
+              description: "Stable identity of the tileset this tile belongs to.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            TILESET_NAME: {
+              type: "string",
+              description: "Human-readable tileset name.",
+              "x-flatbuffer-type": "string"
+            },
+            QUANTITY: {
+              $ref: "#/definitions/srtQuantity",
+              description: "What the samples measure.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Ordinal 0 so an unset field is never read as a real quantity."
+                },
+                CATEGORICAL_CLASS: {
+                  value: 1,
+                  description: "Integer class codes resolved by CLASS_LEGEND."
+                },
+                HEIGHT_ABOVE_GROUND: {
+                  value: 2,
+                  description: "Height above local ground (e.g. canopy height), never terrain."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "A quantity this enum does not model; QUANTITY_NAME names it."
+                }
+              }
+            },
+            QUANTITY_NAME: {
+              type: "string",
+              description: "Source quantity name, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            UNIT: {
+              type: "string",
+              description: "UCUM unit of the scaled value (m for canopy height); absent for classes.",
+              "x-flatbuffer-type": "string"
+            },
+            SAMPLE_TYPE: {
+              $ref: "#/definitions/srtSampleType",
+              description: "Stored sample type.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                UINT8: {
+                  value: 1
+                },
+                INT8: {
+                  value: 2
+                },
+                UINT16: {
+                  value: 3
+                },
+                INT16: {
+                  value: 4
+                },
+                UINT32: {
+                  value: 5
+                },
+                INT32: {
+                  value: 6
+                },
+                FLOAT32: {
+                  value: 7
+                },
+                FLOAT64: {
+                  value: 8
+                }
+              }
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "1.0"
+            },
+            ADD_OFFSET: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0.0"
+            },
+            NO_DATA_VALUE: {
+              type: "number",
+              description: "Stored sample value meaning no data (WorldCover: 0).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CLASS_LEGEND: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRTClass"
+              },
+              description: "Class legend; required when QUANTITY = CATEGORICAL_CLASS.",
+              "x-flatbuffer-type": "[SRTClass]"
+            },
+            CRS: {
+              type: "string",
+              description: "Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857).",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            AFFINE_TRANSFORM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "GDAL geotransform, 6 values, mapping pixel corners to CRS units.",
+              "x-flatbuffer-type": "[double]"
+            },
+            PIXEL_REGISTRATION: {
+              $ref: "#/definitions/srtPixelRegistration",
+              description: "Pixel registration.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                AREA: {
+                  value: 1,
+                  description: "Sample represents the whole cell area (GDAL PixelIsArea)."
+                },
+                POINT: {
+                  value: 2,
+                  description: "Sample represents the point at the cell corner (GDAL PixelIsPoint)."
+                }
+              }
+            },
+            GRID_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid width in samples.",
+              "x-flatbuffer-type": "uint32"
+            },
+            GRID_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid height in samples.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TILING_SCHEME: {
+              $ref: "#/definitions/dttTilingScheme",
+              description: "Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                },
+                GEOGRAPHIC_WGS84: {
+                  value: 1,
+                  description: "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                },
+                GEOGRAPHIC_SINGLE_ROOT: {
+                  value: 2,
+                  description: "Single-root equirectangular geographic scheme, one root tile at level 0."
+                },
+                WEB_MERCATOR: {
+                  value: 3,
+                  description: "Spherical Mercator scheme, one square root tile at level 0."
+                },
+                CUSTOM: {
+                  value: 4,
+                  description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                },
+                GEOGRAPHIC_TWO_ROOT_BODY: {
+                  value: 5,
+                  description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
+                }
+              }
+            },
+            LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid level.",
+              "x-flatbuffer-type": "uint32"
+            },
+            X: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid column.",
+              "x-flatbuffer-type": "uint32"
+            },
+            Y: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid row.",
+              "x-flatbuffer-type": "uint32"
+            },
+            WEST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, west edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SOUTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, south edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            EAST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, east edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            NORTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, north edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            HORIZONTAL_DATUM_NAME: {
+              type: "string",
+              description: "Horizontal datum name, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PAYLOAD_FORMAT: {
+              $ref: "#/definitions/srtPayloadFormat",
+              description: "Encoding of PAYLOAD.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RASTER_GEOTIFF: {
+                  value: 1,
+                  description: "A GeoTIFF file, verbatim."
+                },
+                SAMPLES_ROW_MAJOR_LE: {
+                  value: 2,
+                  description: "Bare samples, rows from the north-west corner, little-endian."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "A format this enum does not model; PAYLOAD.MEDIA_TYPE names it."
+                }
+              }
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Native samples only: no palette conversion, resampling or rounding.",
+              "x-flatbuffer-type": "DTTPayloadRef",
+              "x-flatbuffer-required": true
+            },
+            MIN_VALUE: {
+              type: "number",
+              description: "Minimum scaled value in the tile.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_VALUE: {
+              type: "number",
+              description: "Maximum scaled value in the tile.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DATA_COVERAGE_FRACTION: {
+              type: "number",
+              description: "Fraction of samples that are not NO_DATA_VALUE, 0 to 1.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Dataset epoch of the samples, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset, retrieval and license lineage.",
+              "x-flatbuffer-type": "DTTProvenance",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "TILESET_ID",
+            "CRS",
+            "PAYLOAD",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/SRT",
+      "x-flatbuffer-root-type": "SRT",
+      "x-flatbuffer-file-identifier": "$SRT"
     },
     ACT: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
@@ -536212,6 +541419,74 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -536794,74 +542069,6 @@ format class are named by $NCD's container format.`,
             PooledModel: {
               value: 4,
               description: "The empirical model pooled over all sources, for a source without its own model in the regime"
-            }
-          }
-        },
-        pvnSourceKind: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "ElementSet",
-            "Ephemeris",
-            "Observation",
-            "Reference"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Not stated"
-            },
-            ElementSet: {
-              value: 1,
-              description: "Element sets of a catalog"
-            },
-            Ephemeris: {
-              value: 2,
-              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
-            },
-            Observation: {
-              value: 3,
-              description: "Observations (ranges, angles, other measurements) that states are estimated from"
-            },
-            Reference: {
-              value: 4,
-              description: "Reference registers of sites and facilities (status, dates, identity)"
-            }
-          }
-        },
-        pvnLicenseClass: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Reproducible",
-            "CiteOnly",
-            "ShareAlike",
-            "NonCommercial"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Not stated. Never a grant: treated as CiteOnly."
-            },
-            Reproducible: {
-              value: 1,
-              description: "The records may be republished, with the credit the terms ask."
-            },
-            CiteOnly: {
-              value: 2,
-              description: "The records are computed on and cited, never republished."
-            },
-            ShareAlike: {
-              value: 3,
-              description: "The records may be republished under the same terms, which every derived record carries."
-            },
-            NonCommercial: {
-              value: 4,
-              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -538397,7 +543604,8 @@ format class are named by $NCD's container format.`,
           enum: [
             "None",
             "Harmonic",
-            "Nodes"
+            "Nodes",
+            "LogDensityNodes"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -538412,7 +543620,11 @@ format class are named by $NCD's container format.`,
             },
             Nodes: {
               value: 2,
-              description: "Values at time nodes, optionally at altitude nodes."
+              description: "Temperature values, K, at time nodes, optionally at altitude nodes."
+            },
+            LogDensityNodes: {
+              value: 3,
+              description: "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
             }
           }
         },
@@ -550923,6 +556135,40 @@ format class are named by $NCD's container format.`,
             }
           }
         },
+        sfeEventKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "XRAY",
+            "OPTICAL",
+            "RADIO",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            XRAY: {
+              value: 1,
+              description: "Soft X-ray flare (e.g. event type XRA)."
+            },
+            OPTICAL: {
+              value: 2,
+              description: "Optical flare (e.g. event type FLA)."
+            },
+            RADIO: {
+              value: 3,
+              description: "Radio burst or sweep."
+            },
+            CUSTOM: {
+              value: 4,
+              description: "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+            }
+          }
+        },
         shcNormalization: {
           type: "string",
           enum: [
@@ -552333,6 +557579,160 @@ format class are named by $NCD's container format.`,
             Failed: {
               value: 9,
               description: "Retrieval failed (NOTE says why)."
+            }
+          }
+        },
+        sroRegionKind: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "SUNSPOT_GROUP",
+            "PLAGE",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            SUNSPOT_GROUP: {
+              value: 1,
+              description: "A sunspot group (e.g. SRS Part I)."
+            },
+            PLAGE: {
+              value: 2,
+              description: "A plage region without spots (e.g. SRS Part IA)."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "A kind this enum does not model."
+            }
+          }
+        },
+        srtQuantity: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "CATEGORICAL_CLASS",
+            "HEIGHT_ABOVE_GROUND",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0,
+              description: "Not stated. Ordinal 0 so an unset field is never read as a real quantity."
+            },
+            CATEGORICAL_CLASS: {
+              value: 1,
+              description: "Integer class codes resolved by CLASS_LEGEND."
+            },
+            HEIGHT_ABOVE_GROUND: {
+              value: 2,
+              description: "Height above local ground (e.g. canopy height), never terrain."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "A quantity this enum does not model; QUANTITY_NAME names it."
+            }
+          }
+        },
+        srtSampleType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "UINT8",
+            "INT8",
+            "UINT16",
+            "INT16",
+            "UINT32",
+            "INT32",
+            "FLOAT32",
+            "FLOAT64"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            UINT8: {
+              value: 1
+            },
+            INT8: {
+              value: 2
+            },
+            UINT16: {
+              value: 3
+            },
+            INT16: {
+              value: 4
+            },
+            UINT32: {
+              value: 5
+            },
+            INT32: {
+              value: 6
+            },
+            FLOAT32: {
+              value: 7
+            },
+            FLOAT64: {
+              value: 8
+            }
+          }
+        },
+        srtPixelRegistration: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "AREA",
+            "POINT"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            AREA: {
+              value: 1,
+              description: "Sample represents the whole cell area (GDAL PixelIsArea)."
+            },
+            POINT: {
+              value: 2,
+              description: "Sample represents the point at the cell corner (GDAL PixelIsPoint)."
+            }
+          }
+        },
+        srtPayloadFormat: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "RASTER_GEOTIFF",
+            "SAMPLES_ROW_MAJOR_LE",
+            "CUSTOM"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            RASTER_GEOTIFF: {
+              value: 1,
+              description: "A GeoTIFF file, verbatim."
+            },
+            SAMPLES_ROW_MAJOR_LE: {
+              value: 2,
+              description: "Bare samples, rows from the north-west corner, little-endian."
+            },
+            CUSTOM: {
+              value: 3,
+              description: "A format this enum does not model; PAYLOAD.MEDIA_TYPE names it."
             }
           }
         },
@@ -556414,7 +561814,11 @@ format class are named by $NCD's container format.`,
             "FCK",
             "FMB",
             "FSG",
-            "PIN"
+            "PIN",
+            "SDI",
+            "SFE",
+            "SRO",
+            "SRT"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -556514,6 +561918,18 @@ format class are named by $NCD's container format.`,
             },
             PIN: {
               value: 286
+            },
+            SDI: {
+              value: 287
+            },
+            SFE: {
+              value: 288
+            },
+            SRO: {
+              value: 289
+            },
+            SRT: {
+              value: 290
             }
           }
         },
@@ -583493,6 +588909,101 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -583710,6 +589221,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "number",
               description: "81-day trailing average of adjusted F10.7",
               "x-flatbuffer-type": "float"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -586218,101 +591734,6 @@ empty = the provider's native frame.`,
             EVIDENCE: {
               type: "string",
               description: "Identifier of the report or record that holds the test.",
-              "x-flatbuffer-type": "string"
-            }
-          },
-          additionalProperties: false
-        },
-        PVN: {
-          type: "object",
-          description: "Product Provenance",
-          properties: {
-            SOURCE_ID: {
-              type: "string",
-              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
-              "x-flatbuffer-type": "string"
-            },
-            SOURCE_KIND: {
-              $ref: "#/definitions/pvnSourceKind",
-              description: "What kind of data the source supplies.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
-              "x-flatbuffer-enum-values": {
-                Unspecified: {
-                  value: 0,
-                  description: "Not stated"
-                },
-                ElementSet: {
-                  value: 1,
-                  description: "Element sets of a catalog"
-                },
-                Ephemeris: {
-                  value: 2,
-                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
-                },
-                Observation: {
-                  value: 3,
-                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
-                },
-                Reference: {
-                  value: 4,
-                  description: "Reference registers of sites and facilities (status, dates, identity)"
-                }
-              },
-              "x-flatbuffer-default": "Unspecified"
-            },
-            ORIGINATOR: {
-              type: "string",
-              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
-              "x-flatbuffer-type": "string"
-            },
-            PROVIDER_ID: {
-              type: "string",
-              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
-              "x-flatbuffer-type": "string"
-            },
-            PRODUCER: {
-              type: "string",
-              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
-              "x-flatbuffer-type": "string"
-            },
-            LICENSE_CLASS: {
-              $ref: "#/definitions/pvnLicenseClass",
-              description: "What the source's terms permit for the product.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
-              "x-flatbuffer-enum-values": {
-                Unspecified: {
-                  value: 0,
-                  description: "Not stated. Never a grant: treated as CiteOnly."
-                },
-                Reproducible: {
-                  value: 1,
-                  description: "The records may be republished, with the credit the terms ask."
-                },
-                CiteOnly: {
-                  value: 2,
-                  description: "The records are computed on and cited, never republished."
-                },
-                ShareAlike: {
-                  value: 3,
-                  description: "The records may be republished under the same terms, which every derived record carries."
-                },
-                NonCommercial: {
-                  value: 4,
-                  description: "The records may be republished for non-commercial use only."
-                }
-              },
-              "x-flatbuffer-default": "Unspecified"
-            },
-            LICENSE_ID: {
-              type: "string",
-              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
-              "x-flatbuffer-type": "string"
-            },
-            LINEAGE: {
-              type: "string",
-              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -596520,7 +601941,7 @@ assumptions".`,
         },
         dclCorrection: {
           type: "object",
-          description: "An exospheric-temperature correction.",
+          description: "An exospheric-temperature correction or a dimensionless log-density scale.",
           properties: {
             FORM: {
               $ref: "#/definitions/dclCorrectionForm",
@@ -596537,7 +601958,11 @@ assumptions".`,
                 },
                 Nodes: {
                   value: 2,
-                  description: "Values at time nodes, optionally at altitude nodes."
+                  description: "Temperature values, K, at time nodes, optionally at altitude nodes."
+                },
+                LogDensityNodes: {
+                  value: 3,
+                  description: "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
                 }
               },
               "x-flatbuffer-default": "None"
@@ -596564,7 +601989,7 @@ assumptions".`,
                 minimum: -9223372036854776e3,
                 maximum: 9223372036854776e3
               },
-              description: "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them.",
+              description: "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span.",
               "x-flatbuffer-type": "[int64]"
             },
             NODE_ALTITUDES_KM: {
@@ -596589,6 +602014,14 @@ assumptions".`,
                 type: "number"
               },
               description: "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated.",
+              "x-flatbuffer-type": "[double]"
+            },
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value.",
               "x-flatbuffer-type": "[double]"
             }
           },
@@ -597526,6 +602959,11 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
               $ref: "#/definitions/dclStates",
               description: "OrbitalEnergy and DragWork: the states and their results.",
               "x-flatbuffer-type": "dclStates"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -598800,7 +604238,7 @@ rotation rate (rad/s; 0 = 7.292115e-5).`,
             },
             CONTENT_ENCODING: {
               type: "string",
-              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+              description: "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here.",
               "x-flatbuffer-type": "string"
             },
             MEDIA_TYPE: {
@@ -650552,6 +655990,281 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           },
           additionalProperties: false
         },
+        SDI: {
+          type: "object",
+          description: "Solar Disk Image",
+          properties: {
+            OBSERVATORY: {
+              type: "string",
+              description: "Observatory or mission, verbatim (FITS TELESCOP).",
+              "x-flatbuffer-type": "string"
+            },
+            INSTRUMENT: {
+              type: "string",
+              description: "Instrument, verbatim (FITS INSTRUME).",
+              "x-flatbuffer-type": "string"
+            },
+            MEASUREMENT: {
+              type: "string",
+              description: "Measurement, verbatim (FITS WAVELNTH token or continuum label).",
+              "x-flatbuffer-type": "string"
+            },
+            WAVELENGTH_NM: {
+              type: "number",
+              description: "Wavelength in nm.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMAGE_ID: {
+              type: "string",
+              description: "The source's image identity, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            REQUESTED_AT: {
+              type: "string",
+              description: "When this image was requested from the source, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVED_AT: {
+              type: "string",
+              description: "Observation time normalized to RFC 3339 UTC.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            DATE_OBS: {
+              type: "string",
+              description: "FITS DATE-OBS, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SCALE: {
+              type: "string",
+              description: "FITS TIMESYS, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            CADENCE_S: {
+              type: "number",
+              description: "Source cadence in seconds.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            EXPOSURE_S: {
+              type: "number",
+              description: "Exposure time in seconds (FITS EXPTIME).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            IMAGE_CID: {
+              type: "string",
+              description: "CID of the image bytes.",
+              "x-flatbuffer-type": "string"
+            },
+            IMAGE_MEDIA_TYPE: {
+              type: "string",
+              description: "Media type of the image bytes (e.g. image/jp2, application/fits).",
+              "x-flatbuffer-type": "string"
+            },
+            IMAGE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the image bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            IMAGE_SIZE_BYTES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 18446744073709552e3,
+              description: "Size of the image bytes.",
+              "x-flatbuffer-type": "uint64"
+            },
+            HEADER_CID: {
+              type: "string",
+              description: "CID of the verbatim FITS header.",
+              "x-flatbuffer-type": "string"
+            },
+            WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image width in pixels (FITS NAXIS1).",
+              "x-flatbuffer-type": "uint32"
+            },
+            HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Image height in pixels (FITS NAXIS2).",
+              "x-flatbuffer-type": "uint32"
+            },
+            CTYPE1: {
+              type: "string",
+              description: "FITS CTYPE1, verbatim (e.g. HPLN-TAN).",
+              "x-flatbuffer-type": "string"
+            },
+            CTYPE2: {
+              type: "string",
+              description: "FITS CTYPE2, verbatim (e.g. HPLT-TAN).",
+              "x-flatbuffer-type": "string"
+            },
+            CUNIT1: {
+              type: "string",
+              description: "FITS CUNIT1, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            CUNIT2: {
+              type: "string",
+              description: "FITS CUNIT2, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            CRPIX1: {
+              type: "number",
+              description: "FITS CRPIX1, one-based.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRPIX2: {
+              type: "number",
+              description: "FITS CRPIX2, one-based.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRVAL1: {
+              type: "number",
+              description: "FITS CRVAL1 in CUNIT1.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRVAL2: {
+              type: "number",
+              description: "FITS CRVAL2 in CUNIT2.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CDELT1: {
+              type: "number",
+              description: "FITS CDELT1 in CUNIT1 per pixel.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CDELT2: {
+              type: "number",
+              description: "FITS CDELT2 in CUNIT2 per pixel.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CROTA2: {
+              type: "number",
+              description: "FITS CROTA2 in degrees.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PC: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "FITS PCi_j matrix, 4 values row-major (PC1_1, PC1_2, PC2_1, PC2_2),\npresent only when the source supplies them.",
+              "x-flatbuffer-type": "[double]"
+            },
+            RSUN_OBS_ARCSEC: {
+              type: "number",
+              description: "Observed solar radius in arcseconds (FITS RSUN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            RSUN_REF_M: {
+              type: "number",
+              description: "Reference solar radius in meters (FITS RSUN_REF).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DSUN_OBS_M: {
+              type: "number",
+              description: "Observer distance from Sun center in meters (FITS DSUN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington longitude in degrees (FITS CRLN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CRLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Carrington latitude in degrees (FITS CRLT_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HGLN_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst longitude in degrees (FITS HGLN_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HGLT_OBS_DEG: {
+              type: "number",
+              description: "Observer Stonyhurst latitude in degrees (FITS HGLT_OBS).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            QUALITY: {
+              type: "integer",
+              minimum: -9223372036854776e3,
+              maximum: 9223372036854776e3,
+              description: "FITS QUALITY bitmask; meaningful only when HAS_QUALITY.",
+              "x-flatbuffer-type": "int64"
+            },
+            HAS_QUALITY: {
+              type: "boolean",
+              description: "True when the source states QUALITY.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            PROCESSING: {
+              type: "string",
+              description: "Processing description, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "OBSERVED_AT",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SDICOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SDI"
+              },
+              "x-flatbuffer-type": "[SDI]"
+            }
+          },
+          additionalProperties: false
+        },
         SDL: {
           type: "object",
           description: "Space Data Link Security (CCSDS 355.0-B-1)",
@@ -651388,6 +657101,204 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             OB_DESCRIPTION: {
               type: "string",
               "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
+        SFE: {
+          type: "object",
+          description: "Solar Flare Event",
+          properties: {
+            EVENT_ID: {
+              type: "string",
+              description: "The source's own event identity, verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            PRODUCT: {
+              type: "string",
+              description: "Source product name, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVATORY: {
+              type: "string",
+              description: "Reporting observatory, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PLATFORM: {
+              type: "string",
+              description: "Observing platform or satellite, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            EVENT_KIND: {
+              $ref: "#/definitions/sfeEventKind",
+              description: "Observing domain.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+                },
+                XRAY: {
+                  value: 1,
+                  description: "Soft X-ray flare (e.g. event type XRA)."
+                },
+                OPTICAL: {
+                  value: 2,
+                  description: "Optical flare (e.g. event type FLA)."
+                },
+                RADIO: {
+                  value: 3,
+                  description: "Radio burst or sweep."
+                },
+                CUSTOM: {
+                  value: 4,
+                  description: "A kind this enum does not model; EVENT_TYPE_CODE carries the source token."
+                }
+              }
+            },
+            EVENT_TYPE_CODE: {
+              type: "string",
+              description: "Source event type code, verbatim (e.g. XRA, FLA).",
+              "x-flatbuffer-type": "string"
+            },
+            BEGIN_TIME: {
+              type: "string",
+              description: "Event begin time, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_TIME: {
+              type: "string",
+              description: "Event peak time, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            END_TIME: {
+              type: "string",
+              description: "Event end time, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            BEGIN_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on BEGIN_TIME, verbatim (e.g. B for before).",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on PEAK_TIME, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            END_QUALIFIER: {
+              type: "string",
+              description: "Qualifier on END_TIME, verbatim (e.g. A for after).",
+              "x-flatbuffer-type": "string"
+            },
+            XRAY_CLASS: {
+              type: "string",
+              description: "Soft X-ray class, verbatim (e.g. C1.4).",
+              "x-flatbuffer-type": "string"
+            },
+            OPTICAL_IMPORTANCE: {
+              type: "string",
+              description: "Optical importance, verbatim (e.g. SF).",
+              "x-flatbuffer-type": "string"
+            },
+            PEAK_FLUX_W_M2: {
+              type: "number",
+              description: "Peak flux in W/m^2.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            INTEGRATED_FLUX_J_M2: {
+              type: "number",
+              description: "Integrated flux (fluence) in J/m^2.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PASSBAND_MIN_NM: {
+              type: "number",
+              description: "Lower edge of the observing passband in nm.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            PASSBAND_MAX_NM: {
+              type: "number",
+              description: "Upper edge of the observing passband in nm.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Associated region number; meaningful only when HAS_REGION_NUMBER.",
+              "x-flatbuffer-type": "uint32"
+            },
+            HAS_REGION_NUMBER: {
+              type: "boolean",
+              description: "True only when the source explicitly states the region association.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive, when stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees, west positive, when stated.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            STATUS: {
+              type: "string",
+              description: "Source status of the report, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            REVISION: {
+              type: "string",
+              description: "Source revision or change flag, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "EVENT_ID",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SFECOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SFE"
+              },
+              "x-flatbuffer-type": "[SFE]"
             }
           },
           additionalProperties: false
@@ -658369,6 +664280,493 @@ format class are named by $NCD's container format.`,
               "x-flatbuffer-type": "string"
             }
           },
+          additionalProperties: false
+        },
+        SRO: {
+          type: "object",
+          description: "Solar Region Observation",
+          properties: {
+            REGION_NUMBER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Region number, verbatim, with no solar cycle prefix added or removed.",
+              "x-flatbuffer-type": "uint32"
+            },
+            REGION_AUTHORITY: {
+              type: "string",
+              description: "The numbering authority, verbatim (e.g. NOAA/SWPC).",
+              "x-flatbuffer-type": "string"
+            },
+            ISSUED_AT: {
+              type: "string",
+              description: "When the source issued this report, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVED_DATE: {
+              type: "string",
+              description: "The source's observation date label, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            POSITION_EPOCH: {
+              type: "string",
+              description: "The instant the position below refers to, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            REGION_KIND: {
+              $ref: "#/definitions/sroRegionKind",
+              description: "Region kind as listed by the source.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+                },
+                SUNSPOT_GROUP: {
+                  value: 1,
+                  description: "A sunspot group (e.g. SRS Part I)."
+                },
+                PLAGE: {
+                  value: 2,
+                  description: "A plage region without spots (e.g. SRS Part IA)."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "A kind this enum does not model."
+                }
+              }
+            },
+            LOCATION_TOKEN: {
+              type: "string",
+              description: "Heliographic location token, verbatim (e.g. N14W32).",
+              "x-flatbuffer-type": "string"
+            },
+            HG_LATITUDE_DEG: {
+              type: "number",
+              description: "Heliographic latitude in degrees, north positive.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            HG_LONGITUDE_DEG: {
+              type: "number",
+              description: "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CARRINGTON_LONGITUDE_DEG: {
+              type: "number",
+              description: "Carrington longitude in degrees.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            AREA_MSH: {
+              type: "number",
+              description: "Corrected area in millionths of the solar hemisphere.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            LONGITUDINAL_EXTENT_DEG: {
+              type: "number",
+              description: "Longitudinal extent in degrees.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            SPOT_COUNT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of spots in the region; meaningful only when HAS_SPOT_COUNT.",
+              "x-flatbuffer-type": "uint32"
+            },
+            HAS_SPOT_COUNT: {
+              type: "boolean",
+              description: "True when the source states SPOT_COUNT.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            MCINTOSH_CLASS: {
+              type: "string",
+              description: "McIntosh classification, verbatim (e.g. Dao).",
+              "x-flatbuffer-type": "string"
+            },
+            MAGNETIC_CLASS: {
+              type: "string",
+              description: "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma).",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN",
+              "x-flatbuffer-required": true
+            },
+            SOURCE_CID: {
+              type: "string",
+              description: "CID of the original source bytes this record was parsed from.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_DIGEST: {
+              type: "string",
+              description: "SHA-256 of the original source bytes, lowercase hex.",
+              "x-flatbuffer-type": "string"
+            },
+            RETRIEVED_AT: {
+              type: "string",
+              description: "When the source bytes were retrieved, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          required: [
+            "POSITION_EPOCH",
+            "PROVENANCE"
+          ],
+          additionalProperties: false
+        },
+        SROCOLLECTION: {
+          type: "object",
+          properties: {
+            RECORDS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRO"
+              },
+              "x-flatbuffer-type": "[SRO]"
+            }
+          },
+          additionalProperties: false
+        },
+        SRTClass: {
+          type: "object",
+          description: "One class of a categorical raster.",
+          properties: {
+            CODE: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Sample value of the class.",
+              "x-flatbuffer-type": "int32"
+            },
+            LABEL: {
+              type: "string",
+              description: "Source label, verbatim.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            COLOR_RGBA: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Source display color, 0xRRGGBBAA.",
+              "x-flatbuffer-type": "uint32"
+            }
+          },
+          required: [
+            "LABEL"
+          ],
+          additionalProperties: false
+        },
+        SRT: {
+          type: "object",
+          description: "Surface Raster Tile",
+          properties: {
+            TILESET_ID: {
+              type: "string",
+              description: "Stable identity of the tileset this tile belongs to.",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            TILESET_NAME: {
+              type: "string",
+              description: "Human-readable tileset name.",
+              "x-flatbuffer-type": "string"
+            },
+            QUANTITY: {
+              $ref: "#/definitions/srtQuantity",
+              description: "What the samples measure.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "Not stated. Ordinal 0 so an unset field is never read as a real quantity."
+                },
+                CATEGORICAL_CLASS: {
+                  value: 1,
+                  description: "Integer class codes resolved by CLASS_LEGEND."
+                },
+                HEIGHT_ABOVE_GROUND: {
+                  value: 2,
+                  description: "Height above local ground (e.g. canopy height), never terrain."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "A quantity this enum does not model; QUANTITY_NAME names it."
+                }
+              }
+            },
+            QUANTITY_NAME: {
+              type: "string",
+              description: "Source quantity name, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            UNIT: {
+              type: "string",
+              description: "UCUM unit of the scaled value (m for canopy height); absent for classes.",
+              "x-flatbuffer-type": "string"
+            },
+            SAMPLE_TYPE: {
+              $ref: "#/definitions/srtSampleType",
+              description: "Stored sample type.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                UINT8: {
+                  value: 1
+                },
+                INT8: {
+                  value: 2
+                },
+                UINT16: {
+                  value: 3
+                },
+                INT16: {
+                  value: 4
+                },
+                UINT32: {
+                  value: 5
+                },
+                INT32: {
+                  value: 6
+                },
+                FLOAT32: {
+                  value: 7
+                },
+                FLOAT64: {
+                  value: 8
+                }
+              }
+            },
+            SCALE_FACTOR: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "1.0"
+            },
+            ADD_OFFSET: {
+              type: "number",
+              description: "value = sample * SCALE_FACTOR + ADD_OFFSET.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "0.0"
+            },
+            NO_DATA_VALUE: {
+              type: "number",
+              description: "Stored sample value meaning no data (WorldCover: 0).",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            CLASS_LEGEND: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/SRTClass"
+              },
+              description: "Class legend; required when QUANTITY = CATEGORICAL_CLASS.",
+              "x-flatbuffer-type": "[SRTClass]"
+            },
+            CRS: {
+              type: "string",
+              description: "Coordinate reference system, verbatim (e.g. EPSG:4326, EPSG:3857).",
+              "x-flatbuffer-type": "string",
+              "x-flatbuffer-required": true
+            },
+            AFFINE_TRANSFORM: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "GDAL geotransform, 6 values, mapping pixel corners to CRS units.",
+              "x-flatbuffer-type": "[double]"
+            },
+            PIXEL_REGISTRATION: {
+              $ref: "#/definitions/srtPixelRegistration",
+              description: "Pixel registration.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                AREA: {
+                  value: 1,
+                  description: "Sample represents the whole cell area (GDAL PixelIsArea)."
+                },
+                POINT: {
+                  value: 2,
+                  description: "Sample represents the point at the cell corner (GDAL PixelIsPoint)."
+                }
+              }
+            },
+            GRID_WIDTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid width in samples.",
+              "x-flatbuffer-type": "uint32"
+            },
+            GRID_HEIGHT: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Grid height in samples.",
+              "x-flatbuffer-type": "uint32"
+            },
+            TILING_SCHEME: {
+              $ref: "#/definitions/dttTilingScheme",
+              description: "Optional pyramid address scheme (canopy quadkey tiles = WEB_MERCATOR).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0,
+                  description: "The scheme this tile is addressed in is not stated. Ordinal 0 so an unset field can never be read as a real scheme."
+                },
+                GEOGRAPHIC_WGS84: {
+                  value: 1,
+                  description: "Equirectangular geographic scheme on WGS 84, two root tiles at level 0 covering [-180,0] and [0,180] degrees of longitude."
+                },
+                GEOGRAPHIC_SINGLE_ROOT: {
+                  value: 2,
+                  description: "Single-root equirectangular geographic scheme, one root tile at level 0."
+                },
+                WEB_MERCATOR: {
+                  value: 3,
+                  description: "Spherical Mercator scheme, one square root tile at level 0."
+                },
+                CUSTOM: {
+                  value: 4,
+                  description: "A scheme this enum does not model; the publisher states it out of band and the tile is not addressable by a consumer that does not know it."
+                },
+                GEOGRAPHIC_TWO_ROOT_BODY: {
+                  value: 5,
+                  description: "Equirectangular geographic scheme on the reference body named by CENTER_NAME, two root tiles at level 0 covering [-180,0] and [0,180] degrees of planetocentric longitude (GEOGRAPHIC_WGS84's addressing, on any body). The body's shape is REFERENCE_RADII_M. Added in 1.191.0."
+                }
+              }
+            },
+            LEVEL: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid level.",
+              "x-flatbuffer-type": "uint32"
+            },
+            X: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid column.",
+              "x-flatbuffer-type": "uint32"
+            },
+            Y: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Pyramid row.",
+              "x-flatbuffer-type": "uint32"
+            },
+            WEST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, west edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            SOUTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, south edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            EAST_DEG: {
+              type: "number",
+              description: "Geographic bounding box, east edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            NORTH_DEG: {
+              type: "number",
+              description: "Geographic bounding box, north edge in degrees.",
+              "x-flatbuffer-type": "double"
+            },
+            HORIZONTAL_DATUM_NAME: {
+              type: "string",
+              description: "Horizontal datum name, verbatim.",
+              "x-flatbuffer-type": "string"
+            },
+            PAYLOAD_FORMAT: {
+              $ref: "#/definitions/srtPayloadFormat",
+              description: "Encoding of PAYLOAD.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                RASTER_GEOTIFF: {
+                  value: 1,
+                  description: "A GeoTIFF file, verbatim."
+                },
+                SAMPLES_ROW_MAJOR_LE: {
+                  value: 2,
+                  description: "Bare samples, rows from the north-west corner, little-endian."
+                },
+                CUSTOM: {
+                  value: 3,
+                  description: "A format this enum does not model; PAYLOAD.MEDIA_TYPE names it."
+                }
+              }
+            },
+            PAYLOAD: {
+              $ref: "#/definitions/DTTPayloadRef",
+              description: "Native samples only: no palette conversion, resampling or rounding.",
+              "x-flatbuffer-type": "DTTPayloadRef",
+              "x-flatbuffer-required": true
+            },
+            MIN_VALUE: {
+              type: "number",
+              description: "Minimum scaled value in the tile.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            MAX_VALUE: {
+              type: "number",
+              description: "Maximum scaled value in the tile.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            DATA_COVERAGE_FRACTION: {
+              type: "number",
+              description: "Fraction of samples that are not NO_DATA_VALUE, 0 to 1.",
+              "x-flatbuffer-type": "double",
+              "x-flatbuffer-default": "nan"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Dataset epoch of the samples, RFC 3339 UTC.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/DTTProvenance",
+              description: "Dataset, retrieval and license lineage.",
+              "x-flatbuffer-type": "DTTProvenance",
+              "x-flatbuffer-required": true
+            }
+          },
+          required: [
+            "TILESET_ID",
+            "CRS",
+            "PAYLOAD",
+            "PROVENANCE"
+          ],
           additionalProperties: false
         },
         STOModuleRef: {
@@ -674382,6 +680780,18 @@ balance service's own rate.`,
                 },
                 PIN: {
                   value: 286
+                },
+                SDI: {
+                  value: 287
+                },
+                SFE: {
+                  value: 288
+                },
+                SRO: {
+                  value: 289
+                },
+                SRT: {
+                  value: 290
                 }
               },
               "x-flatbuffer-default": "NONE"
@@ -719084,6 +725494,74 @@ balance service's own rate.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -729084,6 +735562,101 @@ balance service's own rate.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -729301,6 +735874,11 @@ balance service's own rate.`,
               type: "number",
               description: "81-day trailing average of adjusted F10.7",
               "x-flatbuffer-type": "float"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -803580,6 +810158,74 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             }
           }
         },
+        pvnSourceKind: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "ElementSet",
+            "Ephemeris",
+            "Observation",
+            "Reference"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated"
+            },
+            ElementSet: {
+              value: 1,
+              description: "Element sets of a catalog"
+            },
+            Ephemeris: {
+              value: 2,
+              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            Observation: {
+              value: 3,
+              description: "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            Reference: {
+              value: 4,
+              description: "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          }
+        },
+        pvnLicenseClass: {
+          type: "string",
+          enum: [
+            "Unspecified",
+            "Reproducible",
+            "CiteOnly",
+            "ShareAlike",
+            "NonCommercial"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            Unspecified: {
+              value: 0,
+              description: "Not stated. Never a grant: treated as CiteOnly."
+            },
+            Reproducible: {
+              value: 1,
+              description: "The records may be republished, with the credit the terms ask."
+            },
+            CiteOnly: {
+              value: 2,
+              description: "The records are computed on and cited, never republished."
+            },
+            ShareAlike: {
+              value: 3,
+              description: "The records may be republished under the same terms, which every derived record carries."
+            },
+            NonCommercial: {
+              value: 4,
+              description: "The records may be republished for non-commercial use only."
+            }
+          }
+        },
         FluxQualifier: {
           type: "string",
           enum: [
@@ -804162,74 +810808,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             PooledModel: {
               value: 4,
               description: "The empirical model pooled over all sources, for a source without its own model in the regime"
-            }
-          }
-        },
-        pvnSourceKind: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "ElementSet",
-            "Ephemeris",
-            "Observation",
-            "Reference"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Not stated"
-            },
-            ElementSet: {
-              value: 1,
-              description: "Element sets of a catalog"
-            },
-            Ephemeris: {
-              value: 2,
-              description: "Ephemerides: states over time, from an operator or a precise-orbit service"
-            },
-            Observation: {
-              value: 3,
-              description: "Observations (ranges, angles, other measurements) that states are estimated from"
-            },
-            Reference: {
-              value: 4,
-              description: "Reference registers of sites and facilities (status, dates, identity)"
-            }
-          }
-        },
-        pvnLicenseClass: {
-          type: "string",
-          enum: [
-            "Unspecified",
-            "Reproducible",
-            "CiteOnly",
-            "ShareAlike",
-            "NonCommercial"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "byte",
-          "x-flatbuffer-enum-values": {
-            Unspecified: {
-              value: 0,
-              description: "Not stated. Never a grant: treated as CiteOnly."
-            },
-            Reproducible: {
-              value: 1,
-              description: "The records may be republished, with the credit the terms ask."
-            },
-            CiteOnly: {
-              value: 2,
-              description: "The records are computed on and cited, never republished."
-            },
-            ShareAlike: {
-              value: 3,
-              description: "The records may be republished under the same terms, which every derived record carries."
-            },
-            NonCommercial: {
-              value: 4,
-              description: "The records may be republished for non-commercial use only."
             }
           }
         },
@@ -814402,6 +820980,101 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           },
           additionalProperties: false
         },
+        PVN: {
+          type: "object",
+          description: "Product Provenance",
+          properties: {
+            SOURCE_ID: {
+              type: "string",
+              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+              "x-flatbuffer-type": "string"
+            },
+            SOURCE_KIND: {
+              $ref: "#/definitions/pvnSourceKind",
+              description: "What kind of data the source supplies.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated"
+                },
+                ElementSet: {
+                  value: 1,
+                  description: "Element sets of a catalog"
+                },
+                Ephemeris: {
+                  value: 2,
+                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
+                },
+                Observation: {
+                  value: 3,
+                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
+                },
+                Reference: {
+                  value: 4,
+                  description: "Reference registers of sites and facilities (status, dates, identity)"
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            ORIGINATOR: {
+              type: "string",
+              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+              "x-flatbuffer-type": "string"
+            },
+            PROVIDER_ID: {
+              type: "string",
+              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+              "x-flatbuffer-type": "string"
+            },
+            PRODUCER: {
+              type: "string",
+              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+              "x-flatbuffer-type": "string"
+            },
+            LICENSE_CLASS: {
+              $ref: "#/definitions/pvnLicenseClass",
+              description: "What the source's terms permit for the product.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                Unspecified: {
+                  value: 0,
+                  description: "Not stated. Never a grant: treated as CiteOnly."
+                },
+                Reproducible: {
+                  value: 1,
+                  description: "The records may be republished, with the credit the terms ask."
+                },
+                CiteOnly: {
+                  value: 2,
+                  description: "The records are computed on and cited, never republished."
+                },
+                ShareAlike: {
+                  value: 3,
+                  description: "The records may be republished under the same terms, which every derived record carries."
+                },
+                NonCommercial: {
+                  value: 4,
+                  description: "The records may be republished for non-commercial use only."
+                }
+              },
+              "x-flatbuffer-default": "Unspecified"
+            },
+            LICENSE_ID: {
+              type: "string",
+              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+              "x-flatbuffer-type": "string"
+            },
+            LINEAGE: {
+              type: "string",
+              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+              "x-flatbuffer-type": "string"
+            }
+          },
+          additionalProperties: false
+        },
         SPW: {
           type: "object",
           description: "Space Weather Data Record",
@@ -814619,6 +821292,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               type: "number",
               description: "81-day trailing average of adjusted F10.7",
               "x-flatbuffer-type": "float"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false
@@ -817127,101 +823805,6 @@ empty = the provider's native frame.`,
             EVIDENCE: {
               type: "string",
               description: "Identifier of the report or record that holds the test.",
-              "x-flatbuffer-type": "string"
-            }
-          },
-          additionalProperties: false
-        },
-        PVN: {
-          type: "object",
-          description: "Product Provenance",
-          properties: {
-            SOURCE_ID: {
-              type: "string",
-              description: "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
-              "x-flatbuffer-type": "string"
-            },
-            SOURCE_KIND: {
-              $ref: "#/definitions/pvnSourceKind",
-              description: "What kind of data the source supplies.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
-              "x-flatbuffer-enum-values": {
-                Unspecified: {
-                  value: 0,
-                  description: "Not stated"
-                },
-                ElementSet: {
-                  value: 1,
-                  description: "Element sets of a catalog"
-                },
-                Ephemeris: {
-                  value: 2,
-                  description: "Ephemerides: states over time, from an operator or a precise-orbit service"
-                },
-                Observation: {
-                  value: 3,
-                  description: "Observations (ranges, angles, other measurements) that states are estimated from"
-                },
-                Reference: {
-                  value: 4,
-                  description: "Reference registers of sites and facilities (status, dates, identity)"
-                }
-              },
-              "x-flatbuffer-default": "Unspecified"
-            },
-            ORIGINATOR: {
-              type: "string",
-              description: "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
-              "x-flatbuffer-type": "string"
-            },
-            PROVIDER_ID: {
-              type: "string",
-              description: "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
-              "x-flatbuffer-type": "string"
-            },
-            PRODUCER: {
-              type: "string",
-              description: "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
-              "x-flatbuffer-type": "string"
-            },
-            LICENSE_CLASS: {
-              $ref: "#/definitions/pvnLicenseClass",
-              description: "What the source's terms permit for the product.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "byte",
-              "x-flatbuffer-enum-values": {
-                Unspecified: {
-                  value: 0,
-                  description: "Not stated. Never a grant: treated as CiteOnly."
-                },
-                Reproducible: {
-                  value: 1,
-                  description: "The records may be republished, with the credit the terms ask."
-                },
-                CiteOnly: {
-                  value: 2,
-                  description: "The records are computed on and cited, never republished."
-                },
-                ShareAlike: {
-                  value: 3,
-                  description: "The records may be republished under the same terms, which every derived record carries."
-                },
-                NonCommercial: {
-                  value: 4,
-                  description: "The records may be republished for non-commercial use only."
-                }
-              },
-              "x-flatbuffer-default": "Unspecified"
-            },
-            LICENSE_ID: {
-              type: "string",
-              description: "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
-              "x-flatbuffer-type": "string"
-            },
-            LINEAGE: {
-              type: "string",
-              description: "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
               "x-flatbuffer-type": "string"
             }
           },
@@ -902340,6 +908923,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               type: "number",
               description: "81-day trailing average of adjusted F10.7",
               "x-flatbuffer-type": "float"
+            },
+            PROVENANCE: {
+              $ref: "#/definitions/PVN",
+              description: "Per-record source, provider, software, license terms and lineage.",
+              "x-flatbuffer-type": "PVN"
             }
           },
           additionalProperties: false

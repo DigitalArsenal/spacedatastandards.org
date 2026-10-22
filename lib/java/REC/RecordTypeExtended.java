@@ -44,4 +44,8 @@ public final class RecordTypeExtended {
   public static final int FMB = 284;
   public static final int FSG = 285;
   public static final int PIN = 286;
+  public static final int SDI = 287;
+  public static final int SFE = 288;
+  public static final int SRO = 289;
+  public static final int SRT = 290;
 }

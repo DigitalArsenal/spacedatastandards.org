@@ -44,5 +44,9 @@ class RecordTypeExtended private constructor() {
         const val FMB: UShort = 284u
         const val FSG: UShort = 285u
         const val PIN: UShort = 286u
+        const val SDI: UShort = 287u
+        const val SFE: UShort = 288u
+        const val SRO: UShort = 289u
+        const val SRT: UShort = 290u
     }
 }

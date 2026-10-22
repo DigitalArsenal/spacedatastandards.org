@@ -42,6 +42,10 @@ class RecordTypeExtended
     const FMB = 284;
     const FSG = 285;
     const PIN = 286;
+    const SDI = 287;
+    const SFE = 288;
+    const SRO = 289;
+    const SRT = 290;
 
     private static $names = array(
         RecordTypeExtended::NONE=>"NONE",
@@ -76,6 +80,10 @@ class RecordTypeExtended
         RecordTypeExtended::FMB=>"FMB",
         RecordTypeExtended::FSG=>"FSG",
         RecordTypeExtended::PIN=>"PIN",
+        RecordTypeExtended::SDI=>"SDI",
+        RecordTypeExtended::SFE=>"SFE",
+        RecordTypeExtended::SRO=>"SRO",
+        RecordTypeExtended::SRT=>"SRT",
     );
 
     public static function Name($e)

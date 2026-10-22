@@ -1,0 +1,22 @@
+/**
+ * What the samples measure. Append only.
+ */
+export declare enum srtQuantity {
+    /**
+     * Not stated. Ordinal 0 so an unset field is never read as a real quantity.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Integer class codes resolved by CLASS_LEGEND.
+     */
+    CATEGORICAL_CLASS = 1,
+    /**
+     * Height above local ground (e.g. canopy height), never terrain.
+     */
+    HEIGHT_ABOVE_GROUND = 2,
+    /**
+     * A quantity this enum does not model; QUANTITY_NAME names it.
+     */
+    CUSTOM = 3
+}
+//# sourceMappingURL=srtQuantity.d.ts.map

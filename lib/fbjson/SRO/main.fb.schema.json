@@ -1,0 +1,355 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "pvnSourceKind": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "ElementSet",
+        "Ephemeris",
+        "Observation",
+        "Reference"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated"
+        },
+        "ElementSet": {
+          "value": 1,
+          "description": "Element sets of a catalog"
+        },
+        "Ephemeris": {
+          "value": 2,
+          "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+        },
+        "Observation": {
+          "value": 3,
+          "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+        },
+        "Reference": {
+          "value": 4,
+          "description": "Reference registers of sites and facilities (status, dates, identity)"
+        }
+      }
+    },
+    "pvnLicenseClass": {
+      "type": "string",
+      "enum": [
+        "Unspecified",
+        "Reproducible",
+        "CiteOnly",
+        "ShareAlike",
+        "NonCommercial"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "Unspecified": {
+          "value": 0,
+          "description": "Not stated. Never a grant: treated as CiteOnly."
+        },
+        "Reproducible": {
+          "value": 1,
+          "description": "The records may be republished, with the credit the terms ask."
+        },
+        "CiteOnly": {
+          "value": 2,
+          "description": "The records are computed on and cited, never republished."
+        },
+        "ShareAlike": {
+          "value": 3,
+          "description": "The records may be republished under the same terms, which every derived record carries."
+        },
+        "NonCommercial": {
+          "value": 4,
+          "description": "The records may be republished for non-commercial use only."
+        }
+      }
+    },
+    "sroRegionKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SUNSPOT_GROUP",
+        "PLAGE",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+        },
+        "SUNSPOT_GROUP": {
+          "value": 1,
+          "description": "A sunspot group (e.g. SRS Part I)."
+        },
+        "PLAGE": {
+          "value": 2,
+          "description": "A plage region without spots (e.g. SRS Part IA)."
+        },
+        "CUSTOM": {
+          "value": 3,
+          "description": "A kind this enum does not model."
+        }
+      }
+    },
+    "PVN": {
+      "type": "object",
+      "description": "Product Provenance",
+      "properties": {
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_KIND": {
+          "$ref": "#/definitions/pvnSourceKind",
+          "description": "What kind of data the source supplies.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated"
+            },
+            "ElementSet": {
+              "value": 1,
+              "description": "Element sets of a catalog"
+            },
+            "Ephemeris": {
+              "value": 2,
+              "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+            },
+            "Observation": {
+              "value": 3,
+              "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+            },
+            "Reference": {
+              "value": 4,
+              "description": "Reference registers of sites and facilities (status, dates, identity)"
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "ORIGINATOR": {
+          "type": "string",
+          "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVIDER_ID": {
+          "type": "string",
+          "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+          "x-flatbuffer-type": "string"
+        },
+        "PRODUCER": {
+          "type": "string",
+          "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "LICENSE_CLASS": {
+          "$ref": "#/definitions/pvnLicenseClass",
+          "description": "What the source's terms permit for the product.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "Unspecified": {
+              "value": 0,
+              "description": "Not stated. Never a grant: treated as CiteOnly."
+            },
+            "Reproducible": {
+              "value": 1,
+              "description": "The records may be republished, with the credit the terms ask."
+            },
+            "CiteOnly": {
+              "value": 2,
+              "description": "The records are computed on and cited, never republished."
+            },
+            "ShareAlike": {
+              "value": 3,
+              "description": "The records may be republished under the same terms, which every derived record carries."
+            },
+            "NonCommercial": {
+              "value": 4,
+              "description": "The records may be republished for non-commercial use only."
+            }
+          },
+          "x-flatbuffer-default": "Unspecified"
+        },
+        "LICENSE_ID": {
+          "type": "string",
+          "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+          "x-flatbuffer-type": "string"
+        },
+        "LINEAGE": {
+          "type": "string",
+          "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SRO": {
+      "type": "object",
+      "description": "Solar Region Observation",
+      "properties": {
+        "REGION_NUMBER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Region number, verbatim, with no solar cycle prefix added or removed.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "REGION_AUTHORITY": {
+          "type": "string",
+          "description": "The numbering authority, verbatim (e.g. NOAA/SWPC).",
+          "x-flatbuffer-type": "string"
+        },
+        "ISSUED_AT": {
+          "type": "string",
+          "description": "When the source issued this report, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVED_DATE": {
+          "type": "string",
+          "description": "The source's observation date label, verbatim.",
+          "x-flatbuffer-type": "string"
+        },
+        "POSITION_EPOCH": {
+          "type": "string",
+          "description": "The instant the position below refers to, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "REGION_KIND": {
+          "$ref": "#/definitions/sroRegionKind",
+          "description": "Region kind as listed by the source.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Not stated. Ordinal 0 so an unset field is never read as a real kind."
+            },
+            "SUNSPOT_GROUP": {
+              "value": 1,
+              "description": "A sunspot group (e.g. SRS Part I)."
+            },
+            "PLAGE": {
+              "value": 2,
+              "description": "A plage region without spots (e.g. SRS Part IA)."
+            },
+            "CUSTOM": {
+              "value": 3,
+              "description": "A kind this enum does not model."
+            }
+          }
+        },
+        "LOCATION_TOKEN": {
+          "type": "string",
+          "description": "Heliographic location token, verbatim (e.g. N14W32).",
+          "x-flatbuffer-type": "string"
+        },
+        "HG_LATITUDE_DEG": {
+          "type": "number",
+          "description": "Heliographic latitude in degrees, north positive.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "HG_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Stonyhurst heliographic longitude in degrees: 0 is the central meridian\nas seen from Earth, west positive.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "CARRINGTON_LONGITUDE_DEG": {
+          "type": "number",
+          "description": "Carrington longitude in degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "AREA_MSH": {
+          "type": "number",
+          "description": "Corrected area in millionths of the solar hemisphere.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "LONGITUDINAL_EXTENT_DEG": {
+          "type": "number",
+          "description": "Longitudinal extent in degrees.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
+        },
+        "SPOT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of spots in the region; meaningful only when HAS_SPOT_COUNT.",
+          "x-flatbuffer-type": "uint32"
+        },
+        "HAS_SPOT_COUNT": {
+          "type": "boolean",
+          "description": "True when the source states SPOT_COUNT.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MCINTOSH_CLASS": {
+          "type": "string",
+          "description": "McIntosh classification, verbatim (e.g. Dao).",
+          "x-flatbuffer-type": "string"
+        },
+        "MAGNETIC_CLASS": {
+          "type": "string",
+          "description": "Mount Wilson magnetic classification, verbatim (e.g. Beta-Gamma).",
+          "x-flatbuffer-type": "string"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN",
+          "x-flatbuffer-required": true
+        },
+        "SOURCE_CID": {
+          "type": "string",
+          "description": "CID of the original source bytes this record was parsed from.",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_DIGEST": {
+          "type": "string",
+          "description": "SHA-256 of the original source bytes, lowercase hex.",
+          "x-flatbuffer-type": "string"
+        },
+        "RETRIEVED_AT": {
+          "type": "string",
+          "description": "When the source bytes were retrieved, RFC 3339 UTC.",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "required": [
+        "POSITION_EPOCH",
+        "PROVENANCE"
+      ],
+      "additionalProperties": false
+    },
+    "SROCOLLECTION": {
+      "type": "object",
+      "properties": {
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SRO"
+          },
+          "x-flatbuffer-type": "[SRO]"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SRO",
+  "x-flatbuffer-root-type": "SRO",
+  "x-flatbuffer-file-identifier": "$SRO"
+}
