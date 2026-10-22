@@ -720,8 +720,27 @@ func (rcv *SPW) MutateF107AdjLast81(n float32) bool {
 	return rcv.MutateF107_ADJ_LAST81(n)
 }
 
+/// Per-record source, provider, software, license terms and lineage.
+func (rcv *SPW) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *SPW) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Per-record source, provider, software, license terms and lineage.
 func SPWStart(builder *flatbuffers.Builder) {
-	builder.StartObject(31)
+	builder.StartObject(32)
 }
 func SPWAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DATE), 0)
@@ -905,6 +924,12 @@ func SPWAddF107_ADJ_LAST81(builder *flatbuffers.Builder, F107_ADJ_LAST81 float32
 }
 func SPWAddF107AdjLast81(builder *flatbuffers.Builder, F107_ADJ_LAST81 float32) {
 	SPWAddF107_ADJ_LAST81(builder, F107_ADJ_LAST81)
+}
+func SPWAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func SPWAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	SPWAddPROVENANCE(builder, PROVENANCE)
 }
 func SPWEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

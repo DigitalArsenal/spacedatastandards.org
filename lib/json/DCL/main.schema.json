@@ -177,6 +177,14 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "IAU_2000A", "IAU_2000B", "IAU_2006"]
     },
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
     "FluxQualifier" : {
       "type" : "string",
       "enum": ["OBSERVED", "BURST_ADJUSTED", "INTERPOLATED_EXTRAPOLATED", "NO_OBSERVATION", "PROVIDER_INTERPOLATED"]
@@ -281,14 +289,6 @@
       "type" : "string",
       "enum": ["Unspecified", "Operator", "ScaledFit", "SourceModel", "PooledModel"]
     },
-    "pvnSourceKind" : {
-      "type" : "string",
-      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
-    },
-    "pvnLicenseClass" : {
-      "type" : "string",
-      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
-    },
     "ephemerisFormat" : {
       "type" : "string",
       "enum": ["SGP", "SGP4", "SDP4", "SGP8", "SDP8"]
@@ -299,7 +299,7 @@
     },
     "dclCorrectionForm" : {
       "type" : "string",
-      "enum": ["None", "Harmonic", "Nodes"]
+      "enum": ["None", "Harmonic", "Nodes", "LogDensityNodes"]
     },
     "dclStatus" : {
       "type" : "string",
@@ -2405,6 +2405,45 @@
       },
       "additionalProperties" : false
     },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
     "SPW" : {
       "type" : "object",
       "description" : "Space Weather Data Record",
@@ -2532,6 +2571,10 @@
         "F107_ADJ_LAST81" : {
                 "type" : "number",
                 "description" : "81-day trailing average of adjusted F10.7"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
               }
       },
       "additionalProperties" : false
@@ -4016,45 +4059,6 @@
       },
       "additionalProperties" : false
     },
-    "PVN" : {
-      "type" : "object",
-      "description" : "Product Provenance",
-      "properties" : {
-        "SOURCE_ID" : {
-                "type" : "string",
-                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-              },
-        "SOURCE_KIND" : {
-                "$ref" : "#/definitions/pvnSourceKind",
-                "description" : "What kind of data the source supplies."
-              },
-        "ORIGINATOR" : {
-                "type" : "string",
-                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-              },
-        "PROVIDER_ID" : {
-                "type" : "string",
-                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-              },
-        "PRODUCER" : {
-                "type" : "string",
-                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-              },
-        "LICENSE_CLASS" : {
-                "$ref" : "#/definitions/pvnLicenseClass",
-                "description" : "What the source's terms permit for the product."
-              },
-        "LICENSE_ID" : {
-                "type" : "string",
-                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-              },
-        "LINEAGE" : {
-                "type" : "string",
-                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
-              }
-      },
-      "additionalProperties" : false
-    },
     "OMM" : {
       "type" : "object",
       "description" : "Orbit Mean Elements Message",
@@ -4650,7 +4654,7 @@
     },
     "dclCorrection" : {
       "type" : "object",
-      "description" : "An exospheric-temperature correction.",
+      "description" : "An exospheric-temperature correction or a dimensionless log-density scale.",
       "properties" : {
         "FORM" : {
                 "$ref" : "#/definitions/dclCorrectionForm"
@@ -4665,7 +4669,7 @@
               },
         "NODE_TIMES_MS" : {
                 "type" : "array", "items" : {"type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807},
-                "description" : "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them."
+                "description" : "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span."
               },
         "NODE_ALTITUDES_KM" : {
                 "type" : "array", "items" : {"type" : "number"},
@@ -4678,6 +4682,10 @@
         "NODE_SIGMAS_K" : {
                 "type" : "array", "items" : {"type" : "number"},
                 "description" : "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated."
+              },
+        "NODE_LOG_DENSITY_SCALE_DIMENSIONLESS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value."
               }
       },
       "additionalProperties" : false
@@ -5194,6 +5202,10 @@
         "STATES" : {
                 "$ref" : "#/definitions/dclStates",
                 "description" : "OrbitalEnergy and DragWork: the states and their results."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
               }
       },
       "additionalProperties" : false

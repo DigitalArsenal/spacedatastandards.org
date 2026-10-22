@@ -154,6 +154,11 @@ public final class SPW extends com.google.flatbuffers.Table {
    * 81-day trailing average of adjusted F10.7
    */
   public float F107_ADJ_LAST81() { int o = __offset(64); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
+  /**
+   * Per-record source, provider, software, license terms and lineage.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(66); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createSPW(FlatBufferBuilder builder,
       int DATEOffset,
@@ -186,8 +191,10 @@ public final class SPW extends com.google.flatbuffers.Table {
       float F107_OBS_CENTER81,
       float F107_OBS_LAST81,
       float F107_ADJ_CENTER81,
-      float F107_ADJ_LAST81) {
-    builder.startTable(31);
+      float F107_ADJ_LAST81,
+      int PROVENANCEOffset) {
+    builder.startTable(32);
+    SPW.addProvenance(builder, PROVENANCEOffset);
     SPW.addF107AdjLast81(builder, F107_ADJ_LAST81);
     SPW.addF107AdjCenter81(builder, F107_ADJ_CENTER81);
     SPW.addF107ObsLast81(builder, F107_OBS_LAST81);
@@ -222,7 +229,7 @@ public final class SPW extends com.google.flatbuffers.Table {
     return SPW.endSPW(builder);
   }
 
-  public static void startSPW(FlatBufferBuilder builder) { builder.startTable(31); }
+  public static void startSPW(FlatBufferBuilder builder) { builder.startTable(32); }
   public static void addDate(FlatBufferBuilder builder, int DATEOffset) { builder.addOffset(0, DATEOffset, 0); }
   public static void addBsrn(FlatBufferBuilder builder, int BSRN) { builder.addInt(1, BSRN, 0); }
   public static void addNd(FlatBufferBuilder builder, int ND) { builder.addInt(2, ND, 0); }
@@ -254,6 +261,7 @@ public final class SPW extends com.google.flatbuffers.Table {
   public static void addF107ObsLast81(FlatBufferBuilder builder, float F107_OBS_LAST81) { builder.addFloat(28, F107_OBS_LAST81, 0.0f); }
   public static void addF107AdjCenter81(FlatBufferBuilder builder, float F107_ADJ_CENTER81) { builder.addFloat(29, F107_ADJ_CENTER81, 0.0f); }
   public static void addF107AdjLast81(FlatBufferBuilder builder, float F107_ADJ_LAST81) { builder.addFloat(30, F107_ADJ_LAST81, 0.0f); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(31, PROVENANCEOffset, 0); }
   public static int endSPW(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

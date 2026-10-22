@@ -53,7 +53,16 @@ public struct DTTPayloadRef : IFlatbufferObject
 #endif
   public byte[] GetDIGESTArray() { return __p.__vector_as_array<byte>(10); }
   /// Content encoding applied to the block before hashing, verbatim, when the
-  /// bytes are stored compressed.
+  /// bytes are stored compressed or re-encoded. The token is an HTTP
+  /// content-coding (for example gzip) or a publisher-named lossless
+  /// re-encoding of the PAYLOAD_FORMAT bytes (for example
+  /// qm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt
+  /// from a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT
+  /// bytes exactly; a consumer that does not know the token refuses the block.
+  /// SIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed
+  /// records may itself be stored compressed as a whole (for example gzip,
+  /// named with a .gz suffix); that wrapping belongs to the file, not to the
+  /// block, and is not stated here.
   public string CONTENT_ENCODING { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCONTENT_ENCODINGBytes() { return __p.__vector_as_span<byte>(12, 1); }

@@ -83,6 +83,7 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let F107_OBS_LAST81: VOffset = 60
     static let F107_ADJ_CENTER81: VOffset = 62
     static let F107_ADJ_LAST81: VOffset = 64
+    static let PROVENANCE: VOffset = 66
   }
 
   ///  Date in ISO 8601 format
@@ -148,7 +149,9 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var F107_ADJ_CENTER81: Float32 { let o = _accessor.offset(VT.F107_ADJ_CENTER81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
   ///  81-day trailing average of adjusted F10.7
   public var F107_ADJ_LAST81: Float32 { let o = _accessor.offset(VT.F107_ADJ_LAST81); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public static func startSPW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 31) }
+  ///  Per-record source, provider, software, license terms and lineage.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startSPW(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 32) }
   public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
   public static func add(BSRN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BSRN, def: 0, at: VT.BSRN) }
   public static func add(ND: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ND, def: 0, at: VT.ND) }
@@ -180,6 +183,7 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(F107_OBS_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_OBS_LAST81, def: 0.0, at: VT.F107_OBS_LAST81) }
   public static func add(F107_ADJ_CENTER81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_CENTER81, def: 0.0, at: VT.F107_ADJ_CENTER81) }
   public static func add(F107_ADJ_LAST81: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_ADJ_LAST81, def: 0.0, at: VT.F107_ADJ_LAST81) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func endSPW(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createSPW(
     _ fbb: inout FlatBufferBuilder,
@@ -213,7 +217,8 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     F107_OBS_CENTER81: Float32 = 0.0,
     F107_OBS_LAST81: Float32 = 0.0,
     F107_ADJ_CENTER81: Float32 = 0.0,
-    F107_ADJ_LAST81: Float32 = 0.0
+    F107_ADJ_LAST81: Float32 = 0.0,
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = SPW.startSPW(&fbb)
     SPW.add(DATE: DATE, &fbb)
@@ -247,6 +252,7 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     SPW.add(F107_OBS_LAST81: F107_OBS_LAST81, &fbb)
     SPW.add(F107_ADJ_CENTER81: F107_ADJ_CENTER81, &fbb)
     SPW.add(F107_ADJ_LAST81: F107_ADJ_LAST81, &fbb)
+    SPW.add(PROVENANCE: PROVENANCE, &fbb)
     return SPW.endSPW(&fbb, start: __start)
   }
 
@@ -283,6 +289,7 @@ public struct SPW: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.F107_OBS_LAST81, fieldName: "F107_OBS_LAST81", required: false, type: Float32.self)
     try _v.visit(field: VT.F107_ADJ_CENTER81, fieldName: "F107_ADJ_CENTER81", required: false, type: Float32.self)
     try _v.visit(field: VT.F107_ADJ_LAST81, fieldName: "F107_ADJ_LAST81", required: false, type: Float32.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     _v.finish()
   }
 }

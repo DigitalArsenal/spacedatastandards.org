@@ -277,8 +277,20 @@ class SPW(object):
             return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
         return 0.0
 
+    # Per-record source, provider, software, license terms and lineage.
+    # SPW
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def SPWStart(builder):
-    builder.StartObject(31)
+    builder.StartObject(32)
 
 def Start(builder):
     SPWStart(builder)
@@ -469,12 +481,23 @@ def SPWAddF107_ADJ_LAST81(builder, F107_ADJ_LAST81):
 def AddF107_ADJ_LAST81(builder, F107_ADJ_LAST81):
     SPWAddF107_ADJ_LAST81(builder, F107_ADJ_LAST81)
 
+def SPWAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    SPWAddPROVENANCE(builder, PROVENANCE)
+
 def SPWEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return SPWEnd(builder)
 
+import PVN
+try:
+    from typing import Optional
+except:
+    pass
 
 class SPWT(object):
 
@@ -512,6 +535,7 @@ class SPWT(object):
         F107_OBS_LAST81 = 0.0,
         F107_ADJ_CENTER81 = 0.0,
         F107_ADJ_LAST81 = 0.0,
+        PROVENANCE = None,
     ):
         self.DATE = DATE  # type: Optional[str]
         self.BSRN = BSRN  # type: int
@@ -544,6 +568,7 @@ class SPWT(object):
         self.F107_OBS_LAST81 = F107_OBS_LAST81  # type: float
         self.F107_ADJ_CENTER81 = F107_ADJ_CENTER81  # type: float
         self.F107_ADJ_LAST81 = F107_ADJ_LAST81  # type: float
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -597,11 +622,15 @@ class SPWT(object):
         self.F107_OBS_LAST81 = SPW.F107_OBS_LAST81()
         self.F107_ADJ_CENTER81 = SPW.F107_ADJ_CENTER81()
         self.F107_ADJ_LAST81 = SPW.F107_ADJ_LAST81()
+        if SPW.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(SPW.PROVENANCE())
 
     # SPWT
     def Pack(self, builder):
         if self.DATE is not None:
             DATE = builder.CreateString(self.DATE)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
         SPWStart(builder)
         if self.DATE is not None:
             SPWAddDATE(builder, DATE)
@@ -635,5 +664,7 @@ class SPWT(object):
         SPWAddF107_OBS_LAST81(builder, self.F107_OBS_LAST81)
         SPWAddF107_ADJ_CENTER81(builder, self.F107_ADJ_CENTER81)
         SPWAddF107_ADJ_LAST81(builder, self.F107_ADJ_LAST81)
+        if self.PROVENANCE is not None:
+            SPWAddPROVENANCE(builder, PROVENANCE)
         SPW = SPWEnd(builder)
         return SPW

@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 public struct dclCorrection : IFlatbufferObject
 {
   private Table __p;
@@ -24,8 +24,9 @@ public struct dclCorrection : IFlatbufferObject
   /// segment has dT = 0.
   public dclHarmonicSegment? SEGMENTS(int j) { int o = __p.__offset(8); return o != 0 ? (dclHarmonicSegment?)(new dclHarmonicSegment()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int SEGMENTSLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Nodes: node times, strictly increasing. dT is linear in time between
-  /// nodes and held outside them.
+  /// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+  /// The selected correction is linear in time between nodes and held at the
+  /// first/last value outside the node span.
   public long NODE_TIMES_MS(int j) { int o = __p.__offset(10); return o != 0 ? __p.bb.GetLong(__p.__vector(o) + j * 8) : (long)0; }
   public int NODE_TIMES_MSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -66,6 +67,22 @@ public struct dclCorrection : IFlatbufferObject
   public ArraySegment<byte>? GetNODE_SIGMAS_KBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public double[] GetNODE_SIGMAS_KArray() { return __p.__vector_as_array<double>(16); }
+  /// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+  /// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+  /// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+  /// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+  /// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+  /// include the producer's forecast decay through at least 48 hours after
+  /// that epoch. Interpolate those nodes; do not apply another decay in the
+  /// consumer. After the final published node, hold its value.
+  public double NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetNODE_LOG_DENSITY_SCALE_DIMENSIONLESSBytes() { return __p.__vector_as_span<double>(18, 8); }
+#else
+  public ArraySegment<byte>? GetNODE_LOG_DENSITY_SCALE_DIMENSIONLESSBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public double[] GetNODE_LOG_DENSITY_SCALE_DIMENSIONLESSArray() { return __p.__vector_as_array<double>(18); }
 
   public static Offset<dclCorrection> CreatedclCorrection(FlatBufferBuilder builder,
       dclCorrectionForm FORM = dclCorrectionForm.None,
@@ -74,8 +91,10 @@ public struct dclCorrection : IFlatbufferObject
       VectorOffset NODE_TIMES_MSOffset = default(VectorOffset),
       VectorOffset NODE_ALTITUDES_KMOffset = default(VectorOffset),
       VectorOffset NODE_VALUES_KOffset = default(VectorOffset),
-      VectorOffset NODE_SIGMAS_KOffset = default(VectorOffset)) {
-    builder.StartTable(7);
+      VectorOffset NODE_SIGMAS_KOffset = default(VectorOffset),
+      VectorOffset NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset = default(VectorOffset)) {
+    builder.StartTable(8);
+    dclCorrection.AddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
     dclCorrection.AddNODE_SIGMAS_K(builder, NODE_SIGMAS_KOffset);
     dclCorrection.AddNODE_VALUES_K(builder, NODE_VALUES_KOffset);
     dclCorrection.AddNODE_ALTITUDES_KM(builder, NODE_ALTITUDES_KMOffset);
@@ -86,7 +105,7 @@ public struct dclCorrection : IFlatbufferObject
     return dclCorrection.EnddclCorrection(builder);
   }
 
-  public static void StartdclCorrection(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartdclCorrection(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddFORM(FlatBufferBuilder builder, dclCorrectionForm FORM) { builder.AddByte(0, (byte)FORM, 0); }
   public static void AddDEGREE(FlatBufferBuilder builder, byte DEGREE) { builder.AddByte(1, DEGREE, 0); }
   public static void AddSEGMENTS(FlatBufferBuilder builder, VectorOffset SEGMENTSOffset) { builder.AddOffset(2, SEGMENTSOffset.Value, 0); }
@@ -119,6 +138,12 @@ public struct dclCorrection : IFlatbufferObject
   public static VectorOffset CreateNODE_SIGMAS_KVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateNODE_SIGMAS_KVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartNODE_SIGMAS_KVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(FlatBufferBuilder builder, VectorOffset NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset) { builder.AddOffset(7, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset.Value, 0); }
+  public static VectorOffset CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static Offset<dclCorrection> EnddclCorrection(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<dclCorrection>(o);
@@ -141,6 +166,8 @@ public struct dclCorrection : IFlatbufferObject
     for (var _j = 0; _j < this.NODE_VALUES_KLength; ++_j) {_o.NODE_VALUES_K.Add(this.NODE_VALUES_K(_j));}
     _o.NODE_SIGMAS_K = new List<double>();
     for (var _j = 0; _j < this.NODE_SIGMAS_KLength; ++_j) {_o.NODE_SIGMAS_K.Add(this.NODE_SIGMAS_K(_j));}
+    _o.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = new List<double>();
+    for (var _j = 0; _j < this.NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength; ++_j) {_o.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS.Add(this.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(_j));}
   }
   public static Offset<dclCorrection> Pack(FlatBufferBuilder builder, dclCorrectionT _o) {
     if (_o == null) return default(Offset<dclCorrection>);
@@ -170,6 +197,11 @@ public struct dclCorrection : IFlatbufferObject
       var __NODE_SIGMAS_K = _o.NODE_SIGMAS_K.ToArray();
       _NODE_SIGMAS_K = CreateNODE_SIGMAS_KVector(builder, __NODE_SIGMAS_K);
     }
+    var _NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = default(VectorOffset);
+    if (_o.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS != null) {
+      var __NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = _o.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS.ToArray();
+      _NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, __NODE_LOG_DENSITY_SCALE_DIMENSIONLESS);
+    }
     return CreatedclCorrection(
       builder,
       _o.FORM,
@@ -178,7 +210,8 @@ public struct dclCorrection : IFlatbufferObject
       _NODE_TIMES_MS,
       _NODE_ALTITUDES_KM,
       _NODE_VALUES_K,
-      _NODE_SIGMAS_K);
+      _NODE_SIGMAS_K,
+      _NODE_LOG_DENSITY_SCALE_DIMENSIONLESS);
   }
 }
 
@@ -191,6 +224,7 @@ public class dclCorrectionT
   public List<double> NODE_ALTITUDES_KM { get; set; }
   public List<double> NODE_VALUES_K { get; set; }
   public List<double> NODE_SIGMAS_K { get; set; }
+  public List<double> NODE_LOG_DENSITY_SCALE_DIMENSIONLESS { get; set; }
 
   public dclCorrectionT() {
     this.FORM = dclCorrectionForm.None;
@@ -200,6 +234,7 @@ public class dclCorrectionT
     this.NODE_ALTITUDES_KM = null;
     this.NODE_VALUES_K = null;
     this.NODE_SIGMAS_K = null;
+    this.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = null;
   }
 }
 
@@ -216,6 +251,7 @@ static public class dclCorrectionVerify
       && verifier.VerifyVectorOfData(tablePos, 12 /*NODE_ALTITUDES_KM*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 14 /*NODE_VALUES_K*/, 8 /*double*/, false)
       && verifier.VerifyVectorOfData(tablePos, 16 /*NODE_SIGMAS_K*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 18 /*NODE_LOG_DENSITY_SCALE_DIMENSIONLESS*/, 8 /*double*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -7,7 +7,8 @@ import "strconv"
 /// Density Calibration (DCL)
 /// Description
 /// A calibration of a thermospheric density model and the results computed
-/// with it. A calibration is a correction to the model's exospheric
+/// with it. A calibration may be a dimensionless common-mode log-density
+/// scale for NRLMSISE-00, or a correction to the model's exospheric
 /// temperature (added where the model adds its geomagnetic term, so a
 /// constant correction is the same as raising every hourly Dst-derived
 /// temperature change by that amount), estimated either from observed
@@ -36,7 +37,8 @@ import "strconv"
 /// (density, Mach, heating) along an entry trajectory; a DCL density
 /// evaluation along the same trajectory supplies its calibrated density.
 ///
-/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+/// log-density scales are dimensionless ln(corrected density / model density).
 /// What a record computes. Append new values only; never reorder or reuse
 /// existing values.
 type dclProduct byte

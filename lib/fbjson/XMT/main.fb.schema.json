@@ -15872,6 +15872,11 @@
           "type": "number",
           "description": "81-day trailing average of adjusted F10.7",
           "x-flatbuffer-type": "float"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Per-record source, provider, software, license terms and lineage.",
+          "x-flatbuffer-type": "PVN"
         }
       },
       "additionalProperties": false

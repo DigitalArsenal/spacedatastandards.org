@@ -5,6 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { F107DataType } from './F107DataType.js';
+import { PVN, PVNT } from './PVN.js';
 
 
 /**
@@ -282,8 +283,16 @@ F107_ADJ_LAST81():number {
   return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Per-record source, provider, software, license terms and lineage.
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startSPW(builder:flatbuffers.Builder) {
-  builder.startObject(31);
+  builder.startObject(32);
 }
 
 static addDate(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset) {
@@ -410,6 +419,10 @@ static addF107AdjLast81(builder:flatbuffers.Builder, F107_ADJ_LAST81:number) {
   builder.addFieldFloat32(30, F107_ADJ_LAST81, 0.0);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, PROVENANCEOffset, 0);
+}
+
 static endSPW(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -423,41 +436,6 @@ static finishSizePrefixedSPWBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SPW', true);
 }
 
-static createSPW(builder:flatbuffers.Builder, DATEOffset:flatbuffers.Offset, BSRN:number, ND:number, KP1:number, KP2:number, KP3:number, KP4:number, KP5:number, KP6:number, KP7:number, KP8:number, KP_SUM:number, AP1:number, AP2:number, AP3:number, AP4:number, AP5:number, AP6:number, AP7:number, AP8:number, AP_AVG:number, CP:number, C9:number, ISN:number, F107_OBS:number, F107_ADJ:number, F107_DATA_TYPE:F107DataType, F107_OBS_CENTER81:number, F107_OBS_LAST81:number, F107_ADJ_CENTER81:number, F107_ADJ_LAST81:number):flatbuffers.Offset {
-  SPW.startSPW(builder);
-  SPW.addDate(builder, DATEOffset);
-  SPW.addBsrn(builder, BSRN);
-  SPW.addNd(builder, ND);
-  SPW.addKp1(builder, KP1);
-  SPW.addKp2(builder, KP2);
-  SPW.addKp3(builder, KP3);
-  SPW.addKp4(builder, KP4);
-  SPW.addKp5(builder, KP5);
-  SPW.addKp6(builder, KP6);
-  SPW.addKp7(builder, KP7);
-  SPW.addKp8(builder, KP8);
-  SPW.addKpSum(builder, KP_SUM);
-  SPW.addAp1(builder, AP1);
-  SPW.addAp2(builder, AP2);
-  SPW.addAp3(builder, AP3);
-  SPW.addAp4(builder, AP4);
-  SPW.addAp5(builder, AP5);
-  SPW.addAp6(builder, AP6);
-  SPW.addAp7(builder, AP7);
-  SPW.addAp8(builder, AP8);
-  SPW.addApAvg(builder, AP_AVG);
-  SPW.addCp(builder, CP);
-  SPW.addC9(builder, C9);
-  SPW.addIsn(builder, ISN);
-  SPW.addF107Obs(builder, F107_OBS);
-  SPW.addF107Adj(builder, F107_ADJ);
-  SPW.addF107DataType(builder, F107_DATA_TYPE);
-  SPW.addF107ObsCenter81(builder, F107_OBS_CENTER81);
-  SPW.addF107ObsLast81(builder, F107_OBS_LAST81);
-  SPW.addF107AdjCenter81(builder, F107_ADJ_CENTER81);
-  SPW.addF107AdjLast81(builder, F107_ADJ_LAST81);
-  return SPW.endSPW(builder);
-}
 
 unpack(): SPWT {
   return new SPWT(
@@ -491,7 +469,8 @@ unpack(): SPWT {
     this.F107_OBS_CENTER81(),
     this.F107_OBS_LAST81(),
     this.F107_ADJ_CENTER81(),
-    this.F107_ADJ_LAST81()
+    this.F107_ADJ_LAST81(),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
   );
 }
 
@@ -528,6 +507,7 @@ unpackTo(_o: SPWT): void {
   _o.F107_OBS_LAST81 = this.F107_OBS_LAST81();
   _o.F107_ADJ_CENTER81 = this.F107_ADJ_CENTER81();
   _o.F107_ADJ_LAST81 = this.F107_ADJ_LAST81();
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
 }
 }
 
@@ -563,45 +543,49 @@ constructor(
   public F107_OBS_CENTER81: number = 0.0,
   public F107_OBS_LAST81: number = 0.0,
   public F107_ADJ_CENTER81: number = 0.0,
-  public F107_ADJ_LAST81: number = 0.0
+  public F107_ADJ_LAST81: number = 0.0,
+  public PROVENANCE: PVNT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DATE = (this.DATE !== null ? builder.createString(this.DATE!) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
 
-  return SPW.createSPW(builder,
-    DATE,
-    this.BSRN,
-    this.ND,
-    this.KP1,
-    this.KP2,
-    this.KP3,
-    this.KP4,
-    this.KP5,
-    this.KP6,
-    this.KP7,
-    this.KP8,
-    this.KP_SUM,
-    this.AP1,
-    this.AP2,
-    this.AP3,
-    this.AP4,
-    this.AP5,
-    this.AP6,
-    this.AP7,
-    this.AP8,
-    this.AP_AVG,
-    this.CP,
-    this.C9,
-    this.ISN,
-    this.F107_OBS,
-    this.F107_ADJ,
-    this.F107_DATA_TYPE,
-    this.F107_OBS_CENTER81,
-    this.F107_OBS_LAST81,
-    this.F107_ADJ_CENTER81,
-    this.F107_ADJ_LAST81
-  );
+  SPW.startSPW(builder);
+  SPW.addDate(builder, DATE);
+  SPW.addBsrn(builder, this.BSRN);
+  SPW.addNd(builder, this.ND);
+  SPW.addKp1(builder, this.KP1);
+  SPW.addKp2(builder, this.KP2);
+  SPW.addKp3(builder, this.KP3);
+  SPW.addKp4(builder, this.KP4);
+  SPW.addKp5(builder, this.KP5);
+  SPW.addKp6(builder, this.KP6);
+  SPW.addKp7(builder, this.KP7);
+  SPW.addKp8(builder, this.KP8);
+  SPW.addKpSum(builder, this.KP_SUM);
+  SPW.addAp1(builder, this.AP1);
+  SPW.addAp2(builder, this.AP2);
+  SPW.addAp3(builder, this.AP3);
+  SPW.addAp4(builder, this.AP4);
+  SPW.addAp5(builder, this.AP5);
+  SPW.addAp6(builder, this.AP6);
+  SPW.addAp7(builder, this.AP7);
+  SPW.addAp8(builder, this.AP8);
+  SPW.addApAvg(builder, this.AP_AVG);
+  SPW.addCp(builder, this.CP);
+  SPW.addC9(builder, this.C9);
+  SPW.addIsn(builder, this.ISN);
+  SPW.addF107Obs(builder, this.F107_OBS);
+  SPW.addF107Adj(builder, this.F107_ADJ);
+  SPW.addF107DataType(builder, this.F107_DATA_TYPE);
+  SPW.addF107ObsCenter81(builder, this.F107_OBS_CENTER81);
+  SPW.addF107ObsLast81(builder, this.F107_OBS_LAST81);
+  SPW.addF107AdjCenter81(builder, this.F107_ADJ_CENTER81);
+  SPW.addF107AdjLast81(builder, this.F107_ADJ_LAST81);
+  SPW.addProvenance(builder, PROVENANCE);
+
+  return SPW.endSPW(builder);
 }
 }

@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { F107DataType } from './F107DataType.js';
+import { PVN, PVNT } from './PVN.js';
 /**
  * Space Weather Data Record
  */
@@ -135,6 +136,10 @@ export declare class SPW implements flatbuffers.IUnpackableObject<SPWT> {
      * 81-day trailing average of adjusted F10.7
      */
     F107_ADJ_LAST81(): number;
+    /**
+     * Per-record source, provider, software, license terms and lineage.
+     */
+    PROVENANCE(obj?: PVN): PVN | null;
     static startSPW(builder: flatbuffers.Builder): void;
     static addDate(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset): void;
     static addBsrn(builder: flatbuffers.Builder, BSRN: number): void;
@@ -167,10 +172,10 @@ export declare class SPW implements flatbuffers.IUnpackableObject<SPWT> {
     static addF107ObsLast81(builder: flatbuffers.Builder, F107_OBS_LAST81: number): void;
     static addF107AdjCenter81(builder: flatbuffers.Builder, F107_ADJ_CENTER81: number): void;
     static addF107AdjLast81(builder: flatbuffers.Builder, F107_ADJ_LAST81: number): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static endSPW(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishSPWBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedSPWBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createSPW(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset, BSRN: number, ND: number, KP1: number, KP2: number, KP3: number, KP4: number, KP5: number, KP6: number, KP7: number, KP8: number, KP_SUM: number, AP1: number, AP2: number, AP3: number, AP4: number, AP5: number, AP6: number, AP7: number, AP8: number, AP_AVG: number, CP: number, C9: number, ISN: number, F107_OBS: number, F107_ADJ: number, F107_DATA_TYPE: F107DataType, F107_OBS_CENTER81: number, F107_OBS_LAST81: number, F107_ADJ_CENTER81: number, F107_ADJ_LAST81: number): flatbuffers.Offset;
     unpack(): SPWT;
     unpackTo(_o: SPWT): void;
 }
@@ -206,7 +211,8 @@ export declare class SPWT implements flatbuffers.IGeneratedObject {
     F107_OBS_LAST81: number;
     F107_ADJ_CENTER81: number;
     F107_ADJ_LAST81: number;
-    constructor(DATE?: string | Uint8Array | null, BSRN?: number, ND?: number, KP1?: number, KP2?: number, KP3?: number, KP4?: number, KP5?: number, KP6?: number, KP7?: number, KP8?: number, KP_SUM?: number, AP1?: number, AP2?: number, AP3?: number, AP4?: number, AP5?: number, AP6?: number, AP7?: number, AP8?: number, AP_AVG?: number, CP?: number, C9?: number, ISN?: number, F107_OBS?: number, F107_ADJ?: number, F107_DATA_TYPE?: F107DataType, F107_OBS_CENTER81?: number, F107_OBS_LAST81?: number, F107_ADJ_CENTER81?: number, F107_ADJ_LAST81?: number);
+    PROVENANCE: PVNT | null;
+    constructor(DATE?: string | Uint8Array | null, BSRN?: number, ND?: number, KP1?: number, KP2?: number, KP3?: number, KP4?: number, KP5?: number, KP6?: number, KP7?: number, KP8?: number, KP_SUM?: number, AP1?: number, AP2?: number, AP3?: number, AP4?: number, AP5?: number, AP6?: number, AP7?: number, AP8?: number, AP_AVG?: number, CP?: number, C9?: number, ISN?: number, F107_OBS?: number, F107_ADJ?: number, F107_DATA_TYPE?: F107DataType, F107_OBS_CENTER81?: number, F107_OBS_LAST81?: number, F107_ADJ_CENTER81?: number, F107_ADJ_LAST81?: number, PROVENANCE?: PVNT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=SPW.d.ts.map

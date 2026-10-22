@@ -76,7 +76,7 @@ try {
   fs.writeFileSync(path.join(tmp, 'go.mod'), 'module sdse2e\n\ngo 1.21\n\nrequire github.com/google/flatbuffers v25.12.19+incompatible\n');
   fs.writeFileSync(path.join(tmp, 'bindings/wire_e2e.go'), go);
   fs.writeFileSync(path.join(tmp, 'main.go'), 'package main\nimport d "sdse2e/bindings"\nfunc main() { d.WireE2E() }\n');
-  run('go', ['run', '-mod=mod', '.']);
+  run('go', ['run', '-mod=mod', 'main.go']);
   for (const [name, Type] of records) {
     const decode = suffix => Type[`getRootAs${Type.name}`](new fb.ByteBuffer(fs.readFileSync(path.join(tmp, `${name}.${suffix}.fb`)))).unpack();
     const expected = decode('js');

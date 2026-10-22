@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 /**
- * Form of a temperature correction. Append new values only; never reorder or
+ * Form of a density-model correction. Append new values only; never reorder or
  * reuse existing values.
  */
 export enum dclCorrectionForm {
@@ -18,7 +18,13 @@ export enum dclCorrectionForm {
   Harmonic = 1,
 
   /**
-   * Values at time nodes, optionally at altitude nodes.
+   * Temperature values, K, at time nodes, optionally at altitude nodes.
    */
-  Nodes = 2
+  Nodes = 2,
+
+  /**
+   * Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+   * Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+   */
+  LogDensityNodes = 3
 }

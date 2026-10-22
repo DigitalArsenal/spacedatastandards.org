@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# An exospheric-temperature correction.
+# An exospheric-temperature correction or a dimensionless log-density scale.
 class dclCorrection(object):
     __slots__ = ['_tab']
 
@@ -71,8 +71,9 @@ class dclCorrection(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         return o == 0
 
-    # Nodes: node times, strictly increasing. dT is linear in time between
-    # nodes and held outside them.
+    # Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+    # The selected correction is linear in time between nodes and held at the
+    # first/last value outside the node span.
     # dclCorrection
     def NODE_TIMES_MS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -189,8 +190,43 @@ class dclCorrection(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
+    # LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+    # one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+    # rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+    # NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+    # SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+    # include the producer's forecast decay through at least 48 hours after
+    # that epoch. Interpolate those nodes; do not apply another decay in the
+    # consumer. After the final published node, hold its value.
+    # dclCorrection
+    def NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # dclCorrection
+    def NODE_LOG_DENSITY_SCALE_DIMENSIONLESSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # dclCorrection
+    def NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # dclCorrection
+    def NODE_LOG_DENSITY_SCALE_DIMENSIONLESSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
 def dclCorrectionStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(8)
 
 def Start(builder):
     dclCorrectionStart(builder)
@@ -313,6 +349,28 @@ def dclCorrectionCreateNODE_SIGMAS_KVector(builder, data):
 def CreateNODE_SIGMAS_KVector(builder, data):
     return dclCorrectionCreateNODE_SIGMAS_KVector(builder, data)
 
+def dclCorrectionAddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_LOG_DENSITY_SCALE_DIMENSIONLESS), 0)
+
+def AddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS):
+    dclCorrectionAddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
+
+def dclCorrectionStartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems):
+    return dclCorrectionStartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems)
+
+def dclCorrectionCreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data):
+    return dclCorrectionCreateNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, data)
+
 def dclCorrectionEnd(builder):
     return builder.EndObject()
 
@@ -337,6 +395,7 @@ class dclCorrectionT(object):
         NODE_ALTITUDES_KM = None,
         NODE_VALUES_K = None,
         NODE_SIGMAS_K = None,
+        NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = None,
     ):
         self.FORM = FORM  # type: int
         self.DEGREE = DEGREE  # type: int
@@ -345,6 +404,7 @@ class dclCorrectionT(object):
         self.NODE_ALTITUDES_KM = NODE_ALTITUDES_KM  # type: Optional[List[float]]
         self.NODE_VALUES_K = NODE_VALUES_K  # type: Optional[List[float]]
         self.NODE_SIGMAS_K = NODE_SIGMAS_K  # type: Optional[List[float]]
+        self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = NODE_LOG_DENSITY_SCALE_DIMENSIONLESS  # type: Optional[List[float]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -405,6 +465,13 @@ class dclCorrectionT(object):
                     self.NODE_SIGMAS_K.append(dclCorrection.NODE_SIGMAS_K(i))
             else:
                 self.NODE_SIGMAS_K = dclCorrection.NODE_SIGMAS_KAsNumpy()
+        if not dclCorrection.NODE_LOG_DENSITY_SCALE_DIMENSIONLESSIsNone():
+            if np is None:
+                self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = []
+                for i in range(dclCorrection.NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength()):
+                    self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS.append(dclCorrection.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(i))
+            else:
+                self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = dclCorrection.NODE_LOG_DENSITY_SCALE_DIMENSIONLESSAsNumpy()
 
     # dclCorrectionT
     def Pack(self, builder):
@@ -448,6 +515,14 @@ class dclCorrectionT(object):
                 for i in reversed(range(len(self.NODE_SIGMAS_K))):
                     builder.PrependFloat64(self.NODE_SIGMAS_K[i])
                 NODE_SIGMAS_K = builder.EndVector()
+        if self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS is not None:
+            if np is not None and type(self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS) is np.ndarray:
+                NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = builder.CreateNumpyVector(self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
+            else:
+                dclCorrectionStartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, len(self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS))
+                for i in reversed(range(len(self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS))):
+                    builder.PrependFloat64(self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS[i])
+                NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = builder.EndVector()
         dclCorrectionStart(builder)
         dclCorrectionAddFORM(builder, self.FORM)
         dclCorrectionAddDEGREE(builder, self.DEGREE)
@@ -461,5 +536,7 @@ class dclCorrectionT(object):
             dclCorrectionAddNODE_VALUES_K(builder, NODE_VALUES_K)
         if self.NODE_SIGMAS_K is not None:
             dclCorrectionAddNODE_SIGMAS_K(builder, NODE_SIGMAS_K)
+        if self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS is not None:
+            dclCorrectionAddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
         dclCorrection = dclCorrectionEnd(builder)
         return dclCorrection

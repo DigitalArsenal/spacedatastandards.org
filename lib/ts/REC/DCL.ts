@@ -6,6 +6,7 @@ import * as flatbuffers from 'flatbuffers';
 
 import { ATM, ATMT } from './ATM.js';
 import { PRWJB2008IndicesTable, PRWJB2008IndicesTableT } from './PRWJB2008IndicesTable.js';
+import { PVN, PVNT } from './PVN.js';
 import { SPW, SPWT } from './SPW.js';
 import { dclCorrection, dclCorrectionT } from './dclCorrection.js';
 import { dclFitStatistics, dclFitStatisticsT } from './dclFitStatistics.js';
@@ -254,8 +255,16 @@ STATES(obj?:dclStates):dclStates|null {
   return offset ? (obj || new dclStates()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * Per-record source, provider, software, license terms and lineage.
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startDCL(builder:flatbuffers.Builder) {
-  builder.startObject(26);
+  builder.startObject(27);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -410,6 +419,10 @@ static addStates(builder:flatbuffers.Builder, STATESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(25, STATESOffset, 0);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, PROVENANCEOffset, 0);
+}
+
 static endDCL(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -451,7 +464,8 @@ unpack(): DCLT {
     this.bb!.createObjList<dclIteration, dclIterationT>(this.HISTORY.bind(this), this.historyLength()),
     this.LEVEL_LN_B_CORRELATION(),
     this.MEAN_LEVEL_SIGMA_K(),
-    (this.STATES() !== null ? this.STATES()!.unpack() : null)
+    (this.STATES() !== null ? this.STATES()!.unpack() : null),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
   );
 }
 
@@ -483,6 +497,7 @@ unpackTo(_o: DCLT): void {
   _o.LEVEL_LN_B_CORRELATION = this.LEVEL_LN_B_CORRELATION();
   _o.MEAN_LEVEL_SIGMA_K = this.MEAN_LEVEL_SIGMA_K();
   _o.STATES = (this.STATES() !== null ? this.STATES()!.unpack() : null);
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
 }
 }
 
@@ -513,7 +528,8 @@ constructor(
   public HISTORY: (dclIterationT)[] = [],
   public LEVEL_LN_B_CORRELATION: number = NaN,
   public MEAN_LEVEL_SIGMA_K: number = NaN,
-  public STATES: dclStatesT|null = null
+  public STATES: dclStatesT|null = null,
+  public PROVENANCE: PVNT|null = null
 ){}
 
 
@@ -534,6 +550,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LEVELS = DCL.createLevelsVector(builder, builder.createObjectOffsetList(this.LEVELS));
   const HISTORY = DCL.createHistoryVector(builder, builder.createObjectOffsetList(this.HISTORY));
   const STATES = (this.STATES !== null ? this.STATES!.pack(builder) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
 
   DCL.startDCL(builder);
   DCL.addId(builder, ID);
@@ -562,6 +579,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   DCL.addLevelLnBCorrelation(builder, this.LEVEL_LN_B_CORRELATION);
   DCL.addMeanLevelSigmaK(builder, this.MEAN_LEVEL_SIGMA_K);
   DCL.addStates(builder, STATES);
+  DCL.addProvenance(builder, PROVENANCE);
 
   return DCL.endDCL(builder);
 }

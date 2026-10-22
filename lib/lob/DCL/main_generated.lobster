@@ -4,7 +4,8 @@ import flatbuffers
 /// Density Calibration (DCL)
 /// Description
 /// A calibration of a thermospheric density model and the results computed
-/// with it. A calibration is a correction to the model's exospheric
+/// with it. A calibration may be a dimensionless common-mode log-density
+/// scale for NRLMSISE-00, or a correction to the model's exospheric
 /// temperature (added where the model adds its geomagnetic term, so a
 /// constant correction is the same as raising every hourly Dst-derived
 /// temperature change by that amount), estimated either from observed
@@ -33,7 +34,8 @@ import flatbuffers
 /// (density, Mach, heating) along an entry trajectory; a DCL density
 /// evaluation along the same trajectory supplies its calibrated density.
 ///
-/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+/// log-density scales are dimensionless ln(corrected density / model density).
 /// What a record computes. Append new values only; never reorder or reuse
 /// existing values.
 enum dclProduct:
@@ -52,15 +54,18 @@ enum dclProduct:
     /// Drag power and work along a trajectory.
     dclProduct_DragWork = 6
 
-/// Form of a temperature correction. Append new values only; never reorder or
+/// Form of a density-model correction. Append new values only; never reorder or
 /// reuse existing values.
 enum dclCorrectionForm:
     /// No correction (dT = 0).
     dclCorrectionForm_None = 0
     /// Spherical harmonics in latitude and local solar time per time segment.
     dclCorrectionForm_Harmonic = 1
-    /// Values at time nodes, optionally at altitude nodes.
+    /// Temperature values, K, at time nodes, optionally at altitude nodes.
     dclCorrectionForm_Nodes = 2
+    /// Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+    /// Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+    dclCorrectionForm_LogDensityNodes = 3
 
 /// Outcome. Append new values only; never reorder or reuse existing values.
 enum dclStatus:
@@ -252,7 +257,7 @@ struct dclLevelBuilder:
     def end():
         return b_.EndObject()
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 class dclCorrection : flatbuffers.handle
     def FORM() -> dclCorrectionForm:
         return dclCorrectionForm(flatbuffers.field_uint8(buf_, pos_, 4, 0))
@@ -265,8 +270,9 @@ class dclCorrection : flatbuffers.handle
         return dclHarmonicSegment { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 8) + i * 4) }
     def SEGMENTS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 8)
-    /// Nodes: node times, strictly increasing. dT is linear in time between
-    /// nodes and held outside them.
+    /// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+    /// The selected correction is linear in time between nodes and held at the
+    /// first/last value outside the node span.
     def NODE_TIMES_MS(i:int) -> int:
         return read_int64_le(buf_, buf_.flatbuffers.field_vector(pos_, 10) + i * 8)
     def NODE_TIMES_MS_length() -> int:
@@ -291,13 +297,25 @@ class dclCorrection : flatbuffers.handle
         return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 8)
     def NODE_SIGMAS_K_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+    /// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+    /// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+    /// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+    /// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+    /// include the producer's forecast decay through at least 48 hours after
+    /// that epoch. Interpolate those nodes; do not apply another decay in the
+    /// consumer. After the final published node, hold its value.
+    def NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 8)
+    def NODE_LOG_DENSITY_SCALE_DIMENSIONLESS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
 
 def GetRootAsdclCorrection(buf:string): return dclCorrection { buf, flatbuffers.indirect(buf, 0) }
 
 struct dclCorrectionBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(8)
         return this
     def add_FORM(FORM:dclCorrectionForm):
         b_.PrependUint8Slot(0, FORM, 0)
@@ -319,6 +337,9 @@ struct dclCorrectionBuilder:
         return this
     def add_NODE_SIGMAS_K(NODE_SIGMAS_K:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, NODE_SIGMAS_K)
+        return this
+    def add_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(NODE_LOG_DENSITY_SCALE_DIMENSIONLESS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
         return this
     def end():
         return b_.EndObject()
@@ -354,6 +375,13 @@ def dclCorrectionCreateNODEVALUESKVector(b_:flatbuffers.builder, v_:[float]):
 def dclCorrectionStartNODESIGMASKVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(8, n_, 8)
 def dclCorrectionCreateNODESIGMASKVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def dclCorrectionStartNODELOGDENSITYSCALEDIMENSIONLESSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def dclCorrectionCreateNODELOGDENSITYSCALEDIMENSIONLESSVector(b_:flatbuffers.builder, v_:[float]):
     b_.StartVector(8, v_.length, 8)
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
@@ -1648,13 +1676,17 @@ class DCL : flatbuffers.handle
     def STATES() -> dclStates?:
         let o = flatbuffers.field_table(buf_, pos_, 54)
         return if o: dclStates { buf_, o } else: nil
+    /// Per-record source, provider, software, license terms and lineage.
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 56)
+        return if o: PVN { buf_, o } else: nil
 
 def GetRootAsDCL(buf:string): return DCL { buf, flatbuffers.indirect(buf, 0) }
 
 struct DCLBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(26)
+        b_.StartObject(27)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -1733,6 +1765,9 @@ struct DCLBuilder:
         return this
     def add_STATES(STATES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(25, STATES)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, PROVENANCE)
         return this
     def end():
         return b_.EndObject()

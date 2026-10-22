@@ -42,7 +42,8 @@ pub const ENUM_VALUES_DCL_PRODUCT: [dclProduct; 7] = [
 /// Density Calibration (DCL)
 /// Description
 /// A calibration of a thermospheric density model and the results computed
-/// with it. A calibration is a correction to the model's exospheric
+/// with it. A calibration may be a dimensionless common-mode log-density
+/// scale for NRLMSISE-00, or a correction to the model's exospheric
 /// temperature (added where the model adds its geomagnetic term, so a
 /// constant correction is the same as raising every hourly Dst-derived
 /// temperature change by that amount), estimated either from observed
@@ -71,7 +72,8 @@ pub const ENUM_VALUES_DCL_PRODUCT: [dclProduct; 7] = [
 /// (density, Mach, heating) along an entry trajectory; a DCL density
 /// evaluation along the same trajectory supplies its calibrated density.
 ///
-/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+/// log-density scales are dimensionless ln(corrected density / model density).
 /// What a record computes. Append new values only; never reorder or reuse
 /// existing values.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -182,17 +184,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for dclProduct {}
 pub const ENUM_MIN_DCL_CORRECTION_FORM: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_DCL_CORRECTION_FORM: u8 = 2;
+pub const ENUM_MAX_DCL_CORRECTION_FORM: u8 = 3;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_DCL_CORRECTION_FORM: [dclCorrectionForm; 3] = [
+pub const ENUM_VALUES_DCL_CORRECTION_FORM: [dclCorrectionForm; 4] = [
     dclCorrectionForm::None,
     dclCorrectionForm::Harmonic,
     dclCorrectionForm::Nodes,
+    dclCorrectionForm::LogDensityNodes,
 ];
 
-/// Form of a temperature correction. Append new values only; never reorder or
+/// Form of a density-model correction. Append new values only; never reorder or
 /// reuse existing values.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
@@ -204,15 +207,19 @@ impl dclCorrectionForm {
     pub const None: Self = Self(0);
     /// Spherical harmonics in latitude and local solar time per time segment.
     pub const Harmonic: Self = Self(1);
-    /// Values at time nodes, optionally at altitude nodes.
+    /// Temperature values, K, at time nodes, optionally at altitude nodes.
     pub const Nodes: Self = Self(2);
+    /// Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+    /// Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+    pub const LogDensityNodes: Self = Self(3);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_MAX: u8 = 3;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::None,
         Self::Harmonic,
         Self::Nodes,
+        Self::LogDensityNodes,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -221,6 +228,7 @@ impl dclCorrectionForm {
             Self::None => Some("None"),
             Self::Harmonic => Some("Harmonic"),
             Self::Nodes => Some("Nodes"),
+            Self::LogDensityNodes => Some("LogDensityNodes"),
             _ => None,
         }
     }
@@ -1165,7 +1173,7 @@ impl dclLevelT {
 
 pub enum dclCorrectionOffset {}
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 #[derive(Copy, Clone, PartialEq)]
 pub struct dclCorrection<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1188,6 +1196,7 @@ impl<'a> dclCorrection<'a> {
     pub const VT_NODE_ALTITUDES_KM: ::flatbuffers::VOffsetT = 12;
     pub const VT_NODE_VALUES_K: ::flatbuffers::VOffsetT = 14;
     pub const VT_NODE_SIGMAS_K: ::flatbuffers::VOffsetT = 16;
+    pub const VT_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: ::flatbuffers::VOffsetT = 18;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1200,6 +1209,7 @@ impl<'a> dclCorrection<'a> {
         args: &'args dclCorrectionArgs<'args>
     ) -> ::flatbuffers::WIPOffset<dclCorrection<'bldr>> {
         let mut builder = dclCorrectionBuilder::new(_fbb);
+        if let Some(x) = args.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS { builder.add_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(x); }
         if let Some(x) = args.NODE_SIGMAS_K { builder.add_NODE_SIGMAS_K(x); }
         if let Some(x) = args.NODE_VALUES_K { builder.add_NODE_VALUES_K(x); }
         if let Some(x) = args.NODE_ALTITUDES_KM { builder.add_NODE_ALTITUDES_KM(x); }
@@ -1228,6 +1238,9 @@ impl<'a> dclCorrection<'a> {
         let NODE_SIGMAS_K = self.NODE_SIGMAS_K().map(|x| {
             x.into_iter().collect()
         });
+        let NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS().map(|x| {
+            x.into_iter().collect()
+        });
         dclCorrectionT {
             FORM,
             DEGREE,
@@ -1236,6 +1249,7 @@ impl<'a> dclCorrection<'a> {
             NODE_ALTITUDES_KM,
             NODE_VALUES_K,
             NODE_SIGMAS_K,
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS,
         }
     }
 
@@ -1266,8 +1280,9 @@ impl<'a> dclCorrection<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<dclHarmonicSegment>>>>(dclCorrection::VT_SEGMENTS, None)}
     }
 
-    /// Nodes: node times, strictly increasing. dT is linear in time between
-    /// nodes and held outside them.
+    /// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+    /// The selected correction is linear in time between nodes and held at the
+    /// first/last value outside the node span.
     #[inline]
     pub fn NODE_TIMES_MS(&self) -> Option<::flatbuffers::Vector<'a, i64>> {
         // Safety:
@@ -1307,6 +1322,22 @@ impl<'a> dclCorrection<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(dclCorrection::VT_NODE_SIGMAS_K, None)}
     }
+
+    /// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+    /// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+    /// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+    /// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+    /// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+    /// include the producer's forecast decay through at least 48 hours after
+    /// that epoch. Interpolate those nodes; do not apply another decay in the
+    /// consumer. After the final published node, hold its value.
+    #[inline]
+    pub fn NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(dclCorrection::VT_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for dclCorrection<'_> {
@@ -1322,6 +1353,7 @@ impl ::flatbuffers::Verifiable for dclCorrection<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("NODE_ALTITUDES_KM", Self::VT_NODE_ALTITUDES_KM, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("NODE_VALUES_K", Self::VT_NODE_VALUES_K, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("NODE_SIGMAS_K", Self::VT_NODE_SIGMAS_K, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("NODE_LOG_DENSITY_SCALE_DIMENSIONLESS", Self::VT_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, false)?
             .finish();
         Ok(())
     }
@@ -1335,6 +1367,7 @@ pub struct dclCorrectionArgs<'a> {
     pub NODE_ALTITUDES_KM: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub NODE_VALUES_K: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
     pub NODE_SIGMAS_K: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
 }
 
 impl<'a> Default for dclCorrectionArgs<'a> {
@@ -1348,6 +1381,7 @@ impl<'a> Default for dclCorrectionArgs<'a> {
             NODE_ALTITUDES_KM: None,
             NODE_VALUES_K: None,
             NODE_SIGMAS_K: None,
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: None,
         }
     }
 }
@@ -1394,6 +1428,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> dclCorrectionBuilder<'a, 'b, 
     }
 
     #[inline]
+    pub fn add_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(&mut self, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(dclCorrection::VT_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> dclCorrectionBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         dclCorrectionBuilder {
@@ -1419,6 +1458,7 @@ impl ::core::fmt::Debug for dclCorrection<'_> {
         ds.field("NODE_ALTITUDES_KM", &self.NODE_ALTITUDES_KM());
         ds.field("NODE_VALUES_K", &self.NODE_VALUES_K());
         ds.field("NODE_SIGMAS_K", &self.NODE_SIGMAS_K());
+        ds.field("NODE_LOG_DENSITY_SCALE_DIMENSIONLESS", &self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS());
         ds.finish()
     }
 }
@@ -1433,6 +1473,7 @@ pub struct dclCorrectionT {
     pub NODE_ALTITUDES_KM: Option<alloc::vec::Vec<f64>>,
     pub NODE_VALUES_K: Option<alloc::vec::Vec<f64>>,
     pub NODE_SIGMAS_K: Option<alloc::vec::Vec<f64>>,
+    pub NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: Option<alloc::vec::Vec<f64>>,
 }
 
 impl Default for dclCorrectionT {
@@ -1445,6 +1486,7 @@ impl Default for dclCorrectionT {
             NODE_ALTITUDES_KM: None,
             NODE_VALUES_K: None,
             NODE_SIGMAS_K: None,
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: None,
         }
     }
 }
@@ -1471,6 +1513,9 @@ impl dclCorrectionT {
         let NODE_SIGMAS_K = self.NODE_SIGMAS_K.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = self.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
         dclCorrection::create(_fbb, &dclCorrectionArgs{
             FORM,
             DEGREE,
@@ -1479,6 +1524,7 @@ impl dclCorrectionT {
             NODE_ALTITUDES_KM,
             NODE_VALUES_K,
             NODE_SIGMAS_K,
+            NODE_LOG_DENSITY_SCALE_DIMENSIONLESS,
         })
     }
 }
@@ -5204,6 +5250,7 @@ impl<'a> DCL<'a> {
     pub const VT_LEVEL_LN_B_CORRELATION: ::flatbuffers::VOffsetT = 50;
     pub const VT_MEAN_LEVEL_SIGMA_K: ::flatbuffers::VOffsetT = 52;
     pub const VT_STATES: ::flatbuffers::VOffsetT = 54;
+    pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 56;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5222,6 +5269,7 @@ impl<'a> DCL<'a> {
         builder.add_EARTH_ROTATION_RAD_S(args.EARTH_ROTATION_RAD_S);
         builder.add_GM_M3_S2(args.GM_M3_S2);
         builder.add_CREATED_AT_MS(args.CREATED_AT_MS);
+        if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.STATES { builder.add_STATES(x); }
         if let Some(x) = args.HISTORY { builder.add_HISTORY(x); }
         if let Some(x) = args.LEVELS { builder.add_LEVELS(x); }
@@ -5304,6 +5352,9 @@ impl<'a> DCL<'a> {
         let STATES = self.STATES().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let PROVENANCE = self.PROVENANCE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         DCLT {
             ID,
             CREATED_AT_MS,
@@ -5331,6 +5382,7 @@ impl<'a> DCL<'a> {
             LEVEL_LN_B_CORRELATION,
             MEAN_LEVEL_SIGMA_K,
             STATES,
+            PROVENANCE,
         }
     }
 
@@ -5562,6 +5614,15 @@ impl<'a> DCL<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<dclStates>>(DCL::VT_STATES, None)}
     }
+
+    /// Per-record source, provider, software, license terms and lineage.
+    #[inline]
+    pub fn PROVENANCE(&self) -> Option<PVN<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PVN>>(DCL::VT_PROVENANCE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for DCL<'_> {
@@ -5596,6 +5657,7 @@ impl ::flatbuffers::Verifiable for DCL<'_> {
             .visit_field::<f64>("LEVEL_LN_B_CORRELATION", Self::VT_LEVEL_LN_B_CORRELATION, false)?
             .visit_field::<f64>("MEAN_LEVEL_SIGMA_K", Self::VT_MEAN_LEVEL_SIGMA_K, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<dclStates>>("STATES", Self::VT_STATES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
             .finish();
         Ok(())
     }
@@ -5628,6 +5690,7 @@ pub struct DCLArgs<'a> {
     pub LEVEL_LN_B_CORRELATION: f64,
     pub MEAN_LEVEL_SIGMA_K: f64,
     pub STATES: Option<::flatbuffers::WIPOffset<dclStates<'a>>>,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
 }
 
 impl<'a> Default for DCLArgs<'a> {
@@ -5660,6 +5723,7 @@ impl<'a> Default for DCLArgs<'a> {
             LEVEL_LN_B_CORRELATION: f64::NAN,
             MEAN_LEVEL_SIGMA_K: f64::NAN,
             STATES: None,
+            PROVENANCE: None,
         }
     }
 }
@@ -5801,6 +5865,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DCLBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<PVN<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PVN>>(DCL::VT_PROVENANCE, PROVENANCE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DCLBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         DCLBuilder {
@@ -5845,6 +5914,7 @@ impl ::core::fmt::Debug for DCL<'_> {
         ds.field("LEVEL_LN_B_CORRELATION", &self.LEVEL_LN_B_CORRELATION());
         ds.field("MEAN_LEVEL_SIGMA_K", &self.MEAN_LEVEL_SIGMA_K());
         ds.field("STATES", &self.STATES());
+        ds.field("PROVENANCE", &self.PROVENANCE());
         ds.finish()
     }
 }
@@ -5878,6 +5948,7 @@ pub struct DCLT {
     pub LEVEL_LN_B_CORRELATION: f64,
     pub MEAN_LEVEL_SIGMA_K: f64,
     pub STATES: Option<alloc::boxed::Box<dclStatesT>>,
+    pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
 }
 
 impl Default for DCLT {
@@ -5909,6 +5980,7 @@ impl Default for DCLT {
             LEVEL_LN_B_CORRELATION: f64::NAN,
             MEAN_LEVEL_SIGMA_K: f64::NAN,
             STATES: None,
+            PROVENANCE: None,
         }
     }
 }
@@ -5976,6 +6048,9 @@ impl DCLT {
         let STATES = self.STATES.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         DCL::create(_fbb, &DCLArgs{
             ID,
             CREATED_AT_MS,
@@ -6003,6 +6078,7 @@ impl DCLT {
             LEVEL_LN_B_CORRELATION,
             MEAN_LEVEL_SIGMA_K,
             STATES,
+            PROVENANCE,
         })
     }
 }

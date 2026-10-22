@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 type dclCorrection struct {
 	_tab flatbuffers.Table
 }
@@ -119,8 +119,9 @@ func (rcv *dclCorrection) SegmentsLength() int {
 
 /// Harmonic: segments in time order, not overlapping; an instant in no
 /// segment has dT = 0.
-/// Nodes: node times, strictly increasing. dT is linear in time between
-/// nodes and held outside them.
+/// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+/// The selected correction is linear in time between nodes and held at the
+/// first/last value outside the node span.
 func (rcv *dclCorrection) NODE_TIMES_MS(j int) int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -146,8 +147,9 @@ func (rcv *dclCorrection) NodeTimesMsLength() int {
 	return rcv.NODE_TIMES_MSLength()
 }
 
-/// Nodes: node times, strictly increasing. dT is linear in time between
-/// nodes and held outside them.
+/// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+/// The selected correction is linear in time between nodes and held at the
+/// first/last value outside the node span.
 func (rcv *dclCorrection) MutateNODE_TIMES_MS(j int, n int64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -291,8 +293,62 @@ func (rcv *dclCorrection) MutateNodeSigmasK(j int, n float64) bool {
 	return rcv.MutateNODE_SIGMAS_K(j, n)
 }
 
+/// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+/// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+/// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+/// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+/// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+/// include the producer's forecast decay through at least 48 hours after
+/// that epoch. Interpolate those nodes; do not apply another decay in the
+/// consumer. After the final published node, hold its value.
+func (rcv *dclCorrection) NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *dclCorrection) NodeLogDensityScaleDimensionless(j int) float64 {
+	return rcv.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(j)
+}
+
+func (rcv *dclCorrection) NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *dclCorrection) NodeLogDensityScaleDimensionlessLength() int {
+	return rcv.NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength()
+}
+
+/// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+/// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+/// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+/// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+/// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+/// include the producer's forecast decay through at least 48 hours after
+/// that epoch. Interpolate those nodes; do not apply another decay in the
+/// consumer. After the final published node, hold its value.
+func (rcv *dclCorrection) MutateNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *dclCorrection) MutateNodeLogDensityScaleDimensionless(j int, n float64) bool {
+	return rcv.MutateNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(j, n)
+}
+
 func dclCorrectionStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(8)
 }
 func dclCorrectionAddFORM(builder *flatbuffers.Builder, FORM dclCorrectionForm) {
 	builder.PrependByteSlot(0, byte(FORM), 0)
@@ -365,6 +421,18 @@ func dclCorrectionStartNODE_SIGMAS_KVector(builder *flatbuffers.Builder, numElem
 }
 func dclCorrectionStartNodeSigmasKVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return dclCorrectionStartNODE_SIGMAS_KVector(builder, numElems)
+}
+func dclCorrectionAddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder *flatbuffers.Builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(NODE_LOG_DENSITY_SCALE_DIMENSIONLESS), 0)
+}
+func dclCorrectionAddNodeLogDensityScaleDimensionless(builder *flatbuffers.Builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS flatbuffers.UOffsetT) {
+	dclCorrectionAddNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
+}
+func dclCorrectionStartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func dclCorrectionStartNodeLogDensityScaleDimensionlessVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return dclCorrectionStartNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(builder, numElems)
 }
 func dclCorrectionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -5,6 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
 enum FluxQualifier {
   OBSERVED(0),
@@ -168,10 +169,12 @@ class SPW {
   ///  81-day trailing average of adjusted F10.7
   double get F107_ADJ_LAST81 => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
   double get f107AdjLast81 => F107_ADJ_LAST81;
+  ///  Per-record source, provider, software, license terms and lineage.
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 66);
 
   @override
   String toString() {
-    return 'SPW{DATE: ${DATE}, BSRN: ${BSRN}, ND: ${ND}, KP1: ${KP1}, KP2: ${KP2}, KP3: ${KP3}, KP4: ${KP4}, KP5: ${KP5}, KP6: ${KP6}, KP7: ${KP7}, KP8: ${KP8}, kpSum: ${kpSum}, AP1: ${AP1}, AP2: ${AP2}, AP3: ${AP3}, AP4: ${AP4}, AP5: ${AP5}, AP6: ${AP6}, AP7: ${AP7}, AP8: ${AP8}, apAvg: ${apAvg}, CP: ${CP}, C9: ${C9}, ISN: ${ISN}, f107Obs: ${f107Obs}, f107Adj: ${f107Adj}, f107DataType: ${f107DataType}, f107ObsCenter81: ${f107ObsCenter81}, f107ObsLast81: ${f107ObsLast81}, f107AdjCenter81: ${f107AdjCenter81}, f107AdjLast81: ${f107AdjLast81}}';
+    return 'SPW{DATE: ${DATE}, BSRN: ${BSRN}, ND: ${ND}, KP1: ${KP1}, KP2: ${KP2}, KP3: ${KP3}, KP4: ${KP4}, KP5: ${KP5}, KP6: ${KP6}, KP7: ${KP7}, KP8: ${KP8}, kpSum: ${kpSum}, AP1: ${AP1}, AP2: ${AP2}, AP3: ${AP3}, AP4: ${AP4}, AP5: ${AP5}, AP6: ${AP6}, AP7: ${AP7}, AP8: ${AP8}, apAvg: ${apAvg}, CP: ${CP}, C9: ${C9}, ISN: ${ISN}, f107Obs: ${f107Obs}, f107Adj: ${f107Adj}, f107DataType: ${f107DataType}, f107ObsCenter81: ${f107ObsCenter81}, f107ObsLast81: ${f107ObsLast81}, f107AdjCenter81: ${f107AdjCenter81}, f107AdjLast81: ${f107AdjLast81}, PROVENANCE: ${PROVENANCE}}';
   }
 }
 
@@ -189,7 +192,7 @@ class SPWBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(31);
+    fbBuilder.startTable(32);
   }
 
   int addDateOffset(int? offset) {
@@ -316,6 +319,10 @@ class SPWBuilder {
     fbBuilder.addFloat32(30, F107_ADJ_LAST81);
     return fbBuilder.offset;
   }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -354,6 +361,7 @@ class SPWObjectBuilder extends fb.ObjectBuilder {
   final double? _F107_OBS_LAST81;
   final double? _F107_ADJ_CENTER81;
   final double? _F107_ADJ_LAST81;
+  final PVNObjectBuilder? _PROVENANCE;
 
   SPWObjectBuilder({
     String? DATE,
@@ -396,6 +404,7 @@ class SPWObjectBuilder extends fb.ObjectBuilder {
     double? f107AdjCenter81,
     double? F107_ADJ_LAST81,
     double? f107AdjLast81,
+    PVNObjectBuilder? PROVENANCE,
   })
       : _DATE = DATE,
         _BSRN = BSRN,
@@ -427,14 +436,16 @@ class SPWObjectBuilder extends fb.ObjectBuilder {
         _F107_OBS_CENTER81 = f107ObsCenter81 ?? F107_OBS_CENTER81,
         _F107_OBS_LAST81 = f107ObsLast81 ?? F107_OBS_LAST81,
         _F107_ADJ_CENTER81 = f107AdjCenter81 ?? F107_ADJ_CENTER81,
-        _F107_ADJ_LAST81 = f107AdjLast81 ?? F107_ADJ_LAST81;
+        _F107_ADJ_LAST81 = f107AdjLast81 ?? F107_ADJ_LAST81,
+        _PROVENANCE = PROVENANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? DATEOffset = _DATE == null ? null
         : fbBuilder.writeString(_DATE!);
-    fbBuilder.startTable(31);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(32);
     fbBuilder.addOffset(0, DATEOffset);
     fbBuilder.addInt32(1, _BSRN);
     fbBuilder.addInt32(2, _ND);
@@ -466,6 +477,7 @@ class SPWObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat32(28, _F107_OBS_LAST81);
     fbBuilder.addFloat32(29, _F107_ADJ_CENTER81);
     fbBuilder.addFloat32(30, _F107_ADJ_LAST81);
+    fbBuilder.addOffset(31, PROVENANCEOffset);
     return fbBuilder.endTable();
   }
 

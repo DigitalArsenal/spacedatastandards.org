@@ -601,8 +601,27 @@ func (rcv *DCL) States(obj *dclStates) *dclStates {
 }
 
 /// OrbitalEnergy and DragWork: the states and their results.
+/// Per-record source, provider, software, license terms and lineage.
+func (rcv *DCL) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *DCL) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Per-record source, provider, software, license terms and lineage.
 func DCLStart(builder *flatbuffers.Builder) {
-	builder.StartObject(26)
+	builder.StartObject(27)
 }
 func DCLAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -783,6 +802,12 @@ func DCLAddSTATES(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
 }
 func DCLAddStates(builder *flatbuffers.Builder, STATES flatbuffers.UOffsetT) {
 	DCLAddSTATES(builder, STATES)
+}
+func DCLAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func DCLAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	DCLAddPROVENANCE(builder, PROVENANCE)
 }
 func DCLEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
