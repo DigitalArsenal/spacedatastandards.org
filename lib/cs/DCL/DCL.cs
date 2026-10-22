@@ -101,6 +101,8 @@ public struct DCL : IFlatbufferObject
   public double MEAN_LEVEL_SIGMA_K { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
   /// OrbitalEnergy and DragWork: the states and their results.
   public dclStates? STATES { get { int o = __p.__offset(54); return o != 0 ? (dclStates?)(new dclStates()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Per-record source, provider, software, license terms and lineage.
+  public PVN? PROVENANCE { get { int o = __p.__offset(56); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<DCL> CreateDCL(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -128,14 +130,16 @@ public struct DCL : IFlatbufferObject
       VectorOffset HISTORYOffset = default(VectorOffset),
       double LEVEL_LN_B_CORRELATION = Double.NaN,
       double MEAN_LEVEL_SIGMA_K = Double.NaN,
-      Offset<dclStates> STATESOffset = default(Offset<dclStates>)) {
-    builder.StartTable(26);
+      Offset<dclStates> STATESOffset = default(Offset<dclStates>),
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
+    builder.StartTable(27);
     DCL.AddMEAN_LEVEL_SIGMA_K(builder, MEAN_LEVEL_SIGMA_K);
     DCL.AddLEVEL_LN_B_CORRELATION(builder, LEVEL_LN_B_CORRELATION);
     DCL.AddBALLISTIC_COEFFICIENT_M2_KG(builder, BALLISTIC_COEFFICIENT_M2_KG);
     DCL.AddEARTH_ROTATION_RAD_S(builder, EARTH_ROTATION_RAD_S);
     DCL.AddGM_M3_S2(builder, GM_M3_S2);
     DCL.AddCREATED_AT_MS(builder, CREATED_AT_MS);
+    DCL.AddPROVENANCE(builder, PROVENANCEOffset);
     DCL.AddSTATES(builder, STATESOffset);
     DCL.AddHISTORY(builder, HISTORYOffset);
     DCL.AddLEVELS(builder, LEVELSOffset);
@@ -159,7 +163,7 @@ public struct DCL : IFlatbufferObject
     return DCL.EndDCL(builder);
   }
 
-  public static void StartDCL(FlatBufferBuilder builder) { builder.StartTable(26); }
+  public static void StartDCL(FlatBufferBuilder builder) { builder.StartTable(27); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCREATED_AT_MS(FlatBufferBuilder builder, long CREATED_AT_MS) { builder.AddLong(1, CREATED_AT_MS, 0); }
   public static void AddPRODUCER(FlatBufferBuilder builder, StringOffset PRODUCEROffset) { builder.AddOffset(2, PRODUCEROffset.Value, 0); }
@@ -206,6 +210,7 @@ public struct DCL : IFlatbufferObject
   public static void AddLEVEL_LN_B_CORRELATION(FlatBufferBuilder builder, double LEVEL_LN_B_CORRELATION) { builder.AddDouble(23, LEVEL_LN_B_CORRELATION, Double.NaN); }
   public static void AddMEAN_LEVEL_SIGMA_K(FlatBufferBuilder builder, double MEAN_LEVEL_SIGMA_K) { builder.AddDouble(24, MEAN_LEVEL_SIGMA_K, Double.NaN); }
   public static void AddSTATES(FlatBufferBuilder builder, Offset<dclStates> STATESOffset) { builder.AddOffset(25, STATESOffset.Value, 0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(26, PROVENANCEOffset.Value, 0); }
   public static Offset<DCL> EndDCL(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DCL>(o);
@@ -248,6 +253,7 @@ public struct DCL : IFlatbufferObject
     _o.LEVEL_LN_B_CORRELATION = this.LEVEL_LN_B_CORRELATION;
     _o.MEAN_LEVEL_SIGMA_K = this.MEAN_LEVEL_SIGMA_K;
     _o.STATES = this.STATES.HasValue ? this.STATES.Value.UnPack() : null;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
   }
   public static Offset<DCL> Pack(FlatBufferBuilder builder, DCLT _o) {
     if (_o == null) return default(Offset<DCL>);
@@ -287,6 +293,7 @@ public struct DCL : IFlatbufferObject
       _HISTORY = CreateHISTORYVector(builder, __HISTORY);
     }
     var _STATES = _o.STATES == null ? default(Offset<dclStates>) : dclStates.Pack(builder, _o.STATES);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
     return CreateDCL(
       builder,
       _ID,
@@ -314,7 +321,8 @@ public struct DCL : IFlatbufferObject
       _HISTORY,
       _o.LEVEL_LN_B_CORRELATION,
       _o.MEAN_LEVEL_SIGMA_K,
-      _STATES);
+      _STATES,
+      _PROVENANCE);
   }
 }
 
@@ -346,6 +354,7 @@ public class DCLT
   public double LEVEL_LN_B_CORRELATION { get; set; }
   public double MEAN_LEVEL_SIGMA_K { get; set; }
   public dclStatesT STATES { get; set; }
+  public PVNT PROVENANCE { get; set; }
 
   public DCLT() {
     this.ID = null;
@@ -374,6 +383,7 @@ public class DCLT
     this.LEVEL_LN_B_CORRELATION = Double.NaN;
     this.MEAN_LEVEL_SIGMA_K = Double.NaN;
     this.STATES = null;
+    this.PROVENANCE = null;
   }
   public static DCLT DeserializeFromBinary(byte[] fbBuffer) {
     return DCL.GetRootAsDCL(new ByteBuffer(fbBuffer)).UnPack();
@@ -417,6 +427,7 @@ static public class DCLVerify
       && verifier.VerifyField(tablePos, 50 /*LEVEL_LN_B_CORRELATION*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 52 /*MEAN_LEVEL_SIGMA_K*/, 8 /*double*/, 8, false)
       && verifier.VerifyTable(tablePos, 54 /*STATES*/, dclStatesVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 56 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

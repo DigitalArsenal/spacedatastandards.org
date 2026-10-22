@@ -87,6 +87,8 @@ public struct SPW : IFlatbufferObject
   public float F107_ADJ_CENTER81 { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   /// 81-day trailing average of adjusted F10.7
   public float F107_ADJ_LAST81 { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  /// Per-record source, provider, software, license terms and lineage.
+  public PVN? PROVENANCE { get { int o = __p.__offset(66); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<SPW> CreateSPW(FlatBufferBuilder builder,
       StringOffset DATEOffset = default(StringOffset),
@@ -119,8 +121,10 @@ public struct SPW : IFlatbufferObject
       float F107_OBS_CENTER81 = 0.0f,
       float F107_OBS_LAST81 = 0.0f,
       float F107_ADJ_CENTER81 = 0.0f,
-      float F107_ADJ_LAST81 = 0.0f) {
-    builder.StartTable(31);
+      float F107_ADJ_LAST81 = 0.0f,
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
+    builder.StartTable(32);
+    SPW.AddPROVENANCE(builder, PROVENANCEOffset);
     SPW.AddF107_ADJ_LAST81(builder, F107_ADJ_LAST81);
     SPW.AddF107_ADJ_CENTER81(builder, F107_ADJ_CENTER81);
     SPW.AddF107_OBS_LAST81(builder, F107_OBS_LAST81);
@@ -155,7 +159,7 @@ public struct SPW : IFlatbufferObject
     return SPW.EndSPW(builder);
   }
 
-  public static void StartSPW(FlatBufferBuilder builder) { builder.StartTable(31); }
+  public static void StartSPW(FlatBufferBuilder builder) { builder.StartTable(32); }
   public static void AddDATE(FlatBufferBuilder builder, StringOffset DATEOffset) { builder.AddOffset(0, DATEOffset.Value, 0); }
   public static void AddBSRN(FlatBufferBuilder builder, int BSRN) { builder.AddInt(1, BSRN, 0); }
   public static void AddND(FlatBufferBuilder builder, int ND) { builder.AddInt(2, ND, 0); }
@@ -187,6 +191,7 @@ public struct SPW : IFlatbufferObject
   public static void AddF107_OBS_LAST81(FlatBufferBuilder builder, float F107_OBS_LAST81) { builder.AddFloat(28, F107_OBS_LAST81, 0.0f); }
   public static void AddF107_ADJ_CENTER81(FlatBufferBuilder builder, float F107_ADJ_CENTER81) { builder.AddFloat(29, F107_ADJ_CENTER81, 0.0f); }
   public static void AddF107_ADJ_LAST81(FlatBufferBuilder builder, float F107_ADJ_LAST81) { builder.AddFloat(30, F107_ADJ_LAST81, 0.0f); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(31, PROVENANCEOffset.Value, 0); }
   public static Offset<SPW> EndSPW(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SPW>(o);
@@ -230,10 +235,12 @@ public struct SPW : IFlatbufferObject
     _o.F107_OBS_LAST81 = this.F107_OBS_LAST81;
     _o.F107_ADJ_CENTER81 = this.F107_ADJ_CENTER81;
     _o.F107_ADJ_LAST81 = this.F107_ADJ_LAST81;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
   }
   public static Offset<SPW> Pack(FlatBufferBuilder builder, SPWT _o) {
     if (_o == null) return default(Offset<SPW>);
     var _DATE = _o.DATE == null ? default(StringOffset) : builder.CreateString(_o.DATE);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
     return CreateSPW(
       builder,
       _DATE,
@@ -266,7 +273,8 @@ public struct SPW : IFlatbufferObject
       _o.F107_OBS_CENTER81,
       _o.F107_OBS_LAST81,
       _o.F107_ADJ_CENTER81,
-      _o.F107_ADJ_LAST81);
+      _o.F107_ADJ_LAST81,
+      _PROVENANCE);
   }
 }
 
@@ -303,6 +311,7 @@ public class SPWT
   public float F107_OBS_LAST81 { get; set; }
   public float F107_ADJ_CENTER81 { get; set; }
   public float F107_ADJ_LAST81 { get; set; }
+  public PVNT PROVENANCE { get; set; }
 
   public SPWT() {
     this.DATE = null;
@@ -336,6 +345,7 @@ public class SPWT
     this.F107_OBS_LAST81 = 0.0f;
     this.F107_ADJ_CENTER81 = 0.0f;
     this.F107_ADJ_LAST81 = 0.0f;
+    this.PROVENANCE = null;
   }
   public static SPWT DeserializeFromBinary(byte[] fbBuffer) {
     return SPW.GetRootAsSPW(new ByteBuffer(fbBuffer)).UnPack();
@@ -384,6 +394,7 @@ static public class SPWVerify
       && verifier.VerifyField(tablePos, 60 /*F107_OBS_LAST81*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 62 /*F107_ADJ_CENTER81*/, 4 /*float*/, 4, false)
       && verifier.VerifyField(tablePos, 64 /*F107_ADJ_LAST81*/, 4 /*float*/, 4, false)
+      && verifier.VerifyTable(tablePos, 66 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -1,6 +1,7 @@
 import * as flatbuffers from 'flatbuffers';
 import { ATM, ATMT } from './ATM.js';
 import { PRWJB2008IndicesTable, PRWJB2008IndicesTableT } from './PRWJB2008IndicesTable.js';
+import { PVN, PVNT } from './PVN.js';
 import { SPW, SPWT } from './SPW.js';
 import { dclCorrection, dclCorrectionT } from './dclCorrection.js';
 import { dclFitStatistics, dclFitStatisticsT } from './dclFitStatistics.js';
@@ -107,6 +108,10 @@ export declare class DCL implements flatbuffers.IUnpackableObject<DCLT> {
      * OrbitalEnergy and DragWork: the states and their results.
      */
     STATES(obj?: dclStates): dclStates | null;
+    /**
+     * Per-record source, provider, software, license terms and lineage.
+     */
+    PROVENANCE(obj?: PVN): PVN | null;
     static startDCL(builder: flatbuffers.Builder): void;
     static addId(builder: flatbuffers.Builder, IDOffset: flatbuffers.Offset): void;
     static addCreatedAtMs(builder: flatbuffers.Builder, CREATED_AT_MS: bigint): void;
@@ -142,6 +147,7 @@ export declare class DCL implements flatbuffers.IUnpackableObject<DCLT> {
     static addLevelLnBCorrelation(builder: flatbuffers.Builder, LEVEL_LN_B_CORRELATION: number): void;
     static addMeanLevelSigmaK(builder: flatbuffers.Builder, MEAN_LEVEL_SIGMA_K: number): void;
     static addStates(builder: flatbuffers.Builder, STATESOffset: flatbuffers.Offset): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static endDCL(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishDCLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedDCLBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -175,7 +181,8 @@ export declare class DCLT implements flatbuffers.IGeneratedObject {
     LEVEL_LN_B_CORRELATION: number;
     MEAN_LEVEL_SIGMA_K: number;
     STATES: dclStatesT | null;
-    constructor(ID?: string | Uint8Array | null, CREATED_AT_MS?: bigint, PRODUCER?: string | Uint8Array | null, PRODUCT?: dclProduct, ATMOSPHERE?: ATMT | null, JB2008_DRIVERS?: PRWJB2008IndicesTableT | null, SPACE_WEATHER?: (SPWT)[], GRAVITY_FIELD?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM_M3_S2?: number, EARTH_ROTATION_RAD_S?: number, BALLISTIC_COEFFICIENT_M2_KG?: number, SETTINGS?: dclSettingsT | null, CORRECTION?: dclCorrectionT | null, STATUS?: dclStatus, ERROR_CODE?: string | Uint8Array | null, ERROR_MESSAGE?: string | Uint8Array | null, POINTS?: dclPointsT | null, OBJECTS?: (dclObjectT)[], FIT?: dclFitStatisticsT | null, LEVELS?: (dclLevelT)[], HISTORY?: (dclIterationT)[], LEVEL_LN_B_CORRELATION?: number, MEAN_LEVEL_SIGMA_K?: number, STATES?: dclStatesT | null);
+    PROVENANCE: PVNT | null;
+    constructor(ID?: string | Uint8Array | null, CREATED_AT_MS?: bigint, PRODUCER?: string | Uint8Array | null, PRODUCT?: dclProduct, ATMOSPHERE?: ATMT | null, JB2008_DRIVERS?: PRWJB2008IndicesTableT | null, SPACE_WEATHER?: (SPWT)[], GRAVITY_FIELD?: string | Uint8Array | null, GRAVITY_DEGREE?: number, GRAVITY_ORDER?: number, GM_M3_S2?: number, EARTH_ROTATION_RAD_S?: number, BALLISTIC_COEFFICIENT_M2_KG?: number, SETTINGS?: dclSettingsT | null, CORRECTION?: dclCorrectionT | null, STATUS?: dclStatus, ERROR_CODE?: string | Uint8Array | null, ERROR_MESSAGE?: string | Uint8Array | null, POINTS?: dclPointsT | null, OBJECTS?: (dclObjectT)[], FIT?: dclFitStatisticsT | null, LEVELS?: (dclLevelT)[], HISTORY?: (dclIterationT)[], LEVEL_LN_B_CORRELATION?: number, MEAN_LEVEL_SIGMA_K?: number, STATES?: dclStatesT | null, PROVENANCE?: PVNT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DCL.d.ts.map

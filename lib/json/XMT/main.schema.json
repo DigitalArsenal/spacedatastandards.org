@@ -3151,6 +3151,10 @@
         "F107_ADJ_LAST81" : {
                 "type" : "number",
                 "description" : "81-day trailing average of adjusted F10.7"
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Per-record source, provider, software, license terms and lineage."
               }
       },
       "additionalProperties" : false

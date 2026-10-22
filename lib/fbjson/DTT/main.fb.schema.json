@@ -259,7 +259,7 @@
         },
         "CONTENT_ENCODING": {
           "type": "string",
-          "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+          "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here.",
           "x-flatbuffer-type": "string"
         },
         "MEDIA_TYPE": {

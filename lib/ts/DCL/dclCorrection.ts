@@ -9,7 +9,7 @@ import { dclHarmonicSegment, dclHarmonicSegmentT } from './dclHarmonicSegment.js
 
 
 /**
- * An exospheric-temperature correction.
+ * An exospheric-temperature correction or a dimensionless log-density scale.
  */
 export class dclCorrection implements flatbuffers.IUnpackableObject<dclCorrectionT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -57,8 +57,9 @@ segmentsLength():number {
 }
 
 /**
- * Nodes: node times, strictly increasing. dT is linear in time between
- * nodes and held outside them.
+ * Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+ * The selected correction is linear in time between nodes and held at the
+ * first/last value outside the node span.
  */
 NODE_TIMES_MS(index: number):bigint|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
@@ -129,8 +130,33 @@ nodeSigmasKArray():Float64Array|null {
   return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+ * one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+ * rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+ * NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+ * SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+ * include the producer's forecast decay through at least 48 hours after
+ * that epoch. Interpolate those nodes; do not apply another decay in the
+ * consumer. After the final published node, hold its value.
+ */
+NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+nodeLogDensityScaleDimensionlessLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+nodeLogDensityScaleDimensionlessArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
 static startdclCorrection(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(8);
 }
 
 static addForm(builder:flatbuffers.Builder, FORM:dclCorrectionForm) {
@@ -236,12 +262,33 @@ static startNodeSigmasKVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(8, numElems, 8);
 }
 
+static addNodeLogDensityScaleDimensionless(builder:flatbuffers.Builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset, 0);
+}
+
+static createNodeLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createNodeLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createNodeLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startNodeLogDensityScaleDimensionlessVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
 static enddclCorrection(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createdclCorrection(builder:flatbuffers.Builder, FORM:dclCorrectionForm, DEGREE:number, SEGMENTSOffset:flatbuffers.Offset, NODE_TIMES_MSOffset:flatbuffers.Offset, NODE_ALTITUDES_KMOffset:flatbuffers.Offset, NODE_VALUES_KOffset:flatbuffers.Offset, NODE_SIGMAS_KOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createdclCorrection(builder:flatbuffers.Builder, FORM:dclCorrectionForm, DEGREE:number, SEGMENTSOffset:flatbuffers.Offset, NODE_TIMES_MSOffset:flatbuffers.Offset, NODE_ALTITUDES_KMOffset:flatbuffers.Offset, NODE_VALUES_KOffset:flatbuffers.Offset, NODE_SIGMAS_KOffset:flatbuffers.Offset, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset:flatbuffers.Offset):flatbuffers.Offset {
   dclCorrection.startdclCorrection(builder);
   dclCorrection.addForm(builder, FORM);
   dclCorrection.addDegree(builder, DEGREE);
@@ -250,6 +297,7 @@ static createdclCorrection(builder:flatbuffers.Builder, FORM:dclCorrectionForm, 
   dclCorrection.addNodeAltitudesKm(builder, NODE_ALTITUDES_KMOffset);
   dclCorrection.addNodeValuesK(builder, NODE_VALUES_KOffset);
   dclCorrection.addNodeSigmasK(builder, NODE_SIGMAS_KOffset);
+  dclCorrection.addNodeLogDensityScaleDimensionless(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
   return dclCorrection.enddclCorrection(builder);
 }
 
@@ -261,7 +309,8 @@ unpack(): dclCorrectionT {
     this.bb!.createScalarList<bigint>(this.NODE_TIMES_MS.bind(this), this.nodeTimesMsLength()),
     this.bb!.createScalarList<number>(this.NODE_ALTITUDES_KM.bind(this), this.nodeAltitudesKmLength()),
     this.bb!.createScalarList<number>(this.NODE_VALUES_K.bind(this), this.nodeValuesKLength()),
-    this.bb!.createScalarList<number>(this.NODE_SIGMAS_K.bind(this), this.nodeSigmasKLength())
+    this.bb!.createScalarList<number>(this.NODE_SIGMAS_K.bind(this), this.nodeSigmasKLength()),
+    this.bb!.createScalarList<number>(this.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS.bind(this), this.nodeLogDensityScaleDimensionlessLength())
   );
 }
 
@@ -274,6 +323,7 @@ unpackTo(_o: dclCorrectionT): void {
   _o.NODE_ALTITUDES_KM = this.bb!.createScalarList<number>(this.NODE_ALTITUDES_KM.bind(this), this.nodeAltitudesKmLength());
   _o.NODE_VALUES_K = this.bb!.createScalarList<number>(this.NODE_VALUES_K.bind(this), this.nodeValuesKLength());
   _o.NODE_SIGMAS_K = this.bb!.createScalarList<number>(this.NODE_SIGMAS_K.bind(this), this.nodeSigmasKLength());
+  _o.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = this.bb!.createScalarList<number>(this.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS.bind(this), this.nodeLogDensityScaleDimensionlessLength());
 }
 }
 
@@ -285,7 +335,8 @@ constructor(
   public NODE_TIMES_MS: (bigint)[] = [],
   public NODE_ALTITUDES_KM: (number)[] = [],
   public NODE_VALUES_K: (number)[] = [],
-  public NODE_SIGMAS_K: (number)[] = []
+  public NODE_SIGMAS_K: (number)[] = [],
+  public NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: (number)[] = []
 ){}
 
 
@@ -295,6 +346,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NODE_ALTITUDES_KM = dclCorrection.createNodeAltitudesKmVector(builder, this.NODE_ALTITUDES_KM);
   const NODE_VALUES_K = dclCorrection.createNodeValuesKVector(builder, this.NODE_VALUES_K);
   const NODE_SIGMAS_K = dclCorrection.createNodeSigmasKVector(builder, this.NODE_SIGMAS_K);
+  const NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = dclCorrection.createNodeLogDensityScaleDimensionlessVector(builder, this.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS);
 
   return dclCorrection.createdclCorrection(builder,
     this.FORM,
@@ -303,7 +355,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     NODE_TIMES_MS,
     NODE_ALTITUDES_KM,
     NODE_VALUES_K,
-    NODE_SIGMAS_K
+    NODE_SIGMAS_K,
+    NODE_LOG_DENSITY_SCALE_DIMENSIONLESS
   );
 }
 }

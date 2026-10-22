@@ -4,29 +4,34 @@ package DCL
 
 import "strconv"
 
-/// Form of a temperature correction. Append new values only; never reorder or
+/// Form of a density-model correction. Append new values only; never reorder or
 /// reuse existing values.
 type dclCorrectionForm byte
 
 const (
 	/// No correction (dT = 0).
-	dclCorrectionFormNone     dclCorrectionForm = 0
+	dclCorrectionFormNone            dclCorrectionForm = 0
 	/// Spherical harmonics in latitude and local solar time per time segment.
-	dclCorrectionFormHarmonic dclCorrectionForm = 1
-	/// Values at time nodes, optionally at altitude nodes.
-	dclCorrectionFormNodes    dclCorrectionForm = 2
+	dclCorrectionFormHarmonic        dclCorrectionForm = 1
+	/// Temperature values, K, at time nodes, optionally at altitude nodes.
+	dclCorrectionFormNodes           dclCorrectionForm = 2
+	/// Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+	/// Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+	dclCorrectionFormLogDensityNodes dclCorrectionForm = 3
 )
 
 var EnumNamesdclCorrectionForm = map[dclCorrectionForm]string{
-	dclCorrectionFormNone:     "None",
-	dclCorrectionFormHarmonic: "Harmonic",
-	dclCorrectionFormNodes:    "Nodes",
+	dclCorrectionFormNone:            "None",
+	dclCorrectionFormHarmonic:        "Harmonic",
+	dclCorrectionFormNodes:           "Nodes",
+	dclCorrectionFormLogDensityNodes: "LogDensityNodes",
 }
 
 var EnumValuesdclCorrectionForm = map[string]dclCorrectionForm{
-	"None":     dclCorrectionFormNone,
-	"Harmonic": dclCorrectionFormHarmonic,
-	"Nodes":    dclCorrectionFormNodes,
+	"None":            dclCorrectionFormNone,
+	"Harmonic":        dclCorrectionFormHarmonic,
+	"Nodes":           dclCorrectionFormNodes,
+	"LogDensityNodes": dclCorrectionFormLogDensityNodes,
 }
 
 func (v dclCorrectionForm) String() string {

@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * An exospheric-temperature correction.
+ * An exospheric-temperature correction or a dimensionless log-density scale.
  */
 @Suppress("unused")
 class dclCorrection : Table() {
@@ -60,8 +60,9 @@ class dclCorrection : Table() {
             val o = __offset(8); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Nodes: node times, strictly increasing. dT is linear in time between
-     * nodes and held outside them.
+     * Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+     * The selected correction is linear in time between nodes and held at the
+     * first/last value outside the node span.
      */
     fun nodeTimesMs(j: Int) : Long {
         val o = __offset(10)
@@ -133,6 +134,30 @@ class dclCorrection : Table() {
         }
     val nodeSigmasKAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 8)
     fun nodeSigmasKInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 8)
+    /**
+     * LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+     * one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+     * rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+     * NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+     * SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+     * include the producer's forecast decay through at least 48 hours after
+     * that epoch. Interpolate those nodes; do not apply another decay in the
+     * consumer. After the final published node, hold its value.
+     */
+    fun nodeLogDensityScaleDimensionless(j: Int) : Double {
+        val o = __offset(18)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val nodeLogDensityScaleDimensionlessLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
+    val nodeLogDensityScaleDimensionlessAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 8)
+    fun nodeLogDensityScaleDimensionlessInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 8)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsdclCorrection(_bb: ByteBuffer): dclCorrection = getRootAsdclCorrection(_bb, dclCorrection())
@@ -140,8 +165,9 @@ class dclCorrection : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createdclCorrection(builder: FlatBufferBuilder, form: UByte, degree: UByte, segmentsOffset: Int, nodeTimesMsOffset: Int, nodeAltitudesKmOffset: Int, nodeValuesKOffset: Int, nodeSigmasKOffset: Int) : Int {
-            builder.startTable(7)
+        fun createdclCorrection(builder: FlatBufferBuilder, form: UByte, degree: UByte, segmentsOffset: Int, nodeTimesMsOffset: Int, nodeAltitudesKmOffset: Int, nodeValuesKOffset: Int, nodeSigmasKOffset: Int, nodeLogDensityScaleDimensionlessOffset: Int) : Int {
+            builder.startTable(8)
+            addNODELOGDENSITYSCALEDIMENSIONLESS(builder, nodeLogDensityScaleDimensionlessOffset)
             addNODESIGMASK(builder, nodeSigmasKOffset)
             addNODEVALUESK(builder, nodeValuesKOffset)
             addNODEALTITUDESKM(builder, nodeAltitudesKmOffset)
@@ -151,7 +177,7 @@ class dclCorrection : Table() {
             addFORM(builder, form)
             return enddclCorrection(builder)
         }
-        fun startdclCorrection(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startdclCorrection(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addFORM(builder: FlatBufferBuilder, form: UByte) = builder.addByte(0, form.toByte(), 0)
         fun addDEGREE(builder: FlatBufferBuilder, degree: UByte) = builder.addByte(1, degree.toByte(), 0)
         fun addSEGMENTS(builder: FlatBufferBuilder, segments: Int) = builder.addOffset(2, segments, 0)
@@ -199,6 +225,15 @@ class dclCorrection : Table() {
             return builder.endVector()
         }
         fun startNodeSigmasKVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addNODELOGDENSITYSCALEDIMENSIONLESS(builder: FlatBufferBuilder, nodeLogDensityScaleDimensionless: Int) = builder.addOffset(7, nodeLogDensityScaleDimensionless, 0)
+        fun createNodeLogDensityScaleDimensionlessVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startNodeLogDensityScaleDimensionlessVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun enddclCorrection(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -10,7 +10,8 @@ import './main_generated.dart';
 ///  Density Calibration (DCL)
 ///  Description
 ///  A calibration of a thermospheric density model and the results computed
-///  with it. A calibration is a correction to the model's exospheric
+///  with it. A calibration may be a dimensionless common-mode log-density
+///  scale for NRLMSISE-00, or a correction to the model's exospheric
 ///  temperature (added where the model adds its geomagnetic term, so a
 ///  constant correction is the same as raising every hourly Dst-derived
 ///  temperature change by that amount), estimated either from observed
@@ -39,7 +40,8 @@ import './main_generated.dart';
 ///  (density, Mach, heating) along an entry trajectory; a DCL density
 ///  evaluation along the same trajectory supplies its calibrated density.
 ///
-///  Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+///  Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+///  log-density scales are dimensionless ln(corrected density / model density).
 ///  What a record computes. Append new values only; never reorder or reuse
 ///  existing values.
 enum dclProduct {
@@ -86,12 +88,13 @@ class _dclProductReader extends fb.Reader<dclProduct> {
       dclProduct.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Form of a temperature correction. Append new values only; never reorder or
+///  Form of a density-model correction. Append new values only; never reorder or
 ///  reuse existing values.
 enum dclCorrectionForm {
   None(0),
   Harmonic(1),
-  Nodes(2);
+  Nodes(2),
+  LogDensityNodes(3);
 
   final int value;
   const dclCorrectionForm(this.value);
@@ -101,6 +104,7 @@ enum dclCorrectionForm {
       case 0: return dclCorrectionForm.None;
       case 1: return dclCorrectionForm.Harmonic;
       case 2: return dclCorrectionForm.Nodes;
+      case 3: return dclCorrectionForm.LogDensityNodes;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -109,7 +113,7 @@ enum dclCorrectionForm {
       value == null ? null : dclCorrectionForm.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 2;
+  static const int maxValue = 3;
   static const fb.Reader<dclCorrectionForm> reader = _dclCorrectionFormReader();
 }
 
@@ -543,7 +547,7 @@ class dclLevelObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  An exospheric-temperature correction.
+///  An exospheric-temperature correction or a dimensionless log-density scale.
 class dclCorrection {
   dclCorrection._(this._bc, this._bcOffset);
   factory dclCorrection(List<int> bytes) {
@@ -562,8 +566,9 @@ class dclCorrection {
   ///  Harmonic: segments in time order, not overlapping; an instant in no
   ///  segment has dT = 0.
   List<dclHarmonicSegment>? get SEGMENTS => const fb.ListReader<dclHarmonicSegment>(dclHarmonicSegment.reader).vTableGetNullable(_bc, _bcOffset, 8);
-  ///  Nodes: node times, strictly increasing. dT is linear in time between
-  ///  nodes and held outside them.
+  ///  Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+  ///  The selected correction is linear in time between nodes and held at the
+  ///  first/last value outside the node span.
   List<int>? get NODE_TIMES_MS => const fb.ListReader<int>(fb.Int64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
   List<int>? get nodeTimesMs => NODE_TIMES_MS;
   ///  Nodes: altitude nodes, km, strictly increasing; empty = one global
@@ -580,10 +585,20 @@ class dclCorrection {
   ///  estimated.
   List<double>? get NODE_SIGMAS_K => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 16);
   List<double>? get nodeSigmasK => NODE_SIGMAS_K;
+  ///  LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+  ///  one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+  ///  rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+  ///  NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+  ///  SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+  ///  include the producer's forecast decay through at least 48 hours after
+  ///  that epoch. Interpolate those nodes; do not apply another decay in the
+  ///  consumer. After the final published node, hold its value.
+  List<double>? get NODE_LOG_DENSITY_SCALE_DIMENSIONLESS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 18);
+  List<double>? get nodeLogDensityScaleDimensionless => NODE_LOG_DENSITY_SCALE_DIMENSIONLESS;
 
   @override
   String toString() {
-    return 'dclCorrection{FORM: ${FORM}, DEGREE: ${DEGREE}, SEGMENTS: ${SEGMENTS}, nodeTimesMs: ${nodeTimesMs}, nodeAltitudesKm: ${nodeAltitudesKm}, nodeValuesK: ${nodeValuesK}, nodeSigmasK: ${nodeSigmasK}}';
+    return 'dclCorrection{FORM: ${FORM}, DEGREE: ${DEGREE}, SEGMENTS: ${SEGMENTS}, nodeTimesMs: ${nodeTimesMs}, nodeAltitudesKm: ${nodeAltitudesKm}, nodeValuesK: ${nodeValuesK}, nodeSigmasK: ${nodeSigmasK}, nodeLogDensityScaleDimensionless: ${nodeLogDensityScaleDimensionless}}';
   }
 }
 
@@ -601,7 +616,7 @@ class dclCorrectionBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(8);
   }
 
   int addForm(dclCorrectionForm? FORM) {
@@ -632,6 +647,10 @@ class dclCorrectionBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addNodeLogDensityScaleDimensionlessOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -646,6 +665,7 @@ class dclCorrectionObjectBuilder extends fb.ObjectBuilder {
   final List<double>? _NODE_ALTITUDES_KM;
   final List<double>? _NODE_VALUES_K;
   final List<double>? _NODE_SIGMAS_K;
+  final List<double>? _NODE_LOG_DENSITY_SCALE_DIMENSIONLESS;
 
   dclCorrectionObjectBuilder({
     dclCorrectionForm? FORM,
@@ -659,6 +679,8 @@ class dclCorrectionObjectBuilder extends fb.ObjectBuilder {
     List<double>? nodeValuesK,
     List<double>? NODE_SIGMAS_K,
     List<double>? nodeSigmasK,
+    List<double>? NODE_LOG_DENSITY_SCALE_DIMENSIONLESS,
+    List<double>? nodeLogDensityScaleDimensionless,
   })
       : _FORM = FORM,
         _DEGREE = DEGREE,
@@ -666,7 +688,8 @@ class dclCorrectionObjectBuilder extends fb.ObjectBuilder {
         _NODE_TIMES_MS = nodeTimesMs ?? NODE_TIMES_MS,
         _NODE_ALTITUDES_KM = nodeAltitudesKm ?? NODE_ALTITUDES_KM,
         _NODE_VALUES_K = nodeValuesK ?? NODE_VALUES_K,
-        _NODE_SIGMAS_K = nodeSigmasK ?? NODE_SIGMAS_K;
+        _NODE_SIGMAS_K = nodeSigmasK ?? NODE_SIGMAS_K,
+        _NODE_LOG_DENSITY_SCALE_DIMENSIONLESS = nodeLogDensityScaleDimensionless ?? NODE_LOG_DENSITY_SCALE_DIMENSIONLESS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -681,7 +704,9 @@ class dclCorrectionObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeListFloat64(_NODE_VALUES_K!);
     final int? NODE_SIGMAS_KOffset = _NODE_SIGMAS_K == null ? null
         : fbBuilder.writeListFloat64(_NODE_SIGMAS_K!);
-    fbBuilder.startTable(7);
+    final int? NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset = _NODE_LOG_DENSITY_SCALE_DIMENSIONLESS == null ? null
+        : fbBuilder.writeListFloat64(_NODE_LOG_DENSITY_SCALE_DIMENSIONLESS!);
+    fbBuilder.startTable(8);
     fbBuilder.addUint8(0, _FORM?.value);
     fbBuilder.addUint8(1, _DEGREE);
     fbBuilder.addOffset(2, SEGMENTSOffset);
@@ -689,6 +714,7 @@ class dclCorrectionObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(4, NODE_ALTITUDES_KMOffset);
     fbBuilder.addOffset(5, NODE_VALUES_KOffset);
     fbBuilder.addOffset(6, NODE_SIGMAS_KOffset);
+    fbBuilder.addOffset(7, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
     return fbBuilder.endTable();
   }
 
@@ -2508,10 +2534,12 @@ class DCL {
   double get meanLevelSigmaK => MEAN_LEVEL_SIGMA_K;
   ///  OrbitalEnergy and DragWork: the states and their results.
   dclStates? get STATES => dclStates.reader.vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Per-record source, provider, software, license terms and lineage.
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 56);
 
   @override
   String toString() {
-    return 'DCL{ID: ${ID}, createdAtMs: ${createdAtMs}, PRODUCER: ${PRODUCER}, PRODUCT: ${PRODUCT}, ATMOSPHERE: ${ATMOSPHERE}, jb2008Drivers: ${jb2008Drivers}, spaceWeather: ${spaceWeather}, gravityField: ${gravityField}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, gmM3S2: ${gmM3S2}, earthRotationRadS: ${earthRotationRadS}, ballisticCoefficientM2Kg: ${ballisticCoefficientM2Kg}, SETTINGS: ${SETTINGS}, CORRECTION: ${CORRECTION}, STATUS: ${STATUS}, errorCode: ${errorCode}, errorMessage: ${errorMessage}, POINTS: ${POINTS}, OBJECTS: ${OBJECTS}, FIT: ${FIT}, LEVELS: ${LEVELS}, HISTORY: ${HISTORY}, levelLnBCorrelation: ${levelLnBCorrelation}, meanLevelSigmaK: ${meanLevelSigmaK}, STATES: ${STATES}}';
+    return 'DCL{ID: ${ID}, createdAtMs: ${createdAtMs}, PRODUCER: ${PRODUCER}, PRODUCT: ${PRODUCT}, ATMOSPHERE: ${ATMOSPHERE}, jb2008Drivers: ${jb2008Drivers}, spaceWeather: ${spaceWeather}, gravityField: ${gravityField}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, gmM3S2: ${gmM3S2}, earthRotationRadS: ${earthRotationRadS}, ballisticCoefficientM2Kg: ${ballisticCoefficientM2Kg}, SETTINGS: ${SETTINGS}, CORRECTION: ${CORRECTION}, STATUS: ${STATUS}, errorCode: ${errorCode}, errorMessage: ${errorMessage}, POINTS: ${POINTS}, OBJECTS: ${OBJECTS}, FIT: ${FIT}, LEVELS: ${LEVELS}, HISTORY: ${HISTORY}, levelLnBCorrelation: ${levelLnBCorrelation}, meanLevelSigmaK: ${meanLevelSigmaK}, STATES: ${STATES}, PROVENANCE: ${PROVENANCE}}';
   }
 }
 
@@ -2529,7 +2557,7 @@ class DCLBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(26);
+    fbBuilder.startTable(27);
   }
 
   int addIdOffset(int? offset) {
@@ -2636,6 +2664,10 @@ class DCLBuilder {
     fbBuilder.addOffset(25, offset);
     return fbBuilder.offset;
   }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2669,6 +2701,7 @@ class DCLObjectBuilder extends fb.ObjectBuilder {
   final double? _LEVEL_LN_B_CORRELATION;
   final double? _MEAN_LEVEL_SIGMA_K;
   final dclStatesObjectBuilder? _STATES;
+  final PVNObjectBuilder? _PROVENANCE;
 
   DCLObjectBuilder({
     String? ID,
@@ -2710,6 +2743,7 @@ class DCLObjectBuilder extends fb.ObjectBuilder {
     double? MEAN_LEVEL_SIGMA_K,
     double? meanLevelSigmaK,
     dclStatesObjectBuilder? STATES,
+    PVNObjectBuilder? PROVENANCE,
   })
       : _ID = ID,
         _CREATED_AT_MS = createdAtMs ?? CREATED_AT_MS,
@@ -2736,7 +2770,8 @@ class DCLObjectBuilder extends fb.ObjectBuilder {
         _HISTORY = HISTORY,
         _LEVEL_LN_B_CORRELATION = levelLnBCorrelation ?? LEVEL_LN_B_CORRELATION,
         _MEAN_LEVEL_SIGMA_K = meanLevelSigmaK ?? MEAN_LEVEL_SIGMA_K,
-        _STATES = STATES;
+        _STATES = STATES,
+        _PROVENANCE = PROVENANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2766,7 +2801,8 @@ class DCLObjectBuilder extends fb.ObjectBuilder {
     final int? HISTORYOffset = _HISTORY == null ? null
         : fbBuilder.writeList(_HISTORY!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? STATESOffset = _STATES?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(26);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(27);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addInt64(1, _CREATED_AT_MS);
     fbBuilder.addOffset(2, PRODUCEROffset);
@@ -2793,6 +2829,7 @@ class DCLObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(23, _LEVEL_LN_B_CORRELATION);
     fbBuilder.addFloat64(24, _MEAN_LEVEL_SIGMA_K);
     fbBuilder.addOffset(25, STATESOffset);
+    fbBuilder.addOffset(26, PROVENANCEOffset);
     return fbBuilder.endTable();
   }
 

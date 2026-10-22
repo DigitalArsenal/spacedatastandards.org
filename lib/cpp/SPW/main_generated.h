@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "../PVN/main_generated.h"
+
 struct SPW;
 struct SPWBuilder;
 
@@ -130,7 +132,8 @@ struct SPW FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_F107_OBS_CENTER81 = 58,
     VT_F107_OBS_LAST81 = 60,
     VT_F107_ADJ_CENTER81 = 62,
-    VT_F107_ADJ_LAST81 = 64
+    VT_F107_ADJ_LAST81 = 64,
+    VT_PROVENANCE = 66
   };
   /// Date in ISO 8601 format
   const ::flatbuffers::String *DATE() const {
@@ -256,6 +259,10 @@ struct SPW FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   float F107_ADJ_LAST81() const {
     return GetField<float>(VT_F107_ADJ_LAST81, 0.0f);
   }
+  /// Per-record source, provider, software, license terms and lineage.
+  const PVN *PROVENANCE() const {
+    return GetPointer<const PVN *>(VT_PROVENANCE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -291,6 +298,8 @@ struct SPW FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<float>(verifier, VT_F107_OBS_LAST81, 4) &&
            VerifyField<float>(verifier, VT_F107_ADJ_CENTER81, 4) &&
            VerifyField<float>(verifier, VT_F107_ADJ_LAST81, 4) &&
+           VerifyOffset(verifier, VT_PROVENANCE) &&
+           verifier.VerifyTable(PROVENANCE()) &&
            verifier.EndTable();
   }
 };
@@ -392,6 +401,9 @@ struct SPWBuilder {
   void add_F107_ADJ_LAST81(float F107_ADJ_LAST81) {
     fbb_.AddElement<float>(SPW::VT_F107_ADJ_LAST81, F107_ADJ_LAST81, 0.0f);
   }
+  void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
+    fbb_.AddOffset(SPW::VT_PROVENANCE, PROVENANCE);
+  }
   explicit SPWBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -435,8 +447,10 @@ inline ::flatbuffers::Offset<SPW> CreateSPW(
     float F107_OBS_CENTER81 = 0.0f,
     float F107_OBS_LAST81 = 0.0f,
     float F107_ADJ_CENTER81 = 0.0f,
-    float F107_ADJ_LAST81 = 0.0f) {
+    float F107_ADJ_LAST81 = 0.0f,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   SPWBuilder builder_(_fbb);
+  builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_F107_ADJ_LAST81(F107_ADJ_LAST81);
   builder_.add_F107_ADJ_CENTER81(F107_ADJ_CENTER81);
   builder_.add_F107_OBS_LAST81(F107_OBS_LAST81);
@@ -503,7 +517,8 @@ inline ::flatbuffers::Offset<SPW> CreateSPWDirect(
     float F107_OBS_CENTER81 = 0.0f,
     float F107_OBS_LAST81 = 0.0f,
     float F107_ADJ_CENTER81 = 0.0f,
-    float F107_ADJ_LAST81 = 0.0f) {
+    float F107_ADJ_LAST81 = 0.0f,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   auto DATE__ = DATE ? _fbb.CreateString(DATE) : 0;
   return CreateSPW(
       _fbb,
@@ -537,7 +552,8 @@ inline ::flatbuffers::Offset<SPW> CreateSPWDirect(
       F107_OBS_CENTER81,
       F107_OBS_LAST81,
       F107_ADJ_CENTER81,
-      F107_ADJ_LAST81);
+      F107_ADJ_LAST81,
+      PROVENANCE);
 }
 
 struct SPWCOLLECTION FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {

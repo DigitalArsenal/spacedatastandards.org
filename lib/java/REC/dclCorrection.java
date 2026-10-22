@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * An exospheric-temperature correction.
+ * An exospheric-temperature correction or a dimensionless log-density scale.
  */
 @SuppressWarnings("unused")
 public final class dclCorrection extends com.google.flatbuffers.Table {
@@ -42,8 +42,9 @@ public final class dclCorrection extends com.google.flatbuffers.Table {
   public dclHarmonicSegment.Vector segmentsVector() { return segmentsVector(new dclHarmonicSegment.Vector()); }
   public dclHarmonicSegment.Vector segmentsVector(dclHarmonicSegment.Vector obj) { int o = __offset(8); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Nodes: node times, strictly increasing. dT is linear in time between
-   * nodes and held outside them.
+   * Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+   * The selected correction is linear in time between nodes and held at the
+   * first/last value outside the node span.
    */
   public long NODE_TIMES_MS(int j) { int o = __offset(10); return o != 0 ? bb.getLong(__vector(o) + j * 8) : 0; }
   public int NODE_TIMES_MSLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
@@ -83,6 +84,22 @@ public final class dclCorrection extends com.google.flatbuffers.Table {
   public DoubleVector nodeSigmasKVector(DoubleVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer NODE_SIGMAS_KAsByteBuffer() { return __vector_as_bytebuffer(16, 8); }
   public ByteBuffer NODE_SIGMAS_KInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 8); }
+  /**
+   * LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+   * one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+   * rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+   * NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+   * SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+   * include the producer's forecast decay through at least 48 hours after
+   * that epoch. Interpolate those nodes; do not apply another decay in the
+   * consumer. After the final published node, hold its value.
+   */
+  public double NODE_LOG_DENSITY_SCALE_DIMENSIONLESS(int j) { int o = __offset(18); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int NODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector nodeLogDensityScaleDimensionlessVector() { return nodeLogDensityScaleDimensionlessVector(new DoubleVector()); }
+  public DoubleVector nodeLogDensityScaleDimensionlessVector(DoubleVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer NODE_LOG_DENSITY_SCALE_DIMENSIONLESSAsByteBuffer() { return __vector_as_bytebuffer(18, 8); }
+  public ByteBuffer NODE_LOG_DENSITY_SCALE_DIMENSIONLESSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 8); }
 
   public static int createdclCorrection(FlatBufferBuilder builder,
       int FORM,
@@ -91,8 +108,10 @@ public final class dclCorrection extends com.google.flatbuffers.Table {
       int NODE_TIMES_MSOffset,
       int NODE_ALTITUDES_KMOffset,
       int NODE_VALUES_KOffset,
-      int NODE_SIGMAS_KOffset) {
-    builder.startTable(7);
+      int NODE_SIGMAS_KOffset,
+      int NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset) {
+    builder.startTable(8);
+    dclCorrection.addNodeLogDensityScaleDimensionless(builder, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset);
     dclCorrection.addNodeSigmasK(builder, NODE_SIGMAS_KOffset);
     dclCorrection.addNodeValuesK(builder, NODE_VALUES_KOffset);
     dclCorrection.addNodeAltitudesKm(builder, NODE_ALTITUDES_KMOffset);
@@ -103,7 +122,7 @@ public final class dclCorrection extends com.google.flatbuffers.Table {
     return dclCorrection.enddclCorrection(builder);
   }
 
-  public static void startdclCorrection(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startdclCorrection(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addForm(FlatBufferBuilder builder, int FORM) { builder.addByte(0, (byte) FORM, (byte) 0); }
   public static void addDegree(FlatBufferBuilder builder, int DEGREE) { builder.addByte(1, (byte) DEGREE, (byte) 0); }
   public static void addSegments(FlatBufferBuilder builder, int SEGMENTSOffset) { builder.addOffset(2, SEGMENTSOffset, 0); }
@@ -121,6 +140,9 @@ public final class dclCorrection extends com.google.flatbuffers.Table {
   public static void addNodeSigmasK(FlatBufferBuilder builder, int NODE_SIGMAS_KOffset) { builder.addOffset(6, NODE_SIGMAS_KOffset, 0); }
   public static int createNodeSigmasKVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
   public static void startNodeSigmasKVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addNodeLogDensityScaleDimensionless(FlatBufferBuilder builder, int NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset) { builder.addOffset(7, NODE_LOG_DENSITY_SCALE_DIMENSIONLESSOffset, 0); }
+  public static int createNodeLogDensityScaleDimensionlessVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startNodeLogDensityScaleDimensionlessVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static int enddclCorrection(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

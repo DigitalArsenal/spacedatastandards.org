@@ -38,7 +38,16 @@ export declare class DTTPayloadRef implements flatbuffers.IUnpackableObject<DTTP
     DIGEST(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Content encoding applied to the block before hashing, verbatim, when the
-     * bytes are stored compressed.
+     * bytes are stored compressed or re-encoded. The token is an HTTP
+     * content-coding (for example gzip) or a publisher-named lossless
+     * re-encoding of the PAYLOAD_FORMAT bytes (for example
+     * qm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt
+     * from a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT
+     * bytes exactly; a consumer that does not know the token refuses the block.
+     * SIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed
+     * records may itself be stored compressed as a whole (for example gzip,
+     * named with a .gz suffix); that wrapping belongs to the file, not to the
+     * block, and is not stated here.
      */
     CONTENT_ENCODING(): string | null;
     CONTENT_ENCODING(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;

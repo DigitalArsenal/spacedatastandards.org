@@ -333,8 +333,20 @@ class DCL(object):
             return obj
         return None
 
+    # Per-record source, provider, software, license terms and lineage.
+    # DCL
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def DCLStart(builder):
-    builder.StartObject(26)
+    builder.StartObject(27)
 
 def Start(builder):
     DCLStart(builder)
@@ -543,6 +555,12 @@ def DCLAddSTATES(builder, STATES):
 def AddSTATES(builder, STATES):
     DCLAddSTATES(builder, STATES)
 
+def DCLAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    DCLAddPROVENANCE(builder, PROVENANCE)
+
 def DCLEnd(builder):
     return builder.EndObject()
 
@@ -551,6 +569,7 @@ def End(builder):
 
 import ATM
 import PRWJB2008IndicesTable
+import PVN
 import SPW
 import dclCorrection
 import dclFitStatistics
@@ -596,6 +615,7 @@ class DCLT(object):
         LEVEL_LN_B_CORRELATION = float('nan'),
         MEAN_LEVEL_SIGMA_K = float('nan'),
         STATES = None,
+        PROVENANCE = None,
     ):
         self.ID = ID  # type: Optional[str]
         self.CREATED_AT_MS = CREATED_AT_MS  # type: int
@@ -623,6 +643,7 @@ class DCLT(object):
         self.LEVEL_LN_B_CORRELATION = LEVEL_LN_B_CORRELATION  # type: float
         self.MEAN_LEVEL_SIGMA_K = MEAN_LEVEL_SIGMA_K  # type: float
         self.STATES = STATES  # type: Optional[dclStates.dclStatesT]
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -706,6 +727,8 @@ class DCLT(object):
         self.MEAN_LEVEL_SIGMA_K = DCL.MEAN_LEVEL_SIGMA_K()
         if DCL.STATES() is not None:
             self.STATES = dclStates.dclStatesT.InitFromObj(DCL.STATES())
+        if DCL.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(DCL.PROVENANCE())
 
     # DCLT
     def Pack(self, builder):
@@ -765,6 +788,8 @@ class DCLT(object):
             HISTORY = builder.EndVector()
         if self.STATES is not None:
             STATES = self.STATES.Pack(builder)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
         DCLStart(builder)
         if self.ID is not None:
             DCLAddID(builder, ID)
@@ -808,5 +833,7 @@ class DCLT(object):
         DCLAddMEAN_LEVEL_SIGMA_K(builder, self.MEAN_LEVEL_SIGMA_K)
         if self.STATES is not None:
             DCLAddSTATES(builder, STATES)
+        if self.PROVENANCE is not None:
+            DCLAddPROVENANCE(builder, PROVENANCE)
         DCL = DCLEnd(builder)
         return DCL

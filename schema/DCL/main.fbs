@@ -1,15 +1,17 @@
-// Hash: 07794b8e3c8163b382c7de0f1c5fd10ce18e1347bcecbfb107f6c19e65cb3ee3
-// Version: 1.248.0
+// Hash: 5f6683a555aa0be32ed6a000c4515059647c1ef3415d02427dd3dcd197093931
+// Version: 1.248.1
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../PRW/main.fbs";
 include "../OMM/main.fbs";
 include "../OEM/main.fbs";
+include "../PVN/main.fbs";
 
 /// Density Calibration (DCL)
 /// Description
 /// A calibration of a thermospheric density model and the results computed
-/// with it. A calibration is a correction to the model's exospheric
+/// with it. A calibration may be a dimensionless common-mode log-density
+/// scale for NRLMSISE-00, or a correction to the model's exospheric
 /// temperature (added where the model adds its geomagnetic term, so a
 /// constant correction is the same as raising every hourly Dst-derived
 /// temperature change by that amount), estimated either from observed
@@ -38,7 +40,8 @@ include "../OEM/main.fbs";
 /// (density, Mach, heating) along an entry trajectory; a DCL density
 /// evaluation along the same trajectory supplies its calibrated density.
 ///
-/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+/// Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+/// log-density scales are dimensionless ln(corrected density / model density).
 
 /// What a record computes. Append new values only; never reorder or reuse
 /// existing values.
@@ -59,15 +62,18 @@ enum dclProduct : ubyte {
   DragWork
 }
 
-/// Form of a temperature correction. Append new values only; never reorder or
+/// Form of a density-model correction. Append new values only; never reorder or
 /// reuse existing values.
 enum dclCorrectionForm : ubyte {
   /// No correction (dT = 0).
   None,
   /// Spherical harmonics in latitude and local solar time per time segment.
   Harmonic,
-  /// Values at time nodes, optionally at altitude nodes.
-  Nodes
+  /// Temperature values, K, at time nodes, optionally at altitude nodes.
+  Nodes,
+  /// Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+  /// Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+  LogDensityNodes
 }
 
 /// Outcome. Append new values only; never reorder or reuse existing values.
@@ -129,7 +135,7 @@ table dclLevel {
   SIGMA_K: double = nan;
 }
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 table dclCorrection {
   FORM: dclCorrectionForm = None;
   /// Harmonic: the degree (0 = a global constant per segment).
@@ -137,8 +143,9 @@ table dclCorrection {
   /// Harmonic: segments in time order, not overlapping; an instant in no
   /// segment has dT = 0.
   SEGMENTS: [dclHarmonicSegment];
-  /// Nodes: node times, strictly increasing. dT is linear in time between
-  /// nodes and held outside them.
+  /// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+  /// The selected correction is linear in time between nodes and held at the
+  /// first/last value outside the node span.
   NODE_TIMES_MS: [int64];
   /// Nodes: altitude nodes, km, strictly increasing; empty = one global
   /// value per time node (at least two otherwise). dT is linear in altitude
@@ -151,6 +158,15 @@ table dclCorrection {
   /// Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not
   /// estimated.
   NODE_SIGMAS_K: [double];
+  /// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+  /// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+  /// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+  /// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+  /// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+  /// include the producer's forecast decay through at least 48 hours after
+  /// that epoch. Interpolate those nodes; do not apply another decay in the
+  /// consumer. After the final published node, hold its value.
+  NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: [double];
 }
 
 /// Points, column-major and parallel (one entry per point; vectors as
@@ -423,6 +439,8 @@ table DCL {
   MEAN_LEVEL_SIGMA_K: double = nan;
   /// OrbitalEnergy and DragWork: the states and their results.
   STATES: dclStates;
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN;
 }
 
 root_type DCL;

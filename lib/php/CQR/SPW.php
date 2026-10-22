@@ -348,22 +348,30 @@ class SPW extends Table
         return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
     }
 
+    /// Per-record source, provider, software, license terms and lineage.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(66);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startSPW(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(31);
+        $builder->StartObject(32);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SPW
      */
-    public static function createSPW(FlatBufferBuilder $builder, $DATE, $BSRN, $ND, $KP1, $KP2, $KP3, $KP4, $KP5, $KP6, $KP7, $KP8, $KP_SUM, $AP1, $AP2, $AP3, $AP4, $AP5, $AP6, $AP7, $AP8, $AP_AVG, $CP, $C9, $ISN, $F107_OBS, $F107_ADJ, $F107_DATA_TYPE, $F107_OBS_CENTER81, $F107_OBS_LAST81, $F107_ADJ_CENTER81, $F107_ADJ_LAST81)
+    public static function createSPW(FlatBufferBuilder $builder, $DATE, $BSRN, $ND, $KP1, $KP2, $KP3, $KP4, $KP5, $KP6, $KP7, $KP8, $KP_SUM, $AP1, $AP2, $AP3, $AP4, $AP5, $AP6, $AP7, $AP8, $AP_AVG, $CP, $C9, $ISN, $F107_OBS, $F107_ADJ, $F107_DATA_TYPE, $F107_OBS_CENTER81, $F107_OBS_LAST81, $F107_ADJ_CENTER81, $F107_ADJ_LAST81, $PROVENANCE)
     {
-        $builder->startObject(31);
+        $builder->startObject(32);
         self::addDATE($builder, $DATE);
         self::addBSRN($builder, $BSRN);
         self::addND($builder, $ND);
@@ -395,6 +403,7 @@ class SPW extends Table
         self::addF107_OBS_LAST81($builder, $F107_OBS_LAST81);
         self::addF107_ADJ_CENTER81($builder, $F107_ADJ_CENTER81);
         self::addF107_ADJ_LAST81($builder, $F107_ADJ_LAST81);
+        self::addPROVENANCE($builder, $PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -707,6 +716,16 @@ class SPW extends Table
     public static function addF107_ADJ_LAST81(FlatBufferBuilder $builder, $F107_ADJ_LAST81)
     {
         $builder->addFloatX(30, $F107_ADJ_LAST81, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(31, $PROVENANCE, 0);
     }
 
     /**

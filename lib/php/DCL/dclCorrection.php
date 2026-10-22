@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// An exospheric-temperature correction.
+/// An exospheric-temperature correction or a dimensionless log-density scale.
 class dclCorrection extends Table
 {
     /**
@@ -81,8 +81,9 @@ class dclCorrection extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Nodes: node times, strictly increasing. dT is linear in time between
-    /// nodes and held outside them.
+    /// Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+    /// The selected correction is linear in time between nodes and held at the
+    /// first/last value outside the node span.
     /**
      * @param int offset
      * @return long
@@ -167,22 +168,49 @@ class dclCorrection extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+    /// one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+    /// rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+    /// NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+    /// SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+    /// include the producer's forecast decay through at least 48 hours after
+    /// that epoch. Interpolate those nodes; do not apply another decay in the
+    /// consumer. After the final published node, hold its value.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getNODE_LOG_DENSITY_SCALE_DIMENSIONLESS($j)
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNODE_LOG_DENSITY_SCALE_DIMENSIONLESSLength()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startdclCorrection(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return dclCorrection
      */
-    public static function createdclCorrection(FlatBufferBuilder $builder, $FORM, $DEGREE, $SEGMENTS, $NODE_TIMES_MS, $NODE_ALTITUDES_KM, $NODE_VALUES_K, $NODE_SIGMAS_K)
+    public static function createdclCorrection(FlatBufferBuilder $builder, $FORM, $DEGREE, $SEGMENTS, $NODE_TIMES_MS, $NODE_ALTITUDES_KM, $NODE_VALUES_K, $NODE_SIGMAS_K, $NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
     {
-        $builder->startObject(7);
+        $builder->startObject(8);
         self::addFORM($builder, $FORM);
         self::addDEGREE($builder, $DEGREE);
         self::addSEGMENTS($builder, $SEGMENTS);
@@ -190,6 +218,7 @@ class dclCorrection extends Table
         self::addNODE_ALTITUDES_KM($builder, $NODE_ALTITUDES_KM);
         self::addNODE_VALUES_K($builder, $NODE_VALUES_K);
         self::addNODE_SIGMAS_K($builder, $NODE_SIGMAS_K);
+        self::addNODE_LOG_DENSITY_SCALE_DIMENSIONLESS($builder, $NODE_LOG_DENSITY_SCALE_DIMENSIONLESS);
         $o = $builder->endObject();
         return $o;
     }
@@ -380,6 +409,40 @@ class dclCorrection extends Table
      * @return void
      */
     public static function startNODE_SIGMAS_KVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addNODE_LOG_DENSITY_SCALE_DIMENSIONLESS(FlatBufferBuilder $builder, $NODE_LOG_DENSITY_SCALE_DIMENSIONLESS)
+    {
+        $builder->addOffsetX(7, $NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startNODE_LOG_DENSITY_SCALE_DIMENSIONLESSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(8, $numElems, 8);
     }

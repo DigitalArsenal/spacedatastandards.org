@@ -283,6 +283,18 @@ class SPW : Table() {
             val o = __offset(64)
             return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
         }
+    /**
+     * Per-record source, provider, software, license terms and lineage.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(66)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsSPW(_bb: ByteBuffer): SPW = getRootAsSPW(_bb, SPW())
@@ -291,8 +303,9 @@ class SPW : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SPWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SPW")
-        fun createSPW(builder: FlatBufferBuilder, dateOffset: Int, bsrn: Int, nd: Int, kp1: Int, kp2: Int, kp3: Int, kp4: Int, kp5: Int, kp6: Int, kp7: Int, kp8: Int, kpSum: Int, ap1: Int, ap2: Int, ap3: Int, ap4: Int, ap5: Int, ap6: Int, ap7: Int, ap8: Int, apAvg: Int, cp: Float, c9: Int, isn: Int, f107Obs: Float, f107Adj: Float, f107DataType: Byte, f107ObsCenter81: Float, f107ObsLast81: Float, f107AdjCenter81: Float, f107AdjLast81: Float) : Int {
-            builder.startTable(31)
+        fun createSPW(builder: FlatBufferBuilder, dateOffset: Int, bsrn: Int, nd: Int, kp1: Int, kp2: Int, kp3: Int, kp4: Int, kp5: Int, kp6: Int, kp7: Int, kp8: Int, kpSum: Int, ap1: Int, ap2: Int, ap3: Int, ap4: Int, ap5: Int, ap6: Int, ap7: Int, ap8: Int, apAvg: Int, cp: Float, c9: Int, isn: Int, f107Obs: Float, f107Adj: Float, f107DataType: Byte, f107ObsCenter81: Float, f107ObsLast81: Float, f107AdjCenter81: Float, f107AdjLast81: Float, provenanceOffset: Int) : Int {
+            builder.startTable(32)
+            addPROVENANCE(builder, provenanceOffset)
             addF107ADJLAST81(builder, f107AdjLast81)
             addF107ADJCENTER81(builder, f107AdjCenter81)
             addF107OBSLAST81(builder, f107ObsLast81)
@@ -326,7 +339,7 @@ class SPW : Table() {
             addF107DATATYPE(builder, f107DataType)
             return endSPW(builder)
         }
-        fun startSPW(builder: FlatBufferBuilder) = builder.startTable(31)
+        fun startSPW(builder: FlatBufferBuilder) = builder.startTable(32)
         fun addDATE(builder: FlatBufferBuilder, date: Int) = builder.addOffset(0, date, 0)
         fun addBSRN(builder: FlatBufferBuilder, bsrn: Int) = builder.addInt(1, bsrn, 0)
         fun addND(builder: FlatBufferBuilder, nd: Int) = builder.addInt(2, nd, 0)
@@ -358,6 +371,7 @@ class SPW : Table() {
         fun addF107OBSLAST81(builder: FlatBufferBuilder, f107ObsLast81: Float) = builder.addFloat(28, f107ObsLast81, 0.0)
         fun addF107ADJCENTER81(builder: FlatBufferBuilder, f107AdjCenter81: Float) = builder.addFloat(29, f107AdjCenter81, 0.0)
         fun addF107ADJLAST81(builder: FlatBufferBuilder, f107AdjLast81: Float) = builder.addFloat(30, f107AdjLast81, 0.0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(31, provenance, 0)
         fun endSPW(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

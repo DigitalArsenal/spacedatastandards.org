@@ -137,6 +137,11 @@ public final class DCL extends com.google.flatbuffers.Table {
    */
   public dclStates STATES() { return STATES(new dclStates()); }
   public dclStates STATES(dclStates obj) { int o = __offset(54); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Per-record source, provider, software, license terms and lineage.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(56); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createDCL(FlatBufferBuilder builder,
       int IDOffset,
@@ -164,14 +169,16 @@ public final class DCL extends com.google.flatbuffers.Table {
       int HISTORYOffset,
       double LEVEL_LN_B_CORRELATION,
       double MEAN_LEVEL_SIGMA_K,
-      int STATESOffset) {
-    builder.startTable(26);
+      int STATESOffset,
+      int PROVENANCEOffset) {
+    builder.startTable(27);
     DCL.addMeanLevelSigmaK(builder, MEAN_LEVEL_SIGMA_K);
     DCL.addLevelLnBCorrelation(builder, LEVEL_LN_B_CORRELATION);
     DCL.addBallisticCoefficientM2Kg(builder, BALLISTIC_COEFFICIENT_M2_KG);
     DCL.addEarthRotationRadS(builder, EARTH_ROTATION_RAD_S);
     DCL.addGmM3S2(builder, GM_M3_S2);
     DCL.addCreatedAtMs(builder, CREATED_AT_MS);
+    DCL.addProvenance(builder, PROVENANCEOffset);
     DCL.addStates(builder, STATESOffset);
     DCL.addHistory(builder, HISTORYOffset);
     DCL.addLevels(builder, LEVELSOffset);
@@ -195,7 +202,7 @@ public final class DCL extends com.google.flatbuffers.Table {
     return DCL.endDCL(builder);
   }
 
-  public static void startDCL(FlatBufferBuilder builder) { builder.startTable(26); }
+  public static void startDCL(FlatBufferBuilder builder) { builder.startTable(27); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addCreatedAtMs(FlatBufferBuilder builder, long CREATED_AT_MS) { builder.addLong(1, CREATED_AT_MS, 0L); }
   public static void addProducer(FlatBufferBuilder builder, int PRODUCEROffset) { builder.addOffset(2, PRODUCEROffset, 0); }
@@ -230,6 +237,7 @@ public final class DCL extends com.google.flatbuffers.Table {
   public static void addLevelLnBCorrelation(FlatBufferBuilder builder, double LEVEL_LN_B_CORRELATION) { builder.addDouble(23, LEVEL_LN_B_CORRELATION, Double.NaN); }
   public static void addMeanLevelSigmaK(FlatBufferBuilder builder, double MEAN_LEVEL_SIGMA_K) { builder.addDouble(24, MEAN_LEVEL_SIGMA_K, Double.NaN); }
   public static void addStates(FlatBufferBuilder builder, int STATESOffset) { builder.addOffset(25, STATESOffset, 0); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(26, PROVENANCEOffset, 0); }
   public static int endDCL(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

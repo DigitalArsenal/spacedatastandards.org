@@ -156,7 +156,16 @@ func (rcv *DTTPayloadRef) Digest() []byte {
 /// Multihash of the block, lowercase hexadecimal, when the publisher states
 /// one independently of the CID.
 /// Content encoding applied to the block before hashing, verbatim, when the
-/// bytes are stored compressed.
+/// bytes are stored compressed or re-encoded. The token is an HTTP
+/// content-coding (for example gzip) or a publisher-named lossless
+/// re-encoding of the PAYLOAD_FORMAT bytes (for example
+/// qm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt
+/// from a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT
+/// bytes exactly; a consumer that does not know the token refuses the block.
+/// SIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed
+/// records may itself be stored compressed as a whole (for example gzip,
+/// named with a .gz suffix); that wrapping belongs to the file, not to the
+/// block, and is not stated here.
 func (rcv *DTTPayloadRef) CONTENT_ENCODING() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -170,7 +179,16 @@ func (rcv *DTTPayloadRef) ContentEncoding() []byte {
 }
 
 /// Content encoding applied to the block before hashing, verbatim, when the
-/// bytes are stored compressed.
+/// bytes are stored compressed or re-encoded. The token is an HTTP
+/// content-coding (for example gzip) or a publisher-named lossless
+/// re-encoding of the PAYLOAD_FORMAT bytes (for example
+/// qm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt
+/// from a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT
+/// bytes exactly; a consumer that does not know the token refuses the block.
+/// SIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed
+/// records may itself be stored compressed as a whole (for example gzip,
+/// named with a .gz suffix); that wrapping belongs to the file, not to the
+/// block, and is not stated here.
 /// Media type of the block as the publisher serves it.
 func (rcv *DTTPayloadRef) MEDIA_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))

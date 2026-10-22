@@ -14821,6 +14821,74 @@
         "SPW": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "ElementSet": {
+                            "value": 1,
+                            "description": "Element sets of a catalog"
+                        },
+                        "Ephemeris": {
+                            "value": 2,
+                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                        },
+                        "Observation": {
+                            "value": 3,
+                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                        },
+                        "Reference": {
+                            "value": 4,
+                            "description": "Reference registers of sites and facilities (status, dates, identity)"
+                        }
+                    }
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated. Never a grant: treated as CiteOnly."
+                        },
+                        "Reproducible": {
+                            "value": 1,
+                            "description": "The records may be republished, with the credit the terms ask."
+                        },
+                        "CiteOnly": {
+                            "value": 2,
+                            "description": "The records are computed on and cited, never republished."
+                        },
+                        "ShareAlike": {
+                            "value": 3,
+                            "description": "The records may be republished under the same terms, which every derived record carries."
+                        },
+                        "NonCommercial": {
+                            "value": 4,
+                            "description": "The records may be republished for non-commercial use only."
+                        }
+                    }
+                },
                 "FluxQualifier": {
                     "type": "string",
                     "enum": [
@@ -14875,6 +14943,101 @@
                             "value": 3
                         }
                     }
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "ElementSet": {
+                                    "value": 1,
+                                    "description": "Element sets of a catalog"
+                                },
+                                "Ephemeris": {
+                                    "value": 2,
+                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                                },
+                                "Observation": {
+                                    "value": 3,
+                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                                },
+                                "Reference": {
+                                    "value": 4,
+                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated. Never a grant: treated as CiteOnly."
+                                },
+                                "Reproducible": {
+                                    "value": 1,
+                                    "description": "The records may be republished, with the credit the terms ask."
+                                },
+                                "CiteOnly": {
+                                    "value": 2,
+                                    "description": "The records are computed on and cited, never republished."
+                                },
+                                "ShareAlike": {
+                                    "value": 3,
+                                    "description": "The records may be republished under the same terms, which every derived record carries."
+                                },
+                                "NonCommercial": {
+                                    "value": 4,
+                                    "description": "The records may be republished for non-commercial use only."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "SPW": {
                     "type": "object",
@@ -15093,6 +15256,11 @@
                             "type": "number",
                             "description": "81-day trailing average of adjusted F10.7",
                             "x-flatbuffer-type": "float"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -18812,7 +18980,7 @@
                         },
                         "CONTENT_ENCODING": {
                             "type": "string",
-                            "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+                            "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here.",
                             "x-flatbuffer-type": "string"
                         },
                         "MEDIA_TYPE": {
@@ -85788,6 +85956,74 @@
                         }
                     }
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "ElementSet": {
+                            "value": 1,
+                            "description": "Element sets of a catalog"
+                        },
+                        "Ephemeris": {
+                            "value": 2,
+                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                        },
+                        "Observation": {
+                            "value": 3,
+                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                        },
+                        "Reference": {
+                            "value": 4,
+                            "description": "Reference registers of sites and facilities (status, dates, identity)"
+                        }
+                    }
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated. Never a grant: treated as CiteOnly."
+                        },
+                        "Reproducible": {
+                            "value": 1,
+                            "description": "The records may be republished, with the credit the terms ask."
+                        },
+                        "CiteOnly": {
+                            "value": 2,
+                            "description": "The records are computed on and cited, never republished."
+                        },
+                        "ShareAlike": {
+                            "value": 3,
+                            "description": "The records may be republished under the same terms, which every derived record carries."
+                        },
+                        "NonCommercial": {
+                            "value": 4,
+                            "description": "The records may be republished for non-commercial use only."
+                        }
+                    }
+                },
                 "FluxQualifier": {
                     "type": "string",
                     "enum": [
@@ -86373,74 +86609,6 @@
                         }
                     }
                 },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ],
-                    "x-flatbuffer-type": "enum",
-                    "x-flatbuffer-enum-type": "byte",
-                    "x-flatbuffer-enum-values": {
-                        "Unspecified": {
-                            "value": 0,
-                            "description": "Not stated"
-                        },
-                        "ElementSet": {
-                            "value": 1,
-                            "description": "Element sets of a catalog"
-                        },
-                        "Ephemeris": {
-                            "value": 2,
-                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
-                        },
-                        "Observation": {
-                            "value": 3,
-                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
-                        },
-                        "Reference": {
-                            "value": 4,
-                            "description": "Reference registers of sites and facilities (status, dates, identity)"
-                        }
-                    }
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
-                    ],
-                    "x-flatbuffer-type": "enum",
-                    "x-flatbuffer-enum-type": "byte",
-                    "x-flatbuffer-enum-values": {
-                        "Unspecified": {
-                            "value": 0,
-                            "description": "Not stated. Never a grant: treated as CiteOnly."
-                        },
-                        "Reproducible": {
-                            "value": 1,
-                            "description": "The records may be republished, with the credit the terms ask."
-                        },
-                        "CiteOnly": {
-                            "value": 2,
-                            "description": "The records are computed on and cited, never republished."
-                        },
-                        "ShareAlike": {
-                            "value": 3,
-                            "description": "The records may be republished under the same terms, which every derived record carries."
-                        },
-                        "NonCommercial": {
-                            "value": 4,
-                            "description": "The records may be republished for non-commercial use only."
-                        }
-                    }
-                },
                 "ephemerisFormat": {
                     "type": "string",
                     "enum": [
@@ -86524,7 +86692,8 @@
                     "enum": [
                         "None",
                         "Harmonic",
-                        "Nodes"
+                        "Nodes",
+                        "LogDensityNodes"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "ubyte",
@@ -86539,7 +86708,11 @@
                         },
                         "Nodes": {
                             "value": 2,
-                            "description": "Values at time nodes, optionally at altitude nodes."
+                            "description": "Temperature values, K, at time nodes, optionally at altitude nodes."
+                        },
+                        "LogDensityNodes": {
+                            "value": 3,
+                            "description": "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
                         }
                     }
                 },
@@ -96171,6 +96344,101 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "ElementSet": {
+                                    "value": 1,
+                                    "description": "Element sets of a catalog"
+                                },
+                                "Ephemeris": {
+                                    "value": 2,
+                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                                },
+                                "Observation": {
+                                    "value": 3,
+                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                                },
+                                "Reference": {
+                                    "value": 4,
+                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated. Never a grant: treated as CiteOnly."
+                                },
+                                "Reproducible": {
+                                    "value": 1,
+                                    "description": "The records may be republished, with the credit the terms ask."
+                                },
+                                "CiteOnly": {
+                                    "value": 2,
+                                    "description": "The records are computed on and cited, never republished."
+                                },
+                                "ShareAlike": {
+                                    "value": 3,
+                                    "description": "The records may be republished under the same terms, which every derived record carries."
+                                },
+                                "NonCommercial": {
+                                    "value": 4,
+                                    "description": "The records may be republished for non-commercial use only."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SPW": {
                     "type": "object",
                     "description": "Space Weather Data Record",
@@ -96388,6 +96656,11 @@
                             "type": "number",
                             "description": "81-day trailing average of adjusted F10.7",
                             "x-flatbuffer-type": "float"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -98898,101 +99171,6 @@
                     },
                     "additionalProperties": false
                 },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies.",
-                            "x-flatbuffer-type": "enum",
-                            "x-flatbuffer-enum-type": "byte",
-                            "x-flatbuffer-enum-values": {
-                                "Unspecified": {
-                                    "value": 0,
-                                    "description": "Not stated"
-                                },
-                                "ElementSet": {
-                                    "value": 1,
-                                    "description": "Element sets of a catalog"
-                                },
-                                "Ephemeris": {
-                                    "value": 2,
-                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
-                                },
-                                "Observation": {
-                                    "value": 3,
-                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
-                                },
-                                "Reference": {
-                                    "value": 4,
-                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
-                                }
-                            },
-                            "x-flatbuffer-default": "Unspecified"
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product.",
-                            "x-flatbuffer-type": "enum",
-                            "x-flatbuffer-enum-type": "byte",
-                            "x-flatbuffer-enum-values": {
-                                "Unspecified": {
-                                    "value": 0,
-                                    "description": "Not stated. Never a grant: treated as CiteOnly."
-                                },
-                                "Reproducible": {
-                                    "value": 1,
-                                    "description": "The records may be republished, with the credit the terms ask."
-                                },
-                                "CiteOnly": {
-                                    "value": 2,
-                                    "description": "The records are computed on and cited, never republished."
-                                },
-                                "ShareAlike": {
-                                    "value": 3,
-                                    "description": "The records may be republished under the same terms, which every derived record carries."
-                                },
-                                "NonCommercial": {
-                                    "value": 4,
-                                    "description": "The records may be republished for non-commercial use only."
-                                }
-                            },
-                            "x-flatbuffer-default": "Unspecified"
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
-                            "x-flatbuffer-type": "string"
-                        }
-                    },
-                    "additionalProperties": false
-                },
                 "OMM": {
                     "type": "object",
                     "description": "Orbit Mean Elements Message",
@@ -99994,7 +100172,7 @@
                 },
                 "dclCorrection": {
                     "type": "object",
-                    "description": "An exospheric-temperature correction.",
+                    "description": "An exospheric-temperature correction or a dimensionless log-density scale.",
                     "properties": {
                         "FORM": {
                             "$ref": "#/definitions/dclCorrectionForm",
@@ -100011,7 +100189,11 @@
                                 },
                                 "Nodes": {
                                     "value": 2,
-                                    "description": "Values at time nodes, optionally at altitude nodes."
+                                    "description": "Temperature values, K, at time nodes, optionally at altitude nodes."
+                                },
+                                "LogDensityNodes": {
+                                    "value": 3,
+                                    "description": "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
                                 }
                             },
                             "x-flatbuffer-default": "None"
@@ -100038,7 +100220,7 @@
                                 "minimum": -9223372036854775808,
                                 "maximum": 9223372036854775807
                             },
-                            "description": "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them.",
+                            "description": "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span.",
                             "x-flatbuffer-type": "[int64]"
                         },
                         "NODE_ALTITUDES_KM": {
@@ -100063,6 +100245,14 @@
                                 "type": "number"
                             },
                             "description": "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "NODE_LOG_DENSITY_SCALE_DIMENSIONLESS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value.",
                             "x-flatbuffer-type": "[double]"
                         }
                     },
@@ -100998,6 +101188,11 @@
                             "$ref": "#/definitions/dclStates",
                             "description": "OrbitalEnergy and DragWork: the states and their results.",
                             "x-flatbuffer-type": "dclStates"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -227729,6 +227924,74 @@
                         }
                     }
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "ElementSet": {
+                            "value": 1,
+                            "description": "Element sets of a catalog"
+                        },
+                        "Ephemeris": {
+                            "value": 2,
+                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                        },
+                        "Observation": {
+                            "value": 3,
+                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                        },
+                        "Reference": {
+                            "value": 4,
+                            "description": "Reference registers of sites and facilities (status, dates, identity)"
+                        }
+                    }
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated. Never a grant: treated as CiteOnly."
+                        },
+                        "Reproducible": {
+                            "value": 1,
+                            "description": "The records may be republished, with the credit the terms ask."
+                        },
+                        "CiteOnly": {
+                            "value": 2,
+                            "description": "The records are computed on and cited, never republished."
+                        },
+                        "ShareAlike": {
+                            "value": 3,
+                            "description": "The records may be republished under the same terms, which every derived record carries."
+                        },
+                        "NonCommercial": {
+                            "value": 4,
+                            "description": "The records may be republished for non-commercial use only."
+                        }
+                    }
+                },
                 "FluxQualifier": {
                     "type": "string",
                     "enum": [
@@ -228311,74 +228574,6 @@
                         "PooledModel": {
                             "value": 4,
                             "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
-                        }
-                    }
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ],
-                    "x-flatbuffer-type": "enum",
-                    "x-flatbuffer-enum-type": "byte",
-                    "x-flatbuffer-enum-values": {
-                        "Unspecified": {
-                            "value": 0,
-                            "description": "Not stated"
-                        },
-                        "ElementSet": {
-                            "value": 1,
-                            "description": "Element sets of a catalog"
-                        },
-                        "Ephemeris": {
-                            "value": 2,
-                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
-                        },
-                        "Observation": {
-                            "value": 3,
-                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
-                        },
-                        "Reference": {
-                            "value": 4,
-                            "description": "Reference registers of sites and facilities (status, dates, identity)"
-                        }
-                    }
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
-                    ],
-                    "x-flatbuffer-type": "enum",
-                    "x-flatbuffer-enum-type": "byte",
-                    "x-flatbuffer-enum-values": {
-                        "Unspecified": {
-                            "value": 0,
-                            "description": "Not stated. Never a grant: treated as CiteOnly."
-                        },
-                        "Reproducible": {
-                            "value": 1,
-                            "description": "The records may be republished, with the credit the terms ask."
-                        },
-                        "CiteOnly": {
-                            "value": 2,
-                            "description": "The records are computed on and cited, never republished."
-                        },
-                        "ShareAlike": {
-                            "value": 3,
-                            "description": "The records may be republished under the same terms, which every derived record carries."
-                        },
-                        "NonCommercial": {
-                            "value": 4,
-                            "description": "The records may be republished for non-commercial use only."
                         }
                     }
                 },
@@ -229914,7 +230109,8 @@
                     "enum": [
                         "None",
                         "Harmonic",
-                        "Nodes"
+                        "Nodes",
+                        "LogDensityNodes"
                     ],
                     "x-flatbuffer-type": "enum",
                     "x-flatbuffer-enum-type": "ubyte",
@@ -229929,7 +230125,11 @@
                         },
                         "Nodes": {
                             "value": 2,
-                            "description": "Values at time nodes, optionally at altitude nodes."
+                            "description": "Temperature values, K, at time nodes, optionally at altitude nodes."
+                        },
+                        "LogDensityNodes": {
+                            "value": 3,
+                            "description": "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
                         }
                     }
                 },
@@ -274979,6 +275179,101 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "ElementSet": {
+                                    "value": 1,
+                                    "description": "Element sets of a catalog"
+                                },
+                                "Ephemeris": {
+                                    "value": 2,
+                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                                },
+                                "Observation": {
+                                    "value": 3,
+                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                                },
+                                "Reference": {
+                                    "value": 4,
+                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated. Never a grant: treated as CiteOnly."
+                                },
+                                "Reproducible": {
+                                    "value": 1,
+                                    "description": "The records may be republished, with the credit the terms ask."
+                                },
+                                "CiteOnly": {
+                                    "value": 2,
+                                    "description": "The records are computed on and cited, never republished."
+                                },
+                                "ShareAlike": {
+                                    "value": 3,
+                                    "description": "The records may be republished under the same terms, which every derived record carries."
+                                },
+                                "NonCommercial": {
+                                    "value": 4,
+                                    "description": "The records may be republished for non-commercial use only."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SPW": {
                     "type": "object",
                     "description": "Space Weather Data Record",
@@ -275196,6 +275491,11 @@
                             "type": "number",
                             "description": "81-day trailing average of adjusted F10.7",
                             "x-flatbuffer-type": "float"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -277701,101 +278001,6 @@
                         "EVIDENCE": {
                             "type": "string",
                             "description": "Identifier of the report or record that holds the test.",
-                            "x-flatbuffer-type": "string"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies.",
-                            "x-flatbuffer-type": "enum",
-                            "x-flatbuffer-enum-type": "byte",
-                            "x-flatbuffer-enum-values": {
-                                "Unspecified": {
-                                    "value": 0,
-                                    "description": "Not stated"
-                                },
-                                "ElementSet": {
-                                    "value": 1,
-                                    "description": "Element sets of a catalog"
-                                },
-                                "Ephemeris": {
-                                    "value": 2,
-                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
-                                },
-                                "Observation": {
-                                    "value": 3,
-                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
-                                },
-                                "Reference": {
-                                    "value": 4,
-                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
-                                }
-                            },
-                            "x-flatbuffer-default": "Unspecified"
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product.",
-                            "x-flatbuffer-type": "enum",
-                            "x-flatbuffer-enum-type": "byte",
-                            "x-flatbuffer-enum-values": {
-                                "Unspecified": {
-                                    "value": 0,
-                                    "description": "Not stated. Never a grant: treated as CiteOnly."
-                                },
-                                "Reproducible": {
-                                    "value": 1,
-                                    "description": "The records may be republished, with the credit the terms ask."
-                                },
-                                "CiteOnly": {
-                                    "value": 2,
-                                    "description": "The records are computed on and cited, never republished."
-                                },
-                                "ShareAlike": {
-                                    "value": 3,
-                                    "description": "The records may be republished under the same terms, which every derived record carries."
-                                },
-                                "NonCommercial": {
-                                    "value": 4,
-                                    "description": "The records may be republished for non-commercial use only."
-                                }
-                            },
-                            "x-flatbuffer-default": "Unspecified"
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
                             "x-flatbuffer-type": "string"
                         }
                     },
@@ -288000,7 +288205,7 @@
                 },
                 "dclCorrection": {
                     "type": "object",
-                    "description": "An exospheric-temperature correction.",
+                    "description": "An exospheric-temperature correction or a dimensionless log-density scale.",
                     "properties": {
                         "FORM": {
                             "$ref": "#/definitions/dclCorrectionForm",
@@ -288017,7 +288222,11 @@
                                 },
                                 "Nodes": {
                                     "value": 2,
-                                    "description": "Values at time nodes, optionally at altitude nodes."
+                                    "description": "Temperature values, K, at time nodes, optionally at altitude nodes."
+                                },
+                                "LogDensityNodes": {
+                                    "value": 3,
+                                    "description": "Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless. Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only."
                                 }
                             },
                             "x-flatbuffer-default": "None"
@@ -288044,7 +288253,7 @@
                                 "minimum": -9223372036854775808,
                                 "maximum": 9223372036854775807
                             },
-                            "description": "Nodes: node times, strictly increasing. dT is linear in time between\nnodes and held outside them.",
+                            "description": "Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.\nThe selected correction is linear in time between nodes and held at the\nfirst/last value outside the node span.",
                             "x-flatbuffer-type": "[int64]"
                         },
                         "NODE_ALTITUDES_KM": {
@@ -288069,6 +288278,14 @@
                                 "type": "number"
                             },
                             "description": "Nodes: formal sigmas of NODE_VALUES_K, K, same layout; empty = not\nestimated.",
+                            "x-flatbuffer-type": "[double]"
+                        },
+                        "NODE_LOG_DENSITY_SCALE_DIMENSIONLESS": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,\none finite value per NODE_TIMES_MS entry, shared by the whole fleet.\nrho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.\nNODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.\nSETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly\ninclude the producer's forecast decay through at least 48 hours after\nthat epoch. Interpolate those nodes; do not apply another decay in the\nconsumer. After the final published node, hold its value.",
                             "x-flatbuffer-type": "[double]"
                         }
                     },
@@ -289004,6 +289221,11 @@
                             "$ref": "#/definitions/dclStates",
                             "description": "OrbitalEnergy and DragWork: the states and their results.",
                             "x-flatbuffer-type": "dclStates"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -290278,7 +290500,7 @@
                         },
                         "CONTENT_ENCODING": {
                             "type": "string",
-                            "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed.",
+                            "description": "Content encoding applied to the block before hashing, verbatim, when the\nbytes are stored compressed or re-encoded. The token is an HTTP\ncontent-coding (for example gzip) or a publisher-named lossless\nre-encoding of the PAYLOAD_FORMAT bytes (for example\nqm-edge-matched-planes-v1, a quantized mesh whose topology is rebuilt\nfrom a descriptor). Decoding the stored bytes yields the PAYLOAD_FORMAT\nbytes exactly; a consumer that does not know the token refuses the block.\nSIZE_BYTES and DIGEST describe the stored bytes. A file of size-prefixed\nrecords may itself be stored compressed as a whole (for example gzip,\nnamed with a .gz suffix); that wrapping belongs to the file, not to the\nblock, and is not stated here.",
                             "x-flatbuffer-type": "string"
                         },
                         "MEDIA_TYPE": {
@@ -410504,6 +410726,74 @@
                         }
                     }
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "ElementSet": {
+                            "value": 1,
+                            "description": "Element sets of a catalog"
+                        },
+                        "Ephemeris": {
+                            "value": 2,
+                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                        },
+                        "Observation": {
+                            "value": 3,
+                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                        },
+                        "Reference": {
+                            "value": 4,
+                            "description": "Reference registers of sites and facilities (status, dates, identity)"
+                        }
+                    }
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated. Never a grant: treated as CiteOnly."
+                        },
+                        "Reproducible": {
+                            "value": 1,
+                            "description": "The records may be republished, with the credit the terms ask."
+                        },
+                        "CiteOnly": {
+                            "value": 2,
+                            "description": "The records are computed on and cited, never republished."
+                        },
+                        "ShareAlike": {
+                            "value": 3,
+                            "description": "The records may be republished under the same terms, which every derived record carries."
+                        },
+                        "NonCommercial": {
+                            "value": 4,
+                            "description": "The records may be republished for non-commercial use only."
+                        }
+                    }
+                },
                 "FluxQualifier": {
                     "type": "string",
                     "enum": [
@@ -420504,6 +420794,101 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "ElementSet": {
+                                    "value": 1,
+                                    "description": "Element sets of a catalog"
+                                },
+                                "Ephemeris": {
+                                    "value": 2,
+                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                                },
+                                "Observation": {
+                                    "value": 3,
+                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                                },
+                                "Reference": {
+                                    "value": 4,
+                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated. Never a grant: treated as CiteOnly."
+                                },
+                                "Reproducible": {
+                                    "value": 1,
+                                    "description": "The records may be republished, with the credit the terms ask."
+                                },
+                                "CiteOnly": {
+                                    "value": 2,
+                                    "description": "The records are computed on and cited, never republished."
+                                },
+                                "ShareAlike": {
+                                    "value": 3,
+                                    "description": "The records may be republished under the same terms, which every derived record carries."
+                                },
+                                "NonCommercial": {
+                                    "value": 4,
+                                    "description": "The records may be republished for non-commercial use only."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SPW": {
                     "type": "object",
                     "description": "Space Weather Data Record",
@@ -420721,6 +421106,11 @@
                             "type": "number",
                             "description": "81-day trailing average of adjusted F10.7",
                             "x-flatbuffer-type": "float"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -494942,6 +495332,74 @@
                         }
                     }
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated"
+                        },
+                        "ElementSet": {
+                            "value": 1,
+                            "description": "Element sets of a catalog"
+                        },
+                        "Ephemeris": {
+                            "value": 2,
+                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                        },
+                        "Observation": {
+                            "value": 3,
+                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                        },
+                        "Reference": {
+                            "value": 4,
+                            "description": "Reference registers of sites and facilities (status, dates, identity)"
+                        }
+                    }
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ],
+                    "x-flatbuffer-type": "enum",
+                    "x-flatbuffer-enum-type": "byte",
+                    "x-flatbuffer-enum-values": {
+                        "Unspecified": {
+                            "value": 0,
+                            "description": "Not stated. Never a grant: treated as CiteOnly."
+                        },
+                        "Reproducible": {
+                            "value": 1,
+                            "description": "The records may be republished, with the credit the terms ask."
+                        },
+                        "CiteOnly": {
+                            "value": 2,
+                            "description": "The records are computed on and cited, never republished."
+                        },
+                        "ShareAlike": {
+                            "value": 3,
+                            "description": "The records may be republished under the same terms, which every derived record carries."
+                        },
+                        "NonCommercial": {
+                            "value": 4,
+                            "description": "The records may be republished for non-commercial use only."
+                        }
+                    }
+                },
                 "FluxQualifier": {
                     "type": "string",
                     "enum": [
@@ -495524,74 +495982,6 @@
                         "PooledModel": {
                             "value": 4,
                             "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
-                        }
-                    }
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ],
-                    "x-flatbuffer-type": "enum",
-                    "x-flatbuffer-enum-type": "byte",
-                    "x-flatbuffer-enum-values": {
-                        "Unspecified": {
-                            "value": 0,
-                            "description": "Not stated"
-                        },
-                        "ElementSet": {
-                            "value": 1,
-                            "description": "Element sets of a catalog"
-                        },
-                        "Ephemeris": {
-                            "value": 2,
-                            "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
-                        },
-                        "Observation": {
-                            "value": 3,
-                            "description": "Observations (ranges, angles, other measurements) that states are estimated from"
-                        },
-                        "Reference": {
-                            "value": 4,
-                            "description": "Reference registers of sites and facilities (status, dates, identity)"
-                        }
-                    }
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
-                    ],
-                    "x-flatbuffer-type": "enum",
-                    "x-flatbuffer-enum-type": "byte",
-                    "x-flatbuffer-enum-values": {
-                        "Unspecified": {
-                            "value": 0,
-                            "description": "Not stated. Never a grant: treated as CiteOnly."
-                        },
-                        "Reproducible": {
-                            "value": 1,
-                            "description": "The records may be republished, with the credit the terms ask."
-                        },
-                        "CiteOnly": {
-                            "value": 2,
-                            "description": "The records are computed on and cited, never republished."
-                        },
-                        "ShareAlike": {
-                            "value": 3,
-                            "description": "The records may be republished under the same terms, which every derived record carries."
-                        },
-                        "NonCommercial": {
-                            "value": 4,
-                            "description": "The records may be republished for non-commercial use only."
                         }
                     }
                 },
@@ -505764,6 +506154,101 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated"
+                                },
+                                "ElementSet": {
+                                    "value": 1,
+                                    "description": "Element sets of a catalog"
+                                },
+                                "Ephemeris": {
+                                    "value": 2,
+                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
+                                },
+                                "Observation": {
+                                    "value": 3,
+                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
+                                },
+                                "Reference": {
+                                    "value": 4,
+                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product.",
+                            "x-flatbuffer-type": "enum",
+                            "x-flatbuffer-enum-type": "byte",
+                            "x-flatbuffer-enum-values": {
+                                "Unspecified": {
+                                    "value": 0,
+                                    "description": "Not stated. Never a grant: treated as CiteOnly."
+                                },
+                                "Reproducible": {
+                                    "value": 1,
+                                    "description": "The records may be republished, with the credit the terms ask."
+                                },
+                                "CiteOnly": {
+                                    "value": 2,
+                                    "description": "The records are computed on and cited, never republished."
+                                },
+                                "ShareAlike": {
+                                    "value": 3,
+                                    "description": "The records may be republished under the same terms, which every derived record carries."
+                                },
+                                "NonCommercial": {
+                                    "value": 4,
+                                    "description": "The records may be republished for non-commercial use only."
+                                }
+                            },
+                            "x-flatbuffer-default": "Unspecified"
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
+                            "x-flatbuffer-type": "string"
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
+                            "x-flatbuffer-type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "SPW": {
                     "type": "object",
                     "description": "Space Weather Data Record",
@@ -505981,6 +506466,11 @@
                             "type": "number",
                             "description": "81-day trailing average of adjusted F10.7",
                             "x-flatbuffer-type": "float"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false
@@ -508486,101 +508976,6 @@
                         "EVIDENCE": {
                             "type": "string",
                             "description": "Identifier of the report or record that holds the test.",
-                            "x-flatbuffer-type": "string"
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies.",
-                            "x-flatbuffer-type": "enum",
-                            "x-flatbuffer-enum-type": "byte",
-                            "x-flatbuffer-enum-values": {
-                                "Unspecified": {
-                                    "value": 0,
-                                    "description": "Not stated"
-                                },
-                                "ElementSet": {
-                                    "value": 1,
-                                    "description": "Element sets of a catalog"
-                                },
-                                "Ephemeris": {
-                                    "value": 2,
-                                    "description": "Ephemerides: states over time, from an operator or a precise-orbit service"
-                                },
-                                "Observation": {
-                                    "value": 3,
-                                    "description": "Observations (ranges, angles, other measurements) that states are estimated from"
-                                },
-                                "Reference": {
-                                    "value": 4,
-                                    "description": "Reference registers of sites and facilities (status, dates, identity)"
-                                }
-                            },
-                            "x-flatbuffer-default": "Unspecified"
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product.",
-                            "x-flatbuffer-type": "enum",
-                            "x-flatbuffer-enum-type": "byte",
-                            "x-flatbuffer-enum-values": {
-                                "Unspecified": {
-                                    "value": 0,
-                                    "description": "Not stated. Never a grant: treated as CiteOnly."
-                                },
-                                "Reproducible": {
-                                    "value": 1,
-                                    "description": "The records may be republished, with the credit the terms ask."
-                                },
-                                "CiteOnly": {
-                                    "value": 2,
-                                    "description": "The records are computed on and cited, never republished."
-                                },
-                                "ShareAlike": {
-                                    "value": 3,
-                                    "description": "The records may be republished under the same terms, which every derived record carries."
-                                },
-                                "NonCommercial": {
-                                    "value": 4,
-                                    "description": "The records may be republished for non-commercial use only."
-                                }
-                            },
-                            "x-flatbuffer-default": "Unspecified"
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register.",
-                            "x-flatbuffer-type": "string"
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other.",
                             "x-flatbuffer-type": "string"
                         }
                     },
@@ -593627,6 +594022,11 @@
                             "type": "number",
                             "description": "81-day trailing average of adjusted F10.7",
                             "x-flatbuffer-type": "float"
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Per-record source, provider, software, license terms and lineage.",
+                            "x-flatbuffer-type": "PVN"
                         }
                     },
                     "additionalProperties": false

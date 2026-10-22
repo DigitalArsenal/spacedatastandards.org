@@ -308,22 +308,30 @@ class DCL extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Per-record source, provider, software, license terms and lineage.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(56);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDCL(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(26);
+        $builder->StartObject(27);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DCL
      */
-    public static function createDCL(FlatBufferBuilder $builder, $ID, $CREATED_AT_MS, $PRODUCER, $PRODUCT, $ATMOSPHERE, $JB2008_DRIVERS, $SPACE_WEATHER, $GRAVITY_FIELD, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM_M3_S2, $EARTH_ROTATION_RAD_S, $BALLISTIC_COEFFICIENT_M2_KG, $SETTINGS, $CORRECTION, $STATUS, $ERROR_CODE, $ERROR_MESSAGE, $POINTS, $OBJECTS, $FIT, $LEVELS, $HISTORY, $LEVEL_LN_B_CORRELATION, $MEAN_LEVEL_SIGMA_K, $STATES)
+    public static function createDCL(FlatBufferBuilder $builder, $ID, $CREATED_AT_MS, $PRODUCER, $PRODUCT, $ATMOSPHERE, $JB2008_DRIVERS, $SPACE_WEATHER, $GRAVITY_FIELD, $GRAVITY_DEGREE, $GRAVITY_ORDER, $GM_M3_S2, $EARTH_ROTATION_RAD_S, $BALLISTIC_COEFFICIENT_M2_KG, $SETTINGS, $CORRECTION, $STATUS, $ERROR_CODE, $ERROR_MESSAGE, $POINTS, $OBJECTS, $FIT, $LEVELS, $HISTORY, $LEVEL_LN_B_CORRELATION, $MEAN_LEVEL_SIGMA_K, $STATES, $PROVENANCE)
     {
-        $builder->startObject(26);
+        $builder->startObject(27);
         self::addID($builder, $ID);
         self::addCREATED_AT_MS($builder, $CREATED_AT_MS);
         self::addPRODUCER($builder, $PRODUCER);
@@ -350,6 +358,7 @@ class DCL extends Table
         self::addLEVEL_LN_B_CORRELATION($builder, $LEVEL_LN_B_CORRELATION);
         self::addMEAN_LEVEL_SIGMA_K($builder, $MEAN_LEVEL_SIGMA_K);
         self::addSTATES($builder, $STATES);
+        self::addPROVENANCE($builder, $PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -708,6 +717,16 @@ class DCL extends Table
     public static function addSTATES(FlatBufferBuilder $builder, $STATES)
     {
         $builder->addOffsetX(25, $STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(26, $PROVENANCE, 0);
     }
 
     /**

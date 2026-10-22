@@ -1,6 +1,7 @@
-// Hash: f450aecfc546934b6b8e2b4a62dca10cef82be302c5f7e5c3ea025a7ba2a1abe
-// Version: 1.0.3
+// Hash: bdd9ea316a17a3be4f05ecae2a52ccf639e6283a13f5f43d3b72e1cf1a8b5aac
+// Version: 1.0.4
 // -----------------------------------END_HEADER
+include "../PVN/main.fbs";
 enum FluxQualifier: byte {
   OBSERVED = 0,
   BURST_ADJUSTED = 1,
@@ -112,6 +113,9 @@ table SPW {
   
   /// 81-day trailing average of adjusted F10.7
   F107_ADJ_LAST81: float;
+
+  /// Per-record source, provider, software, license terms and lineage.
+  PROVENANCE: PVN;
 }
 
 table SPWCOLLECTION {

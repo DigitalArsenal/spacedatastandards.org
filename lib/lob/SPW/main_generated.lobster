@@ -115,13 +115,17 @@ class SPW : flatbuffers.handle
     /// 81-day trailing average of adjusted F10.7
     def F107_ADJ_LAST81() -> float:
         return flatbuffers.field_float32(buf_, pos_, 64, 0.0)
+    /// Per-record source, provider, software, license terms and lineage.
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 66)
+        return if o: PVN { buf_, o } else: nil
 
 def GetRootAsSPW(buf:string): return SPW { buf, flatbuffers.indirect(buf, 0) }
 
 struct SPWBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(31)
+        b_.StartObject(32)
         return this
     def add_DATE(DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DATE)
@@ -215,6 +219,9 @@ struct SPWBuilder:
         return this
     def add_F107_ADJ_LAST81(F107_ADJ_LAST81:float):
         b_.PrependFloat32Slot(30, F107_ADJ_LAST81, 0.0)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, PROVENANCE)
         return this
     def end():
         return b_.EndObject()

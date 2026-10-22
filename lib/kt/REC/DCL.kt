@@ -299,6 +299,18 @@ class DCL : Table() {
             null
         }
     }
+    /**
+     * Per-record source, provider, software, license terms and lineage.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(56)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDCL(_bb: ByteBuffer): DCL = getRootAsDCL(_bb, DCL())
@@ -307,14 +319,15 @@ class DCL : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DCLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DCL")
-        fun createDCL(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, producerOffset: Int, product: UByte, atmosphereOffset: Int, jb2008DriversOffset: Int, spaceWeatherOffset: Int, gravityFieldOffset: Int, gravityDegree: UShort, gravityOrder: UShort, gmM3S2: Double, earthRotationRadS: Double, ballisticCoefficientM2Kg: Double, settingsOffset: Int, correctionOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, pointsOffset: Int, objectsOffset: Int, fitOffset: Int, levelsOffset: Int, historyOffset: Int, levelLnBCorrelation: Double, meanLevelSigmaK: Double, statesOffset: Int) : Int {
-            builder.startTable(26)
+        fun createDCL(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, producerOffset: Int, product: UByte, atmosphereOffset: Int, jb2008DriversOffset: Int, spaceWeatherOffset: Int, gravityFieldOffset: Int, gravityDegree: UShort, gravityOrder: UShort, gmM3S2: Double, earthRotationRadS: Double, ballisticCoefficientM2Kg: Double, settingsOffset: Int, correctionOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, pointsOffset: Int, objectsOffset: Int, fitOffset: Int, levelsOffset: Int, historyOffset: Int, levelLnBCorrelation: Double, meanLevelSigmaK: Double, statesOffset: Int, provenanceOffset: Int) : Int {
+            builder.startTable(27)
             addMEANLEVELSIGMAK(builder, meanLevelSigmaK)
             addLEVELLNBCORRELATION(builder, levelLnBCorrelation)
             addBALLISTICCOEFFICIENTM2KG(builder, ballisticCoefficientM2Kg)
             addEARTHROTATIONRADS(builder, earthRotationRadS)
             addGMM3S2(builder, gmM3S2)
             addCREATEDATMS(builder, createdAtMs)
+            addPROVENANCE(builder, provenanceOffset)
             addSTATES(builder, statesOffset)
             addHISTORY(builder, historyOffset)
             addLEVELS(builder, levelsOffset)
@@ -337,7 +350,7 @@ class DCL : Table() {
             addPRODUCT(builder, product)
             return endDCL(builder)
         }
-        fun startDCL(builder: FlatBufferBuilder) = builder.startTable(26)
+        fun startDCL(builder: FlatBufferBuilder) = builder.startTable(27)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addCREATEDATMS(builder: FlatBufferBuilder, createdAtMs: Long) = builder.addLong(1, createdAtMs, 0L)
         fun addPRODUCER(builder: FlatBufferBuilder, producer: Int) = builder.addOffset(2, producer, 0)
@@ -396,6 +409,7 @@ class DCL : Table() {
         fun addLEVELLNBCORRELATION(builder: FlatBufferBuilder, levelLnBCorrelation: Double) = builder.addDouble(23, levelLnBCorrelation, Double.NaN)
         fun addMEANLEVELSIGMAK(builder: FlatBufferBuilder, meanLevelSigmaK: Double) = builder.addDouble(24, meanLevelSigmaK, Double.NaN)
         fun addSTATES(builder: FlatBufferBuilder, states: Int) = builder.addOffset(25, states, 0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(26, provenance, 0)
         fun endDCL(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

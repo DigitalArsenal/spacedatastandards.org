@@ -11,7 +11,8 @@ import FlatBuffers
 ///  Density Calibration (DCL)
 ///  Description
 ///  A calibration of a thermospheric density model and the results computed
-///  with it. A calibration is a correction to the model's exospheric
+///  with it. A calibration may be a dimensionless common-mode log-density
+///  scale for NRLMSISE-00, or a correction to the model's exospheric
 ///  temperature (added where the model adds its geomagnetic term, so a
 ///  constant correction is the same as raising every hourly Dst-derived
 ///  temperature change by that amount), estimated either from observed
@@ -40,7 +41,8 @@ import FlatBuffers
 ///  (density, Mach, heating) along an entry trajectory; a DCL density
 ///  evaluation along the same trajectory supplies its calibrated density.
 ///
-///  Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K.
+///  Times are Unix milliseconds (UTC); densities kg/m^3; temperatures K;
+///  log-density scales are dimensionless ln(corrected density / model density).
 ///  What a record computes. Append new values only; never reorder or reuse
 ///  existing values.
 public enum dclProduct: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
@@ -67,7 +69,7 @@ public enum dclProduct: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable 
 }
 
 
-///  Form of a temperature correction. Append new values only; never reorder or
+///  Form of a density-model correction. Append new values only; never reorder or
 ///  reuse existing values.
 public enum dclCorrectionForm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
@@ -77,10 +79,13 @@ public enum dclCorrectionForm: UInt8, FlatbuffersVectorInitializable, Enum, Veri
   case none_ = 0
   ///  Spherical harmonics in latitude and local solar time per time segment.
   case harmonic = 1
-  ///  Values at time nodes, optionally at altitude nodes.
+  ///  Temperature values, K, at time nodes, optionally at altitude nodes.
   case nodes = 2
+  ///  Fleet common-mode ln(density / NRLMSISE-00 density), dimensionless.
+  ///  Uses NODE_TIMES_MS and NODE_LOG_DENSITY_SCALE_DIMENSIONLESS only.
+  case logdensitynodes = 3
 
-  public static var max: dclCorrectionForm { return .nodes }
+  public static var max: dclCorrectionForm { return .logdensitynodes }
   public static var min: dclCorrectionForm { return .none_ }
 }
 
@@ -312,7 +317,7 @@ public struct dclLevel: FlatBufferVerifiableTable, FlatbuffersVectorInitializabl
   }
 }
 
-///  An exospheric-temperature correction.
+///  An exospheric-temperature correction or a dimensionless log-density scale.
 public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -332,6 +337,7 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     static let NODE_ALTITUDES_KM: VOffset = 12
     static let NODE_VALUES_K: VOffset = 14
     static let NODE_SIGMAS_K: VOffset = 16
+    static let NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: VOffset = 18
   }
 
   public var FORM: dclCorrectionForm { let o = _accessor.offset(VT.FORM); return o == 0 ? .none_ : dclCorrectionForm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
@@ -340,8 +346,9 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   ///  Harmonic: segments in time order, not overlapping; an instant in no
   ///  segment has dT = 0.
   public var SEGMENTS: FlatbufferVector<dclHarmonicSegment> { return _accessor.vector(at: VT.SEGMENTS, byteSize: 4) }
-  ///  Nodes: node times, strictly increasing. dT is linear in time between
-  ///  nodes and held outside them.
+  ///  Nodes or LogDensityNodes: UTC Unix milliseconds, strictly increasing.
+  ///  The selected correction is linear in time between nodes and held at the
+  ///  first/last value outside the node span.
   public var NODE_TIMES_MS: FlatbufferVector<Int64> { return _accessor.vector(at: VT.NODE_TIMES_MS, byteSize: 8) }
   public func withUnsafePointerToNodeTimesMs<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NODE_TIMES_MS, body: body) }
   ///  Nodes: altitude nodes, km, strictly increasing; empty = one global
@@ -358,7 +365,17 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   ///  estimated.
   public var NODE_SIGMAS_K: FlatbufferVector<Double> { return _accessor.vector(at: VT.NODE_SIGMAS_K, byteSize: 8) }
   public func withUnsafePointerToNodeSigmasK<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NODE_SIGMAS_K, body: body) }
-  public static func startdclCorrection(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  LogDensityNodes only: s = ln(rho_drag / rho_NRLMSISE00), dimensionless,
+  ///  one finite value per NODE_TIMES_MS entry, shared by the whole fleet.
+  ///  rho_drag = rho_NRLMSISE00 * exp(s(t)); this is not a temperature change.
+  ///  NODE_ALTITUDES_KM, NODE_VALUES_K, NODE_SIGMAS_K and SEGMENTS must be empty.
+  ///  SETTINGS.TO_MS marks the last solve epoch. Published nodes explicitly
+  ///  include the producer's forecast decay through at least 48 hours after
+  ///  that epoch. Interpolate those nodes; do not apply another decay in the
+  ///  consumer. After the final published node, hold its value.
+  public var NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: FlatbufferVector<Double> { return _accessor.vector(at: VT.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, byteSize: 8) }
+  public func withUnsafePointerToNodeLogDensityScaleDimensionless<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, body: body) }
+  public static func startdclCorrection(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(FORM: dclCorrectionForm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORM.rawValue, def: 0, at: VT.FORM) }
   public static func add(DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEGREE, def: 0, at: VT.DEGREE) }
   public static func addVectorOf(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
@@ -366,6 +383,7 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   public static func addVectorOf(NODE_ALTITUDES_KM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_ALTITUDES_KM, at: VT.NODE_ALTITUDES_KM) }
   public static func addVectorOf(NODE_VALUES_K: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_VALUES_K, at: VT.NODE_VALUES_K) }
   public static func addVectorOf(NODE_SIGMAS_K: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_SIGMAS_K, at: VT.NODE_SIGMAS_K) }
+  public static func addVectorOf(NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, at: VT.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS) }
   public static func enddclCorrection(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createdclCorrection(
     _ fbb: inout FlatBufferBuilder,
@@ -375,7 +393,8 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     NODE_TIMES_MSVectorOffset NODE_TIMES_MS: Offset = Offset(),
     NODE_ALTITUDES_KMVectorOffset NODE_ALTITUDES_KM: Offset = Offset(),
     NODE_VALUES_KVectorOffset NODE_VALUES_K: Offset = Offset(),
-    NODE_SIGMAS_KVectorOffset NODE_SIGMAS_K: Offset = Offset()
+    NODE_SIGMAS_KVectorOffset NODE_SIGMAS_K: Offset = Offset(),
+    NODE_LOG_DENSITY_SCALE_DIMENSIONLESSVectorOffset NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: Offset = Offset()
   ) -> Offset {
     let __start = dclCorrection.startdclCorrection(&fbb)
     dclCorrection.add(FORM: FORM, &fbb)
@@ -385,6 +404,7 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     dclCorrection.addVectorOf(NODE_ALTITUDES_KM: NODE_ALTITUDES_KM, &fbb)
     dclCorrection.addVectorOf(NODE_VALUES_K: NODE_VALUES_K, &fbb)
     dclCorrection.addVectorOf(NODE_SIGMAS_K: NODE_SIGMAS_K, &fbb)
+    dclCorrection.addVectorOf(NODE_LOG_DENSITY_SCALE_DIMENSIONLESS: NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, &fbb)
     return dclCorrection.enddclCorrection(&fbb, start: __start)
   }
 
@@ -397,6 +417,7 @@ public struct dclCorrection: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     try _v.visit(field: VT.NODE_ALTITUDES_KM, fieldName: "NODE_ALTITUDES_KM", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.NODE_VALUES_K, fieldName: "NODE_VALUES_K", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VT.NODE_SIGMAS_K, fieldName: "NODE_SIGMAS_K", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.NODE_LOG_DENSITY_SCALE_DIMENSIONLESS, fieldName: "NODE_LOG_DENSITY_SCALE_DIMENSIONLESS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     _v.finish()
   }
 }
@@ -1414,6 +1435,7 @@ public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let LEVEL_LN_B_CORRELATION: VOffset = 50
     static let MEAN_LEVEL_SIGMA_K: VOffset = 52
     static let STATES: VOffset = 54
+    static let PROVENANCE: VOffset = 56
   }
 
   ///  Identifier of the record; empty = not assigned.
@@ -1468,7 +1490,9 @@ public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var MEAN_LEVEL_SIGMA_K: Double { let o = _accessor.offset(VT.MEAN_LEVEL_SIGMA_K); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
   ///  OrbitalEnergy and DragWork: the states and their results.
   public var STATES: dclStates? { let o = _accessor.offset(VT.STATES); return o == 0 ? nil : dclStates(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startDCL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
+  ///  Per-record source, provider, software, license terms and lineage.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startDCL(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(CREATED_AT_MS: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CREATED_AT_MS, def: 0, at: VT.CREATED_AT_MS) }
   public static func add(PRODUCER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PRODUCER, at: VT.PRODUCER) }
@@ -1495,6 +1519,7 @@ public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(LEVEL_LN_B_CORRELATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEVEL_LN_B_CORRELATION, def: .nan, at: VT.LEVEL_LN_B_CORRELATION) }
   public static func add(MEAN_LEVEL_SIGMA_K: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_LEVEL_SIGMA_K, def: .nan, at: VT.MEAN_LEVEL_SIGMA_K) }
   public static func add(STATES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATES, at: VT.STATES) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func endDCL(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDCL(
     _ fbb: inout FlatBufferBuilder,
@@ -1523,7 +1548,8 @@ public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     HISTORYVectorOffset HISTORY: Offset = Offset(),
     LEVEL_LN_B_CORRELATION: Double = .nan,
     MEAN_LEVEL_SIGMA_K: Double = .nan,
-    STATESOffset STATES: Offset = Offset()
+    STATESOffset STATES: Offset = Offset(),
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = DCL.startDCL(&fbb)
     DCL.add(ID: ID, &fbb)
@@ -1552,6 +1578,7 @@ public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     DCL.add(LEVEL_LN_B_CORRELATION: LEVEL_LN_B_CORRELATION, &fbb)
     DCL.add(MEAN_LEVEL_SIGMA_K: MEAN_LEVEL_SIGMA_K, &fbb)
     DCL.add(STATES: STATES, &fbb)
+    DCL.add(PROVENANCE: PROVENANCE, &fbb)
     return DCL.endDCL(&fbb, start: __start)
   }
 
@@ -1583,6 +1610,7 @@ public struct DCL: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.LEVEL_LN_B_CORRELATION, fieldName: "LEVEL_LN_B_CORRELATION", required: false, type: Double.self)
     try _v.visit(field: VT.MEAN_LEVEL_SIGMA_K, fieldName: "MEAN_LEVEL_SIGMA_K", required: false, type: Double.self)
     try _v.visit(field: VT.STATES, fieldName: "STATES", required: false, type: ForwardOffset<dclStates>.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     _v.finish()
   }
 }
