@@ -194,6 +194,23 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Verify GitHub Packages version
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ needs.build.outputs.version }}
+        run: |
+          set -euo pipefail
+          for attempt in {1..23}; do
+            VERSION=$(npm view "@digitalarsenal/spacedatastandards@${RELEASE_VERSION}" version --registry=https://npm.pkg.github.com 2>/dev/null || true)
+            if [ "$VERSION" = "$RELEASE_VERSION" ]; then
+              echo "VERIFIED: GitHub Packages @digitalarsenal/spacedatastandards@${VERSION}"
+              exit 0
+            fi
+            if [ "$attempt" -lt 23 ]; then sleep 120; fi
+          done
+          echo "::error::GitHub Packages did not serve ${RELEASE_VERSION} within 45 minutes"
+          exit 1
+
   # ============================================
   # PyPI (Python)
   # ============================================
