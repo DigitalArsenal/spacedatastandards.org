@@ -726,8 +726,27 @@ func (rcv *EOP) MutateNutationDepsUncertaintyRadians(n float64) bool {
 	return rcv.MutateNUTATION_DEPS_UNCERTAINTY_RADIANS(n)
 }
 
+/// Where this Earth-orientation row comes from and the terms it travels under.
+func (rcv *EOP) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *EOP) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Where this Earth-orientation row comes from and the terms it travels under.
 func EOPStart(builder *flatbuffers.Builder) {
-	builder.StartObject(30)
+	builder.StartObject(31)
 }
 func EOPAddDATE(builder *flatbuffers.Builder, DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DATE), 0)
@@ -908,6 +927,12 @@ func EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder *flatbuffers.Builder, NUTAT
 }
 func EOPAddNutationDepsUncertaintyRadians(builder *flatbuffers.Builder, NUTATION_DEPS_UNCERTAINTY_RADIANS float64) {
 	EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS)
+}
+func EOPAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func EOPAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	EOPAddPROVENANCE(builder, PROVENANCE)
 }
 func EOPEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

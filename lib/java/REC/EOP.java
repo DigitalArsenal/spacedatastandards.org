@@ -172,6 +172,11 @@ public final class EOP extends com.google.flatbuffers.Table {
    * 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
    */
   public double NUTATION_DEPS_UNCERTAINTY_RADIANS() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Where this Earth-orientation row comes from and the terms it travels under.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(64); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createEOP(FlatBufferBuilder builder,
       int DATEOffset,
@@ -203,8 +208,9 @@ public final class EOP extends com.google.flatbuffers.Table {
       double NUTATION_DPSI_RADIANS,
       double NUTATION_DEPS_RADIANS,
       double NUTATION_DPSI_UNCERTAINTY_RADIANS,
-      double NUTATION_DEPS_UNCERTAINTY_RADIANS) {
-    builder.startTable(30);
+      double NUTATION_DEPS_UNCERTAINTY_RADIANS,
+      int PROVENANCEOffset) {
+    builder.startTable(31);
     EOP.addNutationDepsUncertaintyRadians(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS);
     EOP.addNutationDpsiUncertaintyRadians(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS);
     EOP.addNutationDepsRadians(builder, NUTATION_DEPS_RADIANS);
@@ -215,6 +221,7 @@ public final class EOP extends com.google.flatbuffers.Table {
     EOP.addXCelestialPoleOffsetRadiansHp(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
     EOP.addYPoleWanderRadiansHp(builder, Y_POLE_WANDER_RADIANS_HP);
     EOP.addXPoleWanderRadiansHp(builder, X_POLE_WANDER_RADIANS_HP);
+    EOP.addProvenance(builder, PROVENANCEOffset);
     EOP.addDataSetCid(builder, DATA_SET_CIDOffset);
     EOP.addDataSetEpoch(builder, DATA_SET_EPOCHOffset);
     EOP.addLengthOfDayUncertaintySeconds(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
@@ -238,7 +245,7 @@ public final class EOP extends com.google.flatbuffers.Table {
     return EOP.endEOP(builder);
   }
 
-  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(30); }
+  public static void startEOP(FlatBufferBuilder builder) { builder.startTable(31); }
   public static void addDate(FlatBufferBuilder builder, int DATEOffset) { builder.addOffset(0, DATEOffset, 0); }
   public static void addMjd(FlatBufferBuilder builder, long MJD) { builder.addInt(1, (int) MJD, (int) 0L); }
   public static void addXPoleWanderRadians(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.addFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
@@ -269,6 +276,7 @@ public final class EOP extends com.google.flatbuffers.Table {
   public static void addNutationDepsRadians(FlatBufferBuilder builder, double NUTATION_DEPS_RADIANS) { builder.addDouble(27, NUTATION_DEPS_RADIANS, 0.0); }
   public static void addNutationDpsiUncertaintyRadians(FlatBufferBuilder builder, double NUTATION_DPSI_UNCERTAINTY_RADIANS) { builder.addDouble(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0); }
   public static void addNutationDepsUncertaintyRadians(FlatBufferBuilder builder, double NUTATION_DEPS_UNCERTAINTY_RADIANS) { builder.addDouble(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(30, PROVENANCEOffset, 0); }
   public static int endEOP(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

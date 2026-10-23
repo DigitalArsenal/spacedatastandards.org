@@ -6,6 +6,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -1416,6 +1417,7 @@ impl<'a> PPE<'a> {
     pub const VT_EPHEMERIS_SOURCE: ::flatbuffers::VOffsetT = 24;
     pub const VT_NOMINAL_SEGMENT_SPAN: ::flatbuffers::VOffsetT = 26;
     pub const VT_NOMINAL_NUM_COEFFICIENTS: ::flatbuffers::VOffsetT = 28;
+    pub const VT_PROVENANCE: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1429,6 +1431,7 @@ impl<'a> PPE<'a> {
     ) -> ::flatbuffers::WIPOffset<PPE<'bldr>> {
         let mut builder = PPEBuilder::new(_fbb);
         builder.add_NOMINAL_SEGMENT_SPAN(args.NOMINAL_SEGMENT_SPAN);
+        if let Some(x) = args.PROVENANCE { builder.add_PROVENANCE(x); }
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.ORBITAL_ELEMENT_RECORDS { builder.add_ORBITAL_ELEMENT_RECORDS(x); }
         if let Some(x) = args.POSITION_RECORDS { builder.add_POSITION_RECORDS(x); }
@@ -1476,6 +1479,9 @@ impl<'a> PPE<'a> {
         });
         let NOMINAL_SEGMENT_SPAN = self.NOMINAL_SEGMENT_SPAN();
         let NOMINAL_NUM_COEFFICIENTS = self.NOMINAL_NUM_COEFFICIENTS();
+        let PROVENANCE = self.PROVENANCE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PPET {
             COMMENT,
             OBJECT,
@@ -1490,6 +1496,7 @@ impl<'a> PPE<'a> {
             EPHEMERIS_SOURCE,
             NOMINAL_SEGMENT_SPAN,
             NOMINAL_NUM_COEFFICIENTS,
+            PROVENANCE,
         }
     }
 
@@ -1616,6 +1623,15 @@ impl<'a> PPE<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<u16>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, Some(0)).unwrap()}
     }
+
+    /// Where this polynomial ephemeris comes from and the terms it travels under.
+    #[inline]
+    pub fn PROVENANCE(&self) -> Option<PVN<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PVN>>(PPE::VT_PROVENANCE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PPE<'_> {
@@ -1637,6 +1653,7 @@ impl ::flatbuffers::Verifiable for PPE<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EPHEMERIS_SOURCE", Self::VT_EPHEMERIS_SOURCE, false)?
             .visit_field::<f64>("NOMINAL_SEGMENT_SPAN", Self::VT_NOMINAL_SEGMENT_SPAN, false)?
             .visit_field::<u16>("NOMINAL_NUM_COEFFICIENTS", Self::VT_NOMINAL_NUM_COEFFICIENTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PVN>>("PROVENANCE", Self::VT_PROVENANCE, false)?
             .finish();
         Ok(())
     }
@@ -1656,6 +1673,7 @@ pub struct PPEArgs<'a> {
     pub EPHEMERIS_SOURCE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub NOMINAL_SEGMENT_SPAN: f64,
     pub NOMINAL_NUM_COEFFICIENTS: u16,
+    pub PROVENANCE: Option<::flatbuffers::WIPOffset<PVN<'a>>>,
 }
 
 impl<'a> Default for PPEArgs<'a> {
@@ -1675,6 +1693,7 @@ impl<'a> Default for PPEArgs<'a> {
             EPHEMERIS_SOURCE: None,
             NOMINAL_SEGMENT_SPAN: 0.0,
             NOMINAL_NUM_COEFFICIENTS: 0,
+            PROVENANCE: None,
         }
     }
 }
@@ -1751,6 +1770,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PPEBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_PROVENANCE(&mut self, PROVENANCE: ::flatbuffers::WIPOffset<PVN<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PVN>>(PPE::VT_PROVENANCE, PROVENANCE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PPEBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PPEBuilder {
@@ -1782,6 +1806,7 @@ impl ::core::fmt::Debug for PPE<'_> {
         ds.field("EPHEMERIS_SOURCE", &self.EPHEMERIS_SOURCE());
         ds.field("NOMINAL_SEGMENT_SPAN", &self.NOMINAL_SEGMENT_SPAN());
         ds.field("NOMINAL_NUM_COEFFICIENTS", &self.NOMINAL_NUM_COEFFICIENTS());
+        ds.field("PROVENANCE", &self.PROVENANCE());
         ds.finish()
     }
 }
@@ -1802,6 +1827,7 @@ pub struct PPET {
     pub EPHEMERIS_SOURCE: Option<alloc::string::String>,
     pub NOMINAL_SEGMENT_SPAN: f64,
     pub NOMINAL_NUM_COEFFICIENTS: u16,
+    pub PROVENANCE: Option<alloc::boxed::Box<PVNT>>,
 }
 
 impl Default for PPET {
@@ -1820,6 +1846,7 @@ impl Default for PPET {
             EPHEMERIS_SOURCE: None,
             NOMINAL_SEGMENT_SPAN: 0.0,
             NOMINAL_NUM_COEFFICIENTS: 0,
+            PROVENANCE: None,
         }
     }
 }
@@ -1860,6 +1887,9 @@ impl PPET {
         });
         let NOMINAL_SEGMENT_SPAN = self.NOMINAL_SEGMENT_SPAN;
         let NOMINAL_NUM_COEFFICIENTS = self.NOMINAL_NUM_COEFFICIENTS;
+        let PROVENANCE = self.PROVENANCE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PPE::create(_fbb, &PPEArgs{
             COMMENT,
             OBJECT,
@@ -1874,6 +1904,7 @@ impl PPET {
             EPHEMERIS_SOURCE,
             NOMINAL_SEGMENT_SPAN,
             NOMINAL_NUM_COEFFICIENTS,
+            PROVENANCE,
         })
     }
 }

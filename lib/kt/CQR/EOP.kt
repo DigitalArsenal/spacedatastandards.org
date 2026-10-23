@@ -305,6 +305,18 @@ class EOP : Table() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Where this Earth-orientation row comes from and the terms it travels under.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(64)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEOP(_bb: ByteBuffer): EOP = getRootAsEOP(_bb, EOP())
@@ -313,8 +325,8 @@ class EOP : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun EOPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOP")
-        fun createEOP(builder: FlatBufferBuilder, dateOffset: Int, mjd: UInt, xPoleWanderRadians: Float, yPoleWanderRadians: Float, xCelestialPoleOffsetRadians: Float, yCelestialPoleOffsetRadians: Float, ut1MinusUtcSeconds: Float, taiMinusUtcSeconds: UShort, lengthOfDayCorrectionSeconds: Float, dataType: Byte, series: UByte, iauConvention: UByte, xPoleWanderUncertaintyRadians: Float, yPoleWanderUncertaintyRadians: Float, xCelestialPoleOffsetUncertaintyRadians: Float, yCelestialPoleOffsetUncertaintyRadians: Float, ut1MinusUtcUncertaintySeconds: Float, lengthOfDayUncertaintySeconds: Float, xPoleWanderRadiansHp: Double, yPoleWanderRadiansHp: Double, xCelestialPoleOffsetRadiansHp: Double, yCelestialPoleOffsetRadiansHp: Double, ut1MinusUtcSecondsHp: Double, lengthOfDayCorrectionSecondsHp: Double, dataSetEpochOffset: Int, dataSetCidOffset: Int, nutationDpsiRadians: Double, nutationDepsRadians: Double, nutationDpsiUncertaintyRadians: Double, nutationDepsUncertaintyRadians: Double) : Int {
-            builder.startTable(30)
+        fun createEOP(builder: FlatBufferBuilder, dateOffset: Int, mjd: UInt, xPoleWanderRadians: Float, yPoleWanderRadians: Float, xCelestialPoleOffsetRadians: Float, yCelestialPoleOffsetRadians: Float, ut1MinusUtcSeconds: Float, taiMinusUtcSeconds: UShort, lengthOfDayCorrectionSeconds: Float, dataType: Byte, series: UByte, iauConvention: UByte, xPoleWanderUncertaintyRadians: Float, yPoleWanderUncertaintyRadians: Float, xCelestialPoleOffsetUncertaintyRadians: Float, yCelestialPoleOffsetUncertaintyRadians: Float, ut1MinusUtcUncertaintySeconds: Float, lengthOfDayUncertaintySeconds: Float, xPoleWanderRadiansHp: Double, yPoleWanderRadiansHp: Double, xCelestialPoleOffsetRadiansHp: Double, yCelestialPoleOffsetRadiansHp: Double, ut1MinusUtcSecondsHp: Double, lengthOfDayCorrectionSecondsHp: Double, dataSetEpochOffset: Int, dataSetCidOffset: Int, nutationDpsiRadians: Double, nutationDepsRadians: Double, nutationDpsiUncertaintyRadians: Double, nutationDepsUncertaintyRadians: Double, provenanceOffset: Int) : Int {
+            builder.startTable(31)
             addNUTATIONDEPSUNCERTAINTYRADIANS(builder, nutationDepsUncertaintyRadians)
             addNUTATIONDPSIUNCERTAINTYRADIANS(builder, nutationDpsiUncertaintyRadians)
             addNUTATIONDEPSRADIANS(builder, nutationDepsRadians)
@@ -325,6 +337,7 @@ class EOP : Table() {
             addXCELESTIALPOLEOFFSETRADIANSHP(builder, xCelestialPoleOffsetRadiansHp)
             addYPOLEWANDERRADIANSHP(builder, yPoleWanderRadiansHp)
             addXPOLEWANDERRADIANSHP(builder, xPoleWanderRadiansHp)
+            addPROVENANCE(builder, provenanceOffset)
             addDATASETCID(builder, dataSetCidOffset)
             addDATASETEPOCH(builder, dataSetEpochOffset)
             addLENGTHOFDAYUNCERTAINTYSECONDS(builder, lengthOfDayUncertaintySeconds)
@@ -347,7 +360,7 @@ class EOP : Table() {
             addDATATYPE(builder, dataType)
             return endEOP(builder)
         }
-        fun startEOP(builder: FlatBufferBuilder) = builder.startTable(30)
+        fun startEOP(builder: FlatBufferBuilder) = builder.startTable(31)
         fun addDATE(builder: FlatBufferBuilder, date: Int) = builder.addOffset(0, date, 0)
         fun addMJD(builder: FlatBufferBuilder, mjd: UInt) = builder.addInt(1, mjd.toInt(), 0)
         fun addXPOLEWANDERRADIANS(builder: FlatBufferBuilder, xPoleWanderRadians: Float) = builder.addFloat(2, xPoleWanderRadians, 0.0)
@@ -378,6 +391,7 @@ class EOP : Table() {
         fun addNUTATIONDEPSRADIANS(builder: FlatBufferBuilder, nutationDepsRadians: Double) = builder.addDouble(27, nutationDepsRadians, 0.0)
         fun addNUTATIONDPSIUNCERTAINTYRADIANS(builder: FlatBufferBuilder, nutationDpsiUncertaintyRadians: Double) = builder.addDouble(28, nutationDpsiUncertaintyRadians, 0.0)
         fun addNUTATIONDEPSUNCERTAINTYRADIANS(builder: FlatBufferBuilder, nutationDepsUncertaintyRadians: Double) = builder.addDouble(29, nutationDepsUncertaintyRadians, 0.0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(30, provenance, 0)
         fun endEOP(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

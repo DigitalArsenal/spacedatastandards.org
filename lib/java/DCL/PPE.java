@@ -113,6 +113,11 @@ public final class PPE extends com.google.flatbuffers.Table {
    * Informational; actual counts are in individual records.
    */
   public int NOMINAL_NUM_COEFFICIENTS() { int o = __offset(28); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Where this polynomial ephemeris comes from and the terms it travels under.
+   */
+  public PVN PROVENANCE() { return PROVENANCE(new PVN()); }
+  public PVN PROVENANCE(PVN obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPPE(FlatBufferBuilder builder,
       int COMMENTOffset,
@@ -127,9 +132,11 @@ public final class PPE extends com.google.flatbuffers.Table {
       int ORBITAL_ELEMENT_RECORDSOffset,
       int EPHEMERIS_SOURCEOffset,
       double NOMINAL_SEGMENT_SPAN,
-      int NOMINAL_NUM_COEFFICIENTS) {
-    builder.startTable(13);
+      int NOMINAL_NUM_COEFFICIENTS,
+      int PROVENANCEOffset) {
+    builder.startTable(14);
     PPE.addNominalSegmentSpan(builder, NOMINAL_SEGMENT_SPAN);
+    PPE.addProvenance(builder, PROVENANCEOffset);
     PPE.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PPE.addOrbitalElementRecords(builder, ORBITAL_ELEMENT_RECORDSOffset);
     PPE.addPositionRecords(builder, POSITION_RECORDSOffset);
@@ -145,7 +152,7 @@ public final class PPE extends com.google.flatbuffers.Table {
     return PPE.endPPE(builder);
   }
 
-  public static void startPPE(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startPPE(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(0, COMMENTOffset, 0); }
   public static int createCommentVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startCommentVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
@@ -165,6 +172,7 @@ public final class PPE extends com.google.flatbuffers.Table {
   public static void addEphemerisSource(FlatBufferBuilder builder, int EPHEMERIS_SOURCEOffset) { builder.addOffset(10, EPHEMERIS_SOURCEOffset, 0); }
   public static void addNominalSegmentSpan(FlatBufferBuilder builder, double NOMINAL_SEGMENT_SPAN) { builder.addDouble(11, NOMINAL_SEGMENT_SPAN, 0.0); }
   public static void addNominalNumCoefficients(FlatBufferBuilder builder, int NOMINAL_NUM_COEFFICIENTS) { builder.addShort(12, (short) NOMINAL_NUM_COEFFICIENTS, (short) 0); }
+  public static void addProvenance(FlatBufferBuilder builder, int PROVENANCEOffset) { builder.addOffset(13, PROVENANCEOffset, 0); }
   public static int endPPE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

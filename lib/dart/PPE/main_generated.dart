@@ -699,10 +699,12 @@ class PPE {
   ///  Informational; actual counts are in individual records.
   int get NOMINAL_NUM_COEFFICIENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 28, 0);
   int get nominalNumCoefficients => NOMINAL_NUM_COEFFICIENTS;
+  ///  Where this polynomial ephemeris comes from and the terms it travels under.
+  PVN? get PROVENANCE => PVN.reader.vTableGetNullable(_bc, _bcOffset, 30);
 
   @override
   String toString() {
-    return 'PPE{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, defaultBasisType: ${defaultBasisType}, positionRecords: ${positionRecords}, orbitalElementRecords: ${orbitalElementRecords}, ephemerisSource: ${ephemerisSource}, nominalSegmentSpan: ${nominalSegmentSpan}, nominalNumCoefficients: ${nominalNumCoefficients}}';
+    return 'PPE{COMMENT: ${COMMENT}, OBJECT: ${OBJECT}, centerName: ${centerName}, referenceFrame: ${referenceFrame}, timeSystem: ${timeSystem}, startTime: ${startTime}, stopTime: ${stopTime}, defaultBasisType: ${defaultBasisType}, positionRecords: ${positionRecords}, orbitalElementRecords: ${orbitalElementRecords}, ephemerisSource: ${ephemerisSource}, nominalSegmentSpan: ${nominalSegmentSpan}, nominalNumCoefficients: ${nominalNumCoefficients}, PROVENANCE: ${PROVENANCE}}';
   }
 }
 
@@ -720,7 +722,7 @@ class PPEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(14);
   }
 
   int addCommentOffset(int? offset) {
@@ -775,6 +777,10 @@ class PPEBuilder {
     fbBuilder.addUint16(12, NOMINAL_NUM_COEFFICIENTS);
     return fbBuilder.offset;
   }
+  int addProvenanceOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -795,6 +801,7 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
   final String? _EPHEMERIS_SOURCE;
   final double? _NOMINAL_SEGMENT_SPAN;
   final int? _NOMINAL_NUM_COEFFICIENTS;
+  final PVNObjectBuilder? _PROVENANCE;
 
   PPEObjectBuilder({
     List<String>? COMMENT,
@@ -821,6 +828,7 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
     double? nominalSegmentSpan,
     int? NOMINAL_NUM_COEFFICIENTS,
     int? nominalNumCoefficients,
+    PVNObjectBuilder? PROVENANCE,
   })
       : _COMMENT = COMMENT,
         _OBJECT = OBJECT,
@@ -834,7 +842,8 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
         _ORBITAL_ELEMENT_RECORDS = orbitalElementRecords ?? ORBITAL_ELEMENT_RECORDS,
         _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
         _NOMINAL_SEGMENT_SPAN = nominalSegmentSpan ?? NOMINAL_SEGMENT_SPAN,
-        _NOMINAL_NUM_COEFFICIENTS = nominalNumCoefficients ?? NOMINAL_NUM_COEFFICIENTS;
+        _NOMINAL_NUM_COEFFICIENTS = nominalNumCoefficients ?? NOMINAL_NUM_COEFFICIENTS,
+        _PROVENANCE = PROVENANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -855,7 +864,8 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_ORBITAL_ELEMENT_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
         : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
-    fbBuilder.startTable(13);
+    final int? PROVENANCEOffset = _PROVENANCE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, COMMENTOffset);
     fbBuilder.addOffset(1, OBJECTOffset);
     fbBuilder.addOffset(2, CENTER_NAMEOffset);
@@ -869,6 +879,7 @@ class PPEObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, EPHEMERIS_SOURCEOffset);
     fbBuilder.addFloat64(11, _NOMINAL_SEGMENT_SPAN);
     fbBuilder.addUint16(12, _NOMINAL_NUM_COEFFICIENTS);
+    fbBuilder.addOffset(13, PROVENANCEOffset);
     return fbBuilder.endTable();
   }
 

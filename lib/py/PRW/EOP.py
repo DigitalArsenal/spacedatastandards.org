@@ -287,8 +287,20 @@ class EOP(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Where this Earth-orientation row comes from and the terms it travels under.
+    # EOP
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def EOPStart(builder):
-    builder.StartObject(30)
+    builder.StartObject(31)
 
 def Start(builder):
     EOPStart(builder)
@@ -473,12 +485,23 @@ def EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_R
 def AddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS):
     EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS)
 
+def EOPAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    EOPAddPROVENANCE(builder, PROVENANCE)
+
 def EOPEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return EOPEnd(builder)
 
+import PVN
+try:
+    from typing import Optional
+except:
+    pass
 
 class EOPT(object):
 
@@ -515,6 +538,7 @@ class EOPT(object):
         NUTATION_DEPS_RADIANS = 0.0,
         NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
         NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0,
+        PROVENANCE = None,
     ):
         self.DATE = DATE  # type: Optional[str]
         self.MJD = MJD  # type: int
@@ -546,6 +570,7 @@ class EOPT(object):
         self.NUTATION_DEPS_RADIANS = NUTATION_DEPS_RADIANS  # type: float
         self.NUTATION_DPSI_UNCERTAINTY_RADIANS = NUTATION_DPSI_UNCERTAINTY_RADIANS  # type: float
         self.NUTATION_DEPS_UNCERTAINTY_RADIANS = NUTATION_DEPS_UNCERTAINTY_RADIANS  # type: float
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -598,6 +623,8 @@ class EOPT(object):
         self.NUTATION_DEPS_RADIANS = EOP.NUTATION_DEPS_RADIANS()
         self.NUTATION_DPSI_UNCERTAINTY_RADIANS = EOP.NUTATION_DPSI_UNCERTAINTY_RADIANS()
         self.NUTATION_DEPS_UNCERTAINTY_RADIANS = EOP.NUTATION_DEPS_UNCERTAINTY_RADIANS()
+        if EOP.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(EOP.PROVENANCE())
 
     # EOPT
     def Pack(self, builder):
@@ -607,6 +634,8 @@ class EOPT(object):
             DATA_SET_EPOCH = builder.CreateString(self.DATA_SET_EPOCH)
         if self.DATA_SET_CID is not None:
             DATA_SET_CID = builder.CreateString(self.DATA_SET_CID)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
         EOPStart(builder)
         if self.DATE is not None:
             EOPAddDATE(builder, DATE)
@@ -641,5 +670,7 @@ class EOPT(object):
         EOPAddNUTATION_DEPS_RADIANS(builder, self.NUTATION_DEPS_RADIANS)
         EOPAddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, self.NUTATION_DPSI_UNCERTAINTY_RADIANS)
         EOPAddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, self.NUTATION_DEPS_UNCERTAINTY_RADIANS)
+        if self.PROVENANCE is not None:
+            EOPAddPROVENANCE(builder, PROVENANCE)
         EOP = EOPEnd(builder)
         return EOP

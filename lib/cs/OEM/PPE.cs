@@ -84,6 +84,8 @@ public struct PPE : IFlatbufferObject
   /// Nominal number of coefficients per segment.
   /// Informational; actual counts are in individual records.
   public ushort NOMINAL_NUM_COEFFICIENTS { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Where this polynomial ephemeris comes from and the terms it travels under.
+  public PVN? PROVENANCE { get { int o = __p.__offset(30); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PPE> CreatePPE(FlatBufferBuilder builder,
       VectorOffset COMMENTOffset = default(VectorOffset),
@@ -98,9 +100,11 @@ public struct PPE : IFlatbufferObject
       VectorOffset ORBITAL_ELEMENT_RECORDSOffset = default(VectorOffset),
       StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset),
       double NOMINAL_SEGMENT_SPAN = 0.0,
-      ushort NOMINAL_NUM_COEFFICIENTS = 0) {
-    builder.StartTable(13);
+      ushort NOMINAL_NUM_COEFFICIENTS = 0,
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
+    builder.StartTable(14);
     PPE.AddNOMINAL_SEGMENT_SPAN(builder, NOMINAL_SEGMENT_SPAN);
+    PPE.AddPROVENANCE(builder, PROVENANCEOffset);
     PPE.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PPE.AddORBITAL_ELEMENT_RECORDS(builder, ORBITAL_ELEMENT_RECORDSOffset);
     PPE.AddPOSITION_RECORDS(builder, POSITION_RECORDSOffset);
@@ -116,7 +120,7 @@ public struct PPE : IFlatbufferObject
     return PPE.EndPPE(builder);
   }
 
-  public static void StartPPE(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartPPE(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddCOMMENT(FlatBufferBuilder builder, VectorOffset COMMENTOffset) { builder.AddOffset(0, COMMENTOffset.Value, 0); }
   public static VectorOffset CreateCOMMENTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateCOMMENTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -145,6 +149,7 @@ public struct PPE : IFlatbufferObject
   public static void AddEPHEMERIS_SOURCE(FlatBufferBuilder builder, StringOffset EPHEMERIS_SOURCEOffset) { builder.AddOffset(10, EPHEMERIS_SOURCEOffset.Value, 0); }
   public static void AddNOMINAL_SEGMENT_SPAN(FlatBufferBuilder builder, double NOMINAL_SEGMENT_SPAN) { builder.AddDouble(11, NOMINAL_SEGMENT_SPAN, 0.0); }
   public static void AddNOMINAL_NUM_COEFFICIENTS(FlatBufferBuilder builder, ushort NOMINAL_NUM_COEFFICIENTS) { builder.AddUshort(12, NOMINAL_NUM_COEFFICIENTS, 0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(13, PROVENANCEOffset.Value, 0); }
   public static Offset<PPE> EndPPE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PPE>(o);
@@ -173,6 +178,7 @@ public struct PPE : IFlatbufferObject
     _o.EPHEMERIS_SOURCE = this.EPHEMERIS_SOURCE;
     _o.NOMINAL_SEGMENT_SPAN = this.NOMINAL_SEGMENT_SPAN;
     _o.NOMINAL_NUM_COEFFICIENTS = this.NOMINAL_NUM_COEFFICIENTS;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
   }
   public static Offset<PPE> Pack(FlatBufferBuilder builder, PPET _o) {
     if (_o == null) return default(Offset<PPE>);
@@ -200,6 +206,7 @@ public struct PPE : IFlatbufferObject
       _ORBITAL_ELEMENT_RECORDS = CreateORBITAL_ELEMENT_RECORDSVector(builder, __ORBITAL_ELEMENT_RECORDS);
     }
     var _EPHEMERIS_SOURCE = _o.EPHEMERIS_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_SOURCE);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
     return CreatePPE(
       builder,
       _COMMENT,
@@ -214,7 +221,8 @@ public struct PPE : IFlatbufferObject
       _ORBITAL_ELEMENT_RECORDS,
       _EPHEMERIS_SOURCE,
       _o.NOMINAL_SEGMENT_SPAN,
-      _o.NOMINAL_NUM_COEFFICIENTS);
+      _o.NOMINAL_NUM_COEFFICIENTS,
+      _PROVENANCE);
   }
 }
 
@@ -233,6 +241,7 @@ public class PPET
   public string EPHEMERIS_SOURCE { get; set; }
   public double NOMINAL_SEGMENT_SPAN { get; set; }
   public ushort NOMINAL_NUM_COEFFICIENTS { get; set; }
+  public PVNT PROVENANCE { get; set; }
 
   public PPET() {
     this.COMMENT = null;
@@ -248,6 +257,7 @@ public class PPET
     this.EPHEMERIS_SOURCE = null;
     this.NOMINAL_SEGMENT_SPAN = 0.0;
     this.NOMINAL_NUM_COEFFICIENTS = 0;
+    this.PROVENANCE = null;
   }
   public static PPET DeserializeFromBinary(byte[] fbBuffer) {
     return PPE.GetRootAsPPE(new ByteBuffer(fbBuffer)).UnPack();
@@ -278,6 +288,7 @@ static public class PPEVerify
       && verifier.VerifyString(tablePos, 24 /*EPHEMERIS_SOURCE*/, false)
       && verifier.VerifyField(tablePos, 26 /*NOMINAL_SEGMENT_SPAN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*NOMINAL_NUM_COEFFICIENTS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyTable(tablePos, 30 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -1,5 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { DataType } from './DataType.js';
+import { PVN, PVNT } from './PVN.js';
 import { eopSeries } from './eopSeries.js';
 import { iauPrecessionNutationModel } from './iauPrecessionNutationModel.js';
 /**
@@ -153,6 +154,10 @@ export declare class EOP implements flatbuffers.IUnpackableObject<EOPT> {
      * 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
      */
     NUTATION_DEPS_UNCERTAINTY_RADIANS(): number;
+    /**
+     * Where this Earth-orientation row comes from and the terms it travels under.
+     */
+    PROVENANCE(obj?: PVN): PVN | null;
     static startEOP(builder: flatbuffers.Builder): void;
     static addDate(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset): void;
     static addMjd(builder: flatbuffers.Builder, MJD: number): void;
@@ -184,10 +189,10 @@ export declare class EOP implements flatbuffers.IUnpackableObject<EOPT> {
     static addNutationDepsRadians(builder: flatbuffers.Builder, NUTATION_DEPS_RADIANS: number): void;
     static addNutationDpsiUncertaintyRadians(builder: flatbuffers.Builder, NUTATION_DPSI_UNCERTAINTY_RADIANS: number): void;
     static addNutationDepsUncertaintyRadians(builder: flatbuffers.Builder, NUTATION_DEPS_UNCERTAINTY_RADIANS: number): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static endEOP(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishEOPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedEOPBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createEOP(builder: flatbuffers.Builder, DATEOffset: flatbuffers.Offset, MJD: number, X_POLE_WANDER_RADIANS: number, Y_POLE_WANDER_RADIANS: number, X_CELESTIAL_POLE_OFFSET_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_RADIANS: number, UT1_MINUS_UTC_SECONDS: number, TAI_MINUS_UTC_SECONDS: number, LENGTH_OF_DAY_CORRECTION_SECONDS: number, DATA_TYPE: DataType, SERIES: eopSeries, IAU_CONVENTION: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS: number, X_POLE_WANDER_RADIANS_HP: number, Y_POLE_WANDER_RADIANS_HP: number, X_CELESTIAL_POLE_OFFSET_RADIANS_HP: number, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP: number, UT1_MINUS_UTC_SECONDS_HP: number, LENGTH_OF_DAY_CORRECTION_SECONDS_HP: number, DATA_SET_EPOCHOffset: flatbuffers.Offset, DATA_SET_CIDOffset: flatbuffers.Offset, NUTATION_DPSI_RADIANS: number, NUTATION_DEPS_RADIANS: number, NUTATION_DPSI_UNCERTAINTY_RADIANS: number, NUTATION_DEPS_UNCERTAINTY_RADIANS: number): flatbuffers.Offset;
     unpack(): EOPT;
     unpackTo(_o: EOPT): void;
 }
@@ -222,7 +227,8 @@ export declare class EOPT implements flatbuffers.IGeneratedObject {
     NUTATION_DEPS_RADIANS: number;
     NUTATION_DPSI_UNCERTAINTY_RADIANS: number;
     NUTATION_DEPS_UNCERTAINTY_RADIANS: number;
-    constructor(DATE?: string | Uint8Array | null, MJD?: number, X_POLE_WANDER_RADIANS?: number, Y_POLE_WANDER_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS?: number, UT1_MINUS_UTC_SECONDS?: number, TAI_MINUS_UTC_SECONDS?: number, LENGTH_OF_DAY_CORRECTION_SECONDS?: number, DATA_TYPE?: DataType, SERIES?: eopSeries, IAU_CONVENTION?: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS?: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS?: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS?: number, X_POLE_WANDER_RADIANS_HP?: number, Y_POLE_WANDER_RADIANS_HP?: number, X_CELESTIAL_POLE_OFFSET_RADIANS_HP?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP?: number, UT1_MINUS_UTC_SECONDS_HP?: number, LENGTH_OF_DAY_CORRECTION_SECONDS_HP?: number, DATA_SET_EPOCH?: string | Uint8Array | null, DATA_SET_CID?: string | Uint8Array | null, NUTATION_DPSI_RADIANS?: number, NUTATION_DEPS_RADIANS?: number, NUTATION_DPSI_UNCERTAINTY_RADIANS?: number, NUTATION_DEPS_UNCERTAINTY_RADIANS?: number);
+    PROVENANCE: PVNT | null;
+    constructor(DATE?: string | Uint8Array | null, MJD?: number, X_POLE_WANDER_RADIANS?: number, Y_POLE_WANDER_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS?: number, UT1_MINUS_UTC_SECONDS?: number, TAI_MINUS_UTC_SECONDS?: number, LENGTH_OF_DAY_CORRECTION_SECONDS?: number, DATA_TYPE?: DataType, SERIES?: eopSeries, IAU_CONVENTION?: iauPrecessionNutationModel, X_POLE_WANDER_UNCERTAINTY_RADIANS?: number, Y_POLE_WANDER_UNCERTAINTY_RADIANS?: number, X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS?: number, UT1_MINUS_UTC_UNCERTAINTY_SECONDS?: number, LENGTH_OF_DAY_UNCERTAINTY_SECONDS?: number, X_POLE_WANDER_RADIANS_HP?: number, Y_POLE_WANDER_RADIANS_HP?: number, X_CELESTIAL_POLE_OFFSET_RADIANS_HP?: number, Y_CELESTIAL_POLE_OFFSET_RADIANS_HP?: number, UT1_MINUS_UTC_SECONDS_HP?: number, LENGTH_OF_DAY_CORRECTION_SECONDS_HP?: number, DATA_SET_EPOCH?: string | Uint8Array | null, DATA_SET_CID?: string | Uint8Array | null, NUTATION_DPSI_RADIANS?: number, NUTATION_DEPS_RADIANS?: number, NUTATION_DPSI_UNCERTAINTY_RADIANS?: number, NUTATION_DEPS_UNCERTAINTY_RADIANS?: number, PROVENANCE?: PVNT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EOP.d.ts.map

@@ -197,22 +197,30 @@ class PPE extends Table
         return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Where this polynomial ephemeris comes from and the terms it travels under.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPPE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PPE
      */
-    public static function createPPE(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $DEFAULT_BASIS_TYPE, $POSITION_RECORDS, $ORBITAL_ELEMENT_RECORDS, $EPHEMERIS_SOURCE, $NOMINAL_SEGMENT_SPAN, $NOMINAL_NUM_COEFFICIENTS)
+    public static function createPPE(FlatBufferBuilder $builder, $COMMENT, $OBJECT, $CENTER_NAME, $REFERENCE_FRAME, $TIME_SYSTEM, $START_TIME, $STOP_TIME, $DEFAULT_BASIS_TYPE, $POSITION_RECORDS, $ORBITAL_ELEMENT_RECORDS, $EPHEMERIS_SOURCE, $NOMINAL_SEGMENT_SPAN, $NOMINAL_NUM_COEFFICIENTS, $PROVENANCE)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addCOMMENT($builder, $COMMENT);
         self::addOBJECT($builder, $OBJECT);
         self::addCENTER_NAME($builder, $CENTER_NAME);
@@ -226,6 +234,7 @@ class PPE extends Table
         self::addEPHEMERIS_SOURCE($builder, $EPHEMERIS_SOURCE);
         self::addNOMINAL_SEGMENT_SPAN($builder, $NOMINAL_SEGMENT_SPAN);
         self::addNOMINAL_NUM_COEFFICIENTS($builder, $NOMINAL_NUM_COEFFICIENTS);
+        self::addPROVENANCE($builder, $PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -430,6 +439,16 @@ class PPE extends Table
     public static function addNOMINAL_NUM_COEFFICIENTS(FlatBufferBuilder $builder, $NOMINAL_NUM_COEFFICIENTS)
     {
         $builder->addUshortX(12, $NOMINAL_NUM_COEFFICIENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(13, $PROVENANCE, 0);
     }
 
     /**

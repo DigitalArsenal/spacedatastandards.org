@@ -1,6 +1,7 @@
-// Hash: 20bb0784c303cd1c818a5d8a412c8a87b09e12eeeb696112efed08bf1b038ae8
-// Version: 1.0.4
+// Hash: 385ac6bc8cded5d39401d9fe64a880afc74485b1f15aab042e68dd8814775716
+// Version: 1.0.5
 // -----------------------------------END_HEADER
+include "../PVN/main.fbs";
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
 include "../CAT/main.fbs";
@@ -271,6 +272,9 @@ table PPE {
   /// Nominal number of coefficients per segment.
   /// Informational; actual counts are in individual records.
   NOMINAL_NUM_COEFFICIENTS: uint16;
+
+  /// Where this polynomial ephemeris comes from and the terms it travels under.
+  PROVENANCE:PVN;
 }
 
 root_type PPE;

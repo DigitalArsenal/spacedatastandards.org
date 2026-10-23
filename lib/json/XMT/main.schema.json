@@ -2598,6 +2598,10 @@
         "NOMINAL_NUM_COEFFICIENTS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 65535,
                 "description" : "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where this polynomial ephemeris comes from and the terms it travels under."
               }
       },
       "additionalProperties" : false
@@ -3036,6 +3040,10 @@
         "NUTATION_DEPS_UNCERTAINTY_RADIANS" : {
                 "type" : "number",
                 "description" : "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where this Earth-orientation row comes from and the terms it travels under."
               }
       },
       "additionalProperties" : false

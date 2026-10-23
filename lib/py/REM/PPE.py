@@ -202,8 +202,20 @@ class PPE(object):
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Where this polynomial ephemeris comes from and the terms it travels under.
+    # PPE
+    def PROVENANCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PVN import PVN
+            obj = PVN()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PPEStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(14)
 
 def Start(builder):
     PPEStart(builder)
@@ -322,6 +334,12 @@ def PPEAddNOMINAL_NUM_COEFFICIENTS(builder, NOMINAL_NUM_COEFFICIENTS):
 def AddNOMINAL_NUM_COEFFICIENTS(builder, NOMINAL_NUM_COEFFICIENTS):
     PPEAddNOMINAL_NUM_COEFFICIENTS(builder, NOMINAL_NUM_COEFFICIENTS)
 
+def PPEAddPROVENANCE(builder, PROVENANCE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PROVENANCE), 0)
+
+def AddPROVENANCE(builder, PROVENANCE):
+    PPEAddPROVENANCE(builder, PROVENANCE)
+
 def PPEEnd(builder):
     return builder.EndObject()
 
@@ -331,6 +349,7 @@ def End(builder):
 import CAT
 import PPEOrbitalElementRecord
 import PPEPositionRecord
+import PVN
 import RFM
 try:
     from typing import List, Optional
@@ -355,6 +374,7 @@ class PPET(object):
         EPHEMERIS_SOURCE = None,
         NOMINAL_SEGMENT_SPAN = 0.0,
         NOMINAL_NUM_COEFFICIENTS = 0,
+        PROVENANCE = None,
     ):
         self.COMMENT = COMMENT  # type: Optional[List[Optional[str]]]
         self.OBJECT = OBJECT  # type: Optional[CAT.CATT]
@@ -369,6 +389,7 @@ class PPET(object):
         self.EPHEMERIS_SOURCE = EPHEMERIS_SOURCE  # type: Optional[str]
         self.NOMINAL_SEGMENT_SPAN = NOMINAL_SEGMENT_SPAN  # type: float
         self.NOMINAL_NUM_COEFFICIENTS = NOMINAL_NUM_COEFFICIENTS  # type: int
+        self.PROVENANCE = PROVENANCE  # type: Optional[PVN.PVNT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -423,6 +444,8 @@ class PPET(object):
         self.EPHEMERIS_SOURCE = PPE.EPHEMERIS_SOURCE()
         self.NOMINAL_SEGMENT_SPAN = PPE.NOMINAL_SEGMENT_SPAN()
         self.NOMINAL_NUM_COEFFICIENTS = PPE.NOMINAL_NUM_COEFFICIENTS()
+        if PPE.PROVENANCE() is not None:
+            self.PROVENANCE = PVN.PVNT.InitFromObj(PPE.PROVENANCE())
 
     # PPET
     def Pack(self, builder):
@@ -462,6 +485,8 @@ class PPET(object):
             ORBITAL_ELEMENT_RECORDS = builder.EndVector()
         if self.EPHEMERIS_SOURCE is not None:
             EPHEMERIS_SOURCE = builder.CreateString(self.EPHEMERIS_SOURCE)
+        if self.PROVENANCE is not None:
+            PROVENANCE = self.PROVENANCE.Pack(builder)
         PPEStart(builder)
         if self.COMMENT is not None:
             PPEAddCOMMENT(builder, COMMENT)
@@ -485,5 +510,7 @@ class PPET(object):
             PPEAddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCE)
         PPEAddNOMINAL_SEGMENT_SPAN(builder, self.NOMINAL_SEGMENT_SPAN)
         PPEAddNOMINAL_NUM_COEFFICIENTS(builder, self.NOMINAL_NUM_COEFFICIENTS)
+        if self.PROVENANCE is not None:
+            PPEAddPROVENANCE(builder, PROVENANCE)
         PPE = PPEEnd(builder)
         return PPE

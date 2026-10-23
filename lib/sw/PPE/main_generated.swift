@@ -399,6 +399,7 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let EPHEMERIS_SOURCE: VOffset = 24
     static let NOMINAL_SEGMENT_SPAN: VOffset = 26
     static let NOMINAL_NUM_COEFFICIENTS: VOffset = 28
+    static let PROVENANCE: VOffset = 30
   }
 
   ///  Plain-text comments.
@@ -438,7 +439,9 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Nominal number of coefficients per segment.
   ///  Informational; actual counts are in individual records.
   public var NOMINAL_NUM_COEFFICIENTS: UInt16 { let o = _accessor.offset(VT.NOMINAL_NUM_COEFFICIENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public static func startPPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  Where this polynomial ephemeris comes from and the terms it travels under.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPPE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func addVectorOf(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VT.COMMENT) }
   public static func add(OBJECT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT, at: VT.OBJECT) }
   public static func add(CENTER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CENTER_NAME, at: VT.CENTER_NAME) }
@@ -452,6 +455,7 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VT.EPHEMERIS_SOURCE) }
   public static func add(NOMINAL_SEGMENT_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_SEGMENT_SPAN, def: 0.0, at: VT.NOMINAL_SEGMENT_SPAN) }
   public static func add(NOMINAL_NUM_COEFFICIENTS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NOMINAL_NUM_COEFFICIENTS, def: 0, at: VT.NOMINAL_NUM_COEFFICIENTS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func endPPE(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPPE(
     _ fbb: inout FlatBufferBuilder,
@@ -467,7 +471,8 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     ORBITAL_ELEMENT_RECORDSVectorOffset ORBITAL_ELEMENT_RECORDS: Offset = Offset(),
     EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset = Offset(),
     NOMINAL_SEGMENT_SPAN: Double = 0.0,
-    NOMINAL_NUM_COEFFICIENTS: UInt16 = 0
+    NOMINAL_NUM_COEFFICIENTS: UInt16 = 0,
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = PPE.startPPE(&fbb)
     PPE.addVectorOf(COMMENT: COMMENT, &fbb)
@@ -483,6 +488,7 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PPE.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
     PPE.add(NOMINAL_SEGMENT_SPAN: NOMINAL_SEGMENT_SPAN, &fbb)
     PPE.add(NOMINAL_NUM_COEFFICIENTS: NOMINAL_NUM_COEFFICIENTS, &fbb)
+    PPE.add(PROVENANCE: PROVENANCE, &fbb)
     return PPE.endPPE(&fbb, start: __start)
   }
 
@@ -501,6 +507,7 @@ public struct PPE: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.EPHEMERIS_SOURCE, fieldName: "EPHEMERIS_SOURCE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.NOMINAL_SEGMENT_SPAN, fieldName: "NOMINAL_SEGMENT_SPAN", required: false, type: Double.self)
     try _v.visit(field: VT.NOMINAL_NUM_COEFFICIENTS, fieldName: "NOMINAL_NUM_COEFFICIENTS", required: false, type: UInt16.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     _v.finish()
   }
 }

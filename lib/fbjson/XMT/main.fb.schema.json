@@ -14920,6 +14920,11 @@
           "maximum": 65535,
           "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records.",
           "x-flatbuffer-type": "uint16"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Where this polynomial ephemeris comes from and the terms it travels under.",
+          "x-flatbuffer-type": "PVN"
         }
       },
       "additionalProperties": false
@@ -15685,6 +15690,11 @@
           "type": "number",
           "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.",
           "x-flatbuffer-type": "double"
+        },
+        "PROVENANCE": {
+          "$ref": "#/definitions/PVN",
+          "description": "Where this Earth-orientation row comes from and the terms it travels under.",
+          "x-flatbuffer-type": "PVN"
         }
       },
       "additionalProperties": false
