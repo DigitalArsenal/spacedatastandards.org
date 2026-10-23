@@ -1,0 +1,71 @@
+// Hash: 3f494401ae3d89575156c675433dbfb4554143909fabd7bfe3fd5557028093be
+// Version: 0.1.0
+// -----------------------------------END_HEADER
+include "../CAT/main.fbs";
+
+/// Source system that produced this catalog collection.
+enum catalogSource : byte {
+  /// 0 - Unknown or unspecified source
+  UNKNOWN,
+  /// 1 - US Space Command (18 SDS / Space-Track)
+  USSPACECOM,
+  /// 2 - CelesTrak
+  CELESTRAK,
+  /// 3 - European Space Agency (ESA DISCOS)
+  ESA,
+  /// 4 - Beijing Kaiyun Parallel Space Technology (SpaceMapper)
+  SPACEMAPPER,
+  /// 5 - Russian Space Agency (Roscosmos)
+  ROSCOSMOS,
+  /// 6 - Japan Aerospace Exploration Agency
+  JAXA,
+  /// 7 - Indian Space Research Organisation (ISRO)
+  ISRO,
+  /// 8 - Unified Data Library (UDL)
+  UDL,
+  /// 9 - USSF Unified Data Library
+  USSF_UDL,
+  /// 10 - LeoLabs
+  LEOLABS,
+  /// 11 - ExoAnalytic Solutions
+  EXOANALYTIC,
+  /// 12 - Numerica Corporation
+  NUMERICA,
+  /// 13 - Private/custom source
+  PRIVATE
+}
+
+/// Catalog Collection Message
+///
+/// A paginated collection of CAT (Catalog Entity) records from a
+/// space object catalog source. Supports pagination metadata for
+/// incremental catalog retrieval from sources like Space-Track,
+/// CelesTrak, SpaceMapper, ESA DISCOS, or the Unified Data Library.
+table CTC {
+  /// Records in this page/batch
+  RECORDS: [CAT];
+
+  /// Total number of records in the full catalog query result
+  TOTAL: uint32;
+
+  /// Current page index (1-based)
+  PAGE_INDEX: uint32;
+
+  /// Records per page
+  PAGE_SIZE: uint32;
+
+  /// Source system that produced this catalog data
+  SOURCE: catalogSource = UNKNOWN;
+
+  /// ISO 8601 timestamp when this collection was fetched/generated
+  CREATED: string;
+
+  /// Query filter applied (e.g., "countryCode=CN", "objectType=PAYLOAD")
+  QUERY_FILTER: string;
+
+  /// Comment or notes about this collection
+  COMMENT: string;
+}
+
+root_type CTC;
+file_identifier "$CTC";
