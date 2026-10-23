@@ -13,6 +13,8 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
               FLATBUFFERS_VERSION_REVISION == 19,
              "Non-compatible flatbuffers version included");
 
+#include "../PVN/main_generated.h"
+
 struct EOP;
 struct EOPBuilder;
 
@@ -171,7 +173,8 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NUTATION_DPSI_RADIANS = 56,
     VT_NUTATION_DEPS_RADIANS = 58,
     VT_NUTATION_DPSI_UNCERTAINTY_RADIANS = 60,
-    VT_NUTATION_DEPS_UNCERTAINTY_RADIANS = 62
+    VT_NUTATION_DEPS_UNCERTAINTY_RADIANS = 62,
+    VT_PROVENANCE = 64
   };
   ///  Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
   const ::flatbuffers::String *DATE() const {
@@ -311,6 +314,10 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double NUTATION_DEPS_UNCERTAINTY_RADIANS() const {
     return GetField<double>(VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0);
   }
+  /// Where this Earth-orientation row comes from and the terms it travels under.
+  const PVN *PROVENANCE() const {
+    return GetPointer<const PVN *>(VT_PROVENANCE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -347,6 +354,8 @@ struct EOP FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_NUTATION_DEPS_RADIANS, 8) &&
            VerifyField<double>(verifier, VT_NUTATION_DPSI_UNCERTAINTY_RADIANS, 8) &&
            VerifyField<double>(verifier, VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, 8) &&
+           VerifyOffset(verifier, VT_PROVENANCE) &&
+           verifier.VerifyTable(PROVENANCE()) &&
            verifier.EndTable();
   }
 };
@@ -445,6 +454,9 @@ struct EOPBuilder {
   void add_NUTATION_DEPS_UNCERTAINTY_RADIANS(double NUTATION_DEPS_UNCERTAINTY_RADIANS) {
     fbb_.AddElement<double>(EOP::VT_NUTATION_DEPS_UNCERTAINTY_RADIANS, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0);
   }
+  void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
+    fbb_.AddOffset(EOP::VT_PROVENANCE, PROVENANCE);
+  }
   explicit EOPBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -487,7 +499,8 @@ inline ::flatbuffers::Offset<EOP> CreateEOP(
     double NUTATION_DPSI_RADIANS = 0.0,
     double NUTATION_DEPS_RADIANS = 0.0,
     double NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
-    double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0) {
+    double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   EOPBuilder builder_(_fbb);
   builder_.add_NUTATION_DEPS_UNCERTAINTY_RADIANS(NUTATION_DEPS_UNCERTAINTY_RADIANS);
   builder_.add_NUTATION_DPSI_UNCERTAINTY_RADIANS(NUTATION_DPSI_UNCERTAINTY_RADIANS);
@@ -499,6 +512,7 @@ inline ::flatbuffers::Offset<EOP> CreateEOP(
   builder_.add_X_CELESTIAL_POLE_OFFSET_RADIANS_HP(X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
   builder_.add_Y_POLE_WANDER_RADIANS_HP(Y_POLE_WANDER_RADIANS_HP);
   builder_.add_X_POLE_WANDER_RADIANS_HP(X_POLE_WANDER_RADIANS_HP);
+  builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_DATA_SET_CID(DATA_SET_CID);
   builder_.add_DATA_SET_EPOCH(DATA_SET_EPOCH);
   builder_.add_LENGTH_OF_DAY_UNCERTAINTY_SECONDS(LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
@@ -553,7 +567,8 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
     double NUTATION_DPSI_RADIANS = 0.0,
     double NUTATION_DEPS_RADIANS = 0.0,
     double NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
-    double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0) {
+    double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   auto DATE__ = DATE ? _fbb.CreateString(DATE) : 0;
   auto DATA_SET_EPOCH__ = DATA_SET_EPOCH ? _fbb.CreateString(DATA_SET_EPOCH) : 0;
   auto DATA_SET_CID__ = DATA_SET_CID ? _fbb.CreateString(DATA_SET_CID) : 0;
@@ -588,7 +603,8 @@ inline ::flatbuffers::Offset<EOP> CreateEOPDirect(
       NUTATION_DPSI_RADIANS,
       NUTATION_DEPS_RADIANS,
       NUTATION_DPSI_UNCERTAINTY_RADIANS,
-      NUTATION_DEPS_UNCERTAINTY_RADIANS);
+      NUTATION_DEPS_UNCERTAINTY_RADIANS,
+      PROVENANCE);
 }
 
 inline const EOP *GetEOP(const void *buf) {

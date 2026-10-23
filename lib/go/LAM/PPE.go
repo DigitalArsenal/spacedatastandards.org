@@ -348,8 +348,27 @@ func (rcv *PPE) MutateNominalNumCoefficients(n uint16) bool {
 	return rcv.MutateNOMINAL_NUM_COEFFICIENTS(n)
 }
 
+/// Where this polynomial ephemeris comes from and the terms it travels under.
+func (rcv *PPE) PROVENANCE(obj *PVN) *PVN {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PVN)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PPE) Provenance(obj *PVN) *PVN {
+	return rcv.PROVENANCE(obj)
+}
+
+/// Where this polynomial ephemeris comes from and the terms it travels under.
 func PPEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func PPEAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(COMMENT), 0)
@@ -446,6 +465,12 @@ func PPEAddNOMINAL_NUM_COEFFICIENTS(builder *flatbuffers.Builder, NOMINAL_NUM_CO
 }
 func PPEAddNominalNumCoefficients(builder *flatbuffers.Builder, NOMINAL_NUM_COEFFICIENTS uint16) {
 	PPEAddNOMINAL_NUM_COEFFICIENTS(builder, NOMINAL_NUM_COEFFICIENTS)
+}
+func PPEAddPROVENANCE(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PROVENANCE), 0)
+}
+func PPEAddProvenance(builder *flatbuffers.Builder, PROVENANCE flatbuffers.UOffsetT) {
+	PPEAddPROVENANCE(builder, PROVENANCE)
 }
 func PPEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

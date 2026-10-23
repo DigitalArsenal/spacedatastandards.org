@@ -2,6 +2,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
+import { PVN, PVNT } from './PVN.js';
 import { RFM, RFMT } from './RFM.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
 import { timingStandard } from './timingStandard.js';
@@ -87,6 +88,10 @@ export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
      * Informational; actual counts are in individual records.
      */
     NOMINAL_NUM_COEFFICIENTS(): number;
+    /**
+     * Where this polynomial ephemeris comes from and the terms it travels under.
+     */
+    PROVENANCE(obj?: PVN): PVN | null;
     static startPPE(builder: flatbuffers.Builder): void;
     static addComment(builder: flatbuffers.Builder, COMMENTOffset: flatbuffers.Offset): void;
     static createCommentVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
@@ -107,6 +112,7 @@ export declare class PPE implements flatbuffers.IUnpackableObject<PPET> {
     static addEphemerisSource(builder: flatbuffers.Builder, EPHEMERIS_SOURCEOffset: flatbuffers.Offset): void;
     static addNominalSegmentSpan(builder: flatbuffers.Builder, NOMINAL_SEGMENT_SPAN: number): void;
     static addNominalNumCoefficients(builder: flatbuffers.Builder, NOMINAL_NUM_COEFFICIENTS: number): void;
+    static addProvenance(builder: flatbuffers.Builder, PROVENANCEOffset: flatbuffers.Offset): void;
     static endPPE(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPPEBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -127,7 +133,8 @@ export declare class PPET implements flatbuffers.IGeneratedObject {
     EPHEMERIS_SOURCE: string | Uint8Array | null;
     NOMINAL_SEGMENT_SPAN: number;
     NOMINAL_NUM_COEFFICIENTS: number;
-    constructor(COMMENT?: (string)[], OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DEFAULT_BASIS_TYPE?: polynomialBasisType, POSITION_RECORDS?: (PPEPositionRecordT)[], ORBITAL_ELEMENT_RECORDS?: (PPEOrbitalElementRecordT)[], EPHEMERIS_SOURCE?: string | Uint8Array | null, NOMINAL_SEGMENT_SPAN?: number, NOMINAL_NUM_COEFFICIENTS?: number);
+    PROVENANCE: PVNT | null;
+    constructor(COMMENT?: (string)[], OBJECT?: CATT | null, CENTER_NAME?: string | Uint8Array | null, REFERENCE_FRAME?: RFMT | null, TIME_SYSTEM?: timingStandard, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, DEFAULT_BASIS_TYPE?: polynomialBasisType, POSITION_RECORDS?: (PPEPositionRecordT)[], ORBITAL_ELEMENT_RECORDS?: (PPEOrbitalElementRecordT)[], EPHEMERIS_SOURCE?: string | Uint8Array | null, NOMINAL_SEGMENT_SPAN?: number, NOMINAL_NUM_COEFFICIENTS?: number, PROVENANCE?: PVNT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PPE.d.ts.map

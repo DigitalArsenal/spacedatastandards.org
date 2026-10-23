@@ -436,13 +436,17 @@ class PPE : flatbuffers.handle
     /// Informational; actual counts are in individual records.
     def NOMINAL_NUM_COEFFICIENTS() -> int:
         return flatbuffers.field_uint16(buf_, pos_, 28, 0)
+    /// Where this polynomial ephemeris comes from and the terms it travels under.
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: PVN { buf_, o } else: nil
 
 def GetRootAsPPE(buf:string): return PPE { buf, flatbuffers.indirect(buf, 0) }
 
 struct PPEBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(14)
         return this
     def add_COMMENT(COMMENT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, COMMENT)
@@ -482,6 +486,9 @@ struct PPEBuilder:
         return this
     def add_NOMINAL_NUM_COEFFICIENTS(NOMINAL_NUM_COEFFICIENTS:int):
         b_.PrependUint16Slot(12, NOMINAL_NUM_COEFFICIENTS, 0)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, PROVENANCE)
         return this
     def end():
         return b_.EndObject()

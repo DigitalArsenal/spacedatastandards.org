@@ -350,22 +350,30 @@ class EOP extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Where this Earth-orientation row comes from and the terms it travels under.
+    public function getPROVENANCE()
+    {
+        $obj = new PVN();
+        $o = $this->__offset(64);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEOP(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(30);
+        $builder->StartObject(31);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EOP
      */
-    public static function createEOP(FlatBufferBuilder $builder, $DATE, $MJD, $X_POLE_WANDER_RADIANS, $Y_POLE_WANDER_RADIANS, $X_CELESTIAL_POLE_OFFSET_RADIANS, $Y_CELESTIAL_POLE_OFFSET_RADIANS, $UT1_MINUS_UTC_SECONDS, $TAI_MINUS_UTC_SECONDS, $LENGTH_OF_DAY_CORRECTION_SECONDS, $DATA_TYPE, $SERIES, $IAU_CONVENTION, $X_POLE_WANDER_UNCERTAINTY_RADIANS, $Y_POLE_WANDER_UNCERTAINTY_RADIANS, $X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, $Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, $UT1_MINUS_UTC_UNCERTAINTY_SECONDS, $LENGTH_OF_DAY_UNCERTAINTY_SECONDS, $X_POLE_WANDER_RADIANS_HP, $Y_POLE_WANDER_RADIANS_HP, $X_CELESTIAL_POLE_OFFSET_RADIANS_HP, $Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, $UT1_MINUS_UTC_SECONDS_HP, $LENGTH_OF_DAY_CORRECTION_SECONDS_HP, $DATA_SET_EPOCH, $DATA_SET_CID, $NUTATION_DPSI_RADIANS, $NUTATION_DEPS_RADIANS, $NUTATION_DPSI_UNCERTAINTY_RADIANS, $NUTATION_DEPS_UNCERTAINTY_RADIANS)
+    public static function createEOP(FlatBufferBuilder $builder, $DATE, $MJD, $X_POLE_WANDER_RADIANS, $Y_POLE_WANDER_RADIANS, $X_CELESTIAL_POLE_OFFSET_RADIANS, $Y_CELESTIAL_POLE_OFFSET_RADIANS, $UT1_MINUS_UTC_SECONDS, $TAI_MINUS_UTC_SECONDS, $LENGTH_OF_DAY_CORRECTION_SECONDS, $DATA_TYPE, $SERIES, $IAU_CONVENTION, $X_POLE_WANDER_UNCERTAINTY_RADIANS, $Y_POLE_WANDER_UNCERTAINTY_RADIANS, $X_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, $Y_CELESTIAL_POLE_OFFSET_UNCERTAINTY_RADIANS, $UT1_MINUS_UTC_UNCERTAINTY_SECONDS, $LENGTH_OF_DAY_UNCERTAINTY_SECONDS, $X_POLE_WANDER_RADIANS_HP, $Y_POLE_WANDER_RADIANS_HP, $X_CELESTIAL_POLE_OFFSET_RADIANS_HP, $Y_CELESTIAL_POLE_OFFSET_RADIANS_HP, $UT1_MINUS_UTC_SECONDS_HP, $LENGTH_OF_DAY_CORRECTION_SECONDS_HP, $DATA_SET_EPOCH, $DATA_SET_CID, $NUTATION_DPSI_RADIANS, $NUTATION_DEPS_RADIANS, $NUTATION_DPSI_UNCERTAINTY_RADIANS, $NUTATION_DEPS_UNCERTAINTY_RADIANS, $PROVENANCE)
     {
-        $builder->startObject(30);
+        $builder->startObject(31);
         self::addDATE($builder, $DATE);
         self::addMJD($builder, $MJD);
         self::addX_POLE_WANDER_RADIANS($builder, $X_POLE_WANDER_RADIANS);
@@ -396,6 +404,7 @@ class EOP extends Table
         self::addNUTATION_DEPS_RADIANS($builder, $NUTATION_DEPS_RADIANS);
         self::addNUTATION_DPSI_UNCERTAINTY_RADIANS($builder, $NUTATION_DPSI_UNCERTAINTY_RADIANS);
         self::addNUTATION_DEPS_UNCERTAINTY_RADIANS($builder, $NUTATION_DEPS_UNCERTAINTY_RADIANS);
+        self::addPROVENANCE($builder, $PROVENANCE);
         $o = $builder->endObject();
         return $o;
     }
@@ -698,6 +707,16 @@ class EOP extends Table
     public static function addNUTATION_DEPS_UNCERTAINTY_RADIANS(FlatBufferBuilder $builder, $NUTATION_DEPS_UNCERTAINTY_RADIANS)
     {
         $builder->addDoubleX(29, $NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPROVENANCE(FlatBufferBuilder $builder, $PROVENANCE)
+    {
+        $builder->addOffsetX(30, $PROVENANCE, 0);
     }
 
     /**

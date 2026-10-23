@@ -14,6 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "../CAT/main_generated.h"
+#include "../PVN/main_generated.h"
 #include "../RFM/main_generated.h"
 #include "../TIM/main_generated.h"
 
@@ -673,7 +674,8 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ORBITAL_ELEMENT_RECORDS = 22,
     VT_EPHEMERIS_SOURCE = 24,
     VT_NOMINAL_SEGMENT_SPAN = 26,
-    VT_NOMINAL_NUM_COEFFICIENTS = 28
+    VT_NOMINAL_NUM_COEFFICIENTS = 28,
+    VT_PROVENANCE = 30
   };
   /// Plain-text comments.
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COMMENT() const {
@@ -734,6 +736,10 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   uint16_t NOMINAL_NUM_COEFFICIENTS() const {
     return GetField<uint16_t>(VT_NOMINAL_NUM_COEFFICIENTS, 0);
   }
+  /// Where this polynomial ephemeris comes from and the terms it travels under.
+  const PVN *PROVENANCE() const {
+    return GetPointer<const PVN *>(VT_PROVENANCE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -762,6 +768,8 @@ struct PPE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(EPHEMERIS_SOURCE()) &&
            VerifyField<double>(verifier, VT_NOMINAL_SEGMENT_SPAN, 8) &&
            VerifyField<uint16_t>(verifier, VT_NOMINAL_NUM_COEFFICIENTS, 2) &&
+           VerifyOffset(verifier, VT_PROVENANCE) &&
+           verifier.VerifyTable(PROVENANCE()) &&
            verifier.EndTable();
   }
 };
@@ -809,6 +817,9 @@ struct PPEBuilder {
   void add_NOMINAL_NUM_COEFFICIENTS(uint16_t NOMINAL_NUM_COEFFICIENTS) {
     fbb_.AddElement<uint16_t>(PPE::VT_NOMINAL_NUM_COEFFICIENTS, NOMINAL_NUM_COEFFICIENTS, 0);
   }
+  void add_PROVENANCE(::flatbuffers::Offset<PVN> PROVENANCE) {
+    fbb_.AddOffset(PPE::VT_PROVENANCE, PROVENANCE);
+  }
   explicit PPEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -834,9 +845,11 @@ inline ::flatbuffers::Offset<PPE> CreatePPE(
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PPEOrbitalElementRecord>>> ORBITAL_ELEMENT_RECORDS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE = 0,
     double NOMINAL_SEGMENT_SPAN = 0.0,
-    uint16_t NOMINAL_NUM_COEFFICIENTS = 0) {
+    uint16_t NOMINAL_NUM_COEFFICIENTS = 0,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   PPEBuilder builder_(_fbb);
   builder_.add_NOMINAL_SEGMENT_SPAN(NOMINAL_SEGMENT_SPAN);
+  builder_.add_PROVENANCE(PROVENANCE);
   builder_.add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE);
   builder_.add_ORBITAL_ELEMENT_RECORDS(ORBITAL_ELEMENT_RECORDS);
   builder_.add_POSITION_RECORDS(POSITION_RECORDS);
@@ -866,7 +879,8 @@ inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
     const std::vector<::flatbuffers::Offset<PPEOrbitalElementRecord>> *ORBITAL_ELEMENT_RECORDS = nullptr,
     const char *EPHEMERIS_SOURCE = nullptr,
     double NOMINAL_SEGMENT_SPAN = 0.0,
-    uint16_t NOMINAL_NUM_COEFFICIENTS = 0) {
+    uint16_t NOMINAL_NUM_COEFFICIENTS = 0,
+    ::flatbuffers::Offset<PVN> PROVENANCE = 0) {
   auto COMMENT__ = COMMENT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COMMENT) : 0;
   auto CENTER_NAME__ = CENTER_NAME ? _fbb.CreateString(CENTER_NAME) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
@@ -888,7 +902,8 @@ inline ::flatbuffers::Offset<PPE> CreatePPEDirect(
       ORBITAL_ELEMENT_RECORDS__,
       EPHEMERIS_SOURCE__,
       NOMINAL_SEGMENT_SPAN,
-      NOMINAL_NUM_COEFFICIENTS);
+      NOMINAL_NUM_COEFFICIENTS,
+      PROVENANCE);
 }
 
 inline const PPE *GetPPE(const void *buf) {

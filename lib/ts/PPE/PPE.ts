@@ -7,6 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 import { CAT, CATT } from './CAT.js';
 import { PPEOrbitalElementRecord, PPEOrbitalElementRecordT } from './PPEOrbitalElementRecord.js';
 import { PPEPositionRecord, PPEPositionRecordT } from './PPEPositionRecord.js';
+import { PVN, PVNT } from './PVN.js';
 import { RFM, RFMT } from './RFM.js';
 import { polynomialBasisType } from './polynomialBasisType.js';
 import { timingStandard } from './timingStandard.js';
@@ -178,8 +179,16 @@ NOMINAL_NUM_COEFFICIENTS():number {
   return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Where this polynomial ephemeris comes from and the terms it travels under.
+ */
+PROVENANCE(obj?:PVN):PVN|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new PVN()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPPE(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 }
 
 static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
@@ -270,6 +279,10 @@ static addNominalNumCoefficients(builder:flatbuffers.Builder, NOMINAL_NUM_COEFFI
   builder.addFieldInt16(12, NOMINAL_NUM_COEFFICIENTS, 0);
 }
 
+static addProvenance(builder:flatbuffers.Builder, PROVENANCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, PROVENANCEOffset, 0);
+}
+
 static endPPE(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -298,7 +311,8 @@ unpack(): PPET {
     this.bb!.createObjList<PPEOrbitalElementRecord, PPEOrbitalElementRecordT>(this.ORBITAL_ELEMENT_RECORDS.bind(this), this.orbitalElementRecordsLength()),
     this.EPHEMERIS_SOURCE(),
     this.NOMINAL_SEGMENT_SPAN(),
-    this.NOMINAL_NUM_COEFFICIENTS()
+    this.NOMINAL_NUM_COEFFICIENTS(),
+    (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null)
   );
 }
 
@@ -317,6 +331,7 @@ unpackTo(_o: PPET): void {
   _o.EPHEMERIS_SOURCE = this.EPHEMERIS_SOURCE();
   _o.NOMINAL_SEGMENT_SPAN = this.NOMINAL_SEGMENT_SPAN();
   _o.NOMINAL_NUM_COEFFICIENTS = this.NOMINAL_NUM_COEFFICIENTS();
+  _o.PROVENANCE = (this.PROVENANCE() !== null ? this.PROVENANCE()!.unpack() : null);
 }
 }
 
@@ -334,7 +349,8 @@ constructor(
   public ORBITAL_ELEMENT_RECORDS: (PPEOrbitalElementRecordT)[] = [],
   public EPHEMERIS_SOURCE: string|Uint8Array|null = null,
   public NOMINAL_SEGMENT_SPAN: number = 0.0,
-  public NOMINAL_NUM_COEFFICIENTS: number = 0
+  public NOMINAL_NUM_COEFFICIENTS: number = 0,
+  public PROVENANCE: PVNT|null = null
 ){}
 
 
@@ -348,6 +364,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const POSITION_RECORDS = PPE.createPositionRecordsVector(builder, builder.createObjectOffsetList(this.POSITION_RECORDS));
   const ORBITAL_ELEMENT_RECORDS = PPE.createOrbitalElementRecordsVector(builder, builder.createObjectOffsetList(this.ORBITAL_ELEMENT_RECORDS));
   const EPHEMERIS_SOURCE = (this.EPHEMERIS_SOURCE !== null ? builder.createString(this.EPHEMERIS_SOURCE!) : 0);
+  const PROVENANCE = (this.PROVENANCE !== null ? this.PROVENANCE!.pack(builder) : 0);
 
   PPE.startPPE(builder);
   PPE.addComment(builder, COMMENT);
@@ -363,6 +380,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PPE.addEphemerisSource(builder, EPHEMERIS_SOURCE);
   PPE.addNominalSegmentSpan(builder, this.NOMINAL_SEGMENT_SPAN);
   PPE.addNominalNumCoefficients(builder, this.NOMINAL_NUM_COEFFICIENTS);
+  PPE.addProvenance(builder, PROVENANCE);
 
   return PPE.endPPE(builder);
 }

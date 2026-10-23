@@ -36,4 +36,7 @@ export * from './MEMErrorModel.js';
 export * from './memIonosphereModel.js';
 export * from './memMeasurementType.js';
 export * from './memTroposphereModel.js';
+export * from './PVN.js';
+export * from './pvnLicenseClass.js';
+export * from './pvnSourceKind.js';
 //# sourceMappingURL=main.d.ts.map

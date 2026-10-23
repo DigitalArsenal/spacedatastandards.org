@@ -35,7 +35,9 @@ try {
   const version = JSON.parse(fs.readFileSync(path.join(artifact, 'package.json'))).version;
   assert.equal(version.split('+')[0], published || '1.262.0');
   const fb = await import(pathToFileURL(path.join(root, 'node_modules/flatbuffers/js/flatbuffers.js')));
-  const include = process.env.FLATBUFFERS_INCLUDE_DIR || '/Users/tj/software/spacedatanetwork-stack/repos/main-packages/flatbuffers/include';
+  const runtime = JSON.parse(run('go', ['mod', 'download', '-json', 'github.com/google/flatbuffers@v25.12.19+incompatible']));
+  assert.ok(runtime.Dir, runtime.Error);
+  const include = process.env.FLATBUFFERS_INCLUDE_DIR || path.join(runtime.Dir, 'include');
   assert.ok(fs.existsSync(path.join(include, 'flatbuffers/flatbuffers.h')), 'provide pinned C++ runtime headers via FLATBUFFERS_INCLUDE_DIR');
   fs.mkdirSync(path.join(tmp, 'cpp'));
   fs.writeFileSync(path.join(tmp, 'go.mod'), 'module sdsppeeope2e\n\ngo 1.21\n\nrequire github.com/google/flatbuffers v25.12.19+incompatible\n');

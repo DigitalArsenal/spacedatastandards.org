@@ -15991,6 +15991,26 @@
                         "EmpiricalHistoryShrunk"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "CelestialFrame": {
                     "type": "string",
                     "enum": [
@@ -16537,26 +16557,6 @@
                         "R_PERIAPSIS"
                     ]
                 },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
-                    ]
-                },
                 "trajectoryType": {
                     "type": "string",
                     "enum": [
@@ -16737,6 +16737,45 @@
                         "SHRINKAGE_WEIGHT": {
                             "type": "number",
                             "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -17861,45 +17900,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
                         },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -27349,6 +27353,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -27391,26 +27415,6 @@
                         "SourceModel",
                         "PooledModel",
                         "EmpiricalHistoryShrunk"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "trajectoryType": {
@@ -28363,6 +28367,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -28606,6 +28649,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -29040,45 +29087,6 @@
                         "SHRINKAGE_WEIGHT": {
                             "type": "number",
                             "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -34539,6 +34547,26 @@
                         "PROVIDER_DEFINED"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "PolarizationType": {
                     "type": "string",
                     "enum": [
@@ -34904,26 +34932,6 @@
                         "IAU_2000A",
                         "IAU_2000B",
                         "IAU_2006"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "FluxQualifier": {
@@ -36449,6 +36457,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "FrequencyRange": {
                     "type": "object",
                     "description": "Frequency range with lower and upper limits",
@@ -37090,6 +37137,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -37585,45 +37636,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
                         },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -42237,6 +42253,26 @@
         "PPE": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "CelestialFrame": {
                     "type": "string",
                     "enum": [
@@ -42782,6 +42818,45 @@
                         "SMA",
                         "R_PERIAPSIS"
                     ]
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "RFMOrigin": {
                     "type": "object",
@@ -43903,6 +43978,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -48426,6 +48505,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -48468,26 +48567,6 @@
                         "SourceModel",
                         "PooledModel",
                         "EmpiricalHistoryShrunk"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "trajectoryType": {
@@ -49673,6 +49752,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -49916,6 +50034,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -50350,45 +50472,6 @@
                         "SHRINKAGE_WEIGHT": {
                             "type": "number",
                             "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -64007,6 +64090,26 @@
         "EOP": {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
             "definitions": {
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "DataType": {
                     "type": "string",
                     "enum": [
@@ -64034,6 +64137,45 @@
                         "IAU_2000B",
                         "IAU_2006"
                     ]
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
                 },
                 "EOP": {
                     "type": "object",
@@ -64162,6 +64304,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -70208,6 +70354,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -70231,26 +70397,6 @@
                     "enum": [
                         "SMA",
                         "R_PERIAPSIS"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "maneuverStatus": {
@@ -71390,6 +71536,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -71633,6 +71818,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -71980,45 +72169,6 @@
                         "MESSAGE_ID": {
                             "type": "string",
                             "description": "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -80281,6 +80431,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -81183,6 +81353,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -81426,6 +81635,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -85120,6 +85333,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -85162,26 +85395,6 @@
                         "SourceModel",
                         "PooledModel",
                         "EmpiricalHistoryShrunk"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "trajectoryType": {
@@ -86184,6 +86397,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -86427,6 +86679,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -86861,45 +87117,6 @@
                         "SHRINKAGE_WEIGHT": {
                             "type": "number",
                             "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -93071,6 +93288,26 @@
                         "REFERENCE_PROFILE"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "DataType": {
                     "type": "string",
                     "enum": [
@@ -95147,26 +95384,6 @@
                         "CCSDS_RDM_KVN",
                         "CCSDS_RDM_XML",
                         "PROVIDER_DEFINED"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "FluxQualifier": {
@@ -105608,6 +105825,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "EOP": {
                     "type": "object",
                     "description": "Earth Orientation Parameters",
@@ -105735,6 +105991,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -114691,6 +114951,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -115055,45 +115319,6 @@
                         "SOURCE_CID": {
                             "type": "string",
                             "description": "Content identifier of the described container when it is addressed by\ncontent rather than by path."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -193458,6 +193683,26 @@
                         "PROVIDER_DEFINED"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "PolarizationType": {
                     "type": "string",
                     "enum": [
@@ -193823,26 +194068,6 @@
                         "IAU_2000A",
                         "IAU_2000B",
                         "IAU_2006"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "FluxQualifier": {
@@ -195281,6 +195506,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "FrequencyRange": {
                     "type": "object",
                     "description": "Frequency range with lower and upper limits",
@@ -195922,6 +196186,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -196417,45 +196685,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
                         },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -205163,6 +205396,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -205186,26 +205439,6 @@
                     "enum": [
                         "SMA",
                         "R_PERIAPSIS"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "maneuverStatus": {
@@ -206276,6 +206509,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -206519,6 +206791,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -206866,45 +207142,6 @@
                         "MESSAGE_ID": {
                             "type": "string",
                             "description": "MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator\nmakes unique for this message."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
-                        },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -218613,6 +218850,26 @@
                         "StateCovariance"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "polynomialBasisType": {
                     "type": "string",
                     "enum": [
@@ -220352,6 +220609,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "PPEPositionRecord": {
                     "type": "object",
                     "description": "A single time-segment record of polynomial coefficients for Cartesian position\n(and optionally velocity). Coefficients are stored per axis.\n\nTo evaluate position at time t within this record's validity window:\n1. Compute normalized time: tau = (t - EPOCH_MID) / EPOCH_HALF_SPAN\nwhere tau is in [-1, +1].\n2. Evaluate the polynomial basis of degree (NUM_COEFFICIENTS - 1) using\nthe coefficients for each axis.\n\nVelocity coefficients, if present, follow the same evaluation procedure.\nIf HAS_VELOCITY_COEFFICIENTS is false, velocity can be obtained by\nanalytically differentiating the position polynomial.",
@@ -220595,6 +220891,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -227545,6 +227845,26 @@
                         "PROVIDER_DEFINED"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "PolarizationType": {
                     "type": "string",
                     "enum": [
@@ -227910,26 +228230,6 @@
                         "IAU_2000A",
                         "IAU_2000B",
                         "IAU_2006"
-                    ]
-                },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
                     ]
                 },
                 "FluxQualifier": {
@@ -229627,6 +229927,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "FrequencyRange": {
                     "type": "object",
                     "description": "Frequency range with lower and upper limits",
@@ -230268,6 +230607,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -230763,45 +231106,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
                         },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -254276,6 +254584,26 @@
                         "EmpiricalHistoryShrunk"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "CelestialFrame": {
                     "type": "string",
                     "enum": [
@@ -254822,26 +255150,6 @@
                         "R_PERIAPSIS"
                     ]
                 },
-                "pvnSourceKind": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "ElementSet",
-                        "Ephemeris",
-                        "Observation",
-                        "Reference"
-                    ]
-                },
-                "pvnLicenseClass": {
-                    "type": "string",
-                    "enum": [
-                        "Unspecified",
-                        "Reproducible",
-                        "CiteOnly",
-                        "ShareAlike",
-                        "NonCommercial"
-                    ]
-                },
                 "trajectoryType": {
                     "type": "string",
                     "enum": [
@@ -254977,6 +255285,45 @@
                         "SHRINKAGE_WEIGHT": {
                             "type": "number",
                             "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
                         }
                     },
                     "additionalProperties": false
@@ -256101,45 +256448,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
-                        }
-                    },
-                    "additionalProperties": false
-                },
-                "PVN": {
-                    "type": "object",
-                    "description": "Product Provenance",
-                    "properties": {
-                        "SOURCE_ID": {
-                            "type": "string",
-                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
                         },
-                        "SOURCE_KIND": {
-                            "$ref": "#/definitions/pvnSourceKind",
-                            "description": "What kind of data the source supplies."
-                        },
-                        "ORIGINATOR": {
-                            "type": "string",
-                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-                        },
-                        "PROVIDER_ID": {
-                            "type": "string",
-                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-                        },
-                        "PRODUCER": {
-                            "type": "string",
-                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-                        },
-                        "LICENSE_CLASS": {
-                            "$ref": "#/definitions/pvnLicenseClass",
-                            "description": "What the source's terms permit for the product."
-                        },
-                        "LICENSE_ID": {
-                            "type": "string",
-                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-                        },
-                        "LINEAGE": {
-                            "type": "string",
-                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -257684,6 +257996,26 @@
                         "REFERENCE_PROFILE"
                     ]
                 },
+                "pvnSourceKind": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "ElementSet",
+                        "Ephemeris",
+                        "Observation",
+                        "Reference"
+                    ]
+                },
+                "pvnLicenseClass": {
+                    "type": "string",
+                    "enum": [
+                        "Unspecified",
+                        "Reproducible",
+                        "CiteOnly",
+                        "ShareAlike",
+                        "NonCommercial"
+                    ]
+                },
                 "DataType": {
                     "type": "string",
                     "enum": [
@@ -257933,6 +258265,45 @@
                     },
                     "additionalProperties": false
                 },
+                "PVN": {
+                    "type": "object",
+                    "description": "Product Provenance",
+                    "properties": {
+                        "SOURCE_ID": {
+                            "type": "string",
+                            "description": "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+                        },
+                        "SOURCE_KIND": {
+                            "$ref": "#/definitions/pvnSourceKind",
+                            "description": "What kind of data the source supplies."
+                        },
+                        "ORIGINATOR": {
+                            "type": "string",
+                            "description": "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+                        },
+                        "PROVIDER_ID": {
+                            "type": "string",
+                            "description": "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+                        },
+                        "PRODUCER": {
+                            "type": "string",
+                            "description": "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+                        },
+                        "LICENSE_CLASS": {
+                            "$ref": "#/definitions/pvnLicenseClass",
+                            "description": "What the source's terms permit for the product."
+                        },
+                        "LICENSE_ID": {
+                            "type": "string",
+                            "description": "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+                        },
+                        "LINEAGE": {
+                            "type": "string",
+                            "description": "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "EOP": {
                     "type": "object",
                     "description": "Earth Orientation Parameters",
@@ -258060,6 +258431,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -273014,6 +273389,10 @@
                             "minimum": 0,
                             "maximum": 65535,
                             "description": "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this polynomial ephemeris comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false
@@ -273509,6 +273888,10 @@
                         "NUTATION_DEPS_UNCERTAINTY_RADIANS": {
                             "type": "number",
                             "description": "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
+                        },
+                        "PROVENANCE": {
+                            "$ref": "#/definitions/PVN",
+                            "description": "Where this Earth-orientation row comes from and the terms it travels under."
                         }
                     },
                     "additionalProperties": false

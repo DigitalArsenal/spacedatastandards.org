@@ -143,13 +143,17 @@ class EOP : flatbuffers.handle
     /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
     def NUTATION_DEPS_UNCERTAINTY_RADIANS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
+    /// Where this Earth-orientation row comes from and the terms it travels under.
+    def PROVENANCE() -> PVN?:
+        let o = flatbuffers.field_table(buf_, pos_, 64)
+        return if o: PVN { buf_, o } else: nil
 
 def GetRootAsEOP(buf:string): return EOP { buf, flatbuffers.indirect(buf, 0) }
 
 struct EOPBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(30)
+        b_.StartObject(31)
         return this
     def add_DATE(DATE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, DATE)
@@ -240,6 +244,9 @@ struct EOPBuilder:
         return this
     def add_NUTATION_DEPS_UNCERTAINTY_RADIANS(NUTATION_DEPS_UNCERTAINTY_RADIANS:float):
         b_.PrependFloat64Slot(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0)
+        return this
+    def add_PROVENANCE(PROVENANCE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, PROVENANCE)
         return this
     def end():
         return b_.EndObject()

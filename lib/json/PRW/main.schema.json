@@ -101,6 +101,14 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "POSITION_X", "POSITION_Y", "POSITION_Z", "VELOCITY_X", "VELOCITY_Y", "VELOCITY_Z", "POSITION_MAGNITUDE", "VELOCITY_MAGNITUDE", "RIGHT_ASCENSION", "DECLINATION", "VELOCITY_RIGHT_ASCENSION", "VELOCITY_DECLINATION", "FLIGHT_PATH_ANGLE", "AZIMUTH_ANGLE", "HORIZONTAL_FLIGHT_PATH_ANGLE", "RADIAL_VELOCITY", "ANGULAR_MOMENTUM_MAGNITUDE", "ANGULAR_MOMENTUM_X", "ANGULAR_MOMENTUM_Y", "ANGULAR_MOMENTUM_Z", "SEMI_MAJOR_AXIS", "ECCENTRICITY", "INCLINATION", "RIGHT_ASCENSION_OF_ASCENDING_NODE", "ARGUMENT_OF_PERIAPSIS", "TRUE_ANOMALY", "MEAN_ANOMALY", "ECCENTRIC_ANOMALY", "HYPERBOLIC_ANOMALY", "RADIUS_OF_PERIAPSIS", "RADIUS_OF_APOAPSIS", "ALTITUDE_OF_PERIAPSIS", "ALTITUDE_OF_APOAPSIS", "SEMILATUS_RECTUM", "ORBIT_PERIOD", "MEAN_MOTION", "SPECIFIC_ORBITAL_ENERGY", "CHARACTERISTIC_ENERGY", "VELOCITY_AT_PERIAPSIS", "VELOCITY_AT_APOAPSIS", "ARGUMENT_OF_LATITUDE", "TRUE_LONGITUDE", "MEAN_LONGITUDE", "BETA_ANGLE", "ECCENTRICITY_VECTOR_X", "ECCENTRICITY_VECTOR_Y", "ECCENTRICITY_VECTOR_Z", "SEMI_MINOR_AXIS", "EQUINOCTIAL_H", "EQUINOCTIAL_K", "EQUINOCTIAL_P", "EQUINOCTIAL_Q", "EQUINOCTIAL_MEAN_LONGITUDE", "MODIFIED_EQUINOCTIAL_F", "MODIFIED_EQUINOCTIAL_G", "MODIFIED_EQUINOCTIAL_H", "MODIFIED_EQUINOCTIAL_K", "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE", "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM", "ALTERNATE_EQUINOCTIAL_P", "ALTERNATE_EQUINOCTIAL_Q", "ALTERNATE_EQUINOCTIAL_MEAN_MOTION", "DELAUNAY_MEAN_ANOMALY", "DELAUNAY_ARGUMENT_OF_PERIAPSIS", "DELAUNAY_ASCENDING_NODE", "DELAUNAY_ACTION_TOTAL", "DELAUNAY_ACTION_ANGULAR_MOMENTUM", "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM", "GEODETIC_LATITUDE", "GEODETIC_LONGITUDE", "GEODETIC_ALTITUDE", "GEOCENTRIC_LATITUDE", "PLANETODETIC_RADIUS_MAGNITUDE", "PLANETODETIC_VELOCITY_MAGNITUDE", "PLANETODETIC_AZIMUTH", "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE", "LOCAL_SIDEREAL_TIME", "PRIME_MERIDIAN_HOUR_ANGLE", "B_DOT_T", "B_DOT_R", "B_VECTOR_MAGNITUDE", "B_VECTOR_ANGLE", "DECLINATION_OF_DEPARTURE_ASYMPTOTE", "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE", "INCOMING_RADIUS_OF_PERIAPSIS", "INCOMING_CHARACTERISTIC_ENERGY", "INCOMING_ASYMPTOTE_RIGHT_ASCENSION", "INCOMING_ASYMPTOTE_DECLINATION", "INCOMING_B_VECTOR_AZIMUTH", "OUTGOING_RADIUS_OF_PERIAPSIS", "OUTGOING_CHARACTERISTIC_ENERGY", "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION", "OUTGOING_ASYMPTOTE_DECLINATION", "OUTGOING_B_VECTOR_AZIMUTH", "HYPERBOLIC_EXCESS_VELOCITY", "BROUWER_SHORT_SEMI_MAJOR_AXIS", "BROUWER_SHORT_ECCENTRICITY", "BROUWER_SHORT_INCLINATION", "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE", "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS", "BROUWER_SHORT_MEAN_ANOMALY", "BROUWER_LONG_SEMI_MAJOR_AXIS", "BROUWER_LONG_ECCENTRICITY", "BROUWER_LONG_INCLINATION", "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE", "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS", "BROUWER_LONG_MEAN_ANOMALY", "ORBIT_STATE_TRANSITION_MATRIX", "ORBIT_STATE_TRANSITION_MATRIX_A", "ORBIT_STATE_TRANSITION_MATRIX_B", "ORBIT_STATE_TRANSITION_MATRIX_C", "ORBIT_STATE_TRANSITION_MATRIX_D", "ORBIT_ERROR_COVARIANCE_MATRIX", "EPOCH_A1_GREGORIAN", "EPOCH_A1_MODIFIED_JULIAN", "EPOCH_TAI_GREGORIAN", "EPOCH_TAI_MODIFIED_JULIAN", "EPOCH_TT_GREGORIAN", "EPOCH_TT_MODIFIED_JULIAN", "EPOCH_TDB_GREGORIAN", "EPOCH_TDB_MODIFIED_JULIAN", "EPOCH_UTC_GREGORIAN", "EPOCH_UTC_MODIFIED_JULIAN", "EPOCH_UT1_GREGORIAN", "EPOCH_UT1_MODIFIED_JULIAN", "EPOCH_GPS_GREGORIAN", "EPOCH_GPS_MODIFIED_JULIAN", "ELAPSED_DAYS", "ELAPSED_SECONDS", "DRY_MASS", "TOTAL_MASS", "DRAG_COEFFICIENT", "DRAG_AREA", "REFLECTIVITY_COEFFICIENT", "SOLAR_RADIATION_PRESSURE_AREA", "ATMOSPHERIC_DENSITY_SCALE_FACTOR", "DRAG_SCALE_FACTOR", "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR", "BALLISTIC_COEFFICIENT", "AREA_TO_MASS_RATIO", "CENTER_OF_MASS_X", "CENTER_OF_MASS_Y", "CENTER_OF_MASS_Z", "MOMENT_OF_INERTIA_MATRIX", "ATTITUDE_QUATERNION_1", "ATTITUDE_QUATERNION_2", "ATTITUDE_QUATERNION_3", "ATTITUDE_QUATERNION_4", "ATTITUDE_DIRECTION_COSINE_MATRIX", "EULER_ANGLE_1", "EULER_ANGLE_2", "EULER_ANGLE_3", "EULER_ANGLE_RATE_1", "EULER_ANGLE_RATE_2", "EULER_ANGLE_RATE_3", "MODIFIED_RODRIGUES_PARAMETER_1", "MODIFIED_RODRIGUES_PARAMETER_2", "MODIFIED_RODRIGUES_PARAMETER_3", "ANGULAR_VELOCITY_X", "ANGULAR_VELOCITY_Y", "ANGULAR_VELOCITY_Z", "EULER_AXIS_X", "EULER_AXIS_Y", "EULER_AXIS_Z", "PRINCIPAL_ROTATION_ANGLE", "TANK_FUEL_MASS", "TANK_PRESSURE", "TANK_TEMPERATURE", "TANK_REFERENCE_TEMPERATURE", "TANK_VOLUME", "TANK_FUEL_DENSITY", "THRUSTER_DUTY_CYCLE", "THRUSTER_THRUST_SCALE_FACTOR", "THRUSTER_GRAVITATIONAL_ACCELERATION", "THRUSTER_MIXTURE_RATIO", "THRUSTER_SPECIFIC_IMPULSE", "THRUSTER_THRUST_MAGNITUDE", "THRUSTER_MASS_FLOW_RATE", "THRUSTER_DIRECTION_X", "THRUSTER_DIRECTION_Y", "THRUSTER_DIRECTION_Z", "THRUSTER_THRUST_COEFFICIENTS", "THRUSTER_IMPULSE_COEFFICIENTS", "IMPULSIVE_BURN_ELEMENT_1", "IMPULSIVE_BURN_ELEMENT_2", "IMPULSIVE_BURN_ELEMENT_3", "IMPULSIVE_BURN_DELTA_V_MAGNITUDE", "IMPULSIVE_BURN_MASS_CONSUMED", "FINITE_BURN_THRUST_MAGNITUDE", "FINITE_BURN_MASS_FLOW_RATE", "FINITE_BURN_THRUST_X", "FINITE_BURN_THRUST_Y", "FINITE_BURN_THRUST_Z", "FINITE_BURN_ACCELERATION_MAGNITUDE", "FINITE_BURN_MASS_CONSUMED", "TOTAL_POWER_AVAILABLE", "REQUIRED_BUS_POWER", "THRUST_POWER_AVAILABLE", "GENERATED_POWER", "TOTAL_TORQUE_X", "TOTAL_TORQUE_Y", "TOTAL_TORQUE_Z", "TOTAL_TORQUE_MAGNITUDE", "SOLVER_STATUS", "SOLVER_ITERATION_COUNT", "SOLVER_OBJECTIVE_VALUE", "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION", "RELATIVE_RANGE", "RELATIVE_RANGE_RATE", "RELATIVE_POSITION_X", "RELATIVE_POSITION_Y", "RELATIVE_POSITION_Z", "RELATIVE_VELOCITY_X", "RELATIVE_VELOCITY_Y", "RELATIVE_VELOCITY_Z", "TOPOCENTRIC_AZIMUTH", "TOPOCENTRIC_ELEVATION", "ANGULAR_SEPARATION", "SOLAR_PHASE_ANGLE", "LOCAL_SOLAR_ELEVATION_ANGLE", "ILLUMINATION_FRACTION", "LIGHT_TIME_DELAY", "PROVIDER_DEFINED"]
     },
+    "pvnSourceKind" : {
+      "type" : "string",
+      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
+    },
+    "pvnLicenseClass" : {
+      "type" : "string",
+      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
+    },
     "PolarizationType" : {
       "type" : "string",
       "enum": ["linear", "circular", "elliptical", "unpolarized"]
@@ -172,14 +180,6 @@
     "iauPrecessionNutationModel" : {
       "type" : "string",
       "enum": ["UNSPECIFIED", "IAU_2000A", "IAU_2000B", "IAU_2006"]
-    },
-    "pvnSourceKind" : {
-      "type" : "string",
-      "enum": ["Unspecified", "ElementSet", "Ephemeris", "Observation", "Reference"]
-    },
-    "pvnLicenseClass" : {
-      "type" : "string",
-      "enum": ["Unspecified", "Reproducible", "CiteOnly", "ShareAlike", "NonCommercial"]
     },
     "FluxQualifier" : {
       "type" : "string",
@@ -1353,6 +1353,45 @@
       },
       "additionalProperties" : false
     },
+    "PVN" : {
+      "type" : "object",
+      "description" : "Product Provenance",
+      "properties" : {
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
+              },
+        "SOURCE_KIND" : {
+                "$ref" : "#/definitions/pvnSourceKind",
+                "description" : "What kind of data the source supplies."
+              },
+        "ORIGINATOR" : {
+                "type" : "string",
+                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
+              },
+        "PROVIDER_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
+              },
+        "PRODUCER" : {
+                "type" : "string",
+                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
+              },
+        "LICENSE_CLASS" : {
+                "$ref" : "#/definitions/pvnLicenseClass",
+                "description" : "What the source's terms permit for the product."
+              },
+        "LICENSE_ID" : {
+                "type" : "string",
+                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
+              },
+        "LINEAGE" : {
+                "type" : "string",
+                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+              }
+      },
+      "additionalProperties" : false
+    },
     "FrequencyRange" : {
       "type" : "object",
       "description" : "Frequency range with lower and upper limits",
@@ -1916,6 +1955,10 @@
         "NOMINAL_NUM_COEFFICIENTS" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 65535,
                 "description" : "Nominal number of coefficients per segment.\nInformational; actual counts are in individual records."
+              },
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where this polynomial ephemeris comes from and the terms it travels under."
               }
       },
       "additionalProperties" : false
@@ -2354,45 +2397,10 @@
         "NUTATION_DEPS_UNCERTAINTY_RADIANS" : {
                 "type" : "number",
                 "description" : "1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians."
-              }
-      },
-      "additionalProperties" : false
-    },
-    "PVN" : {
-      "type" : "object",
-      "description" : "Product Provenance",
-      "properties" : {
-        "SOURCE_ID" : {
-                "type" : "string",
-                "description" : "Publisher-stable, lowercase identifier of the source in the provider's\nregistry of sources."
               },
-        "SOURCE_KIND" : {
-                "$ref" : "#/definitions/pvnSourceKind",
-                "description" : "What kind of data the source supplies."
-              },
-        "ORIGINATOR" : {
-                "type" : "string",
-                "description" : "Agency, operator or catalog that created the source data, as it names\nitself. Not a message's CCSDS ORIGINATOR, which names who created the\nmessage."
-              },
-        "PROVIDER_ID" : {
-                "type" : "string",
-                "description" : "Identifier of the provider that published the product, as the provider\nnames itself: the module, node or service that retrieved the source data."
-              },
-        "PRODUCER" : {
-                "type" : "string",
-                "description" : "Identifier of the software that made the product from the source data,\nwith its version when it has one."
-              },
-        "LICENSE_CLASS" : {
-                "$ref" : "#/definitions/pvnLicenseClass",
-                "description" : "What the source's terms permit for the product."
-              },
-        "LICENSE_ID" : {
-                "type" : "string",
-                "description" : "Identifier of the terms LICENSE_CLASS was read from: an SPDX license\nidentifier where one applies, else the identifier of the terms in the\nprovider's licence register."
-              },
-        "LINEAGE" : {
-                "type" : "string",
-                "description" : "Identifier of the lineage the source's data descends from. Sources that\nrepublish one upstream share its lineage, so their products are not\nindependent of each other."
+        "PROVENANCE" : {
+                "$ref" : "#/definitions/PVN",
+                "description" : "Where this Earth-orientation row comes from and the terms it travels under."
               }
       },
       "additionalProperties" : false

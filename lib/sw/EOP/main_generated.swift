@@ -105,6 +105,7 @@ public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let NUTATION_DEPS_RADIANS: VOffset = 58
     static let NUTATION_DPSI_UNCERTAINTY_RADIANS: VOffset = 60
     static let NUTATION_DEPS_UNCERTAINTY_RADIANS: VOffset = 62
+    static let PROVENANCE: VOffset = 64
   }
 
   ///   Date in ISO 8601 format, e.g., "2018-01-01T00:00:00Z"
@@ -188,7 +189,9 @@ public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var NUTATION_DPSI_UNCERTAINTY_RADIANS: Double { let o = _accessor.offset(VT.NUTATION_DPSI_UNCERTAINTY_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
   public var NUTATION_DEPS_UNCERTAINTY_RADIANS: Double { let o = _accessor.offset(VT.NUTATION_DEPS_UNCERTAINTY_RADIANS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 30) }
+  ///  Where this Earth-orientation row comes from and the terms it travels under.
+  public var PROVENANCE: PVN? { let o = _accessor.offset(VT.PROVENANCE); return o == 0 ? nil : PVN(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startEOP(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 31) }
   public static func add(DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATE, at: VT.DATE) }
   public static func add(MJD: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MJD, def: 0, at: VT.MJD) }
   public static func add(X_POLE_WANDER_RADIANS: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_POLE_WANDER_RADIANS, def: 0.0, at: VT.X_POLE_WANDER_RADIANS) }
@@ -219,6 +222,7 @@ public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(NUTATION_DEPS_RADIANS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_DEPS_RADIANS, def: 0.0, at: VT.NUTATION_DEPS_RADIANS) }
   public static func add(NUTATION_DPSI_UNCERTAINTY_RADIANS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_DPSI_UNCERTAINTY_RADIANS, def: 0.0, at: VT.NUTATION_DPSI_UNCERTAINTY_RADIANS) }
   public static func add(NUTATION_DEPS_UNCERTAINTY_RADIANS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUTATION_DEPS_UNCERTAINTY_RADIANS, def: 0.0, at: VT.NUTATION_DEPS_UNCERTAINTY_RADIANS) }
+  public static func add(PROVENANCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVENANCE, at: VT.PROVENANCE) }
   public static func endEOP(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEOP(
     _ fbb: inout FlatBufferBuilder,
@@ -251,7 +255,8 @@ public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     NUTATION_DPSI_RADIANS: Double = 0.0,
     NUTATION_DEPS_RADIANS: Double = 0.0,
     NUTATION_DPSI_UNCERTAINTY_RADIANS: Double = 0.0,
-    NUTATION_DEPS_UNCERTAINTY_RADIANS: Double = 0.0
+    NUTATION_DEPS_UNCERTAINTY_RADIANS: Double = 0.0,
+    PROVENANCEOffset PROVENANCE: Offset = Offset()
   ) -> Offset {
     let __start = EOP.startEOP(&fbb)
     EOP.add(DATE: DATE, &fbb)
@@ -284,6 +289,7 @@ public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     EOP.add(NUTATION_DEPS_RADIANS: NUTATION_DEPS_RADIANS, &fbb)
     EOP.add(NUTATION_DPSI_UNCERTAINTY_RADIANS: NUTATION_DPSI_UNCERTAINTY_RADIANS, &fbb)
     EOP.add(NUTATION_DEPS_UNCERTAINTY_RADIANS: NUTATION_DEPS_UNCERTAINTY_RADIANS, &fbb)
+    EOP.add(PROVENANCE: PROVENANCE, &fbb)
     return EOP.endEOP(&fbb, start: __start)
   }
 
@@ -319,6 +325,7 @@ public struct EOP: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.NUTATION_DEPS_RADIANS, fieldName: "NUTATION_DEPS_RADIANS", required: false, type: Double.self)
     try _v.visit(field: VT.NUTATION_DPSI_UNCERTAINTY_RADIANS, fieldName: "NUTATION_DPSI_UNCERTAINTY_RADIANS", required: false, type: Double.self)
     try _v.visit(field: VT.NUTATION_DEPS_UNCERTAINTY_RADIANS, fieldName: "NUTATION_DEPS_UNCERTAINTY_RADIANS", required: false, type: Double.self)
+    try _v.visit(field: VT.PROVENANCE, fieldName: "PROVENANCE", required: false, type: ForwardOffset<PVN>.self)
     _v.finish()
   }
 }

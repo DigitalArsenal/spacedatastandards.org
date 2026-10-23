@@ -115,6 +115,8 @@ public struct EOP : IFlatbufferObject
   public double NUTATION_DPSI_UNCERTAINTY_RADIANS { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// 1-sigma uncertainty of NUTATION_DEPS_RADIANS, radians.
   public double NUTATION_DEPS_UNCERTAINTY_RADIANS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Where this Earth-orientation row comes from and the terms it travels under.
+  public PVN? PROVENANCE { get { int o = __p.__offset(64); return o != 0 ? (PVN?)(new PVN()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<EOP> CreateEOP(FlatBufferBuilder builder,
       StringOffset DATEOffset = default(StringOffset),
@@ -146,8 +148,9 @@ public struct EOP : IFlatbufferObject
       double NUTATION_DPSI_RADIANS = 0.0,
       double NUTATION_DEPS_RADIANS = 0.0,
       double NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0,
-      double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0) {
-    builder.StartTable(30);
+      double NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0,
+      Offset<PVN> PROVENANCEOffset = default(Offset<PVN>)) {
+    builder.StartTable(31);
     EOP.AddNUTATION_DEPS_UNCERTAINTY_RADIANS(builder, NUTATION_DEPS_UNCERTAINTY_RADIANS);
     EOP.AddNUTATION_DPSI_UNCERTAINTY_RADIANS(builder, NUTATION_DPSI_UNCERTAINTY_RADIANS);
     EOP.AddNUTATION_DEPS_RADIANS(builder, NUTATION_DEPS_RADIANS);
@@ -158,6 +161,7 @@ public struct EOP : IFlatbufferObject
     EOP.AddX_CELESTIAL_POLE_OFFSET_RADIANS_HP(builder, X_CELESTIAL_POLE_OFFSET_RADIANS_HP);
     EOP.AddY_POLE_WANDER_RADIANS_HP(builder, Y_POLE_WANDER_RADIANS_HP);
     EOP.AddX_POLE_WANDER_RADIANS_HP(builder, X_POLE_WANDER_RADIANS_HP);
+    EOP.AddPROVENANCE(builder, PROVENANCEOffset);
     EOP.AddDATA_SET_CID(builder, DATA_SET_CIDOffset);
     EOP.AddDATA_SET_EPOCH(builder, DATA_SET_EPOCHOffset);
     EOP.AddLENGTH_OF_DAY_UNCERTAINTY_SECONDS(builder, LENGTH_OF_DAY_UNCERTAINTY_SECONDS);
@@ -181,7 +185,7 @@ public struct EOP : IFlatbufferObject
     return EOP.EndEOP(builder);
   }
 
-  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(30); }
+  public static void StartEOP(FlatBufferBuilder builder) { builder.StartTable(31); }
   public static void AddDATE(FlatBufferBuilder builder, StringOffset DATEOffset) { builder.AddOffset(0, DATEOffset.Value, 0); }
   public static void AddMJD(FlatBufferBuilder builder, uint MJD) { builder.AddUint(1, MJD, 0); }
   public static void AddX_POLE_WANDER_RADIANS(FlatBufferBuilder builder, float X_POLE_WANDER_RADIANS) { builder.AddFloat(2, X_POLE_WANDER_RADIANS, 0.0f); }
@@ -212,6 +216,7 @@ public struct EOP : IFlatbufferObject
   public static void AddNUTATION_DEPS_RADIANS(FlatBufferBuilder builder, double NUTATION_DEPS_RADIANS) { builder.AddDouble(27, NUTATION_DEPS_RADIANS, 0.0); }
   public static void AddNUTATION_DPSI_UNCERTAINTY_RADIANS(FlatBufferBuilder builder, double NUTATION_DPSI_UNCERTAINTY_RADIANS) { builder.AddDouble(28, NUTATION_DPSI_UNCERTAINTY_RADIANS, 0.0); }
   public static void AddNUTATION_DEPS_UNCERTAINTY_RADIANS(FlatBufferBuilder builder, double NUTATION_DEPS_UNCERTAINTY_RADIANS) { builder.AddDouble(29, NUTATION_DEPS_UNCERTAINTY_RADIANS, 0.0); }
+  public static void AddPROVENANCE(FlatBufferBuilder builder, Offset<PVN> PROVENANCEOffset) { builder.AddOffset(30, PROVENANCEOffset.Value, 0); }
   public static Offset<EOP> EndEOP(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EOP>(o);
@@ -254,12 +259,14 @@ public struct EOP : IFlatbufferObject
     _o.NUTATION_DEPS_RADIANS = this.NUTATION_DEPS_RADIANS;
     _o.NUTATION_DPSI_UNCERTAINTY_RADIANS = this.NUTATION_DPSI_UNCERTAINTY_RADIANS;
     _o.NUTATION_DEPS_UNCERTAINTY_RADIANS = this.NUTATION_DEPS_UNCERTAINTY_RADIANS;
+    _o.PROVENANCE = this.PROVENANCE.HasValue ? this.PROVENANCE.Value.UnPack() : null;
   }
   public static Offset<EOP> Pack(FlatBufferBuilder builder, EOPT _o) {
     if (_o == null) return default(Offset<EOP>);
     var _DATE = _o.DATE == null ? default(StringOffset) : builder.CreateString(_o.DATE);
     var _DATA_SET_EPOCH = _o.DATA_SET_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.DATA_SET_EPOCH);
     var _DATA_SET_CID = _o.DATA_SET_CID == null ? default(StringOffset) : builder.CreateString(_o.DATA_SET_CID);
+    var _PROVENANCE = _o.PROVENANCE == null ? default(Offset<PVN>) : PVN.Pack(builder, _o.PROVENANCE);
     return CreateEOP(
       builder,
       _DATE,
@@ -291,7 +298,8 @@ public struct EOP : IFlatbufferObject
       _o.NUTATION_DPSI_RADIANS,
       _o.NUTATION_DEPS_RADIANS,
       _o.NUTATION_DPSI_UNCERTAINTY_RADIANS,
-      _o.NUTATION_DEPS_UNCERTAINTY_RADIANS);
+      _o.NUTATION_DEPS_UNCERTAINTY_RADIANS,
+      _PROVENANCE);
   }
 }
 
@@ -327,6 +335,7 @@ public class EOPT
   public double NUTATION_DEPS_RADIANS { get; set; }
   public double NUTATION_DPSI_UNCERTAINTY_RADIANS { get; set; }
   public double NUTATION_DEPS_UNCERTAINTY_RADIANS { get; set; }
+  public PVNT PROVENANCE { get; set; }
 
   public EOPT() {
     this.DATE = null;
@@ -359,6 +368,7 @@ public class EOPT
     this.NUTATION_DEPS_RADIANS = 0.0;
     this.NUTATION_DPSI_UNCERTAINTY_RADIANS = 0.0;
     this.NUTATION_DEPS_UNCERTAINTY_RADIANS = 0.0;
+    this.PROVENANCE = null;
   }
   public static EOPT DeserializeFromBinary(byte[] fbBuffer) {
     return EOP.GetRootAsEOP(new ByteBuffer(fbBuffer)).UnPack();
@@ -406,6 +416,7 @@ static public class EOPVerify
       && verifier.VerifyField(tablePos, 58 /*NUTATION_DEPS_RADIANS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 60 /*NUTATION_DPSI_UNCERTAINTY_RADIANS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 62 /*NUTATION_DEPS_UNCERTAINTY_RADIANS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 64 /*PROVENANCE*/, PVNVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

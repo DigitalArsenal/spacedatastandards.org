@@ -1,5 +1,5 @@
-// Hash: af297c00d27ae50b46ff5aa76a6a0accb93ce4c82719d5d202be40de00f7e8c0
-// Version: 1.0.4
+// Hash: bfc14d32a6682888c2bbfa38c1fe72b65eb402fbed9791e9225c5a2ea6b31aba
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../PVN/main.fbs";
 enum DataType: byte {

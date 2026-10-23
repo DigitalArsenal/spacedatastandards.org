@@ -200,6 +200,18 @@ class PPE : Table() {
             val o = __offset(28)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
+    /**
+     * Where this polynomial ephemeris comes from and the terms it travels under.
+     */
+    val provenance : PVN? get() = provenance(PVN())
+    fun provenance(obj: PVN) : PVN? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPPE(_bb: ByteBuffer): PPE = getRootAsPPE(_bb, PPE())
@@ -208,9 +220,10 @@ class PPE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PPE")
-        fun createPPE(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, stopTimeOffset: Int, defaultBasisType: Byte, positionRecordsOffset: Int, orbitalElementRecordsOffset: Int, ephemerisSourceOffset: Int, nominalSegmentSpan: Double, nominalNumCoefficients: UShort) : Int {
-            builder.startTable(13)
+        fun createPPE(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, stopTimeOffset: Int, defaultBasisType: Byte, positionRecordsOffset: Int, orbitalElementRecordsOffset: Int, ephemerisSourceOffset: Int, nominalSegmentSpan: Double, nominalNumCoefficients: UShort, provenanceOffset: Int) : Int {
+            builder.startTable(14)
             addNOMINALSEGMENTSPAN(builder, nominalSegmentSpan)
+            addPROVENANCE(builder, provenanceOffset)
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addORBITALELEMENTRECORDS(builder, orbitalElementRecordsOffset)
             addPOSITIONRECORDS(builder, positionRecordsOffset)
@@ -225,7 +238,7 @@ class PPE : Table() {
             addTIMESYSTEM(builder, timeSystem)
             return endPPE(builder)
         }
-        fun startPPE(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startPPE(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
         fun createCommentVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
@@ -263,6 +276,7 @@ class PPE : Table() {
         fun addEPHEMERISSOURCE(builder: FlatBufferBuilder, ephemerisSource: Int) = builder.addOffset(10, ephemerisSource, 0)
         fun addNOMINALSEGMENTSPAN(builder: FlatBufferBuilder, nominalSegmentSpan: Double) = builder.addDouble(11, nominalSegmentSpan, 0.0)
         fun addNOMINALNUMCOEFFICIENTS(builder: FlatBufferBuilder, nominalNumCoefficients: UShort) = builder.addShort(12, nominalNumCoefficients.toShort(), 0)
+        fun addPROVENANCE(builder: FlatBufferBuilder, provenance: Int) = builder.addOffset(13, provenance, 0)
         fun endPPE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o
