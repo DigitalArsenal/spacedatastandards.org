@@ -4747,7 +4747,8 @@
         "Operator",
         "ScaledFit",
         "SourceModel",
-        "PooledModel"
+        "PooledModel",
+        "EmpiricalHistoryShrunk"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -4771,6 +4772,10 @@
         "PooledModel": {
           "value": 4,
           "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+        },
+        "EmpiricalHistoryShrunk": {
+          "value": 5,
+          "description": "Empirical errors from this object's own element-set history, shrunk toward a population prior identified by MODEL_ID and REGIME. Later element sets are comparison states, not independent truth; history alone never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings."
         }
       }
     },
@@ -17216,7 +17221,7 @@
       "properties": {
         "RULE": {
           "$ref": "#/definitions/covarianceRule",
-          "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.",
+          "description": "The rule that produced the covariance. In a CCSDS covariance block,\nOperator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and\nSourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with\nMODEL_ID as COV_BASIS_ID.",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
           "x-flatbuffer-enum-values": {
@@ -17239,13 +17244,17 @@
             "PooledModel": {
               "value": 4,
               "description": "The empirical model pooled over all sources, for a source without its own model in the regime"
+            },
+            "EmpiricalHistoryShrunk": {
+              "value": 5,
+              "description": "Empirical errors from this object's own element-set history, shrunk toward a population prior identified by MODEL_ID and REGIME. Later element sets are comparison states, not independent truth; history alone never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings."
             }
           },
           "x-flatbuffer-default": "Unspecified"
         },
         "MODEL_ID": {
           "type": "string",
-          "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator.",
+          "description": "Identifier of the error model (SourceModel, PooledModel) or of the\nmeasured realism factor (ScaledFit) the covariance came from. Empty for\nOperator. For EmpiricalHistoryShrunk, identifies the population prior;\nEVIDENCE identifies the history estimator and its configuration.",
           "x-flatbuffer-type": "string"
         },
         "REGIME": {
@@ -17332,6 +17341,31 @@
           "type": "string",
           "description": "Identifier of the report or record that holds the test.",
           "x-flatbuffer-type": "string"
+        },
+        "HISTORY_SAMPLES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of retained older/newer element-set residual pairs from this\nobject in the age bin containing AGE_DAYS, after rejection/clipping.\nZero means no retained pairs; never the held-out test count SAMPLES.",
+          "x-flatbuffer-type": "uint"
+        },
+        "HISTORY_SETS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of distinct older element sets contributing HISTORY_SAMPLES.\nZero means none; never the distinct calibration-object count OBJECTS.",
+          "x-flatbuffer-type": "uint"
+        },
+        "HISTORY_WINDOW": {
+          "type": "string",
+          "description": "ISO 8601 UTC start/end interval spanning the element-set epochs used\nin the object's history fit. Empty when no history was used. This is\ntraining support, not TEST_WINDOW or the element-set age AGE_DAYS.",
+          "x-flatbuffer-type": "string"
+        },
+        "SHRINKAGE_WEIGHT": {
+          "type": "number",
+          "description": "Dimensionless population-prior fraction alpha in the covariance blend\nP = (1-alpha) H + alpha P_prior, where H is the history error second\nmoment and P_prior includes the population model's realism scaling.\nRange [0,1]: 0 is all history, 1 is all prior; NaN when not applicable\nor unknown. For interpolation across bins, report the correspondingly\ninterpolated alpha. EVIDENCE must identify the estimator/configuration,\nretained-count bin, participating bins and their weights so the blend\ncan be reconstructed; the scalar alone does not describe that mixture.\nThis is not SCALE_FACTOR, which multiplies a covariance. History-only\nevidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "nan"
         }
       },
       "additionalProperties": false

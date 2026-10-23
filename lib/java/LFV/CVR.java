@@ -31,13 +31,15 @@ public final class CVR extends com.google.flatbuffers.Table {
   /**
    * The rule that produced the covariance. In a CCSDS covariance block,
    * Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-   * SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+   * SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+   * MODEL_ID as COV_BASIS_ID.
    */
   public byte RULE() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) : 0; }
   /**
    * Identifier of the error model (SourceModel, PooledModel) or of the
    * measured realism factor (ScaledFit) the covariance came from. Empty for
-   * Operator.
+   * Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+   * EVIDENCE identifies the history estimator and its configuration.
    */
   public String MODEL_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MODEL_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
@@ -108,6 +110,38 @@ public final class CVR extends com.google.flatbuffers.Table {
   public String EVIDENCE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EVIDENCEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
   public ByteBuffer EVIDENCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Number of retained older/newer element-set residual pairs from this
+   * object in the age bin containing AGE_DAYS, after rejection/clipping.
+   * Zero means no retained pairs; never the held-out test count SAMPLES.
+   */
+  public long HISTORY_SAMPLES() { int o = __offset(32); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Number of distinct older element sets contributing HISTORY_SAMPLES.
+   * Zero means none; never the distinct calibration-object count OBJECTS.
+   */
+  public long HISTORY_SETS() { int o = __offset(34); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * ISO 8601 UTC start/end interval spanning the element-set epochs used
+   * in the object's history fit. Empty when no history was used. This is
+   * training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+   */
+  public String HISTORY_WINDOW() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer HISTORY_WINDOWAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer HISTORY_WINDOWInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Dimensionless population-prior fraction alpha in the covariance blend
+   * P = (1-alpha) H + alpha P_prior, where H is the history error second
+   * moment and P_prior includes the population model's realism scaling.
+   * Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+   * or unknown. For interpolation across bins, report the correspondingly
+   * interpolated alpha. EVIDENCE must identify the estimator/configuration,
+   * retained-count bin, participating bins and their weights so the blend
+   * can be reconstructed; the scalar alone does not describe that mixture.
+   * This is not SCALE_FACTOR, which multiplies a covariance. History-only
+   * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+   */
+  public double SHRINKAGE_WEIGHT() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : Double.NaN; }
 
   public static int createCVR(FlatBufferBuilder builder,
       byte RULE,
@@ -123,13 +157,21 @@ public final class CVR extends com.google.flatbuffers.Table {
       long OBJECTS,
       double SCALE_FACTOR,
       byte CALIBRATION,
-      int EVIDENCEOffset) {
-    builder.startTable(14);
+      int EVIDENCEOffset,
+      long HISTORY_SAMPLES,
+      long HISTORY_SETS,
+      int HISTORY_WINDOWOffset,
+      double SHRINKAGE_WEIGHT) {
+    builder.startTable(18);
+    CVR.addShrinkageWeight(builder, SHRINKAGE_WEIGHT);
     CVR.addScaleFactor(builder, SCALE_FACTOR);
     CVR.addCoverage95(builder, COVERAGE_95);
     CVR.addMeanD2Over3(builder, MEAN_D2_OVER_3);
     CVR.addHorizonDays(builder, HORIZON_DAYS);
     CVR.addAgeDays(builder, AGE_DAYS);
+    CVR.addHistoryWindow(builder, HISTORY_WINDOWOffset);
+    CVR.addHistorySets(builder, HISTORY_SETS);
+    CVR.addHistorySamples(builder, HISTORY_SAMPLES);
     CVR.addEvidence(builder, EVIDENCEOffset);
     CVR.addObjects(builder, OBJECTS);
     CVR.addSamples(builder, SAMPLES);
@@ -142,7 +184,7 @@ public final class CVR extends com.google.flatbuffers.Table {
     return CVR.endCVR(builder);
   }
 
-  public static void startCVR(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startCVR(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addRule(FlatBufferBuilder builder, byte RULE) { builder.addByte(0, RULE, 0); }
   public static void addModelId(FlatBufferBuilder builder, int MODEL_IDOffset) { builder.addOffset(1, MODEL_IDOffset, 0); }
   public static void addRegime(FlatBufferBuilder builder, int REGIMEOffset) { builder.addOffset(2, REGIMEOffset, 0); }
@@ -157,6 +199,10 @@ public final class CVR extends com.google.flatbuffers.Table {
   public static void addScaleFactor(FlatBufferBuilder builder, double SCALE_FACTOR) { builder.addDouble(11, SCALE_FACTOR, Double.NaN); }
   public static void addCalibration(FlatBufferBuilder builder, byte CALIBRATION) { builder.addByte(12, CALIBRATION, 0); }
   public static void addEvidence(FlatBufferBuilder builder, int EVIDENCEOffset) { builder.addOffset(13, EVIDENCEOffset, 0); }
+  public static void addHistorySamples(FlatBufferBuilder builder, long HISTORY_SAMPLES) { builder.addInt(14, (int) HISTORY_SAMPLES, (int) 0L); }
+  public static void addHistorySets(FlatBufferBuilder builder, long HISTORY_SETS) { builder.addInt(15, (int) HISTORY_SETS, (int) 0L); }
+  public static void addHistoryWindow(FlatBufferBuilder builder, int HISTORY_WINDOWOffset) { builder.addOffset(16, HISTORY_WINDOWOffset, 0); }
+  public static void addShrinkageWeight(FlatBufferBuilder builder, double SHRINKAGE_WEIGHT) { builder.addDouble(17, SHRINKAGE_WEIGHT, Double.NaN); }
   public static int endCVR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

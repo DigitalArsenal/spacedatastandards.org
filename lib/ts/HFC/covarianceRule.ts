@@ -3,8 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 /**
- * The rule that produced a covariance. A producer applies the first rule it
- * can, in this order.
+ * The rule that produced a covariance. Wire values are append-only, not a
+ * preference order: a producer states the estimator it actually used.
  */
 export enum covarianceRule {
   /**
@@ -33,5 +33,14 @@ export enum covarianceRule {
    * The empirical model pooled over all sources, for a source without its own
    * model in the regime
    */
-  PooledModel = 4
+  PooledModel = 4,
+
+  /**
+   * Empirical errors from this object's own element-set history, shrunk
+   * toward a population prior identified by MODEL_ID and REGIME. Later
+   * element sets are comparison states, not independent truth; history alone
+   * never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry
+   * fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings.
+   */
+  EmpiricalHistoryShrunk = 5
 }

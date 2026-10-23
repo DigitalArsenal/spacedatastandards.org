@@ -111,20 +111,21 @@ impl ::flatbuffers::SimpleToVerifyInSlice for covarianceCalibration {}
 pub const ENUM_MIN_COVARIANCE_RULE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_COVARIANCE_RULE: i8 = 4;
+pub const ENUM_MAX_COVARIANCE_RULE: i8 = 5;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_COVARIANCE_RULE: [covarianceRule; 5] = [
+pub const ENUM_VALUES_COVARIANCE_RULE: [covarianceRule; 6] = [
     covarianceRule::Unspecified,
     covarianceRule::Operator,
     covarianceRule::ScaledFit,
     covarianceRule::SourceModel,
     covarianceRule::PooledModel,
+    covarianceRule::EmpiricalHistoryShrunk,
 ];
 
-/// The rule that produced a covariance. A producer applies the first rule it
-/// can, in this order.
+/// The rule that produced a covariance. Wire values are append-only, not a
+/// preference order: a producer states the estimator it actually used.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct covarianceRule(pub i8);
@@ -144,15 +145,22 @@ impl covarianceRule {
     /// The empirical model pooled over all sources, for a source without its own
     /// model in the regime
     pub const PooledModel: Self = Self(4);
+    /// Empirical errors from this object's own element-set history, shrunk
+    /// toward a population prior identified by MODEL_ID and REGIME. Later
+    /// element sets are comparison states, not independent truth; history alone
+    /// never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry
+    /// fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings.
+    pub const EmpiricalHistoryShrunk: Self = Self(5);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 4;
+    pub const ENUM_MAX: i8 = 5;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::Unspecified,
         Self::Operator,
         Self::ScaledFit,
         Self::SourceModel,
         Self::PooledModel,
+        Self::EmpiricalHistoryShrunk,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -163,6 +171,7 @@ impl covarianceRule {
             Self::ScaledFit => Some("ScaledFit"),
             Self::SourceModel => Some("SourceModel"),
             Self::PooledModel => Some("PooledModel"),
+            Self::EmpiricalHistoryShrunk => Some("EmpiricalHistoryShrunk"),
             _ => None,
         }
     }
@@ -256,6 +265,10 @@ impl<'a> CVR<'a> {
     pub const VT_SCALE_FACTOR: ::flatbuffers::VOffsetT = 26;
     pub const VT_CALIBRATION: ::flatbuffers::VOffsetT = 28;
     pub const VT_EVIDENCE: ::flatbuffers::VOffsetT = 30;
+    pub const VT_HISTORY_SAMPLES: ::flatbuffers::VOffsetT = 32;
+    pub const VT_HISTORY_SETS: ::flatbuffers::VOffsetT = 34;
+    pub const VT_HISTORY_WINDOW: ::flatbuffers::VOffsetT = 36;
+    pub const VT_SHRINKAGE_WEIGHT: ::flatbuffers::VOffsetT = 38;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -268,11 +281,15 @@ impl<'a> CVR<'a> {
         args: &'args CVRArgs<'args>
     ) -> ::flatbuffers::WIPOffset<CVR<'bldr>> {
         let mut builder = CVRBuilder::new(_fbb);
+        builder.add_SHRINKAGE_WEIGHT(args.SHRINKAGE_WEIGHT);
         builder.add_SCALE_FACTOR(args.SCALE_FACTOR);
         builder.add_COVERAGE_95(args.COVERAGE_95);
         builder.add_MEAN_D2_OVER_3(args.MEAN_D2_OVER_3);
         builder.add_HORIZON_DAYS(args.HORIZON_DAYS);
         builder.add_AGE_DAYS(args.AGE_DAYS);
+        if let Some(x) = args.HISTORY_WINDOW { builder.add_HISTORY_WINDOW(x); }
+        builder.add_HISTORY_SETS(args.HISTORY_SETS);
+        builder.add_HISTORY_SAMPLES(args.HISTORY_SAMPLES);
         if let Some(x) = args.EVIDENCE { builder.add_EVIDENCE(x); }
         builder.add_OBJECTS(args.OBJECTS);
         builder.add_SAMPLES(args.SAMPLES);
@@ -310,6 +327,12 @@ impl<'a> CVR<'a> {
         let EVIDENCE = self.EVIDENCE().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let HISTORY_SAMPLES = self.HISTORY_SAMPLES();
+        let HISTORY_SETS = self.HISTORY_SETS();
+        let HISTORY_WINDOW = self.HISTORY_WINDOW().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SHRINKAGE_WEIGHT = self.SHRINKAGE_WEIGHT();
         CVRT {
             RULE,
             MODEL_ID,
@@ -325,12 +348,17 @@ impl<'a> CVR<'a> {
             SCALE_FACTOR,
             CALIBRATION,
             EVIDENCE,
+            HISTORY_SAMPLES,
+            HISTORY_SETS,
+            HISTORY_WINDOW,
+            SHRINKAGE_WEIGHT,
         }
     }
 
     /// The rule that produced the covariance. In a CCSDS covariance block,
     /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-    /// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+    /// SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+    /// MODEL_ID as COV_BASIS_ID.
     #[inline]
     pub fn RULE(&self) -> covarianceRule {
         // Safety:
@@ -341,7 +369,8 @@ impl<'a> CVR<'a> {
 
     /// Identifier of the error model (SourceModel, PooledModel) or of the
     /// measured realism factor (ScaledFit) the covariance came from. Empty for
-    /// Operator.
+    /// Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+    /// EVIDENCE identifies the history estimator and its configuration.
     #[inline]
     pub fn MODEL_ID(&self) -> Option<&'a str> {
         // Safety:
@@ -467,6 +496,56 @@ impl<'a> CVR<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CVR::VT_EVIDENCE, None)}
     }
+
+    /// Number of retained older/newer element-set residual pairs from this
+    /// object in the age bin containing AGE_DAYS, after rejection/clipping.
+    /// Zero means no retained pairs; never the held-out test count SAMPLES.
+    #[inline]
+    pub fn HISTORY_SAMPLES(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(CVR::VT_HISTORY_SAMPLES, Some(0)).unwrap()}
+    }
+
+    /// Number of distinct older element sets contributing HISTORY_SAMPLES.
+    /// Zero means none; never the distinct calibration-object count OBJECTS.
+    #[inline]
+    pub fn HISTORY_SETS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(CVR::VT_HISTORY_SETS, Some(0)).unwrap()}
+    }
+
+    /// ISO 8601 UTC start/end interval spanning the element-set epochs used
+    /// in the object's history fit. Empty when no history was used. This is
+    /// training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+    #[inline]
+    pub fn HISTORY_WINDOW(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(CVR::VT_HISTORY_WINDOW, None)}
+    }
+
+    /// Dimensionless population-prior fraction alpha in the covariance blend
+    /// P = (1-alpha) H + alpha P_prior, where H is the history error second
+    /// moment and P_prior includes the population model's realism scaling.
+    /// Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+    /// or unknown. For interpolation across bins, report the correspondingly
+    /// interpolated alpha. EVIDENCE must identify the estimator/configuration,
+    /// retained-count bin, participating bins and their weights so the blend
+    /// can be reconstructed; the scalar alone does not describe that mixture.
+    /// This is not SCALE_FACTOR, which multiplies a covariance. History-only
+    /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+    #[inline]
+    pub fn SHRINKAGE_WEIGHT(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(CVR::VT_SHRINKAGE_WEIGHT, Some(f64::NAN)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for CVR<'_> {
@@ -489,6 +568,10 @@ impl ::flatbuffers::Verifiable for CVR<'_> {
             .visit_field::<f64>("SCALE_FACTOR", Self::VT_SCALE_FACTOR, false)?
             .visit_field::<covarianceCalibration>("CALIBRATION", Self::VT_CALIBRATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("EVIDENCE", Self::VT_EVIDENCE, false)?
+            .visit_field::<u32>("HISTORY_SAMPLES", Self::VT_HISTORY_SAMPLES, false)?
+            .visit_field::<u32>("HISTORY_SETS", Self::VT_HISTORY_SETS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("HISTORY_WINDOW", Self::VT_HISTORY_WINDOW, false)?
+            .visit_field::<f64>("SHRINKAGE_WEIGHT", Self::VT_SHRINKAGE_WEIGHT, false)?
             .finish();
         Ok(())
     }
@@ -509,6 +592,10 @@ pub struct CVRArgs<'a> {
     pub SCALE_FACTOR: f64,
     pub CALIBRATION: covarianceCalibration,
     pub EVIDENCE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub HISTORY_SAMPLES: u32,
+    pub HISTORY_SETS: u32,
+    pub HISTORY_WINDOW: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SHRINKAGE_WEIGHT: f64,
 }
 
 impl<'a> Default for CVRArgs<'a> {
@@ -529,6 +616,10 @@ impl<'a> Default for CVRArgs<'a> {
             SCALE_FACTOR: f64::NAN,
             CALIBRATION: covarianceCalibration::Unspecified,
             EVIDENCE: None,
+            HISTORY_SAMPLES: 0,
+            HISTORY_SETS: 0,
+            HISTORY_WINDOW: None,
+            SHRINKAGE_WEIGHT: f64::NAN,
         }
     }
 }
@@ -610,6 +701,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> CVRBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_HISTORY_SAMPLES(&mut self, HISTORY_SAMPLES: u32) {
+        self.fbb_.push_slot::<u32>(CVR::VT_HISTORY_SAMPLES, HISTORY_SAMPLES, 0);
+    }
+
+    #[inline]
+    pub fn add_HISTORY_SETS(&mut self, HISTORY_SETS: u32) {
+        self.fbb_.push_slot::<u32>(CVR::VT_HISTORY_SETS, HISTORY_SETS, 0);
+    }
+
+    #[inline]
+    pub fn add_HISTORY_WINDOW(&mut self, HISTORY_WINDOW: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(CVR::VT_HISTORY_WINDOW, HISTORY_WINDOW);
+    }
+
+    #[inline]
+    pub fn add_SHRINKAGE_WEIGHT(&mut self, SHRINKAGE_WEIGHT: f64) {
+        self.fbb_.push_slot::<f64>(CVR::VT_SHRINKAGE_WEIGHT, SHRINKAGE_WEIGHT, f64::NAN);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> CVRBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         CVRBuilder {
@@ -642,6 +753,10 @@ impl ::core::fmt::Debug for CVR<'_> {
         ds.field("SCALE_FACTOR", &self.SCALE_FACTOR());
         ds.field("CALIBRATION", &self.CALIBRATION());
         ds.field("EVIDENCE", &self.EVIDENCE());
+        ds.field("HISTORY_SAMPLES", &self.HISTORY_SAMPLES());
+        ds.field("HISTORY_SETS", &self.HISTORY_SETS());
+        ds.field("HISTORY_WINDOW", &self.HISTORY_WINDOW());
+        ds.field("SHRINKAGE_WEIGHT", &self.SHRINKAGE_WEIGHT());
         ds.finish()
     }
 }
@@ -663,6 +778,10 @@ pub struct CVRT {
     pub SCALE_FACTOR: f64,
     pub CALIBRATION: covarianceCalibration,
     pub EVIDENCE: Option<alloc::string::String>,
+    pub HISTORY_SAMPLES: u32,
+    pub HISTORY_SETS: u32,
+    pub HISTORY_WINDOW: Option<alloc::string::String>,
+    pub SHRINKAGE_WEIGHT: f64,
 }
 
 impl Default for CVRT {
@@ -682,6 +801,10 @@ impl Default for CVRT {
             SCALE_FACTOR: f64::NAN,
             CALIBRATION: covarianceCalibration::Unspecified,
             EVIDENCE: None,
+            HISTORY_SAMPLES: 0,
+            HISTORY_SETS: 0,
+            HISTORY_WINDOW: None,
+            SHRINKAGE_WEIGHT: f64::NAN,
         }
     }
 }
@@ -715,6 +838,12 @@ impl CVRT {
         let EVIDENCE = self.EVIDENCE.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let HISTORY_SAMPLES = self.HISTORY_SAMPLES;
+        let HISTORY_SETS = self.HISTORY_SETS;
+        let HISTORY_WINDOW = self.HISTORY_WINDOW.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SHRINKAGE_WEIGHT = self.SHRINKAGE_WEIGHT;
         CVR::create(_fbb, &CVRArgs{
             RULE,
             MODEL_ID,
@@ -730,6 +859,10 @@ impl CVRT {
             SCALE_FACTOR,
             CALIBRATION,
             EVIDENCE,
+            HISTORY_SAMPLES,
+            HISTORY_SETS,
+            HISTORY_WINDOW,
+            SHRINKAGE_WEIGHT,
         })
     }
 }

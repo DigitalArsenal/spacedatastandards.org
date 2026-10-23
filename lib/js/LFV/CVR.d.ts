@@ -14,13 +14,15 @@ export declare class CVR implements flatbuffers.IUnpackableObject<CVRT> {
     /**
      * The rule that produced the covariance. In a CCSDS covariance block,
      * Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-     * SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+     * SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+     * MODEL_ID as COV_BASIS_ID.
      */
     RULE(): covarianceRule;
     /**
      * Identifier of the error model (SourceModel, PooledModel) or of the
      * measured realism factor (ScaledFit) the covariance came from. Empty for
-     * Operator.
+     * Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+     * EVIDENCE identifies the history estimator and its configuration.
      */
     MODEL_ID(): string | null;
     MODEL_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
@@ -86,6 +88,37 @@ export declare class CVR implements flatbuffers.IUnpackableObject<CVRT> {
      */
     EVIDENCE(): string | null;
     EVIDENCE(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Number of retained older/newer element-set residual pairs from this
+     * object in the age bin containing AGE_DAYS, after rejection/clipping.
+     * Zero means no retained pairs; never the held-out test count SAMPLES.
+     */
+    HISTORY_SAMPLES(): number;
+    /**
+     * Number of distinct older element sets contributing HISTORY_SAMPLES.
+     * Zero means none; never the distinct calibration-object count OBJECTS.
+     */
+    HISTORY_SETS(): number;
+    /**
+     * ISO 8601 UTC start/end interval spanning the element-set epochs used
+     * in the object's history fit. Empty when no history was used. This is
+     * training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+     */
+    HISTORY_WINDOW(): string | null;
+    HISTORY_WINDOW(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Dimensionless population-prior fraction alpha in the covariance blend
+     * P = (1-alpha) H + alpha P_prior, where H is the history error second
+     * moment and P_prior includes the population model's realism scaling.
+     * Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+     * or unknown. For interpolation across bins, report the correspondingly
+     * interpolated alpha. EVIDENCE must identify the estimator/configuration,
+     * retained-count bin, participating bins and their weights so the blend
+     * can be reconstructed; the scalar alone does not describe that mixture.
+     * This is not SCALE_FACTOR, which multiplies a covariance. History-only
+     * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+     */
+    SHRINKAGE_WEIGHT(): number;
     static startCVR(builder: flatbuffers.Builder): void;
     static addRule(builder: flatbuffers.Builder, RULE: covarianceRule): void;
     static addModelId(builder: flatbuffers.Builder, MODEL_IDOffset: flatbuffers.Offset): void;
@@ -101,10 +134,14 @@ export declare class CVR implements flatbuffers.IUnpackableObject<CVRT> {
     static addScaleFactor(builder: flatbuffers.Builder, SCALE_FACTOR: number): void;
     static addCalibration(builder: flatbuffers.Builder, CALIBRATION: covarianceCalibration): void;
     static addEvidence(builder: flatbuffers.Builder, EVIDENCEOffset: flatbuffers.Offset): void;
+    static addHistorySamples(builder: flatbuffers.Builder, HISTORY_SAMPLES: number): void;
+    static addHistorySets(builder: flatbuffers.Builder, HISTORY_SETS: number): void;
+    static addHistoryWindow(builder: flatbuffers.Builder, HISTORY_WINDOWOffset: flatbuffers.Offset): void;
+    static addShrinkageWeight(builder: flatbuffers.Builder, SHRINKAGE_WEIGHT: number): void;
     static endCVR(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishCVRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedCVRBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
-    static createCVR(builder: flatbuffers.Builder, RULE: covarianceRule, MODEL_IDOffset: flatbuffers.Offset, REGIMEOffset: flatbuffers.Offset, AGE_DAYS: number, HORIZON_DAYS: number, MEASURED_LINEAGEOffset: flatbuffers.Offset, TEST_WINDOWOffset: flatbuffers.Offset, MEAN_D2_OVER_3: number, COVERAGE_95: number, SAMPLES: number, OBJECTS: number, SCALE_FACTOR: number, CALIBRATION: covarianceCalibration, EVIDENCEOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createCVR(builder: flatbuffers.Builder, RULE: covarianceRule, MODEL_IDOffset: flatbuffers.Offset, REGIMEOffset: flatbuffers.Offset, AGE_DAYS: number, HORIZON_DAYS: number, MEASURED_LINEAGEOffset: flatbuffers.Offset, TEST_WINDOWOffset: flatbuffers.Offset, MEAN_D2_OVER_3: number, COVERAGE_95: number, SAMPLES: number, OBJECTS: number, SCALE_FACTOR: number, CALIBRATION: covarianceCalibration, EVIDENCEOffset: flatbuffers.Offset, HISTORY_SAMPLES: number, HISTORY_SETS: number, HISTORY_WINDOWOffset: flatbuffers.Offset, SHRINKAGE_WEIGHT: number): flatbuffers.Offset;
     unpack(): CVRT;
     unpackTo(_o: CVRT): void;
 }
@@ -123,7 +160,11 @@ export declare class CVRT implements flatbuffers.IGeneratedObject {
     SCALE_FACTOR: number;
     CALIBRATION: covarianceCalibration;
     EVIDENCE: string | Uint8Array | null;
-    constructor(RULE?: covarianceRule, MODEL_ID?: string | Uint8Array | null, REGIME?: string | Uint8Array | null, AGE_DAYS?: number, HORIZON_DAYS?: number, MEASURED_LINEAGE?: string | Uint8Array | null, TEST_WINDOW?: string | Uint8Array | null, MEAN_D2_OVER_3?: number, COVERAGE_95?: number, SAMPLES?: number, OBJECTS?: number, SCALE_FACTOR?: number, CALIBRATION?: covarianceCalibration, EVIDENCE?: string | Uint8Array | null);
+    HISTORY_SAMPLES: number;
+    HISTORY_SETS: number;
+    HISTORY_WINDOW: string | Uint8Array | null;
+    SHRINKAGE_WEIGHT: number;
+    constructor(RULE?: covarianceRule, MODEL_ID?: string | Uint8Array | null, REGIME?: string | Uint8Array | null, AGE_DAYS?: number, HORIZON_DAYS?: number, MEASURED_LINEAGE?: string | Uint8Array | null, TEST_WINDOW?: string | Uint8Array | null, MEAN_D2_OVER_3?: number, COVERAGE_95?: number, SAMPLES?: number, OBJECTS?: number, SCALE_FACTOR?: number, CALIBRATION?: covarianceCalibration, EVIDENCE?: string | Uint8Array | null, HISTORY_SAMPLES?: number, HISTORY_SETS?: number, HISTORY_WINDOW?: string | Uint8Array | null, SHRINKAGE_WEIGHT?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=CVR.d.ts.map

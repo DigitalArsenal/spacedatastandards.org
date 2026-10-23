@@ -21,11 +21,13 @@ public struct CVR : IFlatbufferObject
 
   /// The rule that produced the covariance. In a CCSDS covariance block,
   /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-  /// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+  /// SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+  /// MODEL_ID as COV_BASIS_ID.
   public covarianceRule RULE { get { int o = __p.__offset(4); return o != 0 ? (covarianceRule)__p.bb.GetSbyte(o + __p.bb_pos) : covarianceRule.Unspecified; } }
   /// Identifier of the error model (SourceModel, PooledModel) or of the
   /// measured realism factor (ScaledFit) the covariance came from. Empty for
-  /// Operator.
+  /// Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+  /// EVIDENCE identifies the history estimator and its configuration.
   public string MODEL_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMODEL_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -91,6 +93,34 @@ public struct CVR : IFlatbufferObject
   public ArraySegment<byte>? GetEVIDENCEBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
   public byte[] GetEVIDENCEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Number of retained older/newer element-set residual pairs from this
+  /// object in the age bin containing AGE_DAYS, after rejection/clipping.
+  /// Zero means no retained pairs; never the held-out test count SAMPLES.
+  public uint HISTORY_SAMPLES { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Number of distinct older element sets contributing HISTORY_SAMPLES.
+  /// Zero means none; never the distinct calibration-object count OBJECTS.
+  public uint HISTORY_SETS { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// ISO 8601 UTC start/end interval spanning the element-set epochs used
+  /// in the object's history fit. Empty when no history was used. This is
+  /// training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+  public string HISTORY_WINDOW { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetHISTORY_WINDOWBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetHISTORY_WINDOWBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetHISTORY_WINDOWArray() { return __p.__vector_as_array<byte>(36); }
+  /// Dimensionless population-prior fraction alpha in the covariance blend
+  /// P = (1-alpha) H + alpha P_prior, where H is the history error second
+  /// moment and P_prior includes the population model's realism scaling.
+  /// Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+  /// or unknown. For interpolation across bins, report the correspondingly
+  /// interpolated alpha. EVIDENCE must identify the estimator/configuration,
+  /// retained-count bin, participating bins and their weights so the blend
+  /// can be reconstructed; the scalar alone does not describe that mixture.
+  /// This is not SCALE_FACTOR, which multiplies a covariance. History-only
+  /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+  public double SHRINKAGE_WEIGHT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)Double.NaN; } }
 
   public static Offset<CVR> CreateCVR(FlatBufferBuilder builder,
       covarianceRule RULE = covarianceRule.Unspecified,
@@ -106,13 +136,21 @@ public struct CVR : IFlatbufferObject
       uint OBJECTS = 0,
       double SCALE_FACTOR = Double.NaN,
       covarianceCalibration CALIBRATION = covarianceCalibration.Unspecified,
-      StringOffset EVIDENCEOffset = default(StringOffset)) {
-    builder.StartTable(14);
+      StringOffset EVIDENCEOffset = default(StringOffset),
+      uint HISTORY_SAMPLES = 0,
+      uint HISTORY_SETS = 0,
+      StringOffset HISTORY_WINDOWOffset = default(StringOffset),
+      double SHRINKAGE_WEIGHT = Double.NaN) {
+    builder.StartTable(18);
+    CVR.AddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT);
     CVR.AddSCALE_FACTOR(builder, SCALE_FACTOR);
     CVR.AddCOVERAGE_95(builder, COVERAGE_95);
     CVR.AddMEAN_D2_OVER_3(builder, MEAN_D2_OVER_3);
     CVR.AddHORIZON_DAYS(builder, HORIZON_DAYS);
     CVR.AddAGE_DAYS(builder, AGE_DAYS);
+    CVR.AddHISTORY_WINDOW(builder, HISTORY_WINDOWOffset);
+    CVR.AddHISTORY_SETS(builder, HISTORY_SETS);
+    CVR.AddHISTORY_SAMPLES(builder, HISTORY_SAMPLES);
     CVR.AddEVIDENCE(builder, EVIDENCEOffset);
     CVR.AddOBJECTS(builder, OBJECTS);
     CVR.AddSAMPLES(builder, SAMPLES);
@@ -125,7 +163,7 @@ public struct CVR : IFlatbufferObject
     return CVR.EndCVR(builder);
   }
 
-  public static void StartCVR(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartCVR(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddRULE(FlatBufferBuilder builder, covarianceRule RULE) { builder.AddSbyte(0, (sbyte)RULE, 0); }
   public static void AddMODEL_ID(FlatBufferBuilder builder, StringOffset MODEL_IDOffset) { builder.AddOffset(1, MODEL_IDOffset.Value, 0); }
   public static void AddREGIME(FlatBufferBuilder builder, StringOffset REGIMEOffset) { builder.AddOffset(2, REGIMEOffset.Value, 0); }
@@ -140,6 +178,10 @@ public struct CVR : IFlatbufferObject
   public static void AddSCALE_FACTOR(FlatBufferBuilder builder, double SCALE_FACTOR) { builder.AddDouble(11, SCALE_FACTOR, Double.NaN); }
   public static void AddCALIBRATION(FlatBufferBuilder builder, covarianceCalibration CALIBRATION) { builder.AddSbyte(12, (sbyte)CALIBRATION, 0); }
   public static void AddEVIDENCE(FlatBufferBuilder builder, StringOffset EVIDENCEOffset) { builder.AddOffset(13, EVIDENCEOffset.Value, 0); }
+  public static void AddHISTORY_SAMPLES(FlatBufferBuilder builder, uint HISTORY_SAMPLES) { builder.AddUint(14, HISTORY_SAMPLES, 0); }
+  public static void AddHISTORY_SETS(FlatBufferBuilder builder, uint HISTORY_SETS) { builder.AddUint(15, HISTORY_SETS, 0); }
+  public static void AddHISTORY_WINDOW(FlatBufferBuilder builder, StringOffset HISTORY_WINDOWOffset) { builder.AddOffset(16, HISTORY_WINDOWOffset.Value, 0); }
+  public static void AddSHRINKAGE_WEIGHT(FlatBufferBuilder builder, double SHRINKAGE_WEIGHT) { builder.AddDouble(17, SHRINKAGE_WEIGHT, Double.NaN); }
   public static Offset<CVR> EndCVR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CVR>(o);
@@ -166,6 +208,10 @@ public struct CVR : IFlatbufferObject
     _o.SCALE_FACTOR = this.SCALE_FACTOR;
     _o.CALIBRATION = this.CALIBRATION;
     _o.EVIDENCE = this.EVIDENCE;
+    _o.HISTORY_SAMPLES = this.HISTORY_SAMPLES;
+    _o.HISTORY_SETS = this.HISTORY_SETS;
+    _o.HISTORY_WINDOW = this.HISTORY_WINDOW;
+    _o.SHRINKAGE_WEIGHT = this.SHRINKAGE_WEIGHT;
   }
   public static Offset<CVR> Pack(FlatBufferBuilder builder, CVRT _o) {
     if (_o == null) return default(Offset<CVR>);
@@ -174,6 +220,7 @@ public struct CVR : IFlatbufferObject
     var _MEASURED_LINEAGE = _o.MEASURED_LINEAGE == null ? default(StringOffset) : builder.CreateString(_o.MEASURED_LINEAGE);
     var _TEST_WINDOW = _o.TEST_WINDOW == null ? default(StringOffset) : builder.CreateString(_o.TEST_WINDOW);
     var _EVIDENCE = _o.EVIDENCE == null ? default(StringOffset) : builder.CreateString(_o.EVIDENCE);
+    var _HISTORY_WINDOW = _o.HISTORY_WINDOW == null ? default(StringOffset) : builder.CreateString(_o.HISTORY_WINDOW);
     return CreateCVR(
       builder,
       _o.RULE,
@@ -189,7 +236,11 @@ public struct CVR : IFlatbufferObject
       _o.OBJECTS,
       _o.SCALE_FACTOR,
       _o.CALIBRATION,
-      _EVIDENCE);
+      _EVIDENCE,
+      _o.HISTORY_SAMPLES,
+      _o.HISTORY_SETS,
+      _HISTORY_WINDOW,
+      _o.SHRINKAGE_WEIGHT);
   }
 }
 
@@ -209,6 +260,10 @@ public class CVRT
   public double SCALE_FACTOR { get; set; }
   public covarianceCalibration CALIBRATION { get; set; }
   public string EVIDENCE { get; set; }
+  public uint HISTORY_SAMPLES { get; set; }
+  public uint HISTORY_SETS { get; set; }
+  public string HISTORY_WINDOW { get; set; }
+  public double SHRINKAGE_WEIGHT { get; set; }
 
   public CVRT() {
     this.RULE = covarianceRule.Unspecified;
@@ -225,6 +280,10 @@ public class CVRT
     this.SCALE_FACTOR = Double.NaN;
     this.CALIBRATION = covarianceCalibration.Unspecified;
     this.EVIDENCE = null;
+    this.HISTORY_SAMPLES = 0;
+    this.HISTORY_SETS = 0;
+    this.HISTORY_WINDOW = null;
+    this.SHRINKAGE_WEIGHT = Double.NaN;
   }
   public static CVRT DeserializeFromBinary(byte[] fbBuffer) {
     return CVR.GetRootAsCVR(new ByteBuffer(fbBuffer)).UnPack();
@@ -256,6 +315,10 @@ static public class CVRVerify
       && verifier.VerifyField(tablePos, 26 /*SCALE_FACTOR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*CALIBRATION*/, 1 /*covarianceCalibration*/, 1, false)
       && verifier.VerifyString(tablePos, 30 /*EVIDENCE*/, false)
+      && verifier.VerifyField(tablePos, 32 /*HISTORY_SAMPLES*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 34 /*HISTORY_SETS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 36 /*HISTORY_WINDOW*/, false)
+      && verifier.VerifyField(tablePos, 38 /*SHRINKAGE_WEIGHT*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

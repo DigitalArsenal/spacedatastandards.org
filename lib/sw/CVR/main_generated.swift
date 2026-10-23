@@ -27,8 +27,8 @@ public enum covarianceCalibration: Int8, FlatbuffersVectorInitializable, Enum, V
 }
 
 
-///  The rule that produced a covariance. A producer applies the first rule it
-///  can, in this order.
+///  The rule that produced a covariance. Wire values are append-only, not a
+///  preference order: a producer states the estimator it actually used.
 public enum covarianceRule: Int8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = Int8
   public static var byteSize: Int { return MemoryLayout<Int8>.size }
@@ -46,8 +46,14 @@ public enum covarianceRule: Int8, FlatbuffersVectorInitializable, Enum, Verifiab
   ///  The empirical model pooled over all sources, for a source without its own
   ///  model in the regime
   case pooledmodel = 4
+  ///  Empirical errors from this object's own element-set history, shrunk
+  ///  toward a population prior identified by MODEL_ID and REGIME. Later
+  ///  element sets are comparison states, not independent truth; history alone
+  ///  never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry
+  ///  fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings.
+  case empiricalhistoryshrunk = 5
 
-  public static var max: covarianceRule { return .pooledmodel }
+  public static var max: covarianceRule { return .empiricalhistoryshrunk }
   public static var min: covarianceRule { return .unspecified }
 }
 
@@ -79,15 +85,21 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SCALE_FACTOR: VOffset = 26
     static let CALIBRATION: VOffset = 28
     static let EVIDENCE: VOffset = 30
+    static let HISTORY_SAMPLES: VOffset = 32
+    static let HISTORY_SETS: VOffset = 34
+    static let HISTORY_WINDOW: VOffset = 36
+    static let SHRINKAGE_WEIGHT: VOffset = 38
   }
 
   ///  The rule that produced the covariance. In a CCSDS covariance block,
   ///  Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-  ///  SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+  ///  SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+  ///  MODEL_ID as COV_BASIS_ID.
   public var RULE: covarianceRule { let o = _accessor.offset(VT.RULE); return o == 0 ? .unspecified : covarianceRule(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .unspecified }
   ///  Identifier of the error model (SourceModel, PooledModel) or of the
   ///  measured realism factor (ScaledFit) the covariance came from. Empty for
-  ///  Operator.
+  ///  Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+  ///  EVIDENCE identifies the history estimator and its configuration.
   public var MODEL_ID: String? { let o = _accessor.offset(VT.MODEL_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var MODEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MODEL_ID) }
   ///  Orbit regime of the cell, as the model names it.
@@ -128,7 +140,30 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Identifier of the report or record that holds the test.
   public var EVIDENCE: String? { let o = _accessor.offset(VT.EVIDENCE); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVIDENCESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EVIDENCE) }
-  public static func startCVR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  ///  Number of retained older/newer element-set residual pairs from this
+  ///  object in the age bin containing AGE_DAYS, after rejection/clipping.
+  ///  Zero means no retained pairs; never the held-out test count SAMPLES.
+  public var HISTORY_SAMPLES: UInt32 { let o = _accessor.offset(VT.HISTORY_SAMPLES); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of distinct older element sets contributing HISTORY_SAMPLES.
+  ///  Zero means none; never the distinct calibration-object count OBJECTS.
+  public var HISTORY_SETS: UInt32 { let o = _accessor.offset(VT.HISTORY_SETS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  ISO 8601 UTC start/end interval spanning the element-set epochs used
+  ///  in the object's history fit. Empty when no history was used. This is
+  ///  training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+  public var HISTORY_WINDOW: String? { let o = _accessor.offset(VT.HISTORY_WINDOW); return o == 0 ? nil : _accessor.string(at: o) }
+  public var HISTORY_WINDOWSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.HISTORY_WINDOW) }
+  ///  Dimensionless population-prior fraction alpha in the covariance blend
+  ///  P = (1-alpha) H + alpha P_prior, where H is the history error second
+  ///  moment and P_prior includes the population model's realism scaling.
+  ///  Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+  ///  or unknown. For interpolation across bins, report the correspondingly
+  ///  interpolated alpha. EVIDENCE must identify the estimator/configuration,
+  ///  retained-count bin, participating bins and their weights so the blend
+  ///  can be reconstructed; the scalar alone does not describe that mixture.
+  ///  This is not SCALE_FACTOR, which multiplies a covariance. History-only
+  ///  evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+  public var SHRINKAGE_WEIGHT: Double { let o = _accessor.offset(VT.SHRINKAGE_WEIGHT); return o == 0 ? .nan : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startCVR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(RULE: covarianceRule, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RULE.rawValue, def: 0, at: VT.RULE) }
   public static func add(MODEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODEL_ID, at: VT.MODEL_ID) }
   public static func add(REGIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGIME, at: VT.REGIME) }
@@ -143,6 +178,10 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(SCALE_FACTOR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCALE_FACTOR, def: .nan, at: VT.SCALE_FACTOR) }
   public static func add(CALIBRATION: covarianceCalibration, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBRATION.rawValue, def: 0, at: VT.CALIBRATION) }
   public static func add(EVIDENCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVIDENCE, at: VT.EVIDENCE) }
+  public static func add(HISTORY_SAMPLES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HISTORY_SAMPLES, def: 0, at: VT.HISTORY_SAMPLES) }
+  public static func add(HISTORY_SETS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HISTORY_SETS, def: 0, at: VT.HISTORY_SETS) }
+  public static func add(HISTORY_WINDOW: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HISTORY_WINDOW, at: VT.HISTORY_WINDOW) }
+  public static func add(SHRINKAGE_WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHRINKAGE_WEIGHT, def: .nan, at: VT.SHRINKAGE_WEIGHT) }
   public static func endCVR(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCVR(
     _ fbb: inout FlatBufferBuilder,
@@ -159,7 +198,11 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     OBJECTS: UInt32 = 0,
     SCALE_FACTOR: Double = .nan,
     CALIBRATION: covarianceCalibration = .unspecified,
-    EVIDENCEOffset EVIDENCE: Offset = Offset()
+    EVIDENCEOffset EVIDENCE: Offset = Offset(),
+    HISTORY_SAMPLES: UInt32 = 0,
+    HISTORY_SETS: UInt32 = 0,
+    HISTORY_WINDOWOffset HISTORY_WINDOW: Offset = Offset(),
+    SHRINKAGE_WEIGHT: Double = .nan
   ) -> Offset {
     let __start = CVR.startCVR(&fbb)
     CVR.add(RULE: RULE, &fbb)
@@ -176,6 +219,10 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     CVR.add(SCALE_FACTOR: SCALE_FACTOR, &fbb)
     CVR.add(CALIBRATION: CALIBRATION, &fbb)
     CVR.add(EVIDENCE: EVIDENCE, &fbb)
+    CVR.add(HISTORY_SAMPLES: HISTORY_SAMPLES, &fbb)
+    CVR.add(HISTORY_SETS: HISTORY_SETS, &fbb)
+    CVR.add(HISTORY_WINDOW: HISTORY_WINDOW, &fbb)
+    CVR.add(SHRINKAGE_WEIGHT: SHRINKAGE_WEIGHT, &fbb)
     return CVR.endCVR(&fbb, start: __start)
   }
 
@@ -195,6 +242,10 @@ public struct CVR: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SCALE_FACTOR, fieldName: "SCALE_FACTOR", required: false, type: Double.self)
     try _v.visit(field: VT.CALIBRATION, fieldName: "CALIBRATION", required: false, type: covarianceCalibration.self)
     try _v.visit(field: VT.EVIDENCE, fieldName: "EVIDENCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.HISTORY_SAMPLES, fieldName: "HISTORY_SAMPLES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HISTORY_SETS, fieldName: "HISTORY_SETS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.HISTORY_WINDOW, fieldName: "HISTORY_WINDOW", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SHRINKAGE_WEIGHT, fieldName: "SHRINKAGE_WEIGHT", required: false, type: Double.self)
     _v.finish()
   }
 }

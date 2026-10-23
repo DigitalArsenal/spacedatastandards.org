@@ -36,7 +36,8 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
 /**
  * The rule that produced the covariance. In a CCSDS covariance block,
  * Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
- * SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+ * SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+ * MODEL_ID as COV_BASIS_ID.
  */
 RULE():covarianceRule {
   const offset = this.bb!.__offset(this.bb_pos, 4);
@@ -46,7 +47,8 @@ RULE():covarianceRule {
 /**
  * Identifier of the error model (SourceModel, PooledModel) or of the
  * measured realism factor (ScaledFit) the covariance came from. Empty for
- * Operator.
+ * Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+ * EVIDENCE identifies the history estimator and its configuration.
  */
 MODEL_ID():string|null
 MODEL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -169,8 +171,56 @@ EVIDENCE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Number of retained older/newer element-set residual pairs from this
+ * object in the age bin containing AGE_DAYS, after rejection/clipping.
+ * Zero means no retained pairs; never the held-out test count SAMPLES.
+ */
+HISTORY_SAMPLES():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of distinct older element sets contributing HISTORY_SAMPLES.
+ * Zero means none; never the distinct calibration-object count OBJECTS.
+ */
+HISTORY_SETS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * ISO 8601 UTC start/end interval spanning the element-set epochs used
+ * in the object's history fit. Empty when no history was used. This is
+ * training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+ */
+HISTORY_WINDOW():string|null
+HISTORY_WINDOW(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+HISTORY_WINDOW(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Dimensionless population-prior fraction alpha in the covariance blend
+ * P = (1-alpha) H + alpha P_prior, where H is the history error second
+ * moment and P_prior includes the population model's realism scaling.
+ * Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+ * or unknown. For interpolation across bins, report the correspondingly
+ * interpolated alpha. EVIDENCE must identify the estimator/configuration,
+ * retained-count bin, participating bins and their weights so the blend
+ * can be reconstructed; the scalar alone does not describe that mixture.
+ * This is not SCALE_FACTOR, which multiplies a covariance. History-only
+ * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+ */
+SHRINKAGE_WEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : NaN;
+}
+
 static startCVR(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(18);
 }
 
 static addRule(builder:flatbuffers.Builder, RULE:covarianceRule) {
@@ -229,6 +279,22 @@ static addEvidence(builder:flatbuffers.Builder, EVIDENCEOffset:flatbuffers.Offse
   builder.addFieldOffset(13, EVIDENCEOffset, 0);
 }
 
+static addHistorySamples(builder:flatbuffers.Builder, HISTORY_SAMPLES:number) {
+  builder.addFieldInt32(14, HISTORY_SAMPLES, 0);
+}
+
+static addHistorySets(builder:flatbuffers.Builder, HISTORY_SETS:number) {
+  builder.addFieldInt32(15, HISTORY_SETS, 0);
+}
+
+static addHistoryWindow(builder:flatbuffers.Builder, HISTORY_WINDOWOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, HISTORY_WINDOWOffset, 0);
+}
+
+static addShrinkageWeight(builder:flatbuffers.Builder, SHRINKAGE_WEIGHT:number) {
+  builder.addFieldFloat64(17, SHRINKAGE_WEIGHT, NaN);
+}
+
 static endCVR(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -242,7 +308,7 @@ static finishSizePrefixedCVRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CVR', true);
 }
 
-static createCVR(builder:flatbuffers.Builder, RULE:covarianceRule, MODEL_IDOffset:flatbuffers.Offset, REGIMEOffset:flatbuffers.Offset, AGE_DAYS:number, HORIZON_DAYS:number, MEASURED_LINEAGEOffset:flatbuffers.Offset, TEST_WINDOWOffset:flatbuffers.Offset, MEAN_D2_OVER_3:number, COVERAGE_95:number, SAMPLES:number, OBJECTS:number, SCALE_FACTOR:number, CALIBRATION:covarianceCalibration, EVIDENCEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCVR(builder:flatbuffers.Builder, RULE:covarianceRule, MODEL_IDOffset:flatbuffers.Offset, REGIMEOffset:flatbuffers.Offset, AGE_DAYS:number, HORIZON_DAYS:number, MEASURED_LINEAGEOffset:flatbuffers.Offset, TEST_WINDOWOffset:flatbuffers.Offset, MEAN_D2_OVER_3:number, COVERAGE_95:number, SAMPLES:number, OBJECTS:number, SCALE_FACTOR:number, CALIBRATION:covarianceCalibration, EVIDENCEOffset:flatbuffers.Offset, HISTORY_SAMPLES:number, HISTORY_SETS:number, HISTORY_WINDOWOffset:flatbuffers.Offset, SHRINKAGE_WEIGHT:number):flatbuffers.Offset {
   CVR.startCVR(builder);
   CVR.addRule(builder, RULE);
   CVR.addModelId(builder, MODEL_IDOffset);
@@ -258,6 +324,10 @@ static createCVR(builder:flatbuffers.Builder, RULE:covarianceRule, MODEL_IDOffse
   CVR.addScaleFactor(builder, SCALE_FACTOR);
   CVR.addCalibration(builder, CALIBRATION);
   CVR.addEvidence(builder, EVIDENCEOffset);
+  CVR.addHistorySamples(builder, HISTORY_SAMPLES);
+  CVR.addHistorySets(builder, HISTORY_SETS);
+  CVR.addHistoryWindow(builder, HISTORY_WINDOWOffset);
+  CVR.addShrinkageWeight(builder, SHRINKAGE_WEIGHT);
   return CVR.endCVR(builder);
 }
 
@@ -276,7 +346,11 @@ unpack(): CVRT {
     this.OBJECTS(),
     this.SCALE_FACTOR(),
     this.CALIBRATION(),
-    this.EVIDENCE()
+    this.EVIDENCE(),
+    this.HISTORY_SAMPLES(),
+    this.HISTORY_SETS(),
+    this.HISTORY_WINDOW(),
+    this.SHRINKAGE_WEIGHT()
   );
 }
 
@@ -296,6 +370,10 @@ unpackTo(_o: CVRT): void {
   _o.SCALE_FACTOR = this.SCALE_FACTOR();
   _o.CALIBRATION = this.CALIBRATION();
   _o.EVIDENCE = this.EVIDENCE();
+  _o.HISTORY_SAMPLES = this.HISTORY_SAMPLES();
+  _o.HISTORY_SETS = this.HISTORY_SETS();
+  _o.HISTORY_WINDOW = this.HISTORY_WINDOW();
+  _o.SHRINKAGE_WEIGHT = this.SHRINKAGE_WEIGHT();
 }
 }
 
@@ -314,7 +392,11 @@ constructor(
   public OBJECTS: number = 0,
   public SCALE_FACTOR: number = NaN,
   public CALIBRATION: covarianceCalibration = covarianceCalibration.Unspecified,
-  public EVIDENCE: string|Uint8Array|null = null
+  public EVIDENCE: string|Uint8Array|null = null,
+  public HISTORY_SAMPLES: number = 0,
+  public HISTORY_SETS: number = 0,
+  public HISTORY_WINDOW: string|Uint8Array|null = null,
+  public SHRINKAGE_WEIGHT: number = NaN
 ){}
 
 
@@ -324,6 +406,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MEASURED_LINEAGE = (this.MEASURED_LINEAGE !== null ? builder.createString(this.MEASURED_LINEAGE!) : 0);
   const TEST_WINDOW = (this.TEST_WINDOW !== null ? builder.createString(this.TEST_WINDOW!) : 0);
   const EVIDENCE = (this.EVIDENCE !== null ? builder.createString(this.EVIDENCE!) : 0);
+  const HISTORY_WINDOW = (this.HISTORY_WINDOW !== null ? builder.createString(this.HISTORY_WINDOW!) : 0);
 
   return CVR.createCVR(builder,
     this.RULE,
@@ -339,7 +422,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.OBJECTS,
     this.SCALE_FACTOR,
     this.CALIBRATION,
-    EVIDENCE
+    EVIDENCE,
+    this.HISTORY_SAMPLES,
+    this.HISTORY_SETS,
+    HISTORY_WINDOW,
+    this.SHRINKAGE_WEIGHT
   );
 }
 }

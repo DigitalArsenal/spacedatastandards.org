@@ -12,8 +12,8 @@ enum covarianceCalibration:
     /// Measured against independent reference states and passed
     covarianceCalibration_Calibrated = 2
 
-/// The rule that produced a covariance. A producer applies the first rule it
-/// can, in this order.
+/// The rule that produced a covariance. Wire values are append-only, not a
+/// preference order: a producer states the estimator it actually used.
 enum covarianceRule:
     /// Not stated
     covarianceRule_Unspecified = 0
@@ -28,6 +28,12 @@ enum covarianceRule:
     /// The empirical model pooled over all sources, for a source without its own
     /// model in the regime
     covarianceRule_PooledModel = 4
+    /// Empirical errors from this object's own element-set history, shrunk
+    /// toward a population prior identified by MODEL_ID and REGIME. Later
+    /// element sets are comparison states, not independent truth; history alone
+    /// never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry
+    /// fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings.
+    covarianceRule_EmpiricalHistoryShrunk = 5
 
 class CVR
 
@@ -35,12 +41,14 @@ class CVR
 class CVR : flatbuffers.handle
     /// The rule that produced the covariance. In a CCSDS covariance block,
     /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-    /// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+    /// SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+    /// MODEL_ID as COV_BASIS_ID.
     def RULE() -> covarianceRule:
         return covarianceRule(flatbuffers.field_int8(buf_, pos_, 4, 0))
     /// Identifier of the error model (SourceModel, PooledModel) or of the
     /// measured realism factor (ScaledFit) the covariance came from. Empty for
-    /// Operator.
+    /// Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+    /// EVIDENCE identifies the history estimator and its configuration.
     def MODEL_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// Orbit regime of the cell, as the model names it.
@@ -89,13 +97,39 @@ class CVR : flatbuffers.handle
     /// Identifier of the report or record that holds the test.
     def EVIDENCE() -> string:
         return flatbuffers.field_string(buf_, pos_, 30)
+    /// Number of retained older/newer element-set residual pairs from this
+    /// object in the age bin containing AGE_DAYS, after rejection/clipping.
+    /// Zero means no retained pairs; never the held-out test count SAMPLES.
+    def HISTORY_SAMPLES() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 32, 0)
+    /// Number of distinct older element sets contributing HISTORY_SAMPLES.
+    /// Zero means none; never the distinct calibration-object count OBJECTS.
+    def HISTORY_SETS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 34, 0)
+    /// ISO 8601 UTC start/end interval spanning the element-set epochs used
+    /// in the object's history fit. Empty when no history was used. This is
+    /// training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+    def HISTORY_WINDOW() -> string:
+        return flatbuffers.field_string(buf_, pos_, 36)
+    /// Dimensionless population-prior fraction alpha in the covariance blend
+    /// P = (1-alpha) H + alpha P_prior, where H is the history error second
+    /// moment and P_prior includes the population model's realism scaling.
+    /// Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+    /// or unknown. For interpolation across bins, report the correspondingly
+    /// interpolated alpha. EVIDENCE must identify the estimator/configuration,
+    /// retained-count bin, participating bins and their weights so the blend
+    /// can be reconstructed; the scalar alone does not describe that mixture.
+    /// This is not SCALE_FACTOR, which multiplies a covariance. History-only
+    /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+    def SHRINKAGE_WEIGHT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, nan)
 
 def GetRootAsCVR(buf:string): return CVR { buf, flatbuffers.indirect(buf, 0) }
 
 struct CVRBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(14)
+        b_.StartObject(18)
         return this
     def add_RULE(RULE:covarianceRule):
         b_.PrependInt8Slot(0, RULE, 0)
@@ -138,6 +172,18 @@ struct CVRBuilder:
         return this
     def add_EVIDENCE(EVIDENCE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(13, EVIDENCE)
+        return this
+    def add_HISTORY_SAMPLES(HISTORY_SAMPLES:int):
+        b_.PrependUint32Slot(14, HISTORY_SAMPLES, 0)
+        return this
+    def add_HISTORY_SETS(HISTORY_SETS:int):
+        b_.PrependUint32Slot(15, HISTORY_SETS, 0)
+        return this
+    def add_HISTORY_WINDOW(HISTORY_WINDOW:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, HISTORY_WINDOW)
+        return this
+    def add_SHRINKAGE_WEIGHT(SHRINKAGE_WEIGHT:float):
+        b_.PrependFloat64Slot(17, SHRINKAGE_WEIGHT, nan)
         return this
     def end():
         return b_.EndObject()

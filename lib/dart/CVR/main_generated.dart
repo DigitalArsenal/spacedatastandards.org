@@ -45,14 +45,15 @@ class _covarianceCalibrationReader extends fb.Reader<covarianceCalibration> {
       covarianceCalibration.fromValue(const fb.Int8Reader().read(bc, offset));
 }
 
-///  The rule that produced a covariance. A producer applies the first rule it
-///  can, in this order.
+///  The rule that produced a covariance. Wire values are append-only, not a
+///  preference order: a producer states the estimator it actually used.
 enum covarianceRule {
   Unspecified(0),
   Operator(1),
   ScaledFit(2),
   SourceModel(3),
-  PooledModel(4);
+  PooledModel(4),
+  EmpiricalHistoryShrunk(5);
 
   final int value;
   const covarianceRule(this.value);
@@ -64,6 +65,7 @@ enum covarianceRule {
       case 2: return covarianceRule.ScaledFit;
       case 3: return covarianceRule.SourceModel;
       case 4: return covarianceRule.PooledModel;
+      case 5: return covarianceRule.EmpiricalHistoryShrunk;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -72,7 +74,7 @@ enum covarianceRule {
       value == null ? null : covarianceRule.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 4;
+  static const int maxValue = 5;
   static const fb.Reader<covarianceRule> reader = _covarianceRuleReader();
 }
 
@@ -102,11 +104,13 @@ class CVR {
 
   ///  The rule that produced the covariance. In a CCSDS covariance block,
   ///  Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-  ///  SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+  ///  SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+  ///  MODEL_ID as COV_BASIS_ID.
   covarianceRule get RULE => covarianceRule.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
   ///  Identifier of the error model (SourceModel, PooledModel) or of the
   ///  measured realism factor (ScaledFit) the covariance came from. Empty for
-  ///  Operator.
+  ///  Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+  ///  EVIDENCE identifies the history estimator and its configuration.
   String? get MODEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get modelId => MODEL_ID;
   ///  Orbit regime of the cell, as the model names it.
@@ -150,10 +154,36 @@ class CVR {
   covarianceCalibration get CALIBRATION => covarianceCalibration.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
   ///  Identifier of the report or record that holds the test.
   String? get EVIDENCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Number of retained older/newer element-set residual pairs from this
+  ///  object in the age bin containing AGE_DAYS, after rejection/clipping.
+  ///  Zero means no retained pairs; never the held-out test count SAMPLES.
+  int get HISTORY_SAMPLES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 32, 0);
+  int get historySamples => HISTORY_SAMPLES;
+  ///  Number of distinct older element sets contributing HISTORY_SAMPLES.
+  ///  Zero means none; never the distinct calibration-object count OBJECTS.
+  int get HISTORY_SETS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 34, 0);
+  int get historySets => HISTORY_SETS;
+  ///  ISO 8601 UTC start/end interval spanning the element-set epochs used
+  ///  in the object's history fit. Empty when no history was used. This is
+  ///  training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+  String? get HISTORY_WINDOW => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  String? get historyWindow => HISTORY_WINDOW;
+  ///  Dimensionless population-prior fraction alpha in the covariance blend
+  ///  P = (1-alpha) H + alpha P_prior, where H is the history error second
+  ///  moment and P_prior includes the population model's realism scaling.
+  ///  Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+  ///  or unknown. For interpolation across bins, report the correspondingly
+  ///  interpolated alpha. EVIDENCE must identify the estimator/configuration,
+  ///  retained-count bin, participating bins and their weights so the blend
+  ///  can be reconstructed; the scalar alone does not describe that mixture.
+  ///  This is not SCALE_FACTOR, which multiplies a covariance. History-only
+  ///  evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+  double get SHRINKAGE_WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, double.nan);
+  double get shrinkageWeight => SHRINKAGE_WEIGHT;
 
   @override
   String toString() {
-    return 'CVR{RULE: ${RULE}, modelId: ${modelId}, REGIME: ${REGIME}, ageDays: ${ageDays}, horizonDays: ${horizonDays}, measuredLineage: ${measuredLineage}, testWindow: ${testWindow}, meanD2Over3: ${meanD2Over3}, coverage95: ${coverage95}, SAMPLES: ${SAMPLES}, OBJECTS: ${OBJECTS}, scaleFactor: ${scaleFactor}, CALIBRATION: ${CALIBRATION}, EVIDENCE: ${EVIDENCE}}';
+    return 'CVR{RULE: ${RULE}, modelId: ${modelId}, REGIME: ${REGIME}, ageDays: ${ageDays}, horizonDays: ${horizonDays}, measuredLineage: ${measuredLineage}, testWindow: ${testWindow}, meanD2Over3: ${meanD2Over3}, coverage95: ${coverage95}, SAMPLES: ${SAMPLES}, OBJECTS: ${OBJECTS}, scaleFactor: ${scaleFactor}, CALIBRATION: ${CALIBRATION}, EVIDENCE: ${EVIDENCE}, historySamples: ${historySamples}, historySets: ${historySets}, historyWindow: ${historyWindow}, shrinkageWeight: ${shrinkageWeight}}';
   }
 }
 
@@ -171,7 +201,7 @@ class CVRBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(18);
   }
 
   int addRule(covarianceRule? RULE) {
@@ -230,6 +260,22 @@ class CVRBuilder {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
+  int addHistorySamples(int? HISTORY_SAMPLES) {
+    fbBuilder.addUint32(14, HISTORY_SAMPLES);
+    return fbBuilder.offset;
+  }
+  int addHistorySets(int? HISTORY_SETS) {
+    fbBuilder.addUint32(15, HISTORY_SETS);
+    return fbBuilder.offset;
+  }
+  int addHistoryWindowOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addShrinkageWeight(double? SHRINKAGE_WEIGHT) {
+    fbBuilder.addFloat64(17, SHRINKAGE_WEIGHT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -251,6 +297,10 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
   final double? _SCALE_FACTOR;
   final covarianceCalibration? _CALIBRATION;
   final String? _EVIDENCE;
+  final int? _HISTORY_SAMPLES;
+  final int? _HISTORY_SETS;
+  final String? _HISTORY_WINDOW;
+  final double? _SHRINKAGE_WEIGHT;
 
   CVRObjectBuilder({
     covarianceRule? RULE,
@@ -275,6 +325,14 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
     double? scaleFactor,
     covarianceCalibration? CALIBRATION,
     String? EVIDENCE,
+    int? HISTORY_SAMPLES,
+    int? historySamples,
+    int? HISTORY_SETS,
+    int? historySets,
+    String? HISTORY_WINDOW,
+    String? historyWindow,
+    double? SHRINKAGE_WEIGHT,
+    double? shrinkageWeight,
   })
       : _RULE = RULE,
         _MODEL_ID = modelId ?? MODEL_ID,
@@ -289,7 +347,11 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
         _OBJECTS = OBJECTS,
         _SCALE_FACTOR = scaleFactor ?? SCALE_FACTOR,
         _CALIBRATION = CALIBRATION,
-        _EVIDENCE = EVIDENCE;
+        _EVIDENCE = EVIDENCE,
+        _HISTORY_SAMPLES = historySamples ?? HISTORY_SAMPLES,
+        _HISTORY_SETS = historySets ?? HISTORY_SETS,
+        _HISTORY_WINDOW = historyWindow ?? HISTORY_WINDOW,
+        _SHRINKAGE_WEIGHT = shrinkageWeight ?? SHRINKAGE_WEIGHT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -304,7 +366,9 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TEST_WINDOW!);
     final int? EVIDENCEOffset = _EVIDENCE == null ? null
         : fbBuilder.writeString(_EVIDENCE!);
-    fbBuilder.startTable(14);
+    final int? HISTORY_WINDOWOffset = _HISTORY_WINDOW == null ? null
+        : fbBuilder.writeString(_HISTORY_WINDOW!);
+    fbBuilder.startTable(18);
     fbBuilder.addInt8(0, _RULE?.value);
     fbBuilder.addOffset(1, MODEL_IDOffset);
     fbBuilder.addOffset(2, REGIMEOffset);
@@ -319,6 +383,10 @@ class CVRObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(11, _SCALE_FACTOR);
     fbBuilder.addInt8(12, _CALIBRATION?.value);
     fbBuilder.addOffset(13, EVIDENCEOffset);
+    fbBuilder.addUint32(14, _HISTORY_SAMPLES);
+    fbBuilder.addUint32(15, _HISTORY_SETS);
+    fbBuilder.addOffset(16, HISTORY_WINDOWOffset);
+    fbBuilder.addFloat64(17, _SHRINKAGE_WEIGHT);
     return fbBuilder.endTable();
   }
 

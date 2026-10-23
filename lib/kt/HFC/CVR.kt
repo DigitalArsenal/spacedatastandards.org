@@ -32,7 +32,8 @@ class CVR : Table() {
     /**
      * The rule that produced the covariance. In a CCSDS covariance block,
      * Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-     * SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+     * SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+     * MODEL_ID as COV_BASIS_ID.
      */
     val rule : Byte
         get() {
@@ -42,7 +43,8 @@ class CVR : Table() {
     /**
      * Identifier of the error model (SourceModel, PooledModel) or of the
      * measured realism factor (ScaledFit) the covariance came from. Empty for
-     * Operator.
+     * Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+     * EVIDENCE identifies the history estimator and its configuration.
      */
     val modelId : String?
         get() {
@@ -185,6 +187,58 @@ class CVR : Table() {
         }
     val evidenceAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
     fun evidenceInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Number of retained older/newer element-set residual pairs from this
+     * object in the age bin containing AGE_DAYS, after rejection/clipping.
+     * Zero means no retained pairs; never the held-out test count SAMPLES.
+     */
+    val historySamples : UInt
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Number of distinct older element sets contributing HISTORY_SAMPLES.
+     * Zero means none; never the distinct calibration-object count OBJECTS.
+     */
+    val historySets : UInt
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * ISO 8601 UTC start/end interval spanning the element-set epochs used
+     * in the object's history fit. Empty when no history was used. This is
+     * training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+     */
+    val historyWindow : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val historyWindowAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
+    fun historyWindowInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Dimensionless population-prior fraction alpha in the covariance blend
+     * P = (1-alpha) H + alpha P_prior, where H is the history error second
+     * moment and P_prior includes the population model's realism scaling.
+     * Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+     * or unknown. For interpolation across bins, report the correspondingly
+     * interpolated alpha. EVIDENCE must identify the estimator/configuration,
+     * retained-count bin, participating bins and their weights so the blend
+     * can be reconstructed; the scalar alone does not describe that mixture.
+     * This is not SCALE_FACTOR, which multiplies a covariance. History-only
+     * evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+     */
+    val shrinkageWeight : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else Double.NaN
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsCVR(_bb: ByteBuffer): CVR = getRootAsCVR(_bb, CVR())
@@ -193,13 +247,17 @@ class CVR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CVRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CVR")
-        fun createCVR(builder: FlatBufferBuilder, rule: Byte, modelIdOffset: Int, regimeOffset: Int, ageDays: Double, horizonDays: Double, measuredLineageOffset: Int, testWindowOffset: Int, meanD2Over3: Double, coverage95: Double, samples: UInt, objects: UInt, scaleFactor: Double, calibration: Byte, evidenceOffset: Int) : Int {
-            builder.startTable(14)
+        fun createCVR(builder: FlatBufferBuilder, rule: Byte, modelIdOffset: Int, regimeOffset: Int, ageDays: Double, horizonDays: Double, measuredLineageOffset: Int, testWindowOffset: Int, meanD2Over3: Double, coverage95: Double, samples: UInt, objects: UInt, scaleFactor: Double, calibration: Byte, evidenceOffset: Int, historySamples: UInt, historySets: UInt, historyWindowOffset: Int, shrinkageWeight: Double) : Int {
+            builder.startTable(18)
+            addSHRINKAGEWEIGHT(builder, shrinkageWeight)
             addSCALEFACTOR(builder, scaleFactor)
             addCOVERAGE95(builder, coverage95)
             addMEAND2OVER3(builder, meanD2Over3)
             addHORIZONDAYS(builder, horizonDays)
             addAGEDAYS(builder, ageDays)
+            addHISTORYWINDOW(builder, historyWindowOffset)
+            addHISTORYSETS(builder, historySets)
+            addHISTORYSAMPLES(builder, historySamples)
             addEVIDENCE(builder, evidenceOffset)
             addOBJECTS(builder, objects)
             addSAMPLES(builder, samples)
@@ -211,7 +269,7 @@ class CVR : Table() {
             addRULE(builder, rule)
             return endCVR(builder)
         }
-        fun startCVR(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startCVR(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addRULE(builder: FlatBufferBuilder, rule: Byte) = builder.addByte(0, rule, 0)
         fun addMODELID(builder: FlatBufferBuilder, modelId: Int) = builder.addOffset(1, modelId, 0)
         fun addREGIME(builder: FlatBufferBuilder, regime: Int) = builder.addOffset(2, regime, 0)
@@ -226,6 +284,10 @@ class CVR : Table() {
         fun addSCALEFACTOR(builder: FlatBufferBuilder, scaleFactor: Double) = builder.addDouble(11, scaleFactor, Double.NaN)
         fun addCALIBRATION(builder: FlatBufferBuilder, calibration: Byte) = builder.addByte(12, calibration, 0)
         fun addEVIDENCE(builder: FlatBufferBuilder, evidence: Int) = builder.addOffset(13, evidence, 0)
+        fun addHISTORYSAMPLES(builder: FlatBufferBuilder, historySamples: UInt) = builder.addInt(14, historySamples.toInt(), 0)
+        fun addHISTORYSETS(builder: FlatBufferBuilder, historySets: UInt) = builder.addInt(15, historySets.toInt(), 0)
+        fun addHISTORYWINDOW(builder: FlatBufferBuilder, historyWindow: Int) = builder.addOffset(16, historyWindow, 0)
+        fun addSHRINKAGEWEIGHT(builder: FlatBufferBuilder, shrinkageWeight: Double) = builder.addDouble(17, shrinkageWeight, Double.NaN)
         fun endCVR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

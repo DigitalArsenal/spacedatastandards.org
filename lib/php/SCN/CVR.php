@@ -43,7 +43,8 @@ class CVR extends Table
 
     /// The rule that produced the covariance. In a CCSDS covariance block,
     /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-    /// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+    /// SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+    /// MODEL_ID as COV_BASIS_ID.
     /**
      * @return sbyte
      */
@@ -55,7 +56,8 @@ class CVR extends Table
 
     /// Identifier of the error model (SourceModel, PooledModel) or of the
     /// measured realism factor (ScaledFit) the covariance came from. Empty for
-    /// Operator.
+    /// Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+    /// EVIDENCE identifies the history estimator and its configuration.
     public function getMODEL_ID()
     {
         $o = $this->__offset(6);
@@ -180,22 +182,73 @@ class CVR extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Number of retained older/newer element-set residual pairs from this
+    /// object in the age bin containing AGE_DAYS, after rejection/clipping.
+    /// Zero means no retained pairs; never the held-out test count SAMPLES.
+    /**
+     * @return uint
+     */
+    public function getHISTORY_SAMPLES()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Number of distinct older element sets contributing HISTORY_SAMPLES.
+    /// Zero means none; never the distinct calibration-object count OBJECTS.
+    /**
+     * @return uint
+     */
+    public function getHISTORY_SETS()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// ISO 8601 UTC start/end interval spanning the element-set epochs used
+    /// in the object's history fit. Empty when no history was used. This is
+    /// training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+    public function getHISTORY_WINDOW()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Dimensionless population-prior fraction alpha in the covariance blend
+    /// P = (1-alpha) H + alpha P_prior, where H is the history error second
+    /// moment and P_prior includes the population model's realism scaling.
+    /// Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+    /// or unknown. For interpolation across bins, report the correspondingly
+    /// interpolated alpha. EVIDENCE must identify the estimator/configuration,
+    /// retained-count bin, participating bins and their weights so the blend
+    /// can be reconstructed; the scalar alone does not describe that mixture.
+    /// This is not SCALE_FACTOR, which multiplies a covariance. History-only
+    /// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+    /**
+     * @return double
+     */
+    public function getSHRINKAGE_WEIGHT()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : NAN;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startCVR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CVR
      */
-    public static function createCVR(FlatBufferBuilder $builder, $RULE, $MODEL_ID, $REGIME, $AGE_DAYS, $HORIZON_DAYS, $MEASURED_LINEAGE, $TEST_WINDOW, $MEAN_D2_OVER_3, $COVERAGE_95, $SAMPLES, $OBJECTS, $SCALE_FACTOR, $CALIBRATION, $EVIDENCE)
+    public static function createCVR(FlatBufferBuilder $builder, $RULE, $MODEL_ID, $REGIME, $AGE_DAYS, $HORIZON_DAYS, $MEASURED_LINEAGE, $TEST_WINDOW, $MEAN_D2_OVER_3, $COVERAGE_95, $SAMPLES, $OBJECTS, $SCALE_FACTOR, $CALIBRATION, $EVIDENCE, $HISTORY_SAMPLES, $HISTORY_SETS, $HISTORY_WINDOW, $SHRINKAGE_WEIGHT)
     {
-        $builder->startObject(14);
+        $builder->startObject(18);
         self::addRULE($builder, $RULE);
         self::addMODEL_ID($builder, $MODEL_ID);
         self::addREGIME($builder, $REGIME);
@@ -210,6 +263,10 @@ class CVR extends Table
         self::addSCALE_FACTOR($builder, $SCALE_FACTOR);
         self::addCALIBRATION($builder, $CALIBRATION);
         self::addEVIDENCE($builder, $EVIDENCE);
+        self::addHISTORY_SAMPLES($builder, $HISTORY_SAMPLES);
+        self::addHISTORY_SETS($builder, $HISTORY_SETS);
+        self::addHISTORY_WINDOW($builder, $HISTORY_WINDOW);
+        self::addSHRINKAGE_WEIGHT($builder, $SHRINKAGE_WEIGHT);
         $o = $builder->endObject();
         return $o;
     }
@@ -352,6 +409,46 @@ class CVR extends Table
     public static function addEVIDENCE(FlatBufferBuilder $builder, $EVIDENCE)
     {
         $builder->addOffsetX(13, $EVIDENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addHISTORY_SAMPLES(FlatBufferBuilder $builder, $HISTORY_SAMPLES)
+    {
+        $builder->addUintX(14, $HISTORY_SAMPLES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addHISTORY_SETS(FlatBufferBuilder $builder, $HISTORY_SETS)
+    {
+        $builder->addUintX(15, $HISTORY_SETS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addHISTORY_WINDOW(FlatBufferBuilder $builder, $HISTORY_WINDOW)
+    {
+        $builder->addOffsetX(16, $HISTORY_WINDOW, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSHRINKAGE_WEIGHT(FlatBufferBuilder $builder, $SHRINKAGE_WEIGHT)
+    {
+        $builder->addDoubleX(17, $SHRINKAGE_WEIGHT, NAN);
     }
 
     /**

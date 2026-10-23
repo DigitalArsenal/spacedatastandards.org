@@ -57,7 +57,8 @@ func (rcv *CVR) Table() flatbuffers.Table {
 
 /// The rule that produced the covariance. In a CCSDS covariance block,
 /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-/// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+/// SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+/// MODEL_ID as COV_BASIS_ID.
 func (rcv *CVR) RULE() covarianceRule {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -72,7 +73,8 @@ func (rcv *CVR) Rule() covarianceRule {
 
 /// The rule that produced the covariance. In a CCSDS covariance block,
 /// Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-/// SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+/// SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+/// MODEL_ID as COV_BASIS_ID.
 func (rcv *CVR) MutateRULE(n covarianceRule) bool {
 	return rcv._tab.MutateInt8Slot(4, int8(n))
 }
@@ -83,7 +85,8 @@ func (rcv *CVR) MutateRule(n covarianceRule) bool {
 
 /// Identifier of the error model (SourceModel, PooledModel) or of the
 /// measured realism factor (ScaledFit) the covariance came from. Empty for
-/// Operator.
+/// Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+/// EVIDENCE identifies the history estimator and its configuration.
 func (rcv *CVR) MODEL_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -98,7 +101,8 @@ func (rcv *CVR) ModelId() []byte {
 
 /// Identifier of the error model (SourceModel, PooledModel) or of the
 /// measured realism factor (ScaledFit) the covariance came from. Empty for
-/// Operator.
+/// Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+/// EVIDENCE identifies the history estimator and its configuration.
 /// Orbit regime of the cell, as the model names it.
 func (rcv *CVR) REGIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
@@ -351,8 +355,116 @@ func (rcv *CVR) Evidence() []byte {
 }
 
 /// Identifier of the report or record that holds the test.
+/// Number of retained older/newer element-set residual pairs from this
+/// object in the age bin containing AGE_DAYS, after rejection/clipping.
+/// Zero means no retained pairs; never the held-out test count SAMPLES.
+func (rcv *CVR) HISTORY_SAMPLES() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *CVR) HistorySamples() uint32 {
+	return rcv.HISTORY_SAMPLES()
+}
+
+/// Number of retained older/newer element-set residual pairs from this
+/// object in the age bin containing AGE_DAYS, after rejection/clipping.
+/// Zero means no retained pairs; never the held-out test count SAMPLES.
+func (rcv *CVR) MutateHISTORY_SAMPLES(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(32, n)
+}
+
+func (rcv *CVR) MutateHistorySamples(n uint32) bool {
+	return rcv.MutateHISTORY_SAMPLES(n)
+}
+
+/// Number of distinct older element sets contributing HISTORY_SAMPLES.
+/// Zero means none; never the distinct calibration-object count OBJECTS.
+func (rcv *CVR) HISTORY_SETS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *CVR) HistorySets() uint32 {
+	return rcv.HISTORY_SETS()
+}
+
+/// Number of distinct older element sets contributing HISTORY_SAMPLES.
+/// Zero means none; never the distinct calibration-object count OBJECTS.
+func (rcv *CVR) MutateHISTORY_SETS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(34, n)
+}
+
+func (rcv *CVR) MutateHistorySets(n uint32) bool {
+	return rcv.MutateHISTORY_SETS(n)
+}
+
+/// ISO 8601 UTC start/end interval spanning the element-set epochs used
+/// in the object's history fit. Empty when no history was used. This is
+/// training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+func (rcv *CVR) HISTORY_WINDOW() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *CVR) HistoryWindow() []byte {
+	return rcv.HISTORY_WINDOW()
+}
+
+/// ISO 8601 UTC start/end interval spanning the element-set epochs used
+/// in the object's history fit. Empty when no history was used. This is
+/// training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+/// Dimensionless population-prior fraction alpha in the covariance blend
+/// P = (1-alpha) H + alpha P_prior, where H is the history error second
+/// moment and P_prior includes the population model's realism scaling.
+/// Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+/// or unknown. For interpolation across bins, report the correspondingly
+/// interpolated alpha. EVIDENCE must identify the estimator/configuration,
+/// retained-count bin, participating bins and their weights so the blend
+/// can be reconstructed; the scalar alone does not describe that mixture.
+/// This is not SCALE_FACTOR, which multiplies a covariance. History-only
+/// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+func (rcv *CVR) SHRINKAGE_WEIGHT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return float64(math.NaN())
+}
+
+func (rcv *CVR) ShrinkageWeight() float64 {
+	return rcv.SHRINKAGE_WEIGHT()
+}
+
+/// Dimensionless population-prior fraction alpha in the covariance blend
+/// P = (1-alpha) H + alpha P_prior, where H is the history error second
+/// moment and P_prior includes the population model's realism scaling.
+/// Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+/// or unknown. For interpolation across bins, report the correspondingly
+/// interpolated alpha. EVIDENCE must identify the estimator/configuration,
+/// retained-count bin, participating bins and their weights so the blend
+/// can be reconstructed; the scalar alone does not describe that mixture.
+/// This is not SCALE_FACTOR, which multiplies a covariance. History-only
+/// evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+func (rcv *CVR) MutateSHRINKAGE_WEIGHT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *CVR) MutateShrinkageWeight(n float64) bool {
+	return rcv.MutateSHRINKAGE_WEIGHT(n)
+}
+
 func CVRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(18)
 }
 func CVRAddRULE(builder *flatbuffers.Builder, RULE covarianceRule) {
 	builder.PrependInt8Slot(0, int8(RULE), 0)
@@ -437,6 +549,30 @@ func CVRAddEVIDENCE(builder *flatbuffers.Builder, EVIDENCE flatbuffers.UOffsetT)
 }
 func CVRAddEvidence(builder *flatbuffers.Builder, EVIDENCE flatbuffers.UOffsetT) {
 	CVRAddEVIDENCE(builder, EVIDENCE)
+}
+func CVRAddHISTORY_SAMPLES(builder *flatbuffers.Builder, HISTORY_SAMPLES uint32) {
+	builder.PrependUint32Slot(14, HISTORY_SAMPLES, 0)
+}
+func CVRAddHistorySamples(builder *flatbuffers.Builder, HISTORY_SAMPLES uint32) {
+	CVRAddHISTORY_SAMPLES(builder, HISTORY_SAMPLES)
+}
+func CVRAddHISTORY_SETS(builder *flatbuffers.Builder, HISTORY_SETS uint32) {
+	builder.PrependUint32Slot(15, HISTORY_SETS, 0)
+}
+func CVRAddHistorySets(builder *flatbuffers.Builder, HISTORY_SETS uint32) {
+	CVRAddHISTORY_SETS(builder, HISTORY_SETS)
+}
+func CVRAddHISTORY_WINDOW(builder *flatbuffers.Builder, HISTORY_WINDOW flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(HISTORY_WINDOW), 0)
+}
+func CVRAddHistoryWindow(builder *flatbuffers.Builder, HISTORY_WINDOW flatbuffers.UOffsetT) {
+	CVRAddHISTORY_WINDOW(builder, HISTORY_WINDOW)
+}
+func CVRAddSHRINKAGE_WEIGHT(builder *flatbuffers.Builder, SHRINKAGE_WEIGHT float64) {
+	builder.PrependFloat64Slot(17, SHRINKAGE_WEIGHT, float64(math.NaN()))
+}
+func CVRAddShrinkageWeight(builder *flatbuffers.Builder, SHRINKAGE_WEIGHT float64) {
+	CVRAddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT)
 }
 func CVREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

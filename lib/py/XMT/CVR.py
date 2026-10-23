@@ -31,7 +31,8 @@ class CVR(object):
 
     # The rule that produced the covariance. In a CCSDS covariance block,
     # Operator keeps the operator's COV_BASIS, ScaledFit is DETERMINED, and
-    # SourceModel and PooledModel are EMPIRICAL with MODEL_ID as COV_BASIS_ID.
+    # SourceModel, PooledModel and EmpiricalHistoryShrunk are EMPIRICAL with
+    # MODEL_ID as COV_BASIS_ID.
     # CVR
     def RULE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -41,7 +42,8 @@ class CVR(object):
 
     # Identifier of the error model (SourceModel, PooledModel) or of the
     # measured realism factor (ScaledFit) the covariance came from. Empty for
-    # Operator.
+    # Operator. For EmpiricalHistoryShrunk, identifies the population prior;
+    # EVIDENCE identifies the history estimator and its configuration.
     # CVR
     def MODEL_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -155,8 +157,54 @@ class CVR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Number of retained older/newer element-set residual pairs from this
+    # object in the age bin containing AGE_DAYS, after rejection/clipping.
+    # Zero means no retained pairs; never the held-out test count SAMPLES.
+    # CVR
+    def HISTORY_SAMPLES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of distinct older element sets contributing HISTORY_SAMPLES.
+    # Zero means none; never the distinct calibration-object count OBJECTS.
+    # CVR
+    def HISTORY_SETS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # ISO 8601 UTC start/end interval spanning the element-set epochs used
+    # in the object's history fit. Empty when no history was used. This is
+    # training support, not TEST_WINDOW or the element-set age AGE_DAYS.
+    # CVR
+    def HISTORY_WINDOW(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Dimensionless population-prior fraction alpha in the covariance blend
+    # P = (1-alpha) H + alpha P_prior, where H is the history error second
+    # moment and P_prior includes the population model's realism scaling.
+    # Range [0,1]: 0 is all history, 1 is all prior; NaN when not applicable
+    # or unknown. For interpolation across bins, report the correspondingly
+    # interpolated alpha. EVIDENCE must identify the estimator/configuration,
+    # retained-count bin, participating bins and their weights so the blend
+    # can be reconstructed; the scalar alone does not describe that mixture.
+    # This is not SCALE_FACTOR, which multiplies a covariance. History-only
+    # evidence leaves CALIBRATION Uncalibrated and test statistics unmeasured.
+    # CVR
+    def SHRINKAGE_WEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return float('nan')
+
 def CVRStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(18)
 
 def Start(builder):
     CVRStart(builder)
@@ -245,6 +293,30 @@ def CVRAddEVIDENCE(builder, EVIDENCE):
 def AddEVIDENCE(builder, EVIDENCE):
     CVRAddEVIDENCE(builder, EVIDENCE)
 
+def CVRAddHISTORY_SAMPLES(builder, HISTORY_SAMPLES):
+    builder.PrependUint32Slot(14, HISTORY_SAMPLES, 0)
+
+def AddHISTORY_SAMPLES(builder, HISTORY_SAMPLES):
+    CVRAddHISTORY_SAMPLES(builder, HISTORY_SAMPLES)
+
+def CVRAddHISTORY_SETS(builder, HISTORY_SETS):
+    builder.PrependUint32Slot(15, HISTORY_SETS, 0)
+
+def AddHISTORY_SETS(builder, HISTORY_SETS):
+    CVRAddHISTORY_SETS(builder, HISTORY_SETS)
+
+def CVRAddHISTORY_WINDOW(builder, HISTORY_WINDOW):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(HISTORY_WINDOW), 0)
+
+def AddHISTORY_WINDOW(builder, HISTORY_WINDOW):
+    CVRAddHISTORY_WINDOW(builder, HISTORY_WINDOW)
+
+def CVRAddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT):
+    builder.PrependFloat64Slot(17, SHRINKAGE_WEIGHT, float('nan'))
+
+def AddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT):
+    CVRAddSHRINKAGE_WEIGHT(builder, SHRINKAGE_WEIGHT)
+
 def CVREnd(builder):
     return builder.EndObject()
 
@@ -271,6 +343,10 @@ class CVRT(object):
         SCALE_FACTOR = float('nan'),
         CALIBRATION = 0,
         EVIDENCE = None,
+        HISTORY_SAMPLES = 0,
+        HISTORY_SETS = 0,
+        HISTORY_WINDOW = None,
+        SHRINKAGE_WEIGHT = float('nan'),
     ):
         self.RULE = RULE  # type: int
         self.MODEL_ID = MODEL_ID  # type: Optional[str]
@@ -286,6 +362,10 @@ class CVRT(object):
         self.SCALE_FACTOR = SCALE_FACTOR  # type: float
         self.CALIBRATION = CALIBRATION  # type: int
         self.EVIDENCE = EVIDENCE  # type: Optional[str]
+        self.HISTORY_SAMPLES = HISTORY_SAMPLES  # type: int
+        self.HISTORY_SETS = HISTORY_SETS  # type: int
+        self.HISTORY_WINDOW = HISTORY_WINDOW  # type: Optional[str]
+        self.SHRINKAGE_WEIGHT = SHRINKAGE_WEIGHT  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -322,6 +402,10 @@ class CVRT(object):
         self.SCALE_FACTOR = CVR.SCALE_FACTOR()
         self.CALIBRATION = CVR.CALIBRATION()
         self.EVIDENCE = CVR.EVIDENCE()
+        self.HISTORY_SAMPLES = CVR.HISTORY_SAMPLES()
+        self.HISTORY_SETS = CVR.HISTORY_SETS()
+        self.HISTORY_WINDOW = CVR.HISTORY_WINDOW()
+        self.SHRINKAGE_WEIGHT = CVR.SHRINKAGE_WEIGHT()
 
     # CVRT
     def Pack(self, builder):
@@ -335,6 +419,8 @@ class CVRT(object):
             TEST_WINDOW = builder.CreateString(self.TEST_WINDOW)
         if self.EVIDENCE is not None:
             EVIDENCE = builder.CreateString(self.EVIDENCE)
+        if self.HISTORY_WINDOW is not None:
+            HISTORY_WINDOW = builder.CreateString(self.HISTORY_WINDOW)
         CVRStart(builder)
         CVRAddRULE(builder, self.RULE)
         if self.MODEL_ID is not None:
@@ -355,5 +441,10 @@ class CVRT(object):
         CVRAddCALIBRATION(builder, self.CALIBRATION)
         if self.EVIDENCE is not None:
             CVRAddEVIDENCE(builder, EVIDENCE)
+        CVRAddHISTORY_SAMPLES(builder, self.HISTORY_SAMPLES)
+        CVRAddHISTORY_SETS(builder, self.HISTORY_SETS)
+        if self.HISTORY_WINDOW is not None:
+            CVRAddHISTORY_WINDOW(builder, HISTORY_WINDOW)
+        CVRAddSHRINKAGE_WEIGHT(builder, self.SHRINKAGE_WEIGHT)
         CVR = CVREnd(builder)
         return CVR

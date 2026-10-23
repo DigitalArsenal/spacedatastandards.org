@@ -4,40 +4,48 @@ package LFV
 
 import "strconv"
 
-/// The rule that produced a covariance. A producer applies the first rule it
-/// can, in this order.
+/// The rule that produced a covariance. Wire values are append-only, not a
+/// preference order: a producer states the estimator it actually used.
 type covarianceRule int8
 
 const (
 	/// Not stated
-	covarianceRuleUnspecified covarianceRule = 0
+	covarianceRuleUnspecified            covarianceRule = 0
 	/// The operator's covariance, as supplied
-	covarianceRuleOperator    covarianceRule = 1
+	covarianceRuleOperator               covarianceRule = 1
 	/// The formal covariance of an orbit fit, multiplied by the realism factor
 	/// measured for the source and the fit's class (SCALE_FACTOR)
-	covarianceRuleScaledFit   covarianceRule = 2
+	covarianceRuleScaledFit              covarianceRule = 2
 	/// The source's own empirical model of its element sets' errors, by orbit
 	/// regime and element-set age
-	covarianceRuleSourceModel covarianceRule = 3
+	covarianceRuleSourceModel            covarianceRule = 3
 	/// The empirical model pooled over all sources, for a source without its own
 	/// model in the regime
-	covarianceRulePooledModel covarianceRule = 4
+	covarianceRulePooledModel            covarianceRule = 4
+	/// Empirical errors from this object's own element-set history, shrunk
+	/// toward a population prior identified by MODEL_ID and REGIME. Later
+	/// element sets are comparison states, not independent truth; history alone
+	/// never establishes calibration. HISTORY_* and SHRINKAGE_WEIGHT carry
+	/// fitting evidence; SAMPLES/OBJECTS/SCALE_FACTOR retain their meanings.
+	covarianceRuleEmpiricalHistoryShrunk covarianceRule = 5
 )
 
 var EnumNamescovarianceRule = map[covarianceRule]string{
-	covarianceRuleUnspecified: "Unspecified",
-	covarianceRuleOperator:    "Operator",
-	covarianceRuleScaledFit:   "ScaledFit",
-	covarianceRuleSourceModel: "SourceModel",
-	covarianceRulePooledModel: "PooledModel",
+	covarianceRuleUnspecified:            "Unspecified",
+	covarianceRuleOperator:               "Operator",
+	covarianceRuleScaledFit:              "ScaledFit",
+	covarianceRuleSourceModel:            "SourceModel",
+	covarianceRulePooledModel:            "PooledModel",
+	covarianceRuleEmpiricalHistoryShrunk: "EmpiricalHistoryShrunk",
 }
 
 var EnumValuescovarianceRule = map[string]covarianceRule{
-	"Unspecified": covarianceRuleUnspecified,
-	"Operator":    covarianceRuleOperator,
-	"ScaledFit":   covarianceRuleScaledFit,
-	"SourceModel": covarianceRuleSourceModel,
-	"PooledModel": covarianceRulePooledModel,
+	"Unspecified":            covarianceRuleUnspecified,
+	"Operator":               covarianceRuleOperator,
+	"ScaledFit":              covarianceRuleScaledFit,
+	"SourceModel":            covarianceRuleSourceModel,
+	"PooledModel":            covarianceRulePooledModel,
+	"EmpiricalHistoryShrunk": covarianceRuleEmpiricalHistoryShrunk,
 }
 
 func (v covarianceRule) String() string {
