@@ -1,4 +1,4 @@
-// Hash: 939ad1e3036c59eae5d9fe0c79314d0d1e5b199f11ed31bdf4bfcbba4f7ce5a1
+// Hash: e5ecedea2b28b41328acc165461b491b5b3f8f688154a0a554ef29ae72730dd7
 // Version: 1.0.0
 // -----------------------------------END_HEADER
 include "../TIM/main.fbs";
@@ -149,13 +149,15 @@ enum pcfIntegratorAlgorithm : ubyte {
   UNSPECIFIED = 0,
   /// Classical fourth-order Runge-Kutta, fixed step INITIAL_STEP_SECONDS.
   RK4 = 1,
-  /// Runge-Kutta-Fehlberg 4(5), adaptive.
+  /// Runge-Kutta-Fehlberg 4(5) (Fehlberg 1969, NASA TR R-315), adaptive.
   RKF45 = 2,
-  /// Runge-Kutta-Fehlberg 7(8), adaptive.
+  /// Runge-Kutta-Fehlberg 7(8) (Fehlberg 1968, NASA TR R-287), adaptive.
   RKF78 = 3,
-  /// Runge-Kutta 7(8), adaptive.
+  /// The same Fehlberg 7(8) pair under the name the full force model's catalog
+  /// profile uses, adaptive.
   RK78 = 4,
-  /// Dormand-Prince 8(7), adaptive.
+  /// Prince-Dormand 8(7), thirteen stages, "RK8(7)13M" (Prince and Dormand 1981,
+  /// J. Comput. Appl. Math. 7), adaptive.
   RKDP87 = 5,
   /// Adams-Bashforth-Moulton predictor-corrector multistep.
   ABM = 6,
@@ -521,19 +523,27 @@ table PCFOutput {
   MAXIMUM_STATES:uint = 500000;
 }
 
-/// Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
+/// Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.
+/// The TIM epoch is UTC; flux is in SFU (1e-22 W/m2/Hz).
 table PCFSpaceWeather {
+  /// Epoch the values apply to. Required; no default.
   EPOCH:TIMInstant (required);
+  /// Daily F10.7 solar radio flux, SFU. Default 150.
   F107:double = 150;
+  /// Centered 81-day average of F10.7, SFU. Default 150.
   F107_AVERAGE:double = 150;
-  /// Conventional daily Ap and three-hour Kp index values; not accelerations.
+  /// Conventional daily Ap index value, dimensionless (not an acceleration).
+  /// Default 15.
   AP_INDEX:double = 15;
+  /// Conventional three-hour Kp index value, dimensionless (not an
+  /// acceleration). Default 3.
   KP_INDEX:double = 3;
 }
 
 /// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
-/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
-/// added to the a priori model and scaled by the visible Sun fraction.
+/// doi:10.1007/s00190-015-0814-4, eq. 5), in the D-Y-B frame, added to the a
+/// priori model and scaled by the visible Sun fraction. Every coefficient is in
+/// m/s^2 and defaults to 0.
 table PCFEcom2 {
   D0_M_S2:double;
   Y0_M_S2:double;
@@ -549,94 +559,133 @@ table PCFEcom2 {
 }
 
 /// Integrator and its settings, shared by $PCF and $PRW. Units are SI. A scalar
-/// legacy tolerance must be expanded by the adapter. Defaults are those of the
-/// fields; ABSOLUTE_TOLERANCES has none and is required.
+/// legacy tolerance must be expanded by the adapter.
 table PCFIntegratorSettings {
+  /// Algorithm. Default UNSPECIFIED (the provider's own).
   ALGORITHM:pcfIntegratorAlgorithm = UNSPECIFIED;
+  /// First step, seconds; the fixed step of RK4. Default 60.
   INITIAL_STEP_SECONDS:double = 60;
+  /// Smallest step an adaptive algorithm may take, seconds. Default 1.
   MINIMUM_STEP_SECONDS:double = 1;
+  /// Largest step, seconds. Default 3600.
   MAXIMUM_STEP_SECONDS:double = 3600;
   /// Six or seven positive tolerances, respectively m, m/s and optional kg.
+  /// Required; no default.
   ABSOLUTE_TOLERANCES:[double] (required);
+  /// Relative tolerance, dimensionless. Default 1e-12.
   RELATIVE_TOLERANCE:double = 1e-12;
+  /// Most steps one propagation may take. Default 100000.
   MAXIMUM_STEPS:uint = 100000;
 }
 
 /// The forces a propagator applies, shared by $PCF and $PRW. Flags default to
-/// off: a force is active only when selected. No implied support for
-/// coefficients, drag models or bodies the provider cannot supply; a provider
-/// refuses what it cannot apply, by name.
+/// off unless stated: a force is active only when selected. No implied support
+/// for coefficients, drag models or bodies the provider cannot supply; a
+/// provider refuses what it cannot apply, by name.
 table PCFForceModel {
+  /// Gravity field. Default INFER_FLAGS (the ENABLE_ flags decide).
   GRAVITY_CHOICE:pcfGravitySelection = INFER_FLAGS;
+  /// Central-body point-mass term. Default true.
   ENABLE_POINT_MASS:bool = true;
-  /// m3/s2; required positive when a central gravity term is enabled.
+  /// Gravitational parameter of the central body, m3/s2; required positive
+  /// when a central gravity term is enabled. Default 0.
   GRAVITATIONAL_PARAMETER:double;
+  /// J2 zonal term. Default true.
   ENABLE_J2:bool = true;
+  /// J3 zonal term. Default false.
   ENABLE_J3:bool = false;
+  /// J4 zonal term. Default false.
   ENABLE_J4:bool = false;
+  /// Zonal terms above J4. Default false.
   ENABLE_HIGHER_ZONALS:bool = false;
-  /// Optional truncations; absent selects the explicitly reported model default.
+  /// Highest field degree; dimensionless. Absent selects the explicitly
+  /// reported model default.
   MAXIMUM_DEGREE:ushort;
-  /// True when MAXIMUM_DEGREE carries a value; false means absent.
+  /// True when MAXIMUM_DEGREE carries a value; false (the default) means absent.
   HAS_MAXIMUM_DEGREE:bool = false;
+  /// Highest field order; dimensionless. Absent selects the explicitly
+  /// reported model default.
   MAXIMUM_ORDER:ushort;
-  /// True when MAXIMUM_ORDER carries a value; false means absent.
+  /// True when MAXIMUM_ORDER carries a value; false (the default) means absent.
   HAS_MAXIMUM_ORDER:bool = false;
+  /// Third-body gravity of THIRD_BODY_IDS. Default false.
   ENABLE_THIRD_BODY:bool = false;
-  /// NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
+  /// NAIF IDs; explicit vector, e.g. [10,301]. Empty (the default) means no
+  /// third bodies.
   THIRD_BODY_IDS:[int];
+  /// Solar radiation pressure. Default false.
   ENABLE_SRP:bool = false;
+  /// Atmospheric drag. Default false.
   ENABLE_DRAG:bool = false;
+  /// Spacecraft mass, kg. Default 1000.
   INITIAL_MASS_KG:double = 1000;
+  /// Cross-section area, m2. Default 10.
   AREA_M2:double = 10;
+  /// Radiation-pressure coefficient Cr, dimensionless. Default 1.5.
   REFLECTIVITY_COEFFICIENT:double = 1.5;
+  /// Drag coefficient Cd, dimensionless. Default 2.2.
   DRAG_COEFFICIENT:double = 2.2;
+  /// Atmosphere model. Default NRLMSISE00.
   ATMOSPHERE_MODEL:pcfAtmosphereFamily = NRLMSISE00;
+  /// Space weather held for the arc when WEATHER_SOURCE selects it. Default
+  /// absent.
   WEATHER:PCFSpaceWeather;
-  /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
+  /// Actual configured source name, e.g. an analytic series or a planetary SPK
+  /// kernel. Required; no default.
   EPHEMERIS_SOURCE:string (required);
   /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
-  /// orientation (the request's Earth orientation rows) to apply them.
+  /// orientation (the request's Earth orientation rows) to apply them. Default
+  /// NONE.
   SOLID_TIDES:pcfSolidTideModel = NONE;
+  /// Post-Newtonian terms. Default NONE.
   RELATIVITY:pcfRelativityTerms = NONE;
   /// Constant acceleration along the in-track axis, m/s2: T of RTN,
   /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  /// Default absent.
   IN_TRACK_ACCELERATION_M_S2:double;
-  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false (the default)
+  /// means absent.
   HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
   /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
-  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch). Default
+  /// absent.
   DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
-  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false (the
+  /// default) means absent.
   HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
   /// Highest degree of the tesseral and sectorial terms (order >= 1); the
   /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
-  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.
   MAXIMUM_TESSERAL_DEGREE:ushort;
-  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false (the default)
+  /// means absent.
   HAS_MAXIMUM_TESSERAL_DEGREE:bool = false;
-  /// Solar radiation pressure model family (default: the cannonball).
+  /// Solar radiation pressure model family. Default CANNONBALL.
   RADIATION_PRESSURE_MODEL:pcfRadiationPressureFamily = CANNONBALL;
   /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  /// Default UNSPECIFIED.
   GNSS_BLOCK:pcfGnssSpacecraftBlock = UNSPECIFIED;
-  /// ECOM2 coefficients; absent means no ECOM2 term.
+  /// ECOM2 coefficients; absent (the default) means no ECOM2 term.
   ECOM2:PCFEcom2;
   /// Earth radiation pressure (albedo and infrared). It reads the Sun's
-  /// position from the ephemeris source.
+  /// position from the ephemeris source. Default NONE.
   EARTH_RADIATION:pcfEarthRadiationModel = NONE;
-  /// Angular size of the Earth surface elements it sums, degrees.
+  /// Angular size of the Earth surface elements it sums, degrees. Default 15.
   EARTH_RADIATION_RESOLUTION_DEG:double = 15;
   /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
   /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
   /// fitting SRP_AREA_OVER_MASS scales both.
   EARTH_RADIATION_AREA_OVER_MASS_M2_KG:double;
-  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false (the
+  /// default) means absent.
   HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:bool = false;
   /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
-  /// orientation (the request's Earth orientation rows) to apply them.
+  /// orientation (the request's Earth orientation rows) to apply them. Default
+  /// NONE.
   OCEAN_TIDES:pcfOceanTideModel = NONE;
-  /// Truncation of the ocean tide field.
+  /// Truncation of the ocean tide field, degree. Default 30.
   OCEAN_TIDE_MAXIMUM_DEGREE:ushort = 30;
+  /// Truncation of the ocean tide field, order. Default 30.
   OCEAN_TIDE_MAXIMUM_ORDER:ushort = 30;
   /// Central body, a NAIF ID. The gravity field, atmosphere, tides and third
   /// bodies are those of this body. Default 399 (Earth).
@@ -659,13 +708,13 @@ table PCFForceModel {
   /// Absent, the provider's rule (the numerical propagator holds; the advanced
   /// mean-element propagator relaxes with 48 h).
   DENSITY_CORRECTION_RELAXATION_HOURS:double = 0;
-  /// True when DENSITY_CORRECTION_RELAXATION_HOURS carries a value; false means
-  /// absent.
+  /// True when DENSITY_CORRECTION_RELAXATION_HOURS carries a value; false (the
+  /// default) means absent.
   HAS_DENSITY_CORRECTION_RELAXATION_HOURS:bool = false;
   /// Neutral wind in the drag relative velocity. Default NONE.
   NEUTRAL_WIND:pcfNeutralWind = NONE;
-  /// Empirical along-track terms of the averaged theories. Absent: the
-  /// theory's own defaults.
+  /// Empirical along-track terms of the averaged theories. Absent (the
+  /// default): the theory's own.
   EMPIRICAL_TERMS:PCFEmpiricalTerms;
 }
 

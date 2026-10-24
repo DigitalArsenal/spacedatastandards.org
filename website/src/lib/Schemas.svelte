@@ -94,7 +94,7 @@
     "OBD": ["orbit determination", "Kalman", "batch least squares", "residuals", "sensor"],
     "OSM": ["observation", "stability", "pass", "duration", "sensor"],
     "AST": ["astrodynamics", "propagator", "SGP4", "FFM", "force model", "orbital regime"],
-    "PCF": ["propagator", "configuration", "integrator", "RK4", "gravity", "force model"],
+    "PCF": ["propagator", "configuration", "theory", "integrator", "RK4", "DOPRI5", "gravity", "force model", "drag", "fit policy", "event location", "maneuver detection", "reentry", "output"],
     "VCM": ["vector", "covariance", "osculating", "mean elements", "perturbation"],
     // Attitude
     "AEM": ["attitude", "ephemeris", "quaternion", "angular rate", "rotation", "CCSDS"],

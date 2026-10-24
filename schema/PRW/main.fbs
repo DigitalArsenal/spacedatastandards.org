@@ -1,5 +1,5 @@
-// Hash: 4a0bf99ffff424b8ec0cb31f8572df40cc1a4a798afe3b516397a0d8dbdfa63f
-// Version: 1.219.6
+// Hash: ce6ae883aa81033c0a790f8b5ed71d7f4f1a3427e65be3b882f10560e2e3d21b
+// Version: 1.219.7
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -19,6 +19,11 @@ include "../PCF/main.fbs";
 /// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
 /// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
 /// across a JS ↔ WASM boundary, not a substitute for any of them.
+///
+/// The integrator settings and the force model a propagation runs under are
+/// `PCF`'s tables (PCFIntegratorSettings, PCFForceModel and their enums); PRW
+/// carries them and does not define them, so a configuration and a request
+/// share one definition of each.
 
 /// Runtime state-flag bitfield (sized to match a single uint).
 /// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;

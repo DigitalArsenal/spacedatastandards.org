@@ -1,23 +1,30 @@
-// Hash: 9ee0399a8ebd63e61d726efa31554c7616feb0b46b908e3406588cbb44b41a8d
-// Version: 1.0.1
+// Hash: 2d1620360afdb474d0c891f292afb7d59a0acbd6f05a191c86c37dc7d5ff5b3a
+// Version: 1.0.2
 // -----------------------------------END_HEADER
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 table BOV {
-  // EFG Coordinates
-  E_COORDINATE: double; // 11 significant figures
-  F_COORDINATE: double; // 11 significant figures
-  G_COORDINATE: double; // 11 significant figures
+  /// EFG position, E component, km (11 significant figures).
+  E_COORDINATE: double;
+  /// EFG position, F component, km (11 significant figures).
+  F_COORDINATE: double;
+  /// EFG position, G component, km (11 significant figures).
+  G_COORDINATE: double;
 
-  // Velocity in EFG Coordinates
-  E_DOT: double; // 9 significant figures
-  F_DOT: double; // 9 significant figures
-  G_DOT: double; // 9 significant figures
+  /// EFG velocity, E component, km/s (9 significant figures).
+  E_DOT: double;
+  /// EFG velocity, F component, km/s (9 significant figures).
+  F_DOT: double;
+  /// EFG velocity, G component, km/s (9 significant figures).
+  G_DOT: double;
 
-  // Epoch time, in ISO 8601 UTC format
+  /// Epoch time, in ISO 8601 UTC format.
   EPOCH: string;
 
-  // Time from Launch in Seconds
-  TIME_FROM_LAUNCH: double; // Seconds with appropriate precision
+  /// Time from launch, seconds (s), with appropriate precision.
+  TIME_FROM_LAUNCH: double;
 }
 
 root_type BOV;
