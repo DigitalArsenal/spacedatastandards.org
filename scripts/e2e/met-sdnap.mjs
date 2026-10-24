@@ -96,8 +96,7 @@ try {
       ],
     },
     {
-      // EPM's generated C++ header (reached through LDM) does not compile today (KEY_PATH), so $LAM is read JS -> Go -> JS.
-      name: 'LAM', code: 'LAM', start: 'lamInsertionOrbit', cpp: false,
+      name: 'LAM', code: 'LAM', start: 'lamInsertionOrbit',
       build: (model, M, visited) => {
         const insertion = populate(model, M, 'lamInsertionOrbit', visited);
         Object.assign(insertion, {
@@ -143,17 +142,14 @@ try {
       Type[`finish${c.code}Buffer`](b, object.pack(b));
       fs.writeFileSync(path.join(dir, `${name}.js.fb`), b.asUint8Array());
     }
-    const withCpp = c.cpp !== false;
     const program = cppCopySource({ model, root: c.code, include: `${c.code}/main_generated.h`, populated: [...new Set([c.code, ...populated])] });
     const compile = (source, file) => {
       fs.writeFileSync(path.join(dir, `${file}.cpp`), source);
       run(process.env.CXX || 'c++', ['-std=c++17', '-O0', '-I', include, '-I', path.join(dir, 'cpp'), `${file}.cpp`, '-o', file], dir);
     };
-    if (withCpp) {
-      run('tar', ['-xzf', path.join(artifact, `dist/${c.code}/${c.code}.cpp.tar.gz`), '-C', path.join(dir, 'cpp')]);
-      compile(program, 'copy');
-      run(path.join(dir, 'copy'), jobs.flatMap(([name]) => [`${name}.js.fb`, `${name}.cpp.fb`]), dir);
-    }
+    run('tar', ['-xzf', path.join(artifact, `dist/${c.code}/${c.code}.cpp.tar.gz`), '-C', path.join(dir, 'cpp')]);
+    compile(program, 'copy');
+    run(path.join(dir, 'copy'), jobs.flatMap(([name]) => [`${name}.js.fb`, `${name}.cpp.fb`]), dir);
 
     const goDir = path.join(tmp, c.code);
     fs.cpSync(path.join(goRoot, c.code), goDir, { recursive: true });
@@ -161,11 +157,11 @@ try {
     fs.mkdirSync(path.join(tmp, `run${c.code}`), { recursive: true });
     fs.writeFileSync(path.join(tmp, `run${c.code}`, 'main.go'),
       `package main\nimport (\n "os"\n p "sdsmetsdnape2e/${c.code}"\n)\nfunc main() { p.WireE2E(os.Args[1:]) }\n`);
-    run('go', ['run', '-mod=mod', `./run${c.code}`, ...jobs.flatMap(([name]) => [path.join(dir, `${name}.${withCpp ? 'cpp' : 'js'}.fb`), path.join(dir, `${name}.go.fb`)])]);
+    run('go', ['run', '-mod=mod', `./run${c.code}`, ...jobs.flatMap(([name]) => [path.join(dir, `${name}.cpp.fb`), path.join(dir, `${name}.go.fb`)])]);
 
     const decode = (file) => Type[`getRootAs${c.code}`](new fb.ByteBuffer(new Uint8Array(fs.readFileSync(path.join(dir, file))))).unpack();
     for (const [name, expected, label] of jobs) {
-      for (const rt of withCpp ? ['js', 'cpp', 'go'] : ['js', 'go']) {
+      for (const rt of ['js', 'cpp', 'go']) {
         const bytes = new Uint8Array(fs.readFileSync(path.join(dir, `${name}.${rt}.fb`)));
         assert.ok(Type.bufferHasIdentifier(new fb.ByteBuffer(bytes)), `${c.name} ${label ?? 'full'}: file identifier after ${rt}`);
         const back = decode(`${name}.${rt}.fb`);

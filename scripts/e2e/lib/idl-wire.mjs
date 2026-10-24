@@ -210,7 +210,12 @@ export function cppCopySource({ model, root, include, populated }) {
     for (const f of model.tables.get(name).fields) {
       const kind = kindOf(model, f.elem);
       const v = `v_${f.name}`;
-      if (kind === 'table' && !known.has(f.elem)) { body.push(`  if (s->${f.name}()) { std::fprintf(stderr, "unpopulated table field ${name}.${f.name} is set\\n"); std::abort(); }`); continue; }
+      if (kind === 'table' && !known.has(f.elem)) {
+        // An empty vector (the object API packs `[]`) is the same as an absent one; only elements count as set.
+        const set = f.vector ? `s->${f.name}() && s->${f.name}()->size() > 0` : `s->${f.name}()`;
+        body.push(`  if (${set}) { std::fprintf(stderr, "unpopulated table field ${name}.${f.name} is set\\n"); std::abort(); }`);
+        continue;
+      }
       if (kind === 'union') {
         const arms = model.unions.get(f.elem).arms;
         body.push(`  flatbuffers::Offset<void> ${v} = 0;`, `  switch (s->${f.name}_type()) {`,
@@ -243,6 +248,8 @@ export function cppCopySource({ model, root, include, populated }) {
     defs.push(body.join('\n'));
   }
   lines.push(
+    // libc's <math.h> defines DOMAIN, which collides with $EPM's DomainProof.DOMAIN accessors; drop the macro before the generated headers.
+    '#include <flatbuffers/flatbuffers.h>', '#ifdef DOMAIN', '#undef DOMAIN', '#endif',
     `#include "${include}"`,
     '#include <cstdio>', '#include <cstdlib>', '#include <fstream>', '#include <iterator>', '#include <vector>',
     decls.join('\n'), defs.join('\n'),
