@@ -1,4 +1,4 @@
-// Hash: ce6ae883aa81033c0a790f8b5ed71d7f4f1a3427e65be3b882f10560e2e3d21b
+// Hash: 3b0b800e60af9acb12b6822a50e98a2fdee03401398dfeec6b9fdced792a081f
 // Version: 1.219.7
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
@@ -330,6 +330,26 @@ table PRWFiniteBurn {
   THROTTLE:[PRWThrottlePoint];
 }
 
+/// A located event.
+table PRWEventRecord {
+  /// Index into the request's EVENTS.
+  EVENT_INDEX:uint;
+  /// The event function that crossed zero.
+  KIND:pcfEventKind = UNSPECIFIED;
+  /// The way g crossed zero: INCREASING or DECREASING.
+  DIRECTION:pcfEventDirection = ANY;
+  /// Epoch of the crossing.
+  EPOCH:TIMInstant (required);
+  /// Seconds from the request's initial epoch, negative for a backward propagation.
+  ELAPSED_SECONDS:double;
+  /// The state at EPOCH in the request's axes.
+  STATE:PRWResidentState (required);
+  /// g at EPOCH.
+  RESIDUAL:double;
+  /// Refinement steps taken.
+  ITERATIONS:uint;
+}
+
 /// Fixed endpoint propagation. Provider selected by the host's connected port.
 table PRWExecutionRequest {
   INITIAL:PRWResidentState (required);
@@ -353,6 +373,11 @@ table PRWExecutionRequest {
   /// covariance carries their uncertainty and correlation (a VCM's 7x7 to
   /// 10x10). Each must be active in FORCES. Empty means the state alone.
   DYNAMIC_PARAMETERS:[prwDynamicParameter];
+  /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+  /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+  /// or burns) by an integrator with a continuous extension; any other request that
+  /// names events is refused. Default empty.
+  EVENTS:[PCFEventDefinition];
 }
 
 /// Burn times absent until reached; zero means an actual edge at initial epoch.
@@ -398,6 +423,12 @@ table PRWExecutionResult {
   DENSITY_TREATMENT:prwDensityTreatment = UNSPECIFIED;
   /// The parameters the samples' STM and COVARIANCE carry after the state.
   DYNAMIC_PARAMETERS:[prwDynamicParameter];
+  /// The located events with ACTION RECORD or STOP, in time order of propagation.
+  EVENTS:[PRWEventRecord];
+  /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+  EVENT_OCCURRENCES:[uint];
+  /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+  STOPPED_BY_EVENT:int = -1;
 }
 
 /// Portable batch request: no output pointer; state records returned via TAB.

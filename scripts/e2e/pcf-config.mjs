@@ -1,11 +1,13 @@
 #!/usr/bin/env node
-// One E2E: a $PCF 1.0 with every table and every field populated, and a $PRW
-// execution request that carries the tables it shares with $PCF, each written
-// by the generated JS, copied field by field by the generated C++ readers and
+// One E2E: a $PCF 1.0 with every table and every field populated, a $PRW
+// execution request that carries the tables it shares with $PCF (integrator,
+// forces, events) and a populated $PRW execution result, each written by the
+// generated JS, copied field by field by the generated C++ readers and
 // builders, copied again by the generated Go ones, and read back by JS:
 // JS -> C++ -> Go -> JS, every value equal and the JS re-encoding byte for byte
 // the buffer it started from. The enum sweeps send every value of the shared
-// integrator algorithm and of the theory through the same three runtimes.
+// integrator algorithm, the theory and the event enums through the same three
+// runtimes, and a negative control proves the comparison notices a dropped field.
 // Default: candidate (lib/ and dist/ of this tree). --published VERSION: the
 // immutable npm archive and Go module of that release.
 import assert from 'node:assert/strict';
@@ -63,10 +65,14 @@ try {
 
   // Each case: a root, the table whose closure is populated, and how to build the JS value.
   const cases = [
-    { name: 'PCF', code: 'PCF', start: 'PCF', build: (model, M, visited) => populate(model, M, 'PCF', visited) },
+    { name: 'PCF', code: 'PCF', start: 'PCF', sweeps: 'config', build: (model, M, visited) => populate(model, M, 'PCF', visited) },
     {
-      name: 'PRW', code: 'PRW', start: 'PRWExecutionRequest',
+      name: 'PRW', code: 'PRW', start: 'PRWExecutionRequest', sweeps: 'request',
       build: (model, M, visited) => Object.assign(new M.PRWT(), { EXECUTION_REQUEST: populate(model, M, 'PRWExecutionRequest', visited) }),
+    },
+    {
+      name: 'PRW-result', code: 'PRW', start: 'PRWExecutionResult', sweeps: null,
+      build: (model, M, visited) => Object.assign(new M.PRWT(), { EXECUTION_RESULT: populate(model, M, 'PRWExecutionResult', visited) }),
     },
   ];
 
@@ -81,7 +87,7 @@ try {
     assert.deepEqual([...visited].sort(), [...reachable].sort(), `${c.name}: every reachable table must be populated`);
     const fieldCount = reachable.reduce((n, t) => n + model.tables.get(t).fields.length, 0);
 
-    // Enum sweeps: every member of the enums the two standards share, one small buffer each.
+    // The enums the two standards share keep their numbers; every member is then sent through the runtimes, one small buffer each.
     const sweeps = [];
     const sweep = (label, make) => sweeps.push([label, make]);
     const algorithm = model.enums.get('pcfIntegratorAlgorithm');
@@ -92,26 +98,36 @@ try {
     const frozen = ['UNSPECIFIED', 'RK4', 'RKF45', 'RKF78', 'RK78', 'RKDP87', 'ABM', 'BS', 'COWELL', 'ENCKE', 'EQUINOCTIAL_VOP'];
     assert.deepEqual(algorithm.members.slice(0, frozen.length).map((m) => m.name), frozen, 'values 0-10 keep the numbers $PRW carried');
     assert.deepEqual(algorithm.members.slice(frozen.length).map((m) => m.name),
-      ['DOPRI5', 'RK65_8M', 'VERNER_98', 'RKN12_10', 'GAUSS_JACKSON_8', 'GAUSS_VOP', 'DROMO', 'STIEFEL_SCHEIFELE', 'DOPRI853']);
-    for (const m of algorithm.members) {
+      ['DOPRI5', 'RK65', 'RKV98', 'RKN1210', 'GAUSS_JACKSON_8', 'GAUSS_VOP', 'DROMO', 'STIEFEL', 'DOPRI853']);
+    const expectEnum = (enumName, names) => assert.deepEqual(model.enums.get(enumName).members.map((m) => `${m.name}=${m.value}`), names, `${enumName} numbering`);
+    expectEnum('pcfEventKind', ['UNSPECIFIED=0', 'APSIS=1', 'PLANE_CROSSING=2', 'TRUE_ANOMALY=3', 'ARGUMENT_OF_LATITUDE=4', 'LATITUDE_EXTREMUM=5', 'UMBRA=6', 'PENUMBRA=7', 'CLOSEST_APPROACH=8', 'EXPRESSION=9']);
+    expectEnum('pcfEventDirection', ['ANY=0', 'INCREASING=1', 'DECREASING=2']);
+    expectEnum('pcfEventAction', ['CONTINUE=0', 'RECORD=1', 'STOP=2']);
+    if (c.sweeps) for (const m of algorithm.members) {
       assert.equal(M.pcfIntegratorAlgorithm[m.name], m.value, `generated JS enum ${m.name}`);
-      sweep(`algorithm ${m.name}`, () => {
-        const small = c.name === 'PCF'
-          ? Object.assign(new M.PCFT(), { INTEGRATOR: Object.assign(new M.PCFIntegratorSettingsT(), { ALGORITHM: m.value, ABSOLUTE_TOLERANCES: [1e-9, 1e-9, 1e-9, 1e-12, 1e-12, 1e-12] }) })
-          : Object.assign(new M.PRWT(), { EXECUTION_REQUEST: (() => { const r = populate(model, M, 'PRWExecutionRequest', new Set()); r.INTEGRATOR.ALGORITHM = m.value; return r; })() });
-        return small;
-      });
+      sweep(`algorithm ${m.name}`, () => c.sweeps === 'config'
+        ? Object.assign(new M.PCFT(), { INTEGRATOR: Object.assign(new M.PCFIntegratorSettingsT(), { ALGORITHM: m.value, ABSOLUTE_TOLERANCES: [1e-9, 1e-9, 1e-9, 1e-12, 1e-12, 1e-12] }) })
+        : Object.assign(new M.PRWT(), { EXECUTION_REQUEST: (() => { const r = populate(model, M, 'PRWExecutionRequest', new Set()); r.INTEGRATOR.ALGORITHM = m.value; return r; })() }));
     }
-    if (c.name === 'PCF') {
+    if (c.sweeps === 'config') {
       for (const m of theory.members) {
         assert.equal(M.pcfTheory[m.name], m.value);
         sweep(`theory ${m.name}`, () => Object.assign(new M.PCFT(), { THEORY: m.value }));
       }
       assert.deepEqual(theory.members.map((m) => m.name), ['UNSPECIFIED', 'SGP4', 'SGP4XP', 'SDNAP', 'FFM', 'KEPLER']);
-    } else {
-      // $PRW reads the very tables $PCF defines.
+      for (const [enumName, field] of [['pcfEventKind', 'KIND'], ['pcfEventDirection', 'DIRECTION'], ['pcfEventAction', 'ACTION']]) {
+        for (const m of model.enums.get(enumName).members) {
+          assert.equal(M[enumName][m.name], m.value);
+          sweep(`${enumName} ${m.name}`, () => Object.assign(new M.PCFT(), {
+            EVENTS: [Object.assign(new M.PCFEventDefinitionT(), { [field]: m.value, TOLERANCE_SECONDS: 2.5e-7, OCCURRENCE: 3 })],
+          }));
+        }
+      }
+    } else if (c.sweeps === 'request') {
+      // $PRW reads the very tables $PCF defines, events included.
       const req = value.EXECUTION_REQUEST;
       assert.ok(req.INTEGRATOR instanceof M.PCFIntegratorSettingsT && req.FORCES instanceof M.PCFForceModelT);
+      assert.ok(req.EVENTS.every((e) => e instanceof M.PCFEventDefinitionT) && req.EVENTS.length > 0);
     }
 
     const dir = path.join(tmp, `work-${c.name}`);

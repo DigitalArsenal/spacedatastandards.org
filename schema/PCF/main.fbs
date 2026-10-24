@@ -1,6 +1,7 @@
-// Hash: e5ecedea2b28b41328acc165461b491b5b3f8f688154a0a554ef29ae72730dd7
+// Hash: 2721559ee5080661e7f45fc214dafa0b412102cee4074695d26cfebf2f0a9cfb
 // Version: 1.0.0
 // -----------------------------------END_HEADER
+include "../FRM/main.fbs";
 include "../TIM/main.fbs";
 include "../PCE/main.fbs";
 include "../EVL/main.fbs";
@@ -87,17 +88,87 @@ enum pcfEphemerisKind : ubyte {
   PLANETARY_KERNEL = 2
 }
 
-/// What a propagator does when a located event occurs. Append new values
-/// only.
-enum pcfEventAction : ubyte {
+/// The event function of a located event. Each is a continuous function g of the
+/// integrated state, evaluated by the integrator; an event is a zero crossing of g.
+/// The crossing is bracketed on each accepted step, refined to TOLERANCE_SECONDS on
+/// the integrator's continuous extension, and confirmed by re-stepping the
+/// integrator itself, so the epoch does not depend on the step size. Append new
+/// values only.
+enum pcfEventKind : ubyte {
   UNSPECIFIED = 0,
-  /// End the propagation at the event; the result carries its epoch and state.
-  STOP = 1,
-  /// Make the event a step boundary only (the dynamics may change there) and
-  /// report nothing about it.
-  CONTINUE = 2,
-  /// Report the event in the result and keep propagating.
-  RECORD = 3
+  /// g = r . v, the radial rate. INCREASING crossings are periapsis, DECREASING apoapsis.
+  APSIS = 1,
+  /// g = n . r for the plane through the central body's center with normal PLANE_NORMAL
+  /// (absent: the pole of the request's axes, which makes the crossings the nodes).
+  /// INCREASING crossings are ascending, DECREASING descending.
+  PLANE_CROSSING = 2,
+  /// g = the true anomaly minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+  TRUE_ANOMALY = 3,
+  /// g = the argument of latitude minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+  ARGUMENT_OF_LATITUDE = 4,
+  /// g = r^2 d(z)/dt - z (r . v) with z the component along the pole of the request's
+  /// axes: the zero of the rate of the geocentric latitude. DECREASING crossings are
+  /// maxima, INCREASING minima.
+  LATITUDE_EXTREMUM = 5,
+  /// g = the angular separation of the Sun and the central body's centers minus the
+  /// difference of their apparent radii, positive in light (the umbra of the conical
+  /// model). DECREASING is entry, INCREASING exit.
+  UMBRA = 6,
+  /// g = the same separation minus the sum of the apparent radii (the penumbra
+  /// boundary).
+  PENUMBRA = 7,
+  /// g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
+  /// the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
+  /// the range.
+  CLOSEST_APPROACH = 8,
+  /// g = the value of EXPRESSION.
+  EXPRESSION = 9
+}
+
+/// Which zero crossings of the event function count. Append new values only.
+enum pcfEventDirection : ubyte {
+  ANY = 0,
+  /// g goes from negative to positive.
+  INCREASING = 1,
+  /// g goes from positive to negative.
+  DECREASING = 2
+}
+
+/// What the integrator does at a located event. Append new values only.
+enum pcfEventAction : ubyte {
+  /// The event is located and counted; it is not reported.
+  CONTINUE = 0,
+  /// The event is located, counted and reported; propagation continues.
+  RECORD = 1,
+  /// The event is reported and the propagation ends there: the final sample is the
+  /// state at the OCCURRENCE-th qualifying crossing.
+  STOP = 2
+}
+
+/// Operations of a bounded expression. The expression is data, evaluated by the
+/// provider; no code runs. Append new values only.
+enum pcfExpressionOperation : ubyte {
+  UNSPECIFIED = 0,
+  /// Push VALUE.
+  CONSTANT = 1,
+  /// Push the value of PARAMETER at the integrated state, in the units of the $PCE
+  /// catalog.
+  PARAMETER = 2,
+  /// Pop two, push their sum, difference (second minus first popped), product or
+  /// quotient.
+  ADD = 3,
+  SUBTRACT = 4,
+  MULTIPLY = 5,
+  DIVIDE = 6,
+  /// Pop one, push the result.
+  NEGATE = 7,
+  ABSOLUTE = 8,
+  SQUARE_ROOT = 9,
+  SINE = 10,
+  COSINE = 11,
+  /// Pop two, push the lesser or the greater.
+  MINIMUM = 12,
+  MAXIMUM = 13
 }
 
 /// How the correlation of maneuver-detection innovations is weighted. Append
@@ -142,7 +213,7 @@ enum pcfOutputFrame : ubyte {
 /// 10 are the numbers $PRW has always carried; new values are appended only,
 /// never reordered or reused. A scheme value names the stepping method; a
 /// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// STIEFEL) names the variables the equations are written in, and the
 /// scheme that steps them is the provider's, reported in its result.
 enum pcfIntegratorAlgorithm : ubyte {
   /// The provider's own algorithm.
@@ -174,14 +245,14 @@ enum pcfIntegratorAlgorithm : ubyte {
   DOPRI5 = 11,
   /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
   /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-  RK65_8M = 12,
+  RK65 = 12,
   /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-  VERNER_98 = 13,
+  RKV98 = 13,
   /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
   /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
   /// acceleration must not depend on velocity, so a provider refuses it with
   /// drag.
-  RKN12_10 = 14,
+  RKN1210 = 14,
   /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
   /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
   /// 52).
@@ -193,7 +264,7 @@ enum pcfIntegratorAlgorithm : ubyte {
   DROMO = 17,
   /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
   /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
-  STIEFEL_SCHEIFELE = 18,
+  STIEFEL = 18,
   /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
   /// Solving Ordinary Differential Equations I).
   DOPRI853 = 19
@@ -408,35 +479,47 @@ table PCFFitPolicy {
   SRP_PRIOR:PCFGaussianPrior;
 }
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+/// One term of an expression program.
+table PCFExpressionTerm {
+  /// What the term does. Default UNSPECIFIED (refused).
+  OPERATION:pcfExpressionOperation = UNSPECIFIED;
+  /// The constant pushed by CONSTANT. Default 0.
+  VALUE:double;
+  /// The catalog parameter pushed by PARAMETER. Default UNSPECIFIED.
+  PARAMETER:pceParameter = UNSPECIFIED;
+}
+
+/// A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
+/// number.
+table PCFExpression {
+  /// The terms, in evaluation order. Default empty.
+  TERMS:[PCFExpressionTerm];
+}
+
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
 table PCFEventDefinition {
-  /// The caller's name for the event, echoed in the result. Default empty.
-  NAME:string;
-  /// Which locator. Default PARAMETER_CONDITION.
-  LOCATOR_CLASS:evlLocatorClass = PARAMETER_CONDITION;
-  /// Exactly the one of the next five that matches LOCATOR_CLASS is present
-  /// (any other combination is refused as MISSING_CONFIGURATION, as in
-  /// $EVL). The condition carries its own direction, goal value, goal
-  /// tolerance and occurrence.
-  CONDITION:PCEParameterCondition;
-  ECLIPSE:EVLEclipseConfiguration;
-  CONTACT:EVLContactConfiguration;
-  INTRUSION:EVLIntrusionConfiguration;
-  APSIDES:EVLApsidesConfiguration;
-  NODE_CROSSING:EVLNodeCrossingConfiguration;
-  /// What the propagator does at the event. Default RECORD.
+  /// The event function. Default UNSPECIFIED (refused).
+  KIND:pcfEventKind = UNSPECIFIED;
+  /// Which zero crossings of the event function count. Default ANY.
+  DIRECTION:pcfEventDirection = ANY;
+  /// What the integrator does at the event. Default RECORD.
   ACTION:pcfEventAction = RECORD;
-  /// Convergence bar on the located epoch, seconds. Default 1e-9.
-  EPOCH_TOLERANCE_SECONDS:double = 1e-9;
-  /// Step at which the event function is sampled before refinement, seconds;
-  /// 0 samples at the integrator's accepted steps. A root is found only when
-  /// the function changes sign within one sample interval. Default 0.
-  SCAN_STEP_SECONDS:double = 0;
-  /// Largest number of occurrences reported; 0 is no bound. Default 0.
-  MAXIMUM_EVENTS:uint = 0;
+  /// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+  TOLERANCE_SECONDS:double = 1e-9;
+  /// STOP acts at this qualifying crossing (1 is the first). Default 1.
+  OCCURRENCE:uint = 1;
+  /// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+  ANGLE_RAD:double;
+  /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+  /// vector. Default absent (the pole of the axes).
+  PLANE_NORMAL:FRMVector3;
+  /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+  /// as $OEM. Default empty.
+  SECOND_TRAJECTORY_PORT:string;
+  /// EXPRESSION: the program. Default absent.
+  EXPRESSION:PCFExpression;
 }
 
 /// Maneuver detection from fit innovations: a generalized-likelihood-ratio

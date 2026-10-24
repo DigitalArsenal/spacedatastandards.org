@@ -385,9 +385,11 @@ appended only. The first 40 slots of `PCFForceModel` are the former
 still decodes.
 
 Every scalar that can be absent is a value plus a `HAS_` pair; every field
-states its default and unit. Event location is `$EVL`'s vocabulary
-(`evlLocatorClass`, its configuration tables, `PCEParameterCondition`) plus
-`pcfEventAction` (STOP, CONTINUE, RECORD).
+states its default and unit. Event location inside the integrator is
+`PCFEventDefinition` (kind, direction, action CONTINUE, RECORD or STOP,
+tolerance, occurrence, and the parameters of its kind, including a bounded
+expression); a located event comes back as `PRWEventRecord`. `$EVL` locates
+events on sampled ephemerides.
 
 `scripts/e2e/pcf-config.mjs` round-trips a fully populated `$PCF` and a `$PRW`
 execution request through the generated JS, C++ and Go; it derives its fixture
