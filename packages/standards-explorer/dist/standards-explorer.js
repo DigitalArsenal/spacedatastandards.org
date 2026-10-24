@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.266.0+1792877975401",
+  version: "1.267.0+1792885602107",
   STANDARDS: {
     PCF: {
-      IDL: `// Hash: a8335b1487de6e1252c5814f3238ab1e9737b25327be1a593dfb6dd3777f9633
-// Version: 1.0.0
+      IDL: `// Hash: b797b2f06dd2d6560c27173def0b53cbfc4e570c27c159ac412e743a412b4a3f
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -318,7 +318,11 @@ enum pcfGravitySelection : ubyte {
   EGM96 = 6,
   /// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
   /// Moon's field, in the Moon's principal-axis frame.
-  GRGM660PRIM = 7
+  GRGM660PRIM = 7,
+  /// MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+  /// doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+  /// its PDS label.
+  MRO120F = 8
 }
 
 enum pcfAtmosphereFamily : ubyte {
@@ -334,7 +338,12 @@ enum pcfAtmosphereFamily : ubyte {
   JACCHIA_ROBERTS = 5,
   /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
   /// Dst-derived temperature change from the request's JB2008 indices.
-  JB2008 = 6
+  JB2008 = 6,
+  /// Banded exponential atmosphere of Mars: the density falls as
+  /// exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+  /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+  /// with Mars.
+  MARS_EXPONENTIAL = 7
 }
 
 /// Solid Earth tide model for the central body's field. NONE leaves the
@@ -840,6 +849,13 @@ table PCFForceModel {
   /// Empirical along-track terms of the averaged theories. Absent (the
   /// default): the theory's own.
   EMPIRICAL_TERMS:PCFEmpiricalTerms;
+  /// Highest degree of the harmonic field of the third body that has one (the
+  /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+  /// The field's acceleration at the frame origin is subtracted. Default 0:
+  /// third bodies are point masses only.
+  THIRD_BODY_MAXIMUM_DEGREE:ushort = 0;
+  /// Highest order of that field; dimensionless. Default 0.
+  THIRD_BODY_MAXIMUM_ORDER:ushort = 0;
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
@@ -4367,8 +4383,8 @@ file_identifier "$SBM";`,
       ]
     },
     NCD: {
-      IDL: `// Hash: ee277e3cc574bbeae35872dd70559f3a423eae68b641826f67146acc28c9835e
-// Version: 0.0.3
+      IDL: `// Hash: de6ee7894a3ee90de24d397a1a70d1864f293893d757311298c5a20ccda8531d
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 /// Native container format class.
 ///
@@ -4461,6 +4477,11 @@ enum ncdContainerFormat : ubyte {
   RINEX_OBS = 30,
   /// RINEX navigation file.
   RINEX_NAV = 31,
+  /// NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+  /// Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+  /// e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+  /// Required Reading).
+  PCK_DAF = 32,
 
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
@@ -33879,7 +33900,8 @@ var json_default = {
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ]
         },
         pcfAtmosphereFamily: {
@@ -33891,7 +33913,8 @@ var json_default = {
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ]
         },
         pcfSolidTideModel: {
@@ -36373,6 +36396,18 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             EMPIRICAL_TERMS: {
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0."
             }
           },
           required: [
@@ -50468,6 +50503,7 @@ Decoding applies the inverses from the last back.`
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ]
         },
@@ -71928,6 +71964,7 @@ verbatim what that source states about itself.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ]
         },
@@ -72225,7 +72262,8 @@ verbatim what that source states about itself.`,
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ]
         },
         pcfAtmosphereFamily: {
@@ -72237,7 +72275,8 @@ verbatim what that source states about itself.`,
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ]
         },
         pcfSolidTideModel: {
@@ -76346,6 +76385,18 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             EMPIRICAL_TERMS: {
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0."
             }
           },
           required: [
@@ -133913,6 +133964,7 @@ format class are named by $NCD's container format.`
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ]
         },
@@ -134182,7 +134234,8 @@ format class are named by $NCD's container format.`
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ]
         },
         pcfAtmosphereFamily: {
@@ -134194,7 +134247,8 @@ format class are named by $NCD's container format.`
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ]
         },
         pcfSolidTideModel: {
@@ -155502,6 +155556,18 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             EMPIRICAL_TERMS: {
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0."
             }
           },
           required: [
@@ -233873,6 +233939,7 @@ balance service's own rate.`
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ]
         },
@@ -234170,7 +234237,8 @@ balance service's own rate.`
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ]
         },
         pcfAtmosphereFamily: {
@@ -234182,7 +234250,8 @@ balance service's own rate.`
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ]
         },
         pcfSolidTideModel: {
@@ -238203,6 +238272,18 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             EMPIRICAL_TERMS: {
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0."
             }
           },
           required: [
@@ -269510,6 +269591,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ]
         },
@@ -269807,7 +269889,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ]
         },
         pcfAtmosphereFamily: {
@@ -269819,7 +269902,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ]
         },
         pcfSolidTideModel: {
@@ -274100,6 +274184,18 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             EMPIRICAL_TERMS: {
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0."
             }
           },
           required: [
@@ -313257,6 +313353,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ]
         },
@@ -313554,7 +313651,8 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ]
         },
         pcfAtmosphereFamily: {
@@ -313566,7 +313664,8 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ]
         },
         pcfSolidTideModel: {
@@ -318337,6 +318436,18 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             EMPIRICAL_TERMS: {
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0."
             }
           },
           required: [
@@ -325931,7 +326042,8 @@ var fbjson_default = {
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -325949,6 +326061,10 @@ var fbjson_default = {
             GRGM660PRIM: {
               value: 7,
               description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            MRO120F: {
+              value: 8,
+              description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           }
         },
@@ -325961,7 +326077,8 @@ var fbjson_default = {
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -325979,6 +326096,10 @@ var fbjson_default = {
             JB2008: {
               value: 6,
               description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            MARS_EXPONENTIAL: {
+              value: 7,
+              description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           }
         },
@@ -335675,6 +335796,10 @@ var fbjson_default = {
                 GRGM660PRIM: {
                   value: 7,
                   description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+                },
+                MRO120F: {
+                  value: 8,
+                  description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
                 }
               },
               "x-flatbuffer-default": "INFER_FLAGS"
@@ -335811,6 +335936,10 @@ var fbjson_default = {
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -336122,6 +336251,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
               "x-flatbuffer-type": "PCFEmpiricalTerms"
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -373029,6 +373174,7 @@ Decoding applies the inverses from the last back.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -373160,6 +373306,10 @@ Decoding applies the inverses from the last back.`,
             RINEX_NAV: {
               value: 31,
               description: "RINEX navigation file."
+            },
+            PCK_DAF: {
+              value: 32,
+              description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -373619,6 +373769,10 @@ Decoding applies the inverses from the last back.`,
                 RINEX_NAV: {
                   value: 31,
                   description: "RINEX navigation file."
+                },
+                PCK_DAF: {
+                  value: 32,
+                  description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
                 },
                 PROVIDER_DEFINED: {
                   value: 255,
@@ -423132,6 +423286,7 @@ verbatim what that source states about itself.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -423263,6 +423418,10 @@ verbatim what that source states about itself.`,
             RINEX_NAV: {
               value: 31,
               description: "RINEX navigation file."
+            },
+            PCK_DAF: {
+              value: 32,
+              description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -424245,7 +424404,8 @@ verbatim what that source states about itself.`,
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -424263,6 +424423,10 @@ verbatim what that source states about itself.`,
             GRGM660PRIM: {
               value: 7,
               description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            MRO120F: {
+              value: 8,
+              description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           }
         },
@@ -424275,7 +424439,8 @@ verbatim what that source states about itself.`,
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -424293,6 +424458,10 @@ verbatim what that source states about itself.`,
             JB2008: {
               value: 6,
               description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            MARS_EXPONENTIAL: {
+              value: 7,
+              description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           }
         },
@@ -434274,6 +434443,10 @@ verbatim what that source states about itself.`,
                   value: 31,
                   description: "RINEX navigation file."
                 },
+                PCK_DAF: {
+                  value: 32,
+                  description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -438202,6 +438375,10 @@ verbatim what that source states about itself.`,
                 GRGM660PRIM: {
                   value: 7,
                   description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+                },
+                MRO120F: {
+                  value: 8,
+                  description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
                 }
               },
               "x-flatbuffer-default": "INFER_FLAGS"
@@ -438338,6 +438515,10 @@ verbatim what that source states about itself.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -438649,6 +438830,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
               "x-flatbuffer-type": "PCFEmpiricalTerms"
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -440330,6 +440527,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -440436,6 +440637,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -572955,6 +573160,7 @@ format class are named by $NCD's container format.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -573086,6 +573292,10 @@ format class are named by $NCD's container format.`,
             RINEX_NAV: {
               value: 31,
               description: "RINEX navigation file."
+            },
+            PCK_DAF: {
+              value: 32,
+              description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -573983,7 +574193,8 @@ format class are named by $NCD's container format.`,
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -574001,6 +574212,10 @@ format class are named by $NCD's container format.`,
             GRGM660PRIM: {
               value: 7,
               description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            MRO120F: {
+              value: 8,
+              description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           }
         },
@@ -574013,7 +574228,8 @@ format class are named by $NCD's container format.`,
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -574031,6 +574247,10 @@ format class are named by $NCD's container format.`,
             JB2008: {
               value: 6,
               description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            MARS_EXPONENTIAL: {
+              value: 7,
+              description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           }
         },
@@ -621107,6 +621327,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                   value: 31,
                   description: "RINEX navigation file."
                 },
+                PCK_DAF: {
+                  value: 32,
+                  description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -624813,6 +625037,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 GRGM660PRIM: {
                   value: 7,
                   description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+                },
+                MRO120F: {
+                  value: 8,
+                  description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
                 }
               },
               "x-flatbuffer-default": "INFER_FLAGS"
@@ -624949,6 +625177,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -625260,6 +625492,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
               "x-flatbuffer-type": "PCFEmpiricalTerms"
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -626941,6 +627189,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -627047,6 +627299,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -760321,6 +760577,7 @@ balance service's own rate.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -760452,6 +760709,10 @@ balance service's own rate.`,
             RINEX_NAV: {
               value: 31,
               description: "RINEX navigation file."
+            },
+            PCK_DAF: {
+              value: 32,
+              description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -761434,7 +761695,8 @@ balance service's own rate.`,
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -761452,6 +761714,10 @@ balance service's own rate.`,
             GRGM660PRIM: {
               value: 7,
               description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            MRO120F: {
+              value: 8,
+              description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           }
         },
@@ -761464,7 +761730,8 @@ balance service's own rate.`,
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -761482,6 +761749,10 @@ balance service's own rate.`,
             JB2008: {
               value: 6,
               description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            MARS_EXPONENTIAL: {
+              value: 7,
+              description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           }
         },
@@ -771133,6 +771404,10 @@ balance service's own rate.`,
                   value: 31,
                   description: "RINEX navigation file."
                 },
+                PCK_DAF: {
+                  value: 32,
+                  description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -775061,6 +775336,10 @@ balance service's own rate.`,
                 GRGM660PRIM: {
                   value: 7,
                   description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+                },
+                MRO120F: {
+                  value: 8,
+                  description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
                 }
               },
               "x-flatbuffer-default": "INFER_FLAGS"
@@ -775197,6 +775476,10 @@ balance service's own rate.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -775508,6 +775791,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
               "x-flatbuffer-type": "PCFEmpiricalTerms"
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -777189,6 +777488,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -777295,6 +777598,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -849720,6 +850027,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -849851,6 +850159,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             RINEX_NAV: {
               value: 31,
               description: "RINEX navigation file."
+            },
+            PCK_DAF: {
+              value: 32,
+              description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -850833,7 +851145,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -850851,6 +851164,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             GRGM660PRIM: {
               value: 7,
               description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            MRO120F: {
+              value: 8,
+              description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           }
         },
@@ -850863,7 +851180,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -850881,6 +851199,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             JB2008: {
               value: 6,
               description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            MARS_EXPONENTIAL: {
+              value: 7,
+              description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           }
         },
@@ -861296,6 +861618,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                   value: 31,
                   description: "RINEX navigation file."
                 },
+                PCK_DAF: {
+                  value: 32,
+                  description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -865224,6 +865550,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 GRGM660PRIM: {
                   value: 7,
                   description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+                },
+                MRO120F: {
+                  value: 8,
+                  description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
                 }
               },
               "x-flatbuffer-default": "INFER_FLAGS"
@@ -865360,6 +865690,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -865671,6 +866005,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
               "x-flatbuffer-type": "PCFEmpiricalTerms"
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -867352,6 +867702,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -867458,6 +867812,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"
@@ -941687,6 +942045,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "NAIF_SCLK_KERNEL",
             "RINEX_OBS",
             "RINEX_NAV",
+            "PCK_DAF",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -941818,6 +942177,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             RINEX_NAV: {
               value: 31,
               description: "RINEX navigation file."
+            },
+            PCK_DAF: {
+              value: 32,
+              description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -942800,7 +943163,8 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "SPHERICAL_HARMONICS",
             "EGM2008",
             "EGM96",
-            "GRGM660PRIM"
+            "GRGM660PRIM",
+            "MRO120F"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -942818,6 +943182,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             GRGM660PRIM: {
               value: 7,
               description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            MRO120F: {
+              value: 8,
+              description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           }
         },
@@ -942830,7 +943198,8 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "USSA1976",
             "HARRIS_PRIESTER",
             "JACCHIA_ROBERTS",
-            "JB2008"
+            "JB2008",
+            "MARS_EXPONENTIAL"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
@@ -942848,6 +943217,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             JB2008: {
               value: 6,
               description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            MARS_EXPONENTIAL: {
+              value: 7,
+              description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           }
         },
@@ -953771,6 +954144,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                   value: 31,
                   description: "RINEX navigation file."
                 },
+                PCK_DAF: {
+                  value: 32,
+                  description: "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -957699,6 +958076,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 GRGM660PRIM: {
                   value: 7,
                   description: "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+                },
+                MRO120F: {
+                  value: 8,
+                  description: "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
                 }
               },
               "x-flatbuffer-default": "INFER_FLAGS"
@@ -957835,6 +958216,10 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -958146,6 +958531,22 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               $ref: "#/definitions/PCFEmpiricalTerms",
               description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
               "x-flatbuffer-type": "PCFEmpiricalTerms"
+            },
+            THIRD_BODY_MAXIMUM_DEGREE: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
+            },
+            THIRD_BODY_MAXIMUM_ORDER: {
+              type: "integer",
+              minimum: 0,
+              maximum: 65535,
+              description: "Highest order of that field; dimensionless. Default 0.",
+              "x-flatbuffer-type": "ushort",
+              "x-flatbuffer-default": "0"
             }
           },
           required: [
@@ -959827,6 +960228,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "NRLMSISE00"
@@ -959933,6 +960338,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 JB2008: {
                   value: 6,
                   description: "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+                },
+                MARS_EXPONENTIAL: {
+                  value: 7,
+                  description: "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
                 }
               },
               "x-flatbuffer-default": "UNSPECIFIED"

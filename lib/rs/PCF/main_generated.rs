@@ -1701,11 +1701,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for pcfIntegratorAlgorithm {}
 pub const ENUM_MIN_PCF_GRAVITY_SELECTION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_GRAVITY_SELECTION: u8 = 7;
+pub const ENUM_MAX_PCF_GRAVITY_SELECTION: u8 = 8;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_GRAVITY_SELECTION: [pcfGravitySelection; 8] = [
+pub const ENUM_VALUES_PCF_GRAVITY_SELECTION: [pcfGravitySelection; 9] = [
     pcfGravitySelection::INFER_FLAGS,
     pcfGravitySelection::POINT_MASS,
     pcfGravitySelection::J2_ONLY,
@@ -1714,6 +1714,7 @@ pub const ENUM_VALUES_PCF_GRAVITY_SELECTION: [pcfGravitySelection; 8] = [
     pcfGravitySelection::EGM2008,
     pcfGravitySelection::EGM96,
     pcfGravitySelection::GRGM660PRIM,
+    pcfGravitySelection::MRO120F,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -1733,9 +1734,13 @@ impl pcfGravitySelection {
     /// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
     /// Moon's field, in the Moon's principal-axis frame.
     pub const GRGM660PRIM: Self = Self(7);
+    /// MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+    /// doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+    /// its PDS label.
+    pub const MRO120F: Self = Self(8);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 7;
+    pub const ENUM_MAX: u8 = 8;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::INFER_FLAGS,
         Self::POINT_MASS,
@@ -1745,6 +1750,7 @@ impl pcfGravitySelection {
         Self::EGM2008,
         Self::EGM96,
         Self::GRGM660PRIM,
+        Self::MRO120F,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1758,6 +1764,7 @@ impl pcfGravitySelection {
             Self::EGM2008 => Some("EGM2008"),
             Self::EGM96 => Some("EGM96"),
             Self::GRGM660PRIM => Some("GRGM660PRIM"),
+            Self::MRO120F => Some("MRO120F"),
             _ => None,
         }
     }
@@ -1823,11 +1830,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for pcfGravitySelection {}
 pub const ENUM_MIN_PCF_ATMOSPHERE_FAMILY: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_ATMOSPHERE_FAMILY: u8 = 6;
+pub const ENUM_MAX_PCF_ATMOSPHERE_FAMILY: u8 = 7;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_ATMOSPHERE_FAMILY: [pcfAtmosphereFamily; 7] = [
+pub const ENUM_VALUES_PCF_ATMOSPHERE_FAMILY: [pcfAtmosphereFamily; 8] = [
     pcfAtmosphereFamily::UNSPECIFIED,
     pcfAtmosphereFamily::NRLMSISE00,
     pcfAtmosphereFamily::EXPONENTIAL,
@@ -1835,6 +1842,7 @@ pub const ENUM_VALUES_PCF_ATMOSPHERE_FAMILY: [pcfAtmosphereFamily; 7] = [
     pcfAtmosphereFamily::HARRIS_PRIESTER,
     pcfAtmosphereFamily::JACCHIA_ROBERTS,
     pcfAtmosphereFamily::JB2008,
+    pcfAtmosphereFamily::MARS_EXPONENTIAL,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -1859,9 +1867,14 @@ impl pcfAtmosphereFamily {
     /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
     /// Dst-derived temperature change from the request's JB2008 indices.
     pub const JB2008: Self = Self(6);
+    /// Banded exponential atmosphere of Mars: the density falls as
+    /// exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+    /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+    /// with Mars.
+    pub const MARS_EXPONENTIAL: Self = Self(7);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 6;
+    pub const ENUM_MAX: u8 = 7;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::NRLMSISE00,
@@ -1870,6 +1883,7 @@ impl pcfAtmosphereFamily {
         Self::HARRIS_PRIESTER,
         Self::JACCHIA_ROBERTS,
         Self::JB2008,
+        Self::MARS_EXPONENTIAL,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -1882,6 +1896,7 @@ impl pcfAtmosphereFamily {
             Self::HARRIS_PRIESTER => Some("HARRIS_PRIESTER"),
             Self::JACCHIA_ROBERTS => Some("JACCHIA_ROBERTS"),
             Self::JB2008 => Some("JB2008"),
+            Self::MARS_EXPONENTIAL => Some("MARS_EXPONENTIAL"),
             _ => None,
         }
     }
@@ -7155,6 +7170,8 @@ impl<'a> PCFForceModel<'a> {
     pub const VT_HAS_DENSITY_CORRECTION_RELAXATION_HOURS: ::flatbuffers::VOffsetT = 98;
     pub const VT_NEUTRAL_WIND: ::flatbuffers::VOffsetT = 100;
     pub const VT_EMPIRICAL_TERMS: ::flatbuffers::VOffsetT = 102;
+    pub const VT_THIRD_BODY_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 104;
+    pub const VT_THIRD_BODY_MAXIMUM_ORDER: ::flatbuffers::VOffsetT = 106;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -7183,6 +7200,8 @@ impl<'a> PCFForceModel<'a> {
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.WEATHER { builder.add_WEATHER(x); }
         if let Some(x) = args.THIRD_BODY_IDS { builder.add_THIRD_BODY_IDS(x); }
+        builder.add_THIRD_BODY_MAXIMUM_ORDER(args.THIRD_BODY_MAXIMUM_ORDER);
+        builder.add_THIRD_BODY_MAXIMUM_DEGREE(args.THIRD_BODY_MAXIMUM_DEGREE);
         builder.add_OCEAN_TIDE_MAXIMUM_ORDER(args.OCEAN_TIDE_MAXIMUM_ORDER);
         builder.add_OCEAN_TIDE_MAXIMUM_DEGREE(args.OCEAN_TIDE_MAXIMUM_DEGREE);
         builder.add_MAXIMUM_TESSERAL_DEGREE(args.MAXIMUM_TESSERAL_DEGREE);
@@ -7282,6 +7301,8 @@ impl<'a> PCFForceModel<'a> {
         let EMPIRICAL_TERMS = self.EMPIRICAL_TERMS().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let THIRD_BODY_MAXIMUM_DEGREE = self.THIRD_BODY_MAXIMUM_DEGREE();
+        let THIRD_BODY_MAXIMUM_ORDER = self.THIRD_BODY_MAXIMUM_ORDER();
         PCFForceModelT {
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -7333,6 +7354,8 @@ impl<'a> PCFForceModel<'a> {
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
             NEUTRAL_WIND,
             EMPIRICAL_TERMS,
+            THIRD_BODY_MAXIMUM_DEGREE,
+            THIRD_BODY_MAXIMUM_ORDER,
         }
     }
 
@@ -7818,6 +7841,27 @@ impl<'a> PCFForceModel<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFEmpiricalTerms>>(PCFForceModel::VT_EMPIRICAL_TERMS, None)}
     }
+
+    /// Highest degree of the harmonic field of the third body that has one (the
+    /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+    /// The field's acceleration at the frame origin is subtracted. Default 0:
+    /// third bodies are point masses only.
+    #[inline]
+    pub fn THIRD_BODY_MAXIMUM_DEGREE(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PCFForceModel::VT_THIRD_BODY_MAXIMUM_DEGREE, Some(0)).unwrap()}
+    }
+
+    /// Highest order of that field; dimensionless. Default 0.
+    #[inline]
+    pub fn THIRD_BODY_MAXIMUM_ORDER(&self) -> u16 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u16>(PCFForceModel::VT_THIRD_BODY_MAXIMUM_ORDER, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCFForceModel<'_> {
@@ -7876,6 +7920,8 @@ impl ::flatbuffers::Verifiable for PCFForceModel<'_> {
             .visit_field::<bool>("HAS_DENSITY_CORRECTION_RELAXATION_HOURS", Self::VT_HAS_DENSITY_CORRECTION_RELAXATION_HOURS, false)?
             .visit_field::<pcfNeutralWind>("NEUTRAL_WIND", Self::VT_NEUTRAL_WIND, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFEmpiricalTerms>>("EMPIRICAL_TERMS", Self::VT_EMPIRICAL_TERMS, false)?
+            .visit_field::<u16>("THIRD_BODY_MAXIMUM_DEGREE", Self::VT_THIRD_BODY_MAXIMUM_DEGREE, false)?
+            .visit_field::<u16>("THIRD_BODY_MAXIMUM_ORDER", Self::VT_THIRD_BODY_MAXIMUM_ORDER, false)?
             .finish();
         Ok(())
     }
@@ -7932,6 +7978,8 @@ pub struct PCFForceModelArgs<'a> {
     pub HAS_DENSITY_CORRECTION_RELAXATION_HOURS: bool,
     pub NEUTRAL_WIND: pcfNeutralWind,
     pub EMPIRICAL_TERMS: Option<::flatbuffers::WIPOffset<PCFEmpiricalTerms<'a>>>,
+    pub THIRD_BODY_MAXIMUM_DEGREE: u16,
+    pub THIRD_BODY_MAXIMUM_ORDER: u16,
 }
 
 impl<'a> Default for PCFForceModelArgs<'a> {
@@ -7988,6 +8036,8 @@ impl<'a> Default for PCFForceModelArgs<'a> {
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS: false,
             NEUTRAL_WIND: pcfNeutralWind::NONE,
             EMPIRICAL_TERMS: None,
+            THIRD_BODY_MAXIMUM_DEGREE: 0,
+            THIRD_BODY_MAXIMUM_ORDER: 0,
         }
     }
 }
@@ -8249,6 +8299,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFForceModelBuilder<'a, 'b, 
     }
 
     #[inline]
+    pub fn add_THIRD_BODY_MAXIMUM_DEGREE(&mut self, THIRD_BODY_MAXIMUM_DEGREE: u16) {
+        self.fbb_.push_slot::<u16>(PCFForceModel::VT_THIRD_BODY_MAXIMUM_DEGREE, THIRD_BODY_MAXIMUM_DEGREE, 0);
+    }
+
+    #[inline]
+    pub fn add_THIRD_BODY_MAXIMUM_ORDER(&mut self, THIRD_BODY_MAXIMUM_ORDER: u16) {
+        self.fbb_.push_slot::<u16>(PCFForceModel::VT_THIRD_BODY_MAXIMUM_ORDER, THIRD_BODY_MAXIMUM_ORDER, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFForceModelBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFForceModelBuilder {
@@ -8318,6 +8378,8 @@ impl ::core::fmt::Debug for PCFForceModel<'_> {
         ds.field("HAS_DENSITY_CORRECTION_RELAXATION_HOURS", &self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS());
         ds.field("NEUTRAL_WIND", &self.NEUTRAL_WIND());
         ds.field("EMPIRICAL_TERMS", &self.EMPIRICAL_TERMS());
+        ds.field("THIRD_BODY_MAXIMUM_DEGREE", &self.THIRD_BODY_MAXIMUM_DEGREE());
+        ds.field("THIRD_BODY_MAXIMUM_ORDER", &self.THIRD_BODY_MAXIMUM_ORDER());
         ds.finish()
     }
 }
@@ -8375,6 +8437,8 @@ pub struct PCFForceModelT {
     pub HAS_DENSITY_CORRECTION_RELAXATION_HOURS: bool,
     pub NEUTRAL_WIND: pcfNeutralWind,
     pub EMPIRICAL_TERMS: Option<alloc::boxed::Box<PCFEmpiricalTermsT>>,
+    pub THIRD_BODY_MAXIMUM_DEGREE: u16,
+    pub THIRD_BODY_MAXIMUM_ORDER: u16,
 }
 
 impl Default for PCFForceModelT {
@@ -8430,6 +8494,8 @@ impl Default for PCFForceModelT {
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS: false,
             NEUTRAL_WIND: pcfNeutralWind::NONE,
             EMPIRICAL_TERMS: None,
+            THIRD_BODY_MAXIMUM_DEGREE: 0,
+            THIRD_BODY_MAXIMUM_ORDER: 0,
         }
     }
 }
@@ -8500,6 +8566,8 @@ impl PCFForceModelT {
         let EMPIRICAL_TERMS = self.EMPIRICAL_TERMS.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let THIRD_BODY_MAXIMUM_DEGREE = self.THIRD_BODY_MAXIMUM_DEGREE;
+        let THIRD_BODY_MAXIMUM_ORDER = self.THIRD_BODY_MAXIMUM_ORDER;
         PCFForceModel::create(_fbb, &PCFForceModelArgs{
             GRAVITY_CHOICE,
             ENABLE_POINT_MASS,
@@ -8551,6 +8619,8 @@ impl PCFForceModelT {
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
             NEUTRAL_WIND,
             EMPIRICAL_TERMS,
+            THIRD_BODY_MAXIMUM_DEGREE,
+            THIRD_BODY_MAXIMUM_ORDER,
         })
     }
 }

@@ -878,7 +878,8 @@
                         "SPHERICAL_HARMONICS",
                         "EGM2008",
                         "EGM96",
-                        "GRGM660PRIM"
+                        "GRGM660PRIM",
+                        "MRO120F"
                     ]
                 },
                 "pcfAtmosphereFamily": {
@@ -890,7 +891,8 @@
                         "USSA1976",
                         "HARRIS_PRIESTER",
                         "JACCHIA_ROBERTS",
-                        "JB2008"
+                        "JB2008",
+                        "MARS_EXPONENTIAL"
                     ]
                 },
                 "pcfSolidTideModel": {
@@ -3370,6 +3372,18 @@
                         "EMPIRICAL_TERMS": {
                             "$ref": "#/definitions/PCFEmpiricalTerms",
                             "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+                        },
+                        "THIRD_BODY_MAXIMUM_DEGREE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+                        },
+                        "THIRD_BODY_MAXIMUM_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest order of that field; dimensionless. Default 0."
                         }
                     },
                     "required": [
@@ -17432,6 +17446,7 @@
                         "NAIF_SCLK_KERNEL",
                         "RINEX_OBS",
                         "RINEX_NAV",
+                        "PCK_DAF",
                         "PROVIDER_DEFINED"
                     ]
                 },
@@ -38860,6 +38875,7 @@
                         "NAIF_SCLK_KERNEL",
                         "RINEX_OBS",
                         "RINEX_NAV",
+                        "PCK_DAF",
                         "PROVIDER_DEFINED"
                     ]
                 },
@@ -39157,7 +39173,8 @@
                         "SPHERICAL_HARMONICS",
                         "EGM2008",
                         "EGM96",
-                        "GRGM660PRIM"
+                        "GRGM660PRIM",
+                        "MRO120F"
                     ]
                 },
                 "pcfAtmosphereFamily": {
@@ -39169,7 +39186,8 @@
                         "USSA1976",
                         "HARRIS_PRIESTER",
                         "JACCHIA_ROBERTS",
-                        "JB2008"
+                        "JB2008",
+                        "MARS_EXPONENTIAL"
                     ]
                 },
                 "pcfSolidTideModel": {
@@ -43276,6 +43294,18 @@
                         "EMPIRICAL_TERMS": {
                             "$ref": "#/definitions/PCFEmpiricalTerms",
                             "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+                        },
+                        "THIRD_BODY_MAXIMUM_DEGREE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+                        },
+                        "THIRD_BODY_MAXIMUM_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest order of that field; dimensionless. Default 0."
                         }
                     },
                     "required": [
@@ -100746,6 +100776,7 @@
                         "NAIF_SCLK_KERNEL",
                         "RINEX_OBS",
                         "RINEX_NAV",
+                        "PCK_DAF",
                         "PROVIDER_DEFINED"
                     ]
                 },
@@ -101015,7 +101046,8 @@
                         "SPHERICAL_HARMONICS",
                         "EGM2008",
                         "EGM96",
-                        "GRGM660PRIM"
+                        "GRGM660PRIM",
+                        "MRO120F"
                     ]
                 },
                 "pcfAtmosphereFamily": {
@@ -101027,7 +101059,8 @@
                         "USSA1976",
                         "HARRIS_PRIESTER",
                         "JACCHIA_ROBERTS",
-                        "JB2008"
+                        "JB2008",
+                        "MARS_EXPONENTIAL"
                     ]
                 },
                 "pcfSolidTideModel": {
@@ -122302,6 +122335,18 @@
                         "EMPIRICAL_TERMS": {
                             "$ref": "#/definitions/PCFEmpiricalTerms",
                             "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+                        },
+                        "THIRD_BODY_MAXIMUM_DEGREE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+                        },
+                        "THIRD_BODY_MAXIMUM_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest order of that field; dimensionless. Default 0."
                         }
                     },
                     "required": [
@@ -200609,6 +200654,7 @@
                         "NAIF_SCLK_KERNEL",
                         "RINEX_OBS",
                         "RINEX_NAV",
+                        "PCK_DAF",
                         "PROVIDER_DEFINED"
                     ]
                 },
@@ -200906,7 +200952,8 @@
                         "SPHERICAL_HARMONICS",
                         "EGM2008",
                         "EGM96",
-                        "GRGM660PRIM"
+                        "GRGM660PRIM",
+                        "MRO120F"
                     ]
                 },
                 "pcfAtmosphereFamily": {
@@ -200918,7 +200965,8 @@
                         "USSA1976",
                         "HARRIS_PRIESTER",
                         "JACCHIA_ROBERTS",
-                        "JB2008"
+                        "JB2008",
+                        "MARS_EXPONENTIAL"
                     ]
                 },
                 "pcfSolidTideModel": {
@@ -204937,6 +204985,18 @@
                         "EMPIRICAL_TERMS": {
                             "$ref": "#/definitions/PCFEmpiricalTerms",
                             "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+                        },
+                        "THIRD_BODY_MAXIMUM_DEGREE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+                        },
+                        "THIRD_BODY_MAXIMUM_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest order of that field; dimensionless. Default 0."
                         }
                     },
                     "required": [
@@ -236188,6 +236248,7 @@
                         "NAIF_SCLK_KERNEL",
                         "RINEX_OBS",
                         "RINEX_NAV",
+                        "PCK_DAF",
                         "PROVIDER_DEFINED"
                     ]
                 },
@@ -236485,7 +236546,8 @@
                         "SPHERICAL_HARMONICS",
                         "EGM2008",
                         "EGM96",
-                        "GRGM660PRIM"
+                        "GRGM660PRIM",
+                        "MRO120F"
                     ]
                 },
                 "pcfAtmosphereFamily": {
@@ -236497,7 +236559,8 @@
                         "USSA1976",
                         "HARRIS_PRIESTER",
                         "JACCHIA_ROBERTS",
-                        "JB2008"
+                        "JB2008",
+                        "MARS_EXPONENTIAL"
                     ]
                 },
                 "pcfSolidTideModel": {
@@ -240776,6 +240839,18 @@
                         "EMPIRICAL_TERMS": {
                             "$ref": "#/definitions/PCFEmpiricalTerms",
                             "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+                        },
+                        "THIRD_BODY_MAXIMUM_DEGREE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+                        },
+                        "THIRD_BODY_MAXIMUM_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest order of that field; dimensionless. Default 0."
                         }
                     },
                     "required": [
@@ -279860,6 +279935,7 @@
                         "NAIF_SCLK_KERNEL",
                         "RINEX_OBS",
                         "RINEX_NAV",
+                        "PCK_DAF",
                         "PROVIDER_DEFINED"
                     ]
                 },
@@ -280157,7 +280233,8 @@
                         "SPHERICAL_HARMONICS",
                         "EGM2008",
                         "EGM96",
-                        "GRGM660PRIM"
+                        "GRGM660PRIM",
+                        "MRO120F"
                     ]
                 },
                 "pcfAtmosphereFamily": {
@@ -280169,7 +280246,8 @@
                         "USSA1976",
                         "HARRIS_PRIESTER",
                         "JACCHIA_ROBERTS",
-                        "JB2008"
+                        "JB2008",
+                        "MARS_EXPONENTIAL"
                     ]
                 },
                 "pcfSolidTideModel": {
@@ -284938,6 +285016,18 @@
                         "EMPIRICAL_TERMS": {
                             "$ref": "#/definitions/PCFEmpiricalTerms",
                             "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+                        },
+                        "THIRD_BODY_MAXIMUM_DEGREE": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+                        },
+                        "THIRD_BODY_MAXIMUM_ORDER": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535,
+                            "description": "Highest order of that field; dimensionless. Default 0."
                         }
                     },
                     "required": [

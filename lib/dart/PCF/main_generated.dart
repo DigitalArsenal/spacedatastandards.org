@@ -629,7 +629,8 @@ enum pcfGravitySelection {
   SPHERICAL_HARMONICS(4),
   EGM2008(5),
   EGM96(6),
-  GRGM660PRIM(7);
+  GRGM660PRIM(7),
+  MRO120F(8);
 
   final int value;
   const pcfGravitySelection(this.value);
@@ -644,6 +645,7 @@ enum pcfGravitySelection {
       case 5: return pcfGravitySelection.EGM2008;
       case 6: return pcfGravitySelection.EGM96;
       case 7: return pcfGravitySelection.GRGM660PRIM;
+      case 8: return pcfGravitySelection.MRO120F;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -652,7 +654,7 @@ enum pcfGravitySelection {
       value == null ? null : pcfGravitySelection.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 7;
+  static const int maxValue = 8;
   static const fb.Reader<pcfGravitySelection> reader = _pcfGravitySelectionReader();
 }
 
@@ -674,7 +676,8 @@ enum pcfAtmosphereFamily {
   USSA1976(3),
   HARRIS_PRIESTER(4),
   JACCHIA_ROBERTS(5),
-  JB2008(6);
+  JB2008(6),
+  MARS_EXPONENTIAL(7);
 
   final int value;
   const pcfAtmosphereFamily(this.value);
@@ -688,6 +691,7 @@ enum pcfAtmosphereFamily {
       case 4: return pcfAtmosphereFamily.HARRIS_PRIESTER;
       case 5: return pcfAtmosphereFamily.JACCHIA_ROBERTS;
       case 6: return pcfAtmosphereFamily.JB2008;
+      case 7: return pcfAtmosphereFamily.MARS_EXPONENTIAL;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -696,7 +700,7 @@ enum pcfAtmosphereFamily {
       value == null ? null : pcfAtmosphereFamily.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
+  static const int maxValue = 7;
   static const fb.Reader<pcfAtmosphereFamily> reader = _pcfAtmosphereFamilyReader();
 }
 
@@ -3394,10 +3398,19 @@ class PCFForceModel {
   ///  default): the theory's own.
   PCFEmpiricalTerms? get EMPIRICAL_TERMS => PCFEmpiricalTerms.reader.vTableGetNullable(_bc, _bcOffset, 102);
   PCFEmpiricalTerms? get empiricalTerms => EMPIRICAL_TERMS;
+  ///  Highest degree of the harmonic field of the third body that has one (the
+  ///  Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+  ///  The field's acceleration at the frame origin is subtracted. Default 0:
+  ///  third bodies are point masses only.
+  int get THIRD_BODY_MAXIMUM_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 104, 0);
+  int get thirdBodyMaximumDegree => THIRD_BODY_MAXIMUM_DEGREE;
+  ///  Highest order of that field; dimensionless. Default 0.
+  int get THIRD_BODY_MAXIMUM_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 106, 0);
+  int get thirdBodyMaximumOrder => THIRD_BODY_MAXIMUM_ORDER;
 
   @override
   String toString() {
-    return 'PCFForceModel{gravityChoice: ${gravityChoice}, enablePointMass: ${enablePointMass}, gravitationalParameter: ${gravitationalParameter}, enableJ2: ${enableJ2}, enableJ3: ${enableJ3}, enableJ4: ${enableJ4}, enableHigherZonals: ${enableHigherZonals}, maximumDegree: ${maximumDegree}, hasMaximumDegree: ${hasMaximumDegree}, maximumOrder: ${maximumOrder}, hasMaximumOrder: ${hasMaximumOrder}, enableThirdBody: ${enableThirdBody}, thirdBodyIds: ${thirdBodyIds}, enableSrp: ${enableSrp}, enableDrag: ${enableDrag}, initialMassKg: ${initialMassKg}, areaM2: ${areaM2}, reflectivityCoefficient: ${reflectivityCoefficient}, dragCoefficient: ${dragCoefficient}, atmosphereModel: ${atmosphereModel}, WEATHER: ${WEATHER}, ephemerisSource: ${ephemerisSource}, solidTides: ${solidTides}, RELATIVITY: ${RELATIVITY}, inTrackAccelerationMS2: ${inTrackAccelerationMS2}, hasInTrackAccelerationMS2: ${hasInTrackAccelerationMS2}, dragAreaOverMassRateM2KgS: ${dragAreaOverMassRateM2KgS}, hasDragAreaOverMassRateM2KgS: ${hasDragAreaOverMassRateM2KgS}, maximumTesseralDegree: ${maximumTesseralDegree}, hasMaximumTesseralDegree: ${hasMaximumTesseralDegree}, radiationPressureModel: ${radiationPressureModel}, gnssBlock: ${gnssBlock}, ECOM2: ${ECOM2}, earthRadiation: ${earthRadiation}, earthRadiationResolutionDeg: ${earthRadiationResolutionDeg}, earthRadiationAreaOverMassM2Kg: ${earthRadiationAreaOverMassM2Kg}, hasEarthRadiationAreaOverMassM2Kg: ${hasEarthRadiationAreaOverMassM2Kg}, oceanTides: ${oceanTides}, oceanTideMaximumDegree: ${oceanTideMaximumDegree}, oceanTideMaximumOrder: ${oceanTideMaximumOrder}, centralBodyNaifId: ${centralBodyNaifId}, ephemerisKind: ${ephemerisKind}, shadowModel: ${shadowModel}, weatherSource: ${weatherSource}, weatherExtension: ${weatherExtension}, densityCorrection: ${densityCorrection}, densityCorrectionRelaxationHours: ${densityCorrectionRelaxationHours}, hasDensityCorrectionRelaxationHours: ${hasDensityCorrectionRelaxationHours}, neutralWind: ${neutralWind}, empiricalTerms: ${empiricalTerms}}';
+    return 'PCFForceModel{gravityChoice: ${gravityChoice}, enablePointMass: ${enablePointMass}, gravitationalParameter: ${gravitationalParameter}, enableJ2: ${enableJ2}, enableJ3: ${enableJ3}, enableJ4: ${enableJ4}, enableHigherZonals: ${enableHigherZonals}, maximumDegree: ${maximumDegree}, hasMaximumDegree: ${hasMaximumDegree}, maximumOrder: ${maximumOrder}, hasMaximumOrder: ${hasMaximumOrder}, enableThirdBody: ${enableThirdBody}, thirdBodyIds: ${thirdBodyIds}, enableSrp: ${enableSrp}, enableDrag: ${enableDrag}, initialMassKg: ${initialMassKg}, areaM2: ${areaM2}, reflectivityCoefficient: ${reflectivityCoefficient}, dragCoefficient: ${dragCoefficient}, atmosphereModel: ${atmosphereModel}, WEATHER: ${WEATHER}, ephemerisSource: ${ephemerisSource}, solidTides: ${solidTides}, RELATIVITY: ${RELATIVITY}, inTrackAccelerationMS2: ${inTrackAccelerationMS2}, hasInTrackAccelerationMS2: ${hasInTrackAccelerationMS2}, dragAreaOverMassRateM2KgS: ${dragAreaOverMassRateM2KgS}, hasDragAreaOverMassRateM2KgS: ${hasDragAreaOverMassRateM2KgS}, maximumTesseralDegree: ${maximumTesseralDegree}, hasMaximumTesseralDegree: ${hasMaximumTesseralDegree}, radiationPressureModel: ${radiationPressureModel}, gnssBlock: ${gnssBlock}, ECOM2: ${ECOM2}, earthRadiation: ${earthRadiation}, earthRadiationResolutionDeg: ${earthRadiationResolutionDeg}, earthRadiationAreaOverMassM2Kg: ${earthRadiationAreaOverMassM2Kg}, hasEarthRadiationAreaOverMassM2Kg: ${hasEarthRadiationAreaOverMassM2Kg}, oceanTides: ${oceanTides}, oceanTideMaximumDegree: ${oceanTideMaximumDegree}, oceanTideMaximumOrder: ${oceanTideMaximumOrder}, centralBodyNaifId: ${centralBodyNaifId}, ephemerisKind: ${ephemerisKind}, shadowModel: ${shadowModel}, weatherSource: ${weatherSource}, weatherExtension: ${weatherExtension}, densityCorrection: ${densityCorrection}, densityCorrectionRelaxationHours: ${densityCorrectionRelaxationHours}, hasDensityCorrectionRelaxationHours: ${hasDensityCorrectionRelaxationHours}, neutralWind: ${neutralWind}, empiricalTerms: ${empiricalTerms}, thirdBodyMaximumDegree: ${thirdBodyMaximumDegree}, thirdBodyMaximumOrder: ${thirdBodyMaximumOrder}}';
   }
 }
 
@@ -3415,7 +3428,7 @@ class PCFForceModelBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(50);
+    fbBuilder.startTable(52);
   }
 
   int addGravityChoice(pcfGravitySelection? GRAVITY_CHOICE) {
@@ -3618,6 +3631,14 @@ class PCFForceModelBuilder {
     fbBuilder.addOffset(49, offset);
     return fbBuilder.offset;
   }
+  int addThirdBodyMaximumDegree(int? THIRD_BODY_MAXIMUM_DEGREE) {
+    fbBuilder.addUint16(50, THIRD_BODY_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addThirdBodyMaximumOrder(int? THIRD_BODY_MAXIMUM_ORDER) {
+    fbBuilder.addUint16(51, THIRD_BODY_MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3675,6 +3696,8 @@ class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
   final bool? _HAS_DENSITY_CORRECTION_RELAXATION_HOURS;
   final pcfNeutralWind? _NEUTRAL_WIND;
   final PCFEmpiricalTermsObjectBuilder? _EMPIRICAL_TERMS;
+  final int? _THIRD_BODY_MAXIMUM_DEGREE;
+  final int? _THIRD_BODY_MAXIMUM_ORDER;
 
   PCFForceModelObjectBuilder({
     pcfGravitySelection? GRAVITY_CHOICE,
@@ -3774,6 +3797,10 @@ class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
     pcfNeutralWind? neutralWind,
     PCFEmpiricalTermsObjectBuilder? EMPIRICAL_TERMS,
     PCFEmpiricalTermsObjectBuilder? empiricalTerms,
+    int? THIRD_BODY_MAXIMUM_DEGREE,
+    int? thirdBodyMaximumDegree,
+    int? THIRD_BODY_MAXIMUM_ORDER,
+    int? thirdBodyMaximumOrder,
   })
       : _GRAVITY_CHOICE = gravityChoice ?? GRAVITY_CHOICE,
         _ENABLE_POINT_MASS = enablePointMass ?? ENABLE_POINT_MASS,
@@ -3824,7 +3851,9 @@ class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
         _DENSITY_CORRECTION_RELAXATION_HOURS = densityCorrectionRelaxationHours ?? DENSITY_CORRECTION_RELAXATION_HOURS,
         _HAS_DENSITY_CORRECTION_RELAXATION_HOURS = hasDensityCorrectionRelaxationHours ?? HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
         _NEUTRAL_WIND = neutralWind ?? NEUTRAL_WIND,
-        _EMPIRICAL_TERMS = empiricalTerms ?? EMPIRICAL_TERMS;
+        _EMPIRICAL_TERMS = empiricalTerms ?? EMPIRICAL_TERMS,
+        _THIRD_BODY_MAXIMUM_DEGREE = thirdBodyMaximumDegree ?? THIRD_BODY_MAXIMUM_DEGREE,
+        _THIRD_BODY_MAXIMUM_ORDER = thirdBodyMaximumOrder ?? THIRD_BODY_MAXIMUM_ORDER;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3836,7 +3865,7 @@ class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
     final int? ECOM2Offset = _ECOM2?.getOrCreateOffset(fbBuilder);
     final int? EMPIRICAL_TERMSOffset = _EMPIRICAL_TERMS?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(50);
+    fbBuilder.startTable(52);
     fbBuilder.addUint8(0, _GRAVITY_CHOICE?.value);
     fbBuilder.addBool(1, _ENABLE_POINT_MASS);
     fbBuilder.addFloat64(2, _GRAVITATIONAL_PARAMETER);
@@ -3887,6 +3916,8 @@ class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addBool(47, _HAS_DENSITY_CORRECTION_RELAXATION_HOURS);
     fbBuilder.addUint8(48, _NEUTRAL_WIND?.value);
     fbBuilder.addOffset(49, EMPIRICAL_TERMSOffset);
+    fbBuilder.addUint16(50, _THIRD_BODY_MAXIMUM_DEGREE);
+    fbBuilder.addUint16(51, _THIRD_BODY_MAXIMUM_ORDER);
     return fbBuilder.endTable();
   }
 

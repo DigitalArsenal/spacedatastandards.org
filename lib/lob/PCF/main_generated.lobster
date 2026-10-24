@@ -267,6 +267,10 @@ enum pcfGravitySelection:
     /// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
     /// Moon's field, in the Moon's principal-axis frame.
     pcfGravitySelection_GRGM660PRIM = 7
+    /// MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+    /// doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+    /// its PDS label.
+    pcfGravitySelection_MRO120F = 8
 
 enum pcfAtmosphereFamily:
     pcfAtmosphereFamily_UNSPECIFIED = 0
@@ -285,6 +289,11 @@ enum pcfAtmosphereFamily:
     /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
     /// Dst-derived temperature change from the request's JB2008 indices.
     pcfAtmosphereFamily_JB2008 = 6
+    /// Banded exponential atmosphere of Mars: the density falls as
+    /// exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+    /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+    /// with Mars.
+    pcfAtmosphereFamily_MARS_EXPONENTIAL = 7
 
 /// Solid Earth tide model for the central body's field. NONE leaves the
 /// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
@@ -1481,13 +1490,22 @@ class PCFForceModel : flatbuffers.handle
     def EMPIRICAL_TERMS() -> PCFEmpiricalTerms?:
         let o = flatbuffers.field_table(buf_, pos_, 102)
         return if o: PCFEmpiricalTerms { buf_, o } else: nil
+    /// Highest degree of the harmonic field of the third body that has one (the
+    /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+    /// The field's acceleration at the frame origin is subtracted. Default 0:
+    /// third bodies are point masses only.
+    def THIRD_BODY_MAXIMUM_DEGREE() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 104, 0)
+    /// Highest order of that field; dimensionless. Default 0.
+    def THIRD_BODY_MAXIMUM_ORDER() -> int:
+        return flatbuffers.field_uint16(buf_, pos_, 106, 0)
 
 def GetRootAsPCFForceModel(buf:string): return PCFForceModel { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFForceModelBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(50)
+        b_.StartObject(52)
         return this
     def add_GRAVITY_CHOICE(GRAVITY_CHOICE:pcfGravitySelection):
         b_.PrependUint8Slot(0, GRAVITY_CHOICE, 0)
@@ -1638,6 +1656,12 @@ struct PCFForceModelBuilder:
         return this
     def add_EMPIRICAL_TERMS(EMPIRICAL_TERMS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(49, EMPIRICAL_TERMS)
+        return this
+    def add_THIRD_BODY_MAXIMUM_DEGREE(THIRD_BODY_MAXIMUM_DEGREE:int):
+        b_.PrependUint16Slot(50, THIRD_BODY_MAXIMUM_DEGREE, 0)
+        return this
+    def add_THIRD_BODY_MAXIMUM_ORDER(THIRD_BODY_MAXIMUM_ORDER:int):
+        b_.PrependUint16Slot(51, THIRD_BODY_MAXIMUM_ORDER, 0)
         return this
     def end():
         return b_.EndObject()

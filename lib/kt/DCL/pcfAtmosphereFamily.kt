@@ -23,5 +23,12 @@ class pcfAtmosphereFamily private constructor() {
          * Dst-derived temperature change from the request's JB2008 indices.
          */
         const val JB2008: UByte = 6u
+        /**
+         * Banded exponential atmosphere of Mars: the density falls as
+         * exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+         * Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+         * with Mars.
+         */
+        const val MARS_EXPONENTIAL: UByte = 7u
     }
 }

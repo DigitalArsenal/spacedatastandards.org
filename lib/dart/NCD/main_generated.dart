@@ -45,6 +45,7 @@ enum ncdContainerFormat {
   NAIF_SCLK_KERNEL(29),
   RINEX_OBS(30),
   RINEX_NAV(31),
+  PCK_DAF(32),
   PROVIDER_DEFINED(255);
 
   final int value;
@@ -84,6 +85,7 @@ enum ncdContainerFormat {
       case 29: return ncdContainerFormat.NAIF_SCLK_KERNEL;
       case 30: return ncdContainerFormat.RINEX_OBS;
       case 31: return ncdContainerFormat.RINEX_NAV;
+      case 32: return ncdContainerFormat.PCK_DAF;
       case 255: return ncdContainerFormat.PROVIDER_DEFINED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }

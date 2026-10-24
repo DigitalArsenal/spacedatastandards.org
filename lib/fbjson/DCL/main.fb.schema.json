@@ -3991,6 +3991,7 @@
         "NAIF_SCLK_KERNEL",
         "RINEX_OBS",
         "RINEX_NAV",
+        "PCK_DAF",
         "PROVIDER_DEFINED"
       ],
       "x-flatbuffer-type": "enum",
@@ -4122,6 +4123,10 @@
         "RINEX_NAV": {
           "value": 31,
           "description": "RINEX navigation file."
+        },
+        "PCK_DAF": {
+          "value": 32,
+          "description": "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
         },
         "PROVIDER_DEFINED": {
           "value": 255,
@@ -5104,7 +5109,8 @@
         "SPHERICAL_HARMONICS",
         "EGM2008",
         "EGM96",
-        "GRGM660PRIM"
+        "GRGM660PRIM",
+        "MRO120F"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -5122,6 +5128,10 @@
         "GRGM660PRIM": {
           "value": 7,
           "description": "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+        },
+        "MRO120F": {
+          "value": 8,
+          "description": "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
         }
       }
     },
@@ -5134,7 +5144,8 @@
         "USSA1976",
         "HARRIS_PRIESTER",
         "JACCHIA_ROBERTS",
-        "JB2008"
+        "JB2008",
+        "MARS_EXPONENTIAL"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -5152,6 +5163,10 @@
         "JB2008": {
           "value": 6,
           "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+        },
+        "MARS_EXPONENTIAL": {
+          "value": 7,
+          "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
         }
       }
     },
@@ -15133,6 +15148,10 @@
               "value": 31,
               "description": "RINEX navigation file."
             },
+            "PCK_DAF": {
+              "value": 32,
+              "description": "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
+            },
             "PROVIDER_DEFINED": {
               "value": 255,
               "description": "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -19061,6 +19080,10 @@
             "GRGM660PRIM": {
               "value": 7,
               "description": "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            },
+            "MRO120F": {
+              "value": 8,
+              "description": "MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47, doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of its PDS label."
             }
           },
           "x-flatbuffer-default": "INFER_FLAGS"
@@ -19197,6 +19220,10 @@
             "JB2008": {
               "value": 6,
               "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            "MARS_EXPONENTIAL": {
+              "value": 7,
+              "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -19506,6 +19533,22 @@
           "$ref": "#/definitions/PCFEmpiricalTerms",
           "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
           "x-flatbuffer-type": "PCFEmpiricalTerms"
+        },
+        "THIRD_BODY_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "0"
+        },
+        "THIRD_BODY_MAXIMUM_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest order of that field; dimensionless. Default 0.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "0"
         }
       },
       "required": [
@@ -21187,6 +21230,10 @@
             "JB2008": {
               "value": 6,
               "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            "MARS_EXPONENTIAL": {
+              "value": 7,
+              "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -21293,6 +21340,10 @@
             "JB2008": {
               "value": 6,
               "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            },
+            "MARS_EXPONENTIAL": {
+              "value": 7,
+              "description": "Banded exponential atmosphere of Mars: the density falls as exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates with Mars."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

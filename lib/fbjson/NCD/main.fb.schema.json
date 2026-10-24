@@ -36,6 +36,7 @@
         "NAIF_SCLK_KERNEL",
         "RINEX_OBS",
         "RINEX_NAV",
+        "PCK_DAF",
         "PROVIDER_DEFINED"
       ],
       "x-flatbuffer-type": "enum",
@@ -167,6 +168,10 @@
         "RINEX_NAV": {
           "value": 31,
           "description": "RINEX navigation file."
+        },
+        "PCK_DAF": {
+          "value": 32,
+          "description": "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
         },
         "PROVIDER_DEFINED": {
           "value": 255,
@@ -626,6 +631,10 @@
             "RINEX_NAV": {
               "value": 31,
               "description": "RINEX navigation file."
+            },
+            "PCK_DAF": {
+              "value": 32,
+              "description": "NAIF binary Planetary Constants Kernel: a DAF holding body orientation as Chebyshev segments (data types 2, 3 and 20), with no size or shape data; e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK Required Reading)."
             },
             "PROVIDER_DEFINED": {
               "value": 255,

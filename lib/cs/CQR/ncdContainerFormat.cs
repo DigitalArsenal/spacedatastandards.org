@@ -87,6 +87,11 @@ public enum ncdContainerFormat : byte
   RINEX_OBS = 30,
   /// RINEX navigation file.
   RINEX_NAV = 31,
+  /// NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+  /// Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+  /// e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+  /// Required Reading).
+  PCK_DAF = 32,
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
   PROVIDER_DEFINED = 255,

@@ -19,6 +19,11 @@ class pcfAtmosphereFamily
     /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
     /// Dst-derived temperature change from the request's JB2008 indices.
     const JB2008 = 6;
+    /// Banded exponential atmosphere of Mars: the density falls as
+    /// exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+    /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+    /// with Mars.
+    const MARS_EXPONENTIAL = 7;
 
     private static $names = array(
         pcfAtmosphereFamily::UNSPECIFIED=>"UNSPECIFIED",
@@ -28,6 +33,7 @@ class pcfAtmosphereFamily
         pcfAtmosphereFamily::HARRIS_PRIESTER=>"HARRIS_PRIESTER",
         pcfAtmosphereFamily::JACCHIA_ROBERTS=>"JACCHIA_ROBERTS",
         pcfAtmosphereFamily::JB2008=>"JB2008",
+        pcfAtmosphereFamily::MARS_EXPONENTIAL=>"MARS_EXPONENTIAL",
     );
 
     public static function Name($e)

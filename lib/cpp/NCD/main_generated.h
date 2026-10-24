@@ -112,6 +112,11 @@ enum ncdContainerFormat : uint8_t {
   ncdContainerFormat_RINEX_OBS = 30,
   /// RINEX navigation file.
   ncdContainerFormat_RINEX_NAV = 31,
+  /// NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+  /// Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+  /// e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+  /// Required Reading).
+  ncdContainerFormat_PCK_DAF = 32,
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
   ncdContainerFormat_PROVIDER_DEFINED = 255,
@@ -119,7 +124,7 @@ enum ncdContainerFormat : uint8_t {
   ncdContainerFormat_MAX = ncdContainerFormat_PROVIDER_DEFINED
 };
 
-inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[33] {
+inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[34] {
   static const ncdContainerFormat values[] = {
     ncdContainerFormat_UNSPECIFIED,
     ncdContainerFormat_SPK_DAF,
@@ -153,6 +158,7 @@ inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[33] {
     ncdContainerFormat_NAIF_SCLK_KERNEL,
     ncdContainerFormat_RINEX_OBS,
     ncdContainerFormat_RINEX_NAV,
+    ncdContainerFormat_PCK_DAF,
     ncdContainerFormat_PROVIDER_DEFINED
   };
   return values;
@@ -192,6 +198,7 @@ inline const char *EnumNamencdContainerFormat(ncdContainerFormat e) {
     case ncdContainerFormat_NAIF_SCLK_KERNEL: return "NAIF_SCLK_KERNEL";
     case ncdContainerFormat_RINEX_OBS: return "RINEX_OBS";
     case ncdContainerFormat_RINEX_NAV: return "RINEX_NAV";
+    case ncdContainerFormat_PCK_DAF: return "PCK_DAF";
     case ncdContainerFormat_PROVIDER_DEFINED: return "PROVIDER_DEFINED";
     default: return "";
   }

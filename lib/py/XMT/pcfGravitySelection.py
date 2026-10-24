@@ -14,3 +14,7 @@ class pcfGravitySelection(object):
     # GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
     # Moon's field, in the Moon's principal-axis frame.
     GRGM660PRIM = 7
+    # MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+    # doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+    # its PDS label.
+    MRO120F = 8

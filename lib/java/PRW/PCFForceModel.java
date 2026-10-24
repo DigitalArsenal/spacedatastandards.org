@@ -273,6 +273,17 @@ public final class PCFForceModel extends com.google.flatbuffers.Table {
    */
   public PCFEmpiricalTerms EMPIRICAL_TERMS() { return EMPIRICAL_TERMS(new PCFEmpiricalTerms()); }
   public PCFEmpiricalTerms EMPIRICAL_TERMS(PCFEmpiricalTerms obj) { int o = __offset(102); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Highest degree of the harmonic field of the third body that has one (the
+   * Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+   * The field's acceleration at the frame origin is subtracted. Default 0:
+   * third bodies are point masses only.
+   */
+  public int THIRD_BODY_MAXIMUM_DEGREE() { int o = __offset(104); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Highest order of that field; dimensionless. Default 0.
+   */
+  public int THIRD_BODY_MAXIMUM_ORDER() { int o = __offset(106); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
 
   public static int createPCFForceModel(FlatBufferBuilder builder,
       int GRAVITY_CHOICE,
@@ -324,8 +335,10 @@ public final class PCFForceModel extends com.google.flatbuffers.Table {
       double DENSITY_CORRECTION_RELAXATION_HOURS,
       boolean HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
       int NEUTRAL_WIND,
-      int EMPIRICAL_TERMSOffset) {
-    builder.startTable(50);
+      int EMPIRICAL_TERMSOffset,
+      int THIRD_BODY_MAXIMUM_DEGREE,
+      int THIRD_BODY_MAXIMUM_ORDER) {
+    builder.startTable(52);
     PCFForceModel.addDensityCorrectionRelaxationHours(builder, DENSITY_CORRECTION_RELAXATION_HOURS);
     PCFForceModel.addEarthRadiationAreaOverMassM2Kg(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
     PCFForceModel.addEarthRadiationResolutionDeg(builder, EARTH_RADIATION_RESOLUTION_DEG);
@@ -342,6 +355,8 @@ public final class PCFForceModel extends com.google.flatbuffers.Table {
     PCFForceModel.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PCFForceModel.addWeather(builder, WEATHEROffset);
     PCFForceModel.addThirdBodyIds(builder, THIRD_BODY_IDSOffset);
+    PCFForceModel.addThirdBodyMaximumOrder(builder, THIRD_BODY_MAXIMUM_ORDER);
+    PCFForceModel.addThirdBodyMaximumDegree(builder, THIRD_BODY_MAXIMUM_DEGREE);
     PCFForceModel.addOceanTideMaximumOrder(builder, OCEAN_TIDE_MAXIMUM_ORDER);
     PCFForceModel.addOceanTideMaximumDegree(builder, OCEAN_TIDE_MAXIMUM_DEGREE);
     PCFForceModel.addMaximumTesseralDegree(builder, MAXIMUM_TESSERAL_DEGREE);
@@ -379,7 +394,7 @@ public final class PCFForceModel extends com.google.flatbuffers.Table {
     return PCFForceModel.endPCFForceModel(builder);
   }
 
-  public static void startPCFForceModel(FlatBufferBuilder builder) { builder.startTable(50); }
+  public static void startPCFForceModel(FlatBufferBuilder builder) { builder.startTable(52); }
   public static void addGravityChoice(FlatBufferBuilder builder, int GRAVITY_CHOICE) { builder.addByte(0, (byte) GRAVITY_CHOICE, (byte) 0); }
   public static void addEnablePointMass(FlatBufferBuilder builder, boolean ENABLE_POINT_MASS) { builder.addBoolean(1, ENABLE_POINT_MASS, true); }
   public static void addGravitationalParameter(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.addDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -432,6 +447,8 @@ public final class PCFForceModel extends com.google.flatbuffers.Table {
   public static void addHasDensityCorrectionRelaxationHours(FlatBufferBuilder builder, boolean HAS_DENSITY_CORRECTION_RELAXATION_HOURS) { builder.addBoolean(47, HAS_DENSITY_CORRECTION_RELAXATION_HOURS, false); }
   public static void addNeutralWind(FlatBufferBuilder builder, int NEUTRAL_WIND) { builder.addByte(48, (byte) NEUTRAL_WIND, (byte) 0); }
   public static void addEmpiricalTerms(FlatBufferBuilder builder, int EMPIRICAL_TERMSOffset) { builder.addOffset(49, EMPIRICAL_TERMSOffset, 0); }
+  public static void addThirdBodyMaximumDegree(FlatBufferBuilder builder, int THIRD_BODY_MAXIMUM_DEGREE) { builder.addShort(50, (short) THIRD_BODY_MAXIMUM_DEGREE, (short) 0); }
+  public static void addThirdBodyMaximumOrder(FlatBufferBuilder builder, int THIRD_BODY_MAXIMUM_ORDER) { builder.addShort(51, (short) THIRD_BODY_MAXIMUM_ORDER, (short) 0); }
   public static int endPCFForceModel(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 46);  // EPHEMERIS_SOURCE

@@ -18,8 +18,14 @@ public final class pcfGravitySelection {
    * Moon's field, in the Moon's principal-axis frame.
    */
   public static final int GRGM660PRIM = 7;
+  /**
+   * MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+   * doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+   * its PDS label.
+   */
+  public static final int MRO120F = 8;
 
-  public static final String[] names = { "INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", "EGM96", "GRGM660PRIM", };
+  public static final String[] names = { "INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", "EGM96", "GRGM660PRIM", "MRO120F", };
 
   public static String name(int e) { return names[e]; }
 }

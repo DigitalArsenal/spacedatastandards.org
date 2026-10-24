@@ -171,7 +171,7 @@
     },
     "ncdContainerFormat" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "CCSDS_OMM_KVN", "CCSDS_OMM_XML", "CCSDS_OPM_KVN", "CCSDS_OPM_XML", "CCSDS_OCM_KVN", "CCSDS_OCM_XML", "CCSDS_CDM_KVN", "CCSDS_CDM_XML", "CCSDS_APM_KVN", "CCSDS_APM_XML", "CCSDS_ACM_KVN", "CCSDS_ACM_XML", "CCSDS_RDM_KVN", "CCSDS_RDM_XML", "SENTINEL_EOF_XML", "NAIF_CK_DAF", "NAIF_SCLK_KERNEL", "RINEX_OBS", "RINEX_NAV", "PROVIDER_DEFINED"]
+      "enum": ["UNSPECIFIED", "SPK_DAF", "SP3_C", "SP3_D", "CODE_500", "SCENARIO_EPOCH_EPHEMERIS_TEXT", "SCENARIO_EPOCH_ATTITUDE_TEXT", "CCSDS_OEM_KVN", "CCSDS_OEM_XML", "CCSDS_AEM_KVN", "CCSDS_AEM_XML", "CCSDS_TDM_KVN", "CCSDS_TDM_XML", "CCSDS_OMM_KVN", "CCSDS_OMM_XML", "CCSDS_OPM_KVN", "CCSDS_OPM_XML", "CCSDS_OCM_KVN", "CCSDS_OCM_XML", "CCSDS_CDM_KVN", "CCSDS_CDM_XML", "CCSDS_APM_KVN", "CCSDS_APM_XML", "CCSDS_ACM_KVN", "CCSDS_ACM_XML", "CCSDS_RDM_KVN", "CCSDS_RDM_XML", "SENTINEL_EOF_XML", "NAIF_CK_DAF", "NAIF_SCLK_KERNEL", "RINEX_OBS", "RINEX_NAV", "PCK_DAF", "PROVIDER_DEFINED"]
     },
     "DataType" : {
       "type" : "string",
@@ -279,11 +279,11 @@
     },
     "pcfGravitySelection" : {
       "type" : "string",
-      "enum": ["INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", "EGM96", "GRGM660PRIM"]
+      "enum": ["INFER_FLAGS", "POINT_MASS", "J2_ONLY", "J2_TO_J4", "SPHERICAL_HARMONICS", "EGM2008", "EGM96", "GRGM660PRIM", "MRO120F"]
     },
     "pcfAtmosphereFamily" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008"]
+      "enum": ["UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", "MARS_EXPONENTIAL"]
     },
     "pcfSolidTideModel" : {
       "type" : "string",
@@ -3821,6 +3821,14 @@
         "EMPIRICAL_TERMS" : {
                 "$ref" : "#/definitions/PCFEmpiricalTerms",
                 "description" : "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
+              },
+        "THIRD_BODY_MAXIMUM_DEGREE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Highest degree of the harmonic field of the third body that has one (the\nMoon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.\nThe field's acceleration at the frame origin is subtracted. Default 0:\nthird bodies are point masses only."
+              },
+        "THIRD_BODY_MAXIMUM_ORDER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Highest order of that field; dimensionless. Default 0."
               }
       },
       "required" : ["EPHEMERIS_SOURCE"],

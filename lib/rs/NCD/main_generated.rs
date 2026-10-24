@@ -10,7 +10,7 @@ pub const ENUM_MAX_NCD_CONTAINER_FORMAT: u8 = 255;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 33] = [
+pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 34] = [
     ncdContainerFormat::UNSPECIFIED,
     ncdContainerFormat::SPK_DAF,
     ncdContainerFormat::SP3_C,
@@ -43,6 +43,7 @@ pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 33] = [
     ncdContainerFormat::NAIF_SCLK_KERNEL,
     ncdContainerFormat::RINEX_OBS,
     ncdContainerFormat::RINEX_NAV,
+    ncdContainerFormat::PCK_DAF,
     ncdContainerFormat::PROVIDER_DEFINED,
 ];
 
@@ -135,6 +136,11 @@ impl ncdContainerFormat {
     pub const RINEX_OBS: Self = Self(30);
     /// RINEX navigation file.
     pub const RINEX_NAV: Self = Self(31);
+    /// NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+    /// Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+    /// e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+    /// Required Reading).
+    pub const PCK_DAF: Self = Self(32);
     /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
     /// which; a producer never reuses a neighbouring member instead.
     pub const PROVIDER_DEFINED: Self = Self(255);
@@ -174,6 +180,7 @@ impl ncdContainerFormat {
         Self::NAIF_SCLK_KERNEL,
         Self::RINEX_OBS,
         Self::RINEX_NAV,
+        Self::PCK_DAF,
         Self::PROVIDER_DEFINED,
     ];
 
@@ -212,6 +219,7 @@ impl ncdContainerFormat {
             Self::NAIF_SCLK_KERNEL => Some("NAIF_SCLK_KERNEL"),
             Self::RINEX_OBS => Some("RINEX_OBS"),
             Self::RINEX_NAV => Some("RINEX_NAV"),
+            Self::PCK_DAF => Some("PCK_DAF"),
             Self::PROVIDER_DEFINED => Some("PROVIDER_DEFINED"),
             _ => None,
         }

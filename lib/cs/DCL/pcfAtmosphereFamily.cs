@@ -20,4 +20,9 @@ public enum pcfAtmosphereFamily : byte
   /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
   /// Dst-derived temperature change from the request's JB2008 indices.
   JB2008 = 6,
+  /// Banded exponential atmosphere of Mars: the density falls as
+  /// exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+  /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+  /// with Mars.
+  MARS_EXPONENTIAL = 7,
 };

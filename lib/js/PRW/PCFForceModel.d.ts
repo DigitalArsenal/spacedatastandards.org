@@ -264,6 +264,17 @@ export declare class PCFForceModel implements flatbuffers.IUnpackableObject<PCFF
      * default): the theory's own.
      */
     EMPIRICAL_TERMS(obj?: PCFEmpiricalTerms): PCFEmpiricalTerms | null;
+    /**
+     * Highest degree of the harmonic field of the third body that has one (the
+     * Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+     * The field's acceleration at the frame origin is subtracted. Default 0:
+     * third bodies are point masses only.
+     */
+    THIRD_BODY_MAXIMUM_DEGREE(): number;
+    /**
+     * Highest order of that field; dimensionless. Default 0.
+     */
+    THIRD_BODY_MAXIMUM_ORDER(): number;
     static startPCFForceModel(builder: flatbuffers.Builder): void;
     static addGravityChoice(builder: flatbuffers.Builder, GRAVITY_CHOICE: pcfGravitySelection): void;
     static addEnablePointMass(builder: flatbuffers.Builder, ENABLE_POINT_MASS: boolean): void;
@@ -321,6 +332,8 @@ export declare class PCFForceModel implements flatbuffers.IUnpackableObject<PCFF
     static addHasDensityCorrectionRelaxationHours(builder: flatbuffers.Builder, HAS_DENSITY_CORRECTION_RELAXATION_HOURS: boolean): void;
     static addNeutralWind(builder: flatbuffers.Builder, NEUTRAL_WIND: pcfNeutralWind): void;
     static addEmpiricalTerms(builder: flatbuffers.Builder, EMPIRICAL_TERMSOffset: flatbuffers.Offset): void;
+    static addThirdBodyMaximumDegree(builder: flatbuffers.Builder, THIRD_BODY_MAXIMUM_DEGREE: number): void;
+    static addThirdBodyMaximumOrder(builder: flatbuffers.Builder, THIRD_BODY_MAXIMUM_ORDER: number): void;
     static endPCFForceModel(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PCFForceModelT;
     unpackTo(_o: PCFForceModelT): void;
@@ -376,7 +389,9 @@ export declare class PCFForceModelT implements flatbuffers.IGeneratedObject {
     HAS_DENSITY_CORRECTION_RELAXATION_HOURS: boolean;
     NEUTRAL_WIND: pcfNeutralWind;
     EMPIRICAL_TERMS: PCFEmpiricalTermsT | null;
-    constructor(GRAVITY_CHOICE?: pcfGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: pcfAtmosphereFamily, WEATHER?: PCFSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: pcfSolidTideModel, RELATIVITY?: pcfRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean, RADIATION_PRESSURE_MODEL?: pcfRadiationPressureFamily, GNSS_BLOCK?: pcfGnssSpacecraftBlock, ECOM2?: PCFEcom2T | null, EARTH_RADIATION?: pcfEarthRadiationModel, EARTH_RADIATION_RESOLUTION_DEG?: number, EARTH_RADIATION_AREA_OVER_MASS_M2_KG?: number, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG?: boolean, OCEAN_TIDES?: pcfOceanTideModel, OCEAN_TIDE_MAXIMUM_DEGREE?: number, OCEAN_TIDE_MAXIMUM_ORDER?: number, CENTRAL_BODY_NAIF_ID?: number, EPHEMERIS_KIND?: pcfEphemerisKind, SHADOW_MODEL?: evlShadowModel, WEATHER_SOURCE?: pcfWeatherSource, WEATHER_EXTENSION?: pcfWeatherExtension, DENSITY_CORRECTION?: pcfDensityCorrection, DENSITY_CORRECTION_RELAXATION_HOURS?: number, HAS_DENSITY_CORRECTION_RELAXATION_HOURS?: boolean, NEUTRAL_WIND?: pcfNeutralWind, EMPIRICAL_TERMS?: PCFEmpiricalTermsT | null);
+    THIRD_BODY_MAXIMUM_DEGREE: number;
+    THIRD_BODY_MAXIMUM_ORDER: number;
+    constructor(GRAVITY_CHOICE?: pcfGravitySelection, ENABLE_POINT_MASS?: boolean, GRAVITATIONAL_PARAMETER?: number, ENABLE_J2?: boolean, ENABLE_J3?: boolean, ENABLE_J4?: boolean, ENABLE_HIGHER_ZONALS?: boolean, MAXIMUM_DEGREE?: number, HAS_MAXIMUM_DEGREE?: boolean, MAXIMUM_ORDER?: number, HAS_MAXIMUM_ORDER?: boolean, ENABLE_THIRD_BODY?: boolean, THIRD_BODY_IDS?: (number)[], ENABLE_SRP?: boolean, ENABLE_DRAG?: boolean, INITIAL_MASS_KG?: number, AREA_M2?: number, REFLECTIVITY_COEFFICIENT?: number, DRAG_COEFFICIENT?: number, ATMOSPHERE_MODEL?: pcfAtmosphereFamily, WEATHER?: PCFSpaceWeatherT | null, EPHEMERIS_SOURCE?: string | Uint8Array | null, SOLID_TIDES?: pcfSolidTideModel, RELATIVITY?: pcfRelativityTerms, IN_TRACK_ACCELERATION_M_S2?: number, HAS_IN_TRACK_ACCELERATION_M_S2?: boolean, DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: number, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S?: boolean, MAXIMUM_TESSERAL_DEGREE?: number, HAS_MAXIMUM_TESSERAL_DEGREE?: boolean, RADIATION_PRESSURE_MODEL?: pcfRadiationPressureFamily, GNSS_BLOCK?: pcfGnssSpacecraftBlock, ECOM2?: PCFEcom2T | null, EARTH_RADIATION?: pcfEarthRadiationModel, EARTH_RADIATION_RESOLUTION_DEG?: number, EARTH_RADIATION_AREA_OVER_MASS_M2_KG?: number, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG?: boolean, OCEAN_TIDES?: pcfOceanTideModel, OCEAN_TIDE_MAXIMUM_DEGREE?: number, OCEAN_TIDE_MAXIMUM_ORDER?: number, CENTRAL_BODY_NAIF_ID?: number, EPHEMERIS_KIND?: pcfEphemerisKind, SHADOW_MODEL?: evlShadowModel, WEATHER_SOURCE?: pcfWeatherSource, WEATHER_EXTENSION?: pcfWeatherExtension, DENSITY_CORRECTION?: pcfDensityCorrection, DENSITY_CORRECTION_RELAXATION_HOURS?: number, HAS_DENSITY_CORRECTION_RELAXATION_HOURS?: boolean, NEUTRAL_WIND?: pcfNeutralWind, EMPIRICAL_TERMS?: PCFEmpiricalTermsT | null, THIRD_BODY_MAXIMUM_DEGREE?: number, THIRD_BODY_MAXIMUM_ORDER?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PCFForceModel.d.ts.map

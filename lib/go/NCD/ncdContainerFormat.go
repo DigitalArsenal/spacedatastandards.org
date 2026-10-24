@@ -90,6 +90,11 @@ const (
 	ncdContainerFormatRINEX_OBS                     ncdContainerFormat = 30
 	/// RINEX navigation file.
 	ncdContainerFormatRINEX_NAV                     ncdContainerFormat = 31
+	/// NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+	/// Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+	/// e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+	/// Required Reading).
+	ncdContainerFormatPCK_DAF                       ncdContainerFormat = 32
 	/// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
 	/// which; a producer never reuses a neighbouring member instead.
 	ncdContainerFormatPROVIDER_DEFINED              ncdContainerFormat = 255
@@ -128,6 +133,7 @@ var EnumNamesncdContainerFormat = map[ncdContainerFormat]string{
 	ncdContainerFormatNAIF_SCLK_KERNEL:              "NAIF_SCLK_KERNEL",
 	ncdContainerFormatRINEX_OBS:                     "RINEX_OBS",
 	ncdContainerFormatRINEX_NAV:                     "RINEX_NAV",
+	ncdContainerFormatPCK_DAF:                       "PCK_DAF",
 	ncdContainerFormatPROVIDER_DEFINED:              "PROVIDER_DEFINED",
 }
 
@@ -164,6 +170,7 @@ var EnumValuesncdContainerFormat = map[string]ncdContainerFormat{
 	"NAIF_SCLK_KERNEL":              ncdContainerFormatNAIF_SCLK_KERNEL,
 	"RINEX_OBS":                     ncdContainerFormatRINEX_OBS,
 	"RINEX_NAV":                     ncdContainerFormatRINEX_NAV,
+	"PCK_DAF":                       ncdContainerFormatPCK_DAF,
 	"PROVIDER_DEFINED":              ncdContainerFormatPROVIDER_DEFINED,
 }
 

@@ -18,6 +18,10 @@ const (
 	/// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
 	/// Moon's field, in the Moon's principal-axis frame.
 	pcfGravitySelectionGRGM660PRIM         pcfGravitySelection = 7
+	/// MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+	/// doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+	/// its PDS label.
+	pcfGravitySelectionMRO120F             pcfGravitySelection = 8
 )
 
 var EnumNamespcfGravitySelection = map[pcfGravitySelection]string{
@@ -29,6 +33,7 @@ var EnumNamespcfGravitySelection = map[pcfGravitySelection]string{
 	pcfGravitySelectionEGM2008:             "EGM2008",
 	pcfGravitySelectionEGM96:               "EGM96",
 	pcfGravitySelectionGRGM660PRIM:         "GRGM660PRIM",
+	pcfGravitySelectionMRO120F:             "MRO120F",
 }
 
 var EnumValuespcfGravitySelection = map[string]pcfGravitySelection{
@@ -40,6 +45,7 @@ var EnumValuespcfGravitySelection = map[string]pcfGravitySelection{
 	"EGM2008":             pcfGravitySelectionEGM2008,
 	"EGM96":               pcfGravitySelectionEGM96,
 	"GRGM660PRIM":         pcfGravitySelectionGRGM660PRIM,
+	"MRO120F":             pcfGravitySelectionMRO120F,
 }
 
 func (v pcfGravitySelection) String() string {

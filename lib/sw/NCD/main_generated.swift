@@ -95,6 +95,11 @@ public enum ncdContainerFormat: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case rinexObs = 30
   ///  RINEX navigation file.
   case rinexNav = 31
+  ///  NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+  ///  Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+  ///  e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+  ///  Required Reading).
+  case pckDaf = 32
   ///  A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   ///  which; a producer never reuses a neighbouring member instead.
   case providerDefined = 255

@@ -14,6 +14,10 @@ class pcfGravitySelection
     /// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
     /// Moon's field, in the Moon's principal-axis frame.
     const GRGM660PRIM = 7;
+    /// MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+    /// doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+    /// its PDS label.
+    const MRO120F = 8;
 
     private static $names = array(
         pcfGravitySelection::INFER_FLAGS=>"INFER_FLAGS",
@@ -24,6 +28,7 @@ class pcfGravitySelection
         pcfGravitySelection::EGM2008=>"EGM2008",
         pcfGravitySelection::EGM96=>"EGM96",
         pcfGravitySelection::GRGM660PRIM=>"GRGM660PRIM",
+        pcfGravitySelection::MRO120F=>"MRO120F",
     );
 
     public static function Name($e)

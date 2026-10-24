@@ -389,8 +389,12 @@ public enum pcfGravitySelection: UInt8, FlatbuffersVectorInitializable, Enum, Ve
   ///  GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
   ///  Moon's field, in the Moon's principal-axis frame.
   case grgm660prim = 7
+  ///  MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+  ///  doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+  ///  its PDS label.
+  case mro120f = 8
 
-  public static var max: pcfGravitySelection { return .grgm660prim }
+  public static var max: pcfGravitySelection { return .mro120f }
   public static var min: pcfGravitySelection { return .inferFlags }
 }
 
@@ -415,8 +419,13 @@ public enum pcfAtmosphereFamily: UInt8, FlatbuffersVectorInitializable, Enum, Ve
   ///  Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
   ///  Dst-derived temperature change from the request's JB2008 indices.
   case jb2008 = 6
+  ///  Banded exponential atmosphere of Mars: the density falls as
+  ///  exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+  ///  Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+  ///  with Mars.
+  case marsExponential = 7
 
-  public static var max: pcfAtmosphereFamily { return .jb2008 }
+  public static var max: pcfAtmosphereFamily { return .marsExponential }
   public static var min: pcfAtmosphereFamily { return .unspecified }
 }
 
@@ -1843,6 +1852,8 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     static let HAS_DENSITY_CORRECTION_RELAXATION_HOURS: VOffset = 98
     static let NEUTRAL_WIND: VOffset = 100
     static let EMPIRICAL_TERMS: VOffset = 102
+    static let THIRD_BODY_MAXIMUM_DEGREE: VOffset = 104
+    static let THIRD_BODY_MAXIMUM_ORDER: VOffset = 106
   }
 
   ///  Gravity field. Default INFER_FLAGS (the ENABLE_ flags decide).
@@ -1980,7 +1991,14 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   ///  Empirical along-track terms of the averaged theories. Absent (the
   ///  default): the theory's own.
   public var EMPIRICAL_TERMS: PCFEmpiricalTerms? { let o = _accessor.offset(VT.EMPIRICAL_TERMS); return o == 0 ? nil : PCFEmpiricalTerms(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPCFForceModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 50) }
+  ///  Highest degree of the harmonic field of the third body that has one (the
+  ///  Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+  ///  The field's acceleration at the frame origin is subtracted. Default 0:
+  ///  third bodies are point masses only.
+  public var THIRD_BODY_MAXIMUM_DEGREE: UInt16 { let o = _accessor.offset(VT.THIRD_BODY_MAXIMUM_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Highest order of that field; dimensionless. Default 0.
+  public var THIRD_BODY_MAXIMUM_ORDER: UInt16 { let o = _accessor.offset(VT.THIRD_BODY_MAXIMUM_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  public static func startPCFForceModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 52) }
   public static func add(GRAVITY_CHOICE: pcfGravitySelection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_CHOICE.rawValue, def: 0, at: VT.GRAVITY_CHOICE) }
   public static func add(ENABLE_POINT_MASS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_POINT_MASS, def: true,
    at: VT.ENABLE_POINT_MASS) }
@@ -2046,6 +2064,8 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
    at: VT.HAS_DENSITY_CORRECTION_RELAXATION_HOURS) }
   public static func add(NEUTRAL_WIND: pcfNeutralWind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEUTRAL_WIND.rawValue, def: 0, at: VT.NEUTRAL_WIND) }
   public static func add(EMPIRICAL_TERMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMPIRICAL_TERMS, at: VT.EMPIRICAL_TERMS) }
+  public static func add(THIRD_BODY_MAXIMUM_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THIRD_BODY_MAXIMUM_DEGREE, def: 0, at: VT.THIRD_BODY_MAXIMUM_DEGREE) }
+  public static func add(THIRD_BODY_MAXIMUM_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THIRD_BODY_MAXIMUM_ORDER, def: 0, at: VT.THIRD_BODY_MAXIMUM_ORDER) }
   public static func endPCFForceModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [46]); return end }
   public static func createPCFForceModel(
     _ fbb: inout FlatBufferBuilder,
@@ -2098,7 +2118,9 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     DENSITY_CORRECTION_RELAXATION_HOURS: Double = 0.0,
     HAS_DENSITY_CORRECTION_RELAXATION_HOURS: Bool = false,
     NEUTRAL_WIND: pcfNeutralWind = .none_,
-    EMPIRICAL_TERMSOffset EMPIRICAL_TERMS: Offset = Offset()
+    EMPIRICAL_TERMSOffset EMPIRICAL_TERMS: Offset = Offset(),
+    THIRD_BODY_MAXIMUM_DEGREE: UInt16 = 0,
+    THIRD_BODY_MAXIMUM_ORDER: UInt16 = 0
   ) -> Offset {
     let __start = PCFForceModel.startPCFForceModel(&fbb)
     PCFForceModel.add(GRAVITY_CHOICE: GRAVITY_CHOICE, &fbb)
@@ -2151,6 +2173,8 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     PCFForceModel.add(HAS_DENSITY_CORRECTION_RELAXATION_HOURS: HAS_DENSITY_CORRECTION_RELAXATION_HOURS, &fbb)
     PCFForceModel.add(NEUTRAL_WIND: NEUTRAL_WIND, &fbb)
     PCFForceModel.add(EMPIRICAL_TERMS: EMPIRICAL_TERMS, &fbb)
+    PCFForceModel.add(THIRD_BODY_MAXIMUM_DEGREE: THIRD_BODY_MAXIMUM_DEGREE, &fbb)
+    PCFForceModel.add(THIRD_BODY_MAXIMUM_ORDER: THIRD_BODY_MAXIMUM_ORDER, &fbb)
     return PCFForceModel.endPCFForceModel(&fbb, start: __start)
   }
 
@@ -2206,6 +2230,8 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
     try _v.visit(field: VT.HAS_DENSITY_CORRECTION_RELAXATION_HOURS, fieldName: "HAS_DENSITY_CORRECTION_RELAXATION_HOURS", required: false, type: Bool.self)
     try _v.visit(field: VT.NEUTRAL_WIND, fieldName: "NEUTRAL_WIND", required: false, type: pcfNeutralWind.self)
     try _v.visit(field: VT.EMPIRICAL_TERMS, fieldName: "EMPIRICAL_TERMS", required: false, type: ForwardOffset<PCFEmpiricalTerms>.self)
+    try _v.visit(field: VT.THIRD_BODY_MAXIMUM_DEGREE, fieldName: "THIRD_BODY_MAXIMUM_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.THIRD_BODY_MAXIMUM_ORDER, fieldName: "THIRD_BODY_MAXIMUM_ORDER", required: false, type: UInt16.self)
     _v.finish()
   }
 }

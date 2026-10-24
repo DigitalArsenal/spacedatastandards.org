@@ -23,8 +23,15 @@ public final class pcfAtmosphereFamily {
    * Dst-derived temperature change from the request's JB2008 indices.
    */
   public static final int JB2008 = 6;
+  /**
+   * Banded exponential atmosphere of Mars: the density falls as
+   * exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+   * Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+   * with Mars.
+   */
+  public static final int MARS_EXPONENTIAL = 7;
 
-  public static final String[] names = { "UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", };
+  public static final String[] names = { "UNSPECIFIED", "NRLMSISE00", "EXPONENTIAL", "USSA1976", "HARRIS_PRIESTER", "JACCHIA_ROBERTS", "JB2008", "MARS_EXPONENTIAL", };
 
   public static String name(int e) { return names[e]; }
 }

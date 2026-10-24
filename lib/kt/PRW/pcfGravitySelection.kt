@@ -18,5 +18,11 @@ class pcfGravitySelection private constructor() {
          * Moon's field, in the Moon's principal-axis frame.
          */
         const val GRGM660PRIM: UByte = 7u
+        /**
+         * MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+         * doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+         * its PDS label.
+         */
+        const val MRO120F: UByte = 8u
     }
 }
