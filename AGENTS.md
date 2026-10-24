@@ -206,6 +206,14 @@ handle `EXTENDED_TYPE`.
 - Root type is the 3-letter table.
 - Version + SHA-256 hash headers at the top are managed by
   `scripts/generateVersion.py` — do not hand-edit them.
+- Never retype or reuse a table field's slot. Retire a field with
+  `(deprecated)` in place (no accessor is generated) and append its replacement
+  as a new field, as `$EPM` `DomainProof` did in 1.266.0: slot 0 stays a
+  deprecated string and `DOMAINS: [string]` is a new last field. The same
+  deprecate-in-place, never-reuse rule governs `union RecordType` above.
+- Names are never changed to dodge a language's keywords or macros; the
+  consumer handles the collision. See [`docs/name-collisions.md`](docs/name-collisions.md)
+  (C and C++ macros, flatc keyword escaping per target, JSON).
 
 ### Dual-accept wire-format rule (PIV / TAB / PLG)
 
