@@ -1,4 +1,4 @@
-// Hash: 2721559ee5080661e7f45fc214dafa0b412102cee4074695d26cfebf2f0a9cfb
+// Hash: a8335b1487de6e1252c5814f3238ab1e9737b25327be1a593dfb6dd3777f9633
 // Version: 1.0.0
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
@@ -119,7 +119,8 @@ enum pcfEventKind : ubyte {
   PENUMBRA = 7,
   /// g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
   /// the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
-  /// the range.
+  /// the range. The $OEM must cover the propagated arc; the provider interpolates it by
+  /// Hermite polynomials.
   CLOSEST_APPROACH = 8,
   /// g = the value of EXPRESSION.
   EXPRESSION = 9
@@ -257,13 +258,17 @@ enum pcfIntegratorAlgorithm : ubyte {
   /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
   /// 52).
   GAUSS_JACKSON_8 = 15,
-  /// Gauss's variational equations in classical Keplerian elements.
+  /// Gauss's variational equations in classical Keplerian elements. Integrates a
+  /// reduced force model; FFM refuses it by name.
   GAUSS_VOP = 16,
   /// DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
-  /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+  /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by
+  /// name: its propagation does not reach the requested epoch to the integration
+  /// tolerance.
   DROMO = 17,
   /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
-  /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
+  /// and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by
+  /// name, as DROMO.
   STIEFEL = 18,
   /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
   /// Solving Ordinary Differential Equations I).
@@ -516,7 +521,7 @@ table PCFEventDefinition {
   /// vector. Default absent (the pole of the axes).
   PLANE_NORMAL:FRMVector3;
   /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-  /// as $OEM. Default empty.
+  /// as $OEM; "second_trajectory" is the port FFM declares. Default empty.
   SECOND_TRAJECTORY_PORT:string;
   /// EXPRESSION: the program. Default absent.
   EXPRESSION:PCFExpression;
