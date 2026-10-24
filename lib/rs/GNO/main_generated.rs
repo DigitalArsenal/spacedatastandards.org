@@ -125,16 +125,18 @@ impl ::flatbuffers::SimpleToVerifyInSlice for gnssConstellation {}
 pub const ENUM_MIN_GNSS_OBS_TYPE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_GNSS_OBS_TYPE: i8 = 4;
+pub const ENUM_MAX_GNSS_OBS_TYPE: i8 = 6;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_GNSS_OBS_TYPE: [gnssObsType; 5] = [
+pub const ENUM_VALUES_GNSS_OBS_TYPE: [gnssObsType; 7] = [
     gnssObsType::PSEUDORANGE,
     gnssObsType::CARRIER_PHASE,
     gnssObsType::DOPPLER,
     gnssObsType::SNR,
     gnssObsType::RAW_IF,
+    gnssObsType::IONOSPHERE_PHASE_DELAY,
+    gnssObsType::CHANNEL_NUMBER,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -150,15 +152,21 @@ impl gnssObsType {
     pub const DOPPLER: Self = Self(2);
     pub const SNR: Self = Self(3);
     pub const RAW_IF: Self = Self(4);
+    /// Ionosphere phase delay (RINEX observation type I), as the file states it.
+    pub const IONOSPHERE_PHASE_DELAY: Self = Self(5);
+    /// Receiver channel number (RINEX observation type X), as the receiver reports it.
+    pub const CHANNEL_NUMBER: Self = Self(6);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 4;
+    pub const ENUM_MAX: i8 = 6;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::PSEUDORANGE,
         Self::CARRIER_PHASE,
         Self::DOPPLER,
         Self::SNR,
         Self::RAW_IF,
+        Self::IONOSPHERE_PHASE_DELAY,
+        Self::CHANNEL_NUMBER,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -169,6 +177,8 @@ impl gnssObsType {
             Self::DOPPLER => Some("DOPPLER"),
             Self::SNR => Some("SNR"),
             Self::RAW_IF => Some("RAW_IF"),
+            Self::IONOSPHERE_PHASE_DELAY => Some("IONOSPHERE_PHASE_DELAY"),
+            Self::CHANNEL_NUMBER => Some("CHANNEL_NUMBER"),
             _ => None,
         }
     }
@@ -501,6 +511,8 @@ impl<'a> gnssSatObs<'a> {
     pub const VT_TRACKING_STATUS: ::flatbuffers::VOffsetT = 12;
     pub const VT_AGC_STATE: ::flatbuffers::VOffsetT = 14;
     pub const VT_OBSERVATIONS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_GLONASS_FREQUENCY_NUMBER: ::flatbuffers::VOffsetT = 18;
+    pub const VT_HAS_GLONASS_FREQUENCY_NUMBER: ::flatbuffers::VOffsetT = 20;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -519,6 +531,8 @@ impl<'a> gnssSatObs<'a> {
         builder.add_AGC_STATE(args.AGC_STATE);
         builder.add_TRACKING_STATUS(args.TRACKING_STATUS);
         if let Some(x) = args.GNSS_SAT_ID { builder.add_GNSS_SAT_ID(x); }
+        builder.add_HAS_GLONASS_FREQUENCY_NUMBER(args.HAS_GLONASS_FREQUENCY_NUMBER);
+        builder.add_GLONASS_FREQUENCY_NUMBER(args.GLONASS_FREQUENCY_NUMBER);
         builder.add_CONSTELLATION(args.CONSTELLATION);
         builder.finish()
     }
@@ -535,6 +549,8 @@ impl<'a> gnssSatObs<'a> {
         let OBSERVATIONS = self.OBSERVATIONS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
         });
+        let GLONASS_FREQUENCY_NUMBER = self.GLONASS_FREQUENCY_NUMBER();
+        let HAS_GLONASS_FREQUENCY_NUMBER = self.HAS_GLONASS_FREQUENCY_NUMBER();
         gnssSatObsT {
             GNSS_SAT_ID,
             CONSTELLATION,
@@ -543,6 +559,8 @@ impl<'a> gnssSatObs<'a> {
             TRACKING_STATUS,
             AGC_STATE,
             OBSERVATIONS,
+            GLONASS_FREQUENCY_NUMBER,
+            HAS_GLONASS_FREQUENCY_NUMBER,
         }
     }
 
@@ -608,6 +626,26 @@ impl<'a> gnssSatObs<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<gnssObsData>>>>(gnssSatObs::VT_OBSERVATIONS, None)}
     }
+
+    /// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+    /// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+    #[inline]
+    pub fn GLONASS_FREQUENCY_NUMBER(&self) -> i8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i8>(gnssSatObs::VT_GLONASS_FREQUENCY_NUMBER, Some(0)).unwrap()}
+    }
+
+    /// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+    /// channel); false (the default) means absent.
+    #[inline]
+    pub fn HAS_GLONASS_FREQUENCY_NUMBER(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(gnssSatObs::VT_HAS_GLONASS_FREQUENCY_NUMBER, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for gnssSatObs<'_> {
@@ -623,6 +661,8 @@ impl ::flatbuffers::Verifiable for gnssSatObs<'_> {
             .visit_field::<i32>("TRACKING_STATUS", Self::VT_TRACKING_STATUS, false)?
             .visit_field::<i32>("AGC_STATE", Self::VT_AGC_STATE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<gnssObsData>>>>("OBSERVATIONS", Self::VT_OBSERVATIONS, false)?
+            .visit_field::<i8>("GLONASS_FREQUENCY_NUMBER", Self::VT_GLONASS_FREQUENCY_NUMBER, false)?
+            .visit_field::<bool>("HAS_GLONASS_FREQUENCY_NUMBER", Self::VT_HAS_GLONASS_FREQUENCY_NUMBER, false)?
             .finish();
         Ok(())
     }
@@ -636,6 +676,8 @@ pub struct gnssSatObsArgs<'a> {
     pub TRACKING_STATUS: i32,
     pub AGC_STATE: i32,
     pub OBSERVATIONS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<gnssObsData<'a>>>>>,
+    pub GLONASS_FREQUENCY_NUMBER: i8,
+    pub HAS_GLONASS_FREQUENCY_NUMBER: bool,
 }
 
 impl<'a> Default for gnssSatObsArgs<'a> {
@@ -649,6 +691,8 @@ impl<'a> Default for gnssSatObsArgs<'a> {
             TRACKING_STATUS: 0,
             AGC_STATE: 0,
             OBSERVATIONS: None,
+            GLONASS_FREQUENCY_NUMBER: 0,
+            HAS_GLONASS_FREQUENCY_NUMBER: false,
         }
     }
 }
@@ -695,6 +739,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> gnssSatObsBuilder<'a, 'b, A> 
     }
 
     #[inline]
+    pub fn add_GLONASS_FREQUENCY_NUMBER(&mut self, GLONASS_FREQUENCY_NUMBER: i8) {
+        self.fbb_.push_slot::<i8>(gnssSatObs::VT_GLONASS_FREQUENCY_NUMBER, GLONASS_FREQUENCY_NUMBER, 0);
+    }
+
+    #[inline]
+    pub fn add_HAS_GLONASS_FREQUENCY_NUMBER(&mut self, HAS_GLONASS_FREQUENCY_NUMBER: bool) {
+        self.fbb_.push_slot::<bool>(gnssSatObs::VT_HAS_GLONASS_FREQUENCY_NUMBER, HAS_GLONASS_FREQUENCY_NUMBER, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> gnssSatObsBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         gnssSatObsBuilder {
@@ -720,6 +774,8 @@ impl ::core::fmt::Debug for gnssSatObs<'_> {
         ds.field("TRACKING_STATUS", &self.TRACKING_STATUS());
         ds.field("AGC_STATE", &self.AGC_STATE());
         ds.field("OBSERVATIONS", &self.OBSERVATIONS());
+        ds.field("GLONASS_FREQUENCY_NUMBER", &self.GLONASS_FREQUENCY_NUMBER());
+        ds.field("HAS_GLONASS_FREQUENCY_NUMBER", &self.HAS_GLONASS_FREQUENCY_NUMBER());
         ds.finish()
     }
 }
@@ -734,6 +790,8 @@ pub struct gnssSatObsT {
     pub TRACKING_STATUS: i32,
     pub AGC_STATE: i32,
     pub OBSERVATIONS: Option<alloc::vec::Vec<gnssObsDataT>>,
+    pub GLONASS_FREQUENCY_NUMBER: i8,
+    pub HAS_GLONASS_FREQUENCY_NUMBER: bool,
 }
 
 impl Default for gnssSatObsT {
@@ -746,6 +804,8 @@ impl Default for gnssSatObsT {
             TRACKING_STATUS: 0,
             AGC_STATE: 0,
             OBSERVATIONS: None,
+            GLONASS_FREQUENCY_NUMBER: 0,
+            HAS_GLONASS_FREQUENCY_NUMBER: false,
         }
     }
 }
@@ -766,6 +826,8 @@ impl gnssSatObsT {
         let OBSERVATIONS = self.OBSERVATIONS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
         });
+        let GLONASS_FREQUENCY_NUMBER = self.GLONASS_FREQUENCY_NUMBER;
+        let HAS_GLONASS_FREQUENCY_NUMBER = self.HAS_GLONASS_FREQUENCY_NUMBER;
         gnssSatObs::create(_fbb, &gnssSatObsArgs{
             GNSS_SAT_ID,
             CONSTELLATION,
@@ -774,6 +836,8 @@ impl gnssSatObsT {
             TRACKING_STATUS,
             AGC_STATE,
             OBSERVATIONS,
+            GLONASS_FREQUENCY_NUMBER,
+            HAS_GLONASS_FREQUENCY_NUMBER,
         })
     }
 }
@@ -819,6 +883,18 @@ impl<'a> GNO<'a> {
     pub const VT_SAT_OBS: ::flatbuffers::VOffsetT = 44;
     pub const VT_OBS_CODE_SET: ::flatbuffers::VOffsetT = 46;
     pub const VT_NOTES: ::flatbuffers::VOffsetT = 48;
+    pub const VT_TIME_SYSTEM: ::flatbuffers::VOffsetT = 50;
+    pub const VT_EPOCH_FLAG: ::flatbuffers::VOffsetT = 52;
+    pub const VT_MARKER_NAME: ::flatbuffers::VOffsetT = 54;
+    pub const VT_MARKER_NUMBER: ::flatbuffers::VOffsetT = 56;
+    pub const VT_MARKER_TYPE: ::flatbuffers::VOffsetT = 58;
+    pub const VT_OBSERVER: ::flatbuffers::VOffsetT = 60;
+    pub const VT_AGENCY: ::flatbuffers::VOffsetT = 62;
+    pub const VT_ANTENNA_DELTA_HEN: ::flatbuffers::VOffsetT = 64;
+    pub const VT_PHASE_SHIFTS: ::flatbuffers::VOffsetT = 66;
+    pub const VT_SIGNAL_STRENGTH_UNIT: ::flatbuffers::VOffsetT = 68;
+    pub const VT_LEAP_SECONDS: ::flatbuffers::VOffsetT = 70;
+    pub const VT_HAS_LEAP_SECONDS: ::flatbuffers::VOffsetT = 72;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -843,6 +919,16 @@ impl<'a> GNO<'a> {
         builder.add_LATITUDE(args.LATITUDE);
         builder.add_CLOCK_DRIFT(args.CLOCK_DRIFT);
         builder.add_CLOCK_OFFSET(args.CLOCK_OFFSET);
+        builder.add_LEAP_SECONDS(args.LEAP_SECONDS);
+        if let Some(x) = args.SIGNAL_STRENGTH_UNIT { builder.add_SIGNAL_STRENGTH_UNIT(x); }
+        if let Some(x) = args.PHASE_SHIFTS { builder.add_PHASE_SHIFTS(x); }
+        if let Some(x) = args.ANTENNA_DELTA_HEN { builder.add_ANTENNA_DELTA_HEN(x); }
+        if let Some(x) = args.AGENCY { builder.add_AGENCY(x); }
+        if let Some(x) = args.OBSERVER { builder.add_OBSERVER(x); }
+        if let Some(x) = args.MARKER_TYPE { builder.add_MARKER_TYPE(x); }
+        if let Some(x) = args.MARKER_NUMBER { builder.add_MARKER_NUMBER(x); }
+        if let Some(x) = args.MARKER_NAME { builder.add_MARKER_NAME(x); }
+        if let Some(x) = args.TIME_SYSTEM { builder.add_TIME_SYSTEM(x); }
         if let Some(x) = args.NOTES { builder.add_NOTES(x); }
         if let Some(x) = args.OBS_CODE_SET { builder.add_OBS_CODE_SET(x); }
         if let Some(x) = args.SAT_OBS { builder.add_SAT_OBS(x); }
@@ -854,6 +940,8 @@ impl<'a> GNO<'a> {
         if let Some(x) = args.RECEIVER_TYPE { builder.add_RECEIVER_TYPE(x); }
         if let Some(x) = args.RECEIVER_ID { builder.add_RECEIVER_ID(x); }
         if let Some(x) = args.ID { builder.add_ID(x); }
+        builder.add_HAS_LEAP_SECONDS(args.HAS_LEAP_SECONDS);
+        builder.add_EPOCH_FLAG(args.EPOCH_FLAG);
         builder.finish()
     }
 
@@ -901,6 +989,36 @@ impl<'a> GNO<'a> {
         let NOTES = self.NOTES().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let TIME_SYSTEM = self.TIME_SYSTEM().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let EPOCH_FLAG = self.EPOCH_FLAG();
+        let MARKER_NAME = self.MARKER_NAME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MARKER_NUMBER = self.MARKER_NUMBER().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let MARKER_TYPE = self.MARKER_TYPE().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let OBSERVER = self.OBSERVER().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let AGENCY = self.AGENCY().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let ANTENNA_DELTA_HEN = self.ANTENNA_DELTA_HEN().map(|x| {
+            x.into_iter().collect()
+        });
+        let PHASE_SHIFTS = self.PHASE_SHIFTS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let SIGNAL_STRENGTH_UNIT = self.SIGNAL_STRENGTH_UNIT().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let LEAP_SECONDS = self.LEAP_SECONDS();
+        let HAS_LEAP_SECONDS = self.HAS_LEAP_SECONDS();
         GNOT {
             ID,
             RECEIVER_ID,
@@ -925,6 +1043,18 @@ impl<'a> GNO<'a> {
             SAT_OBS,
             OBS_CODE_SET,
             NOTES,
+            TIME_SYSTEM,
+            EPOCH_FLAG,
+            MARKER_NAME,
+            MARKER_NUMBER,
+            MARKER_TYPE,
+            OBSERVER,
+            AGENCY,
+            ANTENNA_DELTA_HEN,
+            PHASE_SHIFTS,
+            SIGNAL_STRENGTH_UNIT,
+            LEAP_SECONDS,
+            HAS_LEAP_SECONDS,
         }
     }
 
@@ -1134,6 +1264,121 @@ impl<'a> GNO<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_NOTES, None)}
     }
+
+    /// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+    /// Default empty (not stated).
+    #[inline]
+    pub fn TIME_SYSTEM(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_TIME_SYSTEM, None)}
+    }
+
+    /// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+    /// a moving antenna, 3 new site occupation, 4 header information follows, 5
+    /// external event, 6 cycle slip records follow. Default 0.
+    #[inline]
+    pub fn EPOCH_FLAG(&self) -> u8 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u8>(GNO::VT_EPOCH_FLAG, Some(0)).unwrap()}
+    }
+
+    /// Marker name from the header. Default empty.
+    #[inline]
+    pub fn MARKER_NAME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_MARKER_NAME, None)}
+    }
+
+    /// Marker number from the header. Default empty.
+    #[inline]
+    pub fn MARKER_NUMBER(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_MARKER_NUMBER, None)}
+    }
+
+    /// Marker type from the header. Default empty.
+    #[inline]
+    pub fn MARKER_TYPE(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_MARKER_TYPE, None)}
+    }
+
+    /// Observer from the header. Default empty.
+    #[inline]
+    pub fn OBSERVER(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_OBSERVER, None)}
+    }
+
+    /// Agency from the header. Default empty.
+    #[inline]
+    pub fn AGENCY(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_AGENCY, None)}
+    }
+
+    /// Antenna delta from the marker to the antenna reference point: height, east,
+    /// north, meters, as [H, E, N]. Default empty.
+    #[inline]
+    pub fn ANTENNA_DELTA_HEN(&self) -> Option<::flatbuffers::Vector<'a, f64>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, f64>>>(GNO::VT_ANTENNA_DELTA_HEN, None)}
+    }
+
+    /// Phase shift records as the header writes them, one per line, for example
+    /// "G L2S -0.25000". Default empty.
+    #[inline]
+    pub fn PHASE_SHIFTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(GNO::VT_PHASE_SHIFTS, None)}
+    }
+
+    /// Unit of the signal strength observations as the header states it. Default
+    /// empty.
+    #[inline]
+    pub fn SIGNAL_STRENGTH_UNIT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(GNO::VT_SIGNAL_STRENGTH_UNIT, None)}
+    }
+
+    /// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+    /// when HAS_LEAP_SECONDS.
+    #[inline]
+    pub fn LEAP_SECONDS(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(GNO::VT_LEAP_SECONDS, Some(0)).unwrap()}
+    }
+
+    /// True when LEAP_SECONDS carries a value; false (the default) means absent.
+    #[inline]
+    pub fn HAS_LEAP_SECONDS(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(GNO::VT_HAS_LEAP_SECONDS, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for GNO<'_> {
@@ -1165,6 +1410,18 @@ impl ::flatbuffers::Verifiable for GNO<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<gnssSatObs>>>>("SAT_OBS", Self::VT_SAT_OBS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("OBS_CODE_SET", Self::VT_OBS_CODE_SET, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+            .visit_field::<u8>("EPOCH_FLAG", Self::VT_EPOCH_FLAG, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MARKER_NAME", Self::VT_MARKER_NAME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MARKER_NUMBER", Self::VT_MARKER_NUMBER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("MARKER_TYPE", Self::VT_MARKER_TYPE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("OBSERVER", Self::VT_OBSERVER, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("AGENCY", Self::VT_AGENCY, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, f64>>>("ANTENNA_DELTA_HEN", Self::VT_ANTENNA_DELTA_HEN, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("PHASE_SHIFTS", Self::VT_PHASE_SHIFTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNAL_STRENGTH_UNIT", Self::VT_SIGNAL_STRENGTH_UNIT, false)?
+            .visit_field::<i32>("LEAP_SECONDS", Self::VT_LEAP_SECONDS, false)?
+            .visit_field::<bool>("HAS_LEAP_SECONDS", Self::VT_HAS_LEAP_SECONDS, false)?
             .finish();
         Ok(())
     }
@@ -1194,6 +1451,18 @@ pub struct GNOArgs<'a> {
     pub SAT_OBS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<gnssSatObs<'a>>>>>,
     pub OBS_CODE_SET: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub NOTES: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_SYSTEM: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_FLAG: u8,
+    pub MARKER_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MARKER_NUMBER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub MARKER_TYPE: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub OBSERVER: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub AGENCY: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub ANTENNA_DELTA_HEN: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, f64>>>,
+    pub PHASE_SHIFTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SIGNAL_STRENGTH_UNIT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LEAP_SECONDS: i32,
+    pub HAS_LEAP_SECONDS: bool,
 }
 
 impl<'a> Default for GNOArgs<'a> {
@@ -1223,6 +1492,18 @@ impl<'a> Default for GNOArgs<'a> {
             SAT_OBS: None,
             OBS_CODE_SET: None,
             NOTES: None,
+            TIME_SYSTEM: None,
+            EPOCH_FLAG: 0,
+            MARKER_NAME: None,
+            MARKER_NUMBER: None,
+            MARKER_TYPE: None,
+            OBSERVER: None,
+            AGENCY: None,
+            ANTENNA_DELTA_HEN: None,
+            PHASE_SHIFTS: None,
+            SIGNAL_STRENGTH_UNIT: None,
+            LEAP_SECONDS: 0,
+            HAS_LEAP_SECONDS: false,
         }
     }
 }
@@ -1349,6 +1630,66 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> GNOBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_TIME_SYSTEM, TIME_SYSTEM);
+    }
+
+    #[inline]
+    pub fn add_EPOCH_FLAG(&mut self, EPOCH_FLAG: u8) {
+        self.fbb_.push_slot::<u8>(GNO::VT_EPOCH_FLAG, EPOCH_FLAG, 0);
+    }
+
+    #[inline]
+    pub fn add_MARKER_NAME(&mut self, MARKER_NAME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_MARKER_NAME, MARKER_NAME);
+    }
+
+    #[inline]
+    pub fn add_MARKER_NUMBER(&mut self, MARKER_NUMBER: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_MARKER_NUMBER, MARKER_NUMBER);
+    }
+
+    #[inline]
+    pub fn add_MARKER_TYPE(&mut self, MARKER_TYPE: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_MARKER_TYPE, MARKER_TYPE);
+    }
+
+    #[inline]
+    pub fn add_OBSERVER(&mut self, OBSERVER: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_OBSERVER, OBSERVER);
+    }
+
+    #[inline]
+    pub fn add_AGENCY(&mut self, AGENCY: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_AGENCY, AGENCY);
+    }
+
+    #[inline]
+    pub fn add_ANTENNA_DELTA_HEN(&mut self, ANTENNA_DELTA_HEN: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , f64>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_ANTENNA_DELTA_HEN, ANTENNA_DELTA_HEN);
+    }
+
+    #[inline]
+    pub fn add_PHASE_SHIFTS(&mut self, PHASE_SHIFTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_PHASE_SHIFTS, PHASE_SHIFTS);
+    }
+
+    #[inline]
+    pub fn add_SIGNAL_STRENGTH_UNIT(&mut self, SIGNAL_STRENGTH_UNIT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(GNO::VT_SIGNAL_STRENGTH_UNIT, SIGNAL_STRENGTH_UNIT);
+    }
+
+    #[inline]
+    pub fn add_LEAP_SECONDS(&mut self, LEAP_SECONDS: i32) {
+        self.fbb_.push_slot::<i32>(GNO::VT_LEAP_SECONDS, LEAP_SECONDS, 0);
+    }
+
+    #[inline]
+    pub fn add_HAS_LEAP_SECONDS(&mut self, HAS_LEAP_SECONDS: bool) {
+        self.fbb_.push_slot::<bool>(GNO::VT_HAS_LEAP_SECONDS, HAS_LEAP_SECONDS, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> GNOBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         GNOBuilder {
@@ -1390,6 +1731,18 @@ impl ::core::fmt::Debug for GNO<'_> {
         ds.field("SAT_OBS", &self.SAT_OBS());
         ds.field("OBS_CODE_SET", &self.OBS_CODE_SET());
         ds.field("NOTES", &self.NOTES());
+        ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+        ds.field("EPOCH_FLAG", &self.EPOCH_FLAG());
+        ds.field("MARKER_NAME", &self.MARKER_NAME());
+        ds.field("MARKER_NUMBER", &self.MARKER_NUMBER());
+        ds.field("MARKER_TYPE", &self.MARKER_TYPE());
+        ds.field("OBSERVER", &self.OBSERVER());
+        ds.field("AGENCY", &self.AGENCY());
+        ds.field("ANTENNA_DELTA_HEN", &self.ANTENNA_DELTA_HEN());
+        ds.field("PHASE_SHIFTS", &self.PHASE_SHIFTS());
+        ds.field("SIGNAL_STRENGTH_UNIT", &self.SIGNAL_STRENGTH_UNIT());
+        ds.field("LEAP_SECONDS", &self.LEAP_SECONDS());
+        ds.field("HAS_LEAP_SECONDS", &self.HAS_LEAP_SECONDS());
         ds.finish()
     }
 }
@@ -1420,6 +1773,18 @@ pub struct GNOT {
     pub SAT_OBS: Option<alloc::vec::Vec<gnssSatObsT>>,
     pub OBS_CODE_SET: Option<alloc::vec::Vec<alloc::string::String>>,
     pub NOTES: Option<alloc::string::String>,
+    pub TIME_SYSTEM: Option<alloc::string::String>,
+    pub EPOCH_FLAG: u8,
+    pub MARKER_NAME: Option<alloc::string::String>,
+    pub MARKER_NUMBER: Option<alloc::string::String>,
+    pub MARKER_TYPE: Option<alloc::string::String>,
+    pub OBSERVER: Option<alloc::string::String>,
+    pub AGENCY: Option<alloc::string::String>,
+    pub ANTENNA_DELTA_HEN: Option<alloc::vec::Vec<f64>>,
+    pub PHASE_SHIFTS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub SIGNAL_STRENGTH_UNIT: Option<alloc::string::String>,
+    pub LEAP_SECONDS: i32,
+    pub HAS_LEAP_SECONDS: bool,
 }
 
 impl Default for GNOT {
@@ -1448,6 +1813,18 @@ impl Default for GNOT {
             SAT_OBS: None,
             OBS_CODE_SET: None,
             NOTES: None,
+            TIME_SYSTEM: None,
+            EPOCH_FLAG: 0,
+            MARKER_NAME: None,
+            MARKER_NUMBER: None,
+            MARKER_TYPE: None,
+            OBSERVER: None,
+            AGENCY: None,
+            ANTENNA_DELTA_HEN: None,
+            PHASE_SHIFTS: None,
+            SIGNAL_STRENGTH_UNIT: None,
+            LEAP_SECONDS: 0,
+            HAS_LEAP_SECONDS: false,
         }
     }
 }
@@ -1500,6 +1877,36 @@ impl GNOT {
         let NOTES = self.NOTES.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let TIME_SYSTEM = self.TIME_SYSTEM.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let EPOCH_FLAG = self.EPOCH_FLAG;
+        let MARKER_NAME = self.MARKER_NAME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MARKER_NUMBER = self.MARKER_NUMBER.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let MARKER_TYPE = self.MARKER_TYPE.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let OBSERVER = self.OBSERVER.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let AGENCY = self.AGENCY.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let ANTENNA_DELTA_HEN = self.ANTENNA_DELTA_HEN.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let PHASE_SHIFTS = self.PHASE_SHIFTS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let SIGNAL_STRENGTH_UNIT = self.SIGNAL_STRENGTH_UNIT.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let LEAP_SECONDS = self.LEAP_SECONDS;
+        let HAS_LEAP_SECONDS = self.HAS_LEAP_SECONDS;
         GNO::create(_fbb, &GNOArgs{
             ID,
             RECEIVER_ID,
@@ -1524,6 +1931,18 @@ impl GNOT {
             SAT_OBS,
             OBS_CODE_SET,
             NOTES,
+            TIME_SYSTEM,
+            EPOCH_FLAG,
+            MARKER_NAME,
+            MARKER_NUMBER,
+            MARKER_TYPE,
+            OBSERVER,
+            AGENCY,
+            ANTENNA_DELTA_HEN,
+            PHASE_SHIFTS,
+            SIGNAL_STRENGTH_UNIT,
+            LEAP_SECONDS,
+            HAS_LEAP_SECONDS,
         })
     }
 }

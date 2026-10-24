@@ -57,7 +57,9 @@ enum gnssObsType {
   CARRIER_PHASE(1),
   DOPPLER(2),
   SNR(3),
-  RAW_IF(4);
+  RAW_IF(4),
+  IONOSPHERE_PHASE_DELAY(5),
+  CHANNEL_NUMBER(6);
 
   final int value;
   const gnssObsType(this.value);
@@ -69,6 +71,8 @@ enum gnssObsType {
       case 2: return gnssObsType.DOPPLER;
       case 3: return gnssObsType.SNR;
       case 4: return gnssObsType.RAW_IF;
+      case 5: return gnssObsType.IONOSPHERE_PHASE_DELAY;
+      case 6: return gnssObsType.CHANNEL_NUMBER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -77,7 +81,7 @@ enum gnssObsType {
       value == null ? null : gnssObsType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 4;
+  static const int maxValue = 6;
   static const fb.Reader<gnssObsType> reader = _gnssObsTypeReader();
 }
 
@@ -239,10 +243,18 @@ class gnssSatObs {
   int get agcState => AGC_STATE;
   ///  Observations for this satellite
   List<gnssObsData>? get OBSERVATIONS => const fb.ListReader<gnssObsData>(gnssObsData.reader).vTableGetNullable(_bc, _bcOffset, 16);
+  ///  GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+  ///  FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+  int get GLONASS_FREQUENCY_NUMBER => const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get glonassFrequencyNumber => GLONASS_FREQUENCY_NUMBER;
+  ///  True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+  ///  channel); false (the default) means absent.
+  bool get HAS_GLONASS_FREQUENCY_NUMBER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasGlonassFrequencyNumber => HAS_GLONASS_FREQUENCY_NUMBER;
 
   @override
   String toString() {
-    return 'gnssSatObs{gnssSatId: ${gnssSatId}, CONSTELLATION: ${CONSTELLATION}, ELEVATION: ${ELEVATION}, AZIMUTH: ${AZIMUTH}, trackingStatus: ${trackingStatus}, agcState: ${agcState}, OBSERVATIONS: ${OBSERVATIONS}}';
+    return 'gnssSatObs{gnssSatId: ${gnssSatId}, CONSTELLATION: ${CONSTELLATION}, ELEVATION: ${ELEVATION}, AZIMUTH: ${AZIMUTH}, trackingStatus: ${trackingStatus}, agcState: ${agcState}, OBSERVATIONS: ${OBSERVATIONS}, glonassFrequencyNumber: ${glonassFrequencyNumber}, hasGlonassFrequencyNumber: ${hasGlonassFrequencyNumber}}';
   }
 }
 
@@ -260,7 +272,7 @@ class gnssSatObsBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(9);
   }
 
   int addGnssSatIdOffset(int? offset) {
@@ -291,6 +303,14 @@ class gnssSatObsBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addGlonassFrequencyNumber(int? GLONASS_FREQUENCY_NUMBER) {
+    fbBuilder.addInt8(7, GLONASS_FREQUENCY_NUMBER);
+    return fbBuilder.offset;
+  }
+  int addHasGlonassFrequencyNumber(bool? HAS_GLONASS_FREQUENCY_NUMBER) {
+    fbBuilder.addBool(8, HAS_GLONASS_FREQUENCY_NUMBER);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -305,6 +325,8 @@ class gnssSatObsObjectBuilder extends fb.ObjectBuilder {
   final int? _TRACKING_STATUS;
   final int? _AGC_STATE;
   final List<gnssObsDataObjectBuilder>? _OBSERVATIONS;
+  final int? _GLONASS_FREQUENCY_NUMBER;
+  final bool? _HAS_GLONASS_FREQUENCY_NUMBER;
 
   gnssSatObsObjectBuilder({
     String? GNSS_SAT_ID,
@@ -317,6 +339,10 @@ class gnssSatObsObjectBuilder extends fb.ObjectBuilder {
     int? AGC_STATE,
     int? agcState,
     List<gnssObsDataObjectBuilder>? OBSERVATIONS,
+    int? GLONASS_FREQUENCY_NUMBER,
+    int? glonassFrequencyNumber,
+    bool? HAS_GLONASS_FREQUENCY_NUMBER,
+    bool? hasGlonassFrequencyNumber,
   })
       : _GNSS_SAT_ID = gnssSatId ?? GNSS_SAT_ID,
         _CONSTELLATION = CONSTELLATION,
@@ -324,7 +350,9 @@ class gnssSatObsObjectBuilder extends fb.ObjectBuilder {
         _AZIMUTH = AZIMUTH,
         _TRACKING_STATUS = trackingStatus ?? TRACKING_STATUS,
         _AGC_STATE = agcState ?? AGC_STATE,
-        _OBSERVATIONS = OBSERVATIONS;
+        _OBSERVATIONS = OBSERVATIONS,
+        _GLONASS_FREQUENCY_NUMBER = glonassFrequencyNumber ?? GLONASS_FREQUENCY_NUMBER,
+        _HAS_GLONASS_FREQUENCY_NUMBER = hasGlonassFrequencyNumber ?? HAS_GLONASS_FREQUENCY_NUMBER;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -333,7 +361,7 @@ class gnssSatObsObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_GNSS_SAT_ID!);
     final int? OBSERVATIONSOffset = _OBSERVATIONS == null ? null
         : fbBuilder.writeList(_OBSERVATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(9);
     fbBuilder.addOffset(0, GNSS_SAT_IDOffset);
     fbBuilder.addInt8(1, _CONSTELLATION?.value);
     fbBuilder.addFloat64(2, _ELEVATION);
@@ -341,6 +369,8 @@ class gnssSatObsObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addInt32(4, _TRACKING_STATUS);
     fbBuilder.addInt32(5, _AGC_STATE);
     fbBuilder.addOffset(6, OBSERVATIONSOffset);
+    fbBuilder.addInt8(7, _GLONASS_FREQUENCY_NUMBER);
+    fbBuilder.addBool(8, _HAS_GLONASS_FREQUENCY_NUMBER);
     return fbBuilder.endTable();
   }
 
@@ -424,10 +454,51 @@ class GNO {
   List<String>? get obsCodeSet => OBS_CODE_SET;
   ///  Additional notes
   String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+  ///  Default empty (not stated).
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  String? get timeSystem => TIME_SYSTEM;
+  ///  RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+  ///  a moving antenna, 3 new site occupation, 4 header information follows, 5
+  ///  external event, 6 cycle slip records follow. Default 0.
+  int get EPOCH_FLAG => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  int get epochFlag => EPOCH_FLAG;
+  ///  Marker name from the header. Default empty.
+  String? get MARKER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  String? get markerName => MARKER_NAME;
+  ///  Marker number from the header. Default empty.
+  String? get MARKER_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  String? get markerNumber => MARKER_NUMBER;
+  ///  Marker type from the header. Default empty.
+  String? get MARKER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  String? get markerType => MARKER_TYPE;
+  ///  Observer from the header. Default empty.
+  String? get OBSERVER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Agency from the header. Default empty.
+  String? get AGENCY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Antenna delta from the marker to the antenna reference point: height, east,
+  ///  north, meters, as [H, E, N]. Default empty.
+  List<double>? get ANTENNA_DELTA_HEN => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 64);
+  List<double>? get antennaDeltaHen => ANTENNA_DELTA_HEN;
+  ///  Phase shift records as the header writes them, one per line, for example
+  ///  "G L2S -0.25000". Default empty.
+  List<String>? get PHASE_SHIFTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
+  List<String>? get phaseShifts => PHASE_SHIFTS;
+  ///  Unit of the signal strength observations as the header states it. Default
+  ///  empty.
+  String? get SIGNAL_STRENGTH_UNIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  String? get signalStrengthUnit => SIGNAL_STRENGTH_UNIT;
+  ///  Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+  ///  when HAS_LEAP_SECONDS.
+  int get LEAP_SECONDS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 70, 0);
+  int get leapSeconds => LEAP_SECONDS;
+  ///  True when LEAP_SECONDS carries a value; false (the default) means absent.
+  bool get HAS_LEAP_SECONDS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
+  bool get hasLeapSeconds => HAS_LEAP_SECONDS;
 
   @override
   String toString() {
-    return 'GNO{ID: ${ID}, receiverId: ${receiverId}, receiverType: ${receiverType}, antennaId: ${antennaId}, antennaType: ${antennaType}, firmwareVersion: ${firmwareVersion}, EPOCH: ${EPOCH}, clockOffset: ${clockOffset}, clockDrift: ${clockDrift}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, approxX: ${approxX}, approxY: ${approxY}, approxZ: ${approxZ}, INTERVAL: ${INTERVAL}, numSats: ${numSats}, PDOP: ${PDOP}, HDOP: ${HDOP}, VDOP: ${VDOP}, satObs: ${satObs}, obsCodeSet: ${obsCodeSet}, NOTES: ${NOTES}}';
+    return 'GNO{ID: ${ID}, receiverId: ${receiverId}, receiverType: ${receiverType}, antennaId: ${antennaId}, antennaType: ${antennaType}, firmwareVersion: ${firmwareVersion}, EPOCH: ${EPOCH}, clockOffset: ${clockOffset}, clockDrift: ${clockDrift}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, approxX: ${approxX}, approxY: ${approxY}, approxZ: ${approxZ}, INTERVAL: ${INTERVAL}, numSats: ${numSats}, PDOP: ${PDOP}, HDOP: ${HDOP}, VDOP: ${VDOP}, satObs: ${satObs}, obsCodeSet: ${obsCodeSet}, NOTES: ${NOTES}, timeSystem: ${timeSystem}, epochFlag: ${epochFlag}, markerName: ${markerName}, markerNumber: ${markerNumber}, markerType: ${markerType}, OBSERVER: ${OBSERVER}, AGENCY: ${AGENCY}, antennaDeltaHen: ${antennaDeltaHen}, phaseShifts: ${phaseShifts}, signalStrengthUnit: ${signalStrengthUnit}, leapSeconds: ${leapSeconds}, hasLeapSeconds: ${hasLeapSeconds}}';
   }
 }
 
@@ -445,7 +516,7 @@ class GNOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(23);
+    fbBuilder.startTable(35);
   }
 
   int addIdOffset(int? offset) {
@@ -540,6 +611,54 @@ class GNOBuilder {
     fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochFlag(int? EPOCH_FLAG) {
+    fbBuilder.addUint8(24, EPOCH_FLAG);
+    return fbBuilder.offset;
+  }
+  int addMarkerNameOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addMarkerNumberOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addMarkerTypeOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addObserverOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addAgencyOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addAntennaDeltaHenOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addPhaseShiftsOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addSignalStrengthUnitOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addLeapSeconds(int? LEAP_SECONDS) {
+    fbBuilder.addInt32(33, LEAP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHasLeapSeconds(bool? HAS_LEAP_SECONDS) {
+    fbBuilder.addBool(34, HAS_LEAP_SECONDS);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -570,6 +689,18 @@ class GNOObjectBuilder extends fb.ObjectBuilder {
   final List<gnssSatObsObjectBuilder>? _SAT_OBS;
   final List<String>? _OBS_CODE_SET;
   final String? _NOTES;
+  final String? _TIME_SYSTEM;
+  final int? _EPOCH_FLAG;
+  final String? _MARKER_NAME;
+  final String? _MARKER_NUMBER;
+  final String? _MARKER_TYPE;
+  final String? _OBSERVER;
+  final String? _AGENCY;
+  final List<double>? _ANTENNA_DELTA_HEN;
+  final List<String>? _PHASE_SHIFTS;
+  final String? _SIGNAL_STRENGTH_UNIT;
+  final int? _LEAP_SECONDS;
+  final bool? _HAS_LEAP_SECONDS;
 
   GNOObjectBuilder({
     String? ID,
@@ -608,6 +739,28 @@ class GNOObjectBuilder extends fb.ObjectBuilder {
     List<String>? OBS_CODE_SET,
     List<String>? obsCodeSet,
     String? NOTES,
+    String? TIME_SYSTEM,
+    String? timeSystem,
+    int? EPOCH_FLAG,
+    int? epochFlag,
+    String? MARKER_NAME,
+    String? markerName,
+    String? MARKER_NUMBER,
+    String? markerNumber,
+    String? MARKER_TYPE,
+    String? markerType,
+    String? OBSERVER,
+    String? AGENCY,
+    List<double>? ANTENNA_DELTA_HEN,
+    List<double>? antennaDeltaHen,
+    List<String>? PHASE_SHIFTS,
+    List<String>? phaseShifts,
+    String? SIGNAL_STRENGTH_UNIT,
+    String? signalStrengthUnit,
+    int? LEAP_SECONDS,
+    int? leapSeconds,
+    bool? HAS_LEAP_SECONDS,
+    bool? hasLeapSeconds,
   })
       : _ID = ID,
         _RECEIVER_ID = receiverId ?? RECEIVER_ID,
@@ -631,7 +784,19 @@ class GNOObjectBuilder extends fb.ObjectBuilder {
         _VDOP = VDOP,
         _SAT_OBS = satObs ?? SAT_OBS,
         _OBS_CODE_SET = obsCodeSet ?? OBS_CODE_SET,
-        _NOTES = NOTES;
+        _NOTES = NOTES,
+        _TIME_SYSTEM = timeSystem ?? TIME_SYSTEM,
+        _EPOCH_FLAG = epochFlag ?? EPOCH_FLAG,
+        _MARKER_NAME = markerName ?? MARKER_NAME,
+        _MARKER_NUMBER = markerNumber ?? MARKER_NUMBER,
+        _MARKER_TYPE = markerType ?? MARKER_TYPE,
+        _OBSERVER = OBSERVER,
+        _AGENCY = AGENCY,
+        _ANTENNA_DELTA_HEN = antennaDeltaHen ?? ANTENNA_DELTA_HEN,
+        _PHASE_SHIFTS = phaseShifts ?? PHASE_SHIFTS,
+        _SIGNAL_STRENGTH_UNIT = signalStrengthUnit ?? SIGNAL_STRENGTH_UNIT,
+        _LEAP_SECONDS = leapSeconds ?? LEAP_SECONDS,
+        _HAS_LEAP_SECONDS = hasLeapSeconds ?? HAS_LEAP_SECONDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -656,7 +821,25 @@ class GNOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_OBS_CODE_SET!.map(fbBuilder.writeString).toList());
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    fbBuilder.startTable(23);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? MARKER_NAMEOffset = _MARKER_NAME == null ? null
+        : fbBuilder.writeString(_MARKER_NAME!);
+    final int? MARKER_NUMBEROffset = _MARKER_NUMBER == null ? null
+        : fbBuilder.writeString(_MARKER_NUMBER!);
+    final int? MARKER_TYPEOffset = _MARKER_TYPE == null ? null
+        : fbBuilder.writeString(_MARKER_TYPE!);
+    final int? OBSERVEROffset = _OBSERVER == null ? null
+        : fbBuilder.writeString(_OBSERVER!);
+    final int? AGENCYOffset = _AGENCY == null ? null
+        : fbBuilder.writeString(_AGENCY!);
+    final int? ANTENNA_DELTA_HENOffset = _ANTENNA_DELTA_HEN == null ? null
+        : fbBuilder.writeListFloat64(_ANTENNA_DELTA_HEN!);
+    final int? PHASE_SHIFTSOffset = _PHASE_SHIFTS == null ? null
+        : fbBuilder.writeList(_PHASE_SHIFTS!.map(fbBuilder.writeString).toList());
+    final int? SIGNAL_STRENGTH_UNITOffset = _SIGNAL_STRENGTH_UNIT == null ? null
+        : fbBuilder.writeString(_SIGNAL_STRENGTH_UNIT!);
+    fbBuilder.startTable(35);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, RECEIVER_IDOffset);
     fbBuilder.addOffset(2, RECEIVER_TYPEOffset);
@@ -680,6 +863,18 @@ class GNOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(20, SAT_OBSOffset);
     fbBuilder.addOffset(21, OBS_CODE_SETOffset);
     fbBuilder.addOffset(22, NOTESOffset);
+    fbBuilder.addOffset(23, TIME_SYSTEMOffset);
+    fbBuilder.addUint8(24, _EPOCH_FLAG);
+    fbBuilder.addOffset(25, MARKER_NAMEOffset);
+    fbBuilder.addOffset(26, MARKER_NUMBEROffset);
+    fbBuilder.addOffset(27, MARKER_TYPEOffset);
+    fbBuilder.addOffset(28, OBSERVEROffset);
+    fbBuilder.addOffset(29, AGENCYOffset);
+    fbBuilder.addOffset(30, ANTENNA_DELTA_HENOffset);
+    fbBuilder.addOffset(31, PHASE_SHIFTSOffset);
+    fbBuilder.addOffset(32, SIGNAL_STRENGTH_UNITOffset);
+    fbBuilder.addInt32(33, _LEAP_SECONDS);
+    fbBuilder.addBool(34, _HAS_LEAP_SECONDS);
     return fbBuilder.endTable();
   }
 

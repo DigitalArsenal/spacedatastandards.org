@@ -131,6 +131,42 @@ export declare class NCD implements flatbuffers.IUnpackableObject<NCDT> {
      */
     SOURCE_CID(): string | null;
     SOURCE_CID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * A reader's REQUEST, carried in the descriptor that frames the file so that
+     * no option travels outside a typed record. Start of the inclusive window to
+     * read, ISO 8601, on the container's own time scale. Default empty (from the
+     * start of the container).
+     */
+    SELECT_START_TIME(): string | null;
+    SELECT_START_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * End of the inclusive window to read, ISO 8601, on the container's own time
+     * scale. Default empty (to the end of the container).
+     */
+    SELECT_STOP_TIME(): string | null;
+    SELECT_STOP_TIME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+     */
+    SELECT_SAMPLE_INTERVAL_SECONDS(): number;
+    /**
+     * Satellite systems to read, as the RINEX letters G R E C J I S. Default
+     * empty (every system the container holds).
+     */
+    SELECT_SATELLITE_SYSTEMS(index: number): string;
+    SELECT_SATELLITE_SYSTEMS(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    selectSatelliteSystemsLength(): number;
+    /**
+     * Observation codes to read (C1C, L1C, ...). Default empty (every code).
+     */
+    SELECT_OBSERVATION_CODES(index: number): string;
+    SELECT_OBSERVATION_CODES(index: number, optionalEncoding: flatbuffers.Encoding): string | Uint8Array;
+    selectObservationCodesLength(): number;
+    /**
+     * Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+     * by the instrument id. Default 0.
+     */
+    SELECT_CLOCK_ID(): number;
     static startNCD(builder: flatbuffers.Builder): void;
     static addFormat(builder: flatbuffers.Builder, FORMAT: ncdContainerFormat): void;
     static addProviderDefinedFormatName(builder: flatbuffers.Builder, PROVIDER_DEFINED_FORMAT_NAMEOffset: flatbuffers.Offset): void;
@@ -156,6 +192,16 @@ export declare class NCD implements flatbuffers.IUnpackableObject<NCDT> {
     static addSourceByteLength(builder: flatbuffers.Builder, SOURCE_BYTE_LENGTH: bigint): void;
     static addSourceSha256(builder: flatbuffers.Builder, SOURCE_SHA256Offset: flatbuffers.Offset): void;
     static addSourceCid(builder: flatbuffers.Builder, SOURCE_CIDOffset: flatbuffers.Offset): void;
+    static addSelectStartTime(builder: flatbuffers.Builder, SELECT_START_TIMEOffset: flatbuffers.Offset): void;
+    static addSelectStopTime(builder: flatbuffers.Builder, SELECT_STOP_TIMEOffset: flatbuffers.Offset): void;
+    static addSelectSampleIntervalSeconds(builder: flatbuffers.Builder, SELECT_SAMPLE_INTERVAL_SECONDS: number): void;
+    static addSelectSatelliteSystems(builder: flatbuffers.Builder, SELECT_SATELLITE_SYSTEMSOffset: flatbuffers.Offset): void;
+    static createSelectSatelliteSystemsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startSelectSatelliteSystemsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSelectObservationCodes(builder: flatbuffers.Builder, SELECT_OBSERVATION_CODESOffset: flatbuffers.Offset): void;
+    static createSelectObservationCodesVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startSelectObservationCodesVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addSelectClockId(builder: flatbuffers.Builder, SELECT_CLOCK_ID: number): void;
     static endNCD(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishNCDBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedNCDBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -183,7 +229,13 @@ export declare class NCDT implements flatbuffers.IGeneratedObject {
     SOURCE_BYTE_LENGTH: bigint;
     SOURCE_SHA256: string | Uint8Array | null;
     SOURCE_CID: string | Uint8Array | null;
-    constructor(FORMAT?: ncdContainerFormat, PROVIDER_DEFINED_FORMAT_NAME?: string | Uint8Array | null, FORMAT_VERSION?: string | Uint8Array | null, PRODUCER?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, INTERNAL_FILE_NAME?: string | Uint8Array | null, COMMENT_AREA?: (string)[], NATIVE_FRAME_NAME?: string | Uint8Array | null, NATIVE_FRAME_ID?: number, NATIVE_TIME_SYSTEM?: string | Uint8Array | null, SEGMENTS?: (NCDSegmentDescriptorT)[], SP3_HEADER?: NCDSP3HeaderT | null, SCENARIO_CONTAINER?: NCDScenarioEpochContainerT | null, CODE_500_HEADER?: NCDCode500HeaderT | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, SOURCE_BYTE_LENGTH?: bigint, SOURCE_SHA256?: string | Uint8Array | null, SOURCE_CID?: string | Uint8Array | null);
+    SELECT_START_TIME: string | Uint8Array | null;
+    SELECT_STOP_TIME: string | Uint8Array | null;
+    SELECT_SAMPLE_INTERVAL_SECONDS: number;
+    SELECT_SATELLITE_SYSTEMS: (string)[];
+    SELECT_OBSERVATION_CODES: (string)[];
+    SELECT_CLOCK_ID: number;
+    constructor(FORMAT?: ncdContainerFormat, PROVIDER_DEFINED_FORMAT_NAME?: string | Uint8Array | null, FORMAT_VERSION?: string | Uint8Array | null, PRODUCER?: string | Uint8Array | null, CREATION_DATE?: string | Uint8Array | null, ORIGINATOR?: string | Uint8Array | null, INTERNAL_FILE_NAME?: string | Uint8Array | null, COMMENT_AREA?: (string)[], NATIVE_FRAME_NAME?: string | Uint8Array | null, NATIVE_FRAME_ID?: number, NATIVE_TIME_SYSTEM?: string | Uint8Array | null, SEGMENTS?: (NCDSegmentDescriptorT)[], SP3_HEADER?: NCDSP3HeaderT | null, SCENARIO_CONTAINER?: NCDScenarioEpochContainerT | null, CODE_500_HEADER?: NCDCode500HeaderT | null, START_TIME?: string | Uint8Array | null, STOP_TIME?: string | Uint8Array | null, SOURCE_BYTE_LENGTH?: bigint, SOURCE_SHA256?: string | Uint8Array | null, SOURCE_CID?: string | Uint8Array | null, SELECT_START_TIME?: string | Uint8Array | null, SELECT_STOP_TIME?: string | Uint8Array | null, SELECT_SAMPLE_INTERVAL_SECONDS?: number, SELECT_SATELLITE_SYSTEMS?: (string)[], SELECT_OBSERVATION_CODES?: (string)[], SELECT_CLOCK_ID?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=NCD.d.ts.map

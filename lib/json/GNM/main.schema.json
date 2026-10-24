@@ -1,0 +1,454 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "gnssConstellation" : {
+      "type" : "string",
+      "enum": ["GPS", "GLONASS", "GALILEO", "BEIDOU", "QZSS", "IRNSS", "SBAS", "MIXED"]
+    },
+    "gnssObsType" : {
+      "type" : "string",
+      "enum": ["PSEUDORANGE", "CARRIER_PHASE", "DOPPLER", "SNR", "RAW_IF", "IONOSPHERE_PHASE_DELAY", "CHANNEL_NUMBER"]
+    },
+    "gnssNavMessageType" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "LNAV", "CNAV", "CNV1", "CNV2", "CNV3", "FNAV", "INAV", "D1", "D2", "FDMA", "SBAS"]
+    },
+    "gnssObsData" : {
+      "type" : "object",
+      "description" : "GNSS Observation Data Point",
+      "properties" : {
+        "SIGNAL" : {
+                "type" : "string",
+                "description" : "Signal type code (e.g., L1C, L2P, L5Q, E1B)"
+              },
+        "OBS_TYPE" : {
+                "$ref" : "#/definitions/gnssObsType",
+                "description" : "Observation type"
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Observation value (units depend on type: m, cycles, Hz, dB-Hz)"
+              },
+        "LLI" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Loss of lock indicator"
+              },
+        "SSI" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Signal strength indicator (1-9)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "gnssSatObs" : {
+      "type" : "object",
+      "description" : "GNSS Satellite Observation",
+      "properties" : {
+        "GNSS_SAT_ID" : {
+                "type" : "string",
+                "description" : "GNSS satellite identifier (e.g., G01, R24, E05, C03)"
+              },
+        "CONSTELLATION" : {
+                "$ref" : "#/definitions/gnssConstellation",
+                "description" : "Constellation"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation angle in degrees"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth angle in degrees"
+              },
+        "TRACKING_STATUS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Tracking status (0=not tracked, 1=tracking, 2=locked)"
+              },
+        "AGC_STATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "AGC state"
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/gnssObsData"},
+                "description" : "Observations for this satellite"
+              },
+        "GLONASS_FREQUENCY_NUMBER" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127,
+                "description" : "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER."
+              },
+        "HAS_GLONASS_FREQUENCY_NUMBER" : {
+                "type" : "boolean",
+                "description" : "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GNO" : {
+      "type" : "object",
+      "description" : "GNSS Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "RECEIVER_ID" : {
+                "type" : "string",
+                "description" : "Receiver identifier"
+              },
+        "RECEIVER_TYPE" : {
+                "type" : "string",
+                "description" : "Receiver type/model"
+              },
+        "ANTENNA_ID" : {
+                "type" : "string",
+                "description" : "Antenna identifier"
+              },
+        "ANTENNA_TYPE" : {
+                "type" : "string",
+                "description" : "Antenna type/model"
+              },
+        "FIRMWARE_VERSION" : {
+                "type" : "string",
+                "description" : "Receiver firmware version"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Observation epoch (ISO 8601)"
+              },
+        "CLOCK_OFFSET" : {
+                "type" : "number",
+                "description" : "Receiver clock offset in seconds"
+              },
+        "CLOCK_DRIFT" : {
+                "type" : "number",
+                "description" : "Receiver clock drift in seconds/second"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Receiver geodetic latitude in degrees"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Receiver geodetic longitude in degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Receiver altitude in meters above WGS-84"
+              },
+        "APPROX_X" : {
+                "type" : "number",
+                "description" : "Approximate position X in meters (ECEF)"
+              },
+        "APPROX_Y" : {
+                "type" : "number",
+                "description" : "Approximate position Y in meters (ECEF)"
+              },
+        "APPROX_Z" : {
+                "type" : "number",
+                "description" : "Approximate position Z in meters (ECEF)"
+              },
+        "INTERVAL" : {
+                "type" : "number",
+                "description" : "Observation interval in seconds"
+              },
+        "NUM_SATS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of satellites observed"
+              },
+        "PDOP" : {
+                "type" : "number",
+                "description" : "PDOP"
+              },
+        "HDOP" : {
+                "type" : "number",
+                "description" : "HDOP"
+              },
+        "VDOP" : {
+                "type" : "number",
+                "description" : "VDOP"
+              },
+        "SAT_OBS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/gnssSatObs"},
+                "description" : "Satellite observations"
+              },
+        "OBS_CODE_SET" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Observation code set identifiers"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated)."
+              },
+        "EPOCH_FLAG" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0."
+              },
+        "MARKER_NAME" : {
+                "type" : "string",
+                "description" : "Marker name from the header. Default empty."
+              },
+        "MARKER_NUMBER" : {
+                "type" : "string",
+                "description" : "Marker number from the header. Default empty."
+              },
+        "MARKER_TYPE" : {
+                "type" : "string",
+                "description" : "Marker type from the header. Default empty."
+              },
+        "OBSERVER" : {
+                "type" : "string",
+                "description" : "Observer from the header. Default empty."
+              },
+        "AGENCY" : {
+                "type" : "string",
+                "description" : "Agency from the header. Default empty."
+              },
+        "ANTENNA_DELTA_HEN" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty."
+              },
+        "PHASE_SHIFTS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Phase shift records as the header writes them, one per line, for example\n\"G L2S -0.25000\". Default empty."
+              },
+        "SIGNAL_STRENGTH_UNIT" : {
+                "type" : "string",
+                "description" : "Unit of the signal strength observations as the header states it. Default\nempty."
+              },
+        "LEAP_SECONDS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS."
+              },
+        "HAS_LEAP_SECONDS" : {
+                "type" : "boolean",
+                "description" : "True when LEAP_SECONDS carries a value; false (the default) means absent."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "gnssKeplerianBroadcast" : {
+      "type" : "object",
+      "description" : "Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the\nsymbols of IS-GPS-200. Angles in radians, lengths in meters, times in\nseconds; every field defaults to 0.",
+      "properties" : {
+        "SQRT_A" : {
+                "type" : "number",
+                "description" : "Square root of the semi-major axis, sqrt(m)."
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity, dimensionless."
+              },
+        "I0" : {
+                "type" : "number",
+                "description" : "Inclination at TOE, rad."
+              },
+        "OMEGA0" : {
+                "type" : "number",
+                "description" : "Longitude of the ascending node at the weekly epoch, rad."
+              },
+        "OMEGA" : {
+                "type" : "number",
+                "description" : "Argument of perigee, rad."
+              },
+        "M0" : {
+                "type" : "number",
+                "description" : "Mean anomaly at TOE, rad."
+              },
+        "DELTA_N" : {
+                "type" : "number",
+                "description" : "Mean motion difference from the computed value, rad/s."
+              },
+        "OMEGA_DOT" : {
+                "type" : "number",
+                "description" : "Rate of right ascension, rad/s."
+              },
+        "IDOT" : {
+                "type" : "number",
+                "description" : "Rate of inclination, rad/s."
+              },
+        "CUC" : {
+                "type" : "number",
+                "description" : "Cosine harmonic correction to the argument of latitude, rad."
+              },
+        "CUS" : {
+                "type" : "number",
+                "description" : "Sine harmonic correction to the argument of latitude, rad."
+              },
+        "CRC" : {
+                "type" : "number",
+                "description" : "Cosine harmonic correction to the orbit radius, m."
+              },
+        "CRS" : {
+                "type" : "number",
+                "description" : "Sine harmonic correction to the orbit radius, m."
+              },
+        "CIC" : {
+                "type" : "number",
+                "description" : "Cosine harmonic correction to the inclination, rad."
+              },
+        "CIS" : {
+                "type" : "number",
+                "description" : "Sine harmonic correction to the inclination, rad."
+              },
+        "TOE" : {
+                "type" : "number",
+                "description" : "Time of ephemeris, seconds of the system week."
+              },
+        "WEEK" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "System week of TOE, not rolled over."
+              },
+        "IODE_OR_IODNAV" : {
+                "type" : "number",
+                "description" : "Issue of data as broadcast (IODE, IODC or IODnav)."
+              },
+        "FIT_INTERVAL_HOURS" : {
+                "type" : "number",
+                "description" : "Fit interval, hours."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "gnssStateBroadcast" : {
+      "type" : "object",
+      "description" : "GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame\n(PZ-90 or the system frame): km, km/s, km/s^2.",
+      "properties" : {
+        "X" : {
+                "type" : "number",
+                "description" : "Position, km."
+              },
+        "Y" : {
+                "type" : "number"
+              },
+        "Z" : {
+                "type" : "number"
+              },
+        "VX" : {
+                "type" : "number",
+                "description" : "Velocity, km/s."
+              },
+        "VY" : {
+                "type" : "number"
+              },
+        "VZ" : {
+                "type" : "number"
+              },
+        "AX" : {
+                "type" : "number",
+                "description" : "Luni-solar acceleration, km/s^2."
+              },
+        "AY" : {
+                "type" : "number"
+              },
+        "AZ" : {
+                "type" : "number"
+              },
+        "TOE" : {
+                "type" : "number",
+                "description" : "Reference time of the state, seconds of the day."
+              },
+        "FREQUENCY_NUMBER" : {
+                "type" : "integer", "minimum" : -128, "maximum" : 127,
+                "description" : "GLONASS frequency channel number k. Meaningful only when\nHAS_FREQUENCY_NUMBER."
+              },
+        "HAS_FREQUENCY_NUMBER" : {
+                "type" : "boolean",
+                "description" : "True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);\nfalse (the default) means absent."
+              },
+        "MESSAGE_FRAME_TIME" : {
+                "type" : "number",
+                "description" : "Message frame time, seconds of the day."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "GNM" : {
+      "type" : "object",
+      "description" : "GNSS broadcast navigation message: one satellite, one message. Exactly one\nof KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The\nparameters are the broadcast ones, not an evaluated orbit; an evaluated\norbit belongs in $OEM.",
+      "properties" : {
+        "SATELLITE_ID" : {
+                "type" : "string",
+                "description" : "Satellite identifier as the source writes it, for example G05, E11, C21,\nR24. Default empty."
+              },
+        "CONSTELLATION" : {
+                "$ref" : "#/definitions/gnssConstellation",
+                "description" : "Constellation of the satellite (the $GNO family's enumeration)."
+              },
+        "MESSAGE_TYPE" : {
+                "$ref" : "#/definitions/gnssNavMessageType",
+                "description" : "Broadcast message the record came from. Default UNSPECIFIED."
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "System time scale TOC, TOE and the clock refer to, as the source names it.\nDefault empty."
+              },
+        "TOC" : {
+                "type" : "string",
+                "description" : "Time of clock, ISO 8601 on TIME_SYSTEM. Default empty."
+              },
+        "CLOCK_BIAS" : {
+                "type" : "number",
+                "description" : "Satellite clock bias, s."
+              },
+        "CLOCK_DRIFT" : {
+                "type" : "number",
+                "description" : "Satellite clock drift, s/s."
+              },
+        "CLOCK_DRIFT_RATE" : {
+                "type" : "number",
+                "description" : "Satellite clock drift rate, s/s^2."
+              },
+        "TRANSMISSION_TIME" : {
+                "type" : "number",
+                "description" : "Transmission time of the message, seconds of the system week."
+              },
+        "HEALTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Health word as broadcast. Meaningful only when HAS_HEALTH."
+              },
+        "HAS_HEALTH" : {
+                "type" : "boolean",
+                "description" : "True when HEALTH carries a value (0 is a real health word); false (the\ndefault) means absent."
+              },
+        "ACCURACY" : {
+                "type" : "number",
+                "description" : "Signal accuracy (URA, SISA or URE index resolved), m."
+              },
+        "ACCURACY_INDEX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX."
+              },
+        "HAS_ACCURACY_INDEX" : {
+                "type" : "boolean",
+                "description" : "True when ACCURACY_INDEX carries a value (0 is a real index); false (the\ndefault) means absent."
+              },
+        "GROUP_DELAYS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default\nempty."
+              },
+        "GROUP_DELAY_NAMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Names of the GROUP_DELAYS, same order and length. Default empty."
+              },
+        "KEPLERIAN" : {
+                "$ref" : "#/definitions/gnssKeplerianBroadcast",
+                "description" : "Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC)."
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/gnssStateBroadcast",
+                "description" : "State vector (GLONASS, SBAS)."
+              },
+        "DATA_SOURCES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "The RINEX data-source bit field. Default 0."
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/GNM"
+}

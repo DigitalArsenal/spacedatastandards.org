@@ -74,6 +74,17 @@ enum ncdContainerFormat:
     ncdContainerFormat_CCSDS_RDM_KVN = 25
     /// CCSDS Reentry Data Message, XML.
     ncdContainerFormat_CCSDS_RDM_XML = 26
+    /// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+    /// AUX_RESORB and AUX_PREORB).
+    ncdContainerFormat_SENTINEL_EOF_XML = 27
+    /// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+    ncdContainerFormat_NAIF_CK_DAF = 28
+    /// NAIF spacecraft clock kernel, text.
+    ncdContainerFormat_NAIF_SCLK_KERNEL = 29
+    /// RINEX observation file.
+    ncdContainerFormat_RINEX_OBS = 30
+    /// RINEX navigation file.
+    ncdContainerFormat_RINEX_NAV = 31
     /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
     /// which; a producer never reuses a neighbouring member instead.
     ncdContainerFormat_PROVIDER_DEFINED = 255
@@ -588,13 +599,41 @@ class NCD : flatbuffers.handle
     /// content rather than by path.
     def SOURCE_CID() -> string:
         return flatbuffers.field_string(buf_, pos_, 42)
+    /// A reader's REQUEST, carried in the descriptor that frames the file so that
+    /// no option travels outside a typed record. Start of the inclusive window to
+    /// read, ISO 8601, on the container's own time scale. Default empty (from the
+    /// start of the container).
+    def SELECT_START_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 44)
+    /// End of the inclusive window to read, ISO 8601, on the container's own time
+    /// scale. Default empty (to the end of the container).
+    def SELECT_STOP_TIME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 46)
+    /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+    def SELECT_SAMPLE_INTERVAL_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
+    /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+    /// empty (every system the container holds).
+    def SELECT_SATELLITE_SYSTEMS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 50) + i * 4)
+    def SELECT_SATELLITE_SYSTEMS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 50)
+    /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+    def SELECT_OBSERVATION_CODES(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 52) + i * 4)
+    def SELECT_OBSERVATION_CODES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 52)
+    /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+    /// by the instrument id. Default 0.
+    def SELECT_CLOCK_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 54, 0)
 
 def GetRootAsNCD(buf:string): return NCD { buf, flatbuffers.indirect(buf, 0) }
 
 struct NCDBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(20)
+        b_.StartObject(26)
         return this
     def add_FORMAT(FORMAT:ncdContainerFormat):
         b_.PrependUint8Slot(0, FORMAT, 0)
@@ -656,6 +695,24 @@ struct NCDBuilder:
     def add_SOURCE_CID(SOURCE_CID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(19, SOURCE_CID)
         return this
+    def add_SELECT_START_TIME(SELECT_START_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(20, SELECT_START_TIME)
+        return this
+    def add_SELECT_STOP_TIME(SELECT_STOP_TIME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(21, SELECT_STOP_TIME)
+        return this
+    def add_SELECT_SAMPLE_INTERVAL_SECONDS(SELECT_SAMPLE_INTERVAL_SECONDS:float):
+        b_.PrependFloat64Slot(22, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0)
+        return this
+    def add_SELECT_SATELLITE_SYSTEMS(SELECT_SATELLITE_SYSTEMS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, SELECT_SATELLITE_SYSTEMS)
+        return this
+    def add_SELECT_OBSERVATION_CODES(SELECT_OBSERVATION_CODES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(24, SELECT_OBSERVATION_CODES)
+        return this
+    def add_SELECT_CLOCK_ID(SELECT_CLOCK_ID:int):
+        b_.PrependInt32Slot(25, SELECT_CLOCK_ID, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -669,6 +726,20 @@ def NCDCreateCOMMENTAREAVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def NCDStartSEGMENTSVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def NCDCreateSEGMENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def NCDStartSELECTSATELLITESYSTEMSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def NCDCreateSELECTSATELLITESYSTEMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def NCDStartSELECTOBSERVATIONCODESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def NCDCreateSELECTOBSERVATIONCODESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

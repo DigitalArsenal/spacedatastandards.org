@@ -241,22 +241,102 @@ class NCD extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// A reader's REQUEST, carried in the descriptor that frames the file so that
+    /// no option travels outside a typed record. Start of the inclusive window to
+    /// read, ISO 8601, on the container's own time scale. Default empty (from the
+    /// start of the container).
+    public function getSELECT_START_TIME()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// End of the inclusive window to read, ISO 8601, on the container's own time
+    /// scale. Default empty (to the end of the container).
+    public function getSELECT_STOP_TIME()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+    /**
+     * @return double
+     */
+    public function getSELECT_SAMPLE_INTERVAL_SECONDS()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+    /// empty (every system the container holds).
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getSELECT_SATELLITE_SYSTEMS($j)
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSELECT_SATELLITE_SYSTEMSLength()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getSELECT_OBSERVATION_CODES($j)
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSELECT_OBSERVATION_CODESLength()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+    /// by the instrument id. Default 0.
+    /**
+     * @return int
+     */
+    public function getSELECT_CLOCK_ID()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startNCD(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(20);
+        $builder->StartObject(26);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return NCD
      */
-    public static function createNCD(FlatBufferBuilder $builder, $FORMAT, $PROVIDER_DEFINED_FORMAT_NAME, $FORMAT_VERSION, $PRODUCER, $CREATION_DATE, $ORIGINATOR, $INTERNAL_FILE_NAME, $COMMENT_AREA, $NATIVE_FRAME_NAME, $NATIVE_FRAME_ID, $NATIVE_TIME_SYSTEM, $SEGMENTS, $SP3_HEADER, $SCENARIO_CONTAINER, $CODE_500_HEADER, $START_TIME, $STOP_TIME, $SOURCE_BYTE_LENGTH, $SOURCE_SHA256, $SOURCE_CID)
+    public static function createNCD(FlatBufferBuilder $builder, $FORMAT, $PROVIDER_DEFINED_FORMAT_NAME, $FORMAT_VERSION, $PRODUCER, $CREATION_DATE, $ORIGINATOR, $INTERNAL_FILE_NAME, $COMMENT_AREA, $NATIVE_FRAME_NAME, $NATIVE_FRAME_ID, $NATIVE_TIME_SYSTEM, $SEGMENTS, $SP3_HEADER, $SCENARIO_CONTAINER, $CODE_500_HEADER, $START_TIME, $STOP_TIME, $SOURCE_BYTE_LENGTH, $SOURCE_SHA256, $SOURCE_CID, $SELECT_START_TIME, $SELECT_STOP_TIME, $SELECT_SAMPLE_INTERVAL_SECONDS, $SELECT_SATELLITE_SYSTEMS, $SELECT_OBSERVATION_CODES, $SELECT_CLOCK_ID)
     {
-        $builder->startObject(20);
+        $builder->startObject(26);
         self::addFORMAT($builder, $FORMAT);
         self::addPROVIDER_DEFINED_FORMAT_NAME($builder, $PROVIDER_DEFINED_FORMAT_NAME);
         self::addFORMAT_VERSION($builder, $FORMAT_VERSION);
@@ -277,6 +357,12 @@ class NCD extends Table
         self::addSOURCE_BYTE_LENGTH($builder, $SOURCE_BYTE_LENGTH);
         self::addSOURCE_SHA256($builder, $SOURCE_SHA256);
         self::addSOURCE_CID($builder, $SOURCE_CID);
+        self::addSELECT_START_TIME($builder, $SELECT_START_TIME);
+        self::addSELECT_STOP_TIME($builder, $SELECT_STOP_TIME);
+        self::addSELECT_SAMPLE_INTERVAL_SECONDS($builder, $SELECT_SAMPLE_INTERVAL_SECONDS);
+        self::addSELECT_SATELLITE_SYSTEMS($builder, $SELECT_SATELLITE_SYSTEMS);
+        self::addSELECT_OBSERVATION_CODES($builder, $SELECT_OBSERVATION_CODES);
+        self::addSELECT_CLOCK_ID($builder, $SELECT_CLOCK_ID);
         $o = $builder->endObject();
         return $o;
     }
@@ -527,6 +613,114 @@ class NCD extends Table
     public static function addSOURCE_CID(FlatBufferBuilder $builder, $SOURCE_CID)
     {
         $builder->addOffsetX(19, $SOURCE_CID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSELECT_START_TIME(FlatBufferBuilder $builder, $SELECT_START_TIME)
+    {
+        $builder->addOffsetX(20, $SELECT_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSELECT_STOP_TIME(FlatBufferBuilder $builder, $SELECT_STOP_TIME)
+    {
+        $builder->addOffsetX(21, $SELECT_STOP_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSELECT_SAMPLE_INTERVAL_SECONDS(FlatBufferBuilder $builder, $SELECT_SAMPLE_INTERVAL_SECONDS)
+    {
+        $builder->addDoubleX(22, $SELECT_SAMPLE_INTERVAL_SECONDS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSELECT_SATELLITE_SYSTEMS(FlatBufferBuilder $builder, $SELECT_SATELLITE_SYSTEMS)
+    {
+        $builder->addOffsetX(23, $SELECT_SATELLITE_SYSTEMS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSELECT_SATELLITE_SYSTEMSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSELECT_SATELLITE_SYSTEMSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSELECT_OBSERVATION_CODES(FlatBufferBuilder $builder, $SELECT_OBSERVATION_CODES)
+    {
+        $builder->addOffsetX(24, $SELECT_OBSERVATION_CODES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSELECT_OBSERVATION_CODESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSELECT_OBSERVATION_CODESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addSELECT_CLOCK_ID(FlatBufferBuilder $builder, $SELECT_CLOCK_ID)
+    {
+        $builder->addIntX(25, $SELECT_CLOCK_ID, 0);
     }
 
     /**

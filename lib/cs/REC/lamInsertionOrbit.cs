@@ -59,6 +59,18 @@ public struct lamInsertionOrbit : IFlatbufferObject
   public double PERIAPSIS_ALTITUDE_UNCERTAINTY_M { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
   public double APOAPSIS_ALTITUDE_UNCERTAINTY_M { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+  /// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+  public double SEMI_MAJOR_AXIS_UNCERTAINTY_M { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+  /// default) means absent, and a consumer applies its vehicle-class default.
+  public bool HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M { get { int o = __p.__offset(36); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+  /// HAS_INCLINATION_UNCERTAINTY_DEG.
+  public double INCLINATION_UNCERTAINTY_DEG { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+  /// means absent, and a consumer applies its vehicle-class default.
+  public bool HAS_INCLINATION_UNCERTAINTY_DEG { get { int o = __p.__offset(40); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<lamInsertionOrbit> CreatelamInsertionOrbit(FlatBufferBuilder builder,
       StringOffset EPOCHOffset = default(StringOffset),
@@ -75,8 +87,14 @@ public struct lamInsertionOrbit : IFlatbufferObject
       double RAAN_UNCERTAINTY_DEG = 0.0,
       double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = 0.0,
       double PERIAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0,
-      double APOAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0) {
-    builder.StartTable(15);
+      double APOAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0,
+      double SEMI_MAJOR_AXIS_UNCERTAINTY_M = 0.0,
+      bool HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = false,
+      double INCLINATION_UNCERTAINTY_DEG = 0.0,
+      bool HAS_INCLINATION_UNCERTAINTY_DEG = false) {
+    builder.StartTable(19);
+    lamInsertionOrbit.AddINCLINATION_UNCERTAINTY_DEG(builder, INCLINATION_UNCERTAINTY_DEG);
+    lamInsertionOrbit.AddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M);
     lamInsertionOrbit.AddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M);
     lamInsertionOrbit.AddPERIAPSIS_ALTITUDE_UNCERTAINTY_M(builder, PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
     lamInsertionOrbit.AddARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(builder, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
@@ -92,10 +110,12 @@ public struct lamInsertionOrbit : IFlatbufferObject
     lamInsertionOrbit.AddTIME_FROM_LAUNCH_S(builder, TIME_FROM_LAUNCH_S);
     lamInsertionOrbit.AddREF_FRAME(builder, REF_FRAMEOffset);
     lamInsertionOrbit.AddEPOCH(builder, EPOCHOffset);
+    lamInsertionOrbit.AddHAS_INCLINATION_UNCERTAINTY_DEG(builder, HAS_INCLINATION_UNCERTAINTY_DEG);
+    lamInsertionOrbit.AddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
     return lamInsertionOrbit.EndlamInsertionOrbit(builder);
   }
 
-  public static void StartlamInsertionOrbit(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartlamInsertionOrbit(FlatBufferBuilder builder) { builder.StartTable(19); }
   public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(0, EPOCHOffset.Value, 0); }
   public static void AddTIME_FROM_LAUNCH_S(FlatBufferBuilder builder, double TIME_FROM_LAUNCH_S) { builder.AddDouble(1, TIME_FROM_LAUNCH_S, 0.0); }
   public static void AddREF_FRAME(FlatBufferBuilder builder, StringOffset REF_FRAMEOffset) { builder.AddOffset(2, REF_FRAMEOffset.Value, 0); }
@@ -111,6 +131,10 @@ public struct lamInsertionOrbit : IFlatbufferObject
   public static void AddARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(FlatBufferBuilder builder, double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG) { builder.AddDouble(12, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, 0.0); }
   public static void AddPERIAPSIS_ALTITUDE_UNCERTAINTY_M(FlatBufferBuilder builder, double PERIAPSIS_ALTITUDE_UNCERTAINTY_M) { builder.AddDouble(13, PERIAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0); }
   public static void AddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(FlatBufferBuilder builder, double APOAPSIS_ALTITUDE_UNCERTAINTY_M) { builder.AddDouble(14, APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0); }
+  public static void AddSEMI_MAJOR_AXIS_UNCERTAINTY_M(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS_UNCERTAINTY_M) { builder.AddDouble(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0); }
+  public static void AddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(FlatBufferBuilder builder, bool HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M) { builder.AddBool(16, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false); }
+  public static void AddINCLINATION_UNCERTAINTY_DEG(FlatBufferBuilder builder, double INCLINATION_UNCERTAINTY_DEG) { builder.AddDouble(17, INCLINATION_UNCERTAINTY_DEG, 0.0); }
+  public static void AddHAS_INCLINATION_UNCERTAINTY_DEG(FlatBufferBuilder builder, bool HAS_INCLINATION_UNCERTAINTY_DEG) { builder.AddBool(18, HAS_INCLINATION_UNCERTAINTY_DEG, false); }
   public static Offset<lamInsertionOrbit> EndlamInsertionOrbit(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<lamInsertionOrbit>(o);
@@ -136,6 +160,10 @@ public struct lamInsertionOrbit : IFlatbufferObject
     _o.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = this.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG;
     _o.PERIAPSIS_ALTITUDE_UNCERTAINTY_M = this.PERIAPSIS_ALTITUDE_UNCERTAINTY_M;
     _o.APOAPSIS_ALTITUDE_UNCERTAINTY_M = this.APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+    _o.SEMI_MAJOR_AXIS_UNCERTAINTY_M = this.SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+    _o.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = this.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+    _o.INCLINATION_UNCERTAINTY_DEG = this.INCLINATION_UNCERTAINTY_DEG;
+    _o.HAS_INCLINATION_UNCERTAINTY_DEG = this.HAS_INCLINATION_UNCERTAINTY_DEG;
   }
   public static Offset<lamInsertionOrbit> Pack(FlatBufferBuilder builder, lamInsertionOrbitT _o) {
     if (_o == null) return default(Offset<lamInsertionOrbit>);
@@ -157,7 +185,11 @@ public struct lamInsertionOrbit : IFlatbufferObject
       _o.RAAN_UNCERTAINTY_DEG,
       _o.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
       _o.PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
-      _o.APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+      _o.APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+      _o.SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+      _o.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+      _o.INCLINATION_UNCERTAINTY_DEG,
+      _o.HAS_INCLINATION_UNCERTAINTY_DEG);
   }
 }
 
@@ -178,6 +210,10 @@ public class lamInsertionOrbitT
   public double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG { get; set; }
   public double PERIAPSIS_ALTITUDE_UNCERTAINTY_M { get; set; }
   public double APOAPSIS_ALTITUDE_UNCERTAINTY_M { get; set; }
+  public double SEMI_MAJOR_AXIS_UNCERTAINTY_M { get; set; }
+  public bool HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M { get; set; }
+  public double INCLINATION_UNCERTAINTY_DEG { get; set; }
+  public bool HAS_INCLINATION_UNCERTAINTY_DEG { get; set; }
 
   public lamInsertionOrbitT() {
     this.EPOCH = null;
@@ -195,6 +231,10 @@ public class lamInsertionOrbitT
     this.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = 0.0;
     this.PERIAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0;
     this.APOAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0;
+    this.SEMI_MAJOR_AXIS_UNCERTAINTY_M = 0.0;
+    this.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = false;
+    this.INCLINATION_UNCERTAINTY_DEG = 0.0;
+    this.HAS_INCLINATION_UNCERTAINTY_DEG = false;
   }
 }
 
@@ -219,6 +259,10 @@ static public class lamInsertionOrbitVerify
       && verifier.VerifyField(tablePos, 28 /*ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 30 /*PERIAPSIS_ALTITUDE_UNCERTAINTY_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 32 /*APOAPSIS_ALTITUDE_UNCERTAINTY_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*SEMI_MAJOR_AXIS_UNCERTAINTY_M*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 38 /*INCLINATION_UNCERTAINTY_DEG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*HAS_INCLINATION_UNCERTAINTY_DEG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

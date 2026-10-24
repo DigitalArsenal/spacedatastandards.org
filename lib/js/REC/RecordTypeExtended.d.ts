@@ -43,6 +43,7 @@ export declare enum RecordTypeExtended {
     SDI = 287,
     SFE = 288,
     SRO = 289,
-    SRT = 290
+    SRT = 290,
+    GNM = 291
 }
 //# sourceMappingURL=RecordTypeExtended.d.ts.map

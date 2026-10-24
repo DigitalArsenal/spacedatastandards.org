@@ -84,6 +84,17 @@ public enum ncdContainerFormat: UInt8, FlatbuffersVectorInitializable, Enum, Ver
   case ccsdsRdmKvn = 25
   ///  CCSDS Reentry Data Message, XML.
   case ccsdsRdmXml = 26
+  ///  ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+  ///  AUX_RESORB and AUX_PREORB).
+  case sentinelEofXml = 27
+  ///  NAIF C-kernel: a DAF holding pointing (attitude) segments.
+  case naifCkDaf = 28
+  ///  NAIF spacecraft clock kernel, text.
+  case naifSclkKernel = 29
+  ///  RINEX observation file.
+  case rinexObs = 30
+  ///  RINEX navigation file.
+  case rinexNav = 31
   ///  A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   ///  which; a producer never reuses a neighbouring member instead.
   case providerDefined = 255
@@ -646,6 +657,12 @@ public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SOURCE_BYTE_LENGTH: VOffset = 38
     static let SOURCE_SHA256: VOffset = 40
     static let SOURCE_CID: VOffset = 42
+    static let SELECT_START_TIME: VOffset = 44
+    static let SELECT_STOP_TIME: VOffset = 46
+    static let SELECT_SAMPLE_INTERVAL_SECONDS: VOffset = 48
+    static let SELECT_SATELLITE_SYSTEMS: VOffset = 50
+    static let SELECT_OBSERVATION_CODES: VOffset = 52
+    static let SELECT_CLOCK_ID: VOffset = 54
   }
 
   ///  Container format class.
@@ -709,7 +726,27 @@ public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  content rather than by path.
   public var SOURCE_CID: String? { let o = _accessor.offset(VT.SOURCE_CID); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOURCE_CIDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SOURCE_CID) }
-  public static func startNCD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
+  ///  A reader's REQUEST, carried in the descriptor that frames the file so that
+  ///  no option travels outside a typed record. Start of the inclusive window to
+  ///  read, ISO 8601, on the container's own time scale. Default empty (from the
+  ///  start of the container).
+  public var SELECT_START_TIME: String? { let o = _accessor.offset(VT.SELECT_START_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SELECT_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SELECT_START_TIME) }
+  ///  End of the inclusive window to read, ISO 8601, on the container's own time
+  ///  scale. Default empty (to the end of the container).
+  public var SELECT_STOP_TIME: String? { let o = _accessor.offset(VT.SELECT_STOP_TIME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SELECT_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SELECT_STOP_TIME) }
+  ///  Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+  public var SELECT_SAMPLE_INTERVAL_SECONDS: Double { let o = _accessor.offset(VT.SELECT_SAMPLE_INTERVAL_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Satellite systems to read, as the RINEX letters G R E C J I S. Default
+  ///  empty (every system the container holds).
+  public var SELECT_SATELLITE_SYSTEMS: FlatbufferVector<String?> { return _accessor.vector(at: VT.SELECT_SATELLITE_SYSTEMS, byteSize: 4) }
+  ///  Observation codes to read (C1C, L1C, ...). Default empty (every code).
+  public var SELECT_OBSERVATION_CODES: FlatbufferVector<String?> { return _accessor.vector(at: VT.SELECT_OBSERVATION_CODES, byteSize: 4) }
+  ///  Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+  ///  by the instrument id. Default 0.
+  public var SELECT_CLOCK_ID: Int32 { let o = _accessor.offset(VT.SELECT_CLOCK_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public static func startNCD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 26) }
   public static func add(FORMAT: ncdContainerFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORMAT.rawValue, def: 0, at: VT.FORMAT) }
   public static func add(PROVIDER_DEFINED_FORMAT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROVIDER_DEFINED_FORMAT_NAME, at: VT.PROVIDER_DEFINED_FORMAT_NAME) }
   public static func add(FORMAT_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMAT_VERSION, at: VT.FORMAT_VERSION) }
@@ -730,6 +767,12 @@ public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(SOURCE_BYTE_LENGTH: UInt64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOURCE_BYTE_LENGTH, def: 0, at: VT.SOURCE_BYTE_LENGTH) }
   public static func add(SOURCE_SHA256: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_SHA256, at: VT.SOURCE_SHA256) }
   public static func add(SOURCE_CID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE_CID, at: VT.SOURCE_CID) }
+  public static func add(SELECT_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECT_START_TIME, at: VT.SELECT_START_TIME) }
+  public static func add(SELECT_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECT_STOP_TIME, at: VT.SELECT_STOP_TIME) }
+  public static func add(SELECT_SAMPLE_INTERVAL_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECT_SAMPLE_INTERVAL_SECONDS, def: 0.0, at: VT.SELECT_SAMPLE_INTERVAL_SECONDS) }
+  public static func addVectorOf(SELECT_SATELLITE_SYSTEMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECT_SATELLITE_SYSTEMS, at: VT.SELECT_SATELLITE_SYSTEMS) }
+  public static func addVectorOf(SELECT_OBSERVATION_CODES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SELECT_OBSERVATION_CODES, at: VT.SELECT_OBSERVATION_CODES) }
+  public static func add(SELECT_CLOCK_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECT_CLOCK_ID, def: 0, at: VT.SELECT_CLOCK_ID) }
   public static func endNCD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createNCD(
     _ fbb: inout FlatBufferBuilder,
@@ -752,7 +795,13 @@ public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     STOP_TIMEOffset STOP_TIME: Offset = Offset(),
     SOURCE_BYTE_LENGTH: UInt64 = 0,
     SOURCE_SHA256Offset SOURCE_SHA256: Offset = Offset(),
-    SOURCE_CIDOffset SOURCE_CID: Offset = Offset()
+    SOURCE_CIDOffset SOURCE_CID: Offset = Offset(),
+    SELECT_START_TIMEOffset SELECT_START_TIME: Offset = Offset(),
+    SELECT_STOP_TIMEOffset SELECT_STOP_TIME: Offset = Offset(),
+    SELECT_SAMPLE_INTERVAL_SECONDS: Double = 0.0,
+    SELECT_SATELLITE_SYSTEMSVectorOffset SELECT_SATELLITE_SYSTEMS: Offset = Offset(),
+    SELECT_OBSERVATION_CODESVectorOffset SELECT_OBSERVATION_CODES: Offset = Offset(),
+    SELECT_CLOCK_ID: Int32 = 0
   ) -> Offset {
     let __start = NCD.startNCD(&fbb)
     NCD.add(FORMAT: FORMAT, &fbb)
@@ -775,6 +824,12 @@ public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     NCD.add(SOURCE_BYTE_LENGTH: SOURCE_BYTE_LENGTH, &fbb)
     NCD.add(SOURCE_SHA256: SOURCE_SHA256, &fbb)
     NCD.add(SOURCE_CID: SOURCE_CID, &fbb)
+    NCD.add(SELECT_START_TIME: SELECT_START_TIME, &fbb)
+    NCD.add(SELECT_STOP_TIME: SELECT_STOP_TIME, &fbb)
+    NCD.add(SELECT_SAMPLE_INTERVAL_SECONDS: SELECT_SAMPLE_INTERVAL_SECONDS, &fbb)
+    NCD.addVectorOf(SELECT_SATELLITE_SYSTEMS: SELECT_SATELLITE_SYSTEMS, &fbb)
+    NCD.addVectorOf(SELECT_OBSERVATION_CODES: SELECT_OBSERVATION_CODES, &fbb)
+    NCD.add(SELECT_CLOCK_ID: SELECT_CLOCK_ID, &fbb)
     return NCD.endNCD(&fbb, start: __start)
   }
 
@@ -800,6 +855,12 @@ public struct NCD: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SOURCE_BYTE_LENGTH, fieldName: "SOURCE_BYTE_LENGTH", required: false, type: UInt64.self)
     try _v.visit(field: VT.SOURCE_SHA256, fieldName: "SOURCE_SHA256", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SOURCE_CID, fieldName: "SOURCE_CID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SELECT_START_TIME, fieldName: "SELECT_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SELECT_STOP_TIME, fieldName: "SELECT_STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SELECT_SAMPLE_INTERVAL_SECONDS, fieldName: "SELECT_SAMPLE_INTERVAL_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.SELECT_SATELLITE_SYSTEMS, fieldName: "SELECT_SATELLITE_SYSTEMS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SELECT_OBSERVATION_CODES, fieldName: "SELECT_OBSERVATION_CODES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SELECT_CLOCK_ID, fieldName: "SELECT_CLOCK_ID", required: false, type: Int32.self)
     _v.finish()
   }
 }

@@ -20,8 +20,15 @@ public final class meanElementSource {
    * Universal Semianalytical Method
    */
   public static final byte USM = 3;
+  /**
+   * SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
+   * theory with open-DCA drag, Starlink drag-makeup thrust and along-track
+   * terms. Its sets are osculating or mean about the center named in CENTER_NAME
+   * (Earth, Moon, Sun or a planet); see $OMM.
+   */
+  public static final byte SDNAP = 4;
 
-  public static final String[] names = { "SGP4", "SGP4XP", "DSST", "USM", };
+  public static final String[] names = { "SGP4", "SGP4XP", "DSST", "USM", "SDNAP", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -606,7 +606,8 @@ enum RecordTypeExtended {
   SDI(287),
   SFE(288),
   SRO(289),
-  SRT(290);
+  SRT(290),
+  GNM(291);
 
   final int value;
   const RecordTypeExtended(this.value);
@@ -649,6 +650,7 @@ enum RecordTypeExtended {
       case 288: return RecordTypeExtended.SFE;
       case 289: return RecordTypeExtended.SRO;
       case 290: return RecordTypeExtended.SRT;
+      case 291: return RecordTypeExtended.GNM;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -657,7 +659,7 @@ enum RecordTypeExtended {
       value == null ? null : RecordTypeExtended.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 290;
+  static const int maxValue = 291;
   static const fb.Reader<RecordTypeExtended> reader = _RecordTypeExtendedReader();
 }
 

@@ -12778,6 +12778,28 @@
           "type": "number",
           "description": "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.",
           "x-flatbuffer-type": "double"
+        },
+        "SEMI_MAJOR_AXIS_UNCERTAINTY_M": {
+          "type": "number",
+          "description": "One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when\nHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M": {
+          "type": "boolean",
+          "description": "True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the\ndefault) means absent, and a consumer applies its vehicle-class default.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "INCLINATION_UNCERTAINTY_DEG": {
+          "type": "number",
+          "description": "One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when\nHAS_INCLINATION_UNCERTAINTY_DEG.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_INCLINATION_UNCERTAINTY_DEG": {
+          "type": "boolean",
+          "description": "True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)\nmeans absent, and a consumer applies its vehicle-class default.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         }
       },
       "additionalProperties": false

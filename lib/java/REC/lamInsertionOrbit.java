@@ -91,6 +91,26 @@ public final class lamInsertionOrbit extends com.google.flatbuffers.Table {
    * One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
    */
   public double APOAPSIS_ALTITUDE_UNCERTAINTY_M() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+   * HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+   */
+  public double SEMI_MAJOR_AXIS_UNCERTAINTY_M() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+   * default) means absent, and a consumer applies its vehicle-class default.
+   */
+  public boolean HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+   * HAS_INCLINATION_UNCERTAINTY_DEG.
+   */
+  public double INCLINATION_UNCERTAINTY_DEG() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+   * means absent, and a consumer applies its vehicle-class default.
+   */
+  public boolean HAS_INCLINATION_UNCERTAINTY_DEG() { int o = __offset(40); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createlamInsertionOrbit(FlatBufferBuilder builder,
       int EPOCHOffset,
@@ -107,8 +127,14 @@ public final class lamInsertionOrbit extends com.google.flatbuffers.Table {
       double RAAN_UNCERTAINTY_DEG,
       double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
       double PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
-      double APOAPSIS_ALTITUDE_UNCERTAINTY_M) {
-    builder.startTable(15);
+      double APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+      double SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+      boolean HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+      double INCLINATION_UNCERTAINTY_DEG,
+      boolean HAS_INCLINATION_UNCERTAINTY_DEG) {
+    builder.startTable(19);
+    lamInsertionOrbit.addInclinationUncertaintyDeg(builder, INCLINATION_UNCERTAINTY_DEG);
+    lamInsertionOrbit.addSemiMajorAxisUncertaintyM(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M);
     lamInsertionOrbit.addApoapsisAltitudeUncertaintyM(builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M);
     lamInsertionOrbit.addPeriapsisAltitudeUncertaintyM(builder, PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
     lamInsertionOrbit.addArgumentOfLatitudeUncertaintyDeg(builder, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
@@ -124,10 +150,12 @@ public final class lamInsertionOrbit extends com.google.flatbuffers.Table {
     lamInsertionOrbit.addTimeFromLaunchS(builder, TIME_FROM_LAUNCH_S);
     lamInsertionOrbit.addRefFrame(builder, REF_FRAMEOffset);
     lamInsertionOrbit.addEpoch(builder, EPOCHOffset);
+    lamInsertionOrbit.addHasInclinationUncertaintyDeg(builder, HAS_INCLINATION_UNCERTAINTY_DEG);
+    lamInsertionOrbit.addHasSemiMajorAxisUncertaintyM(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
     return lamInsertionOrbit.endlamInsertionOrbit(builder);
   }
 
-  public static void startlamInsertionOrbit(FlatBufferBuilder builder) { builder.startTable(15); }
+  public static void startlamInsertionOrbit(FlatBufferBuilder builder) { builder.startTable(19); }
   public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(0, EPOCHOffset, 0); }
   public static void addTimeFromLaunchS(FlatBufferBuilder builder, double TIME_FROM_LAUNCH_S) { builder.addDouble(1, TIME_FROM_LAUNCH_S, 0.0); }
   public static void addRefFrame(FlatBufferBuilder builder, int REF_FRAMEOffset) { builder.addOffset(2, REF_FRAMEOffset, 0); }
@@ -143,6 +171,10 @@ public final class lamInsertionOrbit extends com.google.flatbuffers.Table {
   public static void addArgumentOfLatitudeUncertaintyDeg(FlatBufferBuilder builder, double ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG) { builder.addDouble(12, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, 0.0); }
   public static void addPeriapsisAltitudeUncertaintyM(FlatBufferBuilder builder, double PERIAPSIS_ALTITUDE_UNCERTAINTY_M) { builder.addDouble(13, PERIAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0); }
   public static void addApoapsisAltitudeUncertaintyM(FlatBufferBuilder builder, double APOAPSIS_ALTITUDE_UNCERTAINTY_M) { builder.addDouble(14, APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0); }
+  public static void addSemiMajorAxisUncertaintyM(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS_UNCERTAINTY_M) { builder.addDouble(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0); }
+  public static void addHasSemiMajorAxisUncertaintyM(FlatBufferBuilder builder, boolean HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M) { builder.addBoolean(16, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false); }
+  public static void addInclinationUncertaintyDeg(FlatBufferBuilder builder, double INCLINATION_UNCERTAINTY_DEG) { builder.addDouble(17, INCLINATION_UNCERTAINTY_DEG, 0.0); }
+  public static void addHasInclinationUncertaintyDeg(FlatBufferBuilder builder, boolean HAS_INCLINATION_UNCERTAINTY_DEG) { builder.addBoolean(18, HAS_INCLINATION_UNCERTAINTY_DEG, false); }
   public static int endlamInsertionOrbit(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

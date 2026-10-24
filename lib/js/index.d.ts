@@ -94,6 +94,7 @@ export * as GEL from './GEL/main.js';
 export * as GEO from './GEO/main.js';
 export * as GJN from './GJN/main.js';
 export * as GLX from './GLX/main.js';
+export * as GNM from './GNM/main.js';
 export * as GNO from './GNO/main.js';
 export * as GNP from './GNP/main.js';
 export * as GPX from './GPX/main.js';

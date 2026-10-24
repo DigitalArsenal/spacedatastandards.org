@@ -4593,6 +4593,22 @@
         "APOAPSIS_ALTITUDE_UNCERTAINTY_M" : {
                 "type" : "number",
                 "description" : "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters."
+              },
+        "SEMI_MAJOR_AXIS_UNCERTAINTY_M" : {
+                "type" : "number",
+                "description" : "One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when\nHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M."
+              },
+        "HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M" : {
+                "type" : "boolean",
+                "description" : "True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the\ndefault) means absent, and a consumer applies its vehicle-class default."
+              },
+        "INCLINATION_UNCERTAINTY_DEG" : {
+                "type" : "number",
+                "description" : "One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when\nHAS_INCLINATION_UNCERTAINTY_DEG."
+              },
+        "HAS_INCLINATION_UNCERTAINTY_DEG" : {
+                "type" : "boolean",
+                "description" : "True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)\nmeans absent, and a consumer applies its vehicle-class default."
               }
       },
       "additionalProperties" : false

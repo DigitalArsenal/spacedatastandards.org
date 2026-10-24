@@ -101,6 +101,17 @@ enum ncdContainerFormat : uint8_t {
   ncdContainerFormat_CCSDS_RDM_KVN = 25,
   /// CCSDS Reentry Data Message, XML.
   ncdContainerFormat_CCSDS_RDM_XML = 26,
+  /// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+  /// AUX_RESORB and AUX_PREORB).
+  ncdContainerFormat_SENTINEL_EOF_XML = 27,
+  /// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+  ncdContainerFormat_NAIF_CK_DAF = 28,
+  /// NAIF spacecraft clock kernel, text.
+  ncdContainerFormat_NAIF_SCLK_KERNEL = 29,
+  /// RINEX observation file.
+  ncdContainerFormat_RINEX_OBS = 30,
+  /// RINEX navigation file.
+  ncdContainerFormat_RINEX_NAV = 31,
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
   ncdContainerFormat_PROVIDER_DEFINED = 255,
@@ -108,7 +119,7 @@ enum ncdContainerFormat : uint8_t {
   ncdContainerFormat_MAX = ncdContainerFormat_PROVIDER_DEFINED
 };
 
-inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[28] {
+inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[33] {
   static const ncdContainerFormat values[] = {
     ncdContainerFormat_UNSPECIFIED,
     ncdContainerFormat_SPK_DAF,
@@ -137,6 +148,11 @@ inline const ncdContainerFormat (&EnumValuesncdContainerFormat())[28] {
     ncdContainerFormat_CCSDS_ACM_XML,
     ncdContainerFormat_CCSDS_RDM_KVN,
     ncdContainerFormat_CCSDS_RDM_XML,
+    ncdContainerFormat_SENTINEL_EOF_XML,
+    ncdContainerFormat_NAIF_CK_DAF,
+    ncdContainerFormat_NAIF_SCLK_KERNEL,
+    ncdContainerFormat_RINEX_OBS,
+    ncdContainerFormat_RINEX_NAV,
     ncdContainerFormat_PROVIDER_DEFINED
   };
   return values;
@@ -171,6 +187,11 @@ inline const char *EnumNamencdContainerFormat(ncdContainerFormat e) {
     case ncdContainerFormat_CCSDS_ACM_XML: return "CCSDS_ACM_XML";
     case ncdContainerFormat_CCSDS_RDM_KVN: return "CCSDS_RDM_KVN";
     case ncdContainerFormat_CCSDS_RDM_XML: return "CCSDS_RDM_XML";
+    case ncdContainerFormat_SENTINEL_EOF_XML: return "SENTINEL_EOF_XML";
+    case ncdContainerFormat_NAIF_CK_DAF: return "NAIF_CK_DAF";
+    case ncdContainerFormat_NAIF_SCLK_KERNEL: return "NAIF_SCLK_KERNEL";
+    case ncdContainerFormat_RINEX_OBS: return "RINEX_OBS";
+    case ncdContainerFormat_RINEX_NAV: return "RINEX_NAV";
     case ncdContainerFormat_PROVIDER_DEFINED: return "PROVIDER_DEFINED";
     default: return "";
   }
@@ -1081,7 +1102,13 @@ struct NCD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_STOP_TIME = 36,
     VT_SOURCE_BYTE_LENGTH = 38,
     VT_SOURCE_SHA256 = 40,
-    VT_SOURCE_CID = 42
+    VT_SOURCE_CID = 42,
+    VT_SELECT_START_TIME = 44,
+    VT_SELECT_STOP_TIME = 46,
+    VT_SELECT_SAMPLE_INTERVAL_SECONDS = 48,
+    VT_SELECT_SATELLITE_SYSTEMS = 50,
+    VT_SELECT_OBSERVATION_CODES = 52,
+    VT_SELECT_CLOCK_ID = 54
   };
   /// Container format class.
   ncdContainerFormat FORMAT() const {
@@ -1172,6 +1199,36 @@ struct NCD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *SOURCE_CID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SOURCE_CID);
   }
+  /// A reader's REQUEST, carried in the descriptor that frames the file so that
+  /// no option travels outside a typed record. Start of the inclusive window to
+  /// read, ISO 8601, on the container's own time scale. Default empty (from the
+  /// start of the container).
+  const ::flatbuffers::String *SELECT_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SELECT_START_TIME);
+  }
+  /// End of the inclusive window to read, ISO 8601, on the container's own time
+  /// scale. Default empty (to the end of the container).
+  const ::flatbuffers::String *SELECT_STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SELECT_STOP_TIME);
+  }
+  /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+  double SELECT_SAMPLE_INTERVAL_SECONDS() const {
+    return GetField<double>(VT_SELECT_SAMPLE_INTERVAL_SECONDS, 0.0);
+  }
+  /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+  /// empty (every system the container holds).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SELECT_SATELLITE_SYSTEMS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SELECT_SATELLITE_SYSTEMS);
+  }
+  /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SELECT_OBSERVATION_CODES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SELECT_OBSERVATION_CODES);
+  }
+  /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+  /// by the instrument id. Default 0.
+  int32_t SELECT_CLOCK_ID() const {
+    return GetField<int32_t>(VT_SELECT_CLOCK_ID, 0);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1214,6 +1271,18 @@ struct NCD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SOURCE_SHA256()) &&
            VerifyOffset(verifier, VT_SOURCE_CID) &&
            verifier.VerifyString(SOURCE_CID()) &&
+           VerifyOffset(verifier, VT_SELECT_START_TIME) &&
+           verifier.VerifyString(SELECT_START_TIME()) &&
+           VerifyOffset(verifier, VT_SELECT_STOP_TIME) &&
+           verifier.VerifyString(SELECT_STOP_TIME()) &&
+           VerifyField<double>(verifier, VT_SELECT_SAMPLE_INTERVAL_SECONDS, 8) &&
+           VerifyOffset(verifier, VT_SELECT_SATELLITE_SYSTEMS) &&
+           verifier.VerifyVector(SELECT_SATELLITE_SYSTEMS()) &&
+           verifier.VerifyVectorOfStrings(SELECT_SATELLITE_SYSTEMS()) &&
+           VerifyOffset(verifier, VT_SELECT_OBSERVATION_CODES) &&
+           verifier.VerifyVector(SELECT_OBSERVATION_CODES()) &&
+           verifier.VerifyVectorOfStrings(SELECT_OBSERVATION_CODES()) &&
+           VerifyField<int32_t>(verifier, VT_SELECT_CLOCK_ID, 4) &&
            verifier.EndTable();
   }
 };
@@ -1282,6 +1351,24 @@ struct NCDBuilder {
   void add_SOURCE_CID(::flatbuffers::Offset<::flatbuffers::String> SOURCE_CID) {
     fbb_.AddOffset(NCD::VT_SOURCE_CID, SOURCE_CID);
   }
+  void add_SELECT_START_TIME(::flatbuffers::Offset<::flatbuffers::String> SELECT_START_TIME) {
+    fbb_.AddOffset(NCD::VT_SELECT_START_TIME, SELECT_START_TIME);
+  }
+  void add_SELECT_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> SELECT_STOP_TIME) {
+    fbb_.AddOffset(NCD::VT_SELECT_STOP_TIME, SELECT_STOP_TIME);
+  }
+  void add_SELECT_SAMPLE_INTERVAL_SECONDS(double SELECT_SAMPLE_INTERVAL_SECONDS) {
+    fbb_.AddElement<double>(NCD::VT_SELECT_SAMPLE_INTERVAL_SECONDS, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0);
+  }
+  void add_SELECT_SATELLITE_SYSTEMS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SELECT_SATELLITE_SYSTEMS) {
+    fbb_.AddOffset(NCD::VT_SELECT_SATELLITE_SYSTEMS, SELECT_SATELLITE_SYSTEMS);
+  }
+  void add_SELECT_OBSERVATION_CODES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SELECT_OBSERVATION_CODES) {
+    fbb_.AddOffset(NCD::VT_SELECT_OBSERVATION_CODES, SELECT_OBSERVATION_CODES);
+  }
+  void add_SELECT_CLOCK_ID(int32_t SELECT_CLOCK_ID) {
+    fbb_.AddElement<int32_t>(NCD::VT_SELECT_CLOCK_ID, SELECT_CLOCK_ID, 0);
+  }
   explicit NCDBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1314,9 +1401,21 @@ inline ::flatbuffers::Offset<NCD> CreateNCD(
     ::flatbuffers::Offset<::flatbuffers::String> STOP_TIME = 0,
     uint64_t SOURCE_BYTE_LENGTH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCE_SHA256 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_CID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE_CID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SELECT_START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SELECT_STOP_TIME = 0,
+    double SELECT_SAMPLE_INTERVAL_SECONDS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SELECT_SATELLITE_SYSTEMS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SELECT_OBSERVATION_CODES = 0,
+    int32_t SELECT_CLOCK_ID = 0) {
   NCDBuilder builder_(_fbb);
+  builder_.add_SELECT_SAMPLE_INTERVAL_SECONDS(SELECT_SAMPLE_INTERVAL_SECONDS);
   builder_.add_SOURCE_BYTE_LENGTH(SOURCE_BYTE_LENGTH);
+  builder_.add_SELECT_CLOCK_ID(SELECT_CLOCK_ID);
+  builder_.add_SELECT_OBSERVATION_CODES(SELECT_OBSERVATION_CODES);
+  builder_.add_SELECT_SATELLITE_SYSTEMS(SELECT_SATELLITE_SYSTEMS);
+  builder_.add_SELECT_STOP_TIME(SELECT_STOP_TIME);
+  builder_.add_SELECT_START_TIME(SELECT_START_TIME);
   builder_.add_SOURCE_CID(SOURCE_CID);
   builder_.add_SOURCE_SHA256(SOURCE_SHA256);
   builder_.add_STOP_TIME(STOP_TIME);
@@ -1360,7 +1459,13 @@ inline ::flatbuffers::Offset<NCD> CreateNCDDirect(
     const char *STOP_TIME = nullptr,
     uint64_t SOURCE_BYTE_LENGTH = 0,
     const char *SOURCE_SHA256 = nullptr,
-    const char *SOURCE_CID = nullptr) {
+    const char *SOURCE_CID = nullptr,
+    const char *SELECT_START_TIME = nullptr,
+    const char *SELECT_STOP_TIME = nullptr,
+    double SELECT_SAMPLE_INTERVAL_SECONDS = 0.0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SELECT_SATELLITE_SYSTEMS = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SELECT_OBSERVATION_CODES = nullptr,
+    int32_t SELECT_CLOCK_ID = 0) {
   auto PROVIDER_DEFINED_FORMAT_NAME__ = PROVIDER_DEFINED_FORMAT_NAME ? _fbb.CreateString(PROVIDER_DEFINED_FORMAT_NAME) : 0;
   auto FORMAT_VERSION__ = FORMAT_VERSION ? _fbb.CreateString(FORMAT_VERSION) : 0;
   auto PRODUCER__ = PRODUCER ? _fbb.CreateString(PRODUCER) : 0;
@@ -1375,6 +1480,10 @@ inline ::flatbuffers::Offset<NCD> CreateNCDDirect(
   auto STOP_TIME__ = STOP_TIME ? _fbb.CreateString(STOP_TIME) : 0;
   auto SOURCE_SHA256__ = SOURCE_SHA256 ? _fbb.CreateString(SOURCE_SHA256) : 0;
   auto SOURCE_CID__ = SOURCE_CID ? _fbb.CreateString(SOURCE_CID) : 0;
+  auto SELECT_START_TIME__ = SELECT_START_TIME ? _fbb.CreateString(SELECT_START_TIME) : 0;
+  auto SELECT_STOP_TIME__ = SELECT_STOP_TIME ? _fbb.CreateString(SELECT_STOP_TIME) : 0;
+  auto SELECT_SATELLITE_SYSTEMS__ = SELECT_SATELLITE_SYSTEMS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SELECT_SATELLITE_SYSTEMS) : 0;
+  auto SELECT_OBSERVATION_CODES__ = SELECT_OBSERVATION_CODES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SELECT_OBSERVATION_CODES) : 0;
   return CreateNCD(
       _fbb,
       FORMAT,
@@ -1396,7 +1505,13 @@ inline ::flatbuffers::Offset<NCD> CreateNCDDirect(
       STOP_TIME__,
       SOURCE_BYTE_LENGTH,
       SOURCE_SHA256__,
-      SOURCE_CID__);
+      SOURCE_CID__,
+      SELECT_START_TIME__,
+      SELECT_STOP_TIME__,
+      SELECT_SAMPLE_INTERVAL_SECONDS,
+      SELECT_SATELLITE_SYSTEMS__,
+      SELECT_OBSERVATION_CODES__,
+      SELECT_CLOCK_ID);
 }
 
 inline const NCD *GetNCD(const void *buf) {

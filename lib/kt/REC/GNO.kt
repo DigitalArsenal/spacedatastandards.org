@@ -276,6 +276,167 @@ class GNO : Table() {
         }
     val notesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(48, 1)
     fun notesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+     * Default empty (not stated).
+     */
+    val timeSystem : String?
+        get() {
+            val o = __offset(50)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val timeSystemAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(50, 1)
+    fun timeSystemInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+     * a moving antenna, 3 new site occupation, 4 header information follows, 5
+     * external event, 6 cycle slip records follow. Default 0.
+     */
+    val epochFlag : UByte
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Marker name from the header. Default empty.
+     */
+    val markerName : String?
+        get() {
+            val o = __offset(54)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val markerNameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(54, 1)
+    fun markerNameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * Marker number from the header. Default empty.
+     */
+    val markerNumber : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val markerNumberAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(56, 1)
+    fun markerNumberInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * Marker type from the header. Default empty.
+     */
+    val markerType : String?
+        get() {
+            val o = __offset(58)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val markerTypeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(58, 1)
+    fun markerTypeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Observer from the header. Default empty.
+     */
+    val observer : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val observerAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(60, 1)
+    fun observerInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * Agency from the header. Default empty.
+     */
+    val agency : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val agencyAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(62, 1)
+    fun agencyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Antenna delta from the marker to the antenna reference point: height, east,
+     * north, meters, as [H, E, N]. Default empty.
+     */
+    fun antennaDeltaHen(j: Int) : Double {
+        val o = __offset(64)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val antennaDeltaHenLength : Int
+        get() {
+            val o = __offset(64); return if (o != 0) __vector_len(o) else 0
+        }
+    val antennaDeltaHenAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(64, 8)
+    fun antennaDeltaHenInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 64, 8)
+    /**
+     * Phase shift records as the header writes them, one per line, for example
+     * "G L2S -0.25000". Default empty.
+     */
+    fun phaseShifts(j: Int) : String? {
+        val o = __offset(66)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val phaseShiftsLength : Int
+        get() {
+            val o = __offset(66); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Unit of the signal strength observations as the header states it. Default
+     * empty.
+     */
+    val signalStrengthUnit : String?
+        get() {
+            val o = __offset(68)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val signalStrengthUnitAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(68, 1)
+    fun signalStrengthUnitInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+     * when HAS_LEAP_SECONDS.
+     */
+    val leapSeconds : Int
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
+    /**
+     * True when LEAP_SECONDS carries a value; false (the default) means absent.
+     */
+    val hasLeapSeconds : Boolean
+        get() {
+            val o = __offset(72)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsGNO(_bb: ByteBuffer): GNO = getRootAsGNO(_bb, GNO())
@@ -284,8 +445,8 @@ class GNO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun GNOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GNO")
-        fun createGNO(builder: FlatBufferBuilder, idOffset: Int, receiverIdOffset: Int, receiverTypeOffset: Int, antennaIdOffset: Int, antennaTypeOffset: Int, firmwareVersionOffset: Int, epochOffset: Int, clockOffset: Double, clockDrift: Double, latitude: Double, longitude: Double, altitude: Double, approxX: Double, approxY: Double, approxZ: Double, interval: Double, numSats: UInt, pdop: Double, hdop: Double, vdop: Double, satObsOffset: Int, obsCodeSetOffset: Int, notesOffset: Int) : Int {
-            builder.startTable(23)
+        fun createGNO(builder: FlatBufferBuilder, idOffset: Int, receiverIdOffset: Int, receiverTypeOffset: Int, antennaIdOffset: Int, antennaTypeOffset: Int, firmwareVersionOffset: Int, epochOffset: Int, clockOffset: Double, clockDrift: Double, latitude: Double, longitude: Double, altitude: Double, approxX: Double, approxY: Double, approxZ: Double, interval: Double, numSats: UInt, pdop: Double, hdop: Double, vdop: Double, satObsOffset: Int, obsCodeSetOffset: Int, notesOffset: Int, timeSystemOffset: Int, epochFlag: UByte, markerNameOffset: Int, markerNumberOffset: Int, markerTypeOffset: Int, observerOffset: Int, agencyOffset: Int, antennaDeltaHenOffset: Int, phaseShiftsOffset: Int, signalStrengthUnitOffset: Int, leapSeconds: Int, hasLeapSeconds: Boolean) : Int {
+            builder.startTable(35)
             addVDOP(builder, vdop)
             addHDOP(builder, hdop)
             addPDOP(builder, pdop)
@@ -298,6 +459,16 @@ class GNO : Table() {
             addLATITUDE(builder, latitude)
             addCLOCKDRIFT(builder, clockDrift)
             addCLOCKOFFSET(builder, clockOffset)
+            addLEAPSECONDS(builder, leapSeconds)
+            addSIGNALSTRENGTHUNIT(builder, signalStrengthUnitOffset)
+            addPHASESHIFTS(builder, phaseShiftsOffset)
+            addANTENNADELTAHEN(builder, antennaDeltaHenOffset)
+            addAGENCY(builder, agencyOffset)
+            addOBSERVER(builder, observerOffset)
+            addMARKERTYPE(builder, markerTypeOffset)
+            addMARKERNUMBER(builder, markerNumberOffset)
+            addMARKERNAME(builder, markerNameOffset)
+            addTIMESYSTEM(builder, timeSystemOffset)
             addNOTES(builder, notesOffset)
             addOBSCODESET(builder, obsCodeSetOffset)
             addSATOBS(builder, satObsOffset)
@@ -309,9 +480,11 @@ class GNO : Table() {
             addRECEIVERTYPE(builder, receiverTypeOffset)
             addRECEIVERID(builder, receiverIdOffset)
             addID(builder, idOffset)
+            addHASLEAPSECONDS(builder, hasLeapSeconds)
+            addEPOCHFLAG(builder, epochFlag)
             return endGNO(builder)
         }
-        fun startGNO(builder: FlatBufferBuilder) = builder.startTable(23)
+        fun startGNO(builder: FlatBufferBuilder) = builder.startTable(35)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addRECEIVERID(builder: FlatBufferBuilder, receiverId: Int) = builder.addOffset(1, receiverId, 0)
         fun addRECEIVERTYPE(builder: FlatBufferBuilder, receiverType: Int) = builder.addOffset(2, receiverType, 0)
@@ -351,6 +524,34 @@ class GNO : Table() {
         }
         fun startObsCodeSetVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun addNOTES(builder: FlatBufferBuilder, notes: Int) = builder.addOffset(22, notes, 0)
+        fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Int) = builder.addOffset(23, timeSystem, 0)
+        fun addEPOCHFLAG(builder: FlatBufferBuilder, epochFlag: UByte) = builder.addByte(24, epochFlag.toByte(), 0)
+        fun addMARKERNAME(builder: FlatBufferBuilder, markerName: Int) = builder.addOffset(25, markerName, 0)
+        fun addMARKERNUMBER(builder: FlatBufferBuilder, markerNumber: Int) = builder.addOffset(26, markerNumber, 0)
+        fun addMARKERTYPE(builder: FlatBufferBuilder, markerType: Int) = builder.addOffset(27, markerType, 0)
+        fun addOBSERVER(builder: FlatBufferBuilder, observer: Int) = builder.addOffset(28, observer, 0)
+        fun addAGENCY(builder: FlatBufferBuilder, agency: Int) = builder.addOffset(29, agency, 0)
+        fun addANTENNADELTAHEN(builder: FlatBufferBuilder, antennaDeltaHen: Int) = builder.addOffset(30, antennaDeltaHen, 0)
+        fun createAntennaDeltaHenVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAntennaDeltaHenVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addPHASESHIFTS(builder: FlatBufferBuilder, phaseShifts: Int) = builder.addOffset(31, phaseShifts, 0)
+        fun createPhaseShiftsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startPhaseShiftsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSIGNALSTRENGTHUNIT(builder: FlatBufferBuilder, signalStrengthUnit: Int) = builder.addOffset(32, signalStrengthUnit, 0)
+        fun addLEAPSECONDS(builder: FlatBufferBuilder, leapSeconds: Int) = builder.addInt(33, leapSeconds, 0)
+        fun addHASLEAPSECONDS(builder: FlatBufferBuilder, hasLeapSeconds: Boolean) = builder.addBoolean(34, hasLeapSeconds, false)
         fun endGNO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

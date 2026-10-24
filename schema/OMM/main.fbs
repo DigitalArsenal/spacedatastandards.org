@@ -1,5 +1,5 @@
-// Hash: 7e9ecace0ebca05afa2963b7c6391569e7f7dfa59629782cff5e63893c284bec
-// Version: 2.0.5
+// Hash: 7721e4ea9699308906e69e22cfae5a3647161d65c408f4e15fdf41095018a108
+// Version: 2.0.6
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";

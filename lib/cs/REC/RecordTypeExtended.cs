@@ -47,4 +47,5 @@ public enum RecordTypeExtended : ushort
   SFE = 288,
   SRO = 289,
   SRT = 290,
+  GNM = 291,
 };

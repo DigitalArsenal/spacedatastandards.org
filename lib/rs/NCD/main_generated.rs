@@ -10,7 +10,7 @@ pub const ENUM_MAX_NCD_CONTAINER_FORMAT: u8 = 255;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 28] = [
+pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 33] = [
     ncdContainerFormat::UNSPECIFIED,
     ncdContainerFormat::SPK_DAF,
     ncdContainerFormat::SP3_C,
@@ -38,6 +38,11 @@ pub const ENUM_VALUES_NCD_CONTAINER_FORMAT: [ncdContainerFormat; 28] = [
     ncdContainerFormat::CCSDS_ACM_XML,
     ncdContainerFormat::CCSDS_RDM_KVN,
     ncdContainerFormat::CCSDS_RDM_XML,
+    ncdContainerFormat::SENTINEL_EOF_XML,
+    ncdContainerFormat::NAIF_CK_DAF,
+    ncdContainerFormat::NAIF_SCLK_KERNEL,
+    ncdContainerFormat::RINEX_OBS,
+    ncdContainerFormat::RINEX_NAV,
     ncdContainerFormat::PROVIDER_DEFINED,
 ];
 
@@ -119,6 +124,17 @@ impl ncdContainerFormat {
     pub const CCSDS_RDM_KVN: Self = Self(25);
     /// CCSDS Reentry Data Message, XML.
     pub const CCSDS_RDM_XML: Self = Self(26);
+    /// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+    /// AUX_RESORB and AUX_PREORB).
+    pub const SENTINEL_EOF_XML: Self = Self(27);
+    /// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+    pub const NAIF_CK_DAF: Self = Self(28);
+    /// NAIF spacecraft clock kernel, text.
+    pub const NAIF_SCLK_KERNEL: Self = Self(29);
+    /// RINEX observation file.
+    pub const RINEX_OBS: Self = Self(30);
+    /// RINEX navigation file.
+    pub const RINEX_NAV: Self = Self(31);
     /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
     /// which; a producer never reuses a neighbouring member instead.
     pub const PROVIDER_DEFINED: Self = Self(255);
@@ -153,6 +169,11 @@ impl ncdContainerFormat {
         Self::CCSDS_ACM_XML,
         Self::CCSDS_RDM_KVN,
         Self::CCSDS_RDM_XML,
+        Self::SENTINEL_EOF_XML,
+        Self::NAIF_CK_DAF,
+        Self::NAIF_SCLK_KERNEL,
+        Self::RINEX_OBS,
+        Self::RINEX_NAV,
         Self::PROVIDER_DEFINED,
     ];
 
@@ -186,6 +207,11 @@ impl ncdContainerFormat {
             Self::CCSDS_ACM_XML => Some("CCSDS_ACM_XML"),
             Self::CCSDS_RDM_KVN => Some("CCSDS_RDM_KVN"),
             Self::CCSDS_RDM_XML => Some("CCSDS_RDM_XML"),
+            Self::SENTINEL_EOF_XML => Some("SENTINEL_EOF_XML"),
+            Self::NAIF_CK_DAF => Some("NAIF_CK_DAF"),
+            Self::NAIF_SCLK_KERNEL => Some("NAIF_SCLK_KERNEL"),
+            Self::RINEX_OBS => Some("RINEX_OBS"),
+            Self::RINEX_NAV => Some("RINEX_NAV"),
             Self::PROVIDER_DEFINED => Some("PROVIDER_DEFINED"),
             _ => None,
         }
@@ -2151,6 +2177,12 @@ impl<'a> NCD<'a> {
     pub const VT_SOURCE_BYTE_LENGTH: ::flatbuffers::VOffsetT = 38;
     pub const VT_SOURCE_SHA256: ::flatbuffers::VOffsetT = 40;
     pub const VT_SOURCE_CID: ::flatbuffers::VOffsetT = 42;
+    pub const VT_SELECT_START_TIME: ::flatbuffers::VOffsetT = 44;
+    pub const VT_SELECT_STOP_TIME: ::flatbuffers::VOffsetT = 46;
+    pub const VT_SELECT_SAMPLE_INTERVAL_SECONDS: ::flatbuffers::VOffsetT = 48;
+    pub const VT_SELECT_SATELLITE_SYSTEMS: ::flatbuffers::VOffsetT = 50;
+    pub const VT_SELECT_OBSERVATION_CODES: ::flatbuffers::VOffsetT = 52;
+    pub const VT_SELECT_CLOCK_ID: ::flatbuffers::VOffsetT = 54;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2163,7 +2195,13 @@ impl<'a> NCD<'a> {
         args: &'args NCDArgs<'args>
     ) -> ::flatbuffers::WIPOffset<NCD<'bldr>> {
         let mut builder = NCDBuilder::new(_fbb);
+        builder.add_SELECT_SAMPLE_INTERVAL_SECONDS(args.SELECT_SAMPLE_INTERVAL_SECONDS);
         builder.add_SOURCE_BYTE_LENGTH(args.SOURCE_BYTE_LENGTH);
+        builder.add_SELECT_CLOCK_ID(args.SELECT_CLOCK_ID);
+        if let Some(x) = args.SELECT_OBSERVATION_CODES { builder.add_SELECT_OBSERVATION_CODES(x); }
+        if let Some(x) = args.SELECT_SATELLITE_SYSTEMS { builder.add_SELECT_SATELLITE_SYSTEMS(x); }
+        if let Some(x) = args.SELECT_STOP_TIME { builder.add_SELECT_STOP_TIME(x); }
+        if let Some(x) = args.SELECT_START_TIME { builder.add_SELECT_START_TIME(x); }
         if let Some(x) = args.SOURCE_CID { builder.add_SOURCE_CID(x); }
         if let Some(x) = args.SOURCE_SHA256 { builder.add_SOURCE_SHA256(x); }
         if let Some(x) = args.STOP_TIME { builder.add_STOP_TIME(x); }
@@ -2241,6 +2279,20 @@ impl<'a> NCD<'a> {
         let SOURCE_CID = self.SOURCE_CID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let SELECT_START_TIME = self.SELECT_START_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SELECT_STOP_TIME = self.SELECT_STOP_TIME().map(|x| {
+            alloc::string::ToString::to_string(x)
+        });
+        let SELECT_SAMPLE_INTERVAL_SECONDS = self.SELECT_SAMPLE_INTERVAL_SECONDS();
+        let SELECT_SATELLITE_SYSTEMS = self.SELECT_SATELLITE_SYSTEMS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let SELECT_OBSERVATION_CODES = self.SELECT_OBSERVATION_CODES().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
+        let SELECT_CLOCK_ID = self.SELECT_CLOCK_ID();
         NCDT {
             FORMAT,
             PROVIDER_DEFINED_FORMAT_NAME,
@@ -2262,6 +2314,12 @@ impl<'a> NCD<'a> {
             SOURCE_BYTE_LENGTH,
             SOURCE_SHA256,
             SOURCE_CID,
+            SELECT_START_TIME,
+            SELECT_STOP_TIME,
+            SELECT_SAMPLE_INTERVAL_SECONDS,
+            SELECT_SATELLITE_SYSTEMS,
+            SELECT_OBSERVATION_CODES,
+            SELECT_CLOCK_ID,
         }
     }
 
@@ -2453,6 +2511,66 @@ impl<'a> NCD<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(NCD::VT_SOURCE_CID, None)}
     }
+
+    /// A reader's REQUEST, carried in the descriptor that frames the file so that
+    /// no option travels outside a typed record. Start of the inclusive window to
+    /// read, ISO 8601, on the container's own time scale. Default empty (from the
+    /// start of the container).
+    #[inline]
+    pub fn SELECT_START_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(NCD::VT_SELECT_START_TIME, None)}
+    }
+
+    /// End of the inclusive window to read, ISO 8601, on the container's own time
+    /// scale. Default empty (to the end of the container).
+    #[inline]
+    pub fn SELECT_STOP_TIME(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(NCD::VT_SELECT_STOP_TIME, None)}
+    }
+
+    /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+    #[inline]
+    pub fn SELECT_SAMPLE_INTERVAL_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(NCD::VT_SELECT_SAMPLE_INTERVAL_SECONDS, Some(0.0)).unwrap()}
+    }
+
+    /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+    /// empty (every system the container holds).
+    #[inline]
+    pub fn SELECT_SATELLITE_SYSTEMS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(NCD::VT_SELECT_SATELLITE_SYSTEMS, None)}
+    }
+
+    /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+    #[inline]
+    pub fn SELECT_OBSERVATION_CODES(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(NCD::VT_SELECT_OBSERVATION_CODES, None)}
+    }
+
+    /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+    /// by the instrument id. Default 0.
+    #[inline]
+    pub fn SELECT_CLOCK_ID(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(NCD::VT_SELECT_CLOCK_ID, Some(0)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for NCD<'_> {
@@ -2481,6 +2599,12 @@ impl ::flatbuffers::Verifiable for NCD<'_> {
             .visit_field::<u64>("SOURCE_BYTE_LENGTH", Self::VT_SOURCE_BYTE_LENGTH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_SHA256", Self::VT_SOURCE_SHA256, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SOURCE_CID", Self::VT_SOURCE_CID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SELECT_START_TIME", Self::VT_SELECT_START_TIME, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SELECT_STOP_TIME", Self::VT_SELECT_STOP_TIME, false)?
+            .visit_field::<f64>("SELECT_SAMPLE_INTERVAL_SECONDS", Self::VT_SELECT_SAMPLE_INTERVAL_SECONDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SELECT_SATELLITE_SYSTEMS", Self::VT_SELECT_SATELLITE_SYSTEMS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("SELECT_OBSERVATION_CODES", Self::VT_SELECT_OBSERVATION_CODES, false)?
+            .visit_field::<i32>("SELECT_CLOCK_ID", Self::VT_SELECT_CLOCK_ID, false)?
             .finish();
         Ok(())
     }
@@ -2507,6 +2631,12 @@ pub struct NCDArgs<'a> {
     pub SOURCE_BYTE_LENGTH: u64,
     pub SOURCE_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SOURCE_CID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SELECT_START_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SELECT_STOP_TIME: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub SELECT_SAMPLE_INTERVAL_SECONDS: f64,
+    pub SELECT_SATELLITE_SYSTEMS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SELECT_OBSERVATION_CODES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SELECT_CLOCK_ID: i32,
 }
 
 impl<'a> Default for NCDArgs<'a> {
@@ -2533,6 +2663,12 @@ impl<'a> Default for NCDArgs<'a> {
             SOURCE_BYTE_LENGTH: 0,
             SOURCE_SHA256: None,
             SOURCE_CID: None,
+            SELECT_START_TIME: None,
+            SELECT_STOP_TIME: None,
+            SELECT_SAMPLE_INTERVAL_SECONDS: 0.0,
+            SELECT_SATELLITE_SYSTEMS: None,
+            SELECT_OBSERVATION_CODES: None,
+            SELECT_CLOCK_ID: 0,
         }
     }
 }
@@ -2644,6 +2780,36 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> NCDBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_SELECT_START_TIME(&mut self, SELECT_START_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(NCD::VT_SELECT_START_TIME, SELECT_START_TIME);
+    }
+
+    #[inline]
+    pub fn add_SELECT_STOP_TIME(&mut self, SELECT_STOP_TIME: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(NCD::VT_SELECT_STOP_TIME, SELECT_STOP_TIME);
+    }
+
+    #[inline]
+    pub fn add_SELECT_SAMPLE_INTERVAL_SECONDS(&mut self, SELECT_SAMPLE_INTERVAL_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(NCD::VT_SELECT_SAMPLE_INTERVAL_SECONDS, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_SELECT_SATELLITE_SYSTEMS(&mut self, SELECT_SATELLITE_SYSTEMS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(NCD::VT_SELECT_SATELLITE_SYSTEMS, SELECT_SATELLITE_SYSTEMS);
+    }
+
+    #[inline]
+    pub fn add_SELECT_OBSERVATION_CODES(&mut self, SELECT_OBSERVATION_CODES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(NCD::VT_SELECT_OBSERVATION_CODES, SELECT_OBSERVATION_CODES);
+    }
+
+    #[inline]
+    pub fn add_SELECT_CLOCK_ID(&mut self, SELECT_CLOCK_ID: i32) {
+        self.fbb_.push_slot::<i32>(NCD::VT_SELECT_CLOCK_ID, SELECT_CLOCK_ID, 0);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> NCDBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         NCDBuilder {
@@ -2682,6 +2848,12 @@ impl ::core::fmt::Debug for NCD<'_> {
         ds.field("SOURCE_BYTE_LENGTH", &self.SOURCE_BYTE_LENGTH());
         ds.field("SOURCE_SHA256", &self.SOURCE_SHA256());
         ds.field("SOURCE_CID", &self.SOURCE_CID());
+        ds.field("SELECT_START_TIME", &self.SELECT_START_TIME());
+        ds.field("SELECT_STOP_TIME", &self.SELECT_STOP_TIME());
+        ds.field("SELECT_SAMPLE_INTERVAL_SECONDS", &self.SELECT_SAMPLE_INTERVAL_SECONDS());
+        ds.field("SELECT_SATELLITE_SYSTEMS", &self.SELECT_SATELLITE_SYSTEMS());
+        ds.field("SELECT_OBSERVATION_CODES", &self.SELECT_OBSERVATION_CODES());
+        ds.field("SELECT_CLOCK_ID", &self.SELECT_CLOCK_ID());
         ds.finish()
     }
 }
@@ -2709,6 +2881,12 @@ pub struct NCDT {
     pub SOURCE_BYTE_LENGTH: u64,
     pub SOURCE_SHA256: Option<alloc::string::String>,
     pub SOURCE_CID: Option<alloc::string::String>,
+    pub SELECT_START_TIME: Option<alloc::string::String>,
+    pub SELECT_STOP_TIME: Option<alloc::string::String>,
+    pub SELECT_SAMPLE_INTERVAL_SECONDS: f64,
+    pub SELECT_SATELLITE_SYSTEMS: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub SELECT_OBSERVATION_CODES: Option<alloc::vec::Vec<alloc::string::String>>,
+    pub SELECT_CLOCK_ID: i32,
 }
 
 impl Default for NCDT {
@@ -2734,6 +2912,12 @@ impl Default for NCDT {
             SOURCE_BYTE_LENGTH: 0,
             SOURCE_SHA256: None,
             SOURCE_CID: None,
+            SELECT_START_TIME: None,
+            SELECT_STOP_TIME: None,
+            SELECT_SAMPLE_INTERVAL_SECONDS: 0.0,
+            SELECT_SATELLITE_SYSTEMS: None,
+            SELECT_OBSERVATION_CODES: None,
+            SELECT_CLOCK_ID: 0,
         }
     }
 }
@@ -2797,6 +2981,20 @@ impl NCDT {
         let SOURCE_CID = self.SOURCE_CID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let SELECT_START_TIME = self.SELECT_START_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SELECT_STOP_TIME = self.SELECT_STOP_TIME.as_ref().map(|x|{
+            _fbb.create_string(x)
+        });
+        let SELECT_SAMPLE_INTERVAL_SECONDS = self.SELECT_SAMPLE_INTERVAL_SECONDS;
+        let SELECT_SATELLITE_SYSTEMS = self.SELECT_SATELLITE_SYSTEMS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let SELECT_OBSERVATION_CODES = self.SELECT_OBSERVATION_CODES.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
+        let SELECT_CLOCK_ID = self.SELECT_CLOCK_ID;
         NCD::create(_fbb, &NCDArgs{
             FORMAT,
             PROVIDER_DEFINED_FORMAT_NAME,
@@ -2818,6 +3016,12 @@ impl NCDT {
             SOURCE_BYTE_LENGTH,
             SOURCE_SHA256,
             SOURCE_CID,
+            SELECT_START_TIME,
+            SELECT_STOP_TIME,
+            SELECT_SAMPLE_INTERVAL_SECONDS,
+            SELECT_SATELLITE_SYSTEMS,
+            SELECT_OBSERVATION_CODES,
+            SELECT_CLOCK_ID,
         })
     }
 }

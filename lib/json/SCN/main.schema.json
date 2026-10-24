@@ -83,7 +83,7 @@
     },
     "meanElementSource" : {
       "type" : "string",
-      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM", "SDNAP"]
     },
     "covarianceCalibration" : {
       "type" : "string",
@@ -1724,11 +1724,11 @@
               },
         "CENTER_NAME" : {
                 "type" : "string",
-                "description" : "Center Name (e.g. EARTH, MARS)"
+                "description" : "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
               },
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",
-                "description" : "Reference Frame\nTypically TEMEOFDATE"
+                "description" : "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
               },
         "REFERENCE_FRAME_EPOCH" : {
                 "type" : "string",
@@ -1824,7 +1824,7 @@
               },
         "BSTAR" : {
                 "type" : "number",
-                "description" : "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+                "description" : "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
               },
         "MEAN_MOTION_DOT" : {
                 "type" : "number",
@@ -1832,7 +1832,7 @@
               },
         "MEAN_MOTION_DDOT" : {
                 "type" : "number",
-                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
               },
         "COV_REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",

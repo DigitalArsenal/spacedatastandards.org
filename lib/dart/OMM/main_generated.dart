@@ -74,11 +74,24 @@ class OMM {
   ///  International Designator (YYYY-NNNAAA)
   String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get objectId => OBJECT_ID;
-  ///  Center Name (e.g. EARTH, MARS)
+  ///  Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+  ///  SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+  ///  Earth's reach states its elements about that center; GM is then the
+  ///  center's gravitational parameter, and an open orbit has ECCENTRICITY above
+  ///  1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+  ///  MEAN_ANOMALY.
   String? get CENTER_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   String? get centerName => CENTER_NAME;
   ///  Reference Frame
   ///  Typically TEMEOFDATE
+  ///  The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+  ///  RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+  ///  names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+  ///  (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+  ///  ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+  ///  the Earth-Moon barycenter (BARYCENTRE) or the libration point
+  ///  (LIBRATION_POINT with its primary and secondary). No other frame value is
+  ///  needed for it.
   RFM? get REFERENCE_FRAME => RFM.reader.vTableGetNullable(_bc, _bcOffset, 16);
   RFM? get referenceFrame => REFERENCE_FRAME;
   ///  Reference Frame Epoch (ISO 8601 UTC format)
@@ -148,12 +161,13 @@ class OMM {
   ///  REV_AT_EPOCH [O if SGP/SGP4]
   double get REV_AT_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
   double get revAtEpoch => REV_AT_EPOCH;
-  ///  BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  ///  BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+  ///  signed effective ballistic coefficient B_eff) [C]
   double get BSTAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
   ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
   double get meanMotionDot => MEAN_MOTION_DOT;
-  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
   double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
   double get meanMotionDdot => MEAN_MOTION_DDOT;
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]

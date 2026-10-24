@@ -57,7 +57,12 @@ public final class OMM extends com.google.flatbuffers.Table {
   public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
   /**
-   * Center Name (e.g. EARTH, MARS)
+   * Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+   * SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+   * Earth's reach states its elements about that center; GM is then the
+   * center's gravitational parameter, and an open orbit has ECCENTRICITY above
+   * 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+   * MEAN_ANOMALY.
    */
   public String CENTER_NAME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CENTER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
@@ -65,6 +70,14 @@ public final class OMM extends com.google.flatbuffers.Table {
   /**
    * Reference Frame
    * Typically TEMEOFDATE
+   * The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+   * RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+   * names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+   * (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+   * ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+   * the Earth-Moon barycenter (BARYCENTRE) or the libration point
+   * (LIBRATION_POINT with its primary and secondary). No other frame value is
+   * needed for it.
    */
   public RFM REFERENCE_FRAME() { return REFERENCE_FRAME(new RFM()); }
   public RFM REFERENCE_FRAME(RFM obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
@@ -173,7 +186,8 @@ public final class OMM extends com.google.flatbuffers.Table {
    */
   public double REV_AT_EPOCH() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+   * BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+   * signed effective ballistic coefficient B_eff) [C]
    */
   public double BSTAR() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
@@ -181,7 +195,7 @@ public final class OMM extends com.google.flatbuffers.Table {
    */
   public double MEAN_MOTION_DOT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+   * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
    */
   public double MEAN_MOTION_DDOT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**

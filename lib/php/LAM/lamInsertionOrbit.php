@@ -185,22 +185,66 @@ class lamInsertionOrbit extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+    /// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+    /**
+     * @return double
+     */
+    public function getSEMI_MAJOR_AXIS_UNCERTAINTY_M()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+    /// default) means absent, and a consumer applies its vehicle-class default.
+    /**
+     * @return bool
+     */
+    public function getHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+    /// HAS_INCLINATION_UNCERTAINTY_DEG.
+    /**
+     * @return double
+     */
+    public function getINCLINATION_UNCERTAINTY_DEG()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+    /// means absent, and a consumer applies its vehicle-class default.
+    /**
+     * @return bool
+     */
+    public function getHAS_INCLINATION_UNCERTAINTY_DEG()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startlamInsertionOrbit(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(19);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return lamInsertionOrbit
      */
-    public static function createlamInsertionOrbit(FlatBufferBuilder $builder, $EPOCH, $TIME_FROM_LAUNCH_S, $REF_FRAME, $SEMI_MAJOR_AXIS_M, $ECCENTRICITY, $INCLINATION_DEG, $RAAN_DEG, $ARGUMENT_OF_PERIAPSIS_DEG, $ARGUMENT_OF_LATITUDE_DEG, $PERIAPSIS_ALTITUDE_M, $APOAPSIS_ALTITUDE_M, $RAAN_UNCERTAINTY_DEG, $ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, $PERIAPSIS_ALTITUDE_UNCERTAINTY_M, $APOAPSIS_ALTITUDE_UNCERTAINTY_M)
+    public static function createlamInsertionOrbit(FlatBufferBuilder $builder, $EPOCH, $TIME_FROM_LAUNCH_S, $REF_FRAME, $SEMI_MAJOR_AXIS_M, $ECCENTRICITY, $INCLINATION_DEG, $RAAN_DEG, $ARGUMENT_OF_PERIAPSIS_DEG, $ARGUMENT_OF_LATITUDE_DEG, $PERIAPSIS_ALTITUDE_M, $APOAPSIS_ALTITUDE_M, $RAAN_UNCERTAINTY_DEG, $ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, $PERIAPSIS_ALTITUDE_UNCERTAINTY_M, $APOAPSIS_ALTITUDE_UNCERTAINTY_M, $SEMI_MAJOR_AXIS_UNCERTAINTY_M, $HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, $INCLINATION_UNCERTAINTY_DEG, $HAS_INCLINATION_UNCERTAINTY_DEG)
     {
-        $builder->startObject(15);
+        $builder->startObject(19);
         self::addEPOCH($builder, $EPOCH);
         self::addTIME_FROM_LAUNCH_S($builder, $TIME_FROM_LAUNCH_S);
         self::addREF_FRAME($builder, $REF_FRAME);
@@ -216,6 +260,10 @@ class lamInsertionOrbit extends Table
         self::addARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG($builder, $ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
         self::addPERIAPSIS_ALTITUDE_UNCERTAINTY_M($builder, $PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
         self::addAPOAPSIS_ALTITUDE_UNCERTAINTY_M($builder, $APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+        self::addSEMI_MAJOR_AXIS_UNCERTAINTY_M($builder, $SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+        self::addHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M($builder, $HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+        self::addINCLINATION_UNCERTAINTY_DEG($builder, $INCLINATION_UNCERTAINTY_DEG);
+        self::addHAS_INCLINATION_UNCERTAINTY_DEG($builder, $HAS_INCLINATION_UNCERTAINTY_DEG);
         $o = $builder->endObject();
         return $o;
     }
@@ -368,6 +416,46 @@ class lamInsertionOrbit extends Table
     public static function addAPOAPSIS_ALTITUDE_UNCERTAINTY_M(FlatBufferBuilder $builder, $APOAPSIS_ALTITUDE_UNCERTAINTY_M)
     {
         $builder->addDoubleX(14, $APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSEMI_MAJOR_AXIS_UNCERTAINTY_M(FlatBufferBuilder $builder, $SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+    {
+        $builder->addDoubleX(15, $SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(FlatBufferBuilder $builder, $HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+    {
+        $builder->addBoolX(16, $HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINCLINATION_UNCERTAINTY_DEG(FlatBufferBuilder $builder, $INCLINATION_UNCERTAINTY_DEG)
+    {
+        $builder->addDoubleX(17, $INCLINATION_UNCERTAINTY_DEG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_INCLINATION_UNCERTAINTY_DEG(FlatBufferBuilder $builder, $HAS_INCLINATION_UNCERTAINTY_DEG)
+    {
+        $builder->addBoolX(18, $HAS_INCLINATION_UNCERTAINTY_DEG, false);
     }
 
     /**

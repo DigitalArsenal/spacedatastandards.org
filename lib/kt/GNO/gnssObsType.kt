@@ -12,5 +12,13 @@ class gnssObsType private constructor() {
         const val DOPPLER: Byte = 2
         const val SNR: Byte = 3
         const val RAW_IF: Byte = 4
+        /**
+         * Ionosphere phase delay (RINEX observation type I), as the file states it.
+         */
+        const val IONOSPHERE_PHASE_DELAY: Byte = 5
+        /**
+         * Receiver channel number (RINEX observation type X), as the receiver reports it.
+         */
+        const val CHANNEL_NUMBER: Byte = 6
     }
 }

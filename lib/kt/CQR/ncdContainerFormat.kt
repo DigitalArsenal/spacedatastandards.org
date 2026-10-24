@@ -130,6 +130,27 @@ class ncdContainerFormat private constructor() {
          */
         const val CCSDS_RDM_XML: UByte = 26u
         /**
+         * ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+         * AUX_RESORB and AUX_PREORB).
+         */
+        const val SENTINEL_EOF_XML: UByte = 27u
+        /**
+         * NAIF C-kernel: a DAF holding pointing (attitude) segments.
+         */
+        const val NAIF_CK_DAF: UByte = 28u
+        /**
+         * NAIF spacecraft clock kernel, text.
+         */
+        const val NAIF_SCLK_KERNEL: UByte = 29u
+        /**
+         * RINEX observation file.
+         */
+        const val RINEX_OBS: UByte = 30u
+        /**
+         * RINEX navigation file.
+         */
+        const val RINEX_NAV: UByte = 31u
+        /**
          * A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
          * which; a producer never reuses a neighbouring member instead.
          */

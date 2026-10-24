@@ -102,11 +102,24 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  International Designator (YYYY-NNNAAA)
   public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
-  ///  Center Name (e.g. EARTH, MARS)
+  ///  Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+  ///  SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+  ///  Earth's reach states its elements about that center; GM is then the
+  ///  center's gravitational parameter, and an open orbit has ECCENTRICITY above
+  ///  1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+  ///  MEAN_ANOMALY.
   public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
   ///  Reference Frame
   ///  Typically TEMEOFDATE
+  ///  The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+  ///  RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+  ///  names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+  ///  (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+  ///  ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+  ///  the Earth-Moon barycenter (BARYCENTRE) or the libration point
+  ///  (LIBRATION_POINT with its primary and secondary). No other frame value is
+  ///  needed for it.
   public var REFERENCE_FRAME: RFM? { let o = _accessor.offset(VT.REFERENCE_FRAME); return o == 0 ? nil : RFM(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Reference Frame Epoch (ISO 8601 UTC format)
   public var REFERENCE_FRAME_EPOCH: String? { let o = _accessor.offset(VT.REFERENCE_FRAME_EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
@@ -162,11 +175,12 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VT.ELEMENT_SET_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  REV_AT_EPOCH [O if SGP/SGP4]
   public var REV_AT_EPOCH: Double { let o = _accessor.offset(VT.REV_AT_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  ///  BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+  ///  signed effective ballistic coefficient B_eff) [C]
   public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   ///  COV_REF_FRAME reference frame for covariance [C if covariance given]

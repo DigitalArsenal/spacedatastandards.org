@@ -38,6 +38,12 @@ public struct gnssSatObs : IFlatbufferObject
   /// Observations for this satellite
   public gnssObsData? OBSERVATIONS(int j) { int o = __p.__offset(16); return o != 0 ? (gnssObsData?)(new gnssObsData()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int OBSERVATIONSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+  /// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+  public sbyte GLONASS_FREQUENCY_NUMBER { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetSbyte(o + __p.bb_pos) : (sbyte)0; } }
+  /// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+  /// channel); false (the default) means absent.
+  public bool HAS_GLONASS_FREQUENCY_NUMBER { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<gnssSatObs> CreategnssSatObs(FlatBufferBuilder builder,
       StringOffset GNSS_SAT_IDOffset = default(StringOffset),
@@ -46,19 +52,23 @@ public struct gnssSatObs : IFlatbufferObject
       double AZIMUTH = 0.0,
       int TRACKING_STATUS = 0,
       int AGC_STATE = 0,
-      VectorOffset OBSERVATIONSOffset = default(VectorOffset)) {
-    builder.StartTable(7);
+      VectorOffset OBSERVATIONSOffset = default(VectorOffset),
+      sbyte GLONASS_FREQUENCY_NUMBER = 0,
+      bool HAS_GLONASS_FREQUENCY_NUMBER = false) {
+    builder.StartTable(9);
     gnssSatObs.AddAZIMUTH(builder, AZIMUTH);
     gnssSatObs.AddELEVATION(builder, ELEVATION);
     gnssSatObs.AddOBSERVATIONS(builder, OBSERVATIONSOffset);
     gnssSatObs.AddAGC_STATE(builder, AGC_STATE);
     gnssSatObs.AddTRACKING_STATUS(builder, TRACKING_STATUS);
     gnssSatObs.AddGNSS_SAT_ID(builder, GNSS_SAT_IDOffset);
+    gnssSatObs.AddHAS_GLONASS_FREQUENCY_NUMBER(builder, HAS_GLONASS_FREQUENCY_NUMBER);
+    gnssSatObs.AddGLONASS_FREQUENCY_NUMBER(builder, GLONASS_FREQUENCY_NUMBER);
     gnssSatObs.AddCONSTELLATION(builder, CONSTELLATION);
     return gnssSatObs.EndgnssSatObs(builder);
   }
 
-  public static void StartgnssSatObs(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartgnssSatObs(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddGNSS_SAT_ID(FlatBufferBuilder builder, StringOffset GNSS_SAT_IDOffset) { builder.AddOffset(0, GNSS_SAT_IDOffset.Value, 0); }
   public static void AddCONSTELLATION(FlatBufferBuilder builder, gnssConstellation CONSTELLATION) { builder.AddSbyte(1, (sbyte)CONSTELLATION, 0); }
   public static void AddELEVATION(FlatBufferBuilder builder, double ELEVATION) { builder.AddDouble(2, ELEVATION, 0.0); }
@@ -71,6 +81,8 @@ public struct gnssSatObs : IFlatbufferObject
   public static VectorOffset CreateOBSERVATIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<gnssObsData>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateOBSERVATIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<gnssObsData>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartOBSERVATIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddGLONASS_FREQUENCY_NUMBER(FlatBufferBuilder builder, sbyte GLONASS_FREQUENCY_NUMBER) { builder.AddSbyte(7, GLONASS_FREQUENCY_NUMBER, 0); }
+  public static void AddHAS_GLONASS_FREQUENCY_NUMBER(FlatBufferBuilder builder, bool HAS_GLONASS_FREQUENCY_NUMBER) { builder.AddBool(8, HAS_GLONASS_FREQUENCY_NUMBER, false); }
   public static Offset<gnssSatObs> EndgnssSatObs(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<gnssSatObs>(o);
@@ -89,6 +101,8 @@ public struct gnssSatObs : IFlatbufferObject
     _o.AGC_STATE = this.AGC_STATE;
     _o.OBSERVATIONS = new List<gnssObsDataT>();
     for (var _j = 0; _j < this.OBSERVATIONSLength; ++_j) {_o.OBSERVATIONS.Add(this.OBSERVATIONS(_j).HasValue ? this.OBSERVATIONS(_j).Value.UnPack() : null);}
+    _o.GLONASS_FREQUENCY_NUMBER = this.GLONASS_FREQUENCY_NUMBER;
+    _o.HAS_GLONASS_FREQUENCY_NUMBER = this.HAS_GLONASS_FREQUENCY_NUMBER;
   }
   public static Offset<gnssSatObs> Pack(FlatBufferBuilder builder, gnssSatObsT _o) {
     if (_o == null) return default(Offset<gnssSatObs>);
@@ -107,7 +121,9 @@ public struct gnssSatObs : IFlatbufferObject
       _o.AZIMUTH,
       _o.TRACKING_STATUS,
       _o.AGC_STATE,
-      _OBSERVATIONS);
+      _OBSERVATIONS,
+      _o.GLONASS_FREQUENCY_NUMBER,
+      _o.HAS_GLONASS_FREQUENCY_NUMBER);
   }
 }
 
@@ -120,6 +136,8 @@ public class gnssSatObsT
   public int TRACKING_STATUS { get; set; }
   public int AGC_STATE { get; set; }
   public List<gnssObsDataT> OBSERVATIONS { get; set; }
+  public sbyte GLONASS_FREQUENCY_NUMBER { get; set; }
+  public bool HAS_GLONASS_FREQUENCY_NUMBER { get; set; }
 
   public gnssSatObsT() {
     this.GNSS_SAT_ID = null;
@@ -129,6 +147,8 @@ public class gnssSatObsT
     this.TRACKING_STATUS = 0;
     this.AGC_STATE = 0;
     this.OBSERVATIONS = null;
+    this.GLONASS_FREQUENCY_NUMBER = 0;
+    this.HAS_GLONASS_FREQUENCY_NUMBER = false;
   }
 }
 
@@ -145,6 +165,8 @@ static public class gnssSatObsVerify
       && verifier.VerifyField(tablePos, 12 /*TRACKING_STATUS*/, 4 /*int*/, 4, false)
       && verifier.VerifyField(tablePos, 14 /*AGC_STATE*/, 4 /*int*/, 4, false)
       && verifier.VerifyVectorOfTables(tablePos, 16 /*OBSERVATIONS*/, gnssObsDataVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 18 /*GLONASS_FREQUENCY_NUMBER*/, 1 /*sbyte*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*HAS_GLONASS_FREQUENCY_NUMBER*/, 1 /*bool*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

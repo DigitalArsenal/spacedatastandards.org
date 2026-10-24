@@ -40,6 +40,11 @@ enum ncdContainerFormat {
   CCSDS_ACM_XML(24),
   CCSDS_RDM_KVN(25),
   CCSDS_RDM_XML(26),
+  SENTINEL_EOF_XML(27),
+  NAIF_CK_DAF(28),
+  NAIF_SCLK_KERNEL(29),
+  RINEX_OBS(30),
+  RINEX_NAV(31),
   PROVIDER_DEFINED(255);
 
   final int value;
@@ -74,6 +79,11 @@ enum ncdContainerFormat {
       case 24: return ncdContainerFormat.CCSDS_ACM_XML;
       case 25: return ncdContainerFormat.CCSDS_RDM_KVN;
       case 26: return ncdContainerFormat.CCSDS_RDM_XML;
+      case 27: return ncdContainerFormat.SENTINEL_EOF_XML;
+      case 28: return ncdContainerFormat.NAIF_CK_DAF;
+      case 29: return ncdContainerFormat.NAIF_SCLK_KERNEL;
+      case 30: return ncdContainerFormat.RINEX_OBS;
+      case 31: return ncdContainerFormat.RINEX_NAV;
       case 255: return ncdContainerFormat.PROVIDER_DEFINED;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
@@ -1097,10 +1107,34 @@ class NCD {
   ///  content rather than by path.
   String? get SOURCE_CID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
   String? get sourceCid => SOURCE_CID;
+  ///  A reader's REQUEST, carried in the descriptor that frames the file so that
+  ///  no option travels outside a typed record. Start of the inclusive window to
+  ///  read, ISO 8601, on the container's own time scale. Default empty (from the
+  ///  start of the container).
+  String? get SELECT_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  String? get selectStartTime => SELECT_START_TIME;
+  ///  End of the inclusive window to read, ISO 8601, on the container's own time
+  ///  scale. Default empty (to the end of the container).
+  String? get SELECT_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get selectStopTime => SELECT_STOP_TIME;
+  ///  Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+  double get SELECT_SAMPLE_INTERVAL_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  double get selectSampleIntervalSeconds => SELECT_SAMPLE_INTERVAL_SECONDS;
+  ///  Satellite systems to read, as the RINEX letters G R E C J I S. Default
+  ///  empty (every system the container holds).
+  List<String>? get SELECT_SATELLITE_SYSTEMS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 50);
+  List<String>? get selectSatelliteSystems => SELECT_SATELLITE_SYSTEMS;
+  ///  Observation codes to read (C1C, L1C, ...). Default empty (every code).
+  List<String>? get SELECT_OBSERVATION_CODES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 52);
+  List<String>? get selectObservationCodes => SELECT_OBSERVATION_CODES;
+  ///  Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+  ///  by the instrument id. Default 0.
+  int get SELECT_CLOCK_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 54, 0);
+  int get selectClockId => SELECT_CLOCK_ID;
 
   @override
   String toString() {
-    return 'NCD{FORMAT: ${FORMAT}, providerDefinedFormatName: ${providerDefinedFormatName}, formatVersion: ${formatVersion}, PRODUCER: ${PRODUCER}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, internalFileName: ${internalFileName}, commentArea: ${commentArea}, nativeFrameName: ${nativeFrameName}, nativeFrameId: ${nativeFrameId}, nativeTimeSystem: ${nativeTimeSystem}, SEGMENTS: ${SEGMENTS}, sp3Header: ${sp3Header}, scenarioContainer: ${scenarioContainer}, code500Header: ${code500Header}, startTime: ${startTime}, stopTime: ${stopTime}, sourceByteLength: ${sourceByteLength}, sourceSha256: ${sourceSha256}, sourceCid: ${sourceCid}}';
+    return 'NCD{FORMAT: ${FORMAT}, providerDefinedFormatName: ${providerDefinedFormatName}, formatVersion: ${formatVersion}, PRODUCER: ${PRODUCER}, creationDate: ${creationDate}, ORIGINATOR: ${ORIGINATOR}, internalFileName: ${internalFileName}, commentArea: ${commentArea}, nativeFrameName: ${nativeFrameName}, nativeFrameId: ${nativeFrameId}, nativeTimeSystem: ${nativeTimeSystem}, SEGMENTS: ${SEGMENTS}, sp3Header: ${sp3Header}, scenarioContainer: ${scenarioContainer}, code500Header: ${code500Header}, startTime: ${startTime}, stopTime: ${stopTime}, sourceByteLength: ${sourceByteLength}, sourceSha256: ${sourceSha256}, sourceCid: ${sourceCid}, selectStartTime: ${selectStartTime}, selectStopTime: ${selectStopTime}, selectSampleIntervalSeconds: ${selectSampleIntervalSeconds}, selectSatelliteSystems: ${selectSatelliteSystems}, selectObservationCodes: ${selectObservationCodes}, selectClockId: ${selectClockId}}';
   }
 }
 
@@ -1118,7 +1152,7 @@ class NCDBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(20);
+    fbBuilder.startTable(26);
   }
 
   int addFormat(ncdContainerFormat? FORMAT) {
@@ -1201,6 +1235,30 @@ class NCDBuilder {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
+  int addSelectStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectSampleIntervalSeconds(double? SELECT_SAMPLE_INTERVAL_SECONDS) {
+    fbBuilder.addFloat64(22, SELECT_SAMPLE_INTERVAL_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addSelectSatelliteSystemsOffset(int? offset) {
+    fbBuilder.addOffset(23, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectObservationCodesOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addSelectClockId(int? SELECT_CLOCK_ID) {
+    fbBuilder.addInt32(25, SELECT_CLOCK_ID);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1228,6 +1286,12 @@ class NCDObjectBuilder extends fb.ObjectBuilder {
   final int? _SOURCE_BYTE_LENGTH;
   final String? _SOURCE_SHA256;
   final String? _SOURCE_CID;
+  final String? _SELECT_START_TIME;
+  final String? _SELECT_STOP_TIME;
+  final double? _SELECT_SAMPLE_INTERVAL_SECONDS;
+  final List<String>? _SELECT_SATELLITE_SYSTEMS;
+  final List<String>? _SELECT_OBSERVATION_CODES;
+  final int? _SELECT_CLOCK_ID;
 
   NCDObjectBuilder({
     ncdContainerFormat? FORMAT,
@@ -1266,6 +1330,18 @@ class NCDObjectBuilder extends fb.ObjectBuilder {
     String? sourceSha256,
     String? SOURCE_CID,
     String? sourceCid,
+    String? SELECT_START_TIME,
+    String? selectStartTime,
+    String? SELECT_STOP_TIME,
+    String? selectStopTime,
+    double? SELECT_SAMPLE_INTERVAL_SECONDS,
+    double? selectSampleIntervalSeconds,
+    List<String>? SELECT_SATELLITE_SYSTEMS,
+    List<String>? selectSatelliteSystems,
+    List<String>? SELECT_OBSERVATION_CODES,
+    List<String>? selectObservationCodes,
+    int? SELECT_CLOCK_ID,
+    int? selectClockId,
   })
       : _FORMAT = FORMAT,
         _PROVIDER_DEFINED_FORMAT_NAME = providerDefinedFormatName ?? PROVIDER_DEFINED_FORMAT_NAME,
@@ -1286,7 +1362,13 @@ class NCDObjectBuilder extends fb.ObjectBuilder {
         _STOP_TIME = stopTime ?? STOP_TIME,
         _SOURCE_BYTE_LENGTH = sourceByteLength ?? SOURCE_BYTE_LENGTH,
         _SOURCE_SHA256 = sourceSha256 ?? SOURCE_SHA256,
-        _SOURCE_CID = sourceCid ?? SOURCE_CID;
+        _SOURCE_CID = sourceCid ?? SOURCE_CID,
+        _SELECT_START_TIME = selectStartTime ?? SELECT_START_TIME,
+        _SELECT_STOP_TIME = selectStopTime ?? SELECT_STOP_TIME,
+        _SELECT_SAMPLE_INTERVAL_SECONDS = selectSampleIntervalSeconds ?? SELECT_SAMPLE_INTERVAL_SECONDS,
+        _SELECT_SATELLITE_SYSTEMS = selectSatelliteSystems ?? SELECT_SATELLITE_SYSTEMS,
+        _SELECT_OBSERVATION_CODES = selectObservationCodes ?? SELECT_OBSERVATION_CODES,
+        _SELECT_CLOCK_ID = selectClockId ?? SELECT_CLOCK_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1322,7 +1404,15 @@ class NCDObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_SOURCE_SHA256!);
     final int? SOURCE_CIDOffset = _SOURCE_CID == null ? null
         : fbBuilder.writeString(_SOURCE_CID!);
-    fbBuilder.startTable(20);
+    final int? SELECT_START_TIMEOffset = _SELECT_START_TIME == null ? null
+        : fbBuilder.writeString(_SELECT_START_TIME!);
+    final int? SELECT_STOP_TIMEOffset = _SELECT_STOP_TIME == null ? null
+        : fbBuilder.writeString(_SELECT_STOP_TIME!);
+    final int? SELECT_SATELLITE_SYSTEMSOffset = _SELECT_SATELLITE_SYSTEMS == null ? null
+        : fbBuilder.writeList(_SELECT_SATELLITE_SYSTEMS!.map(fbBuilder.writeString).toList());
+    final int? SELECT_OBSERVATION_CODESOffset = _SELECT_OBSERVATION_CODES == null ? null
+        : fbBuilder.writeList(_SELECT_OBSERVATION_CODES!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(26);
     fbBuilder.addUint8(0, _FORMAT?.value);
     fbBuilder.addOffset(1, PROVIDER_DEFINED_FORMAT_NAMEOffset);
     fbBuilder.addOffset(2, FORMAT_VERSIONOffset);
@@ -1343,6 +1433,12 @@ class NCDObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint64(17, _SOURCE_BYTE_LENGTH);
     fbBuilder.addOffset(18, SOURCE_SHA256Offset);
     fbBuilder.addOffset(19, SOURCE_CIDOffset);
+    fbBuilder.addOffset(20, SELECT_START_TIMEOffset);
+    fbBuilder.addOffset(21, SELECT_STOP_TIMEOffset);
+    fbBuilder.addFloat64(22, _SELECT_SAMPLE_INTERVAL_SECONDS);
+    fbBuilder.addOffset(23, SELECT_SATELLITE_SYSTEMSOffset);
+    fbBuilder.addOffset(24, SELECT_OBSERVATION_CODESOffset);
+    fbBuilder.addInt32(25, _SELECT_CLOCK_ID);
     return fbBuilder.endTable();
   }
 

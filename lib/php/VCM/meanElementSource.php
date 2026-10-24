@@ -12,12 +12,18 @@ class meanElementSource
     const DSST = 2;
     /// Universal Semianalytical Method
     const USM = 3;
+    /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
+    /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
+    /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
+    /// (Earth, Moon, Sun or a planet); see $OMM.
+    const SDNAP = 4;
 
     private static $names = array(
         meanElementSource::SGP4=>"SGP4",
         meanElementSource::SGP4XP=>"SGP4XP",
         meanElementSource::DSST=>"DSST",
         meanElementSource::USM=>"USM",
+        meanElementSource::SDNAP=>"SDNAP",
     );
 
     public static function Name($e)

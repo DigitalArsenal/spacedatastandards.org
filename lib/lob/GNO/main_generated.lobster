@@ -19,6 +19,10 @@ enum gnssObsType:
     gnssObsType_DOPPLER = 2
     gnssObsType_SNR = 3
     gnssObsType_RAW_IF = 4
+    /// Ionosphere phase delay (RINEX observation type I), as the file states it.
+    gnssObsType_IONOSPHERE_PHASE_DELAY = 5
+    /// Receiver channel number (RINEX observation type X), as the receiver reports it.
+    gnssObsType_CHANNEL_NUMBER = 6
 
 class gnssObsData
 
@@ -94,13 +98,21 @@ class gnssSatObs : flatbuffers.handle
         return gnssObsData { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
     def OBSERVATIONS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+    /// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+    def GLONASS_FREQUENCY_NUMBER() -> int:
+        return flatbuffers.field_int8(buf_, pos_, 18, 0)
+    /// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+    /// channel); false (the default) means absent.
+    def HAS_GLONASS_FREQUENCY_NUMBER() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
 
 def GetRootAsgnssSatObs(buf:string): return gnssSatObs { buf, flatbuffers.indirect(buf, 0) }
 
 struct gnssSatObsBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(9)
         return this
     def add_GNSS_SAT_ID(GNSS_SAT_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, GNSS_SAT_ID)
@@ -122,6 +134,12 @@ struct gnssSatObsBuilder:
         return this
     def add_OBSERVATIONS(OBSERVATIONS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, OBSERVATIONS)
+        return this
+    def add_GLONASS_FREQUENCY_NUMBER(GLONASS_FREQUENCY_NUMBER:int):
+        b_.PrependInt8Slot(7, GLONASS_FREQUENCY_NUMBER, 0)
+        return this
+    def add_HAS_GLONASS_FREQUENCY_NUMBER(HAS_GLONASS_FREQUENCY_NUMBER:bool):
+        b_.PrependBoolSlot(8, HAS_GLONASS_FREQUENCY_NUMBER, 0)
         return this
     def end():
         return b_.EndObject()
@@ -208,13 +226,60 @@ class GNO : flatbuffers.handle
     /// Additional notes
     def NOTES() -> string:
         return flatbuffers.field_string(buf_, pos_, 48)
+    /// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+    /// Default empty (not stated).
+    def TIME_SYSTEM() -> string:
+        return flatbuffers.field_string(buf_, pos_, 50)
+    /// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+    /// a moving antenna, 3 new site occupation, 4 header information follows, 5
+    /// external event, 6 cycle slip records follow. Default 0.
+    def EPOCH_FLAG() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 52, 0)
+    /// Marker name from the header. Default empty.
+    def MARKER_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 54)
+    /// Marker number from the header. Default empty.
+    def MARKER_NUMBER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 56)
+    /// Marker type from the header. Default empty.
+    def MARKER_TYPE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 58)
+    /// Observer from the header. Default empty.
+    def OBSERVER() -> string:
+        return flatbuffers.field_string(buf_, pos_, 60)
+    /// Agency from the header. Default empty.
+    def AGENCY() -> string:
+        return flatbuffers.field_string(buf_, pos_, 62)
+    /// Antenna delta from the marker to the antenna reference point: height, east,
+    /// north, meters, as [H, E, N]. Default empty.
+    def ANTENNA_DELTA_HEN(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 64) + i * 8)
+    def ANTENNA_DELTA_HEN_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 64)
+    /// Phase shift records as the header writes them, one per line, for example
+    /// "G L2S -0.25000". Default empty.
+    def PHASE_SHIFTS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 66) + i * 4)
+    def PHASE_SHIFTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 66)
+    /// Unit of the signal strength observations as the header states it. Default
+    /// empty.
+    def SIGNAL_STRENGTH_UNIT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 68)
+    /// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+    /// when HAS_LEAP_SECONDS.
+    def LEAP_SECONDS() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 70, 0)
+    /// True when LEAP_SECONDS carries a value; false (the default) means absent.
+    def HAS_LEAP_SECONDS() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 72, 0))
 
 def GetRootAsGNO(buf:string): return GNO { buf, flatbuffers.indirect(buf, 0) }
 
 struct GNOBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(23)
+        b_.StartObject(35)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -285,6 +350,42 @@ struct GNOBuilder:
     def add_NOTES(NOTES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(22, NOTES)
         return this
+    def add_TIME_SYSTEM(TIME_SYSTEM:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(23, TIME_SYSTEM)
+        return this
+    def add_EPOCH_FLAG(EPOCH_FLAG:int):
+        b_.PrependUint8Slot(24, EPOCH_FLAG, 0)
+        return this
+    def add_MARKER_NAME(MARKER_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(25, MARKER_NAME)
+        return this
+    def add_MARKER_NUMBER(MARKER_NUMBER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(26, MARKER_NUMBER)
+        return this
+    def add_MARKER_TYPE(MARKER_TYPE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(27, MARKER_TYPE)
+        return this
+    def add_OBSERVER(OBSERVER:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(28, OBSERVER)
+        return this
+    def add_AGENCY(AGENCY:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(29, AGENCY)
+        return this
+    def add_ANTENNA_DELTA_HEN(ANTENNA_DELTA_HEN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(30, ANTENNA_DELTA_HEN)
+        return this
+    def add_PHASE_SHIFTS(PHASE_SHIFTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(31, PHASE_SHIFTS)
+        return this
+    def add_SIGNAL_STRENGTH_UNIT(SIGNAL_STRENGTH_UNIT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(32, SIGNAL_STRENGTH_UNIT)
+        return this
+    def add_LEAP_SECONDS(LEAP_SECONDS:int):
+        b_.PrependInt32Slot(33, LEAP_SECONDS, 0)
+        return this
+    def add_HAS_LEAP_SECONDS(HAS_LEAP_SECONDS:bool):
+        b_.PrependBoolSlot(34, HAS_LEAP_SECONDS, 0)
+        return this
     def end():
         return b_.EndObject()
 
@@ -298,6 +399,20 @@ def GNOCreateSATOBSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
 def GNOStartOBSCODESETVector(b_:flatbuffers.builder, n_:int):
     b_.StartVector(4, n_, 4)
 def GNOCreateOBSCODESETVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def GNOStartANTENNADELTAHENVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(8, n_, 8)
+def GNOCreateANTENNADELTAHENVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
+    return b_.EndVector(v_.length)
+
+def GNOStartPHASESHIFTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def GNOCreatePHASESHIFTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
     b_.StartVector(4, v_.length, 4)
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)

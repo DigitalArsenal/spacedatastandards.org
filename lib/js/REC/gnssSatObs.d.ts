@@ -40,6 +40,16 @@ export declare class gnssSatObs implements flatbuffers.IUnpackableObject<gnssSat
      */
     OBSERVATIONS(index: number, obj?: gnssObsData): gnssObsData | null;
     observationsLength(): number;
+    /**
+     * GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+     * FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+     */
+    GLONASS_FREQUENCY_NUMBER(): number;
+    /**
+     * True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+     * channel); false (the default) means absent.
+     */
+    HAS_GLONASS_FREQUENCY_NUMBER(): boolean;
     static startgnssSatObs(builder: flatbuffers.Builder): void;
     static addGnssSatId(builder: flatbuffers.Builder, GNSS_SAT_IDOffset: flatbuffers.Offset): void;
     static addConstellation(builder: flatbuffers.Builder, CONSTELLATION: gnssConstellation): void;
@@ -50,8 +60,10 @@ export declare class gnssSatObs implements flatbuffers.IUnpackableObject<gnssSat
     static addObservations(builder: flatbuffers.Builder, OBSERVATIONSOffset: flatbuffers.Offset): void;
     static createObservationsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startObservationsVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addGlonassFrequencyNumber(builder: flatbuffers.Builder, GLONASS_FREQUENCY_NUMBER: number): void;
+    static addHasGlonassFrequencyNumber(builder: flatbuffers.Builder, HAS_GLONASS_FREQUENCY_NUMBER: boolean): void;
     static endgnssSatObs(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static creategnssSatObs(builder: flatbuffers.Builder, GNSS_SAT_IDOffset: flatbuffers.Offset, CONSTELLATION: gnssConstellation, ELEVATION: number, AZIMUTH: number, TRACKING_STATUS: number, AGC_STATE: number, OBSERVATIONSOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static creategnssSatObs(builder: flatbuffers.Builder, GNSS_SAT_IDOffset: flatbuffers.Offset, CONSTELLATION: gnssConstellation, ELEVATION: number, AZIMUTH: number, TRACKING_STATUS: number, AGC_STATE: number, OBSERVATIONSOffset: flatbuffers.Offset, GLONASS_FREQUENCY_NUMBER: number, HAS_GLONASS_FREQUENCY_NUMBER: boolean): flatbuffers.Offset;
     unpack(): gnssSatObsT;
     unpackTo(_o: gnssSatObsT): void;
 }
@@ -63,7 +75,9 @@ export declare class gnssSatObsT implements flatbuffers.IGeneratedObject {
     TRACKING_STATUS: number;
     AGC_STATE: number;
     OBSERVATIONS: (gnssObsDataT)[];
-    constructor(GNSS_SAT_ID?: string | Uint8Array | null, CONSTELLATION?: gnssConstellation, ELEVATION?: number, AZIMUTH?: number, TRACKING_STATUS?: number, AGC_STATE?: number, OBSERVATIONS?: (gnssObsDataT)[]);
+    GLONASS_FREQUENCY_NUMBER: number;
+    HAS_GLONASS_FREQUENCY_NUMBER: boolean;
+    constructor(GNSS_SAT_ID?: string | Uint8Array | null, CONSTELLATION?: gnssConstellation, ELEVATION?: number, AZIMUTH?: number, TRACKING_STATUS?: number, AGC_STATE?: number, OBSERVATIONS?: (gnssObsDataT)[], GLONASS_FREQUENCY_NUMBER?: number, HAS_GLONASS_FREQUENCY_NUMBER?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=gnssSatObs.d.ts.map

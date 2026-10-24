@@ -61,6 +61,16 @@ public final class gnssSatObs extends com.google.flatbuffers.Table {
   public int OBSERVATIONSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
   public gnssObsData.Vector observationsVector() { return observationsVector(new gnssObsData.Vector()); }
   public gnssObsData.Vector observationsVector(gnssObsData.Vector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+   * FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+   */
+  public byte GLONASS_FREQUENCY_NUMBER() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+   * channel); false (the default) means absent.
+   */
+  public boolean HAS_GLONASS_FREQUENCY_NUMBER() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int creategnssSatObs(FlatBufferBuilder builder,
       int GNSS_SAT_IDOffset,
@@ -69,19 +79,23 @@ public final class gnssSatObs extends com.google.flatbuffers.Table {
       double AZIMUTH,
       int TRACKING_STATUS,
       int AGC_STATE,
-      int OBSERVATIONSOffset) {
-    builder.startTable(7);
+      int OBSERVATIONSOffset,
+      byte GLONASS_FREQUENCY_NUMBER,
+      boolean HAS_GLONASS_FREQUENCY_NUMBER) {
+    builder.startTable(9);
     gnssSatObs.addAzimuth(builder, AZIMUTH);
     gnssSatObs.addElevation(builder, ELEVATION);
     gnssSatObs.addObservations(builder, OBSERVATIONSOffset);
     gnssSatObs.addAgcState(builder, AGC_STATE);
     gnssSatObs.addTrackingStatus(builder, TRACKING_STATUS);
     gnssSatObs.addGnssSatId(builder, GNSS_SAT_IDOffset);
+    gnssSatObs.addHasGlonassFrequencyNumber(builder, HAS_GLONASS_FREQUENCY_NUMBER);
+    gnssSatObs.addGlonassFrequencyNumber(builder, GLONASS_FREQUENCY_NUMBER);
     gnssSatObs.addConstellation(builder, CONSTELLATION);
     return gnssSatObs.endgnssSatObs(builder);
   }
 
-  public static void startgnssSatObs(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startgnssSatObs(FlatBufferBuilder builder) { builder.startTable(9); }
   public static void addGnssSatId(FlatBufferBuilder builder, int GNSS_SAT_IDOffset) { builder.addOffset(0, GNSS_SAT_IDOffset, 0); }
   public static void addConstellation(FlatBufferBuilder builder, byte CONSTELLATION) { builder.addByte(1, CONSTELLATION, 0); }
   public static void addElevation(FlatBufferBuilder builder, double ELEVATION) { builder.addDouble(2, ELEVATION, 0.0); }
@@ -91,6 +105,8 @@ public final class gnssSatObs extends com.google.flatbuffers.Table {
   public static void addObservations(FlatBufferBuilder builder, int OBSERVATIONSOffset) { builder.addOffset(6, OBSERVATIONSOffset, 0); }
   public static int createObservationsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startObservationsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addGlonassFrequencyNumber(FlatBufferBuilder builder, byte GLONASS_FREQUENCY_NUMBER) { builder.addByte(7, GLONASS_FREQUENCY_NUMBER, 0); }
+  public static void addHasGlonassFrequencyNumber(FlatBufferBuilder builder, boolean HAS_GLONASS_FREQUENCY_NUMBER) { builder.addBoolean(8, HAS_GLONASS_FREQUENCY_NUMBER, false); }
   public static int endgnssSatObs(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -79,6 +79,17 @@ const (
 	ncdContainerFormatCCSDS_RDM_KVN                 ncdContainerFormat = 25
 	/// CCSDS Reentry Data Message, XML.
 	ncdContainerFormatCCSDS_RDM_XML                 ncdContainerFormat = 26
+	/// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+	/// AUX_RESORB and AUX_PREORB).
+	ncdContainerFormatSENTINEL_EOF_XML              ncdContainerFormat = 27
+	/// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+	ncdContainerFormatNAIF_CK_DAF                   ncdContainerFormat = 28
+	/// NAIF spacecraft clock kernel, text.
+	ncdContainerFormatNAIF_SCLK_KERNEL              ncdContainerFormat = 29
+	/// RINEX observation file.
+	ncdContainerFormatRINEX_OBS                     ncdContainerFormat = 30
+	/// RINEX navigation file.
+	ncdContainerFormatRINEX_NAV                     ncdContainerFormat = 31
 	/// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
 	/// which; a producer never reuses a neighbouring member instead.
 	ncdContainerFormatPROVIDER_DEFINED              ncdContainerFormat = 255
@@ -112,6 +123,11 @@ var EnumNamesncdContainerFormat = map[ncdContainerFormat]string{
 	ncdContainerFormatCCSDS_ACM_XML:                 "CCSDS_ACM_XML",
 	ncdContainerFormatCCSDS_RDM_KVN:                 "CCSDS_RDM_KVN",
 	ncdContainerFormatCCSDS_RDM_XML:                 "CCSDS_RDM_XML",
+	ncdContainerFormatSENTINEL_EOF_XML:              "SENTINEL_EOF_XML",
+	ncdContainerFormatNAIF_CK_DAF:                   "NAIF_CK_DAF",
+	ncdContainerFormatNAIF_SCLK_KERNEL:              "NAIF_SCLK_KERNEL",
+	ncdContainerFormatRINEX_OBS:                     "RINEX_OBS",
+	ncdContainerFormatRINEX_NAV:                     "RINEX_NAV",
 	ncdContainerFormatPROVIDER_DEFINED:              "PROVIDER_DEFINED",
 }
 
@@ -143,6 +159,11 @@ var EnumValuesncdContainerFormat = map[string]ncdContainerFormat{
 	"CCSDS_ACM_XML":                 ncdContainerFormatCCSDS_ACM_XML,
 	"CCSDS_RDM_KVN":                 ncdContainerFormatCCSDS_RDM_KVN,
 	"CCSDS_RDM_XML":                 ncdContainerFormatCCSDS_RDM_XML,
+	"SENTINEL_EOF_XML":              ncdContainerFormatSENTINEL_EOF_XML,
+	"NAIF_CK_DAF":                   ncdContainerFormatNAIF_CK_DAF,
+	"NAIF_SCLK_KERNEL":              ncdContainerFormatNAIF_SCLK_KERNEL,
+	"RINEX_OBS":                     ncdContainerFormatRINEX_OBS,
+	"RINEX_NAV":                     ncdContainerFormatRINEX_NAV,
 	"PROVIDER_DEFINED":              ncdContainerFormatPROVIDER_DEFINED,
 }
 

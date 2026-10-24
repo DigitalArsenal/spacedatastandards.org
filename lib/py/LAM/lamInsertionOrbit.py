@@ -149,8 +149,44 @@ class lamInsertionOrbit(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+    # HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+    # lamInsertionOrbit
+    def SEMI_MAJOR_AXIS_UNCERTAINTY_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+    # default) means absent, and a consumer applies its vehicle-class default.
+    # lamInsertionOrbit
+    def HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+    # HAS_INCLINATION_UNCERTAINTY_DEG.
+    # lamInsertionOrbit
+    def INCLINATION_UNCERTAINTY_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+    # means absent, and a consumer applies its vehicle-class default.
+    # lamInsertionOrbit
+    def HAS_INCLINATION_UNCERTAINTY_DEG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def lamInsertionOrbitStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(19)
 
 def Start(builder):
     lamInsertionOrbitStart(builder)
@@ -245,6 +281,30 @@ def lamInsertionOrbitAddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder, APOAPSIS_ALTITU
 def AddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M):
     lamInsertionOrbitAddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M)
 
+def lamInsertionOrbitAddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M):
+    builder.PrependFloat64Slot(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0)
+
+def AddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M):
+    lamInsertionOrbitAddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+
+def lamInsertionOrbitAddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M):
+    builder.PrependBoolSlot(16, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0)
+
+def AddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M):
+    lamInsertionOrbitAddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+
+def lamInsertionOrbitAddINCLINATION_UNCERTAINTY_DEG(builder, INCLINATION_UNCERTAINTY_DEG):
+    builder.PrependFloat64Slot(17, INCLINATION_UNCERTAINTY_DEG, 0.0)
+
+def AddINCLINATION_UNCERTAINTY_DEG(builder, INCLINATION_UNCERTAINTY_DEG):
+    lamInsertionOrbitAddINCLINATION_UNCERTAINTY_DEG(builder, INCLINATION_UNCERTAINTY_DEG)
+
+def lamInsertionOrbitAddHAS_INCLINATION_UNCERTAINTY_DEG(builder, HAS_INCLINATION_UNCERTAINTY_DEG):
+    builder.PrependBoolSlot(18, HAS_INCLINATION_UNCERTAINTY_DEG, 0)
+
+def AddHAS_INCLINATION_UNCERTAINTY_DEG(builder, HAS_INCLINATION_UNCERTAINTY_DEG):
+    lamInsertionOrbitAddHAS_INCLINATION_UNCERTAINTY_DEG(builder, HAS_INCLINATION_UNCERTAINTY_DEG)
+
 def lamInsertionOrbitEnd(builder):
     return builder.EndObject()
 
@@ -272,6 +332,10 @@ class lamInsertionOrbitT(object):
         ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = 0.0,
         PERIAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0,
         APOAPSIS_ALTITUDE_UNCERTAINTY_M = 0.0,
+        SEMI_MAJOR_AXIS_UNCERTAINTY_M = 0.0,
+        HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = False,
+        INCLINATION_UNCERTAINTY_DEG = 0.0,
+        HAS_INCLINATION_UNCERTAINTY_DEG = False,
     ):
         self.EPOCH = EPOCH  # type: Optional[str]
         self.TIME_FROM_LAUNCH_S = TIME_FROM_LAUNCH_S  # type: float
@@ -288,6 +352,10 @@ class lamInsertionOrbitT(object):
         self.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG  # type: float
         self.PERIAPSIS_ALTITUDE_UNCERTAINTY_M = PERIAPSIS_ALTITUDE_UNCERTAINTY_M  # type: float
         self.APOAPSIS_ALTITUDE_UNCERTAINTY_M = APOAPSIS_ALTITUDE_UNCERTAINTY_M  # type: float
+        self.SEMI_MAJOR_AXIS_UNCERTAINTY_M = SEMI_MAJOR_AXIS_UNCERTAINTY_M  # type: float
+        self.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M  # type: bool
+        self.INCLINATION_UNCERTAINTY_DEG = INCLINATION_UNCERTAINTY_DEG  # type: float
+        self.HAS_INCLINATION_UNCERTAINTY_DEG = HAS_INCLINATION_UNCERTAINTY_DEG  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -325,6 +393,10 @@ class lamInsertionOrbitT(object):
         self.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = lamInsertionOrbit.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG()
         self.PERIAPSIS_ALTITUDE_UNCERTAINTY_M = lamInsertionOrbit.PERIAPSIS_ALTITUDE_UNCERTAINTY_M()
         self.APOAPSIS_ALTITUDE_UNCERTAINTY_M = lamInsertionOrbit.APOAPSIS_ALTITUDE_UNCERTAINTY_M()
+        self.SEMI_MAJOR_AXIS_UNCERTAINTY_M = lamInsertionOrbit.SEMI_MAJOR_AXIS_UNCERTAINTY_M()
+        self.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = lamInsertionOrbit.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M()
+        self.INCLINATION_UNCERTAINTY_DEG = lamInsertionOrbit.INCLINATION_UNCERTAINTY_DEG()
+        self.HAS_INCLINATION_UNCERTAINTY_DEG = lamInsertionOrbit.HAS_INCLINATION_UNCERTAINTY_DEG()
 
     # lamInsertionOrbitT
     def Pack(self, builder):
@@ -350,5 +422,9 @@ class lamInsertionOrbitT(object):
         lamInsertionOrbitAddARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(builder, self.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG)
         lamInsertionOrbitAddPERIAPSIS_ALTITUDE_UNCERTAINTY_M(builder, self.PERIAPSIS_ALTITUDE_UNCERTAINTY_M)
         lamInsertionOrbitAddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder, self.APOAPSIS_ALTITUDE_UNCERTAINTY_M)
+        lamInsertionOrbitAddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, self.SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+        lamInsertionOrbitAddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, self.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+        lamInsertionOrbitAddINCLINATION_UNCERTAINTY_DEG(builder, self.INCLINATION_UNCERTAINTY_DEG)
+        lamInsertionOrbitAddHAS_INCLINATION_UNCERTAINTY_DEG(builder, self.HAS_INCLINATION_UNCERTAINTY_DEG)
         lamInsertionOrbit = lamInsertionOrbitEnd(builder)
         return lamInsertionOrbit

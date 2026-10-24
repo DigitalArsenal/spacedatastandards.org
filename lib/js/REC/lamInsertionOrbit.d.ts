@@ -70,6 +70,26 @@ export declare class lamInsertionOrbit implements flatbuffers.IUnpackableObject<
      * One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
      */
     APOAPSIS_ALTITUDE_UNCERTAINTY_M(): number;
+    /**
+     * One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+     * HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+     */
+    SEMI_MAJOR_AXIS_UNCERTAINTY_M(): number;
+    /**
+     * True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+     * default) means absent, and a consumer applies its vehicle-class default.
+     */
+    HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(): boolean;
+    /**
+     * One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+     * HAS_INCLINATION_UNCERTAINTY_DEG.
+     */
+    INCLINATION_UNCERTAINTY_DEG(): number;
+    /**
+     * True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+     * means absent, and a consumer applies its vehicle-class default.
+     */
+    HAS_INCLINATION_UNCERTAINTY_DEG(): boolean;
     static startlamInsertionOrbit(builder: flatbuffers.Builder): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset): void;
     static addTimeFromLaunchS(builder: flatbuffers.Builder, TIME_FROM_LAUNCH_S: number): void;
@@ -86,8 +106,12 @@ export declare class lamInsertionOrbit implements flatbuffers.IUnpackableObject<
     static addArgumentOfLatitudeUncertaintyDeg(builder: flatbuffers.Builder, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: number): void;
     static addPeriapsisAltitudeUncertaintyM(builder: flatbuffers.Builder, PERIAPSIS_ALTITUDE_UNCERTAINTY_M: number): void;
     static addApoapsisAltitudeUncertaintyM(builder: flatbuffers.Builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M: number): void;
+    static addSemiMajorAxisUncertaintyM(builder: flatbuffers.Builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M: number): void;
+    static addHasSemiMajorAxisUncertaintyM(builder: flatbuffers.Builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: boolean): void;
+    static addInclinationUncertaintyDeg(builder: flatbuffers.Builder, INCLINATION_UNCERTAINTY_DEG: number): void;
+    static addHasInclinationUncertaintyDeg(builder: flatbuffers.Builder, HAS_INCLINATION_UNCERTAINTY_DEG: boolean): void;
     static endlamInsertionOrbit(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createlamInsertionOrbit(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset, TIME_FROM_LAUNCH_S: number, REF_FRAMEOffset: flatbuffers.Offset, SEMI_MAJOR_AXIS_M: number, ECCENTRICITY: number, INCLINATION_DEG: number, RAAN_DEG: number, ARGUMENT_OF_PERIAPSIS_DEG: number, ARGUMENT_OF_LATITUDE_DEG: number, PERIAPSIS_ALTITUDE_M: number, APOAPSIS_ALTITUDE_M: number, RAAN_UNCERTAINTY_DEG: number, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: number, PERIAPSIS_ALTITUDE_UNCERTAINTY_M: number, APOAPSIS_ALTITUDE_UNCERTAINTY_M: number): flatbuffers.Offset;
+    static createlamInsertionOrbit(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset, TIME_FROM_LAUNCH_S: number, REF_FRAMEOffset: flatbuffers.Offset, SEMI_MAJOR_AXIS_M: number, ECCENTRICITY: number, INCLINATION_DEG: number, RAAN_DEG: number, ARGUMENT_OF_PERIAPSIS_DEG: number, ARGUMENT_OF_LATITUDE_DEG: number, PERIAPSIS_ALTITUDE_M: number, APOAPSIS_ALTITUDE_M: number, RAAN_UNCERTAINTY_DEG: number, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: number, PERIAPSIS_ALTITUDE_UNCERTAINTY_M: number, APOAPSIS_ALTITUDE_UNCERTAINTY_M: number, SEMI_MAJOR_AXIS_UNCERTAINTY_M: number, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: boolean, INCLINATION_UNCERTAINTY_DEG: number, HAS_INCLINATION_UNCERTAINTY_DEG: boolean): flatbuffers.Offset;
     unpack(): lamInsertionOrbitT;
     unpackTo(_o: lamInsertionOrbitT): void;
 }
@@ -107,7 +131,11 @@ export declare class lamInsertionOrbitT implements flatbuffers.IGeneratedObject 
     ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: number;
     PERIAPSIS_ALTITUDE_UNCERTAINTY_M: number;
     APOAPSIS_ALTITUDE_UNCERTAINTY_M: number;
-    constructor(EPOCH?: string | Uint8Array | null, TIME_FROM_LAUNCH_S?: number, REF_FRAME?: string | Uint8Array | null, SEMI_MAJOR_AXIS_M?: number, ECCENTRICITY?: number, INCLINATION_DEG?: number, RAAN_DEG?: number, ARGUMENT_OF_PERIAPSIS_DEG?: number, ARGUMENT_OF_LATITUDE_DEG?: number, PERIAPSIS_ALTITUDE_M?: number, APOAPSIS_ALTITUDE_M?: number, RAAN_UNCERTAINTY_DEG?: number, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG?: number, PERIAPSIS_ALTITUDE_UNCERTAINTY_M?: number, APOAPSIS_ALTITUDE_UNCERTAINTY_M?: number);
+    SEMI_MAJOR_AXIS_UNCERTAINTY_M: number;
+    HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: boolean;
+    INCLINATION_UNCERTAINTY_DEG: number;
+    HAS_INCLINATION_UNCERTAINTY_DEG: boolean;
+    constructor(EPOCH?: string | Uint8Array | null, TIME_FROM_LAUNCH_S?: number, REF_FRAME?: string | Uint8Array | null, SEMI_MAJOR_AXIS_M?: number, ECCENTRICITY?: number, INCLINATION_DEG?: number, RAAN_DEG?: number, ARGUMENT_OF_PERIAPSIS_DEG?: number, ARGUMENT_OF_LATITUDE_DEG?: number, PERIAPSIS_ALTITUDE_M?: number, APOAPSIS_ALTITUDE_M?: number, RAAN_UNCERTAINTY_DEG?: number, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG?: number, PERIAPSIS_ALTITUDE_UNCERTAINTY_M?: number, APOAPSIS_ALTITUDE_UNCERTAINTY_M?: number, SEMI_MAJOR_AXIS_UNCERTAINTY_M?: number, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M?: boolean, INCLINATION_UNCERTAINTY_DEG?: number, HAS_INCLINATION_UNCERTAINTY_DEG?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=lamInsertionOrbit.d.ts.map

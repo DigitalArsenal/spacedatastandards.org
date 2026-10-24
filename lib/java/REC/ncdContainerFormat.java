@@ -130,6 +130,27 @@ public final class ncdContainerFormat {
    */
   public static final int CCSDS_RDM_XML = 26;
   /**
+   * ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+   * AUX_RESORB and AUX_PREORB).
+   */
+  public static final int SENTINEL_EOF_XML = 27;
+  /**
+   * NAIF C-kernel: a DAF holding pointing (attitude) segments.
+   */
+  public static final int NAIF_CK_DAF = 28;
+  /**
+   * NAIF spacecraft clock kernel, text.
+   */
+  public static final int NAIF_SCLK_KERNEL = 29;
+  /**
+   * RINEX observation file.
+   */
+  public static final int RINEX_OBS = 30;
+  /**
+   * RINEX navigation file.
+   */
+  public static final int RINEX_NAV = 31;
+  /**
    * A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
    * which; a producer never reuses a neighbouring member instead.
    */

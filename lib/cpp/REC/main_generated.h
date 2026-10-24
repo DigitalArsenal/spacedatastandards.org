@@ -109,6 +109,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 #include "../GEO/main_generated.h"
 #include "../GJN/main_generated.h"
 #include "../GLX/main_generated.h"
+#include "../GNM/main_generated.h"
 #include "../GNO/main_generated.h"
 #include "../GNP/main_generated.h"
 #include "../GPX/main_generated.h"
@@ -2189,11 +2190,12 @@ enum RecordTypeExtended : uint16_t {
   RecordTypeExtended_SFE = 288,
   RecordTypeExtended_SRO = 289,
   RecordTypeExtended_SRT = 290,
+  RecordTypeExtended_GNM = 291,
   RecordTypeExtended_MIN = RecordTypeExtended_NONE,
-  RecordTypeExtended_MAX = RecordTypeExtended_SRT
+  RecordTypeExtended_MAX = RecordTypeExtended_GNM
 };
 
-inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[36] {
+inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[37] {
   static const RecordTypeExtended values[] = {
     RecordTypeExtended_NONE,
     RecordTypeExtended_ABA,
@@ -2230,7 +2232,8 @@ inline const RecordTypeExtended (&EnumValuesRecordTypeExtended())[36] {
     RecordTypeExtended_SDI,
     RecordTypeExtended_SFE,
     RecordTypeExtended_SRO,
-    RecordTypeExtended_SRT
+    RecordTypeExtended_SRT,
+    RecordTypeExtended_GNM
   };
   return values;
 }
@@ -2273,6 +2276,7 @@ inline const char *EnumNameRecordTypeExtended(RecordTypeExtended e) {
     case RecordTypeExtended_SFE: return "SFE";
     case RecordTypeExtended_SRO: return "SRO";
     case RecordTypeExtended_SRT: return "SRT";
+    case RecordTypeExtended_GNM: return "GNM";
     default: return "";
   }
 }

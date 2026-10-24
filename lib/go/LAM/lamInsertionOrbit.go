@@ -356,8 +356,104 @@ func (rcv *lamInsertionOrbit) MutateApoapsisAltitudeUncertaintyM(n float64) bool
 	return rcv.MutateAPOAPSIS_ALTITUDE_UNCERTAINTY_M(n)
 }
 
+/// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+/// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+func (rcv *lamInsertionOrbit) SEMI_MAJOR_AXIS_UNCERTAINTY_M() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *lamInsertionOrbit) SemiMajorAxisUncertaintyM() float64 {
+	return rcv.SEMI_MAJOR_AXIS_UNCERTAINTY_M()
+}
+
+/// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+/// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+func (rcv *lamInsertionOrbit) MutateSEMI_MAJOR_AXIS_UNCERTAINTY_M(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+func (rcv *lamInsertionOrbit) MutateSemiMajorAxisUncertaintyM(n float64) bool {
+	return rcv.MutateSEMI_MAJOR_AXIS_UNCERTAINTY_M(n)
+}
+
+/// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+/// default) means absent, and a consumer applies its vehicle-class default.
+func (rcv *lamInsertionOrbit) HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *lamInsertionOrbit) HasSemiMajorAxisUncertaintyM() bool {
+	return rcv.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M()
+}
+
+/// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+/// default) means absent, and a consumer applies its vehicle-class default.
+func (rcv *lamInsertionOrbit) MutateHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(n bool) bool {
+	return rcv._tab.MutateBoolSlot(36, n)
+}
+
+func (rcv *lamInsertionOrbit) MutateHasSemiMajorAxisUncertaintyM(n bool) bool {
+	return rcv.MutateHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(n)
+}
+
+/// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+/// HAS_INCLINATION_UNCERTAINTY_DEG.
+func (rcv *lamInsertionOrbit) INCLINATION_UNCERTAINTY_DEG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *lamInsertionOrbit) InclinationUncertaintyDeg() float64 {
+	return rcv.INCLINATION_UNCERTAINTY_DEG()
+}
+
+/// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+/// HAS_INCLINATION_UNCERTAINTY_DEG.
+func (rcv *lamInsertionOrbit) MutateINCLINATION_UNCERTAINTY_DEG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+func (rcv *lamInsertionOrbit) MutateInclinationUncertaintyDeg(n float64) bool {
+	return rcv.MutateINCLINATION_UNCERTAINTY_DEG(n)
+}
+
+/// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+/// means absent, and a consumer applies its vehicle-class default.
+func (rcv *lamInsertionOrbit) HAS_INCLINATION_UNCERTAINTY_DEG() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *lamInsertionOrbit) HasInclinationUncertaintyDeg() bool {
+	return rcv.HAS_INCLINATION_UNCERTAINTY_DEG()
+}
+
+/// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+/// means absent, and a consumer applies its vehicle-class default.
+func (rcv *lamInsertionOrbit) MutateHAS_INCLINATION_UNCERTAINTY_DEG(n bool) bool {
+	return rcv._tab.MutateBoolSlot(40, n)
+}
+
+func (rcv *lamInsertionOrbit) MutateHasInclinationUncertaintyDeg(n bool) bool {
+	return rcv.MutateHAS_INCLINATION_UNCERTAINTY_DEG(n)
+}
+
 func lamInsertionOrbitStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(19)
 }
 func lamInsertionOrbitAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(EPOCH), 0)
@@ -448,6 +544,30 @@ func lamInsertionOrbitAddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder *flatbuffers.Bu
 }
 func lamInsertionOrbitAddApoapsisAltitudeUncertaintyM(builder *flatbuffers.Builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M float64) {
 	lamInsertionOrbitAddAPOAPSIS_ALTITUDE_UNCERTAINTY_M(builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M)
+}
+func lamInsertionOrbitAddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M float64) {
+	builder.PrependFloat64Slot(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0)
+}
+func lamInsertionOrbitAddSemiMajorAxisUncertaintyM(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M float64) {
+	lamInsertionOrbitAddSEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+}
+func lamInsertionOrbitAddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder *flatbuffers.Builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M bool) {
+	builder.PrependBoolSlot(16, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false)
+}
+func lamInsertionOrbitAddHasSemiMajorAxisUncertaintyM(builder *flatbuffers.Builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M bool) {
+	lamInsertionOrbitAddHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M)
+}
+func lamInsertionOrbitAddINCLINATION_UNCERTAINTY_DEG(builder *flatbuffers.Builder, INCLINATION_UNCERTAINTY_DEG float64) {
+	builder.PrependFloat64Slot(17, INCLINATION_UNCERTAINTY_DEG, 0.0)
+}
+func lamInsertionOrbitAddInclinationUncertaintyDeg(builder *flatbuffers.Builder, INCLINATION_UNCERTAINTY_DEG float64) {
+	lamInsertionOrbitAddINCLINATION_UNCERTAINTY_DEG(builder, INCLINATION_UNCERTAINTY_DEG)
+}
+func lamInsertionOrbitAddHAS_INCLINATION_UNCERTAINTY_DEG(builder *flatbuffers.Builder, HAS_INCLINATION_UNCERTAINTY_DEG bool) {
+	builder.PrependBoolSlot(18, HAS_INCLINATION_UNCERTAINTY_DEG, false)
+}
+func lamInsertionOrbitAddHasInclinationUncertaintyDeg(builder *flatbuffers.Builder, HAS_INCLINATION_UNCERTAINTY_DEG bool) {
+	lamInsertionOrbitAddHAS_INCLINATION_UNCERTAINTY_DEG(builder, HAS_INCLINATION_UNCERTAINTY_DEG)
 }
 func lamInsertionOrbitEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

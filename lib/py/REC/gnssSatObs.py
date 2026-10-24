@@ -103,8 +103,26 @@ class gnssSatObs(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
+    # GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+    # FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+    # gnssSatObs
+    def GLONASS_FREQUENCY_NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+    # channel); false (the default) means absent.
+    # gnssSatObs
+    def HAS_GLONASS_FREQUENCY_NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def gnssSatObsStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(9)
 
 def Start(builder):
     gnssSatObsStart(builder)
@@ -163,6 +181,18 @@ def gnssSatObsCreateOBSERVATIONSVector(builder, data):
 def CreateOBSERVATIONSVector(builder, data):
     return gnssSatObsCreateOBSERVATIONSVector(builder, data)
 
+def gnssSatObsAddGLONASS_FREQUENCY_NUMBER(builder, GLONASS_FREQUENCY_NUMBER):
+    builder.PrependInt8Slot(7, GLONASS_FREQUENCY_NUMBER, 0)
+
+def AddGLONASS_FREQUENCY_NUMBER(builder, GLONASS_FREQUENCY_NUMBER):
+    gnssSatObsAddGLONASS_FREQUENCY_NUMBER(builder, GLONASS_FREQUENCY_NUMBER)
+
+def gnssSatObsAddHAS_GLONASS_FREQUENCY_NUMBER(builder, HAS_GLONASS_FREQUENCY_NUMBER):
+    builder.PrependBoolSlot(8, HAS_GLONASS_FREQUENCY_NUMBER, 0)
+
+def AddHAS_GLONASS_FREQUENCY_NUMBER(builder, HAS_GLONASS_FREQUENCY_NUMBER):
+    gnssSatObsAddHAS_GLONASS_FREQUENCY_NUMBER(builder, HAS_GLONASS_FREQUENCY_NUMBER)
+
 def gnssSatObsEnd(builder):
     return builder.EndObject()
 
@@ -187,6 +217,8 @@ class gnssSatObsT(object):
         TRACKING_STATUS = 0,
         AGC_STATE = 0,
         OBSERVATIONS = None,
+        GLONASS_FREQUENCY_NUMBER = 0,
+        HAS_GLONASS_FREQUENCY_NUMBER = False,
     ):
         self.GNSS_SAT_ID = GNSS_SAT_ID  # type: Optional[str]
         self.CONSTELLATION = CONSTELLATION  # type: int
@@ -195,6 +227,8 @@ class gnssSatObsT(object):
         self.TRACKING_STATUS = TRACKING_STATUS  # type: int
         self.AGC_STATE = AGC_STATE  # type: int
         self.OBSERVATIONS = OBSERVATIONS  # type: Optional[List[gnssObsData.gnssObsDataT]]
+        self.GLONASS_FREQUENCY_NUMBER = GLONASS_FREQUENCY_NUMBER  # type: int
+        self.HAS_GLONASS_FREQUENCY_NUMBER = HAS_GLONASS_FREQUENCY_NUMBER  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -231,6 +265,8 @@ class gnssSatObsT(object):
                 else:
                     gnssObsData_ = gnssObsData.gnssObsDataT.InitFromObj(gnssSatObs.OBSERVATIONS(i))
                     self.OBSERVATIONS.append(gnssObsData_)
+        self.GLONASS_FREQUENCY_NUMBER = gnssSatObs.GLONASS_FREQUENCY_NUMBER()
+        self.HAS_GLONASS_FREQUENCY_NUMBER = gnssSatObs.HAS_GLONASS_FREQUENCY_NUMBER()
 
     # gnssSatObsT
     def Pack(self, builder):
@@ -254,5 +290,7 @@ class gnssSatObsT(object):
         gnssSatObsAddAGC_STATE(builder, self.AGC_STATE)
         if self.OBSERVATIONS is not None:
             gnssSatObsAddOBSERVATIONS(builder, OBSERVATIONS)
+        gnssSatObsAddGLONASS_FREQUENCY_NUMBER(builder, self.GLONASS_FREQUENCY_NUMBER)
+        gnssSatObsAddHAS_GLONASS_FREQUENCY_NUMBER(builder, self.HAS_GLONASS_FREQUENCY_NUMBER)
         gnssSatObs = gnssSatObsEnd(builder)
         return gnssSatObs

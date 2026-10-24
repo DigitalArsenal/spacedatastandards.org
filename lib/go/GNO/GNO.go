@@ -512,8 +512,253 @@ func (rcv *GNO) Notes() []byte {
 }
 
 /// Additional notes
+/// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+/// Default empty (not stated).
+func (rcv *GNO) TIME_SYSTEM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) TimeSystem() []byte {
+	return rcv.TIME_SYSTEM()
+}
+
+/// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+/// Default empty (not stated).
+/// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+/// a moving antenna, 3 new site occupation, 4 header information follows, 5
+/// external event, 6 cycle slip records follow. Default 0.
+func (rcv *GNO) EPOCH_FLAG() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *GNO) EpochFlag() byte {
+	return rcv.EPOCH_FLAG()
+}
+
+/// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+/// a moving antenna, 3 new site occupation, 4 header information follows, 5
+/// external event, 6 cycle slip records follow. Default 0.
+func (rcv *GNO) MutateEPOCH_FLAG(n byte) bool {
+	return rcv._tab.MutateByteSlot(52, n)
+}
+
+func (rcv *GNO) MutateEpochFlag(n byte) bool {
+	return rcv.MutateEPOCH_FLAG(n)
+}
+
+/// Marker name from the header. Default empty.
+func (rcv *GNO) MARKER_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) MarkerName() []byte {
+	return rcv.MARKER_NAME()
+}
+
+/// Marker name from the header. Default empty.
+/// Marker number from the header. Default empty.
+func (rcv *GNO) MARKER_NUMBER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) MarkerNumber() []byte {
+	return rcv.MARKER_NUMBER()
+}
+
+/// Marker number from the header. Default empty.
+/// Marker type from the header. Default empty.
+func (rcv *GNO) MARKER_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) MarkerType() []byte {
+	return rcv.MARKER_TYPE()
+}
+
+/// Marker type from the header. Default empty.
+/// Observer from the header. Default empty.
+func (rcv *GNO) OBSERVER() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) Observer() []byte {
+	return rcv.OBSERVER()
+}
+
+/// Observer from the header. Default empty.
+/// Agency from the header. Default empty.
+func (rcv *GNO) AGENCY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) Agency() []byte {
+	return rcv.AGENCY()
+}
+
+/// Agency from the header. Default empty.
+/// Antenna delta from the marker to the antenna reference point: height, east,
+/// north, meters, as [H, E, N]. Default empty.
+func (rcv *GNO) ANTENNA_DELTA_HEN(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *GNO) AntennaDeltaHen(j int) float64 {
+	return rcv.ANTENNA_DELTA_HEN(j)
+}
+
+func (rcv *GNO) ANTENNA_DELTA_HENLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *GNO) AntennaDeltaHenLength() int {
+	return rcv.ANTENNA_DELTA_HENLength()
+}
+
+/// Antenna delta from the marker to the antenna reference point: height, east,
+/// north, meters, as [H, E, N]. Default empty.
+func (rcv *GNO) MutateANTENNA_DELTA_HEN(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+func (rcv *GNO) MutateAntennaDeltaHen(j int, n float64) bool {
+	return rcv.MutateANTENNA_DELTA_HEN(j, n)
+}
+
+/// Phase shift records as the header writes them, one per line, for example
+/// "G L2S -0.25000". Default empty.
+func (rcv *GNO) PHASE_SHIFTS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *GNO) PhaseShifts(j int) []byte {
+	return rcv.PHASE_SHIFTS(j)
+}
+
+func (rcv *GNO) PHASE_SHIFTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *GNO) PhaseShiftsLength() int {
+	return rcv.PHASE_SHIFTSLength()
+}
+
+/// Phase shift records as the header writes them, one per line, for example
+/// "G L2S -0.25000". Default empty.
+/// Unit of the signal strength observations as the header states it. Default
+/// empty.
+func (rcv *GNO) SIGNAL_STRENGTH_UNIT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *GNO) SignalStrengthUnit() []byte {
+	return rcv.SIGNAL_STRENGTH_UNIT()
+}
+
+/// Unit of the signal strength observations as the header states it. Default
+/// empty.
+/// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+/// when HAS_LEAP_SECONDS.
+func (rcv *GNO) LEAP_SECONDS() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *GNO) LeapSeconds() int32 {
+	return rcv.LEAP_SECONDS()
+}
+
+/// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+/// when HAS_LEAP_SECONDS.
+func (rcv *GNO) MutateLEAP_SECONDS(n int32) bool {
+	return rcv._tab.MutateInt32Slot(70, n)
+}
+
+func (rcv *GNO) MutateLeapSeconds(n int32) bool {
+	return rcv.MutateLEAP_SECONDS(n)
+}
+
+/// True when LEAP_SECONDS carries a value; false (the default) means absent.
+func (rcv *GNO) HAS_LEAP_SECONDS() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *GNO) HasLeapSeconds() bool {
+	return rcv.HAS_LEAP_SECONDS()
+}
+
+/// True when LEAP_SECONDS carries a value; false (the default) means absent.
+func (rcv *GNO) MutateHAS_LEAP_SECONDS(n bool) bool {
+	return rcv._tab.MutateBoolSlot(72, n)
+}
+
+func (rcv *GNO) MutateHasLeapSeconds(n bool) bool {
+	return rcv.MutateHAS_LEAP_SECONDS(n)
+}
+
 func GNOStart(builder *flatbuffers.Builder) {
-	builder.StartObject(23)
+	builder.StartObject(35)
 }
 func GNOAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -664,6 +909,90 @@ func GNOAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 }
 func GNOAddNotes(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
 	GNOAddNOTES(builder, NOTES)
+}
+func GNOAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
+}
+func GNOAddTimeSystem(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	GNOAddTIME_SYSTEM(builder, TIME_SYSTEM)
+}
+func GNOAddEPOCH_FLAG(builder *flatbuffers.Builder, EPOCH_FLAG byte) {
+	builder.PrependByteSlot(24, EPOCH_FLAG, 0)
+}
+func GNOAddEpochFlag(builder *flatbuffers.Builder, EPOCH_FLAG byte) {
+	GNOAddEPOCH_FLAG(builder, EPOCH_FLAG)
+}
+func GNOAddMARKER_NAME(builder *flatbuffers.Builder, MARKER_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(MARKER_NAME), 0)
+}
+func GNOAddMarkerName(builder *flatbuffers.Builder, MARKER_NAME flatbuffers.UOffsetT) {
+	GNOAddMARKER_NAME(builder, MARKER_NAME)
+}
+func GNOAddMARKER_NUMBER(builder *flatbuffers.Builder, MARKER_NUMBER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(MARKER_NUMBER), 0)
+}
+func GNOAddMarkerNumber(builder *flatbuffers.Builder, MARKER_NUMBER flatbuffers.UOffsetT) {
+	GNOAddMARKER_NUMBER(builder, MARKER_NUMBER)
+}
+func GNOAddMARKER_TYPE(builder *flatbuffers.Builder, MARKER_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(MARKER_TYPE), 0)
+}
+func GNOAddMarkerType(builder *flatbuffers.Builder, MARKER_TYPE flatbuffers.UOffsetT) {
+	GNOAddMARKER_TYPE(builder, MARKER_TYPE)
+}
+func GNOAddOBSERVER(builder *flatbuffers.Builder, OBSERVER flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(OBSERVER), 0)
+}
+func GNOAddObserver(builder *flatbuffers.Builder, OBSERVER flatbuffers.UOffsetT) {
+	GNOAddOBSERVER(builder, OBSERVER)
+}
+func GNOAddAGENCY(builder *flatbuffers.Builder, AGENCY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(AGENCY), 0)
+}
+func GNOAddAgency(builder *flatbuffers.Builder, AGENCY flatbuffers.UOffsetT) {
+	GNOAddAGENCY(builder, AGENCY)
+}
+func GNOAddANTENNA_DELTA_HEN(builder *flatbuffers.Builder, ANTENNA_DELTA_HEN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(ANTENNA_DELTA_HEN), 0)
+}
+func GNOAddAntennaDeltaHen(builder *flatbuffers.Builder, ANTENNA_DELTA_HEN flatbuffers.UOffsetT) {
+	GNOAddANTENNA_DELTA_HEN(builder, ANTENNA_DELTA_HEN)
+}
+func GNOStartANTENNA_DELTA_HENVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func GNOStartAntennaDeltaHenVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GNOStartANTENNA_DELTA_HENVector(builder, numElems)
+}
+func GNOAddPHASE_SHIFTS(builder *flatbuffers.Builder, PHASE_SHIFTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(PHASE_SHIFTS), 0)
+}
+func GNOAddPhaseShifts(builder *flatbuffers.Builder, PHASE_SHIFTS flatbuffers.UOffsetT) {
+	GNOAddPHASE_SHIFTS(builder, PHASE_SHIFTS)
+}
+func GNOStartPHASE_SHIFTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func GNOStartPhaseShiftsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return GNOStartPHASE_SHIFTSVector(builder, numElems)
+}
+func GNOAddSIGNAL_STRENGTH_UNIT(builder *flatbuffers.Builder, SIGNAL_STRENGTH_UNIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(SIGNAL_STRENGTH_UNIT), 0)
+}
+func GNOAddSignalStrengthUnit(builder *flatbuffers.Builder, SIGNAL_STRENGTH_UNIT flatbuffers.UOffsetT) {
+	GNOAddSIGNAL_STRENGTH_UNIT(builder, SIGNAL_STRENGTH_UNIT)
+}
+func GNOAddLEAP_SECONDS(builder *flatbuffers.Builder, LEAP_SECONDS int32) {
+	builder.PrependInt32Slot(33, LEAP_SECONDS, 0)
+}
+func GNOAddLeapSeconds(builder *flatbuffers.Builder, LEAP_SECONDS int32) {
+	GNOAddLEAP_SECONDS(builder, LEAP_SECONDS)
+}
+func GNOAddHAS_LEAP_SECONDS(builder *flatbuffers.Builder, HAS_LEAP_SECONDS bool) {
+	builder.PrependBoolSlot(34, HAS_LEAP_SECONDS, false)
+}
+func GNOAddHasLeapSeconds(builder *flatbuffers.Builder, HAS_LEAP_SECONDS bool) {
+	GNOAddHAS_LEAP_SECONDS(builder, HAS_LEAP_SECONDS)
 }
 func GNOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

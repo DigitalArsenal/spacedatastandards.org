@@ -49,7 +49,9 @@
         "CARRIER_PHASE",
         "DOPPLER",
         "SNR",
-        "RAW_IF"
+        "RAW_IF",
+        "IONOSPHERE_PHASE_DELAY",
+        "CHANNEL_NUMBER"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -69,6 +71,14 @@
         },
         "RAW_IF": {
           "value": 4
+        },
+        "IONOSPHERE_PHASE_DELAY": {
+          "value": 5,
+          "description": "Ionosphere phase delay (RINEX observation type I), as the file states it."
+        },
+        "CHANNEL_NUMBER": {
+          "value": 6,
+          "description": "Receiver channel number (RINEX observation type X), as the receiver reports it."
         }
       }
     },
@@ -102,6 +112,14 @@
             },
             "RAW_IF": {
               "value": 4
+            },
+            "IONOSPHERE_PHASE_DELAY": {
+              "value": 5,
+              "description": "Ionosphere phase delay (RINEX observation type I), as the file states it."
+            },
+            "CHANNEL_NUMBER": {
+              "value": 6,
+              "description": "Receiver channel number (RINEX observation type X), as the receiver reports it."
             }
           }
         },
@@ -199,6 +217,19 @@
           },
           "description": "Observations for this satellite",
           "x-flatbuffer-type": "[gnssObsData]"
+        },
+        "GLONASS_FREQUENCY_NUMBER": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.",
+          "x-flatbuffer-type": "byte"
+        },
+        "HAS_GLONASS_FREQUENCY_NUMBER": {
+          "type": "boolean",
+          "description": "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         }
       },
       "additionalProperties": false
@@ -329,6 +360,77 @@
           "type": "string",
           "description": "Additional notes",
           "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated).",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_FLAG": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MARKER_NAME": {
+          "type": "string",
+          "description": "Marker name from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "MARKER_NUMBER": {
+          "type": "string",
+          "description": "Marker number from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "MARKER_TYPE": {
+          "type": "string",
+          "description": "Marker type from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVER": {
+          "type": "string",
+          "description": "Observer from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGENCY": {
+          "type": "string",
+          "description": "Agency from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_DELTA_HEN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PHASE_SHIFTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Phase shift records as the header writes them, one per line, for example\n\"G L2S -0.25000\". Default empty.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SIGNAL_STRENGTH_UNIT": {
+          "type": "string",
+          "description": "Unit of the signal strength observations as the header states it. Default\nempty.",
+          "x-flatbuffer-type": "string"
+        },
+        "LEAP_SECONDS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS.",
+          "x-flatbuffer-type": "int"
+        },
+        "HAS_LEAP_SECONDS": {
+          "type": "boolean",
+          "description": "True when LEAP_SECONDS carries a value; false (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
         }
       },
       "additionalProperties": false

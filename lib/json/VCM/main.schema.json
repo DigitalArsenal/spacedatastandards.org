@@ -55,7 +55,7 @@
     },
     "meanElementSource" : {
       "type" : "string",
-      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM", "SDNAP"]
     },
     "elementType" : {
       "type" : "string",

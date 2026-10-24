@@ -3892,6 +3892,11 @@
         "CCSDS_ACM_XML",
         "CCSDS_RDM_KVN",
         "CCSDS_RDM_XML",
+        "SENTINEL_EOF_XML",
+        "NAIF_CK_DAF",
+        "NAIF_SCLK_KERNEL",
+        "RINEX_OBS",
+        "RINEX_NAV",
         "PROVIDER_DEFINED"
       ],
       "x-flatbuffer-type": "enum",
@@ -4003,6 +4008,26 @@
         "CCSDS_RDM_XML": {
           "value": 26,
           "description": "CCSDS Reentry Data Message, XML."
+        },
+        "SENTINEL_EOF_XML": {
+          "value": 27,
+          "description": "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+        },
+        "NAIF_CK_DAF": {
+          "value": 28,
+          "description": "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+        },
+        "NAIF_SCLK_KERNEL": {
+          "value": 29,
+          "description": "NAIF spacecraft clock kernel, text."
+        },
+        "RINEX_OBS": {
+          "value": 30,
+          "description": "RINEX observation file."
+        },
+        "RINEX_NAV": {
+          "value": 31,
+          "description": "RINEX navigation file."
         },
         "PROVIDER_DEFINED": {
           "value": 255,
@@ -14664,6 +14689,26 @@
               "value": 26,
               "description": "CCSDS Reentry Data Message, XML."
             },
+            "SENTINEL_EOF_XML": {
+              "value": 27,
+              "description": "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            "NAIF_CK_DAF": {
+              "value": 28,
+              "description": "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            "NAIF_SCLK_KERNEL": {
+              "value": 29,
+              "description": "NAIF spacecraft clock kernel, text."
+            },
+            "RINEX_OBS": {
+              "value": 30,
+              "description": "RINEX observation file."
+            },
+            "RINEX_NAV": {
+              "value": 31,
+              "description": "RINEX navigation file."
+            },
             "PROVIDER_DEFINED": {
               "value": 255,
               "description": "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -14775,6 +14820,44 @@
           "type": "string",
           "description": "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
           "x-flatbuffer-type": "string"
+        },
+        "SELECT_START_TIME": {
+          "type": "string",
+          "description": "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+          "x-flatbuffer-type": "string"
+        },
+        "SELECT_STOP_TIME": {
+          "type": "string",
+          "description": "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+          "x-flatbuffer-type": "string"
+        },
+        "SELECT_SAMPLE_INTERVAL_SECONDS": {
+          "type": "number",
+          "description": "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+          "x-flatbuffer-type": "double"
+        },
+        "SELECT_SATELLITE_SYSTEMS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SELECT_OBSERVATION_CODES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SELECT_CLOCK_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+          "x-flatbuffer-type": "int"
         }
       },
       "additionalProperties": false

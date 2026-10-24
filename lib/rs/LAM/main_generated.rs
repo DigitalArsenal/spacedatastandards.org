@@ -1608,6 +1608,10 @@ impl<'a> lamInsertionOrbit<'a> {
     pub const VT_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: ::flatbuffers::VOffsetT = 28;
     pub const VT_PERIAPSIS_ALTITUDE_UNCERTAINTY_M: ::flatbuffers::VOffsetT = 30;
     pub const VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M: ::flatbuffers::VOffsetT = 32;
+    pub const VT_SEMI_MAJOR_AXIS_UNCERTAINTY_M: ::flatbuffers::VOffsetT = 34;
+    pub const VT_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: ::flatbuffers::VOffsetT = 36;
+    pub const VT_INCLINATION_UNCERTAINTY_DEG: ::flatbuffers::VOffsetT = 38;
+    pub const VT_HAS_INCLINATION_UNCERTAINTY_DEG: ::flatbuffers::VOffsetT = 40;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1620,6 +1624,8 @@ impl<'a> lamInsertionOrbit<'a> {
         args: &'args lamInsertionOrbitArgs<'args>
     ) -> ::flatbuffers::WIPOffset<lamInsertionOrbit<'bldr>> {
         let mut builder = lamInsertionOrbitBuilder::new(_fbb);
+        builder.add_INCLINATION_UNCERTAINTY_DEG(args.INCLINATION_UNCERTAINTY_DEG);
+        builder.add_SEMI_MAJOR_AXIS_UNCERTAINTY_M(args.SEMI_MAJOR_AXIS_UNCERTAINTY_M);
         builder.add_APOAPSIS_ALTITUDE_UNCERTAINTY_M(args.APOAPSIS_ALTITUDE_UNCERTAINTY_M);
         builder.add_PERIAPSIS_ALTITUDE_UNCERTAINTY_M(args.PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
         builder.add_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(args.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
@@ -1635,6 +1641,8 @@ impl<'a> lamInsertionOrbit<'a> {
         builder.add_TIME_FROM_LAUNCH_S(args.TIME_FROM_LAUNCH_S);
         if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
         if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+        builder.add_HAS_INCLINATION_UNCERTAINTY_DEG(args.HAS_INCLINATION_UNCERTAINTY_DEG);
+        builder.add_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(args.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
         builder.finish()
     }
 
@@ -1658,6 +1666,10 @@ impl<'a> lamInsertionOrbit<'a> {
         let ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = self.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG();
         let PERIAPSIS_ALTITUDE_UNCERTAINTY_M = self.PERIAPSIS_ALTITUDE_UNCERTAINTY_M();
         let APOAPSIS_ALTITUDE_UNCERTAINTY_M = self.APOAPSIS_ALTITUDE_UNCERTAINTY_M();
+        let SEMI_MAJOR_AXIS_UNCERTAINTY_M = self.SEMI_MAJOR_AXIS_UNCERTAINTY_M();
+        let HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = self.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M();
+        let INCLINATION_UNCERTAINTY_DEG = self.INCLINATION_UNCERTAINTY_DEG();
+        let HAS_INCLINATION_UNCERTAINTY_DEG = self.HAS_INCLINATION_UNCERTAINTY_DEG();
         lamInsertionOrbitT {
             EPOCH,
             TIME_FROM_LAUNCH_S,
@@ -1674,6 +1686,10 @@ impl<'a> lamInsertionOrbit<'a> {
             ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
             PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
             APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+            INCLINATION_UNCERTAINTY_DEG,
+            HAS_INCLINATION_UNCERTAINTY_DEG,
         }
     }
 
@@ -1811,6 +1827,46 @@ impl<'a> lamInsertionOrbit<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(lamInsertionOrbit::VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M, Some(0.0)).unwrap()}
     }
+
+    /// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+    /// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+    #[inline]
+    pub fn SEMI_MAJOR_AXIS_UNCERTAINTY_M(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(lamInsertionOrbit::VT_SEMI_MAJOR_AXIS_UNCERTAINTY_M, Some(0.0)).unwrap()}
+    }
+
+    /// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+    /// default) means absent, and a consumer applies its vehicle-class default.
+    #[inline]
+    pub fn HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(lamInsertionOrbit::VT_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, Some(false)).unwrap()}
+    }
+
+    /// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+    /// HAS_INCLINATION_UNCERTAINTY_DEG.
+    #[inline]
+    pub fn INCLINATION_UNCERTAINTY_DEG(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(lamInsertionOrbit::VT_INCLINATION_UNCERTAINTY_DEG, Some(0.0)).unwrap()}
+    }
+
+    /// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+    /// means absent, and a consumer applies its vehicle-class default.
+    #[inline]
+    pub fn HAS_INCLINATION_UNCERTAINTY_DEG(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(lamInsertionOrbit::VT_HAS_INCLINATION_UNCERTAINTY_DEG, Some(false)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for lamInsertionOrbit<'_> {
@@ -1834,6 +1890,10 @@ impl ::flatbuffers::Verifiable for lamInsertionOrbit<'_> {
             .visit_field::<f64>("ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG", Self::VT_ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, false)?
             .visit_field::<f64>("PERIAPSIS_ALTITUDE_UNCERTAINTY_M", Self::VT_PERIAPSIS_ALTITUDE_UNCERTAINTY_M, false)?
             .visit_field::<f64>("APOAPSIS_ALTITUDE_UNCERTAINTY_M", Self::VT_APOAPSIS_ALTITUDE_UNCERTAINTY_M, false)?
+            .visit_field::<f64>("SEMI_MAJOR_AXIS_UNCERTAINTY_M", Self::VT_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false)?
+            .visit_field::<bool>("HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M", Self::VT_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false)?
+            .visit_field::<f64>("INCLINATION_UNCERTAINTY_DEG", Self::VT_INCLINATION_UNCERTAINTY_DEG, false)?
+            .visit_field::<bool>("HAS_INCLINATION_UNCERTAINTY_DEG", Self::VT_HAS_INCLINATION_UNCERTAINTY_DEG, false)?
             .finish();
         Ok(())
     }
@@ -1855,6 +1915,10 @@ pub struct lamInsertionOrbitArgs<'a> {
     pub ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: f64,
     pub PERIAPSIS_ALTITUDE_UNCERTAINTY_M: f64,
     pub APOAPSIS_ALTITUDE_UNCERTAINTY_M: f64,
+    pub SEMI_MAJOR_AXIS_UNCERTAINTY_M: f64,
+    pub HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: bool,
+    pub INCLINATION_UNCERTAINTY_DEG: f64,
+    pub HAS_INCLINATION_UNCERTAINTY_DEG: bool,
 }
 
 impl<'a> Default for lamInsertionOrbitArgs<'a> {
@@ -1876,6 +1940,10 @@ impl<'a> Default for lamInsertionOrbitArgs<'a> {
             ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: 0.0,
             PERIAPSIS_ALTITUDE_UNCERTAINTY_M: 0.0,
             APOAPSIS_ALTITUDE_UNCERTAINTY_M: 0.0,
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M: 0.0,
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: false,
+            INCLINATION_UNCERTAINTY_DEG: 0.0,
+            HAS_INCLINATION_UNCERTAINTY_DEG: false,
         }
     }
 }
@@ -1962,6 +2030,26 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> lamInsertionOrbitBuilder<'a, 
     }
 
     #[inline]
+    pub fn add_SEMI_MAJOR_AXIS_UNCERTAINTY_M(&mut self, SEMI_MAJOR_AXIS_UNCERTAINTY_M: f64) {
+        self.fbb_.push_slot::<f64>(lamInsertionOrbit::VT_SEMI_MAJOR_AXIS_UNCERTAINTY_M, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(&mut self, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: bool) {
+        self.fbb_.push_slot::<bool>(lamInsertionOrbit::VT_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, false);
+    }
+
+    #[inline]
+    pub fn add_INCLINATION_UNCERTAINTY_DEG(&mut self, INCLINATION_UNCERTAINTY_DEG: f64) {
+        self.fbb_.push_slot::<f64>(lamInsertionOrbit::VT_INCLINATION_UNCERTAINTY_DEG, INCLINATION_UNCERTAINTY_DEG, 0.0);
+    }
+
+    #[inline]
+    pub fn add_HAS_INCLINATION_UNCERTAINTY_DEG(&mut self, HAS_INCLINATION_UNCERTAINTY_DEG: bool) {
+        self.fbb_.push_slot::<bool>(lamInsertionOrbit::VT_HAS_INCLINATION_UNCERTAINTY_DEG, HAS_INCLINATION_UNCERTAINTY_DEG, false);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> lamInsertionOrbitBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         lamInsertionOrbitBuilder {
@@ -1995,6 +2083,10 @@ impl ::core::fmt::Debug for lamInsertionOrbit<'_> {
         ds.field("ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG", &self.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG());
         ds.field("PERIAPSIS_ALTITUDE_UNCERTAINTY_M", &self.PERIAPSIS_ALTITUDE_UNCERTAINTY_M());
         ds.field("APOAPSIS_ALTITUDE_UNCERTAINTY_M", &self.APOAPSIS_ALTITUDE_UNCERTAINTY_M());
+        ds.field("SEMI_MAJOR_AXIS_UNCERTAINTY_M", &self.SEMI_MAJOR_AXIS_UNCERTAINTY_M());
+        ds.field("HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M", &self.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M());
+        ds.field("INCLINATION_UNCERTAINTY_DEG", &self.INCLINATION_UNCERTAINTY_DEG());
+        ds.field("HAS_INCLINATION_UNCERTAINTY_DEG", &self.HAS_INCLINATION_UNCERTAINTY_DEG());
         ds.finish()
     }
 }
@@ -2017,6 +2109,10 @@ pub struct lamInsertionOrbitT {
     pub ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: f64,
     pub PERIAPSIS_ALTITUDE_UNCERTAINTY_M: f64,
     pub APOAPSIS_ALTITUDE_UNCERTAINTY_M: f64,
+    pub SEMI_MAJOR_AXIS_UNCERTAINTY_M: f64,
+    pub HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: bool,
+    pub INCLINATION_UNCERTAINTY_DEG: f64,
+    pub HAS_INCLINATION_UNCERTAINTY_DEG: bool,
 }
 
 impl Default for lamInsertionOrbitT {
@@ -2037,6 +2133,10 @@ impl Default for lamInsertionOrbitT {
             ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: 0.0,
             PERIAPSIS_ALTITUDE_UNCERTAINTY_M: 0.0,
             APOAPSIS_ALTITUDE_UNCERTAINTY_M: 0.0,
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M: 0.0,
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: false,
+            INCLINATION_UNCERTAINTY_DEG: 0.0,
+            HAS_INCLINATION_UNCERTAINTY_DEG: false,
         }
     }
 }
@@ -2065,6 +2165,10 @@ impl lamInsertionOrbitT {
         let ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = self.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG;
         let PERIAPSIS_ALTITUDE_UNCERTAINTY_M = self.PERIAPSIS_ALTITUDE_UNCERTAINTY_M;
         let APOAPSIS_ALTITUDE_UNCERTAINTY_M = self.APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+        let SEMI_MAJOR_AXIS_UNCERTAINTY_M = self.SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+        let HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = self.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+        let INCLINATION_UNCERTAINTY_DEG = self.INCLINATION_UNCERTAINTY_DEG;
+        let HAS_INCLINATION_UNCERTAINTY_DEG = self.HAS_INCLINATION_UNCERTAINTY_DEG;
         lamInsertionOrbit::create(_fbb, &lamInsertionOrbitArgs{
             EPOCH,
             TIME_FROM_LAUNCH_S,
@@ -2081,6 +2185,10 @@ impl lamInsertionOrbitT {
             ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
             PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
             APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+            INCLINATION_UNCERTAINTY_DEG,
+            HAS_INCLINATION_UNCERTAINTY_DEG,
         })
     }
 }

@@ -696,6 +696,7 @@ enum RecordTypeExtended:
     RecordTypeExtended_SFE = 288
     RecordTypeExtended_SRO = 289
     RecordTypeExtended_SRT = 290
+    RecordTypeExtended_GNM = 291
 
 class Record
 

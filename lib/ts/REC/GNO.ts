@@ -244,8 +244,142 @@ NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+ * Default empty (not stated).
+ */
+TIME_SYSTEM():string|null
+TIME_SYSTEM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TIME_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+ * a moving antenna, 3 new site occupation, 4 header information follows, 5
+ * external event, 6 cycle slip records follow. Default 0.
+ */
+EPOCH_FLAG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Marker name from the header. Default empty.
+ */
+MARKER_NAME():string|null
+MARKER_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MARKER_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Marker number from the header. Default empty.
+ */
+MARKER_NUMBER():string|null
+MARKER_NUMBER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MARKER_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Marker type from the header. Default empty.
+ */
+MARKER_TYPE():string|null
+MARKER_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MARKER_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Observer from the header. Default empty.
+ */
+OBSERVER():string|null
+OBSERVER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBSERVER(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Agency from the header. Default empty.
+ */
+AGENCY():string|null
+AGENCY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+AGENCY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Antenna delta from the marker to the antenna reference point: height, east,
+ * north, meters, as [H, E, N]. Default empty.
+ */
+ANTENNA_DELTA_HEN(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+antennaDeltaHenLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+antennaDeltaHenArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Phase shift records as the header writes them, one per line, for example
+ * "G L2S -0.25000". Default empty.
+ */
+PHASE_SHIFTS(index: number):string
+PHASE_SHIFTS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+PHASE_SHIFTS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+phaseShiftsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Unit of the signal strength observations as the header states it. Default
+ * empty.
+ */
+SIGNAL_STRENGTH_UNIT():string|null
+SIGNAL_STRENGTH_UNIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SIGNAL_STRENGTH_UNIT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+ * when HAS_LEAP_SECONDS.
+ */
+LEAP_SECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * True when LEAP_SECONDS carries a value; false (the default) means absent.
+ */
+HAS_LEAP_SECONDS():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startGNO(builder:flatbuffers.Builder) {
-  builder.startObject(23);
+  builder.startObject(35);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -364,6 +498,83 @@ static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(22, NOTESOffset, 0);
 }
 
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, TIME_SYSTEMOffset, 0);
+}
+
+static addEpochFlag(builder:flatbuffers.Builder, EPOCH_FLAG:number) {
+  builder.addFieldInt8(24, EPOCH_FLAG, 0);
+}
+
+static addMarkerName(builder:flatbuffers.Builder, MARKER_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(25, MARKER_NAMEOffset, 0);
+}
+
+static addMarkerNumber(builder:flatbuffers.Builder, MARKER_NUMBEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, MARKER_NUMBEROffset, 0);
+}
+
+static addMarkerType(builder:flatbuffers.Builder, MARKER_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, MARKER_TYPEOffset, 0);
+}
+
+static addObserver(builder:flatbuffers.Builder, OBSERVEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, OBSERVEROffset, 0);
+}
+
+static addAgency(builder:flatbuffers.Builder, AGENCYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, AGENCYOffset, 0);
+}
+
+static addAntennaDeltaHen(builder:flatbuffers.Builder, ANTENNA_DELTA_HENOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, ANTENNA_DELTA_HENOffset, 0);
+}
+
+static createAntennaDeltaHenVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAntennaDeltaHenVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAntennaDeltaHenVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAntennaDeltaHenVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addPhaseShifts(builder:flatbuffers.Builder, PHASE_SHIFTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, PHASE_SHIFTSOffset, 0);
+}
+
+static createPhaseShiftsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startPhaseShiftsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSignalStrengthUnit(builder:flatbuffers.Builder, SIGNAL_STRENGTH_UNITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, SIGNAL_STRENGTH_UNITOffset, 0);
+}
+
+static addLeapSeconds(builder:flatbuffers.Builder, LEAP_SECONDS:number) {
+  builder.addFieldInt32(33, LEAP_SECONDS, 0);
+}
+
+static addHasLeapSeconds(builder:flatbuffers.Builder, HAS_LEAP_SECONDS:boolean) {
+  builder.addFieldInt8(34, +HAS_LEAP_SECONDS, +false);
+}
+
 static endGNO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -377,7 +588,7 @@ static finishSizePrefixedGNOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$GNO', true);
 }
 
-static createGNO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, RECEIVER_IDOffset:flatbuffers.Offset, RECEIVER_TYPEOffset:flatbuffers.Offset, ANTENNA_IDOffset:flatbuffers.Offset, ANTENNA_TYPEOffset:flatbuffers.Offset, FIRMWARE_VERSIONOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, CLOCK_OFFSET:number, CLOCK_DRIFT:number, LATITUDE:number, LONGITUDE:number, ALTITUDE:number, APPROX_X:number, APPROX_Y:number, APPROX_Z:number, INTERVAL:number, NUM_SATS:number, PDOP:number, HDOP:number, VDOP:number, SAT_OBSOffset:flatbuffers.Offset, OBS_CODE_SETOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createGNO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, RECEIVER_IDOffset:flatbuffers.Offset, RECEIVER_TYPEOffset:flatbuffers.Offset, ANTENNA_IDOffset:flatbuffers.Offset, ANTENNA_TYPEOffset:flatbuffers.Offset, FIRMWARE_VERSIONOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, CLOCK_OFFSET:number, CLOCK_DRIFT:number, LATITUDE:number, LONGITUDE:number, ALTITUDE:number, APPROX_X:number, APPROX_Y:number, APPROX_Z:number, INTERVAL:number, NUM_SATS:number, PDOP:number, HDOP:number, VDOP:number, SAT_OBSOffset:flatbuffers.Offset, OBS_CODE_SETOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset, TIME_SYSTEMOffset:flatbuffers.Offset, EPOCH_FLAG:number, MARKER_NAMEOffset:flatbuffers.Offset, MARKER_NUMBEROffset:flatbuffers.Offset, MARKER_TYPEOffset:flatbuffers.Offset, OBSERVEROffset:flatbuffers.Offset, AGENCYOffset:flatbuffers.Offset, ANTENNA_DELTA_HENOffset:flatbuffers.Offset, PHASE_SHIFTSOffset:flatbuffers.Offset, SIGNAL_STRENGTH_UNITOffset:flatbuffers.Offset, LEAP_SECONDS:number, HAS_LEAP_SECONDS:boolean):flatbuffers.Offset {
   GNO.startGNO(builder);
   GNO.addId(builder, IDOffset);
   GNO.addReceiverId(builder, RECEIVER_IDOffset);
@@ -402,6 +613,18 @@ static createGNO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, RECEI
   GNO.addSatObs(builder, SAT_OBSOffset);
   GNO.addObsCodeSet(builder, OBS_CODE_SETOffset);
   GNO.addNotes(builder, NOTESOffset);
+  GNO.addTimeSystem(builder, TIME_SYSTEMOffset);
+  GNO.addEpochFlag(builder, EPOCH_FLAG);
+  GNO.addMarkerName(builder, MARKER_NAMEOffset);
+  GNO.addMarkerNumber(builder, MARKER_NUMBEROffset);
+  GNO.addMarkerType(builder, MARKER_TYPEOffset);
+  GNO.addObserver(builder, OBSERVEROffset);
+  GNO.addAgency(builder, AGENCYOffset);
+  GNO.addAntennaDeltaHen(builder, ANTENNA_DELTA_HENOffset);
+  GNO.addPhaseShifts(builder, PHASE_SHIFTSOffset);
+  GNO.addSignalStrengthUnit(builder, SIGNAL_STRENGTH_UNITOffset);
+  GNO.addLeapSeconds(builder, LEAP_SECONDS);
+  GNO.addHasLeapSeconds(builder, HAS_LEAP_SECONDS);
   return GNO.endGNO(builder);
 }
 
@@ -429,7 +652,19 @@ unpack(): GNOT {
     this.VDOP(),
     this.bb!.createObjList<gnssSatObs, gnssSatObsT>(this.SAT_OBS.bind(this), this.satObsLength()),
     this.bb!.createScalarList<string>(this.OBS_CODE_SET.bind(this), this.obsCodeSetLength()),
-    this.NOTES()
+    this.NOTES(),
+    this.TIME_SYSTEM(),
+    this.EPOCH_FLAG(),
+    this.MARKER_NAME(),
+    this.MARKER_NUMBER(),
+    this.MARKER_TYPE(),
+    this.OBSERVER(),
+    this.AGENCY(),
+    this.bb!.createScalarList<number>(this.ANTENNA_DELTA_HEN.bind(this), this.antennaDeltaHenLength()),
+    this.bb!.createScalarList<string>(this.PHASE_SHIFTS.bind(this), this.phaseShiftsLength()),
+    this.SIGNAL_STRENGTH_UNIT(),
+    this.LEAP_SECONDS(),
+    this.HAS_LEAP_SECONDS()
   );
 }
 
@@ -458,6 +693,18 @@ unpackTo(_o: GNOT): void {
   _o.SAT_OBS = this.bb!.createObjList<gnssSatObs, gnssSatObsT>(this.SAT_OBS.bind(this), this.satObsLength());
   _o.OBS_CODE_SET = this.bb!.createScalarList<string>(this.OBS_CODE_SET.bind(this), this.obsCodeSetLength());
   _o.NOTES = this.NOTES();
+  _o.TIME_SYSTEM = this.TIME_SYSTEM();
+  _o.EPOCH_FLAG = this.EPOCH_FLAG();
+  _o.MARKER_NAME = this.MARKER_NAME();
+  _o.MARKER_NUMBER = this.MARKER_NUMBER();
+  _o.MARKER_TYPE = this.MARKER_TYPE();
+  _o.OBSERVER = this.OBSERVER();
+  _o.AGENCY = this.AGENCY();
+  _o.ANTENNA_DELTA_HEN = this.bb!.createScalarList<number>(this.ANTENNA_DELTA_HEN.bind(this), this.antennaDeltaHenLength());
+  _o.PHASE_SHIFTS = this.bb!.createScalarList<string>(this.PHASE_SHIFTS.bind(this), this.phaseShiftsLength());
+  _o.SIGNAL_STRENGTH_UNIT = this.SIGNAL_STRENGTH_UNIT();
+  _o.LEAP_SECONDS = this.LEAP_SECONDS();
+  _o.HAS_LEAP_SECONDS = this.HAS_LEAP_SECONDS();
 }
 }
 
@@ -485,7 +732,19 @@ constructor(
   public VDOP: number = 0.0,
   public SAT_OBS: (gnssSatObsT)[] = [],
   public OBS_CODE_SET: (string)[] = [],
-  public NOTES: string|Uint8Array|null = null
+  public NOTES: string|Uint8Array|null = null,
+  public TIME_SYSTEM: string|Uint8Array|null = null,
+  public EPOCH_FLAG: number = 0,
+  public MARKER_NAME: string|Uint8Array|null = null,
+  public MARKER_NUMBER: string|Uint8Array|null = null,
+  public MARKER_TYPE: string|Uint8Array|null = null,
+  public OBSERVER: string|Uint8Array|null = null,
+  public AGENCY: string|Uint8Array|null = null,
+  public ANTENNA_DELTA_HEN: (number)[] = [],
+  public PHASE_SHIFTS: (string)[] = [],
+  public SIGNAL_STRENGTH_UNIT: string|Uint8Array|null = null,
+  public LEAP_SECONDS: number = 0,
+  public HAS_LEAP_SECONDS: boolean = false
 ){}
 
 
@@ -500,6 +759,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SAT_OBS = GNO.createSatObsVector(builder, builder.createObjectOffsetList(this.SAT_OBS));
   const OBS_CODE_SET = GNO.createObsCodeSetVector(builder, builder.createObjectOffsetList(this.OBS_CODE_SET));
   const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const TIME_SYSTEM = (this.TIME_SYSTEM !== null ? builder.createString(this.TIME_SYSTEM!) : 0);
+  const MARKER_NAME = (this.MARKER_NAME !== null ? builder.createString(this.MARKER_NAME!) : 0);
+  const MARKER_NUMBER = (this.MARKER_NUMBER !== null ? builder.createString(this.MARKER_NUMBER!) : 0);
+  const MARKER_TYPE = (this.MARKER_TYPE !== null ? builder.createString(this.MARKER_TYPE!) : 0);
+  const OBSERVER = (this.OBSERVER !== null ? builder.createString(this.OBSERVER!) : 0);
+  const AGENCY = (this.AGENCY !== null ? builder.createString(this.AGENCY!) : 0);
+  const ANTENNA_DELTA_HEN = GNO.createAntennaDeltaHenVector(builder, this.ANTENNA_DELTA_HEN);
+  const PHASE_SHIFTS = GNO.createPhaseShiftsVector(builder, builder.createObjectOffsetList(this.PHASE_SHIFTS));
+  const SIGNAL_STRENGTH_UNIT = (this.SIGNAL_STRENGTH_UNIT !== null ? builder.createString(this.SIGNAL_STRENGTH_UNIT!) : 0);
 
   return GNO.createGNO(builder,
     ID,
@@ -524,7 +792,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.VDOP,
     SAT_OBS,
     OBS_CODE_SET,
-    NOTES
+    NOTES,
+    TIME_SYSTEM,
+    this.EPOCH_FLAG,
+    MARKER_NAME,
+    MARKER_NUMBER,
+    MARKER_TYPE,
+    OBSERVER,
+    AGENCY,
+    ANTENNA_DELTA_HEN,
+    PHASE_SHIFTS,
+    SIGNAL_STRENGTH_UNIT,
+    this.LEAP_SECONDS,
+    this.HAS_LEAP_SECONDS
   );
 }
 }

@@ -254,8 +254,88 @@ class NCD(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # A reader's REQUEST, carried in the descriptor that frames the file so that
+    # no option travels outside a typed record. Start of the inclusive window to
+    # read, ISO 8601, on the container's own time scale. Default empty (from the
+    # start of the container).
+    # NCD
+    def SELECT_START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # End of the inclusive window to read, ISO 8601, on the container's own time
+    # scale. Default empty (to the end of the container).
+    # NCD
+    def SELECT_STOP_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+    # NCD
+    def SELECT_SAMPLE_INTERVAL_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Satellite systems to read, as the RINEX letters G R E C J I S. Default
+    # empty (every system the container holds).
+    # NCD
+    def SELECT_SATELLITE_SYSTEMS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # NCD
+    def SELECT_SATELLITE_SYSTEMSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # NCD
+    def SELECT_SATELLITE_SYSTEMSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        return o == 0
+
+    # Observation codes to read (C1C, L1C, ...). Default empty (every code).
+    # NCD
+    def SELECT_OBSERVATION_CODES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # NCD
+    def SELECT_OBSERVATION_CODESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # NCD
+    def SELECT_OBSERVATION_CODESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        return o == 0
+
+    # Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+    # by the instrument id. Default 0.
+    # NCD
+    def SELECT_CLOCK_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
 def NCDStart(builder):
-    builder.StartObject(20)
+    builder.StartObject(26)
 
 def Start(builder):
     NCDStart(builder)
@@ -404,6 +484,66 @@ def NCDAddSOURCE_CID(builder, SOURCE_CID):
 def AddSOURCE_CID(builder, SOURCE_CID):
     NCDAddSOURCE_CID(builder, SOURCE_CID)
 
+def NCDAddSELECT_START_TIME(builder, SELECT_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SELECT_START_TIME), 0)
+
+def AddSELECT_START_TIME(builder, SELECT_START_TIME):
+    NCDAddSELECT_START_TIME(builder, SELECT_START_TIME)
+
+def NCDAddSELECT_STOP_TIME(builder, SELECT_STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(SELECT_STOP_TIME), 0)
+
+def AddSELECT_STOP_TIME(builder, SELECT_STOP_TIME):
+    NCDAddSELECT_STOP_TIME(builder, SELECT_STOP_TIME)
+
+def NCDAddSELECT_SAMPLE_INTERVAL_SECONDS(builder, SELECT_SAMPLE_INTERVAL_SECONDS):
+    builder.PrependFloat64Slot(22, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0)
+
+def AddSELECT_SAMPLE_INTERVAL_SECONDS(builder, SELECT_SAMPLE_INTERVAL_SECONDS):
+    NCDAddSELECT_SAMPLE_INTERVAL_SECONDS(builder, SELECT_SAMPLE_INTERVAL_SECONDS)
+
+def NCDAddSELECT_SATELLITE_SYSTEMS(builder, SELECT_SATELLITE_SYSTEMS):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SELECT_SATELLITE_SYSTEMS), 0)
+
+def AddSELECT_SATELLITE_SYSTEMS(builder, SELECT_SATELLITE_SYSTEMS):
+    NCDAddSELECT_SATELLITE_SYSTEMS(builder, SELECT_SATELLITE_SYSTEMS)
+
+def NCDStartSELECT_SATELLITE_SYSTEMSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSELECT_SATELLITE_SYSTEMSVector(builder, numElems):
+    return NCDStartSELECT_SATELLITE_SYSTEMSVector(builder, numElems)
+
+def NCDCreateSELECT_SATELLITE_SYSTEMSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSELECT_SATELLITE_SYSTEMSVector(builder, data):
+    return NCDCreateSELECT_SATELLITE_SYSTEMSVector(builder, data)
+
+def NCDAddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODES):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(SELECT_OBSERVATION_CODES), 0)
+
+def AddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODES):
+    NCDAddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODES)
+
+def NCDStartSELECT_OBSERVATION_CODESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSELECT_OBSERVATION_CODESVector(builder, numElems):
+    return NCDStartSELECT_OBSERVATION_CODESVector(builder, numElems)
+
+def NCDCreateSELECT_OBSERVATION_CODESVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateSELECT_OBSERVATION_CODESVector(builder, data):
+    return NCDCreateSELECT_OBSERVATION_CODESVector(builder, data)
+
+def NCDAddSELECT_CLOCK_ID(builder, SELECT_CLOCK_ID):
+    builder.PrependInt32Slot(25, SELECT_CLOCK_ID, 0)
+
+def AddSELECT_CLOCK_ID(builder, SELECT_CLOCK_ID):
+    NCDAddSELECT_CLOCK_ID(builder, SELECT_CLOCK_ID)
+
 def NCDEnd(builder):
     return builder.EndObject()
 
@@ -444,6 +584,12 @@ class NCDT(object):
         SOURCE_BYTE_LENGTH = 0,
         SOURCE_SHA256 = None,
         SOURCE_CID = None,
+        SELECT_START_TIME = None,
+        SELECT_STOP_TIME = None,
+        SELECT_SAMPLE_INTERVAL_SECONDS = 0.0,
+        SELECT_SATELLITE_SYSTEMS = None,
+        SELECT_OBSERVATION_CODES = None,
+        SELECT_CLOCK_ID = 0,
     ):
         self.FORMAT = FORMAT  # type: int
         self.PROVIDER_DEFINED_FORMAT_NAME = PROVIDER_DEFINED_FORMAT_NAME  # type: Optional[str]
@@ -465,6 +611,12 @@ class NCDT(object):
         self.SOURCE_BYTE_LENGTH = SOURCE_BYTE_LENGTH  # type: int
         self.SOURCE_SHA256 = SOURCE_SHA256  # type: Optional[str]
         self.SOURCE_CID = SOURCE_CID  # type: Optional[str]
+        self.SELECT_START_TIME = SELECT_START_TIME  # type: Optional[str]
+        self.SELECT_STOP_TIME = SELECT_STOP_TIME  # type: Optional[str]
+        self.SELECT_SAMPLE_INTERVAL_SECONDS = SELECT_SAMPLE_INTERVAL_SECONDS  # type: float
+        self.SELECT_SATELLITE_SYSTEMS = SELECT_SATELLITE_SYSTEMS  # type: Optional[List[Optional[str]]]
+        self.SELECT_OBSERVATION_CODES = SELECT_OBSERVATION_CODES  # type: Optional[List[Optional[str]]]
+        self.SELECT_CLOCK_ID = SELECT_CLOCK_ID  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -520,6 +672,18 @@ class NCDT(object):
         self.SOURCE_BYTE_LENGTH = NCD.SOURCE_BYTE_LENGTH()
         self.SOURCE_SHA256 = NCD.SOURCE_SHA256()
         self.SOURCE_CID = NCD.SOURCE_CID()
+        self.SELECT_START_TIME = NCD.SELECT_START_TIME()
+        self.SELECT_STOP_TIME = NCD.SELECT_STOP_TIME()
+        self.SELECT_SAMPLE_INTERVAL_SECONDS = NCD.SELECT_SAMPLE_INTERVAL_SECONDS()
+        if not NCD.SELECT_SATELLITE_SYSTEMSIsNone():
+            self.SELECT_SATELLITE_SYSTEMS = []
+            for i in range(NCD.SELECT_SATELLITE_SYSTEMSLength()):
+                self.SELECT_SATELLITE_SYSTEMS.append(NCD.SELECT_SATELLITE_SYSTEMS(i))
+        if not NCD.SELECT_OBSERVATION_CODESIsNone():
+            self.SELECT_OBSERVATION_CODES = []
+            for i in range(NCD.SELECT_OBSERVATION_CODESLength()):
+                self.SELECT_OBSERVATION_CODES.append(NCD.SELECT_OBSERVATION_CODES(i))
+        self.SELECT_CLOCK_ID = NCD.SELECT_CLOCK_ID()
 
     # NCDT
     def Pack(self, builder):
@@ -569,6 +733,26 @@ class NCDT(object):
             SOURCE_SHA256 = builder.CreateString(self.SOURCE_SHA256)
         if self.SOURCE_CID is not None:
             SOURCE_CID = builder.CreateString(self.SOURCE_CID)
+        if self.SELECT_START_TIME is not None:
+            SELECT_START_TIME = builder.CreateString(self.SELECT_START_TIME)
+        if self.SELECT_STOP_TIME is not None:
+            SELECT_STOP_TIME = builder.CreateString(self.SELECT_STOP_TIME)
+        if self.SELECT_SATELLITE_SYSTEMS is not None:
+            SELECT_SATELLITE_SYSTEMSlist = []
+            for i in range(len(self.SELECT_SATELLITE_SYSTEMS)):
+                SELECT_SATELLITE_SYSTEMSlist.append(builder.CreateString(self.SELECT_SATELLITE_SYSTEMS[i]))
+            NCDStartSELECT_SATELLITE_SYSTEMSVector(builder, len(self.SELECT_SATELLITE_SYSTEMS))
+            for i in reversed(range(len(self.SELECT_SATELLITE_SYSTEMS))):
+                builder.PrependUOffsetTRelative(SELECT_SATELLITE_SYSTEMSlist[i])
+            SELECT_SATELLITE_SYSTEMS = builder.EndVector()
+        if self.SELECT_OBSERVATION_CODES is not None:
+            SELECT_OBSERVATION_CODESlist = []
+            for i in range(len(self.SELECT_OBSERVATION_CODES)):
+                SELECT_OBSERVATION_CODESlist.append(builder.CreateString(self.SELECT_OBSERVATION_CODES[i]))
+            NCDStartSELECT_OBSERVATION_CODESVector(builder, len(self.SELECT_OBSERVATION_CODES))
+            for i in reversed(range(len(self.SELECT_OBSERVATION_CODES))):
+                builder.PrependUOffsetTRelative(SELECT_OBSERVATION_CODESlist[i])
+            SELECT_OBSERVATION_CODES = builder.EndVector()
         NCDStart(builder)
         NCDAddFORMAT(builder, self.FORMAT)
         if self.PROVIDER_DEFINED_FORMAT_NAME is not None:
@@ -607,5 +791,15 @@ class NCDT(object):
             NCDAddSOURCE_SHA256(builder, SOURCE_SHA256)
         if self.SOURCE_CID is not None:
             NCDAddSOURCE_CID(builder, SOURCE_CID)
+        if self.SELECT_START_TIME is not None:
+            NCDAddSELECT_START_TIME(builder, SELECT_START_TIME)
+        if self.SELECT_STOP_TIME is not None:
+            NCDAddSELECT_STOP_TIME(builder, SELECT_STOP_TIME)
+        NCDAddSELECT_SAMPLE_INTERVAL_SECONDS(builder, self.SELECT_SAMPLE_INTERVAL_SECONDS)
+        if self.SELECT_SATELLITE_SYSTEMS is not None:
+            NCDAddSELECT_SATELLITE_SYSTEMS(builder, SELECT_SATELLITE_SYSTEMS)
+        if self.SELECT_OBSERVATION_CODES is not None:
+            NCDAddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODES)
+        NCDAddSELECT_CLOCK_ID(builder, self.SELECT_CLOCK_ID)
         NCD = NCDEnd(builder)
         return NCD

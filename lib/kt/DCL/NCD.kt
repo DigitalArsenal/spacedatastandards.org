@@ -310,6 +310,86 @@ class NCD : Table() {
         }
     val sourceCidAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(42, 1)
     fun sourceCidInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * A reader's REQUEST, carried in the descriptor that frames the file so that
+     * no option travels outside a typed record. Start of the inclusive window to
+     * read, ISO 8601, on the container's own time scale. Default empty (from the
+     * start of the container).
+     */
+    val selectStartTime : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val selectStartTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(44, 1)
+    fun selectStartTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * End of the inclusive window to read, ISO 8601, on the container's own time
+     * scale. Default empty (to the end of the container).
+     */
+    val selectStopTime : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val selectStopTimeAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(46, 1)
+    fun selectStopTimeInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+     */
+    val selectSampleIntervalSeconds : Double
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Satellite systems to read, as the RINEX letters G R E C J I S. Default
+     * empty (every system the container holds).
+     */
+    fun selectSatelliteSystems(j: Int) : String? {
+        val o = __offset(50)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val selectSatelliteSystemsLength : Int
+        get() {
+            val o = __offset(50); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Observation codes to read (C1C, L1C, ...). Default empty (every code).
+     */
+    fun selectObservationCodes(j: Int) : String? {
+        val o = __offset(52)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val selectObservationCodesLength : Int
+        get() {
+            val o = __offset(52); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+     * by the instrument id. Default 0.
+     */
+    val selectClockId : Int
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsNCD(_bb: ByteBuffer): NCD = getRootAsNCD(_bb, NCD())
@@ -318,9 +398,15 @@ class NCD : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun NCDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NCD")
-        fun createNCD(builder: FlatBufferBuilder, format: UByte, providerDefinedFormatNameOffset: Int, formatVersionOffset: Int, producerOffset: Int, creationDateOffset: Int, originatorOffset: Int, internalFileNameOffset: Int, commentAreaOffset: Int, nativeFrameNameOffset: Int, nativeFrameId: Int, nativeTimeSystemOffset: Int, segmentsOffset: Int, sp3HeaderOffset: Int, scenarioContainerOffset: Int, code500HeaderOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, sourceByteLength: ULong, sourceSha256Offset: Int, sourceCidOffset: Int) : Int {
-            builder.startTable(20)
+        fun createNCD(builder: FlatBufferBuilder, format: UByte, providerDefinedFormatNameOffset: Int, formatVersionOffset: Int, producerOffset: Int, creationDateOffset: Int, originatorOffset: Int, internalFileNameOffset: Int, commentAreaOffset: Int, nativeFrameNameOffset: Int, nativeFrameId: Int, nativeTimeSystemOffset: Int, segmentsOffset: Int, sp3HeaderOffset: Int, scenarioContainerOffset: Int, code500HeaderOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, sourceByteLength: ULong, sourceSha256Offset: Int, sourceCidOffset: Int, selectStartTimeOffset: Int, selectStopTimeOffset: Int, selectSampleIntervalSeconds: Double, selectSatelliteSystemsOffset: Int, selectObservationCodesOffset: Int, selectClockId: Int) : Int {
+            builder.startTable(26)
+            addSELECTSAMPLEINTERVALSECONDS(builder, selectSampleIntervalSeconds)
             addSOURCEBYTELENGTH(builder, sourceByteLength)
+            addSELECTCLOCKID(builder, selectClockId)
+            addSELECTOBSERVATIONCODES(builder, selectObservationCodesOffset)
+            addSELECTSATELLITESYSTEMS(builder, selectSatelliteSystemsOffset)
+            addSELECTSTOPTIME(builder, selectStopTimeOffset)
+            addSELECTSTARTTIME(builder, selectStartTimeOffset)
             addSOURCECID(builder, sourceCidOffset)
             addSOURCESHA256(builder, sourceSha256Offset)
             addSTOPTIME(builder, stopTimeOffset)
@@ -342,7 +428,7 @@ class NCD : Table() {
             addFORMAT(builder, format)
             return endNCD(builder)
         }
-        fun startNCD(builder: FlatBufferBuilder) = builder.startTable(20)
+        fun startNCD(builder: FlatBufferBuilder) = builder.startTable(26)
         fun addFORMAT(builder: FlatBufferBuilder, format: UByte) = builder.addByte(0, format.toByte(), 0)
         fun addPROVIDERDEFINEDFORMATNAME(builder: FlatBufferBuilder, providerDefinedFormatName: Int) = builder.addOffset(1, providerDefinedFormatName, 0)
         fun addFORMATVERSION(builder: FlatBufferBuilder, formatVersion: Int) = builder.addOffset(2, formatVersion, 0)
@@ -379,6 +465,28 @@ class NCD : Table() {
         fun addSOURCEBYTELENGTH(builder: FlatBufferBuilder, sourceByteLength: ULong) = builder.addLong(17, sourceByteLength.toLong(), 0)
         fun addSOURCESHA256(builder: FlatBufferBuilder, sourceSha256: Int) = builder.addOffset(18, sourceSha256, 0)
         fun addSOURCECID(builder: FlatBufferBuilder, sourceCid: Int) = builder.addOffset(19, sourceCid, 0)
+        fun addSELECTSTARTTIME(builder: FlatBufferBuilder, selectStartTime: Int) = builder.addOffset(20, selectStartTime, 0)
+        fun addSELECTSTOPTIME(builder: FlatBufferBuilder, selectStopTime: Int) = builder.addOffset(21, selectStopTime, 0)
+        fun addSELECTSAMPLEINTERVALSECONDS(builder: FlatBufferBuilder, selectSampleIntervalSeconds: Double) = builder.addDouble(22, selectSampleIntervalSeconds, 0.0)
+        fun addSELECTSATELLITESYSTEMS(builder: FlatBufferBuilder, selectSatelliteSystems: Int) = builder.addOffset(23, selectSatelliteSystems, 0)
+        fun createSelectSatelliteSystemsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSelectSatelliteSystemsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSELECTOBSERVATIONCODES(builder: FlatBufferBuilder, selectObservationCodes: Int) = builder.addOffset(24, selectObservationCodes, 0)
+        fun createSelectObservationCodesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSelectObservationCodesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSELECTCLOCKID(builder: FlatBufferBuilder, selectClockId: Int) = builder.addInt(25, selectClockId, 0)
         fun endNCD(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

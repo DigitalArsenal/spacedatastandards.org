@@ -748,10 +748,26 @@ class lamInsertionOrbit {
   ///  One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
   double get APOAPSIS_ALTITUDE_UNCERTAINTY_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
   double get apoapsisAltitudeUncertaintyM => APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+  ///  One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+  ///  HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+  double get SEMI_MAJOR_AXIS_UNCERTAINTY_M => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  double get semiMajorAxisUncertaintyM => SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+  ///  True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+  ///  default) means absent, and a consumer applies its vehicle-class default.
+  bool get HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  bool get hasSemiMajorAxisUncertaintyM => HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+  ///  One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+  ///  HAS_INCLINATION_UNCERTAINTY_DEG.
+  double get INCLINATION_UNCERTAINTY_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  double get inclinationUncertaintyDeg => INCLINATION_UNCERTAINTY_DEG;
+  ///  True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+  ///  means absent, and a consumer applies its vehicle-class default.
+  bool get HAS_INCLINATION_UNCERTAINTY_DEG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 40, false);
+  bool get hasInclinationUncertaintyDeg => HAS_INCLINATION_UNCERTAINTY_DEG;
 
   @override
   String toString() {
-    return 'lamInsertionOrbit{EPOCH: ${EPOCH}, timeFromLaunchS: ${timeFromLaunchS}, refFrame: ${refFrame}, semiMajorAxisM: ${semiMajorAxisM}, ECCENTRICITY: ${ECCENTRICITY}, inclinationDeg: ${inclinationDeg}, raanDeg: ${raanDeg}, argumentOfPeriapsisDeg: ${argumentOfPeriapsisDeg}, argumentOfLatitudeDeg: ${argumentOfLatitudeDeg}, periapsisAltitudeM: ${periapsisAltitudeM}, apoapsisAltitudeM: ${apoapsisAltitudeM}, raanUncertaintyDeg: ${raanUncertaintyDeg}, argumentOfLatitudeUncertaintyDeg: ${argumentOfLatitudeUncertaintyDeg}, periapsisAltitudeUncertaintyM: ${periapsisAltitudeUncertaintyM}, apoapsisAltitudeUncertaintyM: ${apoapsisAltitudeUncertaintyM}}';
+    return 'lamInsertionOrbit{EPOCH: ${EPOCH}, timeFromLaunchS: ${timeFromLaunchS}, refFrame: ${refFrame}, semiMajorAxisM: ${semiMajorAxisM}, ECCENTRICITY: ${ECCENTRICITY}, inclinationDeg: ${inclinationDeg}, raanDeg: ${raanDeg}, argumentOfPeriapsisDeg: ${argumentOfPeriapsisDeg}, argumentOfLatitudeDeg: ${argumentOfLatitudeDeg}, periapsisAltitudeM: ${periapsisAltitudeM}, apoapsisAltitudeM: ${apoapsisAltitudeM}, raanUncertaintyDeg: ${raanUncertaintyDeg}, argumentOfLatitudeUncertaintyDeg: ${argumentOfLatitudeUncertaintyDeg}, periapsisAltitudeUncertaintyM: ${periapsisAltitudeUncertaintyM}, apoapsisAltitudeUncertaintyM: ${apoapsisAltitudeUncertaintyM}, semiMajorAxisUncertaintyM: ${semiMajorAxisUncertaintyM}, hasSemiMajorAxisUncertaintyM: ${hasSemiMajorAxisUncertaintyM}, inclinationUncertaintyDeg: ${inclinationUncertaintyDeg}, hasInclinationUncertaintyDeg: ${hasInclinationUncertaintyDeg}}';
   }
 }
 
@@ -769,7 +785,7 @@ class lamInsertionOrbitBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(19);
   }
 
   int addEpochOffset(int? offset) {
@@ -832,6 +848,22 @@ class lamInsertionOrbitBuilder {
     fbBuilder.addFloat64(14, APOAPSIS_ALTITUDE_UNCERTAINTY_M);
     return fbBuilder.offset;
   }
+  int addSemiMajorAxisUncertaintyM(double? SEMI_MAJOR_AXIS_UNCERTAINTY_M) {
+    fbBuilder.addFloat64(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+    return fbBuilder.offset;
+  }
+  int addHasSemiMajorAxisUncertaintyM(bool? HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M) {
+    fbBuilder.addBool(16, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+    return fbBuilder.offset;
+  }
+  int addInclinationUncertaintyDeg(double? INCLINATION_UNCERTAINTY_DEG) {
+    fbBuilder.addFloat64(17, INCLINATION_UNCERTAINTY_DEG);
+    return fbBuilder.offset;
+  }
+  int addHasInclinationUncertaintyDeg(bool? HAS_INCLINATION_UNCERTAINTY_DEG) {
+    fbBuilder.addBool(18, HAS_INCLINATION_UNCERTAINTY_DEG);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -854,6 +886,10 @@ class lamInsertionOrbitObjectBuilder extends fb.ObjectBuilder {
   final double? _ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG;
   final double? _PERIAPSIS_ALTITUDE_UNCERTAINTY_M;
   final double? _APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+  final double? _SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+  final bool? _HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M;
+  final double? _INCLINATION_UNCERTAINTY_DEG;
+  final bool? _HAS_INCLINATION_UNCERTAINTY_DEG;
 
   lamInsertionOrbitObjectBuilder({
     String? EPOCH,
@@ -884,6 +920,14 @@ class lamInsertionOrbitObjectBuilder extends fb.ObjectBuilder {
     double? periapsisAltitudeUncertaintyM,
     double? APOAPSIS_ALTITUDE_UNCERTAINTY_M,
     double? apoapsisAltitudeUncertaintyM,
+    double? SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+    double? semiMajorAxisUncertaintyM,
+    bool? HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+    bool? hasSemiMajorAxisUncertaintyM,
+    double? INCLINATION_UNCERTAINTY_DEG,
+    double? inclinationUncertaintyDeg,
+    bool? HAS_INCLINATION_UNCERTAINTY_DEG,
+    bool? hasInclinationUncertaintyDeg,
   })
       : _EPOCH = EPOCH,
         _TIME_FROM_LAUNCH_S = timeFromLaunchS ?? TIME_FROM_LAUNCH_S,
@@ -899,7 +943,11 @@ class lamInsertionOrbitObjectBuilder extends fb.ObjectBuilder {
         _RAAN_UNCERTAINTY_DEG = raanUncertaintyDeg ?? RAAN_UNCERTAINTY_DEG,
         _ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = argumentOfLatitudeUncertaintyDeg ?? ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
         _PERIAPSIS_ALTITUDE_UNCERTAINTY_M = periapsisAltitudeUncertaintyM ?? PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
-        _APOAPSIS_ALTITUDE_UNCERTAINTY_M = apoapsisAltitudeUncertaintyM ?? APOAPSIS_ALTITUDE_UNCERTAINTY_M;
+        _APOAPSIS_ALTITUDE_UNCERTAINTY_M = apoapsisAltitudeUncertaintyM ?? APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+        _SEMI_MAJOR_AXIS_UNCERTAINTY_M = semiMajorAxisUncertaintyM ?? SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+        _HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = hasSemiMajorAxisUncertaintyM ?? HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+        _INCLINATION_UNCERTAINTY_DEG = inclinationUncertaintyDeg ?? INCLINATION_UNCERTAINTY_DEG,
+        _HAS_INCLINATION_UNCERTAINTY_DEG = hasInclinationUncertaintyDeg ?? HAS_INCLINATION_UNCERTAINTY_DEG;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -908,7 +956,7 @@ class lamInsertionOrbitObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EPOCH!);
     final int? REF_FRAMEOffset = _REF_FRAME == null ? null
         : fbBuilder.writeString(_REF_FRAME!);
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(19);
     fbBuilder.addOffset(0, EPOCHOffset);
     fbBuilder.addFloat64(1, _TIME_FROM_LAUNCH_S);
     fbBuilder.addOffset(2, REF_FRAMEOffset);
@@ -924,6 +972,10 @@ class lamInsertionOrbitObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(12, _ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
     fbBuilder.addFloat64(13, _PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
     fbBuilder.addFloat64(14, _APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+    fbBuilder.addFloat64(15, _SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+    fbBuilder.addBool(16, _HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+    fbBuilder.addFloat64(17, _INCLINATION_UNCERTAINTY_DEG);
+    fbBuilder.addBool(18, _HAS_INCLINATION_UNCERTAINTY_DEG);
     return fbBuilder.endTable();
   }
 

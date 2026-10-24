@@ -92,8 +92,26 @@ observationsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+ * FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+ */
+GLONASS_FREQUENCY_NUMBER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+ * channel); false (the default) means absent.
+ */
+HAS_GLONASS_FREQUENCY_NUMBER():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startgnssSatObs(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(9);
 }
 
 static addGnssSatId(builder:flatbuffers.Builder, GNSS_SAT_IDOffset:flatbuffers.Offset) {
@@ -136,12 +154,20 @@ static startObservationsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
+static addGlonassFrequencyNumber(builder:flatbuffers.Builder, GLONASS_FREQUENCY_NUMBER:number) {
+  builder.addFieldInt8(7, GLONASS_FREQUENCY_NUMBER, 0);
+}
+
+static addHasGlonassFrequencyNumber(builder:flatbuffers.Builder, HAS_GLONASS_FREQUENCY_NUMBER:boolean) {
+  builder.addFieldInt8(8, +HAS_GLONASS_FREQUENCY_NUMBER, +false);
+}
+
 static endgnssSatObs(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static creategnssSatObs(builder:flatbuffers.Builder, GNSS_SAT_IDOffset:flatbuffers.Offset, CONSTELLATION:gnssConstellation, ELEVATION:number, AZIMUTH:number, TRACKING_STATUS:number, AGC_STATE:number, OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static creategnssSatObs(builder:flatbuffers.Builder, GNSS_SAT_IDOffset:flatbuffers.Offset, CONSTELLATION:gnssConstellation, ELEVATION:number, AZIMUTH:number, TRACKING_STATUS:number, AGC_STATE:number, OBSERVATIONSOffset:flatbuffers.Offset, GLONASS_FREQUENCY_NUMBER:number, HAS_GLONASS_FREQUENCY_NUMBER:boolean):flatbuffers.Offset {
   gnssSatObs.startgnssSatObs(builder);
   gnssSatObs.addGnssSatId(builder, GNSS_SAT_IDOffset);
   gnssSatObs.addConstellation(builder, CONSTELLATION);
@@ -150,6 +176,8 @@ static creategnssSatObs(builder:flatbuffers.Builder, GNSS_SAT_IDOffset:flatbuffe
   gnssSatObs.addTrackingStatus(builder, TRACKING_STATUS);
   gnssSatObs.addAgcState(builder, AGC_STATE);
   gnssSatObs.addObservations(builder, OBSERVATIONSOffset);
+  gnssSatObs.addGlonassFrequencyNumber(builder, GLONASS_FREQUENCY_NUMBER);
+  gnssSatObs.addHasGlonassFrequencyNumber(builder, HAS_GLONASS_FREQUENCY_NUMBER);
   return gnssSatObs.endgnssSatObs(builder);
 }
 
@@ -161,7 +189,9 @@ unpack(): gnssSatObsT {
     this.AZIMUTH(),
     this.TRACKING_STATUS(),
     this.AGC_STATE(),
-    this.bb!.createObjList<gnssObsData, gnssObsDataT>(this.OBSERVATIONS.bind(this), this.observationsLength())
+    this.bb!.createObjList<gnssObsData, gnssObsDataT>(this.OBSERVATIONS.bind(this), this.observationsLength()),
+    this.GLONASS_FREQUENCY_NUMBER(),
+    this.HAS_GLONASS_FREQUENCY_NUMBER()
   );
 }
 
@@ -174,6 +204,8 @@ unpackTo(_o: gnssSatObsT): void {
   _o.TRACKING_STATUS = this.TRACKING_STATUS();
   _o.AGC_STATE = this.AGC_STATE();
   _o.OBSERVATIONS = this.bb!.createObjList<gnssObsData, gnssObsDataT>(this.OBSERVATIONS.bind(this), this.observationsLength());
+  _o.GLONASS_FREQUENCY_NUMBER = this.GLONASS_FREQUENCY_NUMBER();
+  _o.HAS_GLONASS_FREQUENCY_NUMBER = this.HAS_GLONASS_FREQUENCY_NUMBER();
 }
 }
 
@@ -185,7 +217,9 @@ constructor(
   public AZIMUTH: number = 0.0,
   public TRACKING_STATUS: number = 0,
   public AGC_STATE: number = 0,
-  public OBSERVATIONS: (gnssObsDataT)[] = []
+  public OBSERVATIONS: (gnssObsDataT)[] = [],
+  public GLONASS_FREQUENCY_NUMBER: number = 0,
+  public HAS_GLONASS_FREQUENCY_NUMBER: boolean = false
 ){}
 
 
@@ -200,7 +234,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.AZIMUTH,
     this.TRACKING_STATUS,
     this.AGC_STATE,
-    OBSERVATIONS
+    OBSERVATIONS,
+    this.GLONASS_FREQUENCY_NUMBER,
+    this.HAS_GLONASS_FREQUENCY_NUMBER
   );
 }
 }

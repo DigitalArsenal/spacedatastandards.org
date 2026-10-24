@@ -75,6 +75,17 @@ class ncdContainerFormat(object):
     CCSDS_RDM_KVN = 25
     # CCSDS Reentry Data Message, XML.
     CCSDS_RDM_XML = 26
+    # ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+    # AUX_RESORB and AUX_PREORB).
+    SENTINEL_EOF_XML = 27
+    # NAIF C-kernel: a DAF holding pointing (attitude) segments.
+    NAIF_CK_DAF = 28
+    # NAIF spacecraft clock kernel, text.
+    NAIF_SCLK_KERNEL = 29
+    # RINEX observation file.
+    RINEX_OBS = 30
+    # RINEX navigation file.
+    RINEX_NAV = 31
     # A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
     # which; a producer never reuses a neighbouring member instead.
     PROVIDER_DEFINED = 255

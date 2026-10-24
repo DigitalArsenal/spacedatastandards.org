@@ -118,22 +118,44 @@ class gnssSatObs extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+    /// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+    /**
+     * @return sbyte
+     */
+    public function getGLONASS_FREQUENCY_NUMBER()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : 0;
+    }
+
+    /// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+    /// channel); false (the default) means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_GLONASS_FREQUENCY_NUMBER()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startgnssSatObs(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return gnssSatObs
      */
-    public static function creategnssSatObs(FlatBufferBuilder $builder, $GNSS_SAT_ID, $CONSTELLATION, $ELEVATION, $AZIMUTH, $TRACKING_STATUS, $AGC_STATE, $OBSERVATIONS)
+    public static function creategnssSatObs(FlatBufferBuilder $builder, $GNSS_SAT_ID, $CONSTELLATION, $ELEVATION, $AZIMUTH, $TRACKING_STATUS, $AGC_STATE, $OBSERVATIONS, $GLONASS_FREQUENCY_NUMBER, $HAS_GLONASS_FREQUENCY_NUMBER)
     {
-        $builder->startObject(7);
+        $builder->startObject(9);
         self::addGNSS_SAT_ID($builder, $GNSS_SAT_ID);
         self::addCONSTELLATION($builder, $CONSTELLATION);
         self::addELEVATION($builder, $ELEVATION);
@@ -141,6 +163,8 @@ class gnssSatObs extends Table
         self::addTRACKING_STATUS($builder, $TRACKING_STATUS);
         self::addAGC_STATE($builder, $AGC_STATE);
         self::addOBSERVATIONS($builder, $OBSERVATIONS);
+        self::addGLONASS_FREQUENCY_NUMBER($builder, $GLONASS_FREQUENCY_NUMBER);
+        self::addHAS_GLONASS_FREQUENCY_NUMBER($builder, $HAS_GLONASS_FREQUENCY_NUMBER);
         $o = $builder->endObject();
         return $o;
     }
@@ -237,6 +261,26 @@ class gnssSatObs extends Table
     public static function startOBSERVATIONSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addGLONASS_FREQUENCY_NUMBER(FlatBufferBuilder $builder, $GLONASS_FREQUENCY_NUMBER)
+    {
+        $builder->addSbyteX(7, $GLONASS_FREQUENCY_NUMBER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_GLONASS_FREQUENCY_NUMBER(FlatBufferBuilder $builder, $HAS_GLONASS_FREQUENCY_NUMBER)
+    {
+        $builder->addBoolX(8, $HAS_GLONASS_FREQUENCY_NUMBER, false);
     }
 
     /**

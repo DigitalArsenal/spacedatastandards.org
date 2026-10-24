@@ -3986,6 +3986,11 @@
         "CCSDS_ACM_XML",
         "CCSDS_RDM_KVN",
         "CCSDS_RDM_XML",
+        "SENTINEL_EOF_XML",
+        "NAIF_CK_DAF",
+        "NAIF_SCLK_KERNEL",
+        "RINEX_OBS",
+        "RINEX_NAV",
         "PROVIDER_DEFINED"
       ],
       "x-flatbuffer-type": "enum",
@@ -4097,6 +4102,26 @@
         "CCSDS_RDM_XML": {
           "value": 26,
           "description": "CCSDS Reentry Data Message, XML."
+        },
+        "SENTINEL_EOF_XML": {
+          "value": 27,
+          "description": "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+        },
+        "NAIF_CK_DAF": {
+          "value": 28,
+          "description": "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+        },
+        "NAIF_SCLK_KERNEL": {
+          "value": 29,
+          "description": "NAIF spacecraft clock kernel, text."
+        },
+        "RINEX_OBS": {
+          "value": 30,
+          "description": "RINEX observation file."
+        },
+        "RINEX_NAV": {
+          "value": 31,
+          "description": "RINEX navigation file."
         },
         "PROVIDER_DEFINED": {
           "value": 255,
@@ -5494,7 +5519,8 @@
         "SGP4",
         "SGP4XP",
         "DSST",
-        "USM"
+        "USM",
+        "SDNAP"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -5514,6 +5540,10 @@
         "USM": {
           "value": 3,
           "description": "Universal Semianalytical Method"
+        },
+        "SDNAP": {
+          "value": 4,
+          "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
         }
       }
     },
@@ -15083,6 +15113,26 @@
               "value": 26,
               "description": "CCSDS Reentry Data Message, XML."
             },
+            "SENTINEL_EOF_XML": {
+              "value": 27,
+              "description": "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            "NAIF_CK_DAF": {
+              "value": 28,
+              "description": "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            "NAIF_SCLK_KERNEL": {
+              "value": 29,
+              "description": "NAIF spacecraft clock kernel, text."
+            },
+            "RINEX_OBS": {
+              "value": 30,
+              "description": "RINEX observation file."
+            },
+            "RINEX_NAV": {
+              "value": 31,
+              "description": "RINEX navigation file."
+            },
             "PROVIDER_DEFINED": {
               "value": 255,
               "description": "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -15194,6 +15244,44 @@
           "type": "string",
           "description": "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
           "x-flatbuffer-type": "string"
+        },
+        "SELECT_START_TIME": {
+          "type": "string",
+          "description": "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+          "x-flatbuffer-type": "string"
+        },
+        "SELECT_STOP_TIME": {
+          "type": "string",
+          "description": "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+          "x-flatbuffer-type": "string"
+        },
+        "SELECT_SAMPLE_INTERVAL_SECONDS": {
+          "type": "number",
+          "description": "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+          "x-flatbuffer-type": "double"
+        },
+        "SELECT_SATELLITE_SYSTEMS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SELECT_OBSERVATION_CODES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SELECT_CLOCK_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+          "x-flatbuffer-type": "int"
         }
       },
       "additionalProperties": false
@@ -21585,6 +21673,10 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
+            },
+            "SDNAP": {
+              "value": 4,
+              "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         }
@@ -21777,12 +21869,12 @@
         },
         "CENTER_NAME": {
           "type": "string",
-          "description": "Center Name (e.g. EARTH, MARS)",
+          "description": "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
           "x-flatbuffer-type": "string"
         },
         "REFERENCE_FRAME": {
           "$ref": "#/definitions/RFM",
-          "description": "Reference Frame\nTypically TEMEOFDATE",
+          "description": "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
           "x-flatbuffer-type": "RFM"
         },
         "REFERENCE_FRAME_EPOCH": {
@@ -21896,6 +21988,10 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
+            },
+            "SDNAP": {
+              "value": 4,
+              "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           },
           "x-flatbuffer-default": "SGP4"
@@ -22030,7 +22126,7 @@
         },
         "BSTAR": {
           "type": "number",
-          "description": "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+          "description": "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DOT": {
@@ -22040,7 +22136,7 @@
         },
         "MEAN_MOTION_DDOT": {
           "type": "number",
-          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
           "x-flatbuffer-type": "double"
         },
         "COV_REFERENCE_FRAME": {

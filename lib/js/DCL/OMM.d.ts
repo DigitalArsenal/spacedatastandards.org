@@ -41,13 +41,26 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
     OBJECT_ID(): string | null;
     OBJECT_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
-     * Center Name (e.g. EARTH, MARS)
+     * Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+     * SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+     * Earth's reach states its elements about that center; GM is then the
+     * center's gravitational parameter, and an open orbit has ECCENTRICITY above
+     * 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+     * MEAN_ANOMALY.
      */
     CENTER_NAME(): string | null;
     CENTER_NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Reference Frame
      * Typically TEMEOFDATE
+     * The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+     * RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+     * names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+     * (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+     * ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+     * the Earth-Moon barycenter (BARYCENTRE) or the libration point
+     * (LIBRATION_POINT with its primary and secondary). No other frame value is
+     * needed for it.
      */
     REFERENCE_FRAME(obj?: RFM): RFM | null;
     /**
@@ -151,7 +164,8 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      */
     REV_AT_EPOCH(): number;
     /**
-     * BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+     * BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+     * signed effective ballistic coefficient B_eff) [C]
      */
     BSTAR(): number;
     /**
@@ -159,7 +173,7 @@ export declare class OMM implements flatbuffers.IUnpackableObject<OMMT> {
      */
     MEAN_MOTION_DOT(): number;
     /**
-     * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+     * MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
      */
     MEAN_MOTION_DDOT(): number;
     /**

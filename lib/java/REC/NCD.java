@@ -164,6 +164,46 @@ public final class NCD extends com.google.flatbuffers.Table {
   public String SOURCE_CID() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SOURCE_CIDAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer SOURCE_CIDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * A reader's REQUEST, carried in the descriptor that frames the file so that
+   * no option travels outside a typed record. Start of the inclusive window to
+   * read, ISO 8601, on the container's own time scale. Default empty (from the
+   * start of the container).
+   */
+  public String SELECT_START_TIME() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SELECT_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer SELECT_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * End of the inclusive window to read, ISO 8601, on the container's own time
+   * scale. Default empty (to the end of the container).
+   */
+  public String SELECT_STOP_TIME() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SELECT_STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer SELECT_STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+   */
+  public double SELECT_SAMPLE_INTERVAL_SECONDS() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Satellite systems to read, as the RINEX letters G R E C J I S. Default
+   * empty (every system the container holds).
+   */
+  public String SELECT_SATELLITE_SYSTEMS(int j) { int o = __offset(50); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SELECT_SATELLITE_SYSTEMSLength() { int o = __offset(50); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector selectSatelliteSystemsVector() { return selectSatelliteSystemsVector(new StringVector()); }
+  public StringVector selectSatelliteSystemsVector(StringVector obj) { int o = __offset(50); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Observation codes to read (C1C, L1C, ...). Default empty (every code).
+   */
+  public String SELECT_OBSERVATION_CODES(int j) { int o = __offset(52); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SELECT_OBSERVATION_CODESLength() { int o = __offset(52); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector selectObservationCodesVector() { return selectObservationCodesVector(new StringVector()); }
+  public StringVector selectObservationCodesVector(StringVector obj) { int o = __offset(52); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+   * by the instrument id. Default 0.
+   */
+  public int SELECT_CLOCK_ID() { int o = __offset(54); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
 
   public static int createNCD(FlatBufferBuilder builder,
       int FORMAT,
@@ -185,9 +225,21 @@ public final class NCD extends com.google.flatbuffers.Table {
       int STOP_TIMEOffset,
       long SOURCE_BYTE_LENGTH,
       int SOURCE_SHA256Offset,
-      int SOURCE_CIDOffset) {
-    builder.startTable(20);
+      int SOURCE_CIDOffset,
+      int SELECT_START_TIMEOffset,
+      int SELECT_STOP_TIMEOffset,
+      double SELECT_SAMPLE_INTERVAL_SECONDS,
+      int SELECT_SATELLITE_SYSTEMSOffset,
+      int SELECT_OBSERVATION_CODESOffset,
+      int SELECT_CLOCK_ID) {
+    builder.startTable(26);
+    NCD.addSelectSampleIntervalSeconds(builder, SELECT_SAMPLE_INTERVAL_SECONDS);
     NCD.addSourceByteLength(builder, SOURCE_BYTE_LENGTH);
+    NCD.addSelectClockId(builder, SELECT_CLOCK_ID);
+    NCD.addSelectObservationCodes(builder, SELECT_OBSERVATION_CODESOffset);
+    NCD.addSelectSatelliteSystems(builder, SELECT_SATELLITE_SYSTEMSOffset);
+    NCD.addSelectStopTime(builder, SELECT_STOP_TIMEOffset);
+    NCD.addSelectStartTime(builder, SELECT_START_TIMEOffset);
     NCD.addSourceCid(builder, SOURCE_CIDOffset);
     NCD.addSourceSha256(builder, SOURCE_SHA256Offset);
     NCD.addStopTime(builder, STOP_TIMEOffset);
@@ -210,7 +262,7 @@ public final class NCD extends com.google.flatbuffers.Table {
     return NCD.endNCD(builder);
   }
 
-  public static void startNCD(FlatBufferBuilder builder) { builder.startTable(20); }
+  public static void startNCD(FlatBufferBuilder builder) { builder.startTable(26); }
   public static void addFormat(FlatBufferBuilder builder, int FORMAT) { builder.addByte(0, (byte) FORMAT, (byte) 0); }
   public static void addProviderDefinedFormatName(FlatBufferBuilder builder, int PROVIDER_DEFINED_FORMAT_NAMEOffset) { builder.addOffset(1, PROVIDER_DEFINED_FORMAT_NAMEOffset, 0); }
   public static void addFormatVersion(FlatBufferBuilder builder, int FORMAT_VERSIONOffset) { builder.addOffset(2, FORMAT_VERSIONOffset, 0); }
@@ -235,6 +287,16 @@ public final class NCD extends com.google.flatbuffers.Table {
   public static void addSourceByteLength(FlatBufferBuilder builder, long SOURCE_BYTE_LENGTH) { builder.addLong(17, SOURCE_BYTE_LENGTH, 0L); }
   public static void addSourceSha256(FlatBufferBuilder builder, int SOURCE_SHA256Offset) { builder.addOffset(18, SOURCE_SHA256Offset, 0); }
   public static void addSourceCid(FlatBufferBuilder builder, int SOURCE_CIDOffset) { builder.addOffset(19, SOURCE_CIDOffset, 0); }
+  public static void addSelectStartTime(FlatBufferBuilder builder, int SELECT_START_TIMEOffset) { builder.addOffset(20, SELECT_START_TIMEOffset, 0); }
+  public static void addSelectStopTime(FlatBufferBuilder builder, int SELECT_STOP_TIMEOffset) { builder.addOffset(21, SELECT_STOP_TIMEOffset, 0); }
+  public static void addSelectSampleIntervalSeconds(FlatBufferBuilder builder, double SELECT_SAMPLE_INTERVAL_SECONDS) { builder.addDouble(22, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0); }
+  public static void addSelectSatelliteSystems(FlatBufferBuilder builder, int SELECT_SATELLITE_SYSTEMSOffset) { builder.addOffset(23, SELECT_SATELLITE_SYSTEMSOffset, 0); }
+  public static int createSelectSatelliteSystemsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSelectSatelliteSystemsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSelectObservationCodes(FlatBufferBuilder builder, int SELECT_OBSERVATION_CODESOffset) { builder.addOffset(24, SELECT_OBSERVATION_CODESOffset, 0); }
+  public static int createSelectObservationCodesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSelectObservationCodesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSelectClockId(FlatBufferBuilder builder, int SELECT_CLOCK_ID) { builder.addInt(25, SELECT_CLOCK_ID, 0); }
   public static int endNCD(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

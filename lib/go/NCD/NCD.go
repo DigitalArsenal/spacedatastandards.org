@@ -436,8 +436,146 @@ func (rcv *NCD) SourceCid() []byte {
 
 /// Content identifier of the described container when it is addressed by
 /// content rather than by path.
+/// A reader's REQUEST, carried in the descriptor that frames the file so that
+/// no option travels outside a typed record. Start of the inclusive window to
+/// read, ISO 8601, on the container's own time scale. Default empty (from the
+/// start of the container).
+func (rcv *NCD) SELECT_START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *NCD) SelectStartTime() []byte {
+	return rcv.SELECT_START_TIME()
+}
+
+/// A reader's REQUEST, carried in the descriptor that frames the file so that
+/// no option travels outside a typed record. Start of the inclusive window to
+/// read, ISO 8601, on the container's own time scale. Default empty (from the
+/// start of the container).
+/// End of the inclusive window to read, ISO 8601, on the container's own time
+/// scale. Default empty (to the end of the container).
+func (rcv *NCD) SELECT_STOP_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *NCD) SelectStopTime() []byte {
+	return rcv.SELECT_STOP_TIME()
+}
+
+/// End of the inclusive window to read, ISO 8601, on the container's own time
+/// scale. Default empty (to the end of the container).
+/// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+func (rcv *NCD) SELECT_SAMPLE_INTERVAL_SECONDS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+func (rcv *NCD) SelectSampleIntervalSeconds() float64 {
+	return rcv.SELECT_SAMPLE_INTERVAL_SECONDS()
+}
+
+/// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+func (rcv *NCD) MutateSELECT_SAMPLE_INTERVAL_SECONDS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+func (rcv *NCD) MutateSelectSampleIntervalSeconds(n float64) bool {
+	return rcv.MutateSELECT_SAMPLE_INTERVAL_SECONDS(n)
+}
+
+/// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+/// empty (every system the container holds).
+func (rcv *NCD) SELECT_SATELLITE_SYSTEMS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *NCD) SelectSatelliteSystems(j int) []byte {
+	return rcv.SELECT_SATELLITE_SYSTEMS(j)
+}
+
+func (rcv *NCD) SELECT_SATELLITE_SYSTEMSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *NCD) SelectSatelliteSystemsLength() int {
+	return rcv.SELECT_SATELLITE_SYSTEMSLength()
+}
+
+/// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+/// empty (every system the container holds).
+/// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+func (rcv *NCD) SELECT_OBSERVATION_CODES(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *NCD) SelectObservationCodes(j int) []byte {
+	return rcv.SELECT_OBSERVATION_CODES(j)
+}
+
+func (rcv *NCD) SELECT_OBSERVATION_CODESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *NCD) SelectObservationCodesLength() int {
+	return rcv.SELECT_OBSERVATION_CODESLength()
+}
+
+/// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+/// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+/// by the instrument id. Default 0.
+func (rcv *NCD) SELECT_CLOCK_ID() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *NCD) SelectClockId() int32 {
+	return rcv.SELECT_CLOCK_ID()
+}
+
+/// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+/// by the instrument id. Default 0.
+func (rcv *NCD) MutateSELECT_CLOCK_ID(n int32) bool {
+	return rcv._tab.MutateInt32Slot(54, n)
+}
+
+func (rcv *NCD) MutateSelectClockId(n int32) bool {
+	return rcv.MutateSELECT_CLOCK_ID(n)
+}
+
 func NCDStart(builder *flatbuffers.Builder) {
-	builder.StartObject(20)
+	builder.StartObject(26)
 }
 func NCDAddFORMAT(builder *flatbuffers.Builder, FORMAT ncdContainerFormat) {
 	builder.PrependByteSlot(0, byte(FORMAT), 0)
@@ -570,6 +708,54 @@ func NCDAddSOURCE_CID(builder *flatbuffers.Builder, SOURCE_CID flatbuffers.UOffs
 }
 func NCDAddSourceCid(builder *flatbuffers.Builder, SOURCE_CID flatbuffers.UOffsetT) {
 	NCDAddSOURCE_CID(builder, SOURCE_CID)
+}
+func NCDAddSELECT_START_TIME(builder *flatbuffers.Builder, SELECT_START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(SELECT_START_TIME), 0)
+}
+func NCDAddSelectStartTime(builder *flatbuffers.Builder, SELECT_START_TIME flatbuffers.UOffsetT) {
+	NCDAddSELECT_START_TIME(builder, SELECT_START_TIME)
+}
+func NCDAddSELECT_STOP_TIME(builder *flatbuffers.Builder, SELECT_STOP_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(SELECT_STOP_TIME), 0)
+}
+func NCDAddSelectStopTime(builder *flatbuffers.Builder, SELECT_STOP_TIME flatbuffers.UOffsetT) {
+	NCDAddSELECT_STOP_TIME(builder, SELECT_STOP_TIME)
+}
+func NCDAddSELECT_SAMPLE_INTERVAL_SECONDS(builder *flatbuffers.Builder, SELECT_SAMPLE_INTERVAL_SECONDS float64) {
+	builder.PrependFloat64Slot(22, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0)
+}
+func NCDAddSelectSampleIntervalSeconds(builder *flatbuffers.Builder, SELECT_SAMPLE_INTERVAL_SECONDS float64) {
+	NCDAddSELECT_SAMPLE_INTERVAL_SECONDS(builder, SELECT_SAMPLE_INTERVAL_SECONDS)
+}
+func NCDAddSELECT_SATELLITE_SYSTEMS(builder *flatbuffers.Builder, SELECT_SATELLITE_SYSTEMS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(SELECT_SATELLITE_SYSTEMS), 0)
+}
+func NCDAddSelectSatelliteSystems(builder *flatbuffers.Builder, SELECT_SATELLITE_SYSTEMS flatbuffers.UOffsetT) {
+	NCDAddSELECT_SATELLITE_SYSTEMS(builder, SELECT_SATELLITE_SYSTEMS)
+}
+func NCDStartSELECT_SATELLITE_SYSTEMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func NCDStartSelectSatelliteSystemsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return NCDStartSELECT_SATELLITE_SYSTEMSVector(builder, numElems)
+}
+func NCDAddSELECT_OBSERVATION_CODES(builder *flatbuffers.Builder, SELECT_OBSERVATION_CODES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(SELECT_OBSERVATION_CODES), 0)
+}
+func NCDAddSelectObservationCodes(builder *flatbuffers.Builder, SELECT_OBSERVATION_CODES flatbuffers.UOffsetT) {
+	NCDAddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODES)
+}
+func NCDStartSELECT_OBSERVATION_CODESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func NCDStartSelectObservationCodesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return NCDStartSELECT_OBSERVATION_CODESVector(builder, numElems)
+}
+func NCDAddSELECT_CLOCK_ID(builder *flatbuffers.Builder, SELECT_CLOCK_ID int32) {
+	builder.PrependInt32Slot(25, SELECT_CLOCK_ID, 0)
+}
+func NCDAddSelectClockId(builder *flatbuffers.Builder, SELECT_CLOCK_ID int32) {
+	NCDAddSELECT_CLOCK_ID(builder, SELECT_CLOCK_ID)
 }
 func NCDEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

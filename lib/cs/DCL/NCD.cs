@@ -155,6 +155,38 @@ public struct NCD : IFlatbufferObject
   public ArraySegment<byte>? GetSOURCE_CIDBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetSOURCE_CIDArray() { return __p.__vector_as_array<byte>(42); }
+  /// A reader's REQUEST, carried in the descriptor that frames the file so that
+  /// no option travels outside a typed record. Start of the inclusive window to
+  /// read, ISO 8601, on the container's own time scale. Default empty (from the
+  /// start of the container).
+  public string SELECT_START_TIME { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSELECT_START_TIMEBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetSELECT_START_TIMEBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetSELECT_START_TIMEArray() { return __p.__vector_as_array<byte>(44); }
+  /// End of the inclusive window to read, ISO 8601, on the container's own time
+  /// scale. Default empty (to the end of the container).
+  public string SELECT_STOP_TIME { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSELECT_STOP_TIMEBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetSELECT_STOP_TIMEBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetSELECT_STOP_TIMEArray() { return __p.__vector_as_array<byte>(46); }
+  /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+  public double SELECT_SAMPLE_INTERVAL_SECONDS { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+  /// empty (every system the container holds).
+  public string SELECT_SATELLITE_SYSTEMS(int j) { int o = __p.__offset(50); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SELECT_SATELLITE_SYSTEMSLength { get { int o = __p.__offset(50); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+  public string SELECT_OBSERVATION_CODES(int j) { int o = __p.__offset(52); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SELECT_OBSERVATION_CODESLength { get { int o = __p.__offset(52); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+  /// by the instrument id. Default 0.
+  public int SELECT_CLOCK_ID { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
   public static Offset<NCD> CreateNCD(FlatBufferBuilder builder,
       ncdContainerFormat FORMAT = ncdContainerFormat.UNSPECIFIED,
@@ -176,9 +208,21 @@ public struct NCD : IFlatbufferObject
       StringOffset STOP_TIMEOffset = default(StringOffset),
       ulong SOURCE_BYTE_LENGTH = 0,
       StringOffset SOURCE_SHA256Offset = default(StringOffset),
-      StringOffset SOURCE_CIDOffset = default(StringOffset)) {
-    builder.StartTable(20);
+      StringOffset SOURCE_CIDOffset = default(StringOffset),
+      StringOffset SELECT_START_TIMEOffset = default(StringOffset),
+      StringOffset SELECT_STOP_TIMEOffset = default(StringOffset),
+      double SELECT_SAMPLE_INTERVAL_SECONDS = 0.0,
+      VectorOffset SELECT_SATELLITE_SYSTEMSOffset = default(VectorOffset),
+      VectorOffset SELECT_OBSERVATION_CODESOffset = default(VectorOffset),
+      int SELECT_CLOCK_ID = 0) {
+    builder.StartTable(26);
+    NCD.AddSELECT_SAMPLE_INTERVAL_SECONDS(builder, SELECT_SAMPLE_INTERVAL_SECONDS);
     NCD.AddSOURCE_BYTE_LENGTH(builder, SOURCE_BYTE_LENGTH);
+    NCD.AddSELECT_CLOCK_ID(builder, SELECT_CLOCK_ID);
+    NCD.AddSELECT_OBSERVATION_CODES(builder, SELECT_OBSERVATION_CODESOffset);
+    NCD.AddSELECT_SATELLITE_SYSTEMS(builder, SELECT_SATELLITE_SYSTEMSOffset);
+    NCD.AddSELECT_STOP_TIME(builder, SELECT_STOP_TIMEOffset);
+    NCD.AddSELECT_START_TIME(builder, SELECT_START_TIMEOffset);
     NCD.AddSOURCE_CID(builder, SOURCE_CIDOffset);
     NCD.AddSOURCE_SHA256(builder, SOURCE_SHA256Offset);
     NCD.AddSTOP_TIME(builder, STOP_TIMEOffset);
@@ -201,7 +245,7 @@ public struct NCD : IFlatbufferObject
     return NCD.EndNCD(builder);
   }
 
-  public static void StartNCD(FlatBufferBuilder builder) { builder.StartTable(20); }
+  public static void StartNCD(FlatBufferBuilder builder) { builder.StartTable(26); }
   public static void AddFORMAT(FlatBufferBuilder builder, ncdContainerFormat FORMAT) { builder.AddByte(0, (byte)FORMAT, 0); }
   public static void AddPROVIDER_DEFINED_FORMAT_NAME(FlatBufferBuilder builder, StringOffset PROVIDER_DEFINED_FORMAT_NAMEOffset) { builder.AddOffset(1, PROVIDER_DEFINED_FORMAT_NAMEOffset.Value, 0); }
   public static void AddFORMAT_VERSION(FlatBufferBuilder builder, StringOffset FORMAT_VERSIONOffset) { builder.AddOffset(2, FORMAT_VERSIONOffset.Value, 0); }
@@ -232,6 +276,22 @@ public struct NCD : IFlatbufferObject
   public static void AddSOURCE_BYTE_LENGTH(FlatBufferBuilder builder, ulong SOURCE_BYTE_LENGTH) { builder.AddUlong(17, SOURCE_BYTE_LENGTH, 0); }
   public static void AddSOURCE_SHA256(FlatBufferBuilder builder, StringOffset SOURCE_SHA256Offset) { builder.AddOffset(18, SOURCE_SHA256Offset.Value, 0); }
   public static void AddSOURCE_CID(FlatBufferBuilder builder, StringOffset SOURCE_CIDOffset) { builder.AddOffset(19, SOURCE_CIDOffset.Value, 0); }
+  public static void AddSELECT_START_TIME(FlatBufferBuilder builder, StringOffset SELECT_START_TIMEOffset) { builder.AddOffset(20, SELECT_START_TIMEOffset.Value, 0); }
+  public static void AddSELECT_STOP_TIME(FlatBufferBuilder builder, StringOffset SELECT_STOP_TIMEOffset) { builder.AddOffset(21, SELECT_STOP_TIMEOffset.Value, 0); }
+  public static void AddSELECT_SAMPLE_INTERVAL_SECONDS(FlatBufferBuilder builder, double SELECT_SAMPLE_INTERVAL_SECONDS) { builder.AddDouble(22, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0); }
+  public static void AddSELECT_SATELLITE_SYSTEMS(FlatBufferBuilder builder, VectorOffset SELECT_SATELLITE_SYSTEMSOffset) { builder.AddOffset(23, SELECT_SATELLITE_SYSTEMSOffset.Value, 0); }
+  public static VectorOffset CreateSELECT_SATELLITE_SYSTEMSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSELECT_SATELLITE_SYSTEMSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECT_SATELLITE_SYSTEMSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECT_SATELLITE_SYSTEMSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSELECT_SATELLITE_SYSTEMSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSELECT_OBSERVATION_CODES(FlatBufferBuilder builder, VectorOffset SELECT_OBSERVATION_CODESOffset) { builder.AddOffset(24, SELECT_OBSERVATION_CODESOffset.Value, 0); }
+  public static VectorOffset CreateSELECT_OBSERVATION_CODESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSELECT_OBSERVATION_CODESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECT_OBSERVATION_CODESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSELECT_OBSERVATION_CODESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSELECT_OBSERVATION_CODESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSELECT_CLOCK_ID(FlatBufferBuilder builder, int SELECT_CLOCK_ID) { builder.AddInt(25, SELECT_CLOCK_ID, 0); }
   public static Offset<NCD> EndNCD(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<NCD>(o);
@@ -266,6 +326,14 @@ public struct NCD : IFlatbufferObject
     _o.SOURCE_BYTE_LENGTH = this.SOURCE_BYTE_LENGTH;
     _o.SOURCE_SHA256 = this.SOURCE_SHA256;
     _o.SOURCE_CID = this.SOURCE_CID;
+    _o.SELECT_START_TIME = this.SELECT_START_TIME;
+    _o.SELECT_STOP_TIME = this.SELECT_STOP_TIME;
+    _o.SELECT_SAMPLE_INTERVAL_SECONDS = this.SELECT_SAMPLE_INTERVAL_SECONDS;
+    _o.SELECT_SATELLITE_SYSTEMS = new List<string>();
+    for (var _j = 0; _j < this.SELECT_SATELLITE_SYSTEMSLength; ++_j) {_o.SELECT_SATELLITE_SYSTEMS.Add(this.SELECT_SATELLITE_SYSTEMS(_j));}
+    _o.SELECT_OBSERVATION_CODES = new List<string>();
+    for (var _j = 0; _j < this.SELECT_OBSERVATION_CODESLength; ++_j) {_o.SELECT_OBSERVATION_CODES.Add(this.SELECT_OBSERVATION_CODES(_j));}
+    _o.SELECT_CLOCK_ID = this.SELECT_CLOCK_ID;
   }
   public static Offset<NCD> Pack(FlatBufferBuilder builder, NCDT _o) {
     if (_o == null) return default(Offset<NCD>);
@@ -296,6 +364,20 @@ public struct NCD : IFlatbufferObject
     var _STOP_TIME = _o.STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.STOP_TIME);
     var _SOURCE_SHA256 = _o.SOURCE_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_SHA256);
     var _SOURCE_CID = _o.SOURCE_CID == null ? default(StringOffset) : builder.CreateString(_o.SOURCE_CID);
+    var _SELECT_START_TIME = _o.SELECT_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.SELECT_START_TIME);
+    var _SELECT_STOP_TIME = _o.SELECT_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.SELECT_STOP_TIME);
+    var _SELECT_SATELLITE_SYSTEMS = default(VectorOffset);
+    if (_o.SELECT_SATELLITE_SYSTEMS != null) {
+      var __SELECT_SATELLITE_SYSTEMS = new StringOffset[_o.SELECT_SATELLITE_SYSTEMS.Count];
+      for (var _j = 0; _j < __SELECT_SATELLITE_SYSTEMS.Length; ++_j) { __SELECT_SATELLITE_SYSTEMS[_j] = builder.CreateString(_o.SELECT_SATELLITE_SYSTEMS[_j]); }
+      _SELECT_SATELLITE_SYSTEMS = CreateSELECT_SATELLITE_SYSTEMSVector(builder, __SELECT_SATELLITE_SYSTEMS);
+    }
+    var _SELECT_OBSERVATION_CODES = default(VectorOffset);
+    if (_o.SELECT_OBSERVATION_CODES != null) {
+      var __SELECT_OBSERVATION_CODES = new StringOffset[_o.SELECT_OBSERVATION_CODES.Count];
+      for (var _j = 0; _j < __SELECT_OBSERVATION_CODES.Length; ++_j) { __SELECT_OBSERVATION_CODES[_j] = builder.CreateString(_o.SELECT_OBSERVATION_CODES[_j]); }
+      _SELECT_OBSERVATION_CODES = CreateSELECT_OBSERVATION_CODESVector(builder, __SELECT_OBSERVATION_CODES);
+    }
     return CreateNCD(
       builder,
       _o.FORMAT,
@@ -317,7 +399,13 @@ public struct NCD : IFlatbufferObject
       _STOP_TIME,
       _o.SOURCE_BYTE_LENGTH,
       _SOURCE_SHA256,
-      _SOURCE_CID);
+      _SOURCE_CID,
+      _SELECT_START_TIME,
+      _SELECT_STOP_TIME,
+      _o.SELECT_SAMPLE_INTERVAL_SECONDS,
+      _SELECT_SATELLITE_SYSTEMS,
+      _SELECT_OBSERVATION_CODES,
+      _o.SELECT_CLOCK_ID);
   }
 }
 
@@ -343,6 +431,12 @@ public class NCDT
   public ulong SOURCE_BYTE_LENGTH { get; set; }
   public string SOURCE_SHA256 { get; set; }
   public string SOURCE_CID { get; set; }
+  public string SELECT_START_TIME { get; set; }
+  public string SELECT_STOP_TIME { get; set; }
+  public double SELECT_SAMPLE_INTERVAL_SECONDS { get; set; }
+  public List<string> SELECT_SATELLITE_SYSTEMS { get; set; }
+  public List<string> SELECT_OBSERVATION_CODES { get; set; }
+  public int SELECT_CLOCK_ID { get; set; }
 
   public NCDT() {
     this.FORMAT = ncdContainerFormat.UNSPECIFIED;
@@ -365,6 +459,12 @@ public class NCDT
     this.SOURCE_BYTE_LENGTH = 0;
     this.SOURCE_SHA256 = null;
     this.SOURCE_CID = null;
+    this.SELECT_START_TIME = null;
+    this.SELECT_STOP_TIME = null;
+    this.SELECT_SAMPLE_INTERVAL_SECONDS = 0.0;
+    this.SELECT_SATELLITE_SYSTEMS = null;
+    this.SELECT_OBSERVATION_CODES = null;
+    this.SELECT_CLOCK_ID = 0;
   }
   public static NCDT DeserializeFromBinary(byte[] fbBuffer) {
     return NCD.GetRootAsNCD(new ByteBuffer(fbBuffer)).UnPack();
@@ -402,6 +502,12 @@ static public class NCDVerify
       && verifier.VerifyField(tablePos, 38 /*SOURCE_BYTE_LENGTH*/, 8 /*ulong*/, 8, false)
       && verifier.VerifyString(tablePos, 40 /*SOURCE_SHA256*/, false)
       && verifier.VerifyString(tablePos, 42 /*SOURCE_CID*/, false)
+      && verifier.VerifyString(tablePos, 44 /*SELECT_START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 46 /*SELECT_STOP_TIME*/, false)
+      && verifier.VerifyField(tablePos, 48 /*SELECT_SAMPLE_INTERVAL_SECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 50 /*SELECT_SATELLITE_SYSTEMS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 52 /*SELECT_OBSERVATION_CODES*/, false)
+      && verifier.VerifyField(tablePos, 54 /*SELECT_CLOCK_ID*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

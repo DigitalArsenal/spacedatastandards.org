@@ -151,8 +151,44 @@ APOAPSIS_ALTITUDE_UNCERTAINTY_M():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+ * HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+ */
+SEMI_MAJOR_AXIS_UNCERTAINTY_M():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+ * default) means absent, and a consumer applies its vehicle-class default.
+ */
+HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+ * HAS_INCLINATION_UNCERTAINTY_DEG.
+ */
+INCLINATION_UNCERTAINTY_DEG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+ * means absent, and a consumer applies its vehicle-class default.
+ */
+HAS_INCLINATION_UNCERTAINTY_DEG():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
 static startlamInsertionOrbit(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(19);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
@@ -215,12 +251,28 @@ static addApoapsisAltitudeUncertaintyM(builder:flatbuffers.Builder, APOAPSIS_ALT
   builder.addFieldFloat64(14, APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0);
 }
 
+static addSemiMajorAxisUncertaintyM(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M:number) {
+  builder.addFieldFloat64(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0);
+}
+
+static addHasSemiMajorAxisUncertaintyM(builder:flatbuffers.Builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M:boolean) {
+  builder.addFieldInt8(16, +HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, +false);
+}
+
+static addInclinationUncertaintyDeg(builder:flatbuffers.Builder, INCLINATION_UNCERTAINTY_DEG:number) {
+  builder.addFieldFloat64(17, INCLINATION_UNCERTAINTY_DEG, 0.0);
+}
+
+static addHasInclinationUncertaintyDeg(builder:flatbuffers.Builder, HAS_INCLINATION_UNCERTAINTY_DEG:boolean) {
+  builder.addFieldInt8(18, +HAS_INCLINATION_UNCERTAINTY_DEG, +false);
+}
+
 static endlamInsertionOrbit(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createlamInsertionOrbit(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, TIME_FROM_LAUNCH_S:number, REF_FRAMEOffset:flatbuffers.Offset, SEMI_MAJOR_AXIS_M:number, ECCENTRICITY:number, INCLINATION_DEG:number, RAAN_DEG:number, ARGUMENT_OF_PERIAPSIS_DEG:number, ARGUMENT_OF_LATITUDE_DEG:number, PERIAPSIS_ALTITUDE_M:number, APOAPSIS_ALTITUDE_M:number, RAAN_UNCERTAINTY_DEG:number, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG:number, PERIAPSIS_ALTITUDE_UNCERTAINTY_M:number, APOAPSIS_ALTITUDE_UNCERTAINTY_M:number):flatbuffers.Offset {
+static createlamInsertionOrbit(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset, TIME_FROM_LAUNCH_S:number, REF_FRAMEOffset:flatbuffers.Offset, SEMI_MAJOR_AXIS_M:number, ECCENTRICITY:number, INCLINATION_DEG:number, RAAN_DEG:number, ARGUMENT_OF_PERIAPSIS_DEG:number, ARGUMENT_OF_LATITUDE_DEG:number, PERIAPSIS_ALTITUDE_M:number, APOAPSIS_ALTITUDE_M:number, RAAN_UNCERTAINTY_DEG:number, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG:number, PERIAPSIS_ALTITUDE_UNCERTAINTY_M:number, APOAPSIS_ALTITUDE_UNCERTAINTY_M:number, SEMI_MAJOR_AXIS_UNCERTAINTY_M:number, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M:boolean, INCLINATION_UNCERTAINTY_DEG:number, HAS_INCLINATION_UNCERTAINTY_DEG:boolean):flatbuffers.Offset {
   lamInsertionOrbit.startlamInsertionOrbit(builder);
   lamInsertionOrbit.addEpoch(builder, EPOCHOffset);
   lamInsertionOrbit.addTimeFromLaunchS(builder, TIME_FROM_LAUNCH_S);
@@ -237,6 +289,10 @@ static createlamInsertionOrbit(builder:flatbuffers.Builder, EPOCHOffset:flatbuff
   lamInsertionOrbit.addArgumentOfLatitudeUncertaintyDeg(builder, ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG);
   lamInsertionOrbit.addPeriapsisAltitudeUncertaintyM(builder, PERIAPSIS_ALTITUDE_UNCERTAINTY_M);
   lamInsertionOrbit.addApoapsisAltitudeUncertaintyM(builder, APOAPSIS_ALTITUDE_UNCERTAINTY_M);
+  lamInsertionOrbit.addSemiMajorAxisUncertaintyM(builder, SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+  lamInsertionOrbit.addHasSemiMajorAxisUncertaintyM(builder, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M);
+  lamInsertionOrbit.addInclinationUncertaintyDeg(builder, INCLINATION_UNCERTAINTY_DEG);
+  lamInsertionOrbit.addHasInclinationUncertaintyDeg(builder, HAS_INCLINATION_UNCERTAINTY_DEG);
   return lamInsertionOrbit.endlamInsertionOrbit(builder);
 }
 
@@ -256,7 +312,11 @@ unpack(): lamInsertionOrbitT {
     this.RAAN_UNCERTAINTY_DEG(),
     this.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG(),
     this.PERIAPSIS_ALTITUDE_UNCERTAINTY_M(),
-    this.APOAPSIS_ALTITUDE_UNCERTAINTY_M()
+    this.APOAPSIS_ALTITUDE_UNCERTAINTY_M(),
+    this.SEMI_MAJOR_AXIS_UNCERTAINTY_M(),
+    this.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(),
+    this.INCLINATION_UNCERTAINTY_DEG(),
+    this.HAS_INCLINATION_UNCERTAINTY_DEG()
   );
 }
 
@@ -277,6 +337,10 @@ unpackTo(_o: lamInsertionOrbitT): void {
   _o.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG = this.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG();
   _o.PERIAPSIS_ALTITUDE_UNCERTAINTY_M = this.PERIAPSIS_ALTITUDE_UNCERTAINTY_M();
   _o.APOAPSIS_ALTITUDE_UNCERTAINTY_M = this.APOAPSIS_ALTITUDE_UNCERTAINTY_M();
+  _o.SEMI_MAJOR_AXIS_UNCERTAINTY_M = this.SEMI_MAJOR_AXIS_UNCERTAINTY_M();
+  _o.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M = this.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M();
+  _o.INCLINATION_UNCERTAINTY_DEG = this.INCLINATION_UNCERTAINTY_DEG();
+  _o.HAS_INCLINATION_UNCERTAINTY_DEG = this.HAS_INCLINATION_UNCERTAINTY_DEG();
 }
 }
 
@@ -296,7 +360,11 @@ constructor(
   public RAAN_UNCERTAINTY_DEG: number = 0.0,
   public ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: number = 0.0,
   public PERIAPSIS_ALTITUDE_UNCERTAINTY_M: number = 0.0,
-  public APOAPSIS_ALTITUDE_UNCERTAINTY_M: number = 0.0
+  public APOAPSIS_ALTITUDE_UNCERTAINTY_M: number = 0.0,
+  public SEMI_MAJOR_AXIS_UNCERTAINTY_M: number = 0.0,
+  public HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: boolean = false,
+  public INCLINATION_UNCERTAINTY_DEG: number = 0.0,
+  public HAS_INCLINATION_UNCERTAINTY_DEG: boolean = false
 ){}
 
 
@@ -319,7 +387,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RAAN_UNCERTAINTY_DEG,
     this.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG,
     this.PERIAPSIS_ALTITUDE_UNCERTAINTY_M,
-    this.APOAPSIS_ALTITUDE_UNCERTAINTY_M
+    this.APOAPSIS_ALTITUDE_UNCERTAINTY_M,
+    this.SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+    this.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M,
+    this.INCLINATION_UNCERTAINTY_DEG,
+    this.HAS_INCLINATION_UNCERTAINTY_DEG
   );
 }
 }

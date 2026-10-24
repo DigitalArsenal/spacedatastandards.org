@@ -75,6 +75,17 @@ class ncdContainerFormat
     const CCSDS_RDM_KVN = 25;
     /// CCSDS Reentry Data Message, XML.
     const CCSDS_RDM_XML = 26;
+    /// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+    /// AUX_RESORB and AUX_PREORB).
+    const SENTINEL_EOF_XML = 27;
+    /// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+    const NAIF_CK_DAF = 28;
+    /// NAIF spacecraft clock kernel, text.
+    const NAIF_SCLK_KERNEL = 29;
+    /// RINEX observation file.
+    const RINEX_OBS = 30;
+    /// RINEX navigation file.
+    const RINEX_NAV = 31;
     /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
     /// which; a producer never reuses a neighbouring member instead.
     const PROVIDER_DEFINED = 255;
@@ -107,6 +118,11 @@ class ncdContainerFormat
         ncdContainerFormat::CCSDS_ACM_XML=>"CCSDS_ACM_XML",
         ncdContainerFormat::CCSDS_RDM_KVN=>"CCSDS_RDM_KVN",
         ncdContainerFormat::CCSDS_RDM_XML=>"CCSDS_RDM_XML",
+        ncdContainerFormat::SENTINEL_EOF_XML=>"SENTINEL_EOF_XML",
+        ncdContainerFormat::NAIF_CK_DAF=>"NAIF_CK_DAF",
+        ncdContainerFormat::NAIF_SCLK_KERNEL=>"NAIF_SCLK_KERNEL",
+        ncdContainerFormat::RINEX_OBS=>"RINEX_OBS",
+        ncdContainerFormat::RINEX_NAV=>"RINEX_NAV",
         ncdContainerFormat::PROVIDER_DEFINED=>"PROVIDER_DEFINED",
     );
 

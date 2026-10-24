@@ -199,8 +199,56 @@ func (rcv *gnssSatObs) ObservationsLength() int {
 }
 
 /// Observations for this satellite
+/// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+/// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+func (rcv *gnssSatObs) GLONASS_FREQUENCY_NUMBER() int8 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetInt8(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+func (rcv *gnssSatObs) GlonassFrequencyNumber() int8 {
+	return rcv.GLONASS_FREQUENCY_NUMBER()
+}
+
+/// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+/// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+func (rcv *gnssSatObs) MutateGLONASS_FREQUENCY_NUMBER(n int8) bool {
+	return rcv._tab.MutateInt8Slot(18, n)
+}
+
+func (rcv *gnssSatObs) MutateGlonassFrequencyNumber(n int8) bool {
+	return rcv.MutateGLONASS_FREQUENCY_NUMBER(n)
+}
+
+/// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+/// channel); false (the default) means absent.
+func (rcv *gnssSatObs) HAS_GLONASS_FREQUENCY_NUMBER() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+func (rcv *gnssSatObs) HasGlonassFrequencyNumber() bool {
+	return rcv.HAS_GLONASS_FREQUENCY_NUMBER()
+}
+
+/// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+/// channel); false (the default) means absent.
+func (rcv *gnssSatObs) MutateHAS_GLONASS_FREQUENCY_NUMBER(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+func (rcv *gnssSatObs) MutateHasGlonassFrequencyNumber(n bool) bool {
+	return rcv.MutateHAS_GLONASS_FREQUENCY_NUMBER(n)
+}
+
 func gnssSatObsStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(9)
 }
 func gnssSatObsAddGNSS_SAT_ID(builder *flatbuffers.Builder, GNSS_SAT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(GNSS_SAT_ID), 0)
@@ -249,6 +297,18 @@ func gnssSatObsStartOBSERVATIONSVector(builder *flatbuffers.Builder, numElems in
 }
 func gnssSatObsStartObservationsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return gnssSatObsStartOBSERVATIONSVector(builder, numElems)
+}
+func gnssSatObsAddGLONASS_FREQUENCY_NUMBER(builder *flatbuffers.Builder, GLONASS_FREQUENCY_NUMBER int8) {
+	builder.PrependInt8Slot(7, GLONASS_FREQUENCY_NUMBER, 0)
+}
+func gnssSatObsAddGlonassFrequencyNumber(builder *flatbuffers.Builder, GLONASS_FREQUENCY_NUMBER int8) {
+	gnssSatObsAddGLONASS_FREQUENCY_NUMBER(builder, GLONASS_FREQUENCY_NUMBER)
+}
+func gnssSatObsAddHAS_GLONASS_FREQUENCY_NUMBER(builder *flatbuffers.Builder, HAS_GLONASS_FREQUENCY_NUMBER bool) {
+	builder.PrependBoolSlot(8, HAS_GLONASS_FREQUENCY_NUMBER, false)
+}
+func gnssSatObsAddHasGlonassFrequencyNumber(builder *flatbuffers.Builder, HAS_GLONASS_FREQUENCY_NUMBER bool) {
+	gnssSatObsAddHAS_GLONASS_FREQUENCY_NUMBER(builder, HAS_GLONASS_FREQUENCY_NUMBER)
 }
 func gnssSatObsEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

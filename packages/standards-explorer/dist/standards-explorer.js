@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.263.0+1792868205416",
+  version: "1.264.0+1792871374963",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: a8335b1487de6e1252c5814f3238ab1e9737b25327be1a593dfb6dd3777f9633
@@ -939,6 +939,180 @@ file_identifier "$PCF";`,
         "./dist/CNP/CNP.cpp.tar.gz",
         "./dist/CNP/CNP.kt.tar.gz",
         "./dist/CNP/CNP.ts.tar.gz"
+      ]
+    },
+    GNM: {
+      IDL: `// Hash: 6ddfb8e305842d3229921ca5fa479bb114e330a990f738e8235c2af52320b940
+// Version: 1.263.0
+// -----------------------------------END_HEADER
+include "../GNO/main.fbs";
+
+/// Which broadcast message a navigation record came from. Append new values
+/// only; never reorder or reuse a value.
+enum gnssNavMessageType : byte {
+  UNSPECIFIED = 0,
+  /// Legacy navigation message (GPS, QZSS, NavIC).
+  LNAV = 1,
+  /// Civil navigation message (GPS and QZSS L2C and L5).
+  CNAV = 2,
+  /// BeiDou B-CNAV1.
+  CNV1 = 3,
+  /// BeiDou B-CNAV2.
+  CNV2 = 4,
+  /// BeiDou B-CNAV3.
+  CNV3 = 5,
+  /// Galileo F/NAV (E5a).
+  FNAV = 6,
+  /// Galileo I/NAV (E1 and E5b).
+  INAV = 7,
+  /// BeiDou D1 (MEO and IGSO).
+  D1 = 8,
+  /// BeiDou D2 (GEO).
+  D2 = 9,
+  /// GLONASS FDMA navigation message.
+  FDMA = 10,
+  /// SBAS geostationary navigation message.
+  SBAS = 11
+}
+
+/// Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the
+/// symbols of IS-GPS-200. Angles in radians, lengths in meters, times in
+/// seconds; every field defaults to 0.
+table gnssKeplerianBroadcast {
+  /// Square root of the semi-major axis, sqrt(m).
+  SQRT_A:double;
+  /// Eccentricity, dimensionless.
+  ECCENTRICITY:double;
+  /// Inclination at TOE, rad.
+  I0:double;
+  /// Longitude of the ascending node at the weekly epoch, rad.
+  OMEGA0:double;
+  /// Argument of perigee, rad.
+  OMEGA:double;
+  /// Mean anomaly at TOE, rad.
+  M0:double;
+  /// Mean motion difference from the computed value, rad/s.
+  DELTA_N:double;
+  /// Rate of right ascension, rad/s.
+  OMEGA_DOT:double;
+  /// Rate of inclination, rad/s.
+  IDOT:double;
+  /// Cosine harmonic correction to the argument of latitude, rad.
+  CUC:double;
+  /// Sine harmonic correction to the argument of latitude, rad.
+  CUS:double;
+  /// Cosine harmonic correction to the orbit radius, m.
+  CRC:double;
+  /// Sine harmonic correction to the orbit radius, m.
+  CRS:double;
+  /// Cosine harmonic correction to the inclination, rad.
+  CIC:double;
+  /// Sine harmonic correction to the inclination, rad.
+  CIS:double;
+  /// Time of ephemeris, seconds of the system week.
+  TOE:double;
+  /// System week of TOE, not rolled over.
+  WEEK:uint;
+  /// Issue of data as broadcast (IODE, IODC or IODnav).
+  IODE_OR_IODNAV:double;
+  /// Fit interval, hours.
+  FIT_INTERVAL_HOURS:double;
+}
+
+/// GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame
+/// (PZ-90 or the system frame): km, km/s, km/s^2.
+table gnssStateBroadcast {
+  /// Position, km.
+  X:double;
+  Y:double;
+  Z:double;
+  /// Velocity, km/s.
+  VX:double;
+  VY:double;
+  VZ:double;
+  /// Luni-solar acceleration, km/s^2.
+  AX:double;
+  AY:double;
+  AZ:double;
+  /// Reference time of the state, seconds of the day.
+  TOE:double;
+  /// GLONASS frequency channel number k. Meaningful only when
+  /// HAS_FREQUENCY_NUMBER.
+  FREQUENCY_NUMBER:byte;
+  /// True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);
+  /// false (the default) means absent.
+  HAS_FREQUENCY_NUMBER:bool = false;
+  /// Message frame time, seconds of the day.
+  MESSAGE_FRAME_TIME:double;
+}
+
+/// GNSS broadcast navigation message: one satellite, one message. Exactly one
+/// of KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The
+/// parameters are the broadcast ones, not an evaluated orbit; an evaluated
+/// orbit belongs in $OEM.
+table GNM {
+  /// Satellite identifier as the source writes it, for example G05, E11, C21,
+  /// R24. Default empty.
+  SATELLITE_ID:string;
+  /// Constellation of the satellite (the $GNO family's enumeration).
+  CONSTELLATION:gnssConstellation;
+  /// Broadcast message the record came from. Default UNSPECIFIED.
+  MESSAGE_TYPE:gnssNavMessageType = UNSPECIFIED;
+  /// System time scale TOC, TOE and the clock refer to, as the source names it.
+  /// Default empty.
+  TIME_SYSTEM:string;
+  /// Time of clock, ISO 8601 on TIME_SYSTEM. Default empty.
+  TOC:string;
+  /// Satellite clock bias, s.
+  CLOCK_BIAS:double;
+  /// Satellite clock drift, s/s.
+  CLOCK_DRIFT:double;
+  /// Satellite clock drift rate, s/s^2.
+  CLOCK_DRIFT_RATE:double;
+  /// Transmission time of the message, seconds of the system week.
+  TRANSMISSION_TIME:double;
+  /// Health word as broadcast. Meaningful only when HAS_HEALTH.
+  HEALTH:uint;
+  /// True when HEALTH carries a value (0 is a real health word); false (the
+  /// default) means absent.
+  HAS_HEALTH:bool = false;
+  /// Signal accuracy (URA, SISA or URE index resolved), m.
+  ACCURACY:double;
+  /// The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX.
+  ACCURACY_INDEX:int;
+  /// True when ACCURACY_INDEX carries a value (0 is a real index); false (the
+  /// default) means absent.
+  HAS_ACCURACY_INDEX:bool = false;
+  /// Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default
+  /// empty.
+  GROUP_DELAYS:[double];
+  /// Names of the GROUP_DELAYS, same order and length. Default empty.
+  GROUP_DELAY_NAMES:[string];
+  /// Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC).
+  KEPLERIAN:gnssKeplerianBroadcast;
+  /// State vector (GLONASS, SBAS).
+  STATE:gnssStateBroadcast;
+  /// The RINEX data-source bit field. Default 0.
+  DATA_SOURCES:uint;
+}
+
+root_type GNM;
+file_identifier "$GNM";`,
+      files: [
+        "./dist/GNM/GNM.sw.tar.gz",
+        "./dist/GNM/GNM.py.tar.gz",
+        "./dist/GNM/GNM.lob.tar.gz",
+        "./dist/GNM/GNM.go.tar.gz",
+        "./dist/GNM/GNM.js.tar.gz",
+        "./dist/GNM/GNM.dart.tar.gz",
+        "./dist/GNM/GNM.cs.tar.gz",
+        "./dist/GNM/GNM.java.tar.gz",
+        "./dist/GNM/GNM.rs.tar.gz",
+        "./dist/GNM/GNM.php.tar.gz",
+        "./dist/GNM/GNM.json.tar.gz",
+        "./dist/GNM/GNM.cpp.tar.gz",
+        "./dist/GNM/GNM.kt.tar.gz",
+        "./dist/GNM/GNM.ts.tar.gz"
       ]
     },
     CAT: {
@@ -4193,8 +4367,8 @@ file_identifier "$SBM";`,
       ]
     },
     NCD: {
-      IDL: `// Hash: 230ff7c03e76a03bf7e80f51e492032dfc22872d95dc09fb983f088739234f19
-// Version: 0.0.2
+      IDL: `// Hash: ee277e3cc574bbeae35872dd70559f3a423eae68b641826f67146acc28c9835e
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Native container format class.
 ///
@@ -4276,6 +4450,17 @@ enum ncdContainerFormat : ubyte {
   CCSDS_RDM_KVN = 25,
   /// CCSDS Reentry Data Message, XML.
   CCSDS_RDM_XML = 26,
+  /// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+  /// AUX_RESORB and AUX_PREORB).
+  SENTINEL_EOF_XML = 27,
+  /// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+  NAIF_CK_DAF = 28,
+  /// NAIF spacecraft clock kernel, text.
+  NAIF_SCLK_KERNEL = 29,
+  /// RINEX observation file.
+  RINEX_OBS = 30,
+  /// RINEX navigation file.
+  RINEX_NAV = 31,
 
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
@@ -4485,6 +4670,25 @@ table NCD {
   /// Content identifier of the described container when it is addressed by
   /// content rather than by path.
   SOURCE_CID: string;
+
+  /// A reader's REQUEST, carried in the descriptor that frames the file so that
+  /// no option travels outside a typed record. Start of the inclusive window to
+  /// read, ISO 8601, on the container's own time scale. Default empty (from the
+  /// start of the container).
+  SELECT_START_TIME: string;
+  /// End of the inclusive window to read, ISO 8601, on the container's own time
+  /// scale. Default empty (to the end of the container).
+  SELECT_STOP_TIME: string;
+  /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+  SELECT_SAMPLE_INTERVAL_SECONDS: double;
+  /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+  /// empty (every system the container holds).
+  SELECT_SATELLITE_SYSTEMS: [string];
+  /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+  SELECT_OBSERVATION_CODES: [string];
+  /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+  /// by the instrument id. Default 0.
+  SELECT_CLOCK_ID: int;
 }
 
 root_type NCD;
@@ -8756,8 +8960,8 @@ file_identifier "$SIT";`,
       ]
     },
     LAM: {
-      IDL: `// Hash: 08de4812943d109ae6d33a52ef8fe90eb53d4a1992077325043593199bb2f0ac
-// Version: 1.100.1
+      IDL: `// Hash: 3608e0543a673fc4aced0d3c65e756865e811359aed037aaee73c5ebbdaba778
+// Version: 1.100.2
 // -----------------------------------END_HEADER
 include "../ATM/main.fbs";
 include "../BOV/main.fbs";
@@ -8916,6 +9120,18 @@ table lamInsertionOrbit {
   PERIAPSIS_ALTITUDE_UNCERTAINTY_M:double;
   /// One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
   APOAPSIS_ALTITUDE_UNCERTAINTY_M:double;
+  /// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+  /// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+  SEMI_MAJOR_AXIS_UNCERTAINTY_M:double;
+  /// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+  /// default) means absent, and a consumer applies its vehicle-class default.
+  HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M:bool = false;
+  /// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+  /// HAS_INCLINATION_UNCERTAINTY_DEG.
+  INCLINATION_UNCERTAINTY_DEG:double;
+  /// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+  /// means absent, and a consumer applies its vehicle-class default.
+  HAS_INCLINATION_UNCERTAINTY_DEG:bool = false;
 }
 
 /// Launch Ascent Message
@@ -11674,7 +11890,32 @@ file_identifier "$TBP";`,
       ]
     },
     MET: {
-      IDL: '// Hash: baf37f69ec211c87c4c638876f09a2cbf7d780681463980fee792c7fc1053d96\n// Version: 1.0.3\n// -----------------------------------END_HEADER\nenum meanElementSource : byte {\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),\n  /// as published in the 2022 astrodynamics conference literature.\n  SGP4XP,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM\n}\n\n/// Mean Element Theory\ntable MET {\n  MEAN_ELEMENT_THEORY:meanElementSource;\n}\nroot_type MET;\nfile_identifier "$MET";',
+      IDL: `// Hash: ac07468994099f25d4d8ed5eb6f0853a064b54a6013755dd31058cfb7d95c496
+// Version: 1.0.4
+// -----------------------------------END_HEADER
+enum meanElementSource : byte {
+  /// Simplified General Perturbation Model 4
+  SGP4,
+  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
+  /// as published in the 2022 astrodynamics conference literature.
+  SGP4XP,
+  /// Draper Semi-analytical Satellite Theory
+  DSST,
+  /// Universal Semianalytical Method
+  USM,
+  /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
+  /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
+  /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
+  /// (Earth, Moon, Sun or a planet); see $OMM.
+  SDNAP
+}
+
+/// Mean Element Theory
+table MET {
+  MEAN_ELEMENT_THEORY:meanElementSource;
+}
+root_type MET;
+file_identifier "$MET";`,
       files: [
         "./dist/MET/MET.sw.tar.gz",
         "./dist/MET/MET.py.tar.gz",
@@ -14197,8 +14438,8 @@ file_identifier "$RND";`,
       ]
     },
     REC: {
-      IDL: `// Hash: 4d2b71fa2721b495b3187b60d8174c7fa680883806134da87dde827ca35ed82c
-// Version: 1.44.86
+      IDL: `// Hash: aa1a2984ad3bfbf6c894188255822b2fbc5c058f71da96675cf7ea1f6541184f
+// Version: 1.44.87
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -14296,6 +14537,7 @@ include "../GEL/main.fbs";
 include "../GEO/main.fbs";
 include "../GJN/main.fbs";
 include "../GLX/main.fbs";
+include "../GNM/main.fbs";
 include "../GNO/main.fbs";
 include "../GNP/main.fbs";
 include "../GPX/main.fbs";
@@ -14615,7 +14857,8 @@ enum RecordTypeExtended : ushort {
   SDI = 287,
   SFE = 288,
   SRO = 289,
-  SRT = 290
+  SRT = 290,
+  GNM = 291
 }  // Wide record types
 
 /// Individual record wrapper for any standard type
@@ -16993,8 +17236,8 @@ file_identifier "$ABA";`,
       ]
     },
     OMM: {
-      IDL: `// Hash: 7e9ecace0ebca05afa2963b7c6391569e7f7dfa59629782cff5e63893c284bec
-// Version: 2.0.5
+      IDL: `// Hash: 7721e4ea9699308906e69e22cfae5a3647161d65c408f4e15fdf41095018a108
+// Version: 2.0.6
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -17038,10 +17281,23 @@ table OMM {
   OBJECT_NAME:string;
   /// International Designator (YYYY-NNNAAA)
   OBJECT_ID:string;
-  /// Center Name (e.g. EARTH, MARS)
+  /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+  /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+  /// Earth's reach states its elements about that center; GM is then the
+  /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
+  /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+  /// MEAN_ANOMALY.
   CENTER_NAME:string;
   /// Reference Frame
   /// Typically TEMEOFDATE
+  /// The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+  /// RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+  /// names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+  /// (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+  /// ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+  /// the Earth-Moon barycenter (BARYCENTRE) or the libration point
+  /// (LIBRATION_POINT with its primary and secondary). No other frame value is
+  /// needed for it.
   REFERENCE_FRAME:RFM;
   /// Reference Frame Epoch (ISO 8601 UTC format)
   REFERENCE_FRAME_EPOCH:string;
@@ -17096,11 +17352,12 @@ table OMM {
   ELEMENT_SET_NO:uint32;
   /// REV_AT_EPOCH [O if SGP/SGP4]
   REV_AT_EPOCH:double;
-  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+  /// signed effective ballistic coefficient B_eff) [C]
   BSTAR:double;
   /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   MEAN_MOTION_DOT:double;
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
   MEAN_MOTION_DDOT:double;
 
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -17461,7 +17718,7 @@ file_identifier "$MDS";`,
       ]
     },
     GNO: {
-      IDL: '// Hash: fba642c744b9381a422e12c33535b2a61eb195102c57cb58804ce856f05e8312\n// Version: 0.0.4\n// -----------------------------------END_HEADER\nenum gnssConstellation : byte {\n  GPS,\n  GLONASS,\n  GALILEO,\n  BEIDOU,\n  QZSS,\n  IRNSS,\n  SBAS,\n  MIXED\n}\n\nenum gnssObsType : byte {\n  PSEUDORANGE,\n  CARRIER_PHASE,\n  /// One-way Doppler of the received carrier (Hz), positive when the\n  /// satellite is approaching (the RINEX convention).\n  DOPPLER,\n  SNR,\n  RAW_IF\n}\n\n/// GNSS Observation Data Point\ntable gnssObsData {\n  /// Signal type code (e.g., L1C, L2P, L5Q, E1B)\n  SIGNAL:string;\n  /// Observation type\n  OBS_TYPE:gnssObsType;\n  /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)\n  VALUE:double;\n  /// Loss of lock indicator\n  LLI:uint8;\n  /// Signal strength indicator (1-9)\n  SSI:uint8;\n}\n\n/// GNSS Satellite Observation\ntable gnssSatObs {\n  /// GNSS satellite identifier (e.g., G01, R24, E05, C03)\n  GNSS_SAT_ID:string;\n  /// Constellation\n  CONSTELLATION:gnssConstellation;\n  /// Elevation angle in degrees\n  ELEVATION:double;\n  /// Azimuth angle in degrees\n  AZIMUTH:double;\n  /// Tracking status (0=not tracked, 1=tracking, 2=locked)\n  TRACKING_STATUS:int;\n  /// AGC state\n  AGC_STATE:int;\n  /// Observations for this satellite\n  OBSERVATIONS:[gnssObsData];\n}\n\n/// GNSS Observation\ntable GNO {\n  /// Unique identifier\n  ID:string;\n  /// Receiver identifier\n  RECEIVER_ID:string;\n  /// Receiver type/model\n  RECEIVER_TYPE:string;\n  /// Antenna identifier\n  ANTENNA_ID:string;\n  /// Antenna type/model\n  ANTENNA_TYPE:string;\n  /// Receiver firmware version\n  FIRMWARE_VERSION:string;\n  /// Observation epoch (ISO 8601)\n  EPOCH:string;\n  /// Receiver clock offset in seconds\n  CLOCK_OFFSET:double;\n  /// Receiver clock drift in seconds/second\n  CLOCK_DRIFT:double;\n  /// Receiver geodetic latitude in degrees\n  LATITUDE:double;\n  /// Receiver geodetic longitude in degrees\n  LONGITUDE:double;\n  /// Receiver altitude in meters above WGS-84\n  ALTITUDE:double;\n  /// Approximate position X in meters (ECEF)\n  APPROX_X:double;\n  /// Approximate position Y in meters (ECEF)\n  APPROX_Y:double;\n  /// Approximate position Z in meters (ECEF)\n  APPROX_Z:double;\n  /// Observation interval in seconds\n  INTERVAL:double;\n  /// Number of satellites observed\n  NUM_SATS:uint;\n  /// PDOP\n  PDOP:double;\n  /// HDOP\n  HDOP:double;\n  /// VDOP\n  VDOP:double;\n  /// Satellite observations\n  SAT_OBS:[gnssSatObs];\n  /// Observation code set identifiers\n  OBS_CODE_SET:[string];\n  /// Additional notes\n  NOTES:string;\n}\n\nroot_type GNO;\nfile_identifier "$GNO";',
+      IDL: '// Hash: 73bba4c2f0d3213dbb2fb72058c6cc769de496cd9b2ef291feb5dafd1451c935\n// Version: 0.0.5\n// -----------------------------------END_HEADER\nenum gnssConstellation : byte {\n  GPS,\n  GLONASS,\n  GALILEO,\n  BEIDOU,\n  QZSS,\n  IRNSS,\n  SBAS,\n  MIXED\n}\n\nenum gnssObsType : byte {\n  PSEUDORANGE,\n  CARRIER_PHASE,\n  /// One-way Doppler of the received carrier (Hz), positive when the\n  /// satellite is approaching (the RINEX convention).\n  DOPPLER,\n  SNR,\n  RAW_IF,\n  /// Ionosphere phase delay (RINEX observation type I), as the file states it.\n  IONOSPHERE_PHASE_DELAY,\n  /// Receiver channel number (RINEX observation type X), as the receiver reports it.\n  CHANNEL_NUMBER\n}\n\n/// GNSS Observation Data Point\ntable gnssObsData {\n  /// Signal type code (e.g., L1C, L2P, L5Q, E1B)\n  SIGNAL:string;\n  /// Observation type\n  OBS_TYPE:gnssObsType;\n  /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)\n  VALUE:double;\n  /// Loss of lock indicator\n  LLI:uint8;\n  /// Signal strength indicator (1-9)\n  SSI:uint8;\n}\n\n/// GNSS Satellite Observation\ntable gnssSatObs {\n  /// GNSS satellite identifier (e.g., G01, R24, E05, C03)\n  GNSS_SAT_ID:string;\n  /// Constellation\n  CONSTELLATION:gnssConstellation;\n  /// Elevation angle in degrees\n  ELEVATION:double;\n  /// Azimuth angle in degrees\n  AZIMUTH:double;\n  /// Tracking status (0=not tracked, 1=tracking, 2=locked)\n  TRACKING_STATUS:int;\n  /// AGC state\n  AGC_STATE:int;\n  /// Observations for this satellite\n  OBSERVATIONS:[gnssObsData];\n  /// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\n  /// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.\n  GLONASS_FREQUENCY_NUMBER:byte;\n  /// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\n  /// channel); false (the default) means absent.\n  HAS_GLONASS_FREQUENCY_NUMBER:bool = false;\n}\n\n/// GNSS Observation\ntable GNO {\n  /// Unique identifier\n  ID:string;\n  /// Receiver identifier\n  RECEIVER_ID:string;\n  /// Receiver type/model\n  RECEIVER_TYPE:string;\n  /// Antenna identifier\n  ANTENNA_ID:string;\n  /// Antenna type/model\n  ANTENNA_TYPE:string;\n  /// Receiver firmware version\n  FIRMWARE_VERSION:string;\n  /// Observation epoch (ISO 8601)\n  EPOCH:string;\n  /// Receiver clock offset in seconds\n  CLOCK_OFFSET:double;\n  /// Receiver clock drift in seconds/second\n  CLOCK_DRIFT:double;\n  /// Receiver geodetic latitude in degrees\n  LATITUDE:double;\n  /// Receiver geodetic longitude in degrees\n  LONGITUDE:double;\n  /// Receiver altitude in meters above WGS-84\n  ALTITUDE:double;\n  /// Approximate position X in meters (ECEF)\n  APPROX_X:double;\n  /// Approximate position Y in meters (ECEF)\n  APPROX_Y:double;\n  /// Approximate position Z in meters (ECEF)\n  APPROX_Z:double;\n  /// Observation interval in seconds\n  INTERVAL:double;\n  /// Number of satellites observed\n  NUM_SATS:uint;\n  /// PDOP\n  PDOP:double;\n  /// HDOP\n  HDOP:double;\n  /// VDOP\n  VDOP:double;\n  /// Satellite observations\n  SAT_OBS:[gnssSatObs];\n  /// Observation code set identifiers\n  OBS_CODE_SET:[string];\n  /// Additional notes\n  NOTES:string;\n  /// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\n  /// Default empty (not stated).\n  TIME_SYSTEM:string;\n  /// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\n  /// a moving antenna, 3 new site occupation, 4 header information follows, 5\n  /// external event, 6 cycle slip records follow. Default 0.\n  EPOCH_FLAG:ubyte;\n  /// Marker name from the header. Default empty.\n  MARKER_NAME:string;\n  /// Marker number from the header. Default empty.\n  MARKER_NUMBER:string;\n  /// Marker type from the header. Default empty.\n  MARKER_TYPE:string;\n  /// Observer from the header. Default empty.\n  OBSERVER:string;\n  /// Agency from the header. Default empty.\n  AGENCY:string;\n  /// Antenna delta from the marker to the antenna reference point: height, east,\n  /// north, meters, as [H, E, N]. Default empty.\n  ANTENNA_DELTA_HEN:[double];\n  /// Phase shift records as the header writes them, one per line, for example\n  /// "G L2S -0.25000". Default empty.\n  PHASE_SHIFTS:[string];\n  /// Unit of the signal strength observations as the header states it. Default\n  /// empty.\n  SIGNAL_STRENGTH_UNIT:string;\n  /// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\n  /// when HAS_LEAP_SECONDS.\n  LEAP_SECONDS:int;\n  /// True when LEAP_SECONDS carries a value; false (the default) means absent.\n  HAS_LEAP_SECONDS:bool = false;\n}\n\nroot_type GNO;\nfile_identifier "$GNO";',
       files: [
         "./dist/GNO/GNO.sw.tar.gz",
         "./dist/GNO/GNO.py.tar.gz",
@@ -36524,6 +36781,537 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
       },
       $ref: "#/definitions/CNP"
     },
+    GNM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        gnssConstellation: {
+          type: "string",
+          enum: [
+            "GPS",
+            "GLONASS",
+            "GALILEO",
+            "BEIDOU",
+            "QZSS",
+            "IRNSS",
+            "SBAS",
+            "MIXED"
+          ]
+        },
+        gnssObsType: {
+          type: "string",
+          enum: [
+            "PSEUDORANGE",
+            "CARRIER_PHASE",
+            "DOPPLER",
+            "SNR",
+            "RAW_IF",
+            "IONOSPHERE_PHASE_DELAY",
+            "CHANNEL_NUMBER"
+          ]
+        },
+        gnssNavMessageType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "LNAV",
+            "CNAV",
+            "CNV1",
+            "CNV2",
+            "CNV3",
+            "FNAV",
+            "INAV",
+            "D1",
+            "D2",
+            "FDMA",
+            "SBAS"
+          ]
+        },
+        gnssObsData: {
+          type: "object",
+          description: "GNSS Observation Data Point",
+          properties: {
+            SIGNAL: {
+              type: "string",
+              description: "Signal type code (e.g., L1C, L2P, L5Q, E1B)"
+            },
+            OBS_TYPE: {
+              $ref: "#/definitions/gnssObsType",
+              description: "Observation type"
+            },
+            VALUE: {
+              type: "number",
+              description: "Observation value (units depend on type: m, cycles, Hz, dB-Hz)"
+            },
+            LLI: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Loss of lock indicator"
+            },
+            SSI: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Signal strength indicator (1-9)"
+            }
+          },
+          additionalProperties: false
+        },
+        gnssSatObs: {
+          type: "object",
+          description: "GNSS Satellite Observation",
+          properties: {
+            GNSS_SAT_ID: {
+              type: "string",
+              description: "GNSS satellite identifier (e.g., G01, R24, E05, C03)"
+            },
+            CONSTELLATION: {
+              $ref: "#/definitions/gnssConstellation",
+              description: "Constellation"
+            },
+            ELEVATION: {
+              type: "number",
+              description: "Elevation angle in degrees"
+            },
+            AZIMUTH: {
+              type: "number",
+              description: "Azimuth angle in degrees"
+            },
+            TRACKING_STATUS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Tracking status (0=not tracked, 1=tracking, 2=locked)"
+            },
+            AGC_STATE: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "AGC state"
+            },
+            OBSERVATIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/gnssObsData"
+              },
+              description: "Observations for this satellite"
+            },
+            GLONASS_FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER."
+            },
+            HAS_GLONASS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent."
+            }
+          },
+          additionalProperties: false
+        },
+        GNO: {
+          type: "object",
+          description: "GNSS Observation",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier"
+            },
+            RECEIVER_ID: {
+              type: "string",
+              description: "Receiver identifier"
+            },
+            RECEIVER_TYPE: {
+              type: "string",
+              description: "Receiver type/model"
+            },
+            ANTENNA_ID: {
+              type: "string",
+              description: "Antenna identifier"
+            },
+            ANTENNA_TYPE: {
+              type: "string",
+              description: "Antenna type/model"
+            },
+            FIRMWARE_VERSION: {
+              type: "string",
+              description: "Receiver firmware version"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Observation epoch (ISO 8601)"
+            },
+            CLOCK_OFFSET: {
+              type: "number",
+              description: "Receiver clock offset in seconds"
+            },
+            CLOCK_DRIFT: {
+              type: "number",
+              description: "Receiver clock drift in seconds/second"
+            },
+            LATITUDE: {
+              type: "number",
+              description: "Receiver geodetic latitude in degrees"
+            },
+            LONGITUDE: {
+              type: "number",
+              description: "Receiver geodetic longitude in degrees"
+            },
+            ALTITUDE: {
+              type: "number",
+              description: "Receiver altitude in meters above WGS-84"
+            },
+            APPROX_X: {
+              type: "number",
+              description: "Approximate position X in meters (ECEF)"
+            },
+            APPROX_Y: {
+              type: "number",
+              description: "Approximate position Y in meters (ECEF)"
+            },
+            APPROX_Z: {
+              type: "number",
+              description: "Approximate position Z in meters (ECEF)"
+            },
+            INTERVAL: {
+              type: "number",
+              description: "Observation interval in seconds"
+            },
+            NUM_SATS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of satellites observed"
+            },
+            PDOP: {
+              type: "number",
+              description: "PDOP"
+            },
+            HDOP: {
+              type: "number",
+              description: "HDOP"
+            },
+            VDOP: {
+              type: "number",
+              description: "VDOP"
+            },
+            SAT_OBS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/gnssSatObs"
+              },
+              description: "Satellite observations"
+            },
+            OBS_CODE_SET: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation code set identifiers"
+            },
+            NOTES: {
+              type: "string",
+              description: "Additional notes"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated)."
+            },
+            EPOCH_FLAG: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0."
+            },
+            MARKER_NAME: {
+              type: "string",
+              description: "Marker name from the header. Default empty."
+            },
+            MARKER_NUMBER: {
+              type: "string",
+              description: "Marker number from the header. Default empty."
+            },
+            MARKER_TYPE: {
+              type: "string",
+              description: "Marker type from the header. Default empty."
+            },
+            OBSERVER: {
+              type: "string",
+              description: "Observer from the header. Default empty."
+            },
+            AGENCY: {
+              type: "string",
+              description: "Agency from the header. Default empty."
+            },
+            ANTENNA_DELTA_HEN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty."
+            },
+            PHASE_SHIFTS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Phase shift records as the header writes them, one per line, for example\n"G L2S -0.25000". Default empty.'
+            },
+            SIGNAL_STRENGTH_UNIT: {
+              type: "string",
+              description: "Unit of the signal strength observations as the header states it. Default\nempty."
+            },
+            LEAP_SECONDS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS."
+            },
+            HAS_LEAP_SECONDS: {
+              type: "boolean",
+              description: "True when LEAP_SECONDS carries a value; false (the default) means absent."
+            }
+          },
+          additionalProperties: false
+        },
+        gnssKeplerianBroadcast: {
+          type: "object",
+          description: "Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the\nsymbols of IS-GPS-200. Angles in radians, lengths in meters, times in\nseconds; every field defaults to 0.",
+          properties: {
+            SQRT_A: {
+              type: "number",
+              description: "Square root of the semi-major axis, sqrt(m)."
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity, dimensionless."
+            },
+            I0: {
+              type: "number",
+              description: "Inclination at TOE, rad."
+            },
+            OMEGA0: {
+              type: "number",
+              description: "Longitude of the ascending node at the weekly epoch, rad."
+            },
+            OMEGA: {
+              type: "number",
+              description: "Argument of perigee, rad."
+            },
+            M0: {
+              type: "number",
+              description: "Mean anomaly at TOE, rad."
+            },
+            DELTA_N: {
+              type: "number",
+              description: "Mean motion difference from the computed value, rad/s."
+            },
+            OMEGA_DOT: {
+              type: "number",
+              description: "Rate of right ascension, rad/s."
+            },
+            IDOT: {
+              type: "number",
+              description: "Rate of inclination, rad/s."
+            },
+            CUC: {
+              type: "number",
+              description: "Cosine harmonic correction to the argument of latitude, rad."
+            },
+            CUS: {
+              type: "number",
+              description: "Sine harmonic correction to the argument of latitude, rad."
+            },
+            CRC: {
+              type: "number",
+              description: "Cosine harmonic correction to the orbit radius, m."
+            },
+            CRS: {
+              type: "number",
+              description: "Sine harmonic correction to the orbit radius, m."
+            },
+            CIC: {
+              type: "number",
+              description: "Cosine harmonic correction to the inclination, rad."
+            },
+            CIS: {
+              type: "number",
+              description: "Sine harmonic correction to the inclination, rad."
+            },
+            TOE: {
+              type: "number",
+              description: "Time of ephemeris, seconds of the system week."
+            },
+            WEEK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "System week of TOE, not rolled over."
+            },
+            IODE_OR_IODNAV: {
+              type: "number",
+              description: "Issue of data as broadcast (IODE, IODC or IODnav)."
+            },
+            FIT_INTERVAL_HOURS: {
+              type: "number",
+              description: "Fit interval, hours."
+            }
+          },
+          additionalProperties: false
+        },
+        gnssStateBroadcast: {
+          type: "object",
+          description: "GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame\n(PZ-90 or the system frame): km, km/s, km/s^2.",
+          properties: {
+            X: {
+              type: "number",
+              description: "Position, km."
+            },
+            Y: {
+              type: "number"
+            },
+            Z: {
+              type: "number"
+            },
+            VX: {
+              type: "number",
+              description: "Velocity, km/s."
+            },
+            VY: {
+              type: "number"
+            },
+            VZ: {
+              type: "number"
+            },
+            AX: {
+              type: "number",
+              description: "Luni-solar acceleration, km/s^2."
+            },
+            AY: {
+              type: "number"
+            },
+            AZ: {
+              type: "number"
+            },
+            TOE: {
+              type: "number",
+              description: "Reference time of the state, seconds of the day."
+            },
+            FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k. Meaningful only when\nHAS_FREQUENCY_NUMBER."
+            },
+            HAS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);\nfalse (the default) means absent."
+            },
+            MESSAGE_FRAME_TIME: {
+              type: "number",
+              description: "Message frame time, seconds of the day."
+            }
+          },
+          additionalProperties: false
+        },
+        GNM: {
+          type: "object",
+          description: "GNSS broadcast navigation message: one satellite, one message. Exactly one\nof KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The\nparameters are the broadcast ones, not an evaluated orbit; an evaluated\norbit belongs in $OEM.",
+          properties: {
+            SATELLITE_ID: {
+              type: "string",
+              description: "Satellite identifier as the source writes it, for example G05, E11, C21,\nR24. Default empty."
+            },
+            CONSTELLATION: {
+              $ref: "#/definitions/gnssConstellation",
+              description: "Constellation of the satellite (the $GNO family's enumeration)."
+            },
+            MESSAGE_TYPE: {
+              $ref: "#/definitions/gnssNavMessageType",
+              description: "Broadcast message the record came from. Default UNSPECIFIED."
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "System time scale TOC, TOE and the clock refer to, as the source names it.\nDefault empty."
+            },
+            TOC: {
+              type: "string",
+              description: "Time of clock, ISO 8601 on TIME_SYSTEM. Default empty."
+            },
+            CLOCK_BIAS: {
+              type: "number",
+              description: "Satellite clock bias, s."
+            },
+            CLOCK_DRIFT: {
+              type: "number",
+              description: "Satellite clock drift, s/s."
+            },
+            CLOCK_DRIFT_RATE: {
+              type: "number",
+              description: "Satellite clock drift rate, s/s^2."
+            },
+            TRANSMISSION_TIME: {
+              type: "number",
+              description: "Transmission time of the message, seconds of the system week."
+            },
+            HEALTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Health word as broadcast. Meaningful only when HAS_HEALTH."
+            },
+            HAS_HEALTH: {
+              type: "boolean",
+              description: "True when HEALTH carries a value (0 is a real health word); false (the\ndefault) means absent."
+            },
+            ACCURACY: {
+              type: "number",
+              description: "Signal accuracy (URA, SISA or URE index resolved), m."
+            },
+            ACCURACY_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX."
+            },
+            HAS_ACCURACY_INDEX: {
+              type: "boolean",
+              description: "True when ACCURACY_INDEX carries a value (0 is a real index); false (the\ndefault) means absent."
+            },
+            GROUP_DELAYS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default\nempty."
+            },
+            GROUP_DELAY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Names of the GROUP_DELAYS, same order and length. Default empty."
+            },
+            KEPLERIAN: {
+              $ref: "#/definitions/gnssKeplerianBroadcast",
+              description: "Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC)."
+            },
+            STATE: {
+              $ref: "#/definitions/gnssStateBroadcast",
+              description: "State vector (GLONASS, SBAS)."
+            },
+            DATA_SOURCES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The RINEX data-source bit field. Default 0."
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/GNM"
+    },
     CAT: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -40658,7 +41446,8 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         elementType: {
@@ -49657,6 +50446,11 @@ Decoding applies the inverses from the last back.`
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ]
         },
@@ -50020,6 +50814,38 @@ Decoding applies the inverses from the last back.`
             SOURCE_CID: {
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container)."
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container)."
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0."
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds)."
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code)."
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0."
             }
           },
           additionalProperties: false
@@ -50503,7 +51329,8 @@ Decoding applies the inverses from the last back.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -51212,11 +52039,11 @@ Decoding applies the inverses from the last back.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -51316,7 +52143,7 @@ Decoding applies the inverses from the last back.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -51324,7 +52151,7 @@ Decoding applies the inverses from the last back.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -52733,7 +53560,8 @@ Decoding applies the inverses from the last back.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         ephemerisFormat: {
@@ -55545,11 +56373,11 @@ Decoding applies the inverses from the last back.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -55649,7 +56477,7 @@ Decoding applies the inverses from the last back.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -55657,7 +56485,7 @@ Decoding applies the inverses from the last back.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -71070,6 +71898,11 @@ verbatim what that source states about itself.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ]
         },
@@ -71563,7 +72396,8 @@ verbatim what that source states about itself.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -73894,6 +74728,38 @@ verbatim what that source states about itself.`,
             SOURCE_CID: {
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container)."
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container)."
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0."
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds)."
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code)."
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0."
             }
           },
           additionalProperties: false
@@ -77110,11 +77976,11 @@ empty = the provider's native frame.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -77214,7 +78080,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -77222,7 +78088,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -91241,6 +92107,22 @@ compressed). Nothing hashes the payload before the protocol hash.`
             APOAPSIS_ALTITUDE_UNCERTAINTY_M: {
               type: "number",
               description: "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters."
+            },
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "number",
+              description: "One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when\nHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M."
+            },
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "boolean",
+              description: "True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the\ndefault) means absent, and a consumer applies its vehicle-class default."
+            },
+            INCLINATION_UNCERTAINTY_DEG: {
+              type: "number",
+              description: "One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when\nHAS_INCLINATION_UNCERTAINTY_DEG."
+            },
+            HAS_INCLINATION_UNCERTAINTY_DEG: {
+              type: "boolean",
+              description: "True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)\nmeans absent, and a consumer applies its vehicle-class default."
             }
           },
           additionalProperties: false
@@ -94635,7 +95517,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -96534,11 +97417,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -96638,7 +97521,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -96646,7 +97529,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -112582,7 +113465,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         MET: {
@@ -132983,6 +133867,11 @@ format class are named by $NCD's container format.`
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ]
         },
@@ -133448,7 +134337,8 @@ format class are named by $NCD's container format.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -135225,7 +136115,26 @@ format class are named by $NCD's container format.`
             "CARRIER_PHASE",
             "DOPPLER",
             "SNR",
-            "RAW_IF"
+            "RAW_IF",
+            "IONOSPHERE_PHASE_DELAY",
+            "CHANNEL_NUMBER"
+          ]
+        },
+        gnssNavMessageType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "LNAV",
+            "CNAV",
+            "CNV1",
+            "CNV2",
+            "CNV3",
+            "FNAV",
+            "INAV",
+            "D1",
+            "D2",
+            "FDMA",
+            "SBAS"
           ]
         },
         gnpFeatureClass: {
@@ -139769,7 +140678,8 @@ format class are named by $NCD's container format.`
             "SDI",
             "SFE",
             "SRO",
-            "SRT"
+            "SRT",
+            "GNM"
           ]
         },
         ABA: {
@@ -153085,6 +153995,38 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             SOURCE_CID: {
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container)."
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container)."
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0."
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds)."
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code)."
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0."
             }
           },
           additionalProperties: false
@@ -156166,11 +157108,11 @@ empty = the provider's native frame.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -156270,7 +157212,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -156278,7 +157220,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -174677,6 +175619,16 @@ Decoding applies the inverses from the last back.`
                 $ref: "#/definitions/gnssObsData"
               },
               description: "Observations for this satellite"
+            },
+            GLONASS_FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER."
+            },
+            HAS_GLONASS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent."
             }
           },
           additionalProperties: false
@@ -174784,6 +175736,299 @@ Decoding applies the inverses from the last back.`
             NOTES: {
               type: "string",
               description: "Additional notes"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated)."
+            },
+            EPOCH_FLAG: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0."
+            },
+            MARKER_NAME: {
+              type: "string",
+              description: "Marker name from the header. Default empty."
+            },
+            MARKER_NUMBER: {
+              type: "string",
+              description: "Marker number from the header. Default empty."
+            },
+            MARKER_TYPE: {
+              type: "string",
+              description: "Marker type from the header. Default empty."
+            },
+            OBSERVER: {
+              type: "string",
+              description: "Observer from the header. Default empty."
+            },
+            AGENCY: {
+              type: "string",
+              description: "Agency from the header. Default empty."
+            },
+            ANTENNA_DELTA_HEN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty."
+            },
+            PHASE_SHIFTS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Phase shift records as the header writes them, one per line, for example\n"G L2S -0.25000". Default empty.'
+            },
+            SIGNAL_STRENGTH_UNIT: {
+              type: "string",
+              description: "Unit of the signal strength observations as the header states it. Default\nempty."
+            },
+            LEAP_SECONDS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS."
+            },
+            HAS_LEAP_SECONDS: {
+              type: "boolean",
+              description: "True when LEAP_SECONDS carries a value; false (the default) means absent."
+            }
+          },
+          additionalProperties: false
+        },
+        gnssKeplerianBroadcast: {
+          type: "object",
+          description: "Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the\nsymbols of IS-GPS-200. Angles in radians, lengths in meters, times in\nseconds; every field defaults to 0.",
+          properties: {
+            SQRT_A: {
+              type: "number",
+              description: "Square root of the semi-major axis, sqrt(m)."
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity, dimensionless."
+            },
+            I0: {
+              type: "number",
+              description: "Inclination at TOE, rad."
+            },
+            OMEGA0: {
+              type: "number",
+              description: "Longitude of the ascending node at the weekly epoch, rad."
+            },
+            OMEGA: {
+              type: "number",
+              description: "Argument of perigee, rad."
+            },
+            M0: {
+              type: "number",
+              description: "Mean anomaly at TOE, rad."
+            },
+            DELTA_N: {
+              type: "number",
+              description: "Mean motion difference from the computed value, rad/s."
+            },
+            OMEGA_DOT: {
+              type: "number",
+              description: "Rate of right ascension, rad/s."
+            },
+            IDOT: {
+              type: "number",
+              description: "Rate of inclination, rad/s."
+            },
+            CUC: {
+              type: "number",
+              description: "Cosine harmonic correction to the argument of latitude, rad."
+            },
+            CUS: {
+              type: "number",
+              description: "Sine harmonic correction to the argument of latitude, rad."
+            },
+            CRC: {
+              type: "number",
+              description: "Cosine harmonic correction to the orbit radius, m."
+            },
+            CRS: {
+              type: "number",
+              description: "Sine harmonic correction to the orbit radius, m."
+            },
+            CIC: {
+              type: "number",
+              description: "Cosine harmonic correction to the inclination, rad."
+            },
+            CIS: {
+              type: "number",
+              description: "Sine harmonic correction to the inclination, rad."
+            },
+            TOE: {
+              type: "number",
+              description: "Time of ephemeris, seconds of the system week."
+            },
+            WEEK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "System week of TOE, not rolled over."
+            },
+            IODE_OR_IODNAV: {
+              type: "number",
+              description: "Issue of data as broadcast (IODE, IODC or IODnav)."
+            },
+            FIT_INTERVAL_HOURS: {
+              type: "number",
+              description: "Fit interval, hours."
+            }
+          },
+          additionalProperties: false
+        },
+        gnssStateBroadcast: {
+          type: "object",
+          description: "GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame\n(PZ-90 or the system frame): km, km/s, km/s^2.",
+          properties: {
+            X: {
+              type: "number",
+              description: "Position, km."
+            },
+            Y: {
+              type: "number"
+            },
+            Z: {
+              type: "number"
+            },
+            VX: {
+              type: "number",
+              description: "Velocity, km/s."
+            },
+            VY: {
+              type: "number"
+            },
+            VZ: {
+              type: "number"
+            },
+            AX: {
+              type: "number",
+              description: "Luni-solar acceleration, km/s^2."
+            },
+            AY: {
+              type: "number"
+            },
+            AZ: {
+              type: "number"
+            },
+            TOE: {
+              type: "number",
+              description: "Reference time of the state, seconds of the day."
+            },
+            FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k. Meaningful only when\nHAS_FREQUENCY_NUMBER."
+            },
+            HAS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);\nfalse (the default) means absent."
+            },
+            MESSAGE_FRAME_TIME: {
+              type: "number",
+              description: "Message frame time, seconds of the day."
+            }
+          },
+          additionalProperties: false
+        },
+        GNM: {
+          type: "object",
+          description: "GNSS broadcast navigation message: one satellite, one message. Exactly one\nof KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The\nparameters are the broadcast ones, not an evaluated orbit; an evaluated\norbit belongs in $OEM.",
+          properties: {
+            SATELLITE_ID: {
+              type: "string",
+              description: "Satellite identifier as the source writes it, for example G05, E11, C21,\nR24. Default empty."
+            },
+            CONSTELLATION: {
+              $ref: "#/definitions/gnssConstellation",
+              description: "Constellation of the satellite (the $GNO family's enumeration)."
+            },
+            MESSAGE_TYPE: {
+              $ref: "#/definitions/gnssNavMessageType",
+              description: "Broadcast message the record came from. Default UNSPECIFIED."
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "System time scale TOC, TOE and the clock refer to, as the source names it.\nDefault empty."
+            },
+            TOC: {
+              type: "string",
+              description: "Time of clock, ISO 8601 on TIME_SYSTEM. Default empty."
+            },
+            CLOCK_BIAS: {
+              type: "number",
+              description: "Satellite clock bias, s."
+            },
+            CLOCK_DRIFT: {
+              type: "number",
+              description: "Satellite clock drift, s/s."
+            },
+            CLOCK_DRIFT_RATE: {
+              type: "number",
+              description: "Satellite clock drift rate, s/s^2."
+            },
+            TRANSMISSION_TIME: {
+              type: "number",
+              description: "Transmission time of the message, seconds of the system week."
+            },
+            HEALTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Health word as broadcast. Meaningful only when HAS_HEALTH."
+            },
+            HAS_HEALTH: {
+              type: "boolean",
+              description: "True when HEALTH carries a value (0 is a real health word); false (the\ndefault) means absent."
+            },
+            ACCURACY: {
+              type: "number",
+              description: "Signal accuracy (URA, SISA or URE index resolved), m."
+            },
+            ACCURACY_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX."
+            },
+            HAS_ACCURACY_INDEX: {
+              type: "boolean",
+              description: "True when ACCURACY_INDEX carries a value (0 is a real index); false (the\ndefault) means absent."
+            },
+            GROUP_DELAYS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default\nempty."
+            },
+            GROUP_DELAY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Names of the GROUP_DELAYS, same order and length. Default empty."
+            },
+            KEPLERIAN: {
+              $ref: "#/definitions/gnssKeplerianBroadcast",
+              description: "Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC)."
+            },
+            STATE: {
+              $ref: "#/definitions/gnssStateBroadcast",
+              description: "State vector (GLONASS, SBAS)."
+            },
+            DATA_SOURCES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The RINEX data-source bit field. Default 0."
             }
           },
           additionalProperties: false
@@ -180599,6 +181844,22 @@ provider's reviewed register). Never free text.`
             APOAPSIS_ALTITUDE_UNCERTAINTY_M: {
               type: "number",
               description: "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters."
+            },
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "number",
+              description: "One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when\nHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M."
+            },
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "boolean",
+              description: "True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the\ndefault) means absent, and a consumer applies its vehicle-class default."
+            },
+            INCLINATION_UNCERTAINTY_DEG: {
+              type: "number",
+              description: "One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when\nHAS_INCLINATION_UNCERTAINTY_DEG."
+            },
+            HAS_INCLINATION_UNCERTAINTY_DEG: {
+              type: "boolean",
+              description: "True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)\nmeans absent, and a consumer applies its vehicle-class default."
             }
           },
           additionalProperties: false
@@ -221105,7 +222366,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -221798,11 +223060,11 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -221902,7 +223164,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -221910,7 +223172,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -226722,7 +227984,9 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "CARRIER_PHASE",
             "DOPPLER",
             "SNR",
-            "RAW_IF"
+            "RAW_IF",
+            "IONOSPHERE_PHASE_DELAY",
+            "CHANNEL_NUMBER"
           ]
         },
         gnssObsData: {
@@ -226794,6 +228058,16 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 $ref: "#/definitions/gnssObsData"
               },
               description: "Observations for this satellite"
+            },
+            GLONASS_FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER."
+            },
+            HAS_GLONASS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent."
             }
           },
           additionalProperties: false
@@ -226901,6 +228175,64 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             NOTES: {
               type: "string",
               description: "Additional notes"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated)."
+            },
+            EPOCH_FLAG: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0."
+            },
+            MARKER_NAME: {
+              type: "string",
+              description: "Marker name from the header. Default empty."
+            },
+            MARKER_NUMBER: {
+              type: "string",
+              description: "Marker number from the header. Default empty."
+            },
+            MARKER_TYPE: {
+              type: "string",
+              description: "Marker type from the header. Default empty."
+            },
+            OBSERVER: {
+              type: "string",
+              description: "Observer from the header. Default empty."
+            },
+            AGENCY: {
+              type: "string",
+              description: "Agency from the header. Default empty."
+            },
+            ANTENNA_DELTA_HEN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty."
+            },
+            PHASE_SHIFTS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Phase shift records as the header writes them, one per line, for example\n"G L2S -0.25000". Default empty.'
+            },
+            SIGNAL_STRENGTH_UNIT: {
+              type: "string",
+              description: "Unit of the signal strength observations as the header states it. Default\nempty."
+            },
+            LEAP_SECONDS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS."
+            },
+            HAS_LEAP_SECONDS: {
+              type: "boolean",
+              description: "True when LEAP_SECONDS carries a value; false (the default) means absent."
             }
           },
           additionalProperties: false
@@ -232487,6 +233819,11 @@ balance service's own rate.`
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ]
         },
@@ -235224,6 +236561,38 @@ balance service's own rate.`
             SOURCE_CID: {
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container)."
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container)."
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0."
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds)."
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code)."
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0."
             }
           },
           additionalProperties: false
@@ -253125,7 +254494,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         MET: {
@@ -268070,6 +269440,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ]
         },
@@ -268563,7 +269938,8 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -271066,6 +272442,38 @@ compressed). Nothing hashes the payload before the protocol hash.`
             SOURCE_CID: {
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container)."
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container)."
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0."
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds)."
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code)."
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0."
             }
           },
           additionalProperties: false
@@ -274282,11 +275690,11 @@ empty = the provider's native frame.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -274386,7 +275794,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -274394,7 +275802,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -283186,7 +284594,8 @@ assumptions".`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ]
         },
         covarianceCalibration: {
@@ -285114,11 +286523,11 @@ assumptions".`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)"
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE"
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it."
             },
             REFERENCE_FRAME_EPOCH: {
               type: "string",
@@ -285218,7 +286627,7 @@ assumptions".`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -285226,7 +286635,7 @@ assumptions".`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -311762,6 +313171,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ]
         },
@@ -315249,6 +316663,38 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             SOURCE_CID: {
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path."
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container)."
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container)."
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0."
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds)."
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code)."
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0."
             }
           },
           additionalProperties: false
@@ -335462,6 +336908,883 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
       "x-flatbuffer-root-type": "CNP",
       "x-flatbuffer-file-identifier": "$CNP"
     },
+    GNM: {
+      $schema: "https://json-schema.org/draft/2019-09/schema",
+      definitions: {
+        gnssConstellation: {
+          type: "string",
+          enum: [
+            "GPS",
+            "GLONASS",
+            "GALILEO",
+            "BEIDOU",
+            "QZSS",
+            "IRNSS",
+            "SBAS",
+            "MIXED"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            GPS: {
+              value: 0
+            },
+            GLONASS: {
+              value: 1
+            },
+            GALILEO: {
+              value: 2
+            },
+            BEIDOU: {
+              value: 3
+            },
+            QZSS: {
+              value: 4
+            },
+            IRNSS: {
+              value: 5
+            },
+            SBAS: {
+              value: 6
+            },
+            MIXED: {
+              value: 7
+            }
+          }
+        },
+        gnssObsType: {
+          type: "string",
+          enum: [
+            "PSEUDORANGE",
+            "CARRIER_PHASE",
+            "DOPPLER",
+            "SNR",
+            "RAW_IF",
+            "IONOSPHERE_PHASE_DELAY",
+            "CHANNEL_NUMBER"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            PSEUDORANGE: {
+              value: 0
+            },
+            CARRIER_PHASE: {
+              value: 1
+            },
+            DOPPLER: {
+              value: 2,
+              description: "One-way Doppler of the received carrier (Hz), positive when the satellite is approaching (the RINEX convention)."
+            },
+            SNR: {
+              value: 3
+            },
+            RAW_IF: {
+              value: 4
+            },
+            IONOSPHERE_PHASE_DELAY: {
+              value: 5,
+              description: "Ionosphere phase delay (RINEX observation type I), as the file states it."
+            },
+            CHANNEL_NUMBER: {
+              value: 6,
+              description: "Receiver channel number (RINEX observation type X), as the receiver reports it."
+            }
+          }
+        },
+        gnssNavMessageType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "LNAV",
+            "CNAV",
+            "CNV1",
+            "CNV2",
+            "CNV3",
+            "FNAV",
+            "INAV",
+            "D1",
+            "D2",
+            "FDMA",
+            "SBAS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            LNAV: {
+              value: 1,
+              description: "Legacy navigation message (GPS, QZSS, NavIC)."
+            },
+            CNAV: {
+              value: 2,
+              description: "Civil navigation message (GPS and QZSS L2C and L5)."
+            },
+            CNV1: {
+              value: 3,
+              description: "BeiDou B-CNAV1."
+            },
+            CNV2: {
+              value: 4,
+              description: "BeiDou B-CNAV2."
+            },
+            CNV3: {
+              value: 5,
+              description: "BeiDou B-CNAV3."
+            },
+            FNAV: {
+              value: 6,
+              description: "Galileo F/NAV (E5a)."
+            },
+            INAV: {
+              value: 7,
+              description: "Galileo I/NAV (E1 and E5b)."
+            },
+            D1: {
+              value: 8,
+              description: "BeiDou D1 (MEO and IGSO)."
+            },
+            D2: {
+              value: 9,
+              description: "BeiDou D2 (GEO)."
+            },
+            FDMA: {
+              value: 10,
+              description: "GLONASS FDMA navigation message."
+            },
+            SBAS: {
+              value: 11,
+              description: "SBAS geostationary navigation message."
+            }
+          }
+        },
+        gnssObsData: {
+          type: "object",
+          description: "GNSS Observation Data Point",
+          properties: {
+            SIGNAL: {
+              type: "string",
+              description: "Signal type code (e.g., L1C, L2P, L5Q, E1B)",
+              "x-flatbuffer-type": "string"
+            },
+            OBS_TYPE: {
+              $ref: "#/definitions/gnssObsType",
+              description: "Observation type",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                PSEUDORANGE: {
+                  value: 0
+                },
+                CARRIER_PHASE: {
+                  value: 1
+                },
+                DOPPLER: {
+                  value: 2,
+                  description: "One-way Doppler of the received carrier (Hz), positive when the satellite is approaching (the RINEX convention)."
+                },
+                SNR: {
+                  value: 3
+                },
+                RAW_IF: {
+                  value: 4
+                },
+                IONOSPHERE_PHASE_DELAY: {
+                  value: 5,
+                  description: "Ionosphere phase delay (RINEX observation type I), as the file states it."
+                },
+                CHANNEL_NUMBER: {
+                  value: 6,
+                  description: "Receiver channel number (RINEX observation type X), as the receiver reports it."
+                }
+              }
+            },
+            VALUE: {
+              type: "number",
+              description: "Observation value (units depend on type: m, cycles, Hz, dB-Hz)",
+              "x-flatbuffer-type": "double"
+            },
+            LLI: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Loss of lock indicator",
+              "x-flatbuffer-type": "uint8"
+            },
+            SSI: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "Signal strength indicator (1-9)",
+              "x-flatbuffer-type": "uint8"
+            }
+          },
+          additionalProperties: false
+        },
+        gnssSatObs: {
+          type: "object",
+          description: "GNSS Satellite Observation",
+          properties: {
+            GNSS_SAT_ID: {
+              type: "string",
+              description: "GNSS satellite identifier (e.g., G01, R24, E05, C03)",
+              "x-flatbuffer-type": "string"
+            },
+            CONSTELLATION: {
+              $ref: "#/definitions/gnssConstellation",
+              description: "Constellation",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GPS: {
+                  value: 0
+                },
+                GLONASS: {
+                  value: 1
+                },
+                GALILEO: {
+                  value: 2
+                },
+                BEIDOU: {
+                  value: 3
+                },
+                QZSS: {
+                  value: 4
+                },
+                IRNSS: {
+                  value: 5
+                },
+                SBAS: {
+                  value: 6
+                },
+                MIXED: {
+                  value: 7
+                }
+              }
+            },
+            ELEVATION: {
+              type: "number",
+              description: "Elevation angle in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            AZIMUTH: {
+              type: "number",
+              description: "Azimuth angle in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            TRACKING_STATUS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Tracking status (0=not tracked, 1=tracking, 2=locked)",
+              "x-flatbuffer-type": "int"
+            },
+            AGC_STATE: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "AGC state",
+              "x-flatbuffer-type": "int"
+            },
+            OBSERVATIONS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/gnssObsData"
+              },
+              description: "Observations for this satellite",
+              "x-flatbuffer-type": "[gnssObsData]"
+            },
+            GLONASS_FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.",
+              "x-flatbuffer-type": "byte"
+            },
+            HAS_GLONASS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            }
+          },
+          additionalProperties: false
+        },
+        GNO: {
+          type: "object",
+          description: "GNSS Observation",
+          properties: {
+            ID: {
+              type: "string",
+              description: "Unique identifier",
+              "x-flatbuffer-type": "string"
+            },
+            RECEIVER_ID: {
+              type: "string",
+              description: "Receiver identifier",
+              "x-flatbuffer-type": "string"
+            },
+            RECEIVER_TYPE: {
+              type: "string",
+              description: "Receiver type/model",
+              "x-flatbuffer-type": "string"
+            },
+            ANTENNA_ID: {
+              type: "string",
+              description: "Antenna identifier",
+              "x-flatbuffer-type": "string"
+            },
+            ANTENNA_TYPE: {
+              type: "string",
+              description: "Antenna type/model",
+              "x-flatbuffer-type": "string"
+            },
+            FIRMWARE_VERSION: {
+              type: "string",
+              description: "Receiver firmware version",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH: {
+              type: "string",
+              description: "Observation epoch (ISO 8601)",
+              "x-flatbuffer-type": "string"
+            },
+            CLOCK_OFFSET: {
+              type: "number",
+              description: "Receiver clock offset in seconds",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_DRIFT: {
+              type: "number",
+              description: "Receiver clock drift in seconds/second",
+              "x-flatbuffer-type": "double"
+            },
+            LATITUDE: {
+              type: "number",
+              description: "Receiver geodetic latitude in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            LONGITUDE: {
+              type: "number",
+              description: "Receiver geodetic longitude in degrees",
+              "x-flatbuffer-type": "double"
+            },
+            ALTITUDE: {
+              type: "number",
+              description: "Receiver altitude in meters above WGS-84",
+              "x-flatbuffer-type": "double"
+            },
+            APPROX_X: {
+              type: "number",
+              description: "Approximate position X in meters (ECEF)",
+              "x-flatbuffer-type": "double"
+            },
+            APPROX_Y: {
+              type: "number",
+              description: "Approximate position Y in meters (ECEF)",
+              "x-flatbuffer-type": "double"
+            },
+            APPROX_Z: {
+              type: "number",
+              description: "Approximate position Z in meters (ECEF)",
+              "x-flatbuffer-type": "double"
+            },
+            INTERVAL: {
+              type: "number",
+              description: "Observation interval in seconds",
+              "x-flatbuffer-type": "double"
+            },
+            NUM_SATS: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Number of satellites observed",
+              "x-flatbuffer-type": "uint"
+            },
+            PDOP: {
+              type: "number",
+              description: "PDOP",
+              "x-flatbuffer-type": "double"
+            },
+            HDOP: {
+              type: "number",
+              description: "HDOP",
+              "x-flatbuffer-type": "double"
+            },
+            VDOP: {
+              type: "number",
+              description: "VDOP",
+              "x-flatbuffer-type": "double"
+            },
+            SAT_OBS: {
+              type: "array",
+              items: {
+                $ref: "#/definitions/gnssSatObs"
+              },
+              description: "Satellite observations",
+              "x-flatbuffer-type": "[gnssSatObs]"
+            },
+            OBS_CODE_SET: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation code set identifiers",
+              "x-flatbuffer-type": "[string]"
+            },
+            NOTES: {
+              type: "string",
+              description: "Additional notes",
+              "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated).",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_FLAG: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MARKER_NAME: {
+              type: "string",
+              description: "Marker name from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            MARKER_NUMBER: {
+              type: "string",
+              description: "Marker number from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            MARKER_TYPE: {
+              type: "string",
+              description: "Marker type from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVER: {
+              type: "string",
+              description: "Observer from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            AGENCY: {
+              type: "string",
+              description: "Agency from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            ANTENNA_DELTA_HEN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty.",
+              "x-flatbuffer-type": "[double]"
+            },
+            PHASE_SHIFTS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Phase shift records as the header writes them, one per line, for example\n"G L2S -0.25000". Default empty.',
+              "x-flatbuffer-type": "[string]"
+            },
+            SIGNAL_STRENGTH_UNIT: {
+              type: "string",
+              description: "Unit of the signal strength observations as the header states it. Default\nempty.",
+              "x-flatbuffer-type": "string"
+            },
+            LEAP_SECONDS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS.",
+              "x-flatbuffer-type": "int"
+            },
+            HAS_LEAP_SECONDS: {
+              type: "boolean",
+              description: "True when LEAP_SECONDS carries a value; false (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            }
+          },
+          additionalProperties: false
+        },
+        gnssKeplerianBroadcast: {
+          type: "object",
+          description: "Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the\nsymbols of IS-GPS-200. Angles in radians, lengths in meters, times in\nseconds; every field defaults to 0.",
+          properties: {
+            SQRT_A: {
+              type: "number",
+              description: "Square root of the semi-major axis, sqrt(m).",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity, dimensionless.",
+              "x-flatbuffer-type": "double"
+            },
+            I0: {
+              type: "number",
+              description: "Inclination at TOE, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            OMEGA0: {
+              type: "number",
+              description: "Longitude of the ascending node at the weekly epoch, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            OMEGA: {
+              type: "number",
+              description: "Argument of perigee, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            M0: {
+              type: "number",
+              description: "Mean anomaly at TOE, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_N: {
+              type: "number",
+              description: "Mean motion difference from the computed value, rad/s.",
+              "x-flatbuffer-type": "double"
+            },
+            OMEGA_DOT: {
+              type: "number",
+              description: "Rate of right ascension, rad/s.",
+              "x-flatbuffer-type": "double"
+            },
+            IDOT: {
+              type: "number",
+              description: "Rate of inclination, rad/s.",
+              "x-flatbuffer-type": "double"
+            },
+            CUC: {
+              type: "number",
+              description: "Cosine harmonic correction to the argument of latitude, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            CUS: {
+              type: "number",
+              description: "Sine harmonic correction to the argument of latitude, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            CRC: {
+              type: "number",
+              description: "Cosine harmonic correction to the orbit radius, m.",
+              "x-flatbuffer-type": "double"
+            },
+            CRS: {
+              type: "number",
+              description: "Sine harmonic correction to the orbit radius, m.",
+              "x-flatbuffer-type": "double"
+            },
+            CIC: {
+              type: "number",
+              description: "Cosine harmonic correction to the inclination, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            CIS: {
+              type: "number",
+              description: "Sine harmonic correction to the inclination, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            TOE: {
+              type: "number",
+              description: "Time of ephemeris, seconds of the system week.",
+              "x-flatbuffer-type": "double"
+            },
+            WEEK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "System week of TOE, not rolled over.",
+              "x-flatbuffer-type": "uint"
+            },
+            IODE_OR_IODNAV: {
+              type: "number",
+              description: "Issue of data as broadcast (IODE, IODC or IODnav).",
+              "x-flatbuffer-type": "double"
+            },
+            FIT_INTERVAL_HOURS: {
+              type: "number",
+              description: "Fit interval, hours.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        gnssStateBroadcast: {
+          type: "object",
+          description: "GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame\n(PZ-90 or the system frame): km, km/s, km/s^2.",
+          properties: {
+            X: {
+              type: "number",
+              description: "Position, km.",
+              "x-flatbuffer-type": "double"
+            },
+            Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VX: {
+              type: "number",
+              description: "Velocity, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            VY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VZ: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            AX: {
+              type: "number",
+              description: "Luni-solar acceleration, km/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            AY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            AZ: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TOE: {
+              type: "number",
+              description: "Reference time of the state, seconds of the day.",
+              "x-flatbuffer-type": "double"
+            },
+            FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k. Meaningful only when\nHAS_FREQUENCY_NUMBER.",
+              "x-flatbuffer-type": "byte"
+            },
+            HAS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);\nfalse (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            MESSAGE_FRAME_TIME: {
+              type: "number",
+              description: "Message frame time, seconds of the day.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        GNM: {
+          type: "object",
+          description: "GNSS broadcast navigation message: one satellite, one message. Exactly one\nof KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The\nparameters are the broadcast ones, not an evaluated orbit; an evaluated\norbit belongs in $OEM.",
+          properties: {
+            SATELLITE_ID: {
+              type: "string",
+              description: "Satellite identifier as the source writes it, for example G05, E11, C21,\nR24. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSTELLATION: {
+              $ref: "#/definitions/gnssConstellation",
+              description: "Constellation of the satellite (the $GNO family's enumeration).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GPS: {
+                  value: 0
+                },
+                GLONASS: {
+                  value: 1
+                },
+                GALILEO: {
+                  value: 2
+                },
+                BEIDOU: {
+                  value: 3
+                },
+                QZSS: {
+                  value: 4
+                },
+                IRNSS: {
+                  value: 5
+                },
+                SBAS: {
+                  value: 6
+                },
+                MIXED: {
+                  value: 7
+                }
+              }
+            },
+            MESSAGE_TYPE: {
+              $ref: "#/definitions/gnssNavMessageType",
+              description: "Broadcast message the record came from. Default UNSPECIFIED.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                LNAV: {
+                  value: 1,
+                  description: "Legacy navigation message (GPS, QZSS, NavIC)."
+                },
+                CNAV: {
+                  value: 2,
+                  description: "Civil navigation message (GPS and QZSS L2C and L5)."
+                },
+                CNV1: {
+                  value: 3,
+                  description: "BeiDou B-CNAV1."
+                },
+                CNV2: {
+                  value: 4,
+                  description: "BeiDou B-CNAV2."
+                },
+                CNV3: {
+                  value: 5,
+                  description: "BeiDou B-CNAV3."
+                },
+                FNAV: {
+                  value: 6,
+                  description: "Galileo F/NAV (E5a)."
+                },
+                INAV: {
+                  value: 7,
+                  description: "Galileo I/NAV (E1 and E5b)."
+                },
+                D1: {
+                  value: 8,
+                  description: "BeiDou D1 (MEO and IGSO)."
+                },
+                D2: {
+                  value: 9,
+                  description: "BeiDou D2 (GEO)."
+                },
+                FDMA: {
+                  value: 10,
+                  description: "GLONASS FDMA navigation message."
+                },
+                SBAS: {
+                  value: 11,
+                  description: "SBAS geostationary navigation message."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "System time scale TOC, TOE and the clock refer to, as the source names it.\nDefault empty.",
+              "x-flatbuffer-type": "string"
+            },
+            TOC: {
+              type: "string",
+              description: "Time of clock, ISO 8601 on TIME_SYSTEM. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            CLOCK_BIAS: {
+              type: "number",
+              description: "Satellite clock bias, s.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_DRIFT: {
+              type: "number",
+              description: "Satellite clock drift, s/s.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_DRIFT_RATE: {
+              type: "number",
+              description: "Satellite clock drift rate, s/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            TRANSMISSION_TIME: {
+              type: "number",
+              description: "Transmission time of the message, seconds of the system week.",
+              "x-flatbuffer-type": "double"
+            },
+            HEALTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Health word as broadcast. Meaningful only when HAS_HEALTH.",
+              "x-flatbuffer-type": "uint"
+            },
+            HAS_HEALTH: {
+              type: "boolean",
+              description: "True when HEALTH carries a value (0 is a real health word); false (the\ndefault) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ACCURACY: {
+              type: "number",
+              description: "Signal accuracy (URA, SISA or URE index resolved), m.",
+              "x-flatbuffer-type": "double"
+            },
+            ACCURACY_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX.",
+              "x-flatbuffer-type": "int"
+            },
+            HAS_ACCURACY_INDEX: {
+              type: "boolean",
+              description: "True when ACCURACY_INDEX carries a value (0 is a real index); false (the\ndefault) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            GROUP_DELAYS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default\nempty.",
+              "x-flatbuffer-type": "[double]"
+            },
+            GROUP_DELAY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Names of the GROUP_DELAYS, same order and length. Default empty.",
+              "x-flatbuffer-type": "[string]"
+            },
+            KEPLERIAN: {
+              $ref: "#/definitions/gnssKeplerianBroadcast",
+              description: "Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC).",
+              "x-flatbuffer-type": "gnssKeplerianBroadcast"
+            },
+            STATE: {
+              $ref: "#/definitions/gnssStateBroadcast",
+              description: "State vector (GLONASS, SBAS).",
+              "x-flatbuffer-type": "gnssStateBroadcast"
+            },
+            DATA_SOURCES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The RINEX data-source bit field. Default 0.",
+              "x-flatbuffer-type": "uint"
+            }
+          },
+          additionalProperties: false
+        }
+      },
+      $ref: "#/definitions/GNM",
+      "x-flatbuffer-root-type": "GNM",
+      "x-flatbuffer-file-identifier": "$GNM"
+    },
     CAT: {
       $schema: "https://json-schema.org/draft/2019-09/schema",
       definitions: {
@@ -350828,7 +353151,8 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -350848,6 +353172,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -352740,6 +355068,10 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -370602,6 +372934,11 @@ Decoding applies the inverses from the last back.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -370713,6 +373050,26 @@ Decoding applies the inverses from the last back.`,
             CCSDS_RDM_XML: {
               value: 26,
               description: "CCSDS Reentry Data Message, XML."
+            },
+            SENTINEL_EOF_XML: {
+              value: 27,
+              description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            NAIF_CK_DAF: {
+              value: 28,
+              description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            NAIF_SCLK_KERNEL: {
+              value: 29,
+              description: "NAIF spacecraft clock kernel, text."
+            },
+            RINEX_OBS: {
+              value: 30,
+              description: "RINEX observation file."
+            },
+            RINEX_NAV: {
+              value: 31,
+              description: "RINEX navigation file."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -371153,6 +373510,26 @@ Decoding applies the inverses from the last back.`,
                   value: 26,
                   description: "CCSDS Reentry Data Message, XML."
                 },
+                SENTINEL_EOF_XML: {
+                  value: 27,
+                  description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+                },
+                NAIF_CK_DAF: {
+                  value: 28,
+                  description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+                },
+                NAIF_SCLK_KERNEL: {
+                  value: 29,
+                  description: "NAIF spacecraft clock kernel, text."
+                },
+                RINEX_OBS: {
+                  value: 30,
+                  description: "RINEX observation file."
+                },
+                RINEX_NAV: {
+                  value: 31,
+                  description: "RINEX navigation file."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -371264,6 +373641,44 @@ Decoding applies the inverses from the last back.`,
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
               "x-flatbuffer-type": "string"
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -372804,7 +375219,8 @@ Decoding applies the inverses from the last back.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -372824,6 +375240,10 @@ Decoding applies the inverses from the last back.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -374594,6 +377014,10 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -374881,12 +377305,12 @@ Decoding applies the inverses from the last back.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -375000,6 +377424,10 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -375134,7 +377562,7 @@ Decoding applies the inverses from the last back.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -375144,7 +377572,7 @@ Decoding applies the inverses from the last back.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -378988,7 +381416,8 @@ Decoding applies the inverses from the last back.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -379008,6 +381437,10 @@ Decoding applies the inverses from the last back.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -385444,6 +387877,10 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -385481,12 +387918,12 @@ Decoding applies the inverses from the last back.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -385600,6 +388037,10 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -385734,7 +388175,7 @@ Decoding applies the inverses from the last back.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -385744,7 +388185,7 @@ Decoding applies the inverses from the last back.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -420587,6 +423028,11 @@ verbatim what that source states about itself.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -420698,6 +423144,26 @@ verbatim what that source states about itself.`,
             CCSDS_RDM_XML: {
               value: 26,
               description: "CCSDS Reentry Data Message, XML."
+            },
+            SENTINEL_EOF_XML: {
+              value: 27,
+              description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            NAIF_CK_DAF: {
+              value: 28,
+              description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            NAIF_SCLK_KERNEL: {
+              value: 29,
+              description: "NAIF spacecraft clock kernel, text."
+            },
+            RINEX_OBS: {
+              value: 30,
+              description: "RINEX observation file."
+            },
+            RINEX_NAV: {
+              value: 31,
+              description: "RINEX navigation file."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -422095,7 +424561,8 @@ verbatim what that source states about itself.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -422115,6 +424582,10 @@ verbatim what that source states about itself.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -431684,6 +434155,26 @@ verbatim what that source states about itself.`,
                   value: 26,
                   description: "CCSDS Reentry Data Message, XML."
                 },
+                SENTINEL_EOF_XML: {
+                  value: 27,
+                  description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+                },
+                NAIF_CK_DAF: {
+                  value: 28,
+                  description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+                },
+                NAIF_SCLK_KERNEL: {
+                  value: 29,
+                  description: "NAIF spacecraft clock kernel, text."
+                },
+                RINEX_OBS: {
+                  value: 30,
+                  description: "RINEX observation file."
+                },
+                RINEX_NAV: {
+                  value: 31,
+                  description: "RINEX navigation file."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -431795,6 +434286,44 @@ verbatim what that source states about itself.`,
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
               "x-flatbuffer-type": "string"
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -438189,6 +440718,10 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -438381,12 +440914,12 @@ empty = the provider's native frame.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -438500,6 +441033,10 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -438634,7 +441171,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -438644,7 +441181,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -478409,6 +480946,28 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               type: "number",
               description: "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.",
               "x-flatbuffer-type": "double"
+            },
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "number",
+              description: "One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when\nHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "boolean",
+              description: "True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the\ndefault) means absent, and a consumer applies its vehicle-class default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            INCLINATION_UNCERTAINTY_DEG: {
+              type: "number",
+              description: "One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when\nHAS_INCLINATION_UNCERTAINTY_DEG.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_INCLINATION_UNCERTAINTY_DEG: {
+              type: "boolean",
+              description: "True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)\nmeans absent, and a consumer applies its vehicle-class default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -484994,7 +487553,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -485014,6 +487574,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -489115,6 +491679,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -489402,12 +491970,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -489521,6 +492089,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -489655,7 +492227,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -489665,7 +492237,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -521343,7 +523915,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -521363,6 +523936,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -521390,6 +523967,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -570252,6 +572833,11 @@ format class are named by $NCD's container format.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -570363,6 +572949,26 @@ format class are named by $NCD's container format.`,
             CCSDS_RDM_XML: {
               value: 26,
               description: "CCSDS Reentry Data Message, XML."
+            },
+            SENTINEL_EOF_XML: {
+              value: 27,
+              description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            NAIF_CK_DAF: {
+              value: 28,
+              description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            NAIF_SCLK_KERNEL: {
+              value: 29,
+              description: "NAIF spacecraft clock kernel, text."
+            },
+            RINEX_OBS: {
+              value: 30,
+              description: "RINEX observation file."
+            },
+            RINEX_NAV: {
+              value: 31,
+              description: "RINEX navigation file."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -571675,7 +574281,8 @@ format class are named by $NCD's container format.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -571695,6 +574302,10 @@ format class are named by $NCD's container format.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -577307,7 +579918,9 @@ format class are named by $NCD's container format.`,
             "CARRIER_PHASE",
             "DOPPLER",
             "SNR",
-            "RAW_IF"
+            "RAW_IF",
+            "IONOSPHERE_PHASE_DELAY",
+            "CHANNEL_NUMBER"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -577327,6 +579940,82 @@ format class are named by $NCD's container format.`,
             },
             RAW_IF: {
               value: 4
+            },
+            IONOSPHERE_PHASE_DELAY: {
+              value: 5,
+              description: "Ionosphere phase delay (RINEX observation type I), as the file states it."
+            },
+            CHANNEL_NUMBER: {
+              value: 6,
+              description: "Receiver channel number (RINEX observation type X), as the receiver reports it."
+            }
+          }
+        },
+        gnssNavMessageType: {
+          type: "string",
+          enum: [
+            "UNSPECIFIED",
+            "LNAV",
+            "CNAV",
+            "CNV1",
+            "CNV2",
+            "CNV3",
+            "FNAV",
+            "INAV",
+            "D1",
+            "D2",
+            "FDMA",
+            "SBAS"
+          ],
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            UNSPECIFIED: {
+              value: 0
+            },
+            LNAV: {
+              value: 1,
+              description: "Legacy navigation message (GPS, QZSS, NavIC)."
+            },
+            CNAV: {
+              value: 2,
+              description: "Civil navigation message (GPS and QZSS L2C and L5)."
+            },
+            CNV1: {
+              value: 3,
+              description: "BeiDou B-CNAV1."
+            },
+            CNV2: {
+              value: 4,
+              description: "BeiDou B-CNAV2."
+            },
+            CNV3: {
+              value: 5,
+              description: "BeiDou B-CNAV3."
+            },
+            FNAV: {
+              value: 6,
+              description: "Galileo F/NAV (E5a)."
+            },
+            INAV: {
+              value: 7,
+              description: "Galileo I/NAV (E1 and E5b)."
+            },
+            D1: {
+              value: 8,
+              description: "BeiDou D1 (MEO and IGSO)."
+            },
+            D2: {
+              value: 9,
+              description: "BeiDou D2 (GEO)."
+            },
+            FDMA: {
+              value: 10,
+              description: "GLONASS FDMA navigation message."
+            },
+            SBAS: {
+              value: 11,
+              description: "SBAS geostationary navigation message."
             }
           }
         },
@@ -591179,7 +593868,8 @@ format class are named by $NCD's container format.`,
             "SDI",
             "SFE",
             "SRO",
-            "SRT"
+            "SRT",
+            "GNM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ushort",
@@ -591291,6 +593981,9 @@ format class are named by $NCD's container format.`,
             },
             SRT: {
               value: 290
+            },
+            GNM: {
+              value: 291
             }
           }
         },
@@ -618268,6 +620961,26 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                   value: 26,
                   description: "CCSDS Reentry Data Message, XML."
                 },
+                SENTINEL_EOF_XML: {
+                  value: 27,
+                  description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+                },
+                NAIF_CK_DAF: {
+                  value: 28,
+                  description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+                },
+                NAIF_SCLK_KERNEL: {
+                  value: 29,
+                  description: "NAIF spacecraft clock kernel, text."
+                },
+                RINEX_OBS: {
+                  value: 30,
+                  description: "RINEX observation file."
+                },
+                RINEX_NAV: {
+                  value: 31,
+                  description: "RINEX navigation file."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -618379,6 +621092,44 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
               "x-flatbuffer-type": "string"
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -624551,6 +627302,10 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -624743,12 +627498,12 @@ empty = the provider's native frame.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -624862,6 +627617,10 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -624996,7 +627755,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -625006,7 +627765,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -651818,6 +654577,14 @@ Decoding applies the inverses from the last back.`,
                 },
                 RAW_IF: {
                   value: 4
+                },
+                IONOSPHERE_PHASE_DELAY: {
+                  value: 5,
+                  description: "Ionosphere phase delay (RINEX observation type I), as the file states it."
+                },
+                CHANNEL_NUMBER: {
+                  value: 6,
+                  description: "Receiver channel number (RINEX observation type X), as the receiver reports it."
                 }
               }
             },
@@ -651915,6 +654682,19 @@ Decoding applies the inverses from the last back.`,
               },
               description: "Observations for this satellite",
               "x-flatbuffer-type": "[gnssObsData]"
+            },
+            GLONASS_FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.",
+              "x-flatbuffer-type": "byte"
+            },
+            HAS_GLONASS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -652045,6 +654825,444 @@ Decoding applies the inverses from the last back.`,
               type: "string",
               description: "Additional notes",
               "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated).",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_FLAG: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MARKER_NAME: {
+              type: "string",
+              description: "Marker name from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            MARKER_NUMBER: {
+              type: "string",
+              description: "Marker number from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            MARKER_TYPE: {
+              type: "string",
+              description: "Marker type from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVER: {
+              type: "string",
+              description: "Observer from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            AGENCY: {
+              type: "string",
+              description: "Agency from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            ANTENNA_DELTA_HEN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty.",
+              "x-flatbuffer-type": "[double]"
+            },
+            PHASE_SHIFTS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Phase shift records as the header writes them, one per line, for example\n"G L2S -0.25000". Default empty.',
+              "x-flatbuffer-type": "[string]"
+            },
+            SIGNAL_STRENGTH_UNIT: {
+              type: "string",
+              description: "Unit of the signal strength observations as the header states it. Default\nempty.",
+              "x-flatbuffer-type": "string"
+            },
+            LEAP_SECONDS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS.",
+              "x-flatbuffer-type": "int"
+            },
+            HAS_LEAP_SECONDS: {
+              type: "boolean",
+              description: "True when LEAP_SECONDS carries a value; false (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            }
+          },
+          additionalProperties: false
+        },
+        gnssKeplerianBroadcast: {
+          type: "object",
+          description: "Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the\nsymbols of IS-GPS-200. Angles in radians, lengths in meters, times in\nseconds; every field defaults to 0.",
+          properties: {
+            SQRT_A: {
+              type: "number",
+              description: "Square root of the semi-major axis, sqrt(m).",
+              "x-flatbuffer-type": "double"
+            },
+            ECCENTRICITY: {
+              type: "number",
+              description: "Eccentricity, dimensionless.",
+              "x-flatbuffer-type": "double"
+            },
+            I0: {
+              type: "number",
+              description: "Inclination at TOE, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            OMEGA0: {
+              type: "number",
+              description: "Longitude of the ascending node at the weekly epoch, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            OMEGA: {
+              type: "number",
+              description: "Argument of perigee, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            M0: {
+              type: "number",
+              description: "Mean anomaly at TOE, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            DELTA_N: {
+              type: "number",
+              description: "Mean motion difference from the computed value, rad/s.",
+              "x-flatbuffer-type": "double"
+            },
+            OMEGA_DOT: {
+              type: "number",
+              description: "Rate of right ascension, rad/s.",
+              "x-flatbuffer-type": "double"
+            },
+            IDOT: {
+              type: "number",
+              description: "Rate of inclination, rad/s.",
+              "x-flatbuffer-type": "double"
+            },
+            CUC: {
+              type: "number",
+              description: "Cosine harmonic correction to the argument of latitude, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            CUS: {
+              type: "number",
+              description: "Sine harmonic correction to the argument of latitude, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            CRC: {
+              type: "number",
+              description: "Cosine harmonic correction to the orbit radius, m.",
+              "x-flatbuffer-type": "double"
+            },
+            CRS: {
+              type: "number",
+              description: "Sine harmonic correction to the orbit radius, m.",
+              "x-flatbuffer-type": "double"
+            },
+            CIC: {
+              type: "number",
+              description: "Cosine harmonic correction to the inclination, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            CIS: {
+              type: "number",
+              description: "Sine harmonic correction to the inclination, rad.",
+              "x-flatbuffer-type": "double"
+            },
+            TOE: {
+              type: "number",
+              description: "Time of ephemeris, seconds of the system week.",
+              "x-flatbuffer-type": "double"
+            },
+            WEEK: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "System week of TOE, not rolled over.",
+              "x-flatbuffer-type": "uint"
+            },
+            IODE_OR_IODNAV: {
+              type: "number",
+              description: "Issue of data as broadcast (IODE, IODC or IODnav).",
+              "x-flatbuffer-type": "double"
+            },
+            FIT_INTERVAL_HOURS: {
+              type: "number",
+              description: "Fit interval, hours.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        gnssStateBroadcast: {
+          type: "object",
+          description: "GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame\n(PZ-90 or the system frame): km, km/s, km/s^2.",
+          properties: {
+            X: {
+              type: "number",
+              description: "Position, km.",
+              "x-flatbuffer-type": "double"
+            },
+            Y: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            Z: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VX: {
+              type: "number",
+              description: "Velocity, km/s.",
+              "x-flatbuffer-type": "double"
+            },
+            VY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            VZ: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            AX: {
+              type: "number",
+              description: "Luni-solar acceleration, km/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            AY: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            AZ: {
+              type: "number",
+              "x-flatbuffer-type": "double"
+            },
+            TOE: {
+              type: "number",
+              description: "Reference time of the state, seconds of the day.",
+              "x-flatbuffer-type": "double"
+            },
+            FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k. Meaningful only when\nHAS_FREQUENCY_NUMBER.",
+              "x-flatbuffer-type": "byte"
+            },
+            HAS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);\nfalse (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            MESSAGE_FRAME_TIME: {
+              type: "number",
+              description: "Message frame time, seconds of the day.",
+              "x-flatbuffer-type": "double"
+            }
+          },
+          additionalProperties: false
+        },
+        GNM: {
+          type: "object",
+          description: "GNSS broadcast navigation message: one satellite, one message. Exactly one\nof KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The\nparameters are the broadcast ones, not an evaluated orbit; an evaluated\norbit belongs in $OEM.",
+          properties: {
+            SATELLITE_ID: {
+              type: "string",
+              description: "Satellite identifier as the source writes it, for example G05, E11, C21,\nR24. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            CONSTELLATION: {
+              $ref: "#/definitions/gnssConstellation",
+              description: "Constellation of the satellite (the $GNO family's enumeration).",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                GPS: {
+                  value: 0
+                },
+                GLONASS: {
+                  value: 1
+                },
+                GALILEO: {
+                  value: 2
+                },
+                BEIDOU: {
+                  value: 3
+                },
+                QZSS: {
+                  value: 4
+                },
+                IRNSS: {
+                  value: 5
+                },
+                SBAS: {
+                  value: 6
+                },
+                MIXED: {
+                  value: 7
+                }
+              }
+            },
+            MESSAGE_TYPE: {
+              $ref: "#/definitions/gnssNavMessageType",
+              description: "Broadcast message the record came from. Default UNSPECIFIED.",
+              "x-flatbuffer-type": "enum",
+              "x-flatbuffer-enum-type": "byte",
+              "x-flatbuffer-enum-values": {
+                UNSPECIFIED: {
+                  value: 0
+                },
+                LNAV: {
+                  value: 1,
+                  description: "Legacy navigation message (GPS, QZSS, NavIC)."
+                },
+                CNAV: {
+                  value: 2,
+                  description: "Civil navigation message (GPS and QZSS L2C and L5)."
+                },
+                CNV1: {
+                  value: 3,
+                  description: "BeiDou B-CNAV1."
+                },
+                CNV2: {
+                  value: 4,
+                  description: "BeiDou B-CNAV2."
+                },
+                CNV3: {
+                  value: 5,
+                  description: "BeiDou B-CNAV3."
+                },
+                FNAV: {
+                  value: 6,
+                  description: "Galileo F/NAV (E5a)."
+                },
+                INAV: {
+                  value: 7,
+                  description: "Galileo I/NAV (E1 and E5b)."
+                },
+                D1: {
+                  value: 8,
+                  description: "BeiDou D1 (MEO and IGSO)."
+                },
+                D2: {
+                  value: 9,
+                  description: "BeiDou D2 (GEO)."
+                },
+                FDMA: {
+                  value: 10,
+                  description: "GLONASS FDMA navigation message."
+                },
+                SBAS: {
+                  value: 11,
+                  description: "SBAS geostationary navigation message."
+                }
+              },
+              "x-flatbuffer-default": "UNSPECIFIED"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "System time scale TOC, TOE and the clock refer to, as the source names it.\nDefault empty.",
+              "x-flatbuffer-type": "string"
+            },
+            TOC: {
+              type: "string",
+              description: "Time of clock, ISO 8601 on TIME_SYSTEM. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            CLOCK_BIAS: {
+              type: "number",
+              description: "Satellite clock bias, s.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_DRIFT: {
+              type: "number",
+              description: "Satellite clock drift, s/s.",
+              "x-flatbuffer-type": "double"
+            },
+            CLOCK_DRIFT_RATE: {
+              type: "number",
+              description: "Satellite clock drift rate, s/s^2.",
+              "x-flatbuffer-type": "double"
+            },
+            TRANSMISSION_TIME: {
+              type: "number",
+              description: "Transmission time of the message, seconds of the system week.",
+              "x-flatbuffer-type": "double"
+            },
+            HEALTH: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "Health word as broadcast. Meaningful only when HAS_HEALTH.",
+              "x-flatbuffer-type": "uint"
+            },
+            HAS_HEALTH: {
+              type: "boolean",
+              description: "True when HEALTH carries a value (0 is a real health word); false (the\ndefault) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            ACCURACY: {
+              type: "number",
+              description: "Signal accuracy (URA, SISA or URE index resolved), m.",
+              "x-flatbuffer-type": "double"
+            },
+            ACCURACY_INDEX: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX.",
+              "x-flatbuffer-type": "int"
+            },
+            HAS_ACCURACY_INDEX: {
+              type: "boolean",
+              description: "True when ACCURACY_INDEX carries a value (0 is a real index); false (the\ndefault) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            GROUP_DELAYS: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default\nempty.",
+              "x-flatbuffer-type": "[double]"
+            },
+            GROUP_DELAY_NAMES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Names of the GROUP_DELAYS, same order and length. Default empty.",
+              "x-flatbuffer-type": "[string]"
+            },
+            KEPLERIAN: {
+              $ref: "#/definitions/gnssKeplerianBroadcast",
+              description: "Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC).",
+              "x-flatbuffer-type": "gnssKeplerianBroadcast"
+            },
+            STATE: {
+              $ref: "#/definitions/gnssStateBroadcast",
+              description: "State vector (GLONASS, SBAS).",
+              "x-flatbuffer-type": "gnssStateBroadcast"
+            },
+            DATA_SOURCES: {
+              type: "integer",
+              minimum: 0,
+              maximum: 4294967295,
+              description: "The RINEX data-source bit field. Default 0.",
+              "x-flatbuffer-type": "uint"
             }
           },
           additionalProperties: false
@@ -660744,6 +663962,28 @@ provider's reviewed register). Never free text.`,
               type: "number",
               description: "One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.",
               "x-flatbuffer-type": "double"
+            },
+            SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "number",
+              description: "One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when\nHAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: {
+              type: "boolean",
+              description: "True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the\ndefault) means absent, and a consumer applies its vehicle-class default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
+            },
+            INCLINATION_UNCERTAINTY_DEG: {
+              type: "number",
+              description: "One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when\nHAS_INCLINATION_UNCERTAINTY_DEG.",
+              "x-flatbuffer-type": "double"
+            },
+            HAS_INCLINATION_UNCERTAINTY_DEG: {
+              type: "boolean",
+              description: "True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)\nmeans absent, and a consumer applies its vehicle-class default.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -666031,6 +669271,10 @@ provider's reviewed register). Never free text.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -712193,6 +715437,9 @@ balance service's own rate.`,
                 },
                 SRT: {
                   value: 290
+                },
+                GNM: {
+                  value: 291
                 }
               },
               "x-flatbuffer-default": "NONE"
@@ -733013,7 +736260,8 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -733033,6 +736281,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -734755,6 +738007,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -735042,12 +738298,12 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -735161,6 +738417,10 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -735295,7 +738555,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -735305,7 +738565,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -745182,7 +748442,9 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "CARRIER_PHASE",
             "DOPPLER",
             "SNR",
-            "RAW_IF"
+            "RAW_IF",
+            "IONOSPHERE_PHASE_DELAY",
+            "CHANNEL_NUMBER"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -745202,6 +748464,14 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             RAW_IF: {
               value: 4
+            },
+            IONOSPHERE_PHASE_DELAY: {
+              value: 5,
+              description: "Ionosphere phase delay (RINEX observation type I), as the file states it."
+            },
+            CHANNEL_NUMBER: {
+              value: 6,
+              description: "Receiver channel number (RINEX observation type X), as the receiver reports it."
             }
           }
         },
@@ -745235,6 +748505,14 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 },
                 RAW_IF: {
                   value: 4
+                },
+                IONOSPHERE_PHASE_DELAY: {
+                  value: 5,
+                  description: "Ionosphere phase delay (RINEX observation type I), as the file states it."
+                },
+                CHANNEL_NUMBER: {
+                  value: 6,
+                  description: "Receiver channel number (RINEX observation type X), as the receiver reports it."
                 }
               }
             },
@@ -745332,6 +748610,19 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               },
               description: "Observations for this satellite",
               "x-flatbuffer-type": "[gnssObsData]"
+            },
+            GLONASS_FREQUENCY_NUMBER: {
+              type: "integer",
+              minimum: -128,
+              maximum: 127,
+              description: "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.",
+              "x-flatbuffer-type": "byte"
+            },
+            HAS_GLONASS_FREQUENCY_NUMBER: {
+              type: "boolean",
+              description: "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -745462,6 +748753,77 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
               type: "string",
               description: "Additional notes",
               "x-flatbuffer-type": "string"
+            },
+            TIME_SYSTEM: {
+              type: "string",
+              description: "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated).",
+              "x-flatbuffer-type": "string"
+            },
+            EPOCH_FLAG: {
+              type: "integer",
+              minimum: 0,
+              maximum: 255,
+              description: "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0.",
+              "x-flatbuffer-type": "ubyte"
+            },
+            MARKER_NAME: {
+              type: "string",
+              description: "Marker name from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            MARKER_NUMBER: {
+              type: "string",
+              description: "Marker number from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            MARKER_TYPE: {
+              type: "string",
+              description: "Marker type from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            OBSERVER: {
+              type: "string",
+              description: "Observer from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            AGENCY: {
+              type: "string",
+              description: "Agency from the header. Default empty.",
+              "x-flatbuffer-type": "string"
+            },
+            ANTENNA_DELTA_HEN: {
+              type: "array",
+              items: {
+                type: "number"
+              },
+              description: "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty.",
+              "x-flatbuffer-type": "[double]"
+            },
+            PHASE_SHIFTS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'Phase shift records as the header writes them, one per line, for example\n"G L2S -0.25000". Default empty.',
+              "x-flatbuffer-type": "[string]"
+            },
+            SIGNAL_STRENGTH_UNIT: {
+              type: "string",
+              description: "Unit of the signal strength observations as the header states it. Default\nempty.",
+              "x-flatbuffer-type": "string"
+            },
+            LEAP_SECONDS: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS.",
+              "x-flatbuffer-type": "int"
+            },
+            HAS_LEAP_SECONDS: {
+              type: "boolean",
+              description: "True when LEAP_SECONDS carries a value; false (the default) means absent.",
+              "x-flatbuffer-type": "bool",
+              "x-flatbuffer-default": "false"
             }
           },
           additionalProperties: false
@@ -756828,6 +760190,11 @@ balance service's own rate.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -756939,6 +760306,26 @@ balance service's own rate.`,
             CCSDS_RDM_XML: {
               value: 26,
               description: "CCSDS Reentry Data Message, XML."
+            },
+            SENTINEL_EOF_XML: {
+              value: 27,
+              description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            NAIF_CK_DAF: {
+              value: 28,
+              description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            NAIF_SCLK_KERNEL: {
+              value: 29,
+              description: "NAIF spacecraft clock kernel, text."
+            },
+            RINEX_OBS: {
+              value: 30,
+              description: "RINEX observation file."
+            },
+            RINEX_NAV: {
+              value: 31,
+              description: "RINEX navigation file."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -767600,6 +770987,26 @@ balance service's own rate.`,
                   value: 26,
                   description: "CCSDS Reentry Data Message, XML."
                 },
+                SENTINEL_EOF_XML: {
+                  value: 27,
+                  description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+                },
+                NAIF_CK_DAF: {
+                  value: 28,
+                  description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+                },
+                NAIF_SCLK_KERNEL: {
+                  value: 29,
+                  description: "NAIF spacecraft clock kernel, text."
+                },
+                RINEX_OBS: {
+                  value: 30,
+                  description: "RINEX observation file."
+                },
+                RINEX_NAV: {
+                  value: 31,
+                  description: "RINEX navigation file."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -767711,6 +771118,44 @@ balance service's own rate.`,
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
               "x-flatbuffer-type": "string"
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -810639,7 +814084,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -810659,6 +814105,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -810686,6 +814136,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -810871,6 +814325,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -846113,6 +849571,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -846224,6 +849687,26 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             CCSDS_RDM_XML: {
               value: 26,
               description: "CCSDS Reentry Data Message, XML."
+            },
+            SENTINEL_EOF_XML: {
+              value: 27,
+              description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            NAIF_CK_DAF: {
+              value: 28,
+              description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            NAIF_SCLK_KERNEL: {
+              value: 29,
+              description: "NAIF spacecraft clock kernel, text."
+            },
+            RINEX_OBS: {
+              value: 30,
+              description: "RINEX observation file."
+            },
+            RINEX_NAV: {
+              value: 31,
+              description: "RINEX navigation file."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -847621,7 +851104,8 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -847641,6 +851125,10 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -857644,6 +861132,26 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                   value: 26,
                   description: "CCSDS Reentry Data Message, XML."
                 },
+                SENTINEL_EOF_XML: {
+                  value: 27,
+                  description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+                },
+                NAIF_CK_DAF: {
+                  value: 28,
+                  description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+                },
+                NAIF_SCLK_KERNEL: {
+                  value: 29,
+                  description: "NAIF spacecraft clock kernel, text."
+                },
+                RINEX_OBS: {
+                  value: 30,
+                  description: "RINEX observation file."
+                },
+                RINEX_NAV: {
+                  value: 31,
+                  description: "RINEX navigation file."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -857755,6 +861263,44 @@ compressed). Nothing hashes the payload before the protocol hash.`,
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
               "x-flatbuffer-type": "string"
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false
@@ -864149,6 +867695,10 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -864341,12 +867891,12 @@ empty = the provider's native frame.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -864460,6 +868010,10 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -864594,7 +868148,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -864604,7 +868158,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -878198,7 +881752,8 @@ assumptions".`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM"
+            "USM",
+            "SDNAP"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -878218,6 +881773,10 @@ assumptions".`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
+            },
+            SDNAP: {
+              value: 4,
+              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -882402,6 +885961,10 @@ assumptions".`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -882689,12 +886252,12 @@ assumptions".`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS)",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
-              description: "Reference Frame\nTypically TEMEOFDATE",
+              description: "Reference Frame\nTypically TEMEOFDATE\nThe Earth-Moon synodic (rotating) frame of a libration-point orbit is the\nRFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES\nnames the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID\n(ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS\nORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),\nthe Earth-Moon barycenter (BARYCENTRE) or the libration point\n(LIBRATION_POINT with its primary and secondary). No other frame value is\nneeded for it.",
               "x-flatbuffer-type": "RFM"
             },
             REFERENCE_FRAME_EPOCH: {
@@ -882808,6 +886371,10 @@ assumptions".`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
+                },
+                SDNAP: {
+                  value: 4,
+                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -882942,7 +886509,7 @@ assumptions".`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -882952,7 +886519,7 @@ assumptions".`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -937953,6 +941520,11 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "CCSDS_ACM_XML",
             "CCSDS_RDM_KVN",
             "CCSDS_RDM_XML",
+            "SENTINEL_EOF_XML",
+            "NAIF_CK_DAF",
+            "NAIF_SCLK_KERNEL",
+            "RINEX_OBS",
+            "RINEX_NAV",
             "PROVIDER_DEFINED"
           ],
           "x-flatbuffer-type": "enum",
@@ -938064,6 +941636,26 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             CCSDS_RDM_XML: {
               value: 26,
               description: "CCSDS Reentry Data Message, XML."
+            },
+            SENTINEL_EOF_XML: {
+              value: 27,
+              description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+            },
+            NAIF_CK_DAF: {
+              value: 28,
+              description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+            },
+            NAIF_SCLK_KERNEL: {
+              value: 29,
+              description: "NAIF spacecraft clock kernel, text."
+            },
+            RINEX_OBS: {
+              value: 30,
+              description: "RINEX observation file."
+            },
+            RINEX_NAV: {
+              value: 31,
+              description: "RINEX navigation file."
             },
             PROVIDER_DEFINED: {
               value: 255,
@@ -949997,6 +953589,26 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
                   value: 26,
                   description: "CCSDS Reentry Data Message, XML."
                 },
+                SENTINEL_EOF_XML: {
+                  value: 27,
+                  description: "ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB, AUX_RESORB and AUX_PREORB)."
+                },
+                NAIF_CK_DAF: {
+                  value: 28,
+                  description: "NAIF C-kernel: a DAF holding pointing (attitude) segments."
+                },
+                NAIF_SCLK_KERNEL: {
+                  value: 29,
+                  description: "NAIF spacecraft clock kernel, text."
+                },
+                RINEX_OBS: {
+                  value: 30,
+                  description: "RINEX observation file."
+                },
+                RINEX_NAV: {
+                  value: 31,
+                  description: "RINEX navigation file."
+                },
                 PROVIDER_DEFINED: {
                   value: 255,
                   description: "A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states which; a producer never reuses a neighbouring member instead."
@@ -950108,6 +953720,44 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
               type: "string",
               description: "Content identifier of the described container when it is addressed by\ncontent rather than by path.",
               "x-flatbuffer-type": "string"
+            },
+            SELECT_START_TIME: {
+              type: "string",
+              description: "A reader's REQUEST, carried in the descriptor that frames the file so that\nno option travels outside a typed record. Start of the inclusive window to\nread, ISO 8601, on the container's own time scale. Default empty (from the\nstart of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_STOP_TIME: {
+              type: "string",
+              description: "End of the inclusive window to read, ISO 8601, on the container's own time\nscale. Default empty (to the end of the container).",
+              "x-flatbuffer-type": "string"
+            },
+            SELECT_SAMPLE_INTERVAL_SECONDS: {
+              type: "number",
+              description: "Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.",
+              "x-flatbuffer-type": "double"
+            },
+            SELECT_SATELLITE_SYSTEMS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Satellite systems to read, as the RINEX letters G R E C J I S. Default\nempty (every system the container holds).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_OBSERVATION_CODES: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: "Observation codes to read (C1C, L1C, ...). Default empty (every code).",
+              "x-flatbuffer-type": "[string]"
+            },
+            SELECT_CLOCK_ID: {
+              type: "integer",
+              minimum: -2147483648,
+              maximum: 2147483647,
+              description: "Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects\nby the instrument id. Default 0.",
+              "x-flatbuffer-type": "int"
             }
           },
           additionalProperties: false

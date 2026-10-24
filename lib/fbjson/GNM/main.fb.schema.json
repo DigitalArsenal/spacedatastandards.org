@@ -1,0 +1,877 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "gnssConstellation": {
+      "type": "string",
+      "enum": [
+        "GPS",
+        "GLONASS",
+        "GALILEO",
+        "BEIDOU",
+        "QZSS",
+        "IRNSS",
+        "SBAS",
+        "MIXED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GPS": {
+          "value": 0
+        },
+        "GLONASS": {
+          "value": 1
+        },
+        "GALILEO": {
+          "value": 2
+        },
+        "BEIDOU": {
+          "value": 3
+        },
+        "QZSS": {
+          "value": 4
+        },
+        "IRNSS": {
+          "value": 5
+        },
+        "SBAS": {
+          "value": 6
+        },
+        "MIXED": {
+          "value": 7
+        }
+      }
+    },
+    "gnssObsType": {
+      "type": "string",
+      "enum": [
+        "PSEUDORANGE",
+        "CARRIER_PHASE",
+        "DOPPLER",
+        "SNR",
+        "RAW_IF",
+        "IONOSPHERE_PHASE_DELAY",
+        "CHANNEL_NUMBER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PSEUDORANGE": {
+          "value": 0
+        },
+        "CARRIER_PHASE": {
+          "value": 1
+        },
+        "DOPPLER": {
+          "value": 2,
+          "description": "One-way Doppler of the received carrier (Hz), positive when the satellite is approaching (the RINEX convention)."
+        },
+        "SNR": {
+          "value": 3
+        },
+        "RAW_IF": {
+          "value": 4
+        },
+        "IONOSPHERE_PHASE_DELAY": {
+          "value": 5,
+          "description": "Ionosphere phase delay (RINEX observation type I), as the file states it."
+        },
+        "CHANNEL_NUMBER": {
+          "value": 6,
+          "description": "Receiver channel number (RINEX observation type X), as the receiver reports it."
+        }
+      }
+    },
+    "gnssNavMessageType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "LNAV",
+        "CNAV",
+        "CNV1",
+        "CNV2",
+        "CNV3",
+        "FNAV",
+        "INAV",
+        "D1",
+        "D2",
+        "FDMA",
+        "SBAS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "LNAV": {
+          "value": 1,
+          "description": "Legacy navigation message (GPS, QZSS, NavIC)."
+        },
+        "CNAV": {
+          "value": 2,
+          "description": "Civil navigation message (GPS and QZSS L2C and L5)."
+        },
+        "CNV1": {
+          "value": 3,
+          "description": "BeiDou B-CNAV1."
+        },
+        "CNV2": {
+          "value": 4,
+          "description": "BeiDou B-CNAV2."
+        },
+        "CNV3": {
+          "value": 5,
+          "description": "BeiDou B-CNAV3."
+        },
+        "FNAV": {
+          "value": 6,
+          "description": "Galileo F/NAV (E5a)."
+        },
+        "INAV": {
+          "value": 7,
+          "description": "Galileo I/NAV (E1 and E5b)."
+        },
+        "D1": {
+          "value": 8,
+          "description": "BeiDou D1 (MEO and IGSO)."
+        },
+        "D2": {
+          "value": 9,
+          "description": "BeiDou D2 (GEO)."
+        },
+        "FDMA": {
+          "value": 10,
+          "description": "GLONASS FDMA navigation message."
+        },
+        "SBAS": {
+          "value": 11,
+          "description": "SBAS geostationary navigation message."
+        }
+      }
+    },
+    "gnssObsData": {
+      "type": "object",
+      "description": "GNSS Observation Data Point",
+      "properties": {
+        "SIGNAL": {
+          "type": "string",
+          "description": "Signal type code (e.g., L1C, L2P, L5Q, E1B)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_TYPE": {
+          "$ref": "#/definitions/gnssObsType",
+          "description": "Observation type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PSEUDORANGE": {
+              "value": 0
+            },
+            "CARRIER_PHASE": {
+              "value": 1
+            },
+            "DOPPLER": {
+              "value": 2,
+              "description": "One-way Doppler of the received carrier (Hz), positive when the satellite is approaching (the RINEX convention)."
+            },
+            "SNR": {
+              "value": 3
+            },
+            "RAW_IF": {
+              "value": 4
+            },
+            "IONOSPHERE_PHASE_DELAY": {
+              "value": 5,
+              "description": "Ionosphere phase delay (RINEX observation type I), as the file states it."
+            },
+            "CHANNEL_NUMBER": {
+              "value": 6,
+              "description": "Receiver channel number (RINEX observation type X), as the receiver reports it."
+            }
+          }
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Observation value (units depend on type: m, cycles, Hz, dB-Hz)",
+          "x-flatbuffer-type": "double"
+        },
+        "LLI": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Loss of lock indicator",
+          "x-flatbuffer-type": "uint8"
+        },
+        "SSI": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Signal strength indicator (1-9)",
+          "x-flatbuffer-type": "uint8"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gnssSatObs": {
+      "type": "object",
+      "description": "GNSS Satellite Observation",
+      "properties": {
+        "GNSS_SAT_ID": {
+          "type": "string",
+          "description": "GNSS satellite identifier (e.g., G01, R24, E05, C03)",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "$ref": "#/definitions/gnssConstellation",
+          "description": "Constellation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GPS": {
+              "value": 0
+            },
+            "GLONASS": {
+              "value": 1
+            },
+            "GALILEO": {
+              "value": 2
+            },
+            "BEIDOU": {
+              "value": 3
+            },
+            "QZSS": {
+              "value": 4
+            },
+            "IRNSS": {
+              "value": 5
+            },
+            "SBAS": {
+              "value": 6
+            },
+            "MIXED": {
+              "value": 7
+            }
+          }
+        },
+        "ELEVATION": {
+          "type": "number",
+          "description": "Elevation angle in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH": {
+          "type": "number",
+          "description": "Azimuth angle in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "TRACKING_STATUS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Tracking status (0=not tracked, 1=tracking, 2=locked)",
+          "x-flatbuffer-type": "int"
+        },
+        "AGC_STATE": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "AGC state",
+          "x-flatbuffer-type": "int"
+        },
+        "OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gnssObsData"
+          },
+          "description": "Observations for this satellite",
+          "x-flatbuffer-type": "[gnssObsData]"
+        },
+        "GLONASS_FREQUENCY_NUMBER": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /\nFRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.",
+          "x-flatbuffer-type": "byte"
+        },
+        "HAS_GLONASS_FREQUENCY_NUMBER": {
+          "type": "boolean",
+          "description": "True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real\nchannel); false (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GNO": {
+      "type": "object",
+      "description": "GNSS Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVER_ID": {
+          "type": "string",
+          "description": "Receiver identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVER_TYPE": {
+          "type": "string",
+          "description": "Receiver type/model",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_ID": {
+          "type": "string",
+          "description": "Antenna identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_TYPE": {
+          "type": "string",
+          "description": "Antenna type/model",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRMWARE_VERSION": {
+          "type": "string",
+          "description": "Receiver firmware version",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Observation epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_OFFSET": {
+          "type": "number",
+          "description": "Receiver clock offset in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_DRIFT": {
+          "type": "number",
+          "description": "Receiver clock drift in seconds/second",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Receiver geodetic latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Receiver geodetic longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Receiver altitude in meters above WGS-84",
+          "x-flatbuffer-type": "double"
+        },
+        "APPROX_X": {
+          "type": "number",
+          "description": "Approximate position X in meters (ECEF)",
+          "x-flatbuffer-type": "double"
+        },
+        "APPROX_Y": {
+          "type": "number",
+          "description": "Approximate position Y in meters (ECEF)",
+          "x-flatbuffer-type": "double"
+        },
+        "APPROX_Z": {
+          "type": "number",
+          "description": "Approximate position Z in meters (ECEF)",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERVAL": {
+          "type": "number",
+          "description": "Observation interval in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_SATS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of satellites observed",
+          "x-flatbuffer-type": "uint"
+        },
+        "PDOP": {
+          "type": "number",
+          "description": "PDOP",
+          "x-flatbuffer-type": "double"
+        },
+        "HDOP": {
+          "type": "number",
+          "description": "HDOP",
+          "x-flatbuffer-type": "double"
+        },
+        "VDOP": {
+          "type": "number",
+          "description": "VDOP",
+          "x-flatbuffer-type": "double"
+        },
+        "SAT_OBS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gnssSatObs"
+          },
+          "description": "Satellite observations",
+          "x-flatbuffer-type": "[gnssSatObs]"
+        },
+        "OBS_CODE_SET": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Observation code set identifiers",
+          "x-flatbuffer-type": "[string]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.\nDefault empty (not stated).",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_FLAG": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of\na moving antenna, 3 new site occupation, 4 header information follows, 5\nexternal event, 6 cycle slip records follow. Default 0.",
+          "x-flatbuffer-type": "ubyte"
+        },
+        "MARKER_NAME": {
+          "type": "string",
+          "description": "Marker name from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "MARKER_NUMBER": {
+          "type": "string",
+          "description": "Marker number from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "MARKER_TYPE": {
+          "type": "string",
+          "description": "Marker type from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVER": {
+          "type": "string",
+          "description": "Observer from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "AGENCY": {
+          "type": "string",
+          "description": "Agency from the header. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_DELTA_HEN": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Antenna delta from the marker to the antenna reference point: height, east,\nnorth, meters, as [H, E, N]. Default empty.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "PHASE_SHIFTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Phase shift records as the header writes them, one per line, for example\n\"G L2S -0.25000\". Default empty.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "SIGNAL_STRENGTH_UNIT": {
+          "type": "string",
+          "description": "Unit of the signal strength observations as the header states it. Default\nempty.",
+          "x-flatbuffer-type": "string"
+        },
+        "LEAP_SECONDS": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only\nwhen HAS_LEAP_SECONDS.",
+          "x-flatbuffer-type": "int"
+        },
+        "HAS_LEAP_SECONDS": {
+          "type": "boolean",
+          "description": "True when LEAP_SECONDS carries a value; false (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gnssKeplerianBroadcast": {
+      "type": "object",
+      "description": "Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the\nsymbols of IS-GPS-200. Angles in radians, lengths in meters, times in\nseconds; every field defaults to 0.",
+      "properties": {
+        "SQRT_A": {
+          "type": "number",
+          "description": "Square root of the semi-major axis, sqrt(m).",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity, dimensionless.",
+          "x-flatbuffer-type": "double"
+        },
+        "I0": {
+          "type": "number",
+          "description": "Inclination at TOE, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA0": {
+          "type": "number",
+          "description": "Longitude of the ascending node at the weekly epoch, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA": {
+          "type": "number",
+          "description": "Argument of perigee, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "M0": {
+          "type": "number",
+          "description": "Mean anomaly at TOE, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_N": {
+          "type": "number",
+          "description": "Mean motion difference from the computed value, rad/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "OMEGA_DOT": {
+          "type": "number",
+          "description": "Rate of right ascension, rad/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "IDOT": {
+          "type": "number",
+          "description": "Rate of inclination, rad/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "CUC": {
+          "type": "number",
+          "description": "Cosine harmonic correction to the argument of latitude, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "CUS": {
+          "type": "number",
+          "description": "Sine harmonic correction to the argument of latitude, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "CRC": {
+          "type": "number",
+          "description": "Cosine harmonic correction to the orbit radius, m.",
+          "x-flatbuffer-type": "double"
+        },
+        "CRS": {
+          "type": "number",
+          "description": "Sine harmonic correction to the orbit radius, m.",
+          "x-flatbuffer-type": "double"
+        },
+        "CIC": {
+          "type": "number",
+          "description": "Cosine harmonic correction to the inclination, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "CIS": {
+          "type": "number",
+          "description": "Sine harmonic correction to the inclination, rad.",
+          "x-flatbuffer-type": "double"
+        },
+        "TOE": {
+          "type": "number",
+          "description": "Time of ephemeris, seconds of the system week.",
+          "x-flatbuffer-type": "double"
+        },
+        "WEEK": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "System week of TOE, not rolled over.",
+          "x-flatbuffer-type": "uint"
+        },
+        "IODE_OR_IODNAV": {
+          "type": "number",
+          "description": "Issue of data as broadcast (IODE, IODC or IODnav).",
+          "x-flatbuffer-type": "double"
+        },
+        "FIT_INTERVAL_HOURS": {
+          "type": "number",
+          "description": "Fit interval, hours.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gnssStateBroadcast": {
+      "type": "object",
+      "description": "GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame\n(PZ-90 or the system frame): km, km/s, km/s^2.",
+      "properties": {
+        "X": {
+          "type": "number",
+          "description": "Position, km.",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VX": {
+          "type": "number",
+          "description": "Velocity, km/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "VY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "VZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AX": {
+          "type": "number",
+          "description": "Luni-solar acceleration, km/s^2.",
+          "x-flatbuffer-type": "double"
+        },
+        "AY": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "AZ": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "TOE": {
+          "type": "number",
+          "description": "Reference time of the state, seconds of the day.",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQUENCY_NUMBER": {
+          "type": "integer",
+          "minimum": -128,
+          "maximum": 127,
+          "description": "GLONASS frequency channel number k. Meaningful only when\nHAS_FREQUENCY_NUMBER.",
+          "x-flatbuffer-type": "byte"
+        },
+        "HAS_FREQUENCY_NUMBER": {
+          "type": "boolean",
+          "description": "True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);\nfalse (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MESSAGE_FRAME_TIME": {
+          "type": "number",
+          "description": "Message frame time, seconds of the day.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GNM": {
+      "type": "object",
+      "description": "GNSS broadcast navigation message: one satellite, one message. Exactly one\nof KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The\nparameters are the broadcast ones, not an evaluated orbit; an evaluated\norbit belongs in $OEM.",
+      "properties": {
+        "SATELLITE_ID": {
+          "type": "string",
+          "description": "Satellite identifier as the source writes it, for example G05, E11, C21,\nR24. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "$ref": "#/definitions/gnssConstellation",
+          "description": "Constellation of the satellite (the $GNO family's enumeration).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GPS": {
+              "value": 0
+            },
+            "GLONASS": {
+              "value": 1
+            },
+            "GALILEO": {
+              "value": 2
+            },
+            "BEIDOU": {
+              "value": 3
+            },
+            "QZSS": {
+              "value": 4
+            },
+            "IRNSS": {
+              "value": 5
+            },
+            "SBAS": {
+              "value": 6
+            },
+            "MIXED": {
+              "value": 7
+            }
+          }
+        },
+        "MESSAGE_TYPE": {
+          "$ref": "#/definitions/gnssNavMessageType",
+          "description": "Broadcast message the record came from. Default UNSPECIFIED.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "LNAV": {
+              "value": 1,
+              "description": "Legacy navigation message (GPS, QZSS, NavIC)."
+            },
+            "CNAV": {
+              "value": 2,
+              "description": "Civil navigation message (GPS and QZSS L2C and L5)."
+            },
+            "CNV1": {
+              "value": 3,
+              "description": "BeiDou B-CNAV1."
+            },
+            "CNV2": {
+              "value": 4,
+              "description": "BeiDou B-CNAV2."
+            },
+            "CNV3": {
+              "value": 5,
+              "description": "BeiDou B-CNAV3."
+            },
+            "FNAV": {
+              "value": 6,
+              "description": "Galileo F/NAV (E5a)."
+            },
+            "INAV": {
+              "value": 7,
+              "description": "Galileo I/NAV (E1 and E5b)."
+            },
+            "D1": {
+              "value": 8,
+              "description": "BeiDou D1 (MEO and IGSO)."
+            },
+            "D2": {
+              "value": 9,
+              "description": "BeiDou D2 (GEO)."
+            },
+            "FDMA": {
+              "value": 10,
+              "description": "GLONASS FDMA navigation message."
+            },
+            "SBAS": {
+              "value": 11,
+              "description": "SBAS geostationary navigation message."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "System time scale TOC, TOE and the clock refer to, as the source names it.\nDefault empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "TOC": {
+          "type": "string",
+          "description": "Time of clock, ISO 8601 on TIME_SYSTEM. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_BIAS": {
+          "type": "number",
+          "description": "Satellite clock bias, s.",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_DRIFT": {
+          "type": "number",
+          "description": "Satellite clock drift, s/s.",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_DRIFT_RATE": {
+          "type": "number",
+          "description": "Satellite clock drift rate, s/s^2.",
+          "x-flatbuffer-type": "double"
+        },
+        "TRANSMISSION_TIME": {
+          "type": "number",
+          "description": "Transmission time of the message, seconds of the system week.",
+          "x-flatbuffer-type": "double"
+        },
+        "HEALTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Health word as broadcast. Meaningful only when HAS_HEALTH.",
+          "x-flatbuffer-type": "uint"
+        },
+        "HAS_HEALTH": {
+          "type": "boolean",
+          "description": "True when HEALTH carries a value (0 is a real health word); false (the\ndefault) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ACCURACY": {
+          "type": "number",
+          "description": "Signal accuracy (URA, SISA or URE index resolved), m.",
+          "x-flatbuffer-type": "double"
+        },
+        "ACCURACY_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX.",
+          "x-flatbuffer-type": "int"
+        },
+        "HAS_ACCURACY_INDEX": {
+          "type": "boolean",
+          "description": "True when ACCURACY_INDEX carries a value (0 is a real index); false (the\ndefault) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "GROUP_DELAYS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default\nempty.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "GROUP_DELAY_NAMES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Names of the GROUP_DELAYS, same order and length. Default empty.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "KEPLERIAN": {
+          "$ref": "#/definitions/gnssKeplerianBroadcast",
+          "description": "Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC).",
+          "x-flatbuffer-type": "gnssKeplerianBroadcast"
+        },
+        "STATE": {
+          "$ref": "#/definitions/gnssStateBroadcast",
+          "description": "State vector (GLONASS, SBAS).",
+          "x-flatbuffer-type": "gnssStateBroadcast"
+        },
+        "DATA_SOURCES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "The RINEX data-source bit field. Default 0.",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/GNM",
+  "x-flatbuffer-root-type": "GNM",
+  "x-flatbuffer-file-identifier": "$GNM"
+}

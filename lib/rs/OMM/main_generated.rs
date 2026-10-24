@@ -420,7 +420,12 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(OMM::VT_OBJECT_ID, None)}
     }
 
-    /// Center Name (e.g. EARTH, MARS)
+    /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+    /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+    /// Earth's reach states its elements about that center; GM is then the
+    /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
+    /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+    /// MEAN_ANOMALY.
     #[inline]
     pub fn CENTER_NAME(&self) -> Option<&'a str> {
         // Safety:
@@ -431,6 +436,14 @@ impl<'a> OMM<'a> {
 
     /// Reference Frame
     /// Typically TEMEOFDATE
+    /// The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+    /// RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+    /// names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+    /// (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+    /// ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+    /// the Earth-Moon barycenter (BARYCENTRE) or the libration point
+    /// (LIBRATION_POINT with its primary and secondary). No other frame value is
+    /// needed for it.
     #[inline]
     pub fn REFERENCE_FRAME(&self) -> Option<RFM<'a>> {
         // Safety:
@@ -650,7 +663,8 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<f64>(OMM::VT_REV_AT_EPOCH, Some(0.0)).unwrap()}
     }
 
-    /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+    /// signed effective ballistic coefficient B_eff) [C]
     #[inline]
     pub fn BSTAR(&self) -> f64 {
         // Safety:
@@ -668,7 +682,7 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
     }
 
-    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
     #[inline]
     pub fn MEAN_MOTION_DDOT(&self) -> f64 {
         // Safety:

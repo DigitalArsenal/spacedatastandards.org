@@ -291,13 +291,29 @@ class lamInsertionOrbit : flatbuffers.handle
     /// One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
     def APOAPSIS_ALTITUDE_UNCERTAINTY_M() -> float:
         return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+    /// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+    def SEMI_MAJOR_AXIS_UNCERTAINTY_M() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+    /// default) means absent, and a consumer applies its vehicle-class default.
+    def HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 36, 0))
+    /// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+    /// HAS_INCLINATION_UNCERTAINTY_DEG.
+    def INCLINATION_UNCERTAINTY_DEG() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+    /// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+    /// means absent, and a consumer applies its vehicle-class default.
+    def HAS_INCLINATION_UNCERTAINTY_DEG() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 40, 0))
 
 def GetRootAslamInsertionOrbit(buf:string): return lamInsertionOrbit { buf, flatbuffers.indirect(buf, 0) }
 
 struct lamInsertionOrbitBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(19)
         return this
     def add_EPOCH(EPOCH:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, EPOCH)
@@ -343,6 +359,18 @@ struct lamInsertionOrbitBuilder:
         return this
     def add_APOAPSIS_ALTITUDE_UNCERTAINTY_M(APOAPSIS_ALTITUDE_UNCERTAINTY_M:float):
         b_.PrependFloat64Slot(14, APOAPSIS_ALTITUDE_UNCERTAINTY_M, 0.0)
+        return this
+    def add_SEMI_MAJOR_AXIS_UNCERTAINTY_M(SEMI_MAJOR_AXIS_UNCERTAINTY_M:float):
+        b_.PrependFloat64Slot(15, SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0.0)
+        return this
+    def add_HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M(HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M:bool):
+        b_.PrependBoolSlot(16, HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, 0)
+        return this
+    def add_INCLINATION_UNCERTAINTY_DEG(INCLINATION_UNCERTAINTY_DEG:float):
+        b_.PrependFloat64Slot(17, INCLINATION_UNCERTAINTY_DEG, 0.0)
+        return this
+    def add_HAS_INCLINATION_UNCERTAINTY_DEG(HAS_INCLINATION_UNCERTAINTY_DEG:bool):
+        b_.PrependBoolSlot(18, HAS_INCLINATION_UNCERTAINTY_DEG, 0)
         return this
     def end():
         return b_.EndObject()

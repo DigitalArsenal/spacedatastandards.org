@@ -99,6 +99,24 @@ class gnssSatObs : Table() {
         get() {
             val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+     * FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+     */
+    val glonassFrequencyNumber : Byte
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+     * channel); false (the default) means absent.
+     */
+    val hasGlonassFrequencyNumber : Boolean
+        get() {
+            val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsgnssSatObs(_bb: ByteBuffer): gnssSatObs = getRootAsgnssSatObs(_bb, gnssSatObs())
@@ -106,18 +124,20 @@ class gnssSatObs : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun creategnssSatObs(builder: FlatBufferBuilder, gnssSatIdOffset: Int, constellation: Byte, elevation: Double, azimuth: Double, trackingStatus: Int, agcState: Int, observationsOffset: Int) : Int {
-            builder.startTable(7)
+        fun creategnssSatObs(builder: FlatBufferBuilder, gnssSatIdOffset: Int, constellation: Byte, elevation: Double, azimuth: Double, trackingStatus: Int, agcState: Int, observationsOffset: Int, glonassFrequencyNumber: Byte, hasGlonassFrequencyNumber: Boolean) : Int {
+            builder.startTable(9)
             addAZIMUTH(builder, azimuth)
             addELEVATION(builder, elevation)
             addOBSERVATIONS(builder, observationsOffset)
             addAGCSTATE(builder, agcState)
             addTRACKINGSTATUS(builder, trackingStatus)
             addGNSSSATID(builder, gnssSatIdOffset)
+            addHASGLONASSFREQUENCYNUMBER(builder, hasGlonassFrequencyNumber)
+            addGLONASSFREQUENCYNUMBER(builder, glonassFrequencyNumber)
             addCONSTELLATION(builder, constellation)
             return endgnssSatObs(builder)
         }
-        fun startgnssSatObs(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startgnssSatObs(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addGNSSSATID(builder: FlatBufferBuilder, gnssSatId: Int) = builder.addOffset(0, gnssSatId, 0)
         fun addCONSTELLATION(builder: FlatBufferBuilder, constellation: Byte) = builder.addByte(1, constellation, 0)
         fun addELEVATION(builder: FlatBufferBuilder, elevation: Double) = builder.addDouble(2, elevation, 0.0)
@@ -133,6 +153,8 @@ class gnssSatObs : Table() {
             return builder.endVector()
         }
         fun startObservationsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addGLONASSFREQUENCYNUMBER(builder: FlatBufferBuilder, glonassFrequencyNumber: Byte) = builder.addByte(7, glonassFrequencyNumber, 0)
+        fun addHASGLONASSFREQUENCYNUMBER(builder: FlatBufferBuilder, hasGlonassFrequencyNumber: Boolean) = builder.addBoolean(8, hasGlonassFrequencyNumber, false)
         fun endgnssSatObs(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

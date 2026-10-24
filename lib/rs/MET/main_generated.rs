@@ -6,15 +6,16 @@ extern crate alloc;
 pub const ENUM_MIN_MEAN_ELEMENT_SOURCE: i8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_MEAN_ELEMENT_SOURCE: i8 = 3;
+pub const ENUM_MAX_MEAN_ELEMENT_SOURCE: i8 = 4;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_MEAN_ELEMENT_SOURCE: [meanElementSource; 4] = [
+pub const ENUM_VALUES_MEAN_ELEMENT_SOURCE: [meanElementSource; 5] = [
     meanElementSource::SGP4,
     meanElementSource::SGP4XP,
     meanElementSource::DSST,
     meanElementSource::USM,
+    meanElementSource::SDNAP,
 ];
 
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
@@ -32,14 +33,20 @@ impl meanElementSource {
     pub const DSST: Self = Self(2);
     /// Universal Semianalytical Method
     pub const USM: Self = Self(3);
+    /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
+    /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
+    /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
+    /// (Earth, Moon, Sun or a planet); see $OMM.
+    pub const SDNAP: Self = Self(4);
 
     pub const ENUM_MIN: i8 = 0;
-    pub const ENUM_MAX: i8 = 3;
+    pub const ENUM_MAX: i8 = 4;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::SGP4,
         Self::SGP4XP,
         Self::DSST,
         Self::USM,
+        Self::SDNAP,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -49,6 +56,7 @@ impl meanElementSource {
             Self::SGP4XP => Some("SGP4XP"),
             Self::DSST => Some("DSST"),
             Self::USM => Some("USM"),
+            Self::SDNAP => Some("SDNAP"),
             _ => None,
         }
     }

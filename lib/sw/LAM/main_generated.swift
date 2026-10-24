@@ -392,6 +392,10 @@ public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorIni
     static let ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: VOffset = 28
     static let PERIAPSIS_ALTITUDE_UNCERTAINTY_M: VOffset = 30
     static let APOAPSIS_ALTITUDE_UNCERTAINTY_M: VOffset = 32
+    static let SEMI_MAJOR_AXIS_UNCERTAINTY_M: VOffset = 34
+    static let HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: VOffset = 36
+    static let INCLINATION_UNCERTAINTY_DEG: VOffset = 38
+    static let HAS_INCLINATION_UNCERTAINTY_DEG: VOffset = 40
   }
 
   ///  Insertion epoch in ISO 8601 UTC format.
@@ -426,7 +430,19 @@ public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public var PERIAPSIS_ALTITUDE_UNCERTAINTY_M: Double { let o = _accessor.offset(VT.PERIAPSIS_ALTITUDE_UNCERTAINTY_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
   public var APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double { let o = _accessor.offset(VT.APOAPSIS_ALTITUDE_UNCERTAINTY_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startlamInsertionOrbit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+  ///  HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+  public var SEMI_MAJOR_AXIS_UNCERTAINTY_M: Double { let o = _accessor.offset(VT.SEMI_MAJOR_AXIS_UNCERTAINTY_M); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+  ///  default) means absent, and a consumer applies its vehicle-class default.
+  public var HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: Bool { let o = _accessor.offset(VT.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+  ///  HAS_INCLINATION_UNCERTAINTY_DEG.
+  public var INCLINATION_UNCERTAINTY_DEG: Double { let o = _accessor.offset(VT.INCLINATION_UNCERTAINTY_DEG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+  ///  means absent, and a consumer applies its vehicle-class default.
+  public var HAS_INCLINATION_UNCERTAINTY_DEG: Bool { let o = _accessor.offset(VT.HAS_INCLINATION_UNCERTAINTY_DEG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startlamInsertionOrbit(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 19) }
   public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
   public static func add(TIME_FROM_LAUNCH_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_FROM_LAUNCH_S, def: 0.0, at: VT.TIME_FROM_LAUNCH_S) }
   public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VT.REF_FRAME) }
@@ -442,6 +458,12 @@ public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public static func add(ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, def: 0.0, at: VT.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG) }
   public static func add(PERIAPSIS_ALTITUDE_UNCERTAINTY_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIAPSIS_ALTITUDE_UNCERTAINTY_M, def: 0.0, at: VT.PERIAPSIS_ALTITUDE_UNCERTAINTY_M) }
   public static func add(APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOAPSIS_ALTITUDE_UNCERTAINTY_M, def: 0.0, at: VT.APOAPSIS_ALTITUDE_UNCERTAINTY_M) }
+  public static func add(SEMI_MAJOR_AXIS_UNCERTAINTY_M: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS_UNCERTAINTY_M, def: 0.0, at: VT.SEMI_MAJOR_AXIS_UNCERTAINTY_M) }
+  public static func add(HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, def: false,
+   at: VT.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M) }
+  public static func add(INCLINATION_UNCERTAINTY_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION_UNCERTAINTY_DEG, def: 0.0, at: VT.INCLINATION_UNCERTAINTY_DEG) }
+  public static func add(HAS_INCLINATION_UNCERTAINTY_DEG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_INCLINATION_UNCERTAINTY_DEG, def: false,
+   at: VT.HAS_INCLINATION_UNCERTAINTY_DEG) }
   public static func endlamInsertionOrbit(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createlamInsertionOrbit(
     _ fbb: inout FlatBufferBuilder,
@@ -459,7 +481,11 @@ public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorIni
     RAAN_UNCERTAINTY_DEG: Double = 0.0,
     ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: Double = 0.0,
     PERIAPSIS_ALTITUDE_UNCERTAINTY_M: Double = 0.0,
-    APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double = 0.0
+    APOAPSIS_ALTITUDE_UNCERTAINTY_M: Double = 0.0,
+    SEMI_MAJOR_AXIS_UNCERTAINTY_M: Double = 0.0,
+    HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: Bool = false,
+    INCLINATION_UNCERTAINTY_DEG: Double = 0.0,
+    HAS_INCLINATION_UNCERTAINTY_DEG: Bool = false
   ) -> Offset {
     let __start = lamInsertionOrbit.startlamInsertionOrbit(&fbb)
     lamInsertionOrbit.add(EPOCH: EPOCH, &fbb)
@@ -477,6 +503,10 @@ public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorIni
     lamInsertionOrbit.add(ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG: ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, &fbb)
     lamInsertionOrbit.add(PERIAPSIS_ALTITUDE_UNCERTAINTY_M: PERIAPSIS_ALTITUDE_UNCERTAINTY_M, &fbb)
     lamInsertionOrbit.add(APOAPSIS_ALTITUDE_UNCERTAINTY_M: APOAPSIS_ALTITUDE_UNCERTAINTY_M, &fbb)
+    lamInsertionOrbit.add(SEMI_MAJOR_AXIS_UNCERTAINTY_M: SEMI_MAJOR_AXIS_UNCERTAINTY_M, &fbb)
+    lamInsertionOrbit.add(HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M: HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, &fbb)
+    lamInsertionOrbit.add(INCLINATION_UNCERTAINTY_DEG: INCLINATION_UNCERTAINTY_DEG, &fbb)
+    lamInsertionOrbit.add(HAS_INCLINATION_UNCERTAINTY_DEG: HAS_INCLINATION_UNCERTAINTY_DEG, &fbb)
     return lamInsertionOrbit.endlamInsertionOrbit(&fbb, start: __start)
   }
 
@@ -497,6 +527,10 @@ public struct lamInsertionOrbit: FlatBufferVerifiableTable, FlatbuffersVectorIni
     try _v.visit(field: VT.ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG, fieldName: "ARGUMENT_OF_LATITUDE_UNCERTAINTY_DEG", required: false, type: Double.self)
     try _v.visit(field: VT.PERIAPSIS_ALTITUDE_UNCERTAINTY_M, fieldName: "PERIAPSIS_ALTITUDE_UNCERTAINTY_M", required: false, type: Double.self)
     try _v.visit(field: VT.APOAPSIS_ALTITUDE_UNCERTAINTY_M, fieldName: "APOAPSIS_ALTITUDE_UNCERTAINTY_M", required: false, type: Double.self)
+    try _v.visit(field: VT.SEMI_MAJOR_AXIS_UNCERTAINTY_M, fieldName: "SEMI_MAJOR_AXIS_UNCERTAINTY_M", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M, fieldName: "HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M", required: false, type: Bool.self)
+    try _v.visit(field: VT.INCLINATION_UNCERTAINTY_DEG, fieldName: "INCLINATION_UNCERTAINTY_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_INCLINATION_UNCERTAINTY_DEG, fieldName: "HAS_INCLINATION_UNCERTAINTY_DEG", required: false, type: Bool.self)
     _v.finish()
   }
 }

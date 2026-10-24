@@ -244,8 +244,144 @@ class GNO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+    # Default empty (not stated).
+    # GNO
+    def TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+    # a moving antenna, 3 new site occupation, 4 header information follows, 5
+    # external event, 6 cycle slip records follow. Default 0.
+    # GNO
+    def EPOCH_FLAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Marker name from the header. Default empty.
+    # GNO
+    def MARKER_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Marker number from the header. Default empty.
+    # GNO
+    def MARKER_NUMBER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Marker type from the header. Default empty.
+    # GNO
+    def MARKER_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observer from the header. Default empty.
+    # GNO
+    def OBSERVER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Agency from the header. Default empty.
+    # GNO
+    def AGENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Antenna delta from the marker to the antenna reference point: height, east,
+    # north, meters, as [H, E, N]. Default empty.
+    # GNO
+    def ANTENNA_DELTA_HEN(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # GNO
+    def ANTENNA_DELTA_HENAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # GNO
+    def ANTENNA_DELTA_HENLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GNO
+    def ANTENNA_DELTA_HENIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        return o == 0
+
+    # Phase shift records as the header writes them, one per line, for example
+    # "G L2S -0.25000". Default empty.
+    # GNO
+    def PHASE_SHIFTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # GNO
+    def PHASE_SHIFTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # GNO
+    def PHASE_SHIFTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        return o == 0
+
+    # Unit of the signal strength observations as the header states it. Default
+    # empty.
+    # GNO
+    def SIGNAL_STRENGTH_UNIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+    # when HAS_LEAP_SECONDS.
+    # GNO
+    def LEAP_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
+
+    # True when LEAP_SECONDS carries a value; false (the default) means absent.
+    # GNO
+    def HAS_LEAP_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
 def GNOStart(builder):
-    builder.StartObject(23)
+    builder.StartObject(35)
 
 def Start(builder):
     GNOStart(builder)
@@ -412,6 +548,106 @@ def GNOAddNOTES(builder, NOTES):
 def AddNOTES(builder, NOTES):
     GNOAddNOTES(builder, NOTES)
 
+def GNOAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
+def AddTIME_SYSTEM(builder, TIME_SYSTEM):
+    GNOAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def GNOAddEPOCH_FLAG(builder, EPOCH_FLAG):
+    builder.PrependUint8Slot(24, EPOCH_FLAG, 0)
+
+def AddEPOCH_FLAG(builder, EPOCH_FLAG):
+    GNOAddEPOCH_FLAG(builder, EPOCH_FLAG)
+
+def GNOAddMARKER_NAME(builder, MARKER_NAME):
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(MARKER_NAME), 0)
+
+def AddMARKER_NAME(builder, MARKER_NAME):
+    GNOAddMARKER_NAME(builder, MARKER_NAME)
+
+def GNOAddMARKER_NUMBER(builder, MARKER_NUMBER):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(MARKER_NUMBER), 0)
+
+def AddMARKER_NUMBER(builder, MARKER_NUMBER):
+    GNOAddMARKER_NUMBER(builder, MARKER_NUMBER)
+
+def GNOAddMARKER_TYPE(builder, MARKER_TYPE):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(MARKER_TYPE), 0)
+
+def AddMARKER_TYPE(builder, MARKER_TYPE):
+    GNOAddMARKER_TYPE(builder, MARKER_TYPE)
+
+def GNOAddOBSERVER(builder, OBSERVER):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVER), 0)
+
+def AddOBSERVER(builder, OBSERVER):
+    GNOAddOBSERVER(builder, OBSERVER)
+
+def GNOAddAGENCY(builder, AGENCY):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(AGENCY), 0)
+
+def AddAGENCY(builder, AGENCY):
+    GNOAddAGENCY(builder, AGENCY)
+
+def GNOAddANTENNA_DELTA_HEN(builder, ANTENNA_DELTA_HEN):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(ANTENNA_DELTA_HEN), 0)
+
+def AddANTENNA_DELTA_HEN(builder, ANTENNA_DELTA_HEN):
+    GNOAddANTENNA_DELTA_HEN(builder, ANTENNA_DELTA_HEN)
+
+def GNOStartANTENNA_DELTA_HENVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartANTENNA_DELTA_HENVector(builder, numElems):
+    return GNOStartANTENNA_DELTA_HENVector(builder, numElems)
+
+def GNOCreateANTENNA_DELTA_HENVector(builder, data):
+    data = list(data)
+    builder.StartVector(8, len(data), 8)
+    for item in reversed(data):
+        builder.PrependFloat64(item)
+    return builder.EndVector()
+
+def CreateANTENNA_DELTA_HENVector(builder, data):
+    return GNOCreateANTENNA_DELTA_HENVector(builder, data)
+
+def GNOAddPHASE_SHIFTS(builder, PHASE_SHIFTS):
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(PHASE_SHIFTS), 0)
+
+def AddPHASE_SHIFTS(builder, PHASE_SHIFTS):
+    GNOAddPHASE_SHIFTS(builder, PHASE_SHIFTS)
+
+def GNOStartPHASE_SHIFTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartPHASE_SHIFTSVector(builder, numElems):
+    return GNOStartPHASE_SHIFTSVector(builder, numElems)
+
+def GNOCreatePHASE_SHIFTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreatePHASE_SHIFTSVector(builder, data):
+    return GNOCreatePHASE_SHIFTSVector(builder, data)
+
+def GNOAddSIGNAL_STRENGTH_UNIT(builder, SIGNAL_STRENGTH_UNIT):
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(SIGNAL_STRENGTH_UNIT), 0)
+
+def AddSIGNAL_STRENGTH_UNIT(builder, SIGNAL_STRENGTH_UNIT):
+    GNOAddSIGNAL_STRENGTH_UNIT(builder, SIGNAL_STRENGTH_UNIT)
+
+def GNOAddLEAP_SECONDS(builder, LEAP_SECONDS):
+    builder.PrependInt32Slot(33, LEAP_SECONDS, 0)
+
+def AddLEAP_SECONDS(builder, LEAP_SECONDS):
+    GNOAddLEAP_SECONDS(builder, LEAP_SECONDS)
+
+def GNOAddHAS_LEAP_SECONDS(builder, HAS_LEAP_SECONDS):
+    builder.PrependBoolSlot(34, HAS_LEAP_SECONDS, 0)
+
+def AddHAS_LEAP_SECONDS(builder, HAS_LEAP_SECONDS):
+    GNOAddHAS_LEAP_SECONDS(builder, HAS_LEAP_SECONDS)
+
 def GNOEnd(builder):
     return builder.EndObject()
 
@@ -452,6 +688,18 @@ class GNOT(object):
         SAT_OBS = None,
         OBS_CODE_SET = None,
         NOTES = None,
+        TIME_SYSTEM = None,
+        EPOCH_FLAG = 0,
+        MARKER_NAME = None,
+        MARKER_NUMBER = None,
+        MARKER_TYPE = None,
+        OBSERVER = None,
+        AGENCY = None,
+        ANTENNA_DELTA_HEN = None,
+        PHASE_SHIFTS = None,
+        SIGNAL_STRENGTH_UNIT = None,
+        LEAP_SECONDS = 0,
+        HAS_LEAP_SECONDS = False,
     ):
         self.ID = ID  # type: Optional[str]
         self.RECEIVER_ID = RECEIVER_ID  # type: Optional[str]
@@ -476,6 +724,18 @@ class GNOT(object):
         self.SAT_OBS = SAT_OBS  # type: Optional[List[gnssSatObs.gnssSatObsT]]
         self.OBS_CODE_SET = OBS_CODE_SET  # type: Optional[List[Optional[str]]]
         self.NOTES = NOTES  # type: Optional[str]
+        self.TIME_SYSTEM = TIME_SYSTEM  # type: Optional[str]
+        self.EPOCH_FLAG = EPOCH_FLAG  # type: int
+        self.MARKER_NAME = MARKER_NAME  # type: Optional[str]
+        self.MARKER_NUMBER = MARKER_NUMBER  # type: Optional[str]
+        self.MARKER_TYPE = MARKER_TYPE  # type: Optional[str]
+        self.OBSERVER = OBSERVER  # type: Optional[str]
+        self.AGENCY = AGENCY  # type: Optional[str]
+        self.ANTENNA_DELTA_HEN = ANTENNA_DELTA_HEN  # type: Optional[List[float]]
+        self.PHASE_SHIFTS = PHASE_SHIFTS  # type: Optional[List[Optional[str]]]
+        self.SIGNAL_STRENGTH_UNIT = SIGNAL_STRENGTH_UNIT  # type: Optional[str]
+        self.LEAP_SECONDS = LEAP_SECONDS  # type: int
+        self.HAS_LEAP_SECONDS = HAS_LEAP_SECONDS  # type: bool
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -531,6 +791,27 @@ class GNOT(object):
             for i in range(GNO.OBS_CODE_SETLength()):
                 self.OBS_CODE_SET.append(GNO.OBS_CODE_SET(i))
         self.NOTES = GNO.NOTES()
+        self.TIME_SYSTEM = GNO.TIME_SYSTEM()
+        self.EPOCH_FLAG = GNO.EPOCH_FLAG()
+        self.MARKER_NAME = GNO.MARKER_NAME()
+        self.MARKER_NUMBER = GNO.MARKER_NUMBER()
+        self.MARKER_TYPE = GNO.MARKER_TYPE()
+        self.OBSERVER = GNO.OBSERVER()
+        self.AGENCY = GNO.AGENCY()
+        if not GNO.ANTENNA_DELTA_HENIsNone():
+            if np is None:
+                self.ANTENNA_DELTA_HEN = []
+                for i in range(GNO.ANTENNA_DELTA_HENLength()):
+                    self.ANTENNA_DELTA_HEN.append(GNO.ANTENNA_DELTA_HEN(i))
+            else:
+                self.ANTENNA_DELTA_HEN = GNO.ANTENNA_DELTA_HENAsNumpy()
+        if not GNO.PHASE_SHIFTSIsNone():
+            self.PHASE_SHIFTS = []
+            for i in range(GNO.PHASE_SHIFTSLength()):
+                self.PHASE_SHIFTS.append(GNO.PHASE_SHIFTS(i))
+        self.SIGNAL_STRENGTH_UNIT = GNO.SIGNAL_STRENGTH_UNIT()
+        self.LEAP_SECONDS = GNO.LEAP_SECONDS()
+        self.HAS_LEAP_SECONDS = GNO.HAS_LEAP_SECONDS()
 
     # GNOT
     def Pack(self, builder):
@@ -566,6 +847,36 @@ class GNOT(object):
             OBS_CODE_SET = builder.EndVector()
         if self.NOTES is not None:
             NOTES = builder.CreateString(self.NOTES)
+        if self.TIME_SYSTEM is not None:
+            TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
+        if self.MARKER_NAME is not None:
+            MARKER_NAME = builder.CreateString(self.MARKER_NAME)
+        if self.MARKER_NUMBER is not None:
+            MARKER_NUMBER = builder.CreateString(self.MARKER_NUMBER)
+        if self.MARKER_TYPE is not None:
+            MARKER_TYPE = builder.CreateString(self.MARKER_TYPE)
+        if self.OBSERVER is not None:
+            OBSERVER = builder.CreateString(self.OBSERVER)
+        if self.AGENCY is not None:
+            AGENCY = builder.CreateString(self.AGENCY)
+        if self.ANTENNA_DELTA_HEN is not None:
+            if np is not None and type(self.ANTENNA_DELTA_HEN) is np.ndarray:
+                ANTENNA_DELTA_HEN = builder.CreateNumpyVector(self.ANTENNA_DELTA_HEN)
+            else:
+                GNOStartANTENNA_DELTA_HENVector(builder, len(self.ANTENNA_DELTA_HEN))
+                for i in reversed(range(len(self.ANTENNA_DELTA_HEN))):
+                    builder.PrependFloat64(self.ANTENNA_DELTA_HEN[i])
+                ANTENNA_DELTA_HEN = builder.EndVector()
+        if self.PHASE_SHIFTS is not None:
+            PHASE_SHIFTSlist = []
+            for i in range(len(self.PHASE_SHIFTS)):
+                PHASE_SHIFTSlist.append(builder.CreateString(self.PHASE_SHIFTS[i]))
+            GNOStartPHASE_SHIFTSVector(builder, len(self.PHASE_SHIFTS))
+            for i in reversed(range(len(self.PHASE_SHIFTS))):
+                builder.PrependUOffsetTRelative(PHASE_SHIFTSlist[i])
+            PHASE_SHIFTS = builder.EndVector()
+        if self.SIGNAL_STRENGTH_UNIT is not None:
+            SIGNAL_STRENGTH_UNIT = builder.CreateString(self.SIGNAL_STRENGTH_UNIT)
         GNOStart(builder)
         if self.ID is not None:
             GNOAddID(builder, ID)
@@ -600,5 +911,26 @@ class GNOT(object):
             GNOAddOBS_CODE_SET(builder, OBS_CODE_SET)
         if self.NOTES is not None:
             GNOAddNOTES(builder, NOTES)
+        if self.TIME_SYSTEM is not None:
+            GNOAddTIME_SYSTEM(builder, TIME_SYSTEM)
+        GNOAddEPOCH_FLAG(builder, self.EPOCH_FLAG)
+        if self.MARKER_NAME is not None:
+            GNOAddMARKER_NAME(builder, MARKER_NAME)
+        if self.MARKER_NUMBER is not None:
+            GNOAddMARKER_NUMBER(builder, MARKER_NUMBER)
+        if self.MARKER_TYPE is not None:
+            GNOAddMARKER_TYPE(builder, MARKER_TYPE)
+        if self.OBSERVER is not None:
+            GNOAddOBSERVER(builder, OBSERVER)
+        if self.AGENCY is not None:
+            GNOAddAGENCY(builder, AGENCY)
+        if self.ANTENNA_DELTA_HEN is not None:
+            GNOAddANTENNA_DELTA_HEN(builder, ANTENNA_DELTA_HEN)
+        if self.PHASE_SHIFTS is not None:
+            GNOAddPHASE_SHIFTS(builder, PHASE_SHIFTS)
+        if self.SIGNAL_STRENGTH_UNIT is not None:
+            GNOAddSIGNAL_STRENGTH_UNIT(builder, SIGNAL_STRENGTH_UNIT)
+        GNOAddLEAP_SECONDS(builder, self.LEAP_SECONDS)
+        GNOAddHAS_LEAP_SECONDS(builder, self.HAS_LEAP_SECONDS)
         GNO = GNOEnd(builder)
         return GNO

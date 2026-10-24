@@ -267,22 +267,148 @@ class GNO extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+    /// Default empty (not stated).
+    public function getTIME_SYSTEM()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+    /// a moving antenna, 3 new site occupation, 4 header information follows, 5
+    /// external event, 6 cycle slip records follow. Default 0.
+    /**
+     * @return byte
+     */
+    public function getEPOCH_FLAG()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Marker name from the header. Default empty.
+    public function getMARKER_NAME()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Marker number from the header. Default empty.
+    public function getMARKER_NUMBER()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Marker type from the header. Default empty.
+    public function getMARKER_TYPE()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Observer from the header. Default empty.
+    public function getOBSERVER()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Agency from the header. Default empty.
+    public function getAGENCY()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Antenna delta from the marker to the antenna reference point: height, east,
+    /// north, meters, as [H, E, N]. Default empty.
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getANTENNA_DELTA_HEN($j)
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getANTENNA_DELTA_HENLength()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Phase shift records as the header writes them, one per line, for example
+    /// "G L2S -0.25000". Default empty.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getPHASE_SHIFTS($j)
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPHASE_SHIFTSLength()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Unit of the signal strength observations as the header states it. Default
+    /// empty.
+    public function getSIGNAL_STRENGTH_UNIT()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+    /// when HAS_LEAP_SECONDS.
+    /**
+     * @return int
+     */
+    public function getLEAP_SECONDS()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+    }
+
+    /// True when LEAP_SECONDS carries a value; false (the default) means absent.
+    /**
+     * @return bool
+     */
+    public function getHAS_LEAP_SECONDS()
+    {
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startGNO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(23);
+        $builder->StartObject(35);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GNO
      */
-    public static function createGNO(FlatBufferBuilder $builder, $ID, $RECEIVER_ID, $RECEIVER_TYPE, $ANTENNA_ID, $ANTENNA_TYPE, $FIRMWARE_VERSION, $EPOCH, $CLOCK_OFFSET, $CLOCK_DRIFT, $LATITUDE, $LONGITUDE, $ALTITUDE, $APPROX_X, $APPROX_Y, $APPROX_Z, $INTERVAL, $NUM_SATS, $PDOP, $HDOP, $VDOP, $SAT_OBS, $OBS_CODE_SET, $NOTES)
+    public static function createGNO(FlatBufferBuilder $builder, $ID, $RECEIVER_ID, $RECEIVER_TYPE, $ANTENNA_ID, $ANTENNA_TYPE, $FIRMWARE_VERSION, $EPOCH, $CLOCK_OFFSET, $CLOCK_DRIFT, $LATITUDE, $LONGITUDE, $ALTITUDE, $APPROX_X, $APPROX_Y, $APPROX_Z, $INTERVAL, $NUM_SATS, $PDOP, $HDOP, $VDOP, $SAT_OBS, $OBS_CODE_SET, $NOTES, $TIME_SYSTEM, $EPOCH_FLAG, $MARKER_NAME, $MARKER_NUMBER, $MARKER_TYPE, $OBSERVER, $AGENCY, $ANTENNA_DELTA_HEN, $PHASE_SHIFTS, $SIGNAL_STRENGTH_UNIT, $LEAP_SECONDS, $HAS_LEAP_SECONDS)
     {
-        $builder->startObject(23);
+        $builder->startObject(35);
         self::addID($builder, $ID);
         self::addRECEIVER_ID($builder, $RECEIVER_ID);
         self::addRECEIVER_TYPE($builder, $RECEIVER_TYPE);
@@ -306,6 +432,18 @@ class GNO extends Table
         self::addSAT_OBS($builder, $SAT_OBS);
         self::addOBS_CODE_SET($builder, $OBS_CODE_SET);
         self::addNOTES($builder, $NOTES);
+        self::addTIME_SYSTEM($builder, $TIME_SYSTEM);
+        self::addEPOCH_FLAG($builder, $EPOCH_FLAG);
+        self::addMARKER_NAME($builder, $MARKER_NAME);
+        self::addMARKER_NUMBER($builder, $MARKER_NUMBER);
+        self::addMARKER_TYPE($builder, $MARKER_TYPE);
+        self::addOBSERVER($builder, $OBSERVER);
+        self::addAGENCY($builder, $AGENCY);
+        self::addANTENNA_DELTA_HEN($builder, $ANTENNA_DELTA_HEN);
+        self::addPHASE_SHIFTS($builder, $PHASE_SHIFTS);
+        self::addSIGNAL_STRENGTH_UNIT($builder, $SIGNAL_STRENGTH_UNIT);
+        self::addLEAP_SECONDS($builder, $LEAP_SECONDS);
+        self::addHAS_LEAP_SECONDS($builder, $HAS_LEAP_SECONDS);
         $o = $builder->endObject();
         return $o;
     }
@@ -586,6 +724,174 @@ class GNO extends Table
     public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
         $builder->addOffsetX(22, $NOTES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTIME_SYSTEM(FlatBufferBuilder $builder, $TIME_SYSTEM)
+    {
+        $builder->addOffsetX(23, $TIME_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addEPOCH_FLAG(FlatBufferBuilder $builder, $EPOCH_FLAG)
+    {
+        $builder->addByteX(24, $EPOCH_FLAG, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMARKER_NAME(FlatBufferBuilder $builder, $MARKER_NAME)
+    {
+        $builder->addOffsetX(25, $MARKER_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMARKER_NUMBER(FlatBufferBuilder $builder, $MARKER_NUMBER)
+    {
+        $builder->addOffsetX(26, $MARKER_NUMBER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMARKER_TYPE(FlatBufferBuilder $builder, $MARKER_TYPE)
+    {
+        $builder->addOffsetX(27, $MARKER_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBSERVER(FlatBufferBuilder $builder, $OBSERVER)
+    {
+        $builder->addOffsetX(28, $OBSERVER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addAGENCY(FlatBufferBuilder $builder, $AGENCY)
+    {
+        $builder->addOffsetX(29, $AGENCY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addANTENNA_DELTA_HEN(FlatBufferBuilder $builder, $ANTENNA_DELTA_HEN)
+    {
+        $builder->addOffsetX(30, $ANTENNA_DELTA_HEN, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createANTENNA_DELTA_HENVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startANTENNA_DELTA_HENVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPHASE_SHIFTS(FlatBufferBuilder $builder, $PHASE_SHIFTS)
+    {
+        $builder->addOffsetX(31, $PHASE_SHIFTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createPHASE_SHIFTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startPHASE_SHIFTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSIGNAL_STRENGTH_UNIT(FlatBufferBuilder $builder, $SIGNAL_STRENGTH_UNIT)
+    {
+        $builder->addOffsetX(32, $SIGNAL_STRENGTH_UNIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addLEAP_SECONDS(FlatBufferBuilder $builder, $LEAP_SECONDS)
+    {
+        $builder->addIntX(33, $LEAP_SECONDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHAS_LEAP_SECONDS(FlatBufferBuilder $builder, $HAS_LEAP_SECONDS)
+    {
+        $builder->addBoolX(34, $HAS_LEAP_SECONDS, false);
     }
 
     /**

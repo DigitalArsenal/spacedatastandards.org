@@ -290,6 +290,7 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 pub mod flatbuffers_encryption {
 //! Field-encryption format 3: encrypts or decrypts, in place, every
@@ -8794,11 +8795,11 @@ impl RecordTypeT {
 pub const ENUM_MIN_RECORD_TYPE_EXTENDED: u16 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 290;
+pub const ENUM_MAX_RECORD_TYPE_EXTENDED: u16 = 291;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 36] = [
+pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 37] = [
     RecordTypeExtended::NONE,
     RecordTypeExtended::ABA,
     RecordTypeExtended::CVR,
@@ -8835,6 +8836,7 @@ pub const ENUM_VALUES_RECORD_TYPE_EXTENDED: [RecordTypeExtended; 36] = [
     RecordTypeExtended::SFE,
     RecordTypeExtended::SRO,
     RecordTypeExtended::SRT,
+    RecordTypeExtended::GNM,
 ];
 
 /// WIDE RECORD TYPES -- APPEND ONLY, FOREVER.
@@ -8886,9 +8888,10 @@ impl RecordTypeExtended {
     pub const SFE: Self = Self(288);
     pub const SRO: Self = Self(289);
     pub const SRT: Self = Self(290);
+    pub const GNM: Self = Self(291);
 
     pub const ENUM_MIN: u16 = 0;
-    pub const ENUM_MAX: u16 = 290;
+    pub const ENUM_MAX: u16 = 291;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::NONE,
         Self::ABA,
@@ -8926,6 +8929,7 @@ impl RecordTypeExtended {
         Self::SFE,
         Self::SRO,
         Self::SRT,
+        Self::GNM,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -8967,6 +8971,7 @@ impl RecordTypeExtended {
             Self::SFE => Some("SFE"),
             Self::SRO => Some("SRO"),
             Self::SRT => Some("SRT"),
+            Self::GNM => Some("GNM"),
             _ => None,
         }
     }

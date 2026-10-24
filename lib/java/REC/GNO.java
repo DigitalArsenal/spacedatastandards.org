@@ -143,6 +143,83 @@ public final class GNO extends com.google.flatbuffers.Table {
   public String NOTES() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
   public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+   * Default empty (not stated).
+   */
+  public String TIME_SYSTEM() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_SYSTEMAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer TIME_SYSTEMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+   * a moving antenna, 3 new site occupation, 4 header information follows, 5
+   * external event, 6 cycle slip records follow. Default 0.
+   */
+  public int EPOCH_FLAG() { int o = __offset(52); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Marker name from the header. Default empty.
+   */
+  public String MARKER_NAME() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MARKER_NAMEAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer MARKER_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * Marker number from the header. Default empty.
+   */
+  public String MARKER_NUMBER() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MARKER_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer MARKER_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * Marker type from the header. Default empty.
+   */
+  public String MARKER_TYPE() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MARKER_TYPEAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer MARKER_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * Observer from the header. Default empty.
+   */
+  public String OBSERVER() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBSERVERAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer OBSERVERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * Agency from the header. Default empty.
+   */
+  public String AGENCY() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer AGENCYAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer AGENCYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Antenna delta from the marker to the antenna reference point: height, east,
+   * north, meters, as [H, E, N]. Default empty.
+   */
+  public double ANTENNA_DELTA_HEN(int j) { int o = __offset(64); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ANTENNA_DELTA_HENLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector antennaDeltaHenVector() { return antennaDeltaHenVector(new DoubleVector()); }
+  public DoubleVector antennaDeltaHenVector(DoubleVector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ANTENNA_DELTA_HENAsByteBuffer() { return __vector_as_bytebuffer(64, 8); }
+  public ByteBuffer ANTENNA_DELTA_HENInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 8); }
+  /**
+   * Phase shift records as the header writes them, one per line, for example
+   * "G L2S -0.25000". Default empty.
+   */
+  public String PHASE_SHIFTS(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int PHASE_SHIFTSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector phaseShiftsVector() { return phaseShiftsVector(new StringVector()); }
+  public StringVector phaseShiftsVector(StringVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Unit of the signal strength observations as the header states it. Default
+   * empty.
+   */
+  public String SIGNAL_STRENGTH_UNIT() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SIGNAL_STRENGTH_UNITAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer SIGNAL_STRENGTH_UNITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+   * when HAS_LEAP_SECONDS.
+   */
+  public int LEAP_SECONDS() { int o = __offset(70); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * True when LEAP_SECONDS carries a value; false (the default) means absent.
+   */
+  public boolean HAS_LEAP_SECONDS() { int o = __offset(72); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
 
   public static int createGNO(FlatBufferBuilder builder,
       int IDOffset,
@@ -167,8 +244,20 @@ public final class GNO extends com.google.flatbuffers.Table {
       double VDOP,
       int SAT_OBSOffset,
       int OBS_CODE_SETOffset,
-      int NOTESOffset) {
-    builder.startTable(23);
+      int NOTESOffset,
+      int TIME_SYSTEMOffset,
+      int EPOCH_FLAG,
+      int MARKER_NAMEOffset,
+      int MARKER_NUMBEROffset,
+      int MARKER_TYPEOffset,
+      int OBSERVEROffset,
+      int AGENCYOffset,
+      int ANTENNA_DELTA_HENOffset,
+      int PHASE_SHIFTSOffset,
+      int SIGNAL_STRENGTH_UNITOffset,
+      int LEAP_SECONDS,
+      boolean HAS_LEAP_SECONDS) {
+    builder.startTable(35);
     GNO.addVdop(builder, VDOP);
     GNO.addHdop(builder, HDOP);
     GNO.addPdop(builder, PDOP);
@@ -181,6 +270,16 @@ public final class GNO extends com.google.flatbuffers.Table {
     GNO.addLatitude(builder, LATITUDE);
     GNO.addClockDrift(builder, CLOCK_DRIFT);
     GNO.addClockOffset(builder, CLOCK_OFFSET);
+    GNO.addLeapSeconds(builder, LEAP_SECONDS);
+    GNO.addSignalStrengthUnit(builder, SIGNAL_STRENGTH_UNITOffset);
+    GNO.addPhaseShifts(builder, PHASE_SHIFTSOffset);
+    GNO.addAntennaDeltaHen(builder, ANTENNA_DELTA_HENOffset);
+    GNO.addAgency(builder, AGENCYOffset);
+    GNO.addObserver(builder, OBSERVEROffset);
+    GNO.addMarkerType(builder, MARKER_TYPEOffset);
+    GNO.addMarkerNumber(builder, MARKER_NUMBEROffset);
+    GNO.addMarkerName(builder, MARKER_NAMEOffset);
+    GNO.addTimeSystem(builder, TIME_SYSTEMOffset);
     GNO.addNotes(builder, NOTESOffset);
     GNO.addObsCodeSet(builder, OBS_CODE_SETOffset);
     GNO.addSatObs(builder, SAT_OBSOffset);
@@ -192,10 +291,12 @@ public final class GNO extends com.google.flatbuffers.Table {
     GNO.addReceiverType(builder, RECEIVER_TYPEOffset);
     GNO.addReceiverId(builder, RECEIVER_IDOffset);
     GNO.addId(builder, IDOffset);
+    GNO.addHasLeapSeconds(builder, HAS_LEAP_SECONDS);
+    GNO.addEpochFlag(builder, EPOCH_FLAG);
     return GNO.endGNO(builder);
   }
 
-  public static void startGNO(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void startGNO(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addReceiverId(FlatBufferBuilder builder, int RECEIVER_IDOffset) { builder.addOffset(1, RECEIVER_IDOffset, 0); }
   public static void addReceiverType(FlatBufferBuilder builder, int RECEIVER_TYPEOffset) { builder.addOffset(2, RECEIVER_TYPEOffset, 0); }
@@ -223,6 +324,22 @@ public final class GNO extends com.google.flatbuffers.Table {
   public static int createObsCodeSetVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startObsCodeSetVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(22, NOTESOffset, 0); }
+  public static void addTimeSystem(FlatBufferBuilder builder, int TIME_SYSTEMOffset) { builder.addOffset(23, TIME_SYSTEMOffset, 0); }
+  public static void addEpochFlag(FlatBufferBuilder builder, int EPOCH_FLAG) { builder.addByte(24, (byte) EPOCH_FLAG, (byte) 0); }
+  public static void addMarkerName(FlatBufferBuilder builder, int MARKER_NAMEOffset) { builder.addOffset(25, MARKER_NAMEOffset, 0); }
+  public static void addMarkerNumber(FlatBufferBuilder builder, int MARKER_NUMBEROffset) { builder.addOffset(26, MARKER_NUMBEROffset, 0); }
+  public static void addMarkerType(FlatBufferBuilder builder, int MARKER_TYPEOffset) { builder.addOffset(27, MARKER_TYPEOffset, 0); }
+  public static void addObserver(FlatBufferBuilder builder, int OBSERVEROffset) { builder.addOffset(28, OBSERVEROffset, 0); }
+  public static void addAgency(FlatBufferBuilder builder, int AGENCYOffset) { builder.addOffset(29, AGENCYOffset, 0); }
+  public static void addAntennaDeltaHen(FlatBufferBuilder builder, int ANTENNA_DELTA_HENOffset) { builder.addOffset(30, ANTENNA_DELTA_HENOffset, 0); }
+  public static int createAntennaDeltaHenVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAntennaDeltaHenVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addPhaseShifts(FlatBufferBuilder builder, int PHASE_SHIFTSOffset) { builder.addOffset(31, PHASE_SHIFTSOffset, 0); }
+  public static int createPhaseShiftsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startPhaseShiftsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSignalStrengthUnit(FlatBufferBuilder builder, int SIGNAL_STRENGTH_UNITOffset) { builder.addOffset(32, SIGNAL_STRENGTH_UNITOffset, 0); }
+  public static void addLeapSeconds(FlatBufferBuilder builder, int LEAP_SECONDS) { builder.addInt(33, LEAP_SECONDS, 0); }
+  public static void addHasLeapSeconds(FlatBufferBuilder builder, boolean HAS_LEAP_SECONDS) { builder.addBoolean(34, HAS_LEAP_SECONDS, false); }
   public static int endGNO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

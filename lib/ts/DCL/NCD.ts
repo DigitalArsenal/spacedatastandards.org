@@ -254,8 +254,80 @@ SOURCE_CID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * A reader's REQUEST, carried in the descriptor that frames the file so that
+ * no option travels outside a typed record. Start of the inclusive window to
+ * read, ISO 8601, on the container's own time scale. Default empty (from the
+ * start of the container).
+ */
+SELECT_START_TIME():string|null
+SELECT_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SELECT_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * End of the inclusive window to read, ISO 8601, on the container's own time
+ * scale. Default empty (to the end of the container).
+ */
+SELECT_STOP_TIME():string|null
+SELECT_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SELECT_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+ */
+SELECT_SAMPLE_INTERVAL_SECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Satellite systems to read, as the RINEX letters G R E C J I S. Default
+ * empty (every system the container holds).
+ */
+SELECT_SATELLITE_SYSTEMS(index: number):string
+SELECT_SATELLITE_SYSTEMS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+SELECT_SATELLITE_SYSTEMS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+selectSatelliteSystemsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Observation codes to read (C1C, L1C, ...). Default empty (every code).
+ */
+SELECT_OBSERVATION_CODES(index: number):string
+SELECT_OBSERVATION_CODES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+SELECT_OBSERVATION_CODES(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+selectObservationCodesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+ * by the instrument id. Default 0.
+ */
+SELECT_CLOCK_ID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
 static startNCD(builder:flatbuffers.Builder) {
-  builder.startObject(20);
+  builder.startObject(26);
 }
 
 static addFormat(builder:flatbuffers.Builder, FORMAT:ncdContainerFormat) {
@@ -362,6 +434,54 @@ static addSourceCid(builder:flatbuffers.Builder, SOURCE_CIDOffset:flatbuffers.Of
   builder.addFieldOffset(19, SOURCE_CIDOffset, 0);
 }
 
+static addSelectStartTime(builder:flatbuffers.Builder, SELECT_START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, SELECT_START_TIMEOffset, 0);
+}
+
+static addSelectStopTime(builder:flatbuffers.Builder, SELECT_STOP_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, SELECT_STOP_TIMEOffset, 0);
+}
+
+static addSelectSampleIntervalSeconds(builder:flatbuffers.Builder, SELECT_SAMPLE_INTERVAL_SECONDS:number) {
+  builder.addFieldFloat64(22, SELECT_SAMPLE_INTERVAL_SECONDS, 0.0);
+}
+
+static addSelectSatelliteSystems(builder:flatbuffers.Builder, SELECT_SATELLITE_SYSTEMSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(23, SELECT_SATELLITE_SYSTEMSOffset, 0);
+}
+
+static createSelectSatelliteSystemsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSelectSatelliteSystemsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSelectObservationCodes(builder:flatbuffers.Builder, SELECT_OBSERVATION_CODESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, SELECT_OBSERVATION_CODESOffset, 0);
+}
+
+static createSelectObservationCodesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSelectObservationCodesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSelectClockId(builder:flatbuffers.Builder, SELECT_CLOCK_ID:number) {
+  builder.addFieldInt32(25, SELECT_CLOCK_ID, 0);
+}
+
 static endNCD(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -397,7 +517,13 @@ unpack(): NCDT {
     this.STOP_TIME(),
     this.SOURCE_BYTE_LENGTH(),
     this.SOURCE_SHA256(),
-    this.SOURCE_CID()
+    this.SOURCE_CID(),
+    this.SELECT_START_TIME(),
+    this.SELECT_STOP_TIME(),
+    this.SELECT_SAMPLE_INTERVAL_SECONDS(),
+    this.bb!.createScalarList<string>(this.SELECT_SATELLITE_SYSTEMS.bind(this), this.selectSatelliteSystemsLength()),
+    this.bb!.createScalarList<string>(this.SELECT_OBSERVATION_CODES.bind(this), this.selectObservationCodesLength()),
+    this.SELECT_CLOCK_ID()
   );
 }
 
@@ -423,6 +549,12 @@ unpackTo(_o: NCDT): void {
   _o.SOURCE_BYTE_LENGTH = this.SOURCE_BYTE_LENGTH();
   _o.SOURCE_SHA256 = this.SOURCE_SHA256();
   _o.SOURCE_CID = this.SOURCE_CID();
+  _o.SELECT_START_TIME = this.SELECT_START_TIME();
+  _o.SELECT_STOP_TIME = this.SELECT_STOP_TIME();
+  _o.SELECT_SAMPLE_INTERVAL_SECONDS = this.SELECT_SAMPLE_INTERVAL_SECONDS();
+  _o.SELECT_SATELLITE_SYSTEMS = this.bb!.createScalarList<string>(this.SELECT_SATELLITE_SYSTEMS.bind(this), this.selectSatelliteSystemsLength());
+  _o.SELECT_OBSERVATION_CODES = this.bb!.createScalarList<string>(this.SELECT_OBSERVATION_CODES.bind(this), this.selectObservationCodesLength());
+  _o.SELECT_CLOCK_ID = this.SELECT_CLOCK_ID();
 }
 }
 
@@ -447,7 +579,13 @@ constructor(
   public STOP_TIME: string|Uint8Array|null = null,
   public SOURCE_BYTE_LENGTH: bigint = BigInt('0'),
   public SOURCE_SHA256: string|Uint8Array|null = null,
-  public SOURCE_CID: string|Uint8Array|null = null
+  public SOURCE_CID: string|Uint8Array|null = null,
+  public SELECT_START_TIME: string|Uint8Array|null = null,
+  public SELECT_STOP_TIME: string|Uint8Array|null = null,
+  public SELECT_SAMPLE_INTERVAL_SECONDS: number = 0.0,
+  public SELECT_SATELLITE_SYSTEMS: (string)[] = [],
+  public SELECT_OBSERVATION_CODES: (string)[] = [],
+  public SELECT_CLOCK_ID: number = 0
 ){}
 
 
@@ -469,6 +607,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const STOP_TIME = (this.STOP_TIME !== null ? builder.createString(this.STOP_TIME!) : 0);
   const SOURCE_SHA256 = (this.SOURCE_SHA256 !== null ? builder.createString(this.SOURCE_SHA256!) : 0);
   const SOURCE_CID = (this.SOURCE_CID !== null ? builder.createString(this.SOURCE_CID!) : 0);
+  const SELECT_START_TIME = (this.SELECT_START_TIME !== null ? builder.createString(this.SELECT_START_TIME!) : 0);
+  const SELECT_STOP_TIME = (this.SELECT_STOP_TIME !== null ? builder.createString(this.SELECT_STOP_TIME!) : 0);
+  const SELECT_SATELLITE_SYSTEMS = NCD.createSelectSatelliteSystemsVector(builder, builder.createObjectOffsetList(this.SELECT_SATELLITE_SYSTEMS));
+  const SELECT_OBSERVATION_CODES = NCD.createSelectObservationCodesVector(builder, builder.createObjectOffsetList(this.SELECT_OBSERVATION_CODES));
 
   NCD.startNCD(builder);
   NCD.addFormat(builder, this.FORMAT);
@@ -491,6 +633,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   NCD.addSourceByteLength(builder, this.SOURCE_BYTE_LENGTH);
   NCD.addSourceSha256(builder, SOURCE_SHA256);
   NCD.addSourceCid(builder, SOURCE_CID);
+  NCD.addSelectStartTime(builder, SELECT_START_TIME);
+  NCD.addSelectStopTime(builder, SELECT_STOP_TIME);
+  NCD.addSelectSampleIntervalSeconds(builder, this.SELECT_SAMPLE_INTERVAL_SECONDS);
+  NCD.addSelectSatelliteSystems(builder, SELECT_SATELLITE_SYSTEMS);
+  NCD.addSelectObservationCodes(builder, SELECT_OBSERVATION_CODES);
+  NCD.addSelectClockId(builder, this.SELECT_CLOCK_ID);
 
   return NCD.endNCD(builder);
 }

@@ -37,8 +37,12 @@ public enum gnssObsType: Int8, FlatbuffersVectorInitializable, Enum, Verifiable 
   case doppler = 2
   case snr = 3
   case rawIf = 4
+  ///  Ionosphere phase delay (RINEX observation type I), as the file states it.
+  case ionospherePhaseDelay = 5
+  ///  Receiver channel number (RINEX observation type X), as the receiver reports it.
+  case channelNumber = 6
 
-  public static var max: gnssObsType { return .rawIf }
+  public static var max: gnssObsType { return .channelNumber }
   public static var min: gnssObsType { return .pseudorange }
 }
 
@@ -129,6 +133,8 @@ public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     static let TRACKING_STATUS: VOffset = 12
     static let AGC_STATE: VOffset = 14
     static let OBSERVATIONS: VOffset = 16
+    static let GLONASS_FREQUENCY_NUMBER: VOffset = 18
+    static let HAS_GLONASS_FREQUENCY_NUMBER: VOffset = 20
   }
 
   ///  GNSS satellite identifier (e.g., G01, R24, E05, C03)
@@ -146,7 +152,13 @@ public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public var AGC_STATE: Int32 { let o = _accessor.offset(VT.AGC_STATE); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   ///  Observations for this satellite
   public var OBSERVATIONS: FlatbufferVector<gnssObsData> { return _accessor.vector(at: VT.OBSERVATIONS, byteSize: 4) }
-  public static func startgnssSatObs(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+  ///  FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+  public var GLONASS_FREQUENCY_NUMBER: Int8 { let o = _accessor.offset(VT.GLONASS_FREQUENCY_NUMBER); return o == 0 ? 0 : _accessor.readBuffer(of: Int8.self, at: o) }
+  ///  True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+  ///  channel); false (the default) means absent.
+  public var HAS_GLONASS_FREQUENCY_NUMBER: Bool { let o = _accessor.offset(VT.HAS_GLONASS_FREQUENCY_NUMBER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startgnssSatObs(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
   public static func add(GNSS_SAT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GNSS_SAT_ID, at: VT.GNSS_SAT_ID) }
   public static func add(CONSTELLATION: gnssConstellation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONSTELLATION.rawValue, def: 0, at: VT.CONSTELLATION) }
   public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VT.ELEVATION) }
@@ -154,6 +166,9 @@ public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public static func add(TRACKING_STATUS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACKING_STATUS, def: 0, at: VT.TRACKING_STATUS) }
   public static func add(AGC_STATE: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGC_STATE, def: 0, at: VT.AGC_STATE) }
   public static func addVectorOf(OBSERVATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATIONS, at: VT.OBSERVATIONS) }
+  public static func add(GLONASS_FREQUENCY_NUMBER: Int8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GLONASS_FREQUENCY_NUMBER, def: 0, at: VT.GLONASS_FREQUENCY_NUMBER) }
+  public static func add(HAS_GLONASS_FREQUENCY_NUMBER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_GLONASS_FREQUENCY_NUMBER, def: false,
+   at: VT.HAS_GLONASS_FREQUENCY_NUMBER) }
   public static func endgnssSatObs(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func creategnssSatObs(
     _ fbb: inout FlatBufferBuilder,
@@ -163,7 +178,9 @@ public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     AZIMUTH: Double = 0.0,
     TRACKING_STATUS: Int32 = 0,
     AGC_STATE: Int32 = 0,
-    OBSERVATIONSVectorOffset OBSERVATIONS: Offset = Offset()
+    OBSERVATIONSVectorOffset OBSERVATIONS: Offset = Offset(),
+    GLONASS_FREQUENCY_NUMBER: Int8 = 0,
+    HAS_GLONASS_FREQUENCY_NUMBER: Bool = false
   ) -> Offset {
     let __start = gnssSatObs.startgnssSatObs(&fbb)
     gnssSatObs.add(GNSS_SAT_ID: GNSS_SAT_ID, &fbb)
@@ -173,6 +190,8 @@ public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     gnssSatObs.add(TRACKING_STATUS: TRACKING_STATUS, &fbb)
     gnssSatObs.add(AGC_STATE: AGC_STATE, &fbb)
     gnssSatObs.addVectorOf(OBSERVATIONS: OBSERVATIONS, &fbb)
+    gnssSatObs.add(GLONASS_FREQUENCY_NUMBER: GLONASS_FREQUENCY_NUMBER, &fbb)
+    gnssSatObs.add(HAS_GLONASS_FREQUENCY_NUMBER: HAS_GLONASS_FREQUENCY_NUMBER, &fbb)
     return gnssSatObs.endgnssSatObs(&fbb, start: __start)
   }
 
@@ -185,6 +204,8 @@ public struct gnssSatObs: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     try _v.visit(field: VT.TRACKING_STATUS, fieldName: "TRACKING_STATUS", required: false, type: Int32.self)
     try _v.visit(field: VT.AGC_STATE, fieldName: "AGC_STATE", required: false, type: Int32.self)
     try _v.visit(field: VT.OBSERVATIONS, fieldName: "OBSERVATIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<gnssObsData>, gnssObsData>>.self)
+    try _v.visit(field: VT.GLONASS_FREQUENCY_NUMBER, fieldName: "GLONASS_FREQUENCY_NUMBER", required: false, type: Int8.self)
+    try _v.visit(field: VT.HAS_GLONASS_FREQUENCY_NUMBER, fieldName: "HAS_GLONASS_FREQUENCY_NUMBER", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -225,6 +246,18 @@ public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let SAT_OBS: VOffset = 44
     static let OBS_CODE_SET: VOffset = 46
     static let NOTES: VOffset = 48
+    static let TIME_SYSTEM: VOffset = 50
+    static let EPOCH_FLAG: VOffset = 52
+    static let MARKER_NAME: VOffset = 54
+    static let MARKER_NUMBER: VOffset = 56
+    static let MARKER_TYPE: VOffset = 58
+    static let OBSERVER: VOffset = 60
+    static let AGENCY: VOffset = 62
+    static let ANTENNA_DELTA_HEN: VOffset = 64
+    static let PHASE_SHIFTS: VOffset = 66
+    static let SIGNAL_STRENGTH_UNIT: VOffset = 68
+    static let LEAP_SECONDS: VOffset = 70
+    static let HAS_LEAP_SECONDS: VOffset = 72
   }
 
   ///  Unique identifier
@@ -281,7 +314,46 @@ public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   ///  Additional notes
   public var NOTES: String? { let o = _accessor.offset(VT.NOTES); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NOTES) }
-  public static func startGNO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
+  ///  Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+  ///  Default empty (not stated).
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VT.TIME_SYSTEM); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TIME_SYSTEM) }
+  ///  RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+  ///  a moving antenna, 3 new site occupation, 4 header information follows, 5
+  ///  external event, 6 cycle slip records follow. Default 0.
+  public var EPOCH_FLAG: UInt8 { let o = _accessor.offset(VT.EPOCH_FLAG); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Marker name from the header. Default empty.
+  public var MARKER_NAME: String? { let o = _accessor.offset(VT.MARKER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MARKER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MARKER_NAME) }
+  ///  Marker number from the header. Default empty.
+  public var MARKER_NUMBER: String? { let o = _accessor.offset(VT.MARKER_NUMBER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MARKER_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MARKER_NUMBER) }
+  ///  Marker type from the header. Default empty.
+  public var MARKER_TYPE: String? { let o = _accessor.offset(VT.MARKER_TYPE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MARKER_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.MARKER_TYPE) }
+  ///  Observer from the header. Default empty.
+  public var OBSERVER: String? { let o = _accessor.offset(VT.OBSERVER); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVERSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBSERVER) }
+  ///  Agency from the header. Default empty.
+  public var AGENCY: String? { let o = _accessor.offset(VT.AGENCY); return o == 0 ? nil : _accessor.string(at: o) }
+  public var AGENCYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.AGENCY) }
+  ///  Antenna delta from the marker to the antenna reference point: height, east,
+  ///  north, meters, as [H, E, N]. Default empty.
+  public var ANTENNA_DELTA_HEN: FlatbufferVector<Double> { return _accessor.vector(at: VT.ANTENNA_DELTA_HEN, byteSize: 8) }
+  public func withUnsafePointerToAntennaDeltaHen<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ANTENNA_DELTA_HEN, body: body) }
+  ///  Phase shift records as the header writes them, one per line, for example
+  ///  "G L2S -0.25000". Default empty.
+  public var PHASE_SHIFTS: FlatbufferVector<String?> { return _accessor.vector(at: VT.PHASE_SHIFTS, byteSize: 4) }
+  ///  Unit of the signal strength observations as the header states it. Default
+  ///  empty.
+  public var SIGNAL_STRENGTH_UNIT: String? { let o = _accessor.offset(VT.SIGNAL_STRENGTH_UNIT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SIGNAL_STRENGTH_UNITSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SIGNAL_STRENGTH_UNIT) }
+  ///  Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+  ///  when HAS_LEAP_SECONDS.
+  public var LEAP_SECONDS: Int32 { let o = _accessor.offset(VT.LEAP_SECONDS); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  True when LEAP_SECONDS carries a value; false (the default) means absent.
+  public var HAS_LEAP_SECONDS: Bool { let o = _accessor.offset(VT.HAS_LEAP_SECONDS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startGNO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VT.ID) }
   public static func add(RECEIVER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_ID, at: VT.RECEIVER_ID) }
   public static func add(RECEIVER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RECEIVER_TYPE, at: VT.RECEIVER_TYPE) }
@@ -305,6 +377,19 @@ public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func addVectorOf(SAT_OBS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAT_OBS, at: VT.SAT_OBS) }
   public static func addVectorOf(OBS_CODE_SET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBS_CODE_SET, at: VT.OBS_CODE_SET) }
   public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VT.NOTES) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VT.TIME_SYSTEM) }
+  public static func add(EPOCH_FLAG: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_FLAG, def: 0, at: VT.EPOCH_FLAG) }
+  public static func add(MARKER_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MARKER_NAME, at: VT.MARKER_NAME) }
+  public static func add(MARKER_NUMBER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MARKER_NUMBER, at: VT.MARKER_NUMBER) }
+  public static func add(MARKER_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MARKER_TYPE, at: VT.MARKER_TYPE) }
+  public static func add(OBSERVER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVER, at: VT.OBSERVER) }
+  public static func add(AGENCY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGENCY, at: VT.AGENCY) }
+  public static func addVectorOf(ANTENNA_DELTA_HEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ANTENNA_DELTA_HEN, at: VT.ANTENNA_DELTA_HEN) }
+  public static func addVectorOf(PHASE_SHIFTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PHASE_SHIFTS, at: VT.PHASE_SHIFTS) }
+  public static func add(SIGNAL_STRENGTH_UNIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNAL_STRENGTH_UNIT, at: VT.SIGNAL_STRENGTH_UNIT) }
+  public static func add(LEAP_SECONDS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LEAP_SECONDS, def: 0, at: VT.LEAP_SECONDS) }
+  public static func add(HAS_LEAP_SECONDS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_LEAP_SECONDS, def: false,
+   at: VT.HAS_LEAP_SECONDS) }
   public static func endGNO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGNO(
     _ fbb: inout FlatBufferBuilder,
@@ -330,7 +415,19 @@ public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     VDOP: Double = 0.0,
     SAT_OBSVectorOffset SAT_OBS: Offset = Offset(),
     OBS_CODE_SETVectorOffset OBS_CODE_SET: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset()
+    NOTESOffset NOTES: Offset = Offset(),
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    EPOCH_FLAG: UInt8 = 0,
+    MARKER_NAMEOffset MARKER_NAME: Offset = Offset(),
+    MARKER_NUMBEROffset MARKER_NUMBER: Offset = Offset(),
+    MARKER_TYPEOffset MARKER_TYPE: Offset = Offset(),
+    OBSERVEROffset OBSERVER: Offset = Offset(),
+    AGENCYOffset AGENCY: Offset = Offset(),
+    ANTENNA_DELTA_HENVectorOffset ANTENNA_DELTA_HEN: Offset = Offset(),
+    PHASE_SHIFTSVectorOffset PHASE_SHIFTS: Offset = Offset(),
+    SIGNAL_STRENGTH_UNITOffset SIGNAL_STRENGTH_UNIT: Offset = Offset(),
+    LEAP_SECONDS: Int32 = 0,
+    HAS_LEAP_SECONDS: Bool = false
   ) -> Offset {
     let __start = GNO.startGNO(&fbb)
     GNO.add(ID: ID, &fbb)
@@ -356,6 +453,18 @@ public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     GNO.addVectorOf(SAT_OBS: SAT_OBS, &fbb)
     GNO.addVectorOf(OBS_CODE_SET: OBS_CODE_SET, &fbb)
     GNO.add(NOTES: NOTES, &fbb)
+    GNO.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    GNO.add(EPOCH_FLAG: EPOCH_FLAG, &fbb)
+    GNO.add(MARKER_NAME: MARKER_NAME, &fbb)
+    GNO.add(MARKER_NUMBER: MARKER_NUMBER, &fbb)
+    GNO.add(MARKER_TYPE: MARKER_TYPE, &fbb)
+    GNO.add(OBSERVER: OBSERVER, &fbb)
+    GNO.add(AGENCY: AGENCY, &fbb)
+    GNO.addVectorOf(ANTENNA_DELTA_HEN: ANTENNA_DELTA_HEN, &fbb)
+    GNO.addVectorOf(PHASE_SHIFTS: PHASE_SHIFTS, &fbb)
+    GNO.add(SIGNAL_STRENGTH_UNIT: SIGNAL_STRENGTH_UNIT, &fbb)
+    GNO.add(LEAP_SECONDS: LEAP_SECONDS, &fbb)
+    GNO.add(HAS_LEAP_SECONDS: HAS_LEAP_SECONDS, &fbb)
     return GNO.endGNO(&fbb, start: __start)
   }
 
@@ -384,6 +493,18 @@ public struct GNO: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.SAT_OBS, fieldName: "SAT_OBS", required: false, type: ForwardOffset<Vector<ForwardOffset<gnssSatObs>, gnssSatObs>>.self)
     try _v.visit(field: VT.OBS_CODE_SET, fieldName: "OBS_CODE_SET", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VT.NOTES, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.TIME_SYSTEM, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EPOCH_FLAG, fieldName: "EPOCH_FLAG", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MARKER_NAME, fieldName: "MARKER_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MARKER_NUMBER, fieldName: "MARKER_NUMBER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.MARKER_TYPE, fieldName: "MARKER_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.OBSERVER, fieldName: "OBSERVER", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.AGENCY, fieldName: "AGENCY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.ANTENNA_DELTA_HEN, fieldName: "ANTENNA_DELTA_HEN", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.PHASE_SHIFTS, fieldName: "PHASE_SHIFTS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VT.SIGNAL_STRENGTH_UNIT, fieldName: "SIGNAL_STRENGTH_UNIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LEAP_SECONDS, fieldName: "LEAP_SECONDS", required: false, type: Int32.self)
+    try _v.visit(field: VT.HAS_LEAP_SECONDS, fieldName: "HAS_LEAP_SECONDS", required: false, type: Bool.self)
     _v.finish()
   }
 }

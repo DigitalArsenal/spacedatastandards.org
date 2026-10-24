@@ -12,8 +12,16 @@ public final class gnssObsType {
   public static final byte DOPPLER = 2;
   public static final byte SNR = 3;
   public static final byte RAW_IF = 4;
+  /**
+   * Ionosphere phase delay (RINEX observation type I), as the file states it.
+   */
+  public static final byte IONOSPHERE_PHASE_DELAY = 5;
+  /**
+   * Receiver channel number (RINEX observation type X), as the receiver reports it.
+   */
+  public static final byte CHANNEL_NUMBER = 6;
 
-  public static final String[] names = { "PSEUDORANGE", "CARRIER_PHASE", "DOPPLER", "SNR", "RAW_IF", };
+  public static final String[] names = { "PSEUDORANGE", "CARRIER_PHASE", "DOPPLER", "SNR", "RAW_IF", "IONOSPHERE_PHASE_DELAY", "CHANNEL_NUMBER", };
 
   public static String name(int e) { return names[e]; }
 }

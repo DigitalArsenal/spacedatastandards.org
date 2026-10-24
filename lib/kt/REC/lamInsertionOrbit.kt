@@ -161,6 +161,42 @@ class lamInsertionOrbit : Table() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+     * HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+     */
+    val semiMajorAxisUncertaintyM : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+     * default) means absent, and a consumer applies its vehicle-class default.
+     */
+    val hasSemiMajorAxisUncertaintyM : Boolean
+        get() {
+            val o = __offset(36)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+     * HAS_INCLINATION_UNCERTAINTY_DEG.
+     */
+    val inclinationUncertaintyDeg : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+     * means absent, and a consumer applies its vehicle-class default.
+     */
+    val hasInclinationUncertaintyDeg : Boolean
+        get() {
+            val o = __offset(40)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAslamInsertionOrbit(_bb: ByteBuffer): lamInsertionOrbit = getRootAslamInsertionOrbit(_bb, lamInsertionOrbit())
@@ -168,8 +204,10 @@ class lamInsertionOrbit : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createlamInsertionOrbit(builder: FlatBufferBuilder, epochOffset: Int, timeFromLaunchS: Double, refFrameOffset: Int, semiMajorAxisM: Double, eccentricity: Double, inclinationDeg: Double, raanDeg: Double, argumentOfPeriapsisDeg: Double, argumentOfLatitudeDeg: Double, periapsisAltitudeM: Double, apoapsisAltitudeM: Double, raanUncertaintyDeg: Double, argumentOfLatitudeUncertaintyDeg: Double, periapsisAltitudeUncertaintyM: Double, apoapsisAltitudeUncertaintyM: Double) : Int {
-            builder.startTable(15)
+        fun createlamInsertionOrbit(builder: FlatBufferBuilder, epochOffset: Int, timeFromLaunchS: Double, refFrameOffset: Int, semiMajorAxisM: Double, eccentricity: Double, inclinationDeg: Double, raanDeg: Double, argumentOfPeriapsisDeg: Double, argumentOfLatitudeDeg: Double, periapsisAltitudeM: Double, apoapsisAltitudeM: Double, raanUncertaintyDeg: Double, argumentOfLatitudeUncertaintyDeg: Double, periapsisAltitudeUncertaintyM: Double, apoapsisAltitudeUncertaintyM: Double, semiMajorAxisUncertaintyM: Double, hasSemiMajorAxisUncertaintyM: Boolean, inclinationUncertaintyDeg: Double, hasInclinationUncertaintyDeg: Boolean) : Int {
+            builder.startTable(19)
+            addINCLINATIONUNCERTAINTYDEG(builder, inclinationUncertaintyDeg)
+            addSEMIMAJORAXISUNCERTAINTYM(builder, semiMajorAxisUncertaintyM)
             addAPOAPSISALTITUDEUNCERTAINTYM(builder, apoapsisAltitudeUncertaintyM)
             addPERIAPSISALTITUDEUNCERTAINTYM(builder, periapsisAltitudeUncertaintyM)
             addARGUMENTOFLATITUDEUNCERTAINTYDEG(builder, argumentOfLatitudeUncertaintyDeg)
@@ -185,9 +223,11 @@ class lamInsertionOrbit : Table() {
             addTIMEFROMLAUNCHS(builder, timeFromLaunchS)
             addREFFRAME(builder, refFrameOffset)
             addEPOCH(builder, epochOffset)
+            addHASINCLINATIONUNCERTAINTYDEG(builder, hasInclinationUncertaintyDeg)
+            addHASSEMIMAJORAXISUNCERTAINTYM(builder, hasSemiMajorAxisUncertaintyM)
             return endlamInsertionOrbit(builder)
         }
-        fun startlamInsertionOrbit(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startlamInsertionOrbit(builder: FlatBufferBuilder) = builder.startTable(19)
         fun addEPOCH(builder: FlatBufferBuilder, epoch: Int) = builder.addOffset(0, epoch, 0)
         fun addTIMEFROMLAUNCHS(builder: FlatBufferBuilder, timeFromLaunchS: Double) = builder.addDouble(1, timeFromLaunchS, 0.0)
         fun addREFFRAME(builder: FlatBufferBuilder, refFrame: Int) = builder.addOffset(2, refFrame, 0)
@@ -203,6 +243,10 @@ class lamInsertionOrbit : Table() {
         fun addARGUMENTOFLATITUDEUNCERTAINTYDEG(builder: FlatBufferBuilder, argumentOfLatitudeUncertaintyDeg: Double) = builder.addDouble(12, argumentOfLatitudeUncertaintyDeg, 0.0)
         fun addPERIAPSISALTITUDEUNCERTAINTYM(builder: FlatBufferBuilder, periapsisAltitudeUncertaintyM: Double) = builder.addDouble(13, periapsisAltitudeUncertaintyM, 0.0)
         fun addAPOAPSISALTITUDEUNCERTAINTYM(builder: FlatBufferBuilder, apoapsisAltitudeUncertaintyM: Double) = builder.addDouble(14, apoapsisAltitudeUncertaintyM, 0.0)
+        fun addSEMIMAJORAXISUNCERTAINTYM(builder: FlatBufferBuilder, semiMajorAxisUncertaintyM: Double) = builder.addDouble(15, semiMajorAxisUncertaintyM, 0.0)
+        fun addHASSEMIMAJORAXISUNCERTAINTYM(builder: FlatBufferBuilder, hasSemiMajorAxisUncertaintyM: Boolean) = builder.addBoolean(16, hasSemiMajorAxisUncertaintyM, false)
+        fun addINCLINATIONUNCERTAINTYDEG(builder: FlatBufferBuilder, inclinationUncertaintyDeg: Double) = builder.addDouble(17, inclinationUncertaintyDeg, 0.0)
+        fun addHASINCLINATIONUNCERTAINTYDEG(builder: FlatBufferBuilder, hasInclinationUncertaintyDeg: Boolean) = builder.addBoolean(18, hasInclinationUncertaintyDeg, false)
         fun endlamInsertionOrbit(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

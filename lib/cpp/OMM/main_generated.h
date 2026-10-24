@@ -139,12 +139,25 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
   }
-  /// Center Name (e.g. EARTH, MARS)
+  /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
+  /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
+  /// Earth's reach states its elements about that center; GM is then the
+  /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
+  /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
+  /// MEAN_ANOMALY.
   const ::flatbuffers::String *CENTER_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CENTER_NAME);
   }
   /// Reference Frame
   /// Typically TEMEOFDATE
+  /// The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
+  /// RFMCoordinateSystem with AXIS_TYPE OBJECT_REFERENCED: OBJECT_REFERENCED_AXES
+  /// names the Earth as PRIMARY_OBJECT_ID and the Moon as SECONDARY_OBJECT_ID
+  /// (ephemeris body codes 399 and 301, as text), X_AXIS RADIAL and Z_AXIS
+  /// ORBIT_NORMAL, Y completing the triad; ORIGIN is the Moon (CELESTIAL_BODY),
+  /// the Earth-Moon barycenter (BARYCENTRE) or the libration point
+  /// (LIBRATION_POINT with its primary and secondary). No other frame value is
+  /// needed for it.
   const RFM *REFERENCE_FRAME() const {
     return GetPointer<const RFM *>(VT_REFERENCE_FRAME);
   }
@@ -244,7 +257,8 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double REV_AT_EPOCH() const {
     return GetField<double>(VT_REV_AT_EPOCH, 0.0);
   }
-  /// BSTAR in 1/Earth radii or BTERM in m**2/kg depending on MEAN_ELEMENT_THEORY [C]
+  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
+  /// signed effective ballistic coefficient B_eff) [C]
   double BSTAR() const {
     return GetField<double>(VT_BSTAR, 0.0);
   }
@@ -252,7 +266,7 @@ struct OMM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double MEAN_MOTION_DOT() const {
     return GetField<double>(VT_MEAN_MOTION_DOT, 0.0);
   }
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
   double MEAN_MOTION_DDOT() const {
     return GetField<double>(VT_MEAN_MOTION_DDOT, 0.0);
   }

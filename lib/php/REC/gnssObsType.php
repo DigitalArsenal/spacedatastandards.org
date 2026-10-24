@@ -10,6 +10,10 @@ class gnssObsType
     const DOPPLER = 2;
     const SNR = 3;
     const RAW_IF = 4;
+    /// Ionosphere phase delay (RINEX observation type I), as the file states it.
+    const IONOSPHERE_PHASE_DELAY = 5;
+    /// Receiver channel number (RINEX observation type X), as the receiver reports it.
+    const CHANNEL_NUMBER = 6;
 
     private static $names = array(
         gnssObsType::PSEUDORANGE=>"PSEUDORANGE",
@@ -17,6 +21,8 @@ class gnssObsType
         gnssObsType::DOPPLER=>"DOPPLER",
         gnssObsType::SNR=>"SNR",
         gnssObsType::RAW_IF=>"RAW_IF",
+        gnssObsType::IONOSPHERE_PHASE_DELAY=>"IONOSPHERE_PHASE_DELAY",
+        gnssObsType::CHANNEL_NUMBER=>"CHANNEL_NUMBER",
     );
 
     public static function Name($e)
