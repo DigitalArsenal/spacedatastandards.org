@@ -174,7 +174,9 @@ try {
     run(path.join(dir, 'copy'), jobs.flatMap(([name]) => [`${name}.js.fb`, `${name}.cpp.fb`]), dir);
 
     const goDir = path.join(tmp, c.code);
-    fs.cpSync(path.join(goRoot, c.code), goDir, { recursive: true });
+    // The Go module cache is read-only: copy the package and make it writable so the harness file can be added.
+    run('cp', ['-R', path.join(goRoot, c.code), goDir]);
+    run('chmod', ['-R', 'u+w', goDir]);
     fs.writeFileSync(path.join(goDir, 'wire_e2e.go'), goProgram(model, c, reachable));
     fs.mkdirSync(path.join(tmp, `run${c.code}`), { recursive: true });
     fs.writeFileSync(path.join(tmp, `run${c.code}`, 'main.go'),
