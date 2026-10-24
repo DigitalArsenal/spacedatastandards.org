@@ -1,5 +1,5 @@
-// Hash: ee277e3cc574bbeae35872dd70559f3a423eae68b641826f67146acc28c9835e
-// Version: 0.0.3
+// Hash: de6ee7894a3ee90de24d397a1a70d1864f293893d757311298c5a20ccda8531d
+// Version: 0.0.4
 // -----------------------------------END_HEADER
 /// Native container format class.
 ///
@@ -92,6 +92,11 @@ enum ncdContainerFormat : ubyte {
   RINEX_OBS = 30,
   /// RINEX navigation file.
   RINEX_NAV = 31,
+  /// NAIF binary Planetary Constants Kernel: a DAF holding body orientation as
+  /// Chebyshev segments (data types 2, 3 and 20), with no size or shape data;
+  /// e.g. the Moon's principal-axis frame in moon_pa_de440_*.bpc (NAIF, PCK
+  /// Required Reading).
+  PCK_DAF = 32,
 
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.

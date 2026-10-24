@@ -89,7 +89,7 @@ try {
     {
       name: 'NCD', code: 'NCD', start: 'NCD', sweeps: null, build: (model, M, visited) => populate(model, M, 'NCD', visited),
       enums: [['ncdContainerFormat', (M, v) => Object.assign(new M.NCDT(), { FORMAT: v })]],
-      tails: { ncdContainerFormat: ['CCSDS_RDM_XML=26', 'SENTINEL_EOF_XML=27', 'NAIF_CK_DAF=28', 'NAIF_SCLK_KERNEL=29', 'RINEX_OBS=30', 'RINEX_NAV=31', 'PROVIDER_DEFINED=255'] },
+      tails: { ncdContainerFormat: ['CCSDS_RDM_XML=26', 'SENTINEL_EOF_XML=27', 'NAIF_CK_DAF=28', 'NAIF_SCLK_KERNEL=29', 'RINEX_OBS=30', 'RINEX_NAV=31', 'PCK_DAF=32', 'PROVIDER_DEFINED=255'] },
     },
   ];
 

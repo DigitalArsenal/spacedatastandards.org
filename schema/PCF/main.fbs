@@ -1,5 +1,5 @@
-// Hash: a8335b1487de6e1252c5814f3238ab1e9737b25327be1a593dfb6dd3777f9633
-// Version: 1.0.0
+// Hash: b797b2f06dd2d6560c27173def0b53cbfc4e570c27c159ac412e743a412b4a3f
+// Version: 1.0.1
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -282,7 +282,11 @@ enum pcfGravitySelection : ubyte {
   EGM96 = 6,
   /// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
   /// Moon's field, in the Moon's principal-axis frame.
-  GRGM660PRIM = 7
+  GRGM660PRIM = 7,
+  /// MRO120F (Konopliv et al. 2020, Geophys. Res. Lett. 47,
+  /// doi:10.1029/2020GL090568), the Mars field, in the Mars-fixed frame of
+  /// its PDS label.
+  MRO120F = 8
 }
 
 enum pcfAtmosphereFamily : ubyte {
@@ -298,7 +302,12 @@ enum pcfAtmosphereFamily : ubyte {
   JACCHIA_ROBERTS = 5,
   /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
   /// Dst-derived temperature change from the request's JB2008 indices.
-  JB2008 = 6
+  JB2008 = 6,
+  /// Banded exponential atmosphere of Mars: the density falls as
+  /// exp(-(h - h0) / H) through altitude bands (Vallado, Fundamentals of
+  /// Astrodynamics and Applications, 4th ed., section 8.6), and it co-rotates
+  /// with Mars.
+  MARS_EXPONENTIAL = 7
 }
 
 /// Solid Earth tide model for the central body's field. NONE leaves the
@@ -804,6 +813,13 @@ table PCFForceModel {
   /// Empirical along-track terms of the averaged theories. Absent (the
   /// default): the theory's own.
   EMPIRICAL_TERMS:PCFEmpiricalTerms;
+  /// Highest degree of the harmonic field of the third body that has one (the
+  /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
+  /// The field's acceleration at the frame origin is subtracted. Default 0:
+  /// third bodies are point masses only.
+  THIRD_BODY_MAXIMUM_DEGREE:ushort = 0;
+  /// Highest order of that field; dimensionless. Default 0.
+  THIRD_BODY_MAXIMUM_ORDER:ushort = 0;
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
