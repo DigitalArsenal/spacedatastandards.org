@@ -101,6 +101,7 @@ export const schemaCategoryDefinitions: SchemaCategoryDefinition[] = [
       { abbr: "SAR", desc: "SAR Observation" },
       { abbr: "RFO", desc: "RF Observation" },
       { abbr: "GNO", desc: "GNSS Observation" },
+      { abbr: "GNM", desc: "GNSS Navigation Message" },
       { abbr: "DOA", desc: "Difference of Arrival" },
       { abbr: "MTI", desc: "Moving Target Indicator" },
       { abbr: "SWR", desc: "Short-Wave IR Observation" },

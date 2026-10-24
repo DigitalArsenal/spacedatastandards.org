@@ -72,7 +72,7 @@ const CATEGORY_MAP = {
   'REC': 'Data', 'RDM': 'Data', 'RDO': 'Data', 'MTI': 'Data', 'MST': 'Data',
 
   // Physical/Environment
-  'PHY': 'Physical', 'ENV': 'Physical', 'GEO': 'Physical', 'GNO': 'Physical',
+  'PHY': 'Physical', 'ENV': 'Physical', 'GEO': 'Physical', 'GNO': 'Physical', 'GNM': 'Physical',
   'SPW': 'Physical', 'WTH': 'Physical', 'IRO': 'Physical', 'ION': 'Physical',
 
   // Military/Weapons

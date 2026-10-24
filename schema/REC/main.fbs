@@ -1,5 +1,5 @@
-// Hash: 4d2b71fa2721b495b3187b60d8174c7fa680883806134da87dde827ca35ed82c
-// Version: 1.44.86
+// Hash: aa1a2984ad3bfbf6c894188255822b2fbc5c058f71da96675cf7ea1f6541184f
+// Version: 1.44.87
 // -----------------------------------END_HEADER
 include "../ABA/main.fbs";
 include "../ACI/main.fbs";
@@ -97,6 +97,7 @@ include "../GEL/main.fbs";
 include "../GEO/main.fbs";
 include "../GJN/main.fbs";
 include "../GLX/main.fbs";
+include "../GNM/main.fbs";
 include "../GNO/main.fbs";
 include "../GNP/main.fbs";
 include "../GPX/main.fbs";
@@ -416,7 +417,8 @@ enum RecordTypeExtended : ushort {
   SDI = 287,
   SFE = 288,
   SRO = 289,
-  SRT = 290
+  SRT = 290,
+  GNM = 291
 }  // Wide record types
 
 /// Individual record wrapper for any standard type

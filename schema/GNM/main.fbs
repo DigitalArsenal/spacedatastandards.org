@@ -1,0 +1,156 @@
+// Hash: 6ddfb8e305842d3229921ca5fa479bb114e330a990f738e8235c2af52320b940
+// Version: 1.263.0
+// -----------------------------------END_HEADER
+include "../GNO/main.fbs";
+
+/// Which broadcast message a navigation record came from. Append new values
+/// only; never reorder or reuse a value.
+enum gnssNavMessageType : byte {
+  UNSPECIFIED = 0,
+  /// Legacy navigation message (GPS, QZSS, NavIC).
+  LNAV = 1,
+  /// Civil navigation message (GPS and QZSS L2C and L5).
+  CNAV = 2,
+  /// BeiDou B-CNAV1.
+  CNV1 = 3,
+  /// BeiDou B-CNAV2.
+  CNV2 = 4,
+  /// BeiDou B-CNAV3.
+  CNV3 = 5,
+  /// Galileo F/NAV (E5a).
+  FNAV = 6,
+  /// Galileo I/NAV (E1 and E5b).
+  INAV = 7,
+  /// BeiDou D1 (MEO and IGSO).
+  D1 = 8,
+  /// BeiDou D2 (GEO).
+  D2 = 9,
+  /// GLONASS FDMA navigation message.
+  FDMA = 10,
+  /// SBAS geostationary navigation message.
+  SBAS = 11
+}
+
+/// Keplerian broadcast parameters (GPS, Galileo, BeiDou, QZSS, NavIC), in the
+/// symbols of IS-GPS-200. Angles in radians, lengths in meters, times in
+/// seconds; every field defaults to 0.
+table gnssKeplerianBroadcast {
+  /// Square root of the semi-major axis, sqrt(m).
+  SQRT_A:double;
+  /// Eccentricity, dimensionless.
+  ECCENTRICITY:double;
+  /// Inclination at TOE, rad.
+  I0:double;
+  /// Longitude of the ascending node at the weekly epoch, rad.
+  OMEGA0:double;
+  /// Argument of perigee, rad.
+  OMEGA:double;
+  /// Mean anomaly at TOE, rad.
+  M0:double;
+  /// Mean motion difference from the computed value, rad/s.
+  DELTA_N:double;
+  /// Rate of right ascension, rad/s.
+  OMEGA_DOT:double;
+  /// Rate of inclination, rad/s.
+  IDOT:double;
+  /// Cosine harmonic correction to the argument of latitude, rad.
+  CUC:double;
+  /// Sine harmonic correction to the argument of latitude, rad.
+  CUS:double;
+  /// Cosine harmonic correction to the orbit radius, m.
+  CRC:double;
+  /// Sine harmonic correction to the orbit radius, m.
+  CRS:double;
+  /// Cosine harmonic correction to the inclination, rad.
+  CIC:double;
+  /// Sine harmonic correction to the inclination, rad.
+  CIS:double;
+  /// Time of ephemeris, seconds of the system week.
+  TOE:double;
+  /// System week of TOE, not rolled over.
+  WEEK:uint;
+  /// Issue of data as broadcast (IODE, IODC or IODnav).
+  IODE_OR_IODNAV:double;
+  /// Fit interval, hours.
+  FIT_INTERVAL_HOURS:double;
+}
+
+/// GLONASS and SBAS broadcast a state vector in the system's Earth-fixed frame
+/// (PZ-90 or the system frame): km, km/s, km/s^2.
+table gnssStateBroadcast {
+  /// Position, km.
+  X:double;
+  Y:double;
+  Z:double;
+  /// Velocity, km/s.
+  VX:double;
+  VY:double;
+  VZ:double;
+  /// Luni-solar acceleration, km/s^2.
+  AX:double;
+  AY:double;
+  AZ:double;
+  /// Reference time of the state, seconds of the day.
+  TOE:double;
+  /// GLONASS frequency channel number k. Meaningful only when
+  /// HAS_FREQUENCY_NUMBER.
+  FREQUENCY_NUMBER:byte;
+  /// True when FREQUENCY_NUMBER carries a value (channel 0 is a real channel);
+  /// false (the default) means absent.
+  HAS_FREQUENCY_NUMBER:bool = false;
+  /// Message frame time, seconds of the day.
+  MESSAGE_FRAME_TIME:double;
+}
+
+/// GNSS broadcast navigation message: one satellite, one message. Exactly one
+/// of KEPLERIAN and STATE is present, by CONSTELLATION and MESSAGE_TYPE. The
+/// parameters are the broadcast ones, not an evaluated orbit; an evaluated
+/// orbit belongs in $OEM.
+table GNM {
+  /// Satellite identifier as the source writes it, for example G05, E11, C21,
+  /// R24. Default empty.
+  SATELLITE_ID:string;
+  /// Constellation of the satellite (the $GNO family's enumeration).
+  CONSTELLATION:gnssConstellation;
+  /// Broadcast message the record came from. Default UNSPECIFIED.
+  MESSAGE_TYPE:gnssNavMessageType = UNSPECIFIED;
+  /// System time scale TOC, TOE and the clock refer to, as the source names it.
+  /// Default empty.
+  TIME_SYSTEM:string;
+  /// Time of clock, ISO 8601 on TIME_SYSTEM. Default empty.
+  TOC:string;
+  /// Satellite clock bias, s.
+  CLOCK_BIAS:double;
+  /// Satellite clock drift, s/s.
+  CLOCK_DRIFT:double;
+  /// Satellite clock drift rate, s/s^2.
+  CLOCK_DRIFT_RATE:double;
+  /// Transmission time of the message, seconds of the system week.
+  TRANSMISSION_TIME:double;
+  /// Health word as broadcast. Meaningful only when HAS_HEALTH.
+  HEALTH:uint;
+  /// True when HEALTH carries a value (0 is a real health word); false (the
+  /// default) means absent.
+  HAS_HEALTH:bool = false;
+  /// Signal accuracy (URA, SISA or URE index resolved), m.
+  ACCURACY:double;
+  /// The accuracy index as broadcast. Meaningful only when HAS_ACCURACY_INDEX.
+  ACCURACY_INDEX:int;
+  /// True when ACCURACY_INDEX carries a value (0 is a real index); false (the
+  /// default) means absent.
+  HAS_ACCURACY_INDEX:bool = false;
+  /// Group delays (TGD, BGD, ISC), s, in the order of GROUP_DELAY_NAMES. Default
+  /// empty.
+  GROUP_DELAYS:[double];
+  /// Names of the GROUP_DELAYS, same order and length. Default empty.
+  GROUP_DELAY_NAMES:[string];
+  /// Keplerian parameters (GPS, Galileo, BeiDou, QZSS, NavIC).
+  KEPLERIAN:gnssKeplerianBroadcast;
+  /// State vector (GLONASS, SBAS).
+  STATE:gnssStateBroadcast;
+  /// The RINEX data-source bit field. Default 0.
+  DATA_SOURCES:uint;
+}
+
+root_type GNM;
+file_identifier "$GNM";

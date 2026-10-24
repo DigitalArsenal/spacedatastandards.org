@@ -8,6 +8,8 @@
 // the buffer it started from. The enum sweeps send every value of the shared
 // integrator algorithm, the theory and the event enums through the same three
 // runtimes, and a negative control proves the comparison notices a dropped field.
+// The same run covers the GNSS navigation message ($GNM), the GNSS observation
+// ($GNO) and the native-container descriptor ($NCD) of the release that follows.
 // Default: candidate (lib/ and dist/ of this tree). --published VERSION: the
 // immutable npm archive and Go module of that release.
 import assert from 'node:assert/strict';
@@ -74,6 +76,21 @@ try {
       name: 'PRW-result', code: 'PRW', start: 'PRWExecutionResult', sweeps: null,
       build: (model, M, visited) => Object.assign(new M.PRWT(), { EXECUTION_RESULT: populate(model, M, 'PRWExecutionResult', visited) }),
     },
+    {
+      name: 'GNM', code: 'GNM', start: 'GNM', sweeps: null, build: (model, M, visited) => populate(model, M, 'GNM', visited),
+      enums: [['gnssNavMessageType', (M, v) => Object.assign(new M.GNMT(), { MESSAGE_TYPE: v })]],
+      tails: { gnssNavMessageType: ['UNSPECIFIED=0', 'LNAV=1', 'CNAV=2', 'CNV1=3', 'CNV2=4', 'CNV3=5', 'FNAV=6', 'INAV=7', 'D1=8', 'D2=9', 'FDMA=10', 'SBAS=11'] },
+    },
+    {
+      name: 'GNO', code: 'GNO', start: 'GNO', sweeps: null, build: (model, M, visited) => populate(model, M, 'GNO', visited),
+      enums: [['gnssObsType', (M, v) => Object.assign(new M.GNOT(), { SAT_OBS: [Object.assign(new M.gnssSatObsT(), { OBSERVATIONS: [Object.assign(new M.gnssObsDataT(), { OBS_TYPE: v })] })] })]],
+      tails: { gnssObsType: ['RAW_IF=4', 'IONOSPHERE_PHASE_DELAY=5', 'CHANNEL_NUMBER=6'] },
+    },
+    {
+      name: 'NCD', code: 'NCD', start: 'NCD', sweeps: null, build: (model, M, visited) => populate(model, M, 'NCD', visited),
+      enums: [['ncdContainerFormat', (M, v) => Object.assign(new M.NCDT(), { FORMAT: v })]],
+      tails: { ncdContainerFormat: ['CCSDS_RDM_XML=26', 'SENTINEL_EOF_XML=27', 'NAIF_CK_DAF=28', 'NAIF_SCLK_KERNEL=29', 'RINEX_OBS=30', 'RINEX_NAV=31', 'PROVIDER_DEFINED=255'] },
+    },
   ];
 
   for (const c of cases) {
@@ -90,19 +107,31 @@ try {
     // The enums the two standards share keep their numbers; every member is then sent through the runtimes, one small buffer each.
     const sweeps = [];
     const sweep = (label, make) => sweeps.push([label, make]);
-    const algorithm = model.enums.get('pcfIntegratorAlgorithm');
+    const shared = c.code === 'PCF' || c.code === 'PRW';
+    const algorithm = shared ? model.enums.get('pcfIntegratorAlgorithm') : { members: [] };
     const theory = model.enums.get('pcfTheory');
-    assert.ok(algorithm, `${c.name}: pcfIntegratorAlgorithm is the one integrator enum`);
-    assert.ok(!model.enums.has('prwSolverAlgorithm') && !model.enums.has('IntegratorType'), `${c.name}: no second integrator enum`);
-    assert.deepEqual(algorithm.members.map((m) => m.value), algorithm.members.map((_, i) => i), 'algorithm numbering is dense and append-only');
-    const frozen = ['UNSPECIFIED', 'RK4', 'RKF45', 'RKF78', 'RK78', 'RKDP87', 'ABM', 'BS', 'COWELL', 'ENCKE', 'EQUINOCTIAL_VOP'];
-    assert.deepEqual(algorithm.members.slice(0, frozen.length).map((m) => m.name), frozen, 'values 0-10 keep the numbers $PRW carried');
-    assert.deepEqual(algorithm.members.slice(frozen.length).map((m) => m.name),
-      ['DOPRI5', 'RK65', 'RKV98', 'RKN1210', 'GAUSS_JACKSON_8', 'GAUSS_VOP', 'DROMO', 'STIEFEL', 'DOPRI853']);
-    const expectEnum = (enumName, names) => assert.deepEqual(model.enums.get(enumName).members.map((m) => `${m.name}=${m.value}`), names, `${enumName} numbering`);
-    expectEnum('pcfEventKind', ['UNSPECIFIED=0', 'APSIS=1', 'PLANE_CROSSING=2', 'TRUE_ANOMALY=3', 'ARGUMENT_OF_LATITUDE=4', 'LATITUDE_EXTREMUM=5', 'UMBRA=6', 'PENUMBRA=7', 'CLOSEST_APPROACH=8', 'EXPRESSION=9']);
-    expectEnum('pcfEventDirection', ['ANY=0', 'INCREASING=1', 'DECREASING=2']);
-    expectEnum('pcfEventAction', ['CONTINUE=0', 'RECORD=1', 'STOP=2']);
+    if (shared) {
+      assert.ok(algorithm, `${c.name}: pcfIntegratorAlgorithm is the one integrator enum`);
+      assert.ok(!model.enums.has('prwSolverAlgorithm') && !model.enums.has('IntegratorType'), `${c.name}: no second integrator enum`);
+      assert.deepEqual(algorithm.members.map((m) => m.value), algorithm.members.map((_, i) => i), 'algorithm numbering is dense and append-only');
+      const frozen = ['UNSPECIFIED', 'RK4', 'RKF45', 'RKF78', 'RK78', 'RKDP87', 'ABM', 'BS', 'COWELL', 'ENCKE', 'EQUINOCTIAL_VOP'];
+      assert.deepEqual(algorithm.members.slice(0, frozen.length).map((m) => m.name), frozen, 'values 0-10 keep the numbers $PRW carried');
+      assert.deepEqual(algorithm.members.slice(frozen.length).map((m) => m.name),
+        ['DOPRI5', 'RK65', 'RKV98', 'RKN1210', 'GAUSS_JACKSON_8', 'GAUSS_VOP', 'DROMO', 'STIEFEL', 'DOPRI853']);
+      const expectEnum = (enumName, names) => assert.deepEqual(model.enums.get(enumName).members.map((m) => `${m.name}=${m.value}`), names, `${enumName} numbering`);
+      expectEnum('pcfEventKind', ['UNSPECIFIED=0', 'APSIS=1', 'PLANE_CROSSING=2', 'TRUE_ANOMALY=3', 'ARGUMENT_OF_LATITUDE=4', 'LATITUDE_EXTREMUM=5', 'UMBRA=6', 'PENUMBRA=7', 'CLOSEST_APPROACH=8', 'EXPRESSION=9']);
+      expectEnum('pcfEventDirection', ['ANY=0', 'INCREASING=1', 'DECREASING=2']);
+      expectEnum('pcfEventAction', ['CONTINUE=0', 'RECORD=1', 'STOP=2']);
+    }
+    // Enums a case owns: the appended tail keeps its numbers, then every member is sent through the runtimes.
+    for (const [enumName, expected] of Object.entries(c.tails ?? {})) {
+      const members = model.enums.get(enumName).members.map((m) => `${m.name}=${m.value}`);
+      assert.deepEqual(members.slice(members.length - expected.length), expected, `${enumName} tail numbering`);
+    }
+    for (const [enumName, make] of c.enums ?? []) for (const m of model.enums.get(enumName).members) {
+      assert.equal(M[enumName][m.name], m.value, `generated JS enum ${enumName}.${m.name}`);
+      sweep(`${enumName} ${m.name}`, () => make(M, m.value));
+    }
     if (c.sweeps) for (const m of algorithm.members) {
       assert.equal(M.pcfIntegratorAlgorithm[m.name], m.value, `generated JS enum ${m.name}`);
       sweep(`algorithm ${m.name}`, () => c.sweeps === 'config'

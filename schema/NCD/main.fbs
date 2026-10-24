@@ -1,5 +1,5 @@
-// Hash: 230ff7c03e76a03bf7e80f51e492032dfc22872d95dc09fb983f088739234f19
-// Version: 0.0.2
+// Hash: ee277e3cc574bbeae35872dd70559f3a423eae68b641826f67146acc28c9835e
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Native container format class.
 ///
@@ -81,6 +81,17 @@ enum ncdContainerFormat : ubyte {
   CCSDS_RDM_KVN = 25,
   /// CCSDS Reentry Data Message, XML.
   CCSDS_RDM_XML = 26,
+  /// ESA Earth Explorer orbit file in XML (Sentinel-1, -2 and -3 AUX_POEORB,
+  /// AUX_RESORB and AUX_PREORB).
+  SENTINEL_EOF_XML = 27,
+  /// NAIF C-kernel: a DAF holding pointing (attitude) segments.
+  NAIF_CK_DAF = 28,
+  /// NAIF spacecraft clock kernel, text.
+  NAIF_SCLK_KERNEL = 29,
+  /// RINEX observation file.
+  RINEX_OBS = 30,
+  /// RINEX navigation file.
+  RINEX_NAV = 31,
 
   /// A container outside this roster. PROVIDER_DEFINED_FORMAT_NAME states
   /// which; a producer never reuses a neighbouring member instead.
@@ -290,6 +301,25 @@ table NCD {
   /// Content identifier of the described container when it is addressed by
   /// content rather than by path.
   SOURCE_CID: string;
+
+  /// A reader's REQUEST, carried in the descriptor that frames the file so that
+  /// no option travels outside a typed record. Start of the inclusive window to
+  /// read, ISO 8601, on the container's own time scale. Default empty (from the
+  /// start of the container).
+  SELECT_START_TIME: string;
+  /// End of the inclusive window to read, ISO 8601, on the container's own time
+  /// scale. Default empty (to the end of the container).
+  SELECT_STOP_TIME: string;
+  /// Thin the output to this spacing, seconds; 0 keeps every sample. Default 0.
+  SELECT_SAMPLE_INTERVAL_SECONDS: double;
+  /// Satellite systems to read, as the RINEX letters G R E C J I S. Default
+  /// empty (every system the container holds).
+  SELECT_SATELLITE_SYSTEMS: [string];
+  /// Observation codes to read (C1C, L1C, ...). Default empty (every code).
+  SELECT_OBSERVATION_CODES: [string];
+  /// Spacecraft clock id (for example -76) of a clock kernel to read; 0 selects
+  /// by the instrument id. Default 0.
+  SELECT_CLOCK_ID: int;
 }
 
 root_type NCD;

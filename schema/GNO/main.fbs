@@ -1,5 +1,5 @@
-// Hash: fba642c744b9381a422e12c33535b2a61eb195102c57cb58804ce856f05e8312
-// Version: 0.0.4
+// Hash: 73bba4c2f0d3213dbb2fb72058c6cc769de496cd9b2ef291feb5dafd1451c935
+// Version: 0.0.5
 // -----------------------------------END_HEADER
 enum gnssConstellation : byte {
   GPS,
@@ -19,7 +19,11 @@ enum gnssObsType : byte {
   /// satellite is approaching (the RINEX convention).
   DOPPLER,
   SNR,
-  RAW_IF
+  RAW_IF,
+  /// Ionosphere phase delay (RINEX observation type I), as the file states it.
+  IONOSPHERE_PHASE_DELAY,
+  /// Receiver channel number (RINEX observation type X), as the receiver reports it.
+  CHANNEL_NUMBER
 }
 
 /// GNSS Observation Data Point
@@ -52,6 +56,12 @@ table gnssSatObs {
   AGC_STATE:int;
   /// Observations for this satellite
   OBSERVATIONS:[gnssObsData];
+  /// GLONASS frequency channel number k of this satellite (RINEX GLONASS SLOT /
+  /// FRQ #), -7 to +6. Meaningful only when HAS_GLONASS_FREQUENCY_NUMBER.
+  GLONASS_FREQUENCY_NUMBER:byte;
+  /// True when GLONASS_FREQUENCY_NUMBER carries a value (channel 0 is a real
+  /// channel); false (the default) means absent.
+  HAS_GLONASS_FREQUENCY_NUMBER:bool = false;
 }
 
 /// GNSS Observation
@@ -102,6 +112,37 @@ table GNO {
   OBS_CODE_SET:[string];
   /// Additional notes
   NOTES:string;
+  /// Time scale of EPOCH as the file names it: GPS, GLO, GAL, QZS, BDT or IRN.
+  /// Default empty (not stated).
+  TIME_SYSTEM:string;
+  /// RINEX epoch flag: 0 OK, 1 power failure since the previous epoch, 2 start of
+  /// a moving antenna, 3 new site occupation, 4 header information follows, 5
+  /// external event, 6 cycle slip records follow. Default 0.
+  EPOCH_FLAG:ubyte;
+  /// Marker name from the header. Default empty.
+  MARKER_NAME:string;
+  /// Marker number from the header. Default empty.
+  MARKER_NUMBER:string;
+  /// Marker type from the header. Default empty.
+  MARKER_TYPE:string;
+  /// Observer from the header. Default empty.
+  OBSERVER:string;
+  /// Agency from the header. Default empty.
+  AGENCY:string;
+  /// Antenna delta from the marker to the antenna reference point: height, east,
+  /// north, meters, as [H, E, N]. Default empty.
+  ANTENNA_DELTA_HEN:[double];
+  /// Phase shift records as the header writes them, one per line, for example
+  /// "G L2S -0.25000". Default empty.
+  PHASE_SHIFTS:[string];
+  /// Unit of the signal strength observations as the header states it. Default
+  /// empty.
+  SIGNAL_STRENGTH_UNIT:string;
+  /// Leap seconds of the header (RINEX LEAP SECONDS), seconds. Meaningful only
+  /// when HAS_LEAP_SECONDS.
+  LEAP_SECONDS:int;
+  /// True when LEAP_SECONDS carries a value; false (the default) means absent.
+  HAS_LEAP_SECONDS:bool = false;
 }
 
 root_type GNO;
