@@ -113,7 +113,7 @@ class PCFEventDefinition extends Table
     }
 
     /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-    /// as $OEM. Default empty.
+    /// as $OEM; "second_trajectory" is the port FFM declares. Default empty.
     public function getSECOND_TRAJECTORY_PORT()
     {
         $o = $this->__offset(18);

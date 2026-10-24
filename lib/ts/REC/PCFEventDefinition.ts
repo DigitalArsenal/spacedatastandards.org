@@ -93,7 +93,7 @@ PLANE_NORMAL(obj?:FRMVector3):FRMVector3|null {
 
 /**
  * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
- * as $OEM. Default empty.
+ * as $OEM; "second_trajectory" is the port FFM declares. Default empty.
  */
 SECOND_TRAJECTORY_PORT():string|null
 SECOND_TRAJECTORY_PORT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null

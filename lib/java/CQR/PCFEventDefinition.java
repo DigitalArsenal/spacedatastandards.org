@@ -61,7 +61,7 @@ public final class PCFEventDefinition extends com.google.flatbuffers.Table {
   public FRMVector3 PLANE_NORMAL(FRMVector3 obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-   * as $OEM. Default empty.
+   * as $OEM; "second_trajectory" is the port FFM declares. Default empty.
    */
   public String SECOND_TRAJECTORY_PORT() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SECOND_TRAJECTORY_PORTAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }

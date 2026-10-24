@@ -107,7 +107,8 @@ enum pcfEventKind:
     pcfEventKind_PENUMBRA = 7
     /// g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
     /// the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
-    /// the range.
+    /// the range. The $OEM must cover the propagated arc; the provider interpolates it by
+    /// Hermite polynomials.
     pcfEventKind_CLOSEST_APPROACH = 8
     /// g = the value of EXPRESSION.
     pcfEventKind_EXPRESSION = 9
@@ -238,13 +239,17 @@ enum pcfIntegratorAlgorithm:
     /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
     /// 52).
     pcfIntegratorAlgorithm_GAUSS_JACKSON_8 = 15
-    /// Gauss's variational equations in classical Keplerian elements.
+    /// Gauss's variational equations in classical Keplerian elements. Integrates a
+    /// reduced force model; FFM refuses it by name.
     pcfIntegratorAlgorithm_GAUSS_VOP = 16
     /// DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
-    /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+    /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by
+    /// name: its propagation does not reach the requested epoch to the integration
+    /// tolerance.
     pcfIntegratorAlgorithm_DROMO = 17
     /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
-    /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
+    /// and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by
+    /// name, as DROMO.
     pcfIntegratorAlgorithm_STIEFEL = 18
     /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
     /// Solving Ordinary Differential Equations I).
@@ -826,7 +831,7 @@ class PCFEventDefinition : flatbuffers.handle
         let o = flatbuffers.field_table(buf_, pos_, 16)
         return if o: FRMVector3 { buf_, o } else: nil
     /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-    /// as $OEM. Default empty.
+    /// as $OEM; "second_trajectory" is the port FFM declares. Default empty.
     def SECOND_TRAJECTORY_PORT() -> string:
         return flatbuffers.field_string(buf_, pos_, 18)
     /// EXPRESSION: the program. Default absent.

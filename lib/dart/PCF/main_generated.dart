@@ -2018,7 +2018,7 @@ class PCFEventDefinition {
   FRMVector3? get PLANE_NORMAL => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 16);
   FRMVector3? get planeNormal => PLANE_NORMAL;
   ///  CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-  ///  as $OEM. Default empty.
+  ///  as $OEM; "second_trajectory" is the port FFM declares. Default empty.
   String? get SECOND_TRAJECTORY_PORT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
   String? get secondTrajectoryPort => SECOND_TRAJECTORY_PORT;
   ///  EXPRESSION: the program. Default absent.

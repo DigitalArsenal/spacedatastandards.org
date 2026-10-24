@@ -4656,7 +4656,7 @@
         },
         "CLOSEST_APPROACH": {
           "value": 8,
-          "description": "g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of the range."
+          "description": "g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of the range. The $OEM must cover the propagated arc; the provider interpolates it by Hermite polynomials."
         },
         "EXPRESSION": {
           "value": 9,
@@ -4959,15 +4959,15 @@
         },
         "GAUSS_VOP": {
           "value": 16,
-          "description": "Gauss's variational equations in classical Keplerian elements."
+          "description": "Gauss's variational equations in classical Keplerian elements. Integrates a reduced force model; FFM refuses it by name."
         },
         "DROMO": {
           "value": 17,
-          "description": "DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97)."
+          "description": "DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by name: its propagation does not reach the requested epoch to the integration tolerance."
         },
         "STIEFEL": {
           "value": 18,
-          "description": "Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel and Scheifele 1971, Linear and Regular Celestial Mechanics)."
+          "description": "Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by name, as DROMO."
         },
         "DOPRI853": {
           "value": 19,
@@ -18721,7 +18721,7 @@
             },
             "CLOSEST_APPROACH": {
               "value": 8,
-              "description": "g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of the range."
+              "description": "g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of the range. The $OEM must cover the propagated arc; the provider interpolates it by Hermite polynomials."
             },
             "EXPRESSION": {
               "value": 9,
@@ -18797,7 +18797,7 @@
         },
         "SECOND_TRAJECTORY_PORT": {
           "type": "string",
-          "description": "CLOSEST_APPROACH: the id of the input port that carries the second trajectory\nas $OEM. Default empty.",
+          "description": "CLOSEST_APPROACH: the id of the input port that carries the second trajectory\nas $OEM; \"second_trajectory\" is the port FFM declares. Default empty.",
           "x-flatbuffer-type": "string"
         },
         "EXPRESSION": {
@@ -19226,15 +19226,15 @@
             },
             "GAUSS_VOP": {
               "value": 16,
-              "description": "Gauss's variational equations in classical Keplerian elements."
+              "description": "Gauss's variational equations in classical Keplerian elements. Integrates a reduced force model; FFM refuses it by name."
             },
             "DROMO": {
               "value": 17,
-              "description": "DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97)."
+              "description": "DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by name: its propagation does not reach the requested epoch to the integration tolerance."
             },
             "STIEFEL": {
               "value": 18,
-              "description": "Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel and Scheifele 1971, Linear and Regular Celestial Mechanics)."
+              "description": "Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by name, as DROMO."
             },
             "DOPRI853": {
               "value": 19,
@@ -20561,7 +20561,7 @@
             },
             "CLOSEST_APPROACH": {
               "value": 8,
-              "description": "g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of the range."
+              "description": "g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of the range. The $OEM must cover the propagated arc; the provider interpolates it by Hermite polynomials."
             },
             "EXPRESSION": {
               "value": 9,

@@ -50,7 +50,8 @@ class pcfEventKind private constructor() {
         /**
          * g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
          * the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
-         * the range.
+         * the range. The $OEM must cover the propagated arc; the provider interpolates it by
+         * Hermite polynomials.
          */
         const val CLOSEST_APPROACH: UByte = 8u
         /**

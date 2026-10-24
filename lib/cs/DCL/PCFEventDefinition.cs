@@ -35,7 +35,7 @@ public struct PCFEventDefinition : IFlatbufferObject
   /// vector. Default absent (the pole of the axes).
   public FRMVector3? PLANE_NORMAL { get { int o = __p.__offset(16); return o != 0 ? (FRMVector3?)(new FRMVector3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-  /// as $OEM. Default empty.
+  /// as $OEM; "second_trajectory" is the port FFM declares. Default empty.
   public string SECOND_TRAJECTORY_PORT { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSECOND_TRAJECTORY_PORTBytes() { return __p.__vector_as_span<byte>(18, 1); }

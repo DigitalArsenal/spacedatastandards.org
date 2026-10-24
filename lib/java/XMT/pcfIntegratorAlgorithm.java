@@ -85,17 +85,21 @@ public final class pcfIntegratorAlgorithm {
    */
   public static final int GAUSS_JACKSON_8 = 15;
   /**
-   * Gauss's variational equations in classical Keplerian elements.
+   * Gauss's variational equations in classical Keplerian elements. Integrates a
+   * reduced force model; FFM refuses it by name.
    */
   public static final int GAUSS_VOP = 16;
   /**
    * DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
-   * Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+   * Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by
+   * name: its propagation does not reach the requested epoch to the integration
+   * tolerance.
    */
   public static final int DROMO = 17;
   /**
    * Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
-   * and Scheifele 1971, Linear and Regular Celestial Mechanics).
+   * and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by
+   * name, as DROMO.
    */
   public static final int STIEFEL = 18;
   /**

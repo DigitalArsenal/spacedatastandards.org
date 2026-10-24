@@ -94,7 +94,7 @@ class PCFEventDefinition : Table() {
     }
     /**
      * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-     * as $OEM. Default empty.
+     * as $OEM; "second_trajectory" is the port FFM declares. Default empty.
      */
     val secondTrajectoryPort : String?
         get() {

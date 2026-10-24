@@ -198,7 +198,7 @@ func (rcv *PCFEventDefinition) PlaneNormal(obj *FRMVector3) *FRMVector3 {
 /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
 /// vector. Default absent (the pole of the axes).
 /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-/// as $OEM. Default empty.
+/// as $OEM; "second_trajectory" is the port FFM declares. Default empty.
 func (rcv *PCFEventDefinition) SECOND_TRAJECTORY_PORT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -212,7 +212,7 @@ func (rcv *PCFEventDefinition) SecondTrajectoryPort() []byte {
 }
 
 /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-/// as $OEM. Default empty.
+/// as $OEM; "second_trajectory" is the port FFM declares. Default empty.
 /// EXPRESSION: the program. Default absent.
 func (rcv *PCFEventDefinition) EXPRESSION(obj *PCFExpression) *PCFExpression {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))

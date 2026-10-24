@@ -165,7 +165,8 @@ public enum pcfEventKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
   case penumbra = 7
   ///  g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
   ///  the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
-  ///  the range.
+  ///  the range. The $OEM must cover the propagated arc; the provider interpolates it by
+  ///  Hermite polynomials.
   case closestApproach = 8
   ///  g = the value of EXPRESSION.
   case expression = 9
@@ -352,13 +353,17 @@ public enum pcfIntegratorAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum,
   ///  started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
   ///  52).
   case gaussJackson8 = 15
-  ///  Gauss's variational equations in classical Keplerian elements.
+  ///  Gauss's variational equations in classical Keplerian elements. Integrates a
+  ///  reduced force model; FFM refuses it by name.
   case gaussVop = 16
   ///  DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
-  ///  Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+  ///  Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by
+  ///  name: its propagation does not reach the requested epoch to the integration
+  ///  tolerance.
   case dromo = 17
   ///  Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
-  ///  and Scheifele 1971, Linear and Regular Celestial Mechanics).
+  ///  and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by
+  ///  name, as DROMO.
   case stiefel = 18
   ///  Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
   ///  Solving Ordinary Differential Equations I).
@@ -1143,7 +1148,7 @@ public struct PCFEventDefinition: FlatBufferVerifiableTable, FlatbuffersVectorIn
   ///  vector. Default absent (the pole of the axes).
   public var PLANE_NORMAL: FRMVector3? { let o = _accessor.offset(VT.PLANE_NORMAL); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-  ///  as $OEM. Default empty.
+  ///  as $OEM; "second_trajectory" is the port FFM declares. Default empty.
   public var SECOND_TRAJECTORY_PORT: String? { let o = _accessor.offset(VT.SECOND_TRAJECTORY_PORT); return o == 0 ? nil : _accessor.string(at: o) }
   public var SECOND_TRAJECTORY_PORTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SECOND_TRAJECTORY_PORT) }
   ///  EXPRESSION: the program. Default absent.

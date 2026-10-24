@@ -50,13 +50,17 @@ class pcfIntegratorAlgorithm
     /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
     /// 52).
     const GAUSS_JACKSON_8 = 15;
-    /// Gauss's variational equations in classical Keplerian elements.
+    /// Gauss's variational equations in classical Keplerian elements. Integrates a
+    /// reduced force model; FFM refuses it by name.
     const GAUSS_VOP = 16;
     /// DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
-    /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+    /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by
+    /// name: its propagation does not reach the requested epoch to the integration
+    /// tolerance.
     const DROMO = 17;
     /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
-    /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
+    /// and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by
+    /// name, as DROMO.
     const STIEFEL = 18;
     /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
     /// Solving Ordinary Differential Equations I).

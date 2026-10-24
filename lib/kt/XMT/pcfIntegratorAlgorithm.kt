@@ -85,17 +85,21 @@ class pcfIntegratorAlgorithm private constructor() {
          */
         const val GAUSS_JACKSON_8: UByte = 15u
         /**
-         * Gauss's variational equations in classical Keplerian elements.
+         * Gauss's variational equations in classical Keplerian elements. Integrates a
+         * reduced force model; FFM refuses it by name.
          */
         const val GAUSS_VOP: UByte = 16u
         /**
          * DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
-         * Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+         * Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97). FFM refuses it by
+         * name: its propagation does not reach the requested epoch to the integration
+         * tolerance.
          */
         const val DROMO: UByte = 17u
         /**
          * Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
-         * and Scheifele 1971, Linear and Regular Celestial Mechanics).
+         * and Scheifele 1971, Linear and Regular Celestial Mechanics). FFM refuses it by
+         * name, as DROMO.
          */
         const val STIEFEL: UByte = 18u
         /**

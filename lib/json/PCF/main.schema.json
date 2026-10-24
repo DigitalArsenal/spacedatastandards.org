@@ -1966,7 +1966,7 @@
               },
         "SECOND_TRAJECTORY_PORT" : {
                 "type" : "string",
-                "description" : "CLOSEST_APPROACH: the id of the input port that carries the second trajectory\nas $OEM. Default empty."
+                "description" : "CLOSEST_APPROACH: the id of the input port that carries the second trajectory\nas $OEM; \"second_trajectory\" is the port FFM declares. Default empty."
               },
         "EXPRESSION" : {
                 "$ref" : "#/definitions/PCFExpression",

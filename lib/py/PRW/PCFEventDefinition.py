@@ -93,7 +93,7 @@ class PCFEventDefinition(object):
         return None
 
     # CLOSEST_APPROACH: the id of the input port that carries the second trajectory
-    # as $OEM. Default empty.
+    # as $OEM; "second_trajectory" is the port FFM declares. Default empty.
     # PCFEventDefinition
     def SECOND_TRAJECTORY_PORT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
