@@ -8,6 +8,7 @@ include "../PPE/main.fbs";
 include "../NCD/main.fbs";
 include "../EOP/main.fbs";
 include "../SPW/main.fbs";
+include "../PCF/main.fbs";
 
 /// Propagator Runtime Wire — arena-addressed init / batch request / batch
 /// response envelopes for orbital propagators that produce state vectors
@@ -169,35 +170,6 @@ table PRWBatchResponse {
   ERROR_MESSAGE:string;
 }
 
-/// Propagator Runtime Wire — envelope that carries either an init request,
-/// a batch request, or a batch response across a runtime boundary.
-/// New numeric choices are append-only and are not legacy C++ enum ordinals.
-enum prwSolverAlgorithm : ubyte {
-  UNSPECIFIED = 0, RK4 = 1, RKF45 = 2, RKF78 = 3, RK78 = 4,
-  RKDP87 = 5, ABM = 6, BS = 7, COWELL = 8, ENCKE = 9,
-  EQUINOCTIAL_VOP = 10
-}
-enum prwGravitySelection : ubyte {
-  INFER_FLAGS = 0, POINT_MASS = 1, J2_ONLY = 2, J2_TO_J4 = 3,
-  SPHERICAL_HARMONICS = 4, EGM2008 = 5,
-  /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
-  EGM96 = 6
-}
-enum prwAtmosphereFamily : ubyte {
-  UNSPECIFIED = 0, NRLMSISE00 = 1, EXPONENTIAL = 2,
-  USSA1976 = 3, HARRIS_PRIESTER = 4,
-  /// Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
-  /// evaluation of Jacchia's static diffusion model with the constants NASA
-  /// GTDS and GMAT use (inflection temperature, mean molecular mass and
-  /// 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
-  /// F10.7 of the previous day, that day's 81-day centred average, and the
-  /// three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
-  /// constant). A VCM's JACCHIA_70 is carried here.
-  JACCHIA_ROBERTS = 5,
-  /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
-  /// Dst-derived temperature change from PRW.JB2008_INDICES.
-  JB2008 = 6
-}
 enum prwDerivativeTechnique : ubyte {
   UNSPECIFIED = 0, ANALYTIC = 1, FINITE_DIFFERENCE = 2
 }
@@ -231,23 +203,6 @@ enum prwDensitySpecies : ubyte {
   MOLECULAR_OXYGEN = 4, ARGON = 5, HYDROGEN = 6, ATOMIC_NITROGEN = 7,
   ANOMALOUS_OXYGEN = 8
 }
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
-enum prwSolidTideModel : ubyte {
-  NONE = 0, IERS_2010 = 1
-}
-/// Post-Newtonian corrections to the central body's acceleration (IERS
-/// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
-/// point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
-/// (geodesic) precession.
-enum prwRelativityTerms : ubyte {
-  NONE = 0, SCHWARZSCHILD = 1, IERS_2010 = 2
-}
 /// Dynamical model parameters a covariance and STM may carry after the state
 /// (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
 /// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
@@ -258,53 +213,10 @@ enum prwRelativityTerms : ubyte {
 enum prwDynamicParameter : ubyte {
   UNSPECIFIED = 0, DRAG_AREA_OVER_MASS = 1, DRAG_AREA_OVER_MASS_RATE = 2,
   SRP_AREA_OVER_MASS = 3, IN_TRACK_ACCELERATION = 4,
-  /// ECOM2 coefficients (PRWEcom2), in their order there.
+  /// ECOM2 coefficients (PCFEcom2), in their order there.
   ECOM2_D0 = 5, ECOM2_Y0 = 6, ECOM2_B0 = 7, ECOM2_D2_COS = 8, ECOM2_D2_SIN = 9,
   ECOM2_D4_COS = 10, ECOM2_D4_SIN = 11, ECOM2_B1_COS = 12, ECOM2_B1_SIN = 13,
   ECOM2_B3_COS = 14, ECOM2_B3_SIN = 15
-}
-
-/// Solar radiation pressure model family. CANNONBALL uses the
-/// radiation-pressure coefficient and area-to-mass ratio of the force
-/// configuration; GNSS_BOX_WING is the a priori box-wing model of the
-/// spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
-/// Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
-/// under nominal yaw steering, with the mass INITIAL_MASS_KG.
-enum prwRadiationPressureFamily : ubyte { CANNONBALL = 0, GNSS_BOX_WING = 1, NONE = 2 }
-
-/// Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
-/// infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
-/// is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
-/// emissivity zonal to the second Legendre degree with the annual term of
-/// the first, from the elements of the Earth's surface the spacecraft sees
-/// (as Orekit's KnockeRediffusedForceModel evaluates it).
-enum prwEarthRadiationModel : ubyte { NONE = 0, KNOCKE = 1 }
-
-/// Ocean tide model for the central body's field. FES2004 is IERS
-/// Conventions (2010) section 6.3: the variations of the normalized Stokes
-/// coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
-/// eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
-/// The ocean pole tide is not included.
-enum prwOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
-
-/// GNSS spacecraft block, selecting the box-wing surfaces.
-enum prwGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
-
-/// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
-/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
-/// added to the a priori model and scaled by the visible Sun fraction.
-table PRWEcom2 {
-  D0_M_S2:double;
-  Y0_M_S2:double;
-  B0_M_S2:double;
-  D2_COS_M_S2:double;
-  D2_SIN_M_S2:double;
-  D4_COS_M_S2:double;
-  D4_SIN_M_S2:double;
-  B1_COS_M_S2:double;
-  B1_SIN_M_S2:double;
-  B3_COS_M_S2:double;
-  B3_SIN_M_S2:double;
 }
 
 /// Instance identity is host-provided, opaque, and not a physical quantity.
@@ -313,104 +225,6 @@ table PRWInstance {
   INSTANCE_ID:string (required);
   /// Incremented on reinitialization or configuration invalidation.
   GENERATION:ulong;
-}
-
-/// Units are SI. A scalar legacy tolerance must be expanded by the adapter.
-table PRWIntegratorSettings {
-  ALGORITHM:prwSolverAlgorithm = UNSPECIFIED;
-  INITIAL_STEP_SECONDS:double = 60;
-  MINIMUM_STEP_SECONDS:double = 1;
-  MAXIMUM_STEP_SECONDS:double = 3600;
-  /// Six or seven positive tolerances, respectively m, m/s and optional kg.
-  ABSOLUTE_TOLERANCES:[double] (required);
-  RELATIVE_TOLERANCE:double = 1e-12;
-  MAXIMUM_STEPS:uint = 100000;
-}
-
-/// Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
-table PRWSpaceWeather {
-  EPOCH:TIMInstant (required);
-  F107:double = 150;
-  F107_AVERAGE:double = 150;
-  /// Conventional daily Ap and three-hour Kp index values; not accelerations.
-  AP_INDEX:double = 15;
-  KP_INDEX:double = 3;
-}
-
-/// Executable subset currently reachable through the FFM module's invoke. No implied
-/// support for coefficients, drag models or bodies the provider cannot supply.
-table PRWForceConfiguration {
-  GRAVITY_CHOICE:prwGravitySelection = INFER_FLAGS;
-  ENABLE_POINT_MASS:bool = true;
-  /// m3/s2; required positive when a central gravity term is enabled.
-  GRAVITATIONAL_PARAMETER:double;
-  ENABLE_J2:bool = true;
-  ENABLE_J3:bool = false;
-  ENABLE_J4:bool = false;
-  ENABLE_HIGHER_ZONALS:bool = false;
-  /// Optional truncations; absent selects the explicitly reported model default.
-  MAXIMUM_DEGREE:ushort;
-  /// True when MAXIMUM_DEGREE carries a value; false means absent.
-  HAS_MAXIMUM_DEGREE:bool = false;
-  MAXIMUM_ORDER:ushort;
-  /// True when MAXIMUM_ORDER carries a value; false means absent.
-  HAS_MAXIMUM_ORDER:bool = false;
-  ENABLE_THIRD_BODY:bool = false;
-  /// NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
-  THIRD_BODY_IDS:[int];
-  ENABLE_SRP:bool = false;
-  ENABLE_DRAG:bool = false;
-  INITIAL_MASS_KG:double = 1000;
-  AREA_M2:double = 10;
-  REFLECTIVITY_COEFFICIENT:double = 1.5;
-  DRAG_COEFFICIENT:double = 2.2;
-  ATMOSPHERE_MODEL:prwAtmosphereFamily = NRLMSISE00;
-  WEATHER:PRWSpaceWeather;
-  /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
-  EPHEMERIS_SOURCE:string (required);
-  /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
-  /// orientation (PRW.EARTH_ORIENTATION) to apply them.
-  SOLID_TIDES:prwSolidTideModel = NONE;
-  RELATIVITY:prwRelativityTerms = NONE;
-  /// Constant acceleration along the in-track axis, m/s2: T of RTN,
-  /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
-  IN_TRACK_ACCELERATION_M_S2:double;
-  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
-  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
-  /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
-  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
-  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
-  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
-  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
-  /// Highest degree of the tesseral and sectorial terms (order >= 1); the
-  /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
-  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
-  MAXIMUM_TESSERAL_DEGREE:ushort;
-  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
-  HAS_MAXIMUM_TESSERAL_DEGREE:bool = false;
-  /// Solar radiation pressure model family (default: the cannonball).
-  RADIATION_PRESSURE_MODEL:prwRadiationPressureFamily = CANNONBALL;
-  /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
-  GNSS_BLOCK:prwGnssSpacecraftBlock = UNSPECIFIED;
-  /// ECOM2 coefficients; absent means no ECOM2 term.
-  ECOM2:PRWEcom2;
-  /// Earth radiation pressure (albedo and infrared). It reads the Sun's
-  /// position from the request's ephemeris source.
-  EARTH_RADIATION:prwEarthRadiationModel = NONE;
-  /// Angular size of the Earth surface elements it sums, degrees.
-  EARTH_RADIATION_RESOLUTION_DEG:double = 15;
-  /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
-  /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
-  /// fitting SRP_AREA_OVER_MASS scales both.
-  EARTH_RADIATION_AREA_OVER_MASS_M2_KG:double;
-  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
-  HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:bool = false;
-  /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
-  /// orientation (PRW.EARTH_ORIENTATION) to apply them.
-  OCEAN_TIDES:prwOceanTideModel = NONE;
-  /// Truncation of the ocean tide field.
-  OCEAN_TIDE_MAXIMUM_DEGREE:ushort = 30;
-  OCEAN_TIDE_MAXIMUM_ORDER:ushort = 30;
 }
 
 /// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
@@ -462,7 +276,7 @@ table PRWResidentState {
   DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
   /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
   HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
-  /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+  /// Constant in-track acceleration, m/s2, as PCFForceModel's.
   IN_TRACK_ACCELERATION_M_S2:double;
   /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
   HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
@@ -515,8 +329,8 @@ table PRWFiniteBurn {
 table PRWExecutionRequest {
   INITIAL:PRWResidentState (required);
   TARGET_EPOCH:TIMInstant (required);
-  INTEGRATOR:PRWIntegratorSettings (required);
-  FORCES:PRWForceConfiguration (required);
+  INTEGRATOR:PCFIntegratorSettings (required);
+  FORCES:PCFForceModel (required);
   INCLUDE_STM:bool = false;
   STM_TECHNIQUE:prwDerivativeTechnique = ANALYTIC;
   DENSITY_TREATMENT:prwDensityTreatment = NEGLECTED;
@@ -714,7 +528,7 @@ table PRWEphemerisResult {
 
 /// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
 table PRWAtmosphereRequest {
-  ATMOSPHERE_MODEL:prwAtmosphereFamily = NRLMSISE00;
+  ATMOSPHERE_MODEL:pcfAtmosphereFamily = NRLMSISE00;
   EPOCH:TIMInstant (required);
   ALTITUDE_M:double;
   LATITUDE_RAD:double;
@@ -735,7 +549,7 @@ table PRWSpeciesDensity {
 }
 
 table PRWAtmosphereResult {
-  ATMOSPHERE_MODEL:prwAtmosphereFamily = UNSPECIFIED;
+  ATMOSPHERE_MODEL:pcfAtmosphereFamily = UNSPECIFIED;
   VARIANT:string;
   ALTITUDE_M:double;
   DENSITY_KG_M3:double;

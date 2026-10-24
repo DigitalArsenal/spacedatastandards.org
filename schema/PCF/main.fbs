@@ -1,33 +1,714 @@
-// Hash: 8f79ae546a2c5dd97269f807c944cdb258e30a2094db89cbee1907feb7e1cb06
-// Version: 0.0.2
+// Hash: 939ad1e3036c59eae5d9fe0c79314d0d1e5b199f11ed31bdf4bfcbba4f7ce5a1
+// Version: 1.0.0
 // -----------------------------------END_HEADER
-enum IntegratorType : ubyte {
-  RK4 = 0,            // Classical Runge-Kutta 4th order
-  RK45 = 1,           // Runge-Kutta-Fehlberg 4(5)
-  RK78 = 2,           // Runge-Kutta 7(8)
-  DOPRI5 = 3,         // Dormand-Prince 5(4)
-  DOPRI853 = 4,       // Dormand-Prince 8(5,3)
-  ABM = 5,            // Adams-Bashforth-Moulton
-  BS = 6,             // Bulirsch-Stoer
-  ANALYTICAL = 255,   // Analytical (e.g., SGP4/SDP4)
+include "../TIM/main.fbs";
+include "../PCE/main.fbs";
+include "../EVL/main.fbs";
+
+
+/// The orbit theory that computes the states. Append new values only; never
+/// reorder or reuse a value.
+enum pcfTheory : ubyte {
+  /// The receiving module's own theory. A module that offers several reads
+  /// UNSPECIFIED as the one it ingests element sets with (the advanced
+  /// propagator reads it as SGP4XP).
+  UNSPECIFIED = 0,
+  /// Mean-element theory of SPACETRACK REPORT No. 3 (SGP4 near Earth, SDP4
+  /// deep space).
+  SGP4 = 1,
+  /// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
+  /// astrodynamics conference literature); the same value as $MET SGP4XP.
+  SGP4XP = 2,
+  /// SDN's own advanced mean-element theory, labeled as its own; carried in
+  /// $OMM as a user-defined theory until $MET appends it.
+  SDNAP = 3,
+  /// Numerical integration of the equations of motion under the full force
+  /// model of PCFForceModel (profile FFM-1).
+  FFM = 4,
+  /// Two-body (Keplerian) motion about the central body.
+  KEPLER = 5
 }
 
-/// Propagator Configuration
+/// How a propagator learns the space weather beyond the daily rows it was
+/// given. Append new values only.
+enum pcfWeatherExtension : ubyte {
+  /// The provider's own rule (the numerical propagator refuses, the advanced
+  /// mean-element propagator chains forecasts).
+  UNSPECIFIED = 0,
+  /// Refuse an arc that reaches past the rows (space-weather-out-of-range).
+  REFUSE = 1,
+  /// Hold the last row's values.
+  HOLD_LAST = 2,
+  /// Observed rows, then the three-day forecast, then the 45-day forecast,
+  /// then the solar-cycle climatology; each hand-off is blended over one day
+  /// and every evaluation names its tier.
+  FORECAST_CHAIN = 3
+}
+
+/// Where the space weather of a propagation comes from. Append new values
+/// only.
+enum pcfWeatherSource : ubyte {
+  /// Infer: PCFSpaceWeather when the force model carries it, else the daily
+  /// rows supplied with the request.
+  UNSPECIFIED = 0,
+  /// PCFSpaceWeather, held for the whole arc.
+  CONSTANT = 1,
+  /// Daily rows supplied with the request ($SPW rows; the JB2008 indices
+  /// for the JB2008 atmosphere).
+  RECORDS = 2
+}
+
+/// Correction applied to the atmosphere model's density. Append new values
+/// only.
+enum pcfDensityCorrection : ubyte {
+  /// Density as the atmosphere model gives it.
+  NONE = 0,
+  /// The open-DCA common-mode correction published as $DCL: model density
+  /// times exp(s(t)), s the log-density scale of the published nodes.
+  DCA_COMMON_MODE = 1
+}
+
+/// Neutral wind in the drag relative velocity. Append new values only.
+enum pcfNeutralWind : ubyte {
+  /// Atmosphere co-rotating with the central body, no wind.
+  NONE = 0,
+  /// The HWM14 empirical horizontal wind model (Drob et al. 2015, Earth and
+  /// Space Science 2, 301-319).
+  HWM14 = 1
+}
+
+/// Where the Sun, Moon and planets are read from. Append new values only.
+enum pcfEphemerisKind : ubyte {
+  /// The provider's own source, named in EPHEMERIS_SOURCE.
+  UNSPECIFIED = 0,
+  /// A closed-form analytic series (low precision, no kernel to load).
+  ANALYTIC_SERIES = 1,
+  /// A planetary ephemeris kernel (SPK), named in EPHEMERIS_SOURCE.
+  PLANETARY_KERNEL = 2
+}
+
+/// What a propagator does when a located event occurs. Append new values
+/// only.
+enum pcfEventAction : ubyte {
+  UNSPECIFIED = 0,
+  /// End the propagation at the event; the result carries its epoch and state.
+  STOP = 1,
+  /// Make the event a step boundary only (the dynamics may change there) and
+  /// report nothing about it.
+  CONTINUE = 2,
+  /// Report the event in the result and keep propagating.
+  RECORD = 3
+}
+
+/// How the correlation of maneuver-detection innovations is weighted. Append
+/// new values only.
+enum pcfInnovationCorrelation : ubyte {
+  UNSPECIFIED = 0,
+  /// Every sample independent (the white-noise assumption).
+  WHITE = 1,
+  /// One sample per revolution counts, so a revolution is one independent
+  /// innovation.
+  ONE_SAMPLE_PER_REVOLUTION = 2,
+  /// An exponential correlation of the innovations over a correlation time.
+  CORRELATION_TIME = 3
+}
+
+/// How the reentry-time window is computed. Append new values only.
+enum pcfReentryWindowMethod : ubyte {
+  UNSPECIFIED = 0,
+  /// First-order propagation of the ballistic and density sigmas through the
+  /// remaining life.
+  LINEAR = 1,
+  /// The unscented transform over the hand-off state, the ballistic
+  /// coefficient and the density level.
+  UNSCENTED = 2
+}
+
+/// Frame of the output states. Append new values only.
+enum pcfOutputFrame : ubyte {
+  /// The grid template's frame; TEME without one.
+  UNSPECIFIED = 0,
+  /// True equator, mean equinox of date.
+  TEME = 1,
+  /// Geocentric Celestial Reference Frame.
+  GCRF = 2,
+  /// Mean equator and equinox of J2000.0.
+  EME2000 = 3,
+  /// International Terrestrial Reference Frame (Earth-fixed).
+  ITRF = 4
+}
+
+/// Integration algorithm, shared by $PCF and $PRW (one definition). Values 1 to
+/// 10 are the numbers $PRW has always carried; new values are appended only,
+/// never reordered or reused. A scheme value names the stepping method; a
+/// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
+/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// scheme that steps them is the provider's, reported in its result.
+enum pcfIntegratorAlgorithm : ubyte {
+  /// The provider's own algorithm.
+  UNSPECIFIED = 0,
+  /// Classical fourth-order Runge-Kutta, fixed step INITIAL_STEP_SECONDS.
+  RK4 = 1,
+  /// Runge-Kutta-Fehlberg 4(5), adaptive.
+  RKF45 = 2,
+  /// Runge-Kutta-Fehlberg 7(8), adaptive.
+  RKF78 = 3,
+  /// Runge-Kutta 7(8), adaptive.
+  RK78 = 4,
+  /// Dormand-Prince 8(7), adaptive.
+  RKDP87 = 5,
+  /// Adams-Bashforth-Moulton predictor-corrector multistep.
+  ABM = 6,
+  /// Gragg-Bulirsch-Stoer extrapolation.
+  BS = 7,
+  /// Cowell's method: Cartesian position and velocity.
+  COWELL = 8,
+  /// Encke's method: the deviation from a reference conic.
+  ENCKE = 9,
+  /// Variation of parameters in equinoctial elements.
+  EQUINOCTIAL_VOP = 10,
+  /// Dormand-Prince 5(4), seven stages (Dormand and Prince 1980, J. Comput.
+  /// Appl. Math. 6).
+  DOPRI5 = 11,
+  /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
+  /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
+  RK65_8M = 12,
+  /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
+  VERNER_98 = 13,
+  /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
+  /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
+  /// acceleration must not depend on velocity, so a provider refuses it with
+  /// drag.
+  RKN12_10 = 14,
+  /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
+  /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
+  /// 52).
+  GAUSS_JACKSON_8 = 15,
+  /// Gauss's variational equations in classical Keplerian elements.
+  GAUSS_VOP = 16,
+  /// DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
+  /// Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+  DROMO = 17,
+  /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
+  /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
+  STIEFEL_SCHEIFELE = 18,
+  /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
+  /// Solving Ordinary Differential Equations I).
+  DOPRI853 = 19
+}
+
+enum pcfGravitySelection : ubyte {
+  INFER_FLAGS = 0, POINT_MASS = 1, J2_ONLY = 2, J2_TO_J4 = 3,
+  SPHERICAL_HARMONICS = 4, EGM2008 = 5,
+  /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+  EGM96 = 6,
+  /// GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
+  /// Moon's field, in the Moon's principal-axis frame.
+  GRGM660PRIM = 7
+}
+
+enum pcfAtmosphereFamily : ubyte {
+  UNSPECIFIED = 0, NRLMSISE00 = 1, EXPONENTIAL = 2,
+  USSA1976 = 3, HARRIS_PRIESTER = 4,
+  /// Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
+  /// evaluation of Jacchia's static diffusion model with the constants NASA
+  /// GTDS and GMAT use (inflection temperature, mean molecular mass and
+  /// 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
+  /// F10.7 of the previous day, that day's 81-day centred average, and the
+  /// three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
+  /// constant). A VCM's JACCHIA_70 is carried here.
+  JACCHIA_ROBERTS = 5,
+  /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+  /// Dst-derived temperature change from the request's JB2008 indices.
+  JB2008 = 6
+}
+
+/// Solid Earth tide model for the central body's field. NONE leaves the
+/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+/// the permanent tide handled for the field's own tide system. Pole tide is
+/// not included.
+enum pcfSolidTideModel : ubyte {
+  NONE = 0, IERS_2010 = 1
+}
+
+/// Post-Newtonian corrections to the central body's acceleration (IERS
+/// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+/// point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+/// (geodesic) precession.
+enum pcfRelativityTerms : ubyte {
+  NONE = 0, SCHWARZSCHILD = 1, IERS_2010 = 2
+}
+
+/// Solar radiation pressure model family. CANNONBALL uses the
+/// radiation-pressure coefficient and area-to-mass ratio of the force
+/// configuration; GNSS_BOX_WING is the a priori box-wing model of the
+/// spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+/// Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+/// under nominal yaw steering, with the mass INITIAL_MASS_KG.
+enum pcfRadiationPressureFamily : ubyte { CANNONBALL = 0, GNSS_BOX_WING = 1, NONE = 2 }
+
+/// Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+/// infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+/// is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+/// emissivity zonal to the second Legendre degree with the annual term of
+/// the first, from the elements of the Earth's surface the spacecraft sees
+/// (as Orekit's KnockeRediffusedForceModel evaluates it).
+enum pcfEarthRadiationModel : ubyte { NONE = 0, KNOCKE = 1 }
+
+/// Ocean tide model for the central body's field. FES2004 is IERS
+/// Conventions (2010) section 6.3: the variations of the normalized Stokes
+/// coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+/// eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+/// The ocean pole tide is not included.
+enum pcfOceanTideModel : ubyte { NONE = 0, FES2004 = 1 }
+
+/// GNSS spacecraft block, selecting the box-wing surfaces.
+enum pcfGnssSpacecraftBlock : ubyte { UNSPECIFIED = 0, GPS_IIR = 1, GPS_IIR_M = 2, GPS_IIF = 3 }
+
+/// A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
+/// the theory's own sigma and moves only the mean.
+table PCFGaussianPrior {
+  /// Prior mean, in the unit of the parameter it is attached to. Default 0.
+  MEAN:double = 0;
+  /// Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  SIGMA:double = 0;
+  /// True when SIGMA carries a value; false keeps the theory's own sigma.
+  HAS_SIGMA:bool = false;
+}
+
+/// Empirical along-track terms of the averaged theories: a transverse
+/// acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
+/// latitude and g = 1 on the fit arc.
+table PCFEmpiricalTerms {
+  /// Fit the once-per-revolution pair (TAUC, TAUS). Default true.
+  ONCE_PER_REVOLUTION:bool = true;
+  /// The constant term TAU0 is free only when this rule selects it: a fitted
+  /// B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
+  /// prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
+  TAU0_RULE_LIMIT_M2_KG:double = 0.5;
+  /// True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
+  /// default) leaves TAU0 off.
+  HAS_TAU0_RULE_LIMIT_M2_KG:bool = false;
+  /// True holds TAUC and TAUS after the arc end above the drag regime
+  /// instead of decaying them. Default false.
+  HELD_ABOVE_DRAG_REGIME:bool = false;
+  /// Persistence time of the empirical force after the arc end, hours.
+  /// Default 24.
+  PERSISTENCE_HOURS:double = 24;
+}
+
+/// Truncations and switches of the averaged (mean-element) theories SGP4XP
+/// and SDNAP. SGP4's constants are fixed by its specification and are not
+/// options.
+table PCFMeanElementOptions {
+  /// Highest even degree of the m-daily short-periodic gravity terms; 0
+  /// omits them. Range 0 to 16. Default 12.
+  M_DAILY_MAXIMUM_DEGREE:ubyte = 12;
+  /// Highest degree of the zonal tail (secular and long-period terms past
+  /// J5). Range 6 to 70. Default 20.
+  ZONAL_MAXIMUM_DEGREE:ubyte = 20;
+  /// Highest degree of the eccentricity-vector short-periodic terms. Range
+  /// 2 to 16. Default 7.
+  SHORT_PERIODIC_MAXIMUM_DEGREE:ubyte = 7;
+  /// Resonance terms on or off. Default true.
+  ENABLE_RESONANCE:bool = true;
+  /// Highest odd degree of the shallow-resonance terms. Default 31.
+  RESONANCE_MAXIMUM_DEGREE:ubyte = 31;
+  /// Resonance band: terms whose angle drifts slower than this fraction of
+  /// the mean motion are integrated with the rates. Default 0.045.
+  RESONANCE_BAND:double = 0.045;
+  /// Highest multiple of the mean anomaly in a resonance angle. Default 1.
+  RESONANCE_MAXIMUM_K:ubyte = 1;
+  /// Near-resonance band at output time, as a fraction of the mean motion
+  /// beyond RESONANCE_BAND; 0 is off. Default 0.
+  NEAR_RESONANCE_BAND:double = 0;
+  /// Divisor of the integration grid step; >= 1. Default 1.
+  GRID_STEP_DIVISOR:ubyte = 1;
+  /// The catalog-shared density kernel (a gridded log-density table shared by
+  /// every object) on or off; off evaluates the atmosphere model directly.
+  /// Default true.
+  DENSITY_KERNEL:bool = true;
+  /// Perigee height below which B_eff and TAU0 act (the drag regime), km.
+  /// Default 2500.
+  DRAG_REGIME_PERIGEE_KM:double = 2500;
+}
+
+/// Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
+/// cut into segments at maneuvers and sphere-of-influence passages.
+table PCFSegmentOptions {
+  /// Moon-centered gravity field degree. Default 70.
+  MOON_GRAVITY_MAXIMUM_DEGREE:ushort = 70;
+  /// Moon-centered short-periodic degree. Default 8.
+  MOON_SHORT_PERIODIC_MAXIMUM_DEGREE:ubyte = 8;
+  /// Moon-centered eccentricity order (highest |q| of the mean-anomaly
+  /// multiple kept). Default 2.
+  MOON_ECCENTRICITY_ORDER:ubyte = 2;
+  /// Moon-centered integration step, seconds. Default 240.
+  MOON_STEP_SECONDS:double = 240;
+  /// Cislunar integration step, seconds. Default 60.
+  CISLUNAR_STEP_SECONDS:double = 60;
+  /// Heliocentric integration step, seconds. Default 1800.
+  HELIOCENTRIC_STEP_SECONDS:double = 1800;
+  /// A segment is accepted when its RMS is within max(RMS_FACTOR x the
+  /// cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
+  SEGMENT_RMS_FACTOR:double = 2;
+  /// The additive term of the same rule, km. Default 0.05.
+  SEGMENT_RMS_MARGIN_KM:double = 0.05;
+  /// Shortest cislunar segment, hours. Default 6.
+  CISLUNAR_MINIMUM_SEGMENT_HOURS:double = 6;
+}
+
+/// Fit policy: how long an arc a fit uses, how that is validated, and what a
+/// fit refuses.
+table PCFFitPolicy {
+  /// Fit span used when the span rule is not run, hours. Default 48.
+  DEFAULT_SPAN_HOURS:double = 48;
+  /// Shortest span a fit may take, hours. Default 24.
+  MINIMUM_SPAN_HOURS:double = 24;
+  /// Longest span a fit may take, hours. Default 120.
+  MAXIMUM_SPAN_HOURS:double = 120;
+  /// Spans the extension rule scores, ascending, hours, each within
+  /// [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
+  /// 24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  CANDIDATE_SPANS_HOURS:[double];
+  /// Validation tail: each candidate is fitted to the data before the latest
+  /// TAIL_HOURS and scored on that tail, hours. Default 24.
+  TAIL_HOURS:double = 24;
+  /// Extension rule: a longer candidate is taken only when its tail error is
+  /// at most this fraction of the best shorter candidate's. Default 0.9.
+  EXTENSION_MARGIN:double = 0.9;
+  /// Hours held out at the end of the data and reported as error growth; the
+  /// fit then ends HOLDOUT_HOURS before the data does. Absent, the data
+  /// block's own useable stop time decides.
+  HOLDOUT_HOURS:double = 0;
+  /// True when HOLDOUT_HOURS carries a value; false means absent.
+  HAS_HOLDOUT_HOURS:bool = false;
+  /// Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+  ECCENTRICITY_THRESHOLD:double = 0.5;
+  /// Eccentric orbits: the default span, hours. Default 24.
+  ECCENTRIC_DEFAULT_SPAN_HOURS:double = 24;
+  /// Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+  ECCENTRIC_EXTENSION_MARGIN:double = 0.7;
+  /// Eccentric orbits: no candidate longer than this is tried once the orbital
+  /// period passes it, hours. Default 36.
+  ECCENTRIC_MAXIMUM_PERIOD_HOURS:double = 36;
+  /// A fit whose RMS passes this is refused as fit-implausible, km. Default
+  /// 100.
+  IMPLAUSIBLE_RMS_KM:double = 100;
+  /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
+  /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  DRAG_PRIOR:PCFGaussianPrior;
+  /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
+  /// Absent or without sigma: mean 0, sigma 0.05.
+  SRP_PRIOR:PCFGaussianPrior;
+}
+
+/// One event a propagator locates while it integrates. The vocabulary is
+/// $EVL's: a locator class with its configuration, and $PCE's parameter
+/// condition for the generic case (an altitude, radius, speed, radial
+/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+table PCFEventDefinition {
+  /// The caller's name for the event, echoed in the result. Default empty.
+  NAME:string;
+  /// Which locator. Default PARAMETER_CONDITION.
+  LOCATOR_CLASS:evlLocatorClass = PARAMETER_CONDITION;
+  /// Exactly the one of the next five that matches LOCATOR_CLASS is present
+  /// (any other combination is refused as MISSING_CONFIGURATION, as in
+  /// $EVL). The condition carries its own direction, goal value, goal
+  /// tolerance and occurrence.
+  CONDITION:PCEParameterCondition;
+  ECLIPSE:EVLEclipseConfiguration;
+  CONTACT:EVLContactConfiguration;
+  INTRUSION:EVLIntrusionConfiguration;
+  APSIDES:EVLApsidesConfiguration;
+  NODE_CROSSING:EVLNodeCrossingConfiguration;
+  /// What the propagator does at the event. Default RECORD.
+  ACTION:pcfEventAction = RECORD;
+  /// Convergence bar on the located epoch, seconds. Default 1e-9.
+  EPOCH_TOLERANCE_SECONDS:double = 1e-9;
+  /// Step at which the event function is sampled before refinement, seconds;
+  /// 0 samples at the integrator's accepted steps. A root is found only when
+  /// the function changes sign within one sample interval. Default 0.
+  SCAN_STEP_SECONDS:double = 0;
+  /// Largest number of occurrences reported; 0 is no bound. Default 0.
+  MAXIMUM_EVENTS:uint = 0;
+}
+
+/// Maneuver detection from fit innovations: a generalized-likelihood-ratio
+/// scan of the six mean elements.
+table PCFManeuverDetection {
+  /// False-alarm rate the THRESHOLD is calibrated for, per object-year. A
+  /// provider that cannot recalibrate refuses another rate. Default 1.
+  FALSE_ALARMS_PER_OBJECT_YEAR:double = 1;
+  /// How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
+  CORRELATION_MODEL:pcfInnovationCorrelation = ONE_SAMPLE_PER_REVOLUTION;
+  /// The statistic Lambda (chi-square, 3 degrees of freedom) above which a
+  /// maneuver is declared. Default 20.
+  THRESHOLD:double = 20;
+  /// States kept clear at each end of the arc when scanning. Default 12.
+  MARGIN_STATES:uint = 12;
+  /// Half-width of the window the burn epoch is refined in, hours. Default 2.
+  REFINE_WINDOW_HOURS:double = 2;
+  /// Fewest states an arc must hold to be scanned. Default 48.
+  MINIMUM_STATES:uint = 48;
+}
+
+/// Reentry: where the averaged theory hands off to osculating integration,
+/// where the trajectory ends, and the width of the reentry window.
+table PCFReentry {
+  /// Altitude at which the trajectory ends as reentered, km. Default 80.
+  ALTITUDE_KM:double = 80;
+  /// Hand-off when the perigee altitude falls below this, km. Default 180.
+  HANDOFF_PERIGEE_ALTITUDE_KM:double = 180;
+  /// Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
+  /// fraction of the density scale height H. Default 0.05.
+  HANDOFF_DECAY_RATIO:double = 0.05;
+  /// Hand-off when the eccentricity collapses by more than this fraction of
+  /// a e per revolution, with the eccentricity above
+  /// HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
+  HANDOFF_ECCENTRICITY_COLLAPSE:double = 0.01;
+  /// Eccentricity above which the collapse test applies. Default 0.01.
+  HANDOFF_MINIMUM_ECCENTRICITY:double = 0.01;
+  /// Spacing of the nodes the hand-off tests are evaluated at, minutes.
+  /// Default 30.
+  NODE_STEP_MINUTES:double = 30;
+  /// Longest look-ahead for a hand-off or reentry, days. Default 120.
+  HORIZON_DAYS:double = 120;
+  /// How the reentry window is computed. Default LINEAR.
+  WINDOW_METHOD:pcfReentryWindowMethod = LINEAR;
+  /// Fractional 1-sigma density error of the window. Default 0.15.
+  WINDOW_DENSITY_SIGMA:double = 0.15;
+  /// Correlation time of the density error, days. Default 2.
+  WINDOW_CORRELATION_DAYS:double = 2;
+  /// Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
+  WINDOW_BALLISTIC_SIGMA:double = 0.05;
+  /// Step of the osculating integration after the hand-off, seconds. Default
+  /// 10.
+  OSCULATING_STEP_SECONDS:double = 10;
+}
+
+/// Launch initialization: priors for the first element sets of new objects
+/// and for a deployment batch fitted jointly.
+table PCFLaunch {
+  /// A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
+  DRAG_AREA_OVER_MASS_PRIOR_M2_KG:double = 0.01;
+  /// A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
+  SRP_AREA_OVER_MASS_PRIOR_M2_KG:double = 0.01;
+  /// Prior 1-sigma of each object's separation velocity per axis, m/s.
+  /// Default 1.
+  SEPARATION_SIGMA_M_S:double = 1;
+  /// Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
+  /// Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
+  SHRINK_SIGMA_M2_KG:double = 0;
+  /// True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
+  HAS_SHRINK_SIGMA_M2_KG:bool = false;
+  /// Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
+  BATCH_MEAN_SIGMA_M2_KG:double = 1;
+}
+
+/// Output states: frame, step and size.
+table PCFOutput {
+  /// Frame of the output states. Default UNSPECIFIED (the grid template's
+  /// frame, TEME without one).
+  FRAME:pcfOutputFrame = UNSPECIFIED;
+  /// Spacing of the output states, seconds, when no grid template names the
+  /// epochs; a grid template's epochs win. Default 60.
+  STEP_SECONDS:double = 60;
+  /// Most states one request may produce. Default 500000.
+  MAXIMUM_STATES:uint = 500000;
+}
+
+/// Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
+table PCFSpaceWeather {
+  EPOCH:TIMInstant (required);
+  F107:double = 150;
+  F107_AVERAGE:double = 150;
+  /// Conventional daily Ap and three-hour Kp index values; not accelerations.
+  AP_INDEX:double = 15;
+  KP_INDEX:double = 3;
+}
+
+/// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
+/// added to the a priori model and scaled by the visible Sun fraction.
+table PCFEcom2 {
+  D0_M_S2:double;
+  Y0_M_S2:double;
+  B0_M_S2:double;
+  D2_COS_M_S2:double;
+  D2_SIN_M_S2:double;
+  D4_COS_M_S2:double;
+  D4_SIN_M_S2:double;
+  B1_COS_M_S2:double;
+  B1_SIN_M_S2:double;
+  B3_COS_M_S2:double;
+  B3_SIN_M_S2:double;
+}
+
+/// Integrator and its settings, shared by $PCF and $PRW. Units are SI. A scalar
+/// legacy tolerance must be expanded by the adapter. Defaults are those of the
+/// fields; ABSOLUTE_TOLERANCES has none and is required.
+table PCFIntegratorSettings {
+  ALGORITHM:pcfIntegratorAlgorithm = UNSPECIFIED;
+  INITIAL_STEP_SECONDS:double = 60;
+  MINIMUM_STEP_SECONDS:double = 1;
+  MAXIMUM_STEP_SECONDS:double = 3600;
+  /// Six or seven positive tolerances, respectively m, m/s and optional kg.
+  ABSOLUTE_TOLERANCES:[double] (required);
+  RELATIVE_TOLERANCE:double = 1e-12;
+  MAXIMUM_STEPS:uint = 100000;
+}
+
+/// The forces a propagator applies, shared by $PCF and $PRW. Flags default to
+/// off: a force is active only when selected. No implied support for
+/// coefficients, drag models or bodies the provider cannot supply; a provider
+/// refuses what it cannot apply, by name.
+table PCFForceModel {
+  GRAVITY_CHOICE:pcfGravitySelection = INFER_FLAGS;
+  ENABLE_POINT_MASS:bool = true;
+  /// m3/s2; required positive when a central gravity term is enabled.
+  GRAVITATIONAL_PARAMETER:double;
+  ENABLE_J2:bool = true;
+  ENABLE_J3:bool = false;
+  ENABLE_J4:bool = false;
+  ENABLE_HIGHER_ZONALS:bool = false;
+  /// Optional truncations; absent selects the explicitly reported model default.
+  MAXIMUM_DEGREE:ushort;
+  /// True when MAXIMUM_DEGREE carries a value; false means absent.
+  HAS_MAXIMUM_DEGREE:bool = false;
+  MAXIMUM_ORDER:ushort;
+  /// True when MAXIMUM_ORDER carries a value; false means absent.
+  HAS_MAXIMUM_ORDER:bool = false;
+  ENABLE_THIRD_BODY:bool = false;
+  /// NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
+  THIRD_BODY_IDS:[int];
+  ENABLE_SRP:bool = false;
+  ENABLE_DRAG:bool = false;
+  INITIAL_MASS_KG:double = 1000;
+  AREA_M2:double = 10;
+  REFLECTIVITY_COEFFICIENT:double = 1.5;
+  DRAG_COEFFICIENT:double = 2.2;
+  ATMOSPHERE_MODEL:pcfAtmosphereFamily = NRLMSISE00;
+  WEATHER:PCFSpaceWeather;
+  /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
+  EPHEMERIS_SOURCE:string (required);
+  /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  /// orientation (the request's Earth orientation rows) to apply them.
+  SOLID_TIDES:pcfSolidTideModel = NONE;
+  RELATIVITY:pcfRelativityTerms = NONE;
+  /// Constant acceleration along the in-track axis, m/s2: T of RTN,
+  /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  IN_TRACK_ACCELERATION_M_S2:double;
+  /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
+  HAS_IN_TRACK_ACCELERATION_M_S2:bool = false;
+  /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
+  DRAG_AREA_OVER_MASS_RATE_M2_KG_S:double;
+  /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
+  HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool = false;
+  /// Highest degree of the tesseral and sectorial terms (order >= 1); the
+  /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
+  MAXIMUM_TESSERAL_DEGREE:ushort;
+  /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
+  HAS_MAXIMUM_TESSERAL_DEGREE:bool = false;
+  /// Solar radiation pressure model family (default: the cannonball).
+  RADIATION_PRESSURE_MODEL:pcfRadiationPressureFamily = CANNONBALL;
+  /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  GNSS_BLOCK:pcfGnssSpacecraftBlock = UNSPECIFIED;
+  /// ECOM2 coefficients; absent means no ECOM2 term.
+  ECOM2:PCFEcom2;
+  /// Earth radiation pressure (albedo and infrared). It reads the Sun's
+  /// position from the ephemeris source.
+  EARTH_RADIATION:pcfEarthRadiationModel = NONE;
+  /// Angular size of the Earth surface elements it sums, degrees.
+  EARTH_RADIATION_RESOLUTION_DEG:double = 15;
+  /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  /// fitting SRP_AREA_OVER_MASS scales both.
+  EARTH_RADIATION_AREA_OVER_MASS_M2_KG:double;
+  /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
+  HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:bool = false;
+  /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  /// orientation (the request's Earth orientation rows) to apply them.
+  OCEAN_TIDES:pcfOceanTideModel = NONE;
+  /// Truncation of the ocean tide field.
+  OCEAN_TIDE_MAXIMUM_DEGREE:ushort = 30;
+  OCEAN_TIDE_MAXIMUM_ORDER:ushort = 30;
+  /// Central body, a NAIF ID. The gravity field, atmosphere, tides and third
+  /// bodies are those of this body. Default 399 (Earth).
+  CENTRAL_BODY_NAIF_ID:int = 399;
+  /// Where the Sun, Moon and planets are read from. Default UNSPECIFIED (the
+  /// source named in EPHEMERIS_SOURCE).
+  EPHEMERIS_KIND:pcfEphemerisKind = UNSPECIFIED;
+  /// Shadow model of the radiation-pressure and Earth-radiation terms. Default
+  /// UNSPECIFIED (the provider's: conical).
+  SHADOW_MODEL:evlShadowModel = UNSPECIFIED;
+  /// Where the space weather comes from. Default UNSPECIFIED (inferred).
+  WEATHER_SOURCE:pcfWeatherSource = UNSPECIFIED;
+  /// What happens past the last space weather row. Default UNSPECIFIED (the
+  /// provider's rule).
+  WEATHER_EXTENSION:pcfWeatherExtension = UNSPECIFIED;
+  /// Correction applied to the atmosphere model's density. Default NONE.
+  DENSITY_CORRECTION:pcfDensityCorrection = NONE;
+  /// Past the last density-correction node the log-density scale relaxes to
+  /// its trailing mean with this time constant, hours; 0 holds the last node.
+  /// Absent, the provider's rule (the numerical propagator holds; the advanced
+  /// mean-element propagator relaxes with 48 h).
+  DENSITY_CORRECTION_RELAXATION_HOURS:double = 0;
+  /// True when DENSITY_CORRECTION_RELAXATION_HOURS carries a value; false means
+  /// absent.
+  HAS_DENSITY_CORRECTION_RELAXATION_HOURS:bool = false;
+  /// Neutral wind in the drag relative velocity. Default NONE.
+  NEUTRAL_WIND:pcfNeutralWind = NONE;
+  /// Empirical along-track terms of the averaged theories. Absent: the
+  /// theory's own defaults.
+  EMPIRICAL_TERMS:PCFEmpiricalTerms;
+}
+
+/// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+/// force model, Kepler): the theory, the integrator and its settings, the
+/// forces, the fit policy, the events to locate, maneuver detection, reentry
+/// hand-off, launch priors and the output. A host passes it beside the
+/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+/// launch) selects the tables that method reads. An absent table takes the
+/// theory's own defaults; a table or value the selected theory cannot honor is
+/// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+/// PCFForceModel and their enums, so the runtime wire and the configuration
+/// share one definition of each. Units are in the field names and docs; every
+/// field states its default.
 table PCF {
-  STEP_SIZE:double;
-  TOLERANCE:double;
-  MIN_STEP:double;
-  MAX_STEP:double;
-  MAX_ITERATIONS:uint;
-  GRAVITY_DEGREE:ushort;
-  GRAVITY_ORDER:ushort;
-  INTEGRATOR:ubyte;
-  OUTPUT_FRAME:ubyte;
-  FORCE_FLAGS:ushort;
-  DRAG_COEFFICIENT:float;
-  SRP_COEFFICIENT:float;
-  AREA_MASS_RATIO:float;
-  RESERVED:[uint8];
+  /// Opaque identifier of this configuration, for provenance. Default empty.
+  CONFIGURATION_ID:string;
+  /// Named profile this configuration instantiates, for example "FFM-1".
+  /// Informational: every value that matters is carried below. Default empty.
+  PROFILE:string;
+  /// The orbit theory. Default UNSPECIFIED (the receiving module's own).
+  THEORY:pcfTheory = UNSPECIFIED;
+  /// Integrator and settings. Absent: the theory's own.
+  INTEGRATOR:PCFIntegratorSettings;
+  /// Forces. Absent: the theory's built-in set.
+  FORCES:PCFForceModel;
+  /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+  MEAN_ELEMENT:PCFMeanElementOptions;
+  /// Beyond-Earth segment sets.
+  SEGMENTS:PCFSegmentOptions;
+  /// Fit policy.
+  FIT:PCFFitPolicy;
+  /// Events located while integrating. Default empty.
+  EVENTS:[PCFEventDefinition];
+  /// Maneuver detection.
+  MANEUVER_DETECTION:PCFManeuverDetection;
+  /// Reentry hand-off and window.
+  REENTRY:PCFReentry;
+  /// Launch initialization priors.
+  LAUNCH:PCFLaunch;
+  /// Output states.
+  OUTPUT:PCFOutput;
 }
 
 root_type PCF;

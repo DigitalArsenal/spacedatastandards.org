@@ -27,6 +27,7 @@ include "../OIL/main.fbs";
 include "../CVR/main.fbs";
 include "../MNV/main.fbs";
 include "../PRW/main.fbs";
+include "../PCF/main.fbs";
 
 /// Verdict of a trajectory comparison. Append new values only; never reorder or
 /// reuse existing values.
@@ -597,9 +598,9 @@ table XMTEpochFitPolicy {
   /// SHA-256 hex digest of the propagator artifact.
   PROPAGATOR_ARTIFACT_SHA256: string;
   /// Force model the trajectories were propagated with.
-  FORCE_MODEL: PRWForceConfiguration;
+  FORCE_MODEL: PCFForceModel;
   /// Integrator settings, when stated.
-  INTEGRATOR: PRWIntegratorSettings;
+  INTEGRATOR: PCFIntegratorSettings;
   /// Known limitations of the force model (human-readable).
   FORCE_MODEL_LIMITATION: string;
   /// Immutable reference to the frame transformation used.
