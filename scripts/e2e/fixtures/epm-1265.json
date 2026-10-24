@@ -1,0 +1,104 @@
+{
+  "DN": "EPM.DN·1:0é",
+  "LEGAL_NAME": "EPM.LEGAL_NAME·2:0é",
+  "FAMILY_NAME": "EPM.FAMILY_NAME·3:0é",
+  "GIVEN_NAME": "EPM.GIVEN_NAME·4:0é",
+  "ADDITIONAL_NAME": "EPM.ADDITIONAL_NAME·5:0é",
+  "HONORIFIC_PREFIX": "EPM.HONORIFIC_PREFIX·6:0é",
+  "HONORIFIC_SUFFIX": "EPM.HONORIFIC_SUFFIX·7:0é",
+  "JOB_TITLE": "EPM.JOB_TITLE·8:0é",
+  "OCCUPATION": "EPM.OCCUPATION·9:0é",
+  "ADDRESS": {
+    "COUNTRY": "Address.COUNTRY·11:0é",
+    "REGION": "Address.REGION·12:0é",
+    "LOCALITY": "Address.LOCALITY·13:0é",
+    "POSTAL_CODE": "Address.POSTAL_CODE·14:0é",
+    "STREET": "Address.STREET·15:0é",
+    "POST_OFFICE_BOX_NUMBER": "Address.POST_OFFICE_BOX_NUMBER·16:0é"
+  },
+  "ALTERNATE_NAMES": [
+    "EPM.ALTERNATE_NAMES·17:0é",
+    "EPM.ALTERNATE_NAMES·17:1é"
+  ],
+  "EMAIL": "EPM.EMAIL·18:0é",
+  "TELEPHONE": "EPM.TELEPHONE·19:0é",
+  "KEYS": [
+    {
+      "PUBLIC_KEY": "CryptoKey.PUBLIC_KEY·21:0é",
+      "XPUB": "CryptoKey.XPUB·22:0é",
+      "PRIVATE_KEY": "CryptoKey.PRIVATE_KEY·23:0é",
+      "XPRIV": "CryptoKey.XPRIV·24:0é",
+      "KEY_ADDRESS": "CryptoKey.KEY_ADDRESS·25:0é",
+      "ADDRESS_TYPE": "CryptoKey.ADDRESS_TYPE·26:0é",
+      "KEY_TYPE": 1,
+      "KEY_PATH": "CryptoKey.KEY_PATH·28:0é",
+      "ALGORITHM": "CryptoKey.ALGORITHM·29:0é",
+      "ENCODING": "CryptoKey.ENCODING·30:0é"
+    },
+    {
+      "PUBLIC_KEY": "CryptoKey.PUBLIC_KEY·31:0é",
+      "XPUB": "CryptoKey.XPUB·32:0é",
+      "PRIVATE_KEY": "CryptoKey.PRIVATE_KEY·33:0é",
+      "XPRIV": "CryptoKey.XPRIV·34:0é",
+      "KEY_ADDRESS": "CryptoKey.KEY_ADDRESS·35:0é",
+      "ADDRESS_TYPE": "CryptoKey.ADDRESS_TYPE·36:0é",
+      "KEY_TYPE": 1,
+      "KEY_PATH": "CryptoKey.KEY_PATH·38:0é",
+      "ALGORITHM": "CryptoKey.ALGORITHM·39:0é",
+      "ENCODING": "CryptoKey.ENCODING·40:0é"
+    }
+  ],
+  "MULTIFORMAT_ADDRESS": [
+    "EPM.MULTIFORMAT_ADDRESS·41:0é",
+    "EPM.MULTIFORMAT_ADDRESS·41:1é"
+  ],
+  "SIGNATURE": "EPM.SIGNATURE·42:0é",
+  "SIGNATURE_TIMESTAMP": {
+    "$int64": "-1099511671335"
+  },
+  "CHAIN_PROOFS": [
+    {
+      "CHAIN": "ChainProof.CHAIN·45:0é",
+      "ADDRESS": "ChainProof.ADDRESS·46:0é",
+      "PUBLIC_KEY": "ChainProof.PUBLIC_KEY·47:0é",
+      "KEY_PATH": "ChainProof.KEY_PATH·48:0é",
+      "SIGNATURE": "ChainProof.SIGNATURE·49:0é",
+      "SIGNED_PAYLOAD": "ChainProof.SIGNED_PAYLOAD·50:0é",
+      "ALGORITHM": "ChainProof.ALGORITHM·51:0é",
+      "ENCODING": "ChainProof.ENCODING·52:0é"
+    },
+    {
+      "CHAIN": "ChainProof.CHAIN·53:0é",
+      "ADDRESS": "ChainProof.ADDRESS·54:0é",
+      "PUBLIC_KEY": "ChainProof.PUBLIC_KEY·55:0é",
+      "KEY_PATH": "ChainProof.KEY_PATH·56:0é",
+      "SIGNATURE": "ChainProof.SIGNATURE·57:0é",
+      "SIGNED_PAYLOAD": "ChainProof.SIGNED_PAYLOAD·58:0é",
+      "ALGORITHM": "ChainProof.ALGORITHM·59:0é",
+      "ENCODING": "ChainProof.ENCODING·60:0é"
+    }
+  ],
+  "ENTITY_TYPE": 1,
+  "SIGNATURE_ALGORITHM": "EPM.SIGNATURE_ALGORITHM·62:0é",
+  "DOMAIN_PROOFS": [
+    {
+      "DNS_DOMAIN": "node.example.org",
+      "PUBLIC_KEY": "DomainProof.PUBLIC_KEY·65:0é",
+      "KEY_PATH": "DomainProof.KEY_PATH·66:0é",
+      "SIGNATURE": "DomainProof.SIGNATURE·67:0é",
+      "SIGNED_PAYLOAD": "DomainProof.SIGNED_PAYLOAD·68:0é",
+      "ALGORITHM": "DomainProof.ALGORITHM·69:0é",
+      "ENCODING": "DomainProof.ENCODING·70:0é"
+    },
+    {
+      "DNS_DOMAIN": "DomainProof.DNS_DOMAIN·71:0é",
+      "PUBLIC_KEY": "DomainProof.PUBLIC_KEY·72:0é",
+      "KEY_PATH": "DomainProof.KEY_PATH·73:0é",
+      "SIGNATURE": "DomainProof.SIGNATURE·74:0é",
+      "SIGNED_PAYLOAD": "DomainProof.SIGNED_PAYLOAD·75:0é",
+      "ALGORITHM": "DomainProof.ALGORITHM·76:0é",
+      "ENCODING": "DomainProof.ENCODING·77:0é"
+    }
+  ],
+  "PHOTO": "EPM.PHOTO·78:0é"
+}
