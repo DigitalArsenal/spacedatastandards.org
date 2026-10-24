@@ -3,22 +3,33 @@ import flatbuffers
 
 class BOV
 
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 class BOV : flatbuffers.handle
+    /// EFG position, E component, km (11 significant figures).
     def E_COORDINATE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
+    /// EFG position, F component, km (11 significant figures).
     def F_COORDINATE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// EFG position, G component, km (11 significant figures).
     def G_COORDINATE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
+    /// EFG velocity, E component, km/s (9 significant figures).
     def E_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
+    /// EFG velocity, F component, km/s (9 significant figures).
     def F_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// EFG velocity, G component, km/s (9 significant figures).
     def G_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Epoch time, in ISO 8601 UTC format.
     def EPOCH() -> string:
         return flatbuffers.field_string(buf_, pos_, 16)
+    /// Time from launch, seconds (s), with appropriate precision.
     def TIME_FROM_LAUNCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
 

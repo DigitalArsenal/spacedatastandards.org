@@ -56,8 +56,8 @@ class PRWExecutionRequest(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from PRWIntegratorSettings import PRWIntegratorSettings
-            obj = PRWIntegratorSettings()
+            from PCFIntegratorSettings import PCFIntegratorSettings
+            obj = PCFIntegratorSettings()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -67,8 +67,8 @@ class PRWExecutionRequest(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from PRWForceConfiguration import PRWForceConfiguration
-            obj = PRWForceConfiguration()
+            from PCFForceModel import PCFForceModel
+            obj = PCFForceModel()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -396,10 +396,10 @@ def PRWExecutionRequestEnd(builder):
 def End(builder):
     return PRWExecutionRequestEnd(builder)
 
+import PCFForceModel
+import PCFIntegratorSettings
 import PRWFiniteBurn
-import PRWForceConfiguration
 import PRWImpulse
-import PRWIntegratorSettings
 import PRWProcessNoise
 import PRWResidentState
 import PRWStateMatrix
@@ -432,8 +432,8 @@ class PRWExecutionRequestT(object):
     ):
         self.INITIAL = INITIAL  # type: Optional[PRWResidentState.PRWResidentStateT]
         self.TARGET_EPOCH = TARGET_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
-        self.INTEGRATOR = INTEGRATOR  # type: Optional[PRWIntegratorSettings.PRWIntegratorSettingsT]
-        self.FORCES = FORCES  # type: Optional[PRWForceConfiguration.PRWForceConfigurationT]
+        self.INTEGRATOR = INTEGRATOR  # type: Optional[PCFIntegratorSettings.PCFIntegratorSettingsT]
+        self.FORCES = FORCES  # type: Optional[PCFForceModel.PCFForceModelT]
         self.INCLUDE_STM = INCLUDE_STM  # type: bool
         self.STM_TECHNIQUE = STM_TECHNIQUE  # type: int
         self.DENSITY_TREATMENT = DENSITY_TREATMENT  # type: int
@@ -472,9 +472,9 @@ class PRWExecutionRequestT(object):
         if PRWExecutionRequest.TARGET_EPOCH() is not None:
             self.TARGET_EPOCH = TIMInstant.TIMInstantT.InitFromObj(PRWExecutionRequest.TARGET_EPOCH())
         if PRWExecutionRequest.INTEGRATOR() is not None:
-            self.INTEGRATOR = PRWIntegratorSettings.PRWIntegratorSettingsT.InitFromObj(PRWExecutionRequest.INTEGRATOR())
+            self.INTEGRATOR = PCFIntegratorSettings.PCFIntegratorSettingsT.InitFromObj(PRWExecutionRequest.INTEGRATOR())
         if PRWExecutionRequest.FORCES() is not None:
-            self.FORCES = PRWForceConfiguration.PRWForceConfigurationT.InitFromObj(PRWExecutionRequest.FORCES())
+            self.FORCES = PCFForceModel.PCFForceModelT.InitFromObj(PRWExecutionRequest.FORCES())
         self.INCLUDE_STM = PRWExecutionRequest.INCLUDE_STM()
         self.STM_TECHNIQUE = PRWExecutionRequest.STM_TECHNIQUE()
         self.DENSITY_TREATMENT = PRWExecutionRequest.DENSITY_TREATMENT()

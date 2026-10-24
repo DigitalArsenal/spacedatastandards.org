@@ -4244,6 +4244,818 @@
         }
       }
     },
+    "evlLocatorClass": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ECLIPSE",
+        "CONTACT",
+        "INTRUSION",
+        "APSIDES",
+        "NODE_CROSSING",
+        "PARAMETER_CONDITION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "ECLIPSE": {
+          "value": 1,
+          "description": "Passage of the target through the shadow of one or more occulting bodies."
+        },
+        "CONTACT": {
+          "value": 2,
+          "description": "Visibility of the target from a surface site, subject to a horizon or mask constraint."
+        },
+        "INTRUSION": {
+          "value": 3,
+          "description": "Entry of a body or object into a sensor field of view."
+        },
+        "APSIDES": {
+          "value": 4,
+          "description": "Passage of the target through an apsis of its orbit."
+        },
+        "NODE_CROSSING": {
+          "value": 5,
+          "description": "Passage of the target through the node line of a stated coordinate system."
+        },
+        "PARAMETER_CONDITION": {
+          "value": 6,
+          "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+        }
+      }
+    },
+    "evlEventType": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "UMBRA",
+        "PENUMBRA",
+        "ANTUMBRA",
+        "RISE",
+        "SET",
+        "ENTRY",
+        "EXIT",
+        "APOAPSIS",
+        "PERIAPSIS",
+        "ASCENDING_NODE",
+        "DESCENDING_NODE",
+        "CONDITION_SATISFIED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "UMBRA": {
+          "value": 1,
+          "description": "Total occultation of the illuminating body."
+        },
+        "PENUMBRA": {
+          "value": 2,
+          "description": "Partial occultation of the illuminating body."
+        },
+        "ANTUMBRA": {
+          "value": 3,
+          "description": "The occulting body is fully inside the illuminating body disc."
+        },
+        "RISE": {
+          "value": 4,
+          "description": "The target crossed the constraint boundary into visibility."
+        },
+        "SET": {
+          "value": 5,
+          "description": "The target crossed the constraint boundary out of visibility."
+        },
+        "ENTRY": {
+          "value": 6,
+          "description": "Entry into a bounded volume or field of view."
+        },
+        "EXIT": {
+          "value": 7,
+          "description": "Exit from a bounded volume or field of view."
+        },
+        "APOAPSIS": {
+          "value": 8,
+          "description": "Maximum orbital radius."
+        },
+        "PERIAPSIS": {
+          "value": 9,
+          "description": "Minimum orbital radius."
+        },
+        "ASCENDING_NODE": {
+          "value": 10,
+          "description": "Node crossing with the out-of-plane component increasing."
+        },
+        "DESCENDING_NODE": {
+          "value": 11,
+          "description": "Node crossing with the out-of-plane component decreasing."
+        },
+        "CONDITION_SATISFIED": {
+          "value": 12,
+          "description": "A $PCE parameter condition was attained."
+        }
+      }
+    },
+    "evlShadowModel": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CYLINDRICAL",
+        "CONICAL",
+        "DUAL_CONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CYLINDRICAL": {
+          "value": 1,
+          "description": "The occulting body casts a cylinder; no penumbra exists."
+        },
+        "CONICAL": {
+          "value": 2,
+          "description": "A single cone; umbra and penumbra are distinguished."
+        },
+        "DUAL_CONE": {
+          "value": 3,
+          "description": "Umbra and penumbra cones evaluated separately, admitting antumbra."
+        }
+      }
+    },
+    "evlAberrationCorrection": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NO_CORRECTION",
+        "LIGHT_TIME",
+        "LIGHT_TIME_AND_STELLAR_ABERRATION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "NO_CORRECTION": {
+          "value": 1,
+          "description": "Geometric positions at the same instant."
+        },
+        "LIGHT_TIME": {
+          "value": 2,
+          "description": "Positions corrected for one-way signal travel time."
+        },
+        "LIGHT_TIME_AND_STELLAR_ABERRATION": {
+          "value": 3,
+          "description": "Light time and the observer's transverse motion."
+        }
+      }
+    },
+    "evlFieldOfViewShape": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONIC",
+        "RECTANGULAR",
+        "CUSTOM_MASK"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "CONIC": {
+          "value": 1,
+          "description": "A circular cone about the boresight, bounded by CONE_HALF_ANGLE_RAD."
+        },
+        "RECTANGULAR": {
+          "value": 2,
+          "description": "A rectangular pyramid about the boresight, bounded by the two half-angles."
+        },
+        "CUSTOM_MASK": {
+          "value": 3,
+          "description": "A custom boundary carried as a boresight-relative angular mask."
+        }
+      }
+    },
+    "evlSamplePoint": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "EVENT_START",
+        "EVENT_STOP",
+        "EVENT_EXTREMUM",
+        "INTERIOR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "EVENT_START": {
+          "value": 1
+        },
+        "EVENT_STOP": {
+          "value": 2
+        },
+        "EVENT_EXTREMUM": {
+          "value": 3,
+          "description": "The instant of the event's extremum: deepest obscuration, peak elevation, closest approach."
+        },
+        "INTERIOR": {
+          "value": 4,
+          "description": "A sample inside the event that is none of the above."
+        }
+      }
+    },
+    "evlResultStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "OK",
+        "INVALID_INPUT",
+        "UNSUPPORTED_LOCATOR_CLASS",
+        "MISSING_CONFIGURATION",
+        "MISSING_EPHEMERIS",
+        "MISSING_EOP_DATA",
+        "PARAMETER_UNAVAILABLE",
+        "ROOT_REFINEMENT_FAILED",
+        "BUDGET_EXCEEDED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "OK": {
+          "value": 1
+        },
+        "INVALID_INPUT": {
+          "value": 2
+        },
+        "UNSUPPORTED_LOCATOR_CLASS": {
+          "value": 3,
+          "description": "The provider does not implement the requested locator class."
+        },
+        "MISSING_CONFIGURATION": {
+          "value": 4,
+          "description": "The configuration table matching LOCATOR_CLASS was absent."
+        },
+        "MISSING_EPHEMERIS": {
+          "value": 5,
+          "description": "The state source did not span the requested interval."
+        },
+        "MISSING_EOP_DATA": {
+          "value": 6,
+          "description": "The geometry needs Earth-orientation data that was not supplied or does not span the interval."
+        },
+        "PARAMETER_UNAVAILABLE": {
+          "value": 7,
+          "description": "A generic condition names a parameter the provider cannot evaluate, or one that does not support a stopping condition."
+        },
+        "ROOT_REFINEMENT_FAILED": {
+          "value": 8,
+          "description": "A crossing was bracketed but the refinement did not converge to REFINEMENT_TOLERANCE_SECONDS. The provider MUST report this rather than emit an unconverged epoch."
+        },
+        "BUDGET_EXCEEDED": {
+          "value": 9,
+          "description": "The run hit MAXIMUM_EVENTS or its evaluation budget before reaching SCAN_STOP_EPOCH; the events reported are a prefix, not the whole answer."
+        }
+      }
+    },
+    "pcfTheory": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "SGP4",
+        "SGP4XP",
+        "SDNAP",
+        "FFM",
+        "KEPLER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The receiving module's own theory. A module that offers several reads UNSPECIFIED as the one it ingests element sets with (the advanced propagator reads it as SGP4XP)."
+        },
+        "SGP4": {
+          "value": 1,
+          "description": "Mean-element theory of SPACETRACK REPORT No. 3 (SGP4 near Earth, SDP4 deep space)."
+        },
+        "SGP4XP": {
+          "value": 2,
+          "description": "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
+        },
+        "SDNAP": {
+          "value": 3,
+          "description": "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
+        },
+        "FFM": {
+          "value": 4,
+          "description": "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
+        },
+        "KEPLER": {
+          "value": 5,
+          "description": "Two-body (Keplerian) motion about the central body."
+        }
+      }
+    },
+    "pcfWeatherExtension": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "REFUSE",
+        "HOLD_LAST",
+        "FORECAST_CHAIN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The provider's own rule (the numerical propagator refuses, the advanced mean-element propagator chains forecasts)."
+        },
+        "REFUSE": {
+          "value": 1,
+          "description": "Refuse an arc that reaches past the rows (space-weather-out-of-range)."
+        },
+        "HOLD_LAST": {
+          "value": 2,
+          "description": "Hold the last row's values."
+        },
+        "FORECAST_CHAIN": {
+          "value": 3,
+          "description": "Observed rows, then the three-day forecast, then the 45-day forecast, then the solar-cycle climatology; each hand-off is blended over one day and every evaluation names its tier."
+        }
+      }
+    },
+    "pcfWeatherSource": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "CONSTANT",
+        "RECORDS"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "Infer: PCFSpaceWeather when the force model carries it, else the daily rows supplied with the request."
+        },
+        "CONSTANT": {
+          "value": 1,
+          "description": "PCFSpaceWeather, held for the whole arc."
+        },
+        "RECORDS": {
+          "value": 2,
+          "description": "Daily rows supplied with the request ($SPW rows; the JB2008 indices for the JB2008 atmosphere)."
+        }
+      }
+    },
+    "pcfDensityCorrection": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "DCA_COMMON_MODE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "Density as the atmosphere model gives it."
+        },
+        "DCA_COMMON_MODE": {
+          "value": 1,
+          "description": "The open-DCA common-mode correction published as $DCL: model density times exp(s(t)), s the log-density scale of the published nodes."
+        }
+      }
+    },
+    "pcfNeutralWind": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "HWM14"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0,
+          "description": "Atmosphere co-rotating with the central body, no wind."
+        },
+        "HWM14": {
+          "value": 1,
+          "description": "The HWM14 empirical horizontal wind model (Drob et al. 2015, Earth and Space Science 2, 301-319)."
+        }
+      }
+    },
+    "pcfEphemerisKind": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "ANALYTIC_SERIES",
+        "PLANETARY_KERNEL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The provider's own source, named in EPHEMERIS_SOURCE."
+        },
+        "ANALYTIC_SERIES": {
+          "value": 1,
+          "description": "A closed-form analytic series (low precision, no kernel to load)."
+        },
+        "PLANETARY_KERNEL": {
+          "value": 2,
+          "description": "A planetary ephemeris kernel (SPK), named in EPHEMERIS_SOURCE."
+        }
+      }
+    },
+    "pcfEventAction": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "STOP",
+        "CONTINUE",
+        "RECORD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "STOP": {
+          "value": 1,
+          "description": "End the propagation at the event; the result carries its epoch and state."
+        },
+        "CONTINUE": {
+          "value": 2,
+          "description": "Make the event a step boundary only (the dynamics may change there) and report nothing about it."
+        },
+        "RECORD": {
+          "value": 3,
+          "description": "Report the event in the result and keep propagating."
+        }
+      }
+    },
+    "pcfInnovationCorrelation": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "WHITE",
+        "ONE_SAMPLE_PER_REVOLUTION",
+        "CORRELATION_TIME"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "WHITE": {
+          "value": 1,
+          "description": "Every sample independent (the white-noise assumption)."
+        },
+        "ONE_SAMPLE_PER_REVOLUTION": {
+          "value": 2,
+          "description": "One sample per revolution counts, so a revolution is one independent innovation."
+        },
+        "CORRELATION_TIME": {
+          "value": 3,
+          "description": "An exponential correlation of the innovations over a correlation time."
+        }
+      }
+    },
+    "pcfReentryWindowMethod": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "LINEAR",
+        "UNSCENTED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "LINEAR": {
+          "value": 1,
+          "description": "First-order propagation of the ballistic and density sigmas through the remaining life."
+        },
+        "UNSCENTED": {
+          "value": 2,
+          "description": "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
+        }
+      }
+    },
+    "pcfOutputFrame": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "TEME",
+        "GCRF",
+        "EME2000",
+        "ITRF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The grid template's frame; TEME without one."
+        },
+        "TEME": {
+          "value": 1,
+          "description": "True equator, mean equinox of date."
+        },
+        "GCRF": {
+          "value": 2,
+          "description": "Geocentric Celestial Reference Frame."
+        },
+        "EME2000": {
+          "value": 3,
+          "description": "Mean equator and equinox of J2000.0."
+        },
+        "ITRF": {
+          "value": 4,
+          "description": "International Terrestrial Reference Frame (Earth-fixed)."
+        }
+      }
+    },
+    "pcfIntegratorAlgorithm": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "RK4",
+        "RKF45",
+        "RKF78",
+        "RK78",
+        "RKDP87",
+        "ABM",
+        "BS",
+        "COWELL",
+        "ENCKE",
+        "EQUINOCTIAL_VOP",
+        "DOPRI5",
+        "RK65_8M",
+        "VERNER_98",
+        "RKN12_10",
+        "GAUSS_JACKSON_8",
+        "GAUSS_VOP",
+        "DROMO",
+        "STIEFEL_SCHEIFELE",
+        "DOPRI853"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0,
+          "description": "The provider's own algorithm."
+        },
+        "RK4": {
+          "value": 1,
+          "description": "Classical fourth-order Runge-Kutta, fixed step INITIAL_STEP_SECONDS."
+        },
+        "RKF45": {
+          "value": 2,
+          "description": "Runge-Kutta-Fehlberg 4(5) (Fehlberg 1969, NASA TR R-315), adaptive."
+        },
+        "RKF78": {
+          "value": 3,
+          "description": "Runge-Kutta-Fehlberg 7(8) (Fehlberg 1968, NASA TR R-287), adaptive."
+        },
+        "RK78": {
+          "value": 4,
+          "description": "The same Fehlberg 7(8) pair under the name the full force model's catalog profile uses, adaptive."
+        },
+        "RKDP87": {
+          "value": 5,
+          "description": "Prince-Dormand 8(7), thirteen stages, \"RK8(7)13M\" (Prince and Dormand 1981, J. Comput. Appl. Math. 7), adaptive."
+        },
+        "ABM": {
+          "value": 6,
+          "description": "Adams-Bashforth-Moulton predictor-corrector multistep."
+        },
+        "BS": {
+          "value": 7,
+          "description": "Gragg-Bulirsch-Stoer extrapolation."
+        },
+        "COWELL": {
+          "value": 8,
+          "description": "Cowell's method: Cartesian position and velocity."
+        },
+        "ENCKE": {
+          "value": 9,
+          "description": "Encke's method: the deviation from a reference conic."
+        },
+        "EQUINOCTIAL_VOP": {
+          "value": 10,
+          "description": "Variation of parameters in equinoctial elements."
+        },
+        "DOPRI5": {
+          "value": 11,
+          "description": "Dormand-Prince 5(4), seven stages (Dormand and Prince 1980, J. Comput. Appl. Math. 6)."
+        },
+        "RK65_8M": {
+          "value": 12,
+          "description": "Prince-Dormand 6(5), eight stages, minimized error coefficients, \"RK6(5)8M\" (Prince and Dormand 1981, J. Comput. Appl. Math. 7)."
+        },
+        "VERNER_98": {
+          "value": 13,
+          "description": "Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53)."
+        },
+        "RKN12_10": {
+          "value": 14,
+          "description": "Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The acceleration must not depend on velocity, so a provider refuses it with drag."
+        },
+        "GAUSS_JACKSON_8": {
+          "value": 15,
+          "description": "Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct, started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci. 52)."
+        },
+        "GAUSS_VOP": {
+          "value": 16,
+          "description": "Gauss's variational equations in classical Keplerian elements."
+        },
+        "DROMO": {
+          "value": 17,
+          "description": "DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97)."
+        },
+        "STIEFEL_SCHEIFELE": {
+          "value": 18,
+          "description": "Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel and Scheifele 1971, Linear and Regular Celestial Mechanics)."
+        },
+        "DOPRI853": {
+          "value": 19,
+          "description": "Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993, Solving Ordinary Differential Equations I)."
+        }
+      }
+    },
+    "pcfGravitySelection": {
+      "type": "string",
+      "enum": [
+        "INFER_FLAGS",
+        "POINT_MASS",
+        "J2_ONLY",
+        "J2_TO_J4",
+        "SPHERICAL_HARMONICS",
+        "EGM2008",
+        "EGM96",
+        "GRGM660PRIM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "INFER_FLAGS": {
+          "value": 0
+        },
+        "SPHERICAL_HARMONICS": {
+          "value": 4
+        },
+        "EGM96": {
+          "value": 6,
+          "description": "NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free."
+        },
+        "GRGM660PRIM": {
+          "value": 7,
+          "description": "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+        }
+      }
+    },
+    "pcfAtmosphereFamily": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NRLMSISE00",
+        "EXPONENTIAL",
+        "USSA1976",
+        "HARRIS_PRIESTER",
+        "JACCHIA_ROBERTS",
+        "JB2008"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        },
+        "USSA1976": {
+          "value": 3
+        },
+        "JACCHIA_ROBERTS": {
+          "value": 5,
+          "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
+        },
+        "JB2008": {
+          "value": 6,
+          "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+        }
+      }
+    },
+    "pcfSolidTideModel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "IERS_2010"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "pcfRelativityTerms": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "SCHWARZSCHILD",
+        "IERS_2010"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "pcfRadiationPressureFamily": {
+      "type": "string",
+      "enum": [
+        "CANNONBALL",
+        "GNSS_BOX_WING",
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "CANNONBALL": {
+          "value": 0
+        }
+      }
+    },
+    "pcfEarthRadiationModel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "KNOCKE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "pcfOceanTideModel": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "FES2004"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        }
+      }
+    },
+    "pcfGnssSpacecraftBlock": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "GPS_IIR",
+        "GPS_IIR_M",
+        "GPS_IIF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "UNSPECIFIED": {
+          "value": 0
+        }
+      }
+    },
     "propagatorStateFlags": {
       "type": "string",
       "enum": [
@@ -4332,91 +5144,6 @@
         "KEPLERIAN": {
           "value": 5,
           "description": "Source is a single classical Keplerian element set."
-        }
-      }
-    },
-    "prwSolverAlgorithm": {
-      "type": "string",
-      "enum": [
-        "UNSPECIFIED",
-        "RK4",
-        "RKF45",
-        "RKF78",
-        "RK78",
-        "RKDP87",
-        "ABM",
-        "BS",
-        "COWELL",
-        "ENCKE",
-        "EQUINOCTIAL_VOP"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "UNSPECIFIED": {
-          "value": 0
-        },
-        "RKDP87": {
-          "value": 5
-        },
-        "EQUINOCTIAL_VOP": {
-          "value": 10
-        }
-      }
-    },
-    "prwGravitySelection": {
-      "type": "string",
-      "enum": [
-        "INFER_FLAGS",
-        "POINT_MASS",
-        "J2_ONLY",
-        "J2_TO_J4",
-        "SPHERICAL_HARMONICS",
-        "EGM2008",
-        "EGM96"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "INFER_FLAGS": {
-          "value": 0
-        },
-        "SPHERICAL_HARMONICS": {
-          "value": 4
-        },
-        "EGM96": {
-          "value": 6,
-          "description": "NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free."
-        }
-      }
-    },
-    "prwAtmosphereFamily": {
-      "type": "string",
-      "enum": [
-        "UNSPECIFIED",
-        "NRLMSISE00",
-        "EXPONENTIAL",
-        "USSA1976",
-        "HARRIS_PRIESTER",
-        "JACCHIA_ROBERTS",
-        "JB2008"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "UNSPECIFIED": {
-          "value": 0
-        },
-        "USSA1976": {
-          "value": 3
-        },
-        "JACCHIA_ROBERTS": {
-          "value": 5,
-          "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
-        },
-        "JB2008": {
-          "value": 6,
-          "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
         }
       }
     },
@@ -4558,35 +5285,6 @@
         }
       }
     },
-    "prwSolidTideModel": {
-      "type": "string",
-      "enum": [
-        "NONE",
-        "IERS_2010"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "NONE": {
-          "value": 0
-        }
-      }
-    },
-    "prwRelativityTerms": {
-      "type": "string",
-      "enum": [
-        "NONE",
-        "SCHWARZSCHILD",
-        "IERS_2010"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "NONE": {
-          "value": 0
-        }
-      }
-    },
     "prwDynamicParameter": {
       "type": "string",
       "enum": [
@@ -4618,72 +5316,13 @@
         },
         "ECOM2_D0": {
           "value": 5,
-          "description": "ECOM2 coefficients (PRWEcom2), in their order there."
+          "description": "ECOM2 coefficients (PCFEcom2), in their order there."
         },
         "ECOM2_D4_COS": {
           "value": 10
         },
         "ECOM2_B3_COS": {
           "value": 14
-        }
-      }
-    },
-    "prwRadiationPressureFamily": {
-      "type": "string",
-      "enum": [
-        "CANNONBALL",
-        "GNSS_BOX_WING",
-        "NONE"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "CANNONBALL": {
-          "value": 0
-        }
-      }
-    },
-    "prwEarthRadiationModel": {
-      "type": "string",
-      "enum": [
-        "NONE",
-        "KNOCKE"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "NONE": {
-          "value": 0
-        }
-      }
-    },
-    "prwOceanTideModel": {
-      "type": "string",
-      "enum": [
-        "NONE",
-        "FES2004"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "NONE": {
-          "value": 0
-        }
-      }
-    },
-    "prwGnssSpacecraftBlock": {
-      "type": "string",
-      "enum": [
-        "UNSPECIFIED",
-        "GPS_IIR",
-        "GPS_IIR_M",
-        "GPS_IIF"
-      ],
-      "x-flatbuffer-type": "enum",
-      "x-flatbuffer-enum-type": "ubyte",
-      "x-flatbuffer-enum-values": {
-        "UNSPECIFIED": {
-          "value": 0
         }
       }
     },
@@ -14858,6 +15497,2994 @@
       },
       "additionalProperties": false
     },
+    "EVLEclipseConfiguration": {
+      "type": "object",
+      "description": "Configuration for ECLIPSE.",
+      "properties": {
+        "OCCULTING_BODY_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "description": "Ephemeris body codes of the bodies allowed to occult, in the order they\nare tested. More than one is normal.",
+          "x-flatbuffer-type": "[int]"
+        },
+        "ILLUMINATING_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the illuminating body.",
+          "x-flatbuffer-type": "int"
+        },
+        "SHADOW_MODEL": {
+          "$ref": "#/definitions/evlShadowModel",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CYLINDRICAL": {
+              "value": 1,
+              "description": "The occulting body casts a cylinder; no penumbra exists."
+            },
+            "CONICAL": {
+              "value": 2,
+              "description": "A single cone; umbra and penumbra are distinguished."
+            },
+            "DUAL_CONE": {
+              "value": 3,
+              "description": "Umbra and penumbra cones evaluated separately, admitting antumbra."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "REPORT_UMBRA": {
+          "type": "boolean",
+          "description": "Which shadow regions to report. A model that cannot distinguish a region\nMUST refuse the request rather than fold it into a neighbour.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REPORT_PENUMBRA": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REPORT_ANTUMBRA": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "MINIMUM_DURATION_SECONDS": {
+          "type": "number",
+          "description": "Events shorter than this are not reported. 0 reports every event.",
+          "x-flatbuffer-type": "double"
+        },
+        "ABERRATION_CORRECTION": {
+          "$ref": "#/definitions/evlAberrationCorrection",
+          "description": "Correct the illuminating-body direction for signal travel time.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NO_CORRECTION": {
+              "value": 1,
+              "description": "Geometric positions at the same instant."
+            },
+            "LIGHT_TIME": {
+              "value": 2,
+              "description": "Positions corrected for one-way signal travel time."
+            },
+            "LIGHT_TIME_AND_STELLAR_ABERRATION": {
+              "value": 3,
+              "description": "Light time and the observer's transverse motion."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLContactConfiguration": {
+      "type": "object",
+      "description": "Configuration for CONTACT.",
+      "properties": {
+        "OBSERVER": {
+          "$ref": "#/definitions/RFMOrigin",
+          "description": "The observing point, normally a GROUND_SITE origin.",
+          "x-flatbuffer-type": "RFMOrigin"
+        },
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Identifier of the observing site or sensor; resolves against $SEN.ID\nwhen the observer is an instrumented site.",
+          "x-flatbuffer-type": "string"
+        },
+        "MINIMUM_ELEVATION_RAD": {
+          "type": "number",
+          "description": "Elevation the target must exceed, radians, when no mask is supplied.",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH_ELEVATION_MASK_RAD": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Horizon mask as azimuth and minimum-elevation pairs, radians, in\nascending azimuth: [az0, el0, az1, el1, ...]. Present, it supersedes\nMINIMUM_ELEVATION_RAD. An odd length is INVALID_INPUT.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "OCCULTING_BODY_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "description": "Bodies allowed to block the line of sight.",
+          "x-flatbuffer-type": "[int]"
+        },
+        "ABERRATION_CORRECTION": {
+          "$ref": "#/definitions/evlAberrationCorrection",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "NO_CORRECTION": {
+              "value": 1,
+              "description": "Geometric positions at the same instant."
+            },
+            "LIGHT_TIME": {
+              "value": 2,
+              "description": "Positions corrected for one-way signal travel time."
+            },
+            "LIGHT_TIME_AND_STELLAR_ABERRATION": {
+              "value": 3,
+              "description": "Light time and the observer's transverse motion."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "MINIMUM_DURATION_SECONDS": {
+          "type": "number",
+          "description": "Events shorter than this are not reported.",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLIntrusionConfiguration": {
+      "type": "object",
+      "description": "Configuration for INTRUSION.",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Identifier of the sensor whose field of view is tested; resolves against\n$SEN.ID. The sensor's site data is NOT restated here.",
+          "x-flatbuffer-type": "string"
+        },
+        "FIELD_OF_VIEW_SHAPE": {
+          "$ref": "#/definitions/evlFieldOfViewShape",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CONIC": {
+              "value": 1,
+              "description": "A circular cone about the boresight, bounded by CONE_HALF_ANGLE_RAD."
+            },
+            "RECTANGULAR": {
+              "value": 2,
+              "description": "A rectangular pyramid about the boresight, bounded by the two half-angles."
+            },
+            "CUSTOM_MASK": {
+              "value": 3,
+              "description": "A custom boundary carried as a boresight-relative angular mask."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "BORESIGHT": {
+          "$ref": "#/definitions/FRMVector3",
+          "description": "Boresight direction, expressed in BORESIGHT_COORDINATE_SYSTEM_NAME.",
+          "x-flatbuffer-type": "FRMVector3"
+        },
+        "BORESIGHT_COORDINATE_SYSTEM_NAME": {
+          "type": "string",
+          "description": "Coordinate system BORESIGHT is expressed in; resolves against\nRFMCoordinateSystem.NAME on the request context.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONE_HALF_ANGLE_RAD": {
+          "type": "number",
+          "description": "Half-angle of a CONIC field of view, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "RECTANGULAR_HALF_ANGLE_X_RAD": {
+          "type": "number",
+          "description": "Half-angles of a RECTANGULAR field of view about the boresight, radians.",
+          "x-flatbuffer-type": "double"
+        },
+        "RECTANGULAR_HALF_ANGLE_Y_RAD": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "CUSTOM_MASK_RAD": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Boundary of a CUSTOM_MASK field of view as clock and cone angle pairs\nabout the boresight, radians: [clock0, cone0, clock1, cone1, ...]. An\nodd length is INVALID_INPUT.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "INTRUDING_BODY_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "description": "Ephemeris body codes of the bodies tested for intrusion.",
+          "x-flatbuffer-type": "[int]"
+        },
+        "INTRUDING_OBJECT_IDS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Identifiers of the tracked objects tested for intrusion.",
+          "x-flatbuffer-type": "[string]"
+        },
+        "USE_APPARENT_BODY_RADIUS": {
+          "type": "boolean",
+          "description": "Test the intruder's apparent disc rather than its centre, so an event\nbegins when the limb enters the field of view.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MINIMUM_DURATION_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLApsidesConfiguration": {
+      "type": "object",
+      "description": "Configuration for APSIDES.",
+      "properties": {
+        "CENTRAL_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code the radius is measured from. The apsis is the root\nof the RADIAL_VELOCITY parameter about this body, NOT an extremum of\ngeodetic height; the two differ by tens of degrees of true anomaly on an\noblate body.",
+          "x-flatbuffer-type": "int"
+        },
+        "REPORT_APOAPSIS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REPORT_PERIAPSIS": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLNodeCrossingConfiguration": {
+      "type": "object",
+      "description": "Configuration for NODE_CROSSING.",
+      "properties": {
+        "REFERENCE_COORDINATE_SYSTEM_NAME": {
+          "type": "string",
+          "description": "Coordinate system whose reference plane defines the node line; resolves\nagainst RFMCoordinateSystem.NAME on the request context.",
+          "x-flatbuffer-type": "string"
+        },
+        "REPORT_ASCENDING": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REPORT_DESCENDING": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLParameterConditionConfiguration": {
+      "type": "object",
+      "description": "Configuration for PARAMETER_CONDITION, the generic locator.",
+      "properties": {
+        "CONDITIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PCEParameterCondition"
+          },
+          "description": "Conditions on $PCE catalog parameters. The predicate vocabulary is\nPCEParameterCondition and is NOT restated here.",
+          "x-flatbuffer-type": "[PCEParameterCondition]"
+        },
+        "REPORT_AS_INTERVAL": {
+          "type": "boolean",
+          "description": "True reports the interval BETWEEN a satisfying crossing and the next\nunsatisfying one; false reports each crossing as an instantaneous event\nwith equal start and stop epochs.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "MINIMUM_DURATION_SECONDS": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLEventSample": {
+      "type": "object",
+      "description": "Parameter values captured at one instant inside an event.",
+      "properties": {
+        "POINT": {
+          "$ref": "#/definitions/evlSamplePoint",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "EVENT_START": {
+              "value": 1
+            },
+            "EVENT_STOP": {
+              "value": 2
+            },
+            "EVENT_EXTREMUM": {
+              "value": 3,
+              "description": "The instant of the event's extremum: deepest obscuration, peak elevation, closest approach."
+            },
+            "INTERIOR": {
+              "value": 4,
+              "description": "A sample inside the event that is none of the above."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SAMPLE": {
+          "$ref": "#/definitions/PCEParameterSample",
+          "x-flatbuffer-type": "PCEParameterSample"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLEvent": {
+      "type": "object",
+      "description": "One located event. An instantaneous event has STOP_EPOCH equal to\nSTART_EPOCH and DURATION_SECONDS equal to 0.",
+      "properties": {
+        "EVENT_TYPE": {
+          "$ref": "#/definitions/evlEventType",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "UMBRA": {
+              "value": 1,
+              "description": "Total occultation of the illuminating body."
+            },
+            "PENUMBRA": {
+              "value": 2,
+              "description": "Partial occultation of the illuminating body."
+            },
+            "ANTUMBRA": {
+              "value": 3,
+              "description": "The occulting body is fully inside the illuminating body disc."
+            },
+            "RISE": {
+              "value": 4,
+              "description": "The target crossed the constraint boundary into visibility."
+            },
+            "SET": {
+              "value": 5,
+              "description": "The target crossed the constraint boundary out of visibility."
+            },
+            "ENTRY": {
+              "value": 6,
+              "description": "Entry into a bounded volume or field of view."
+            },
+            "EXIT": {
+              "value": 7,
+              "description": "Exit from a bounded volume or field of view."
+            },
+            "APOAPSIS": {
+              "value": 8,
+              "description": "Maximum orbital radius."
+            },
+            "PERIAPSIS": {
+              "value": 9,
+              "description": "Minimum orbital radius."
+            },
+            "ASCENDING_NODE": {
+              "value": 10,
+              "description": "Node crossing with the out-of-plane component increasing."
+            },
+            "DESCENDING_NODE": {
+              "value": 11,
+              "description": "Node crossing with the out-of-plane component decreasing."
+            },
+            "CONDITION_SATISFIED": {
+              "value": 12,
+              "description": "A $PCE parameter condition was attained."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "START_EPOCH": {
+          "type": "string",
+          "description": "Entry epoch, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_EPOCH": {
+          "type": "string",
+          "description": "Exit epoch, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system of the epochs, named by the $TIM timingStandard member name.",
+          "x-flatbuffer-type": "string"
+        },
+        "DURATION_SECONDS": {
+          "type": "number",
+          "description": "STOP_EPOCH minus START_EPOCH in seconds. Carried because it is the\nreported quantity of an event report and MUST agree with the epochs.",
+          "x-flatbuffer-type": "double"
+        },
+        "TARGET_OBJECT_ID": {
+          "type": "string",
+          "description": "The object the event happened to.",
+          "x-flatbuffer-type": "string"
+        },
+        "OCCULTING_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code of the body that occulted or intruded, when one did.",
+          "x-flatbuffer-type": "int"
+        },
+        "OBSERVER_ID": {
+          "type": "string",
+          "description": "Identifier of the observing site or sensor, when the class has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "OBSERVED_OBJECT_ID": {
+          "type": "string",
+          "description": "Identifier of the observed body or object, when the class has one.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTREMUM_EPOCH": {
+          "type": "string",
+          "description": "Epoch of the event's extremum, ISO 8601: deepest obscuration, peak\nelevation, closest approach. Absent when the class has no extremum.",
+          "x-flatbuffer-type": "string"
+        },
+        "EXTREMUM_VALUE": {
+          "type": "number",
+          "description": "Value at EXTREMUM_EPOCH, in the unit of EXTREMUM_PARAMETER.",
+          "x-flatbuffer-type": "double"
+        },
+        "EXTREMUM_PARAMETER": {
+          "$ref": "#/definitions/pceParameter",
+          "description": "Which catalog parameter EXTREMUM_VALUE is a value of.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ushort",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "POSITION_X": {
+              "value": 1,
+              "description": "--- 1..29 Cartesian state and its direct magnitudes --------------------"
+            },
+            "POSITION_Y": {
+              "value": 2
+            },
+            "POSITION_Z": {
+              "value": 3
+            },
+            "VELOCITY_X": {
+              "value": 4
+            },
+            "VELOCITY_Y": {
+              "value": 5
+            },
+            "VELOCITY_Z": {
+              "value": 6
+            },
+            "POSITION_MAGNITUDE": {
+              "value": 7
+            },
+            "VELOCITY_MAGNITUDE": {
+              "value": 8
+            },
+            "RIGHT_ASCENSION": {
+              "value": 9,
+              "description": "Right ascension of the position vector."
+            },
+            "DECLINATION": {
+              "value": 10,
+              "description": "Declination of the position vector."
+            },
+            "VELOCITY_RIGHT_ASCENSION": {
+              "value": 11,
+              "description": "Right ascension of the velocity vector."
+            },
+            "VELOCITY_DECLINATION": {
+              "value": 12,
+              "description": "Declination of the velocity vector."
+            },
+            "FLIGHT_PATH_ANGLE": {
+              "value": 13,
+              "description": "Angle between the velocity vector and the local horizontal plane."
+            },
+            "AZIMUTH_ANGLE": {
+              "value": 14,
+              "description": "Azimuth of the velocity vector, measured from local north."
+            },
+            "HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 15,
+              "description": "Flight path angle measured from the local horizontal."
+            },
+            "RADIAL_VELOCITY": {
+              "value": 16,
+              "description": "Component of velocity along the position unit vector. Its zero crossing IS the apsis condition; a stop at apoapsis is this parameter with goal 0 and direction DECREASING."
+            },
+            "ANGULAR_MOMENTUM_MAGNITUDE": {
+              "value": 17
+            },
+            "ANGULAR_MOMENTUM_X": {
+              "value": 18
+            },
+            "ANGULAR_MOMENTUM_Y": {
+              "value": 19
+            },
+            "ANGULAR_MOMENTUM_Z": {
+              "value": 20
+            },
+            "SEMI_MAJOR_AXIS": {
+              "value": 30,
+              "description": "--- 30..69 Keplerian elements and derived orbit scalars ----------------"
+            },
+            "ECCENTRICITY": {
+              "value": 31
+            },
+            "INCLINATION": {
+              "value": 32
+            },
+            "RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 33
+            },
+            "ARGUMENT_OF_PERIAPSIS": {
+              "value": 34
+            },
+            "TRUE_ANOMALY": {
+              "value": 35
+            },
+            "MEAN_ANOMALY": {
+              "value": 36
+            },
+            "ECCENTRIC_ANOMALY": {
+              "value": 37
+            },
+            "HYPERBOLIC_ANOMALY": {
+              "value": 38
+            },
+            "RADIUS_OF_PERIAPSIS": {
+              "value": 39
+            },
+            "RADIUS_OF_APOAPSIS": {
+              "value": 40
+            },
+            "ALTITUDE_OF_PERIAPSIS": {
+              "value": 41
+            },
+            "ALTITUDE_OF_APOAPSIS": {
+              "value": 42
+            },
+            "SEMILATUS_RECTUM": {
+              "value": 43
+            },
+            "ORBIT_PERIOD": {
+              "value": 44
+            },
+            "MEAN_MOTION": {
+              "value": 45
+            },
+            "SPECIFIC_ORBITAL_ENERGY": {
+              "value": 46,
+              "description": "Specific orbital energy."
+            },
+            "CHARACTERISTIC_ENERGY": {
+              "value": 47,
+              "description": "Twice the specific orbital energy; the square of the hyperbolic excess speed on an escape trajectory."
+            },
+            "VELOCITY_AT_PERIAPSIS": {
+              "value": 48
+            },
+            "VELOCITY_AT_APOAPSIS": {
+              "value": 49
+            },
+            "ARGUMENT_OF_LATITUDE": {
+              "value": 50,
+              "description": "Argument of periapsis plus true anomaly."
+            },
+            "TRUE_LONGITUDE": {
+              "value": 51
+            },
+            "MEAN_LONGITUDE": {
+              "value": 52
+            },
+            "BETA_ANGLE": {
+              "value": 53,
+              "description": "Angle between the orbit plane and the direction to the illuminating body."
+            },
+            "ECCENTRICITY_VECTOR_X": {
+              "value": 54
+            },
+            "ECCENTRICITY_VECTOR_Y": {
+              "value": 55
+            },
+            "ECCENTRICITY_VECTOR_Z": {
+              "value": 56
+            },
+            "SEMI_MINOR_AXIS": {
+              "value": 57
+            },
+            "EQUINOCTIAL_H": {
+              "value": 70,
+              "description": "--- 70..89 equinoctial families ----------------------------------------"
+            },
+            "EQUINOCTIAL_K": {
+              "value": 71
+            },
+            "EQUINOCTIAL_P": {
+              "value": 72
+            },
+            "EQUINOCTIAL_Q": {
+              "value": 73
+            },
+            "EQUINOCTIAL_MEAN_LONGITUDE": {
+              "value": 74
+            },
+            "MODIFIED_EQUINOCTIAL_F": {
+              "value": 75
+            },
+            "MODIFIED_EQUINOCTIAL_G": {
+              "value": 76
+            },
+            "MODIFIED_EQUINOCTIAL_H": {
+              "value": 77
+            },
+            "MODIFIED_EQUINOCTIAL_K": {
+              "value": 78
+            },
+            "MODIFIED_EQUINOCTIAL_TRUE_LONGITUDE": {
+              "value": 79
+            },
+            "MODIFIED_EQUINOCTIAL_SEMILATUS_RECTUM": {
+              "value": 80
+            },
+            "ALTERNATE_EQUINOCTIAL_P": {
+              "value": 81
+            },
+            "ALTERNATE_EQUINOCTIAL_Q": {
+              "value": 82
+            },
+            "ALTERNATE_EQUINOCTIAL_MEAN_MOTION": {
+              "value": 83
+            },
+            "DELAUNAY_MEAN_ANOMALY": {
+              "value": 90,
+              "description": "--- 90..99 Delaunay canonical variables --------------------------------"
+            },
+            "DELAUNAY_ARGUMENT_OF_PERIAPSIS": {
+              "value": 91
+            },
+            "DELAUNAY_ASCENDING_NODE": {
+              "value": 92
+            },
+            "DELAUNAY_ACTION_TOTAL": {
+              "value": 93
+            },
+            "DELAUNAY_ACTION_ANGULAR_MOMENTUM": {
+              "value": 94
+            },
+            "DELAUNAY_ACTION_POLAR_ANGULAR_MOMENTUM": {
+              "value": 95
+            },
+            "GEODETIC_LATITUDE": {
+              "value": 100,
+              "description": "--- 100..119 planetodetic and body-fixed -------------------------------"
+            },
+            "GEODETIC_LONGITUDE": {
+              "value": 101
+            },
+            "GEODETIC_ALTITUDE": {
+              "value": 102
+            },
+            "GEOCENTRIC_LATITUDE": {
+              "value": 103
+            },
+            "PLANETODETIC_RADIUS_MAGNITUDE": {
+              "value": 104
+            },
+            "PLANETODETIC_VELOCITY_MAGNITUDE": {
+              "value": 105
+            },
+            "PLANETODETIC_AZIMUTH": {
+              "value": 106
+            },
+            "PLANETODETIC_HORIZONTAL_FLIGHT_PATH_ANGLE": {
+              "value": 107
+            },
+            "LOCAL_SIDEREAL_TIME": {
+              "value": 108,
+              "description": "Local sidereal time at the sub-object meridian."
+            },
+            "PRIME_MERIDIAN_HOUR_ANGLE": {
+              "value": 109,
+              "description": "Hour angle of the body prime meridian."
+            },
+            "B_DOT_T": {
+              "value": 120,
+              "description": "--- 120..139 B-plane and asymptote sets --------------------------------"
+            },
+            "B_DOT_R": {
+              "value": 121
+            },
+            "B_VECTOR_MAGNITUDE": {
+              "value": 122
+            },
+            "B_VECTOR_ANGLE": {
+              "value": 123
+            },
+            "DECLINATION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 124,
+              "description": "Declination of the departure asymptote."
+            },
+            "RIGHT_ASCENSION_OF_DEPARTURE_ASYMPTOTE": {
+              "value": 125,
+              "description": "Right ascension of the departure asymptote."
+            },
+            "INCOMING_RADIUS_OF_PERIAPSIS": {
+              "value": 126
+            },
+            "INCOMING_CHARACTERISTIC_ENERGY": {
+              "value": 127
+            },
+            "INCOMING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 128
+            },
+            "INCOMING_ASYMPTOTE_DECLINATION": {
+              "value": 129
+            },
+            "INCOMING_B_VECTOR_AZIMUTH": {
+              "value": 130
+            },
+            "OUTGOING_RADIUS_OF_PERIAPSIS": {
+              "value": 131
+            },
+            "OUTGOING_CHARACTERISTIC_ENERGY": {
+              "value": 132
+            },
+            "OUTGOING_ASYMPTOTE_RIGHT_ASCENSION": {
+              "value": 133
+            },
+            "OUTGOING_ASYMPTOTE_DECLINATION": {
+              "value": 134
+            },
+            "OUTGOING_B_VECTOR_AZIMUTH": {
+              "value": 135
+            },
+            "HYPERBOLIC_EXCESS_VELOCITY": {
+              "value": 136
+            },
+            "BROUWER_SHORT_SEMI_MAJOR_AXIS": {
+              "value": 140,
+              "description": "--- 140..159 Brouwer-Lyddane mean elements -----------------------------"
+            },
+            "BROUWER_SHORT_ECCENTRICITY": {
+              "value": 141
+            },
+            "BROUWER_SHORT_INCLINATION": {
+              "value": 142
+            },
+            "BROUWER_SHORT_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 143
+            },
+            "BROUWER_SHORT_ARGUMENT_OF_PERIAPSIS": {
+              "value": 144
+            },
+            "BROUWER_SHORT_MEAN_ANOMALY": {
+              "value": 145
+            },
+            "BROUWER_LONG_SEMI_MAJOR_AXIS": {
+              "value": 146
+            },
+            "BROUWER_LONG_ECCENTRICITY": {
+              "value": 147
+            },
+            "BROUWER_LONG_INCLINATION": {
+              "value": 148
+            },
+            "BROUWER_LONG_RIGHT_ASCENSION_OF_ASCENDING_NODE": {
+              "value": 149
+            },
+            "BROUWER_LONG_ARGUMENT_OF_PERIAPSIS": {
+              "value": 150
+            },
+            "BROUWER_LONG_MEAN_ANOMALY": {
+              "value": 151
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX": {
+              "value": 160,
+              "description": "--- 160..179 state transition and covariance matrices ------------------ Six by six orbit state transition matrix, row-major."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_A": {
+              "value": 161,
+              "description": "Position-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_B": {
+              "value": 162,
+              "description": "Velocity-to-position three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_C": {
+              "value": 163,
+              "description": "Position-to-velocity three by three block."
+            },
+            "ORBIT_STATE_TRANSITION_MATRIX_D": {
+              "value": 164,
+              "description": "Velocity-to-velocity three by three block."
+            },
+            "ORBIT_ERROR_COVARIANCE_MATRIX": {
+              "value": 165,
+              "description": "Six by six orbit error covariance, row-major, in the request's coordinate system."
+            },
+            "EPOCH_A1_GREGORIAN": {
+              "value": 180,
+              "description": "--- 180..219 time ------------------------------------------------------ Each EPOCH_ member is the owner epoch expressed in one time system. GREGORIAN members are ISO 8601 text; MODIFIED_JULIAN members are a day count. The time system is named by the $TIM timingStandard member."
+            },
+            "EPOCH_A1_MODIFIED_JULIAN": {
+              "value": 181
+            },
+            "EPOCH_TAI_GREGORIAN": {
+              "value": 182
+            },
+            "EPOCH_TAI_MODIFIED_JULIAN": {
+              "value": 183
+            },
+            "EPOCH_TT_GREGORIAN": {
+              "value": 184
+            },
+            "EPOCH_TT_MODIFIED_JULIAN": {
+              "value": 185
+            },
+            "EPOCH_TDB_GREGORIAN": {
+              "value": 186
+            },
+            "EPOCH_TDB_MODIFIED_JULIAN": {
+              "value": 187
+            },
+            "EPOCH_UTC_GREGORIAN": {
+              "value": 188
+            },
+            "EPOCH_UTC_MODIFIED_JULIAN": {
+              "value": 189
+            },
+            "EPOCH_UT1_GREGORIAN": {
+              "value": 190
+            },
+            "EPOCH_UT1_MODIFIED_JULIAN": {
+              "value": 191
+            },
+            "EPOCH_GPS_GREGORIAN": {
+              "value": 192
+            },
+            "EPOCH_GPS_MODIFIED_JULIAN": {
+              "value": 193
+            },
+            "ELAPSED_DAYS": {
+              "value": 194,
+              "description": "Days since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "ELAPSED_SECONDS": {
+              "value": 195,
+              "description": "Seconds since PCEEvaluationContext.REFERENCE_EPOCH."
+            },
+            "DRY_MASS": {
+              "value": 220,
+              "description": "--- 220..249 mass, ballistic and physical properties -------------------"
+            },
+            "TOTAL_MASS": {
+              "value": 221
+            },
+            "DRAG_COEFFICIENT": {
+              "value": 222
+            },
+            "DRAG_AREA": {
+              "value": 223
+            },
+            "REFLECTIVITY_COEFFICIENT": {
+              "value": 224
+            },
+            "SOLAR_RADIATION_PRESSURE_AREA": {
+              "value": 225
+            },
+            "ATMOSPHERIC_DENSITY_SCALE_FACTOR": {
+              "value": 226
+            },
+            "DRAG_SCALE_FACTOR": {
+              "value": 227
+            },
+            "SOLAR_RADIATION_PRESSURE_SCALE_FACTOR": {
+              "value": 228
+            },
+            "BALLISTIC_COEFFICIENT": {
+              "value": 229
+            },
+            "AREA_TO_MASS_RATIO": {
+              "value": 230
+            },
+            "CENTER_OF_MASS_X": {
+              "value": 231
+            },
+            "CENTER_OF_MASS_Y": {
+              "value": 232
+            },
+            "CENTER_OF_MASS_Z": {
+              "value": 233
+            },
+            "MOMENT_OF_INERTIA_MATRIX": {
+              "value": 234,
+              "description": "Three by three inertia tensor, row-major, in body axes."
+            },
+            "ATTITUDE_QUATERNION_1": {
+              "value": 250,
+              "description": "--- 250..289 attitude --------------------------------------------------"
+            },
+            "ATTITUDE_QUATERNION_2": {
+              "value": 251
+            },
+            "ATTITUDE_QUATERNION_3": {
+              "value": 252
+            },
+            "ATTITUDE_QUATERNION_4": {
+              "value": 253,
+              "description": "Scalar component of the attitude quaternion."
+            },
+            "ATTITUDE_DIRECTION_COSINE_MATRIX": {
+              "value": 254,
+              "description": "Three by three direction cosine matrix, row-major."
+            },
+            "EULER_ANGLE_1": {
+              "value": 255
+            },
+            "EULER_ANGLE_2": {
+              "value": 256
+            },
+            "EULER_ANGLE_3": {
+              "value": 257
+            },
+            "EULER_ANGLE_RATE_1": {
+              "value": 258
+            },
+            "EULER_ANGLE_RATE_2": {
+              "value": 259
+            },
+            "EULER_ANGLE_RATE_3": {
+              "value": 260
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_1": {
+              "value": 261
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_2": {
+              "value": 262
+            },
+            "MODIFIED_RODRIGUES_PARAMETER_3": {
+              "value": 263
+            },
+            "ANGULAR_VELOCITY_X": {
+              "value": 264
+            },
+            "ANGULAR_VELOCITY_Y": {
+              "value": 265
+            },
+            "ANGULAR_VELOCITY_Z": {
+              "value": 266
+            },
+            "EULER_AXIS_X": {
+              "value": 267
+            },
+            "EULER_AXIS_Y": {
+              "value": 268
+            },
+            "EULER_AXIS_Z": {
+              "value": 269
+            },
+            "PRINCIPAL_ROTATION_ANGLE": {
+              "value": 270
+            },
+            "TANK_FUEL_MASS": {
+              "value": 300,
+              "description": "--- 300..319 propellant reservoir --------------------------------------"
+            },
+            "TANK_PRESSURE": {
+              "value": 301
+            },
+            "TANK_TEMPERATURE": {
+              "value": 302
+            },
+            "TANK_REFERENCE_TEMPERATURE": {
+              "value": 303
+            },
+            "TANK_VOLUME": {
+              "value": 304
+            },
+            "TANK_FUEL_DENSITY": {
+              "value": 305
+            },
+            "THRUSTER_DUTY_CYCLE": {
+              "value": 320,
+              "description": "--- 320..369 thrust-producing device -----------------------------------"
+            },
+            "THRUSTER_THRUST_SCALE_FACTOR": {
+              "value": 321
+            },
+            "THRUSTER_GRAVITATIONAL_ACCELERATION": {
+              "value": 322
+            },
+            "THRUSTER_MIXTURE_RATIO": {
+              "value": 323
+            },
+            "THRUSTER_SPECIFIC_IMPULSE": {
+              "value": 324
+            },
+            "THRUSTER_THRUST_MAGNITUDE": {
+              "value": 325
+            },
+            "THRUSTER_MASS_FLOW_RATE": {
+              "value": 326
+            },
+            "THRUSTER_DIRECTION_X": {
+              "value": 327
+            },
+            "THRUSTER_DIRECTION_Y": {
+              "value": 328
+            },
+            "THRUSTER_DIRECTION_Z": {
+              "value": 329
+            },
+            "THRUSTER_THRUST_COEFFICIENTS": {
+              "value": 330,
+              "description": "Coefficient vector of the thrust polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "THRUSTER_IMPULSE_COEFFICIENTS": {
+              "value": 331,
+              "description": "Coefficient vector of the specific-impulse polynomial; address one coefficient with PCEParameterRef.ELEMENT_INDEX."
+            },
+            "IMPULSIVE_BURN_ELEMENT_1": {
+              "value": 370,
+              "description": "--- 370..389 impulsive velocity change --------------------------------- First component of the velocity change in the burn coordinate system."
+            },
+            "IMPULSIVE_BURN_ELEMENT_2": {
+              "value": 371
+            },
+            "IMPULSIVE_BURN_ELEMENT_3": {
+              "value": 372
+            },
+            "IMPULSIVE_BURN_DELTA_V_MAGNITUDE": {
+              "value": 373
+            },
+            "IMPULSIVE_BURN_MASS_CONSUMED": {
+              "value": 374
+            },
+            "FINITE_BURN_THRUST_MAGNITUDE": {
+              "value": 390,
+              "description": "--- 390..409 finite thrust arc -----------------------------------------"
+            },
+            "FINITE_BURN_MASS_FLOW_RATE": {
+              "value": 391
+            },
+            "FINITE_BURN_THRUST_X": {
+              "value": 392
+            },
+            "FINITE_BURN_THRUST_Y": {
+              "value": 393
+            },
+            "FINITE_BURN_THRUST_Z": {
+              "value": 394
+            },
+            "FINITE_BURN_ACCELERATION_MAGNITUDE": {
+              "value": 395
+            },
+            "FINITE_BURN_MASS_CONSUMED": {
+              "value": 396
+            },
+            "TOTAL_POWER_AVAILABLE": {
+              "value": 410,
+              "description": "--- 410..429 electrical power ------------------------------------------"
+            },
+            "REQUIRED_BUS_POWER": {
+              "value": 411
+            },
+            "THRUST_POWER_AVAILABLE": {
+              "value": 412
+            },
+            "GENERATED_POWER": {
+              "value": 413
+            },
+            "TOTAL_TORQUE_X": {
+              "value": 430,
+              "description": "--- 430..449 torque ----------------------------------------------------"
+            },
+            "TOTAL_TORQUE_Y": {
+              "value": 431
+            },
+            "TOTAL_TORQUE_Z": {
+              "value": 432
+            },
+            "TOTAL_TORQUE_MAGNITUDE": {
+              "value": 433
+            },
+            "SOLVER_STATUS": {
+              "value": 450,
+              "description": "--- 450..469 solver ---------------------------------------------------- Run state of the solver, as an integer code the solver family defines."
+            },
+            "SOLVER_ITERATION_COUNT": {
+              "value": 451
+            },
+            "SOLVER_OBJECTIVE_VALUE": {
+              "value": 452
+            },
+            "SOLVER_MAXIMUM_CONSTRAINT_VIOLATION": {
+              "value": 453
+            },
+            "RELATIVE_RANGE": {
+              "value": 470,
+              "description": "--- 470..499 relative geometry and observation ------------------------- Distance from the owner to PCEParameterRef.SECOND_OBJECT_ID."
+            },
+            "RELATIVE_RANGE_RATE": {
+              "value": 471
+            },
+            "RELATIVE_POSITION_X": {
+              "value": 472
+            },
+            "RELATIVE_POSITION_Y": {
+              "value": 473
+            },
+            "RELATIVE_POSITION_Z": {
+              "value": 474
+            },
+            "RELATIVE_VELOCITY_X": {
+              "value": 475
+            },
+            "RELATIVE_VELOCITY_Y": {
+              "value": 476
+            },
+            "RELATIVE_VELOCITY_Z": {
+              "value": 477
+            },
+            "TOPOCENTRIC_AZIMUTH": {
+              "value": 478,
+              "description": "Azimuth of the owner as seen from the site named on the request."
+            },
+            "TOPOCENTRIC_ELEVATION": {
+              "value": 479,
+              "description": "Elevation of the owner as seen from the site named on the request."
+            },
+            "ANGULAR_SEPARATION": {
+              "value": 480,
+              "description": "Angle subtended at the owner between two named directions."
+            },
+            "SOLAR_PHASE_ANGLE": {
+              "value": 481,
+              "description": "Angle at the owner between the illuminating body and the observer."
+            },
+            "LOCAL_SOLAR_ELEVATION_ANGLE": {
+              "value": 482,
+              "description": "Elevation of the illuminating body at the site named on the request."
+            },
+            "ILLUMINATION_FRACTION": {
+              "value": 483,
+              "description": "Fraction of the illuminating body disc visible from the owner: 1 in full sunlight, 0 in umbra, between the two in penumbra. Its crossings ARE the eclipse entry and exit conditions."
+            },
+            "LIGHT_TIME_DELAY": {
+              "value": 484,
+              "description": "One-way signal propagation time between the owner and the observer."
+            },
+            "PROVIDER_DEFINED": {
+              "value": 65535,
+              "description": "The parameter is outside this roster and is named in PROVIDER_DEFINED_NAME. A consumer that cannot resolve that name MUST refuse the entry; it never guesses a neighbouring member."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "CONDITION_INDEX": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Index into EVLEventLocationRequest.PARAMETER_CONDITION_CONFIGURATION's\nCONDITIONS for a generic event; negative for every other class.",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "-1"
+        },
+        "SAMPLES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVLEventSample"
+          },
+          "description": "Requested parameters, evaluated at the instants of this event.",
+          "x-flatbuffer-type": "[EVLEventSample]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLEventLocationRequest": {
+      "type": "object",
+      "description": "Locate events of one class over one interval.",
+      "properties": {
+        "LOCATOR_CLASS": {
+          "$ref": "#/definitions/evlLocatorClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ECLIPSE": {
+              "value": 1,
+              "description": "Passage of the target through the shadow of one or more occulting bodies."
+            },
+            "CONTACT": {
+              "value": 2,
+              "description": "Visibility of the target from a surface site, subject to a horizon or mask constraint."
+            },
+            "INTRUSION": {
+              "value": 3,
+              "description": "Entry of a body or object into a sensor field of view."
+            },
+            "APSIDES": {
+              "value": 4,
+              "description": "Passage of the target through an apsis of its orbit."
+            },
+            "NODE_CROSSING": {
+              "value": 5,
+              "description": "Passage of the target through the node line of a stated coordinate system."
+            },
+            "PARAMETER_CONDITION": {
+              "value": 6,
+              "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TARGET_OBJECT_ID": {
+          "type": "string",
+          "description": "Object the events are located for.",
+          "x-flatbuffer-type": "string"
+        },
+        "CONTEXT": {
+          "$ref": "#/definitions/PCEEvaluationContext",
+          "description": "Bodies, coordinate systems, epoch reference and Earth-orientation data\nset the geometry is evaluated in. The state source itself is a port the\ncaller supplies and is NOT named here.",
+          "x-flatbuffer-type": "PCEEvaluationContext"
+        },
+        "SCAN_START_EPOCH": {
+          "type": "string",
+          "description": "Interval to search, ISO 8601.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_STOP_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system of the interval, named by the $TIM timingStandard member\nname.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_STEP_SECONDS": {
+          "type": "number",
+          "description": "Coarse step the event function is sampled at before refinement. A\nprovider MAY choose its own step when this is absent, and the located\nepochs MUST NOT depend on it beyond REFINEMENT_TOLERANCE_SECONDS.",
+          "x-flatbuffer-type": "double"
+        },
+        "REFINEMENT_TOLERANCE_SECONDS": {
+          "type": "number",
+          "description": "Convergence bar on a located epoch. A provider that cannot meet it\nreturns ROOT_REFINEMENT_FAILED.",
+          "x-flatbuffer-type": "double"
+        },
+        "MAXIMUM_EVENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Upper bound on reported events. 0 means no bound.",
+          "x-flatbuffer-type": "uint"
+        },
+        "REPORT_PARAMETERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PCEParameterRef"
+          },
+          "description": "Parameters to evaluate at each event's instants.",
+          "x-flatbuffer-type": "[PCEParameterRef]"
+        },
+        "ECLIPSE_CONFIGURATION": {
+          "$ref": "#/definitions/EVLEclipseConfiguration",
+          "description": "Exactly the configuration matching LOCATOR_CLASS is present; any other\ncombination is MISSING_CONFIGURATION.",
+          "x-flatbuffer-type": "EVLEclipseConfiguration"
+        },
+        "CONTACT_CONFIGURATION": {
+          "$ref": "#/definitions/EVLContactConfiguration",
+          "x-flatbuffer-type": "EVLContactConfiguration"
+        },
+        "INTRUSION_CONFIGURATION": {
+          "$ref": "#/definitions/EVLIntrusionConfiguration",
+          "x-flatbuffer-type": "EVLIntrusionConfiguration"
+        },
+        "APSIDES_CONFIGURATION": {
+          "$ref": "#/definitions/EVLApsidesConfiguration",
+          "x-flatbuffer-type": "EVLApsidesConfiguration"
+        },
+        "NODE_CROSSING_CONFIGURATION": {
+          "$ref": "#/definitions/EVLNodeCrossingConfiguration",
+          "x-flatbuffer-type": "EVLNodeCrossingConfiguration"
+        },
+        "PARAMETER_CONDITION_CONFIGURATION": {
+          "$ref": "#/definitions/EVLParameterConditionConfiguration",
+          "x-flatbuffer-type": "EVLParameterConditionConfiguration"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLEventReport": {
+      "type": "object",
+      "description": "The events found, and the interval they were actually searched over.",
+      "properties": {
+        "STATUS": {
+          "$ref": "#/definitions/evlResultStatus",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "OK": {
+              "value": 1
+            },
+            "INVALID_INPUT": {
+              "value": 2
+            },
+            "UNSUPPORTED_LOCATOR_CLASS": {
+              "value": 3,
+              "description": "The provider does not implement the requested locator class."
+            },
+            "MISSING_CONFIGURATION": {
+              "value": 4,
+              "description": "The configuration table matching LOCATOR_CLASS was absent."
+            },
+            "MISSING_EPHEMERIS": {
+              "value": 5,
+              "description": "The state source did not span the requested interval."
+            },
+            "MISSING_EOP_DATA": {
+              "value": 6,
+              "description": "The geometry needs Earth-orientation data that was not supplied or does not span the interval."
+            },
+            "PARAMETER_UNAVAILABLE": {
+              "value": 7,
+              "description": "A generic condition names a parameter the provider cannot evaluate, or one that does not support a stopping condition."
+            },
+            "ROOT_REFINEMENT_FAILED": {
+              "value": 8,
+              "description": "A crossing was bracketed but the refinement did not converge to REFINEMENT_TOLERANCE_SECONDS. The provider MUST report this rather than emit an unconverged epoch."
+            },
+            "BUDGET_EXCEEDED": {
+              "value": 9,
+              "description": "The run hit MAXIMUM_EVENTS or its evaluation budget before reaching SCAN_STOP_EPOCH; the events reported are a prefix, not the whole answer."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ERROR_MESSAGE": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATOR_CLASS": {
+          "$ref": "#/definitions/evlLocatorClass",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ECLIPSE": {
+              "value": 1,
+              "description": "Passage of the target through the shadow of one or more occulting bodies."
+            },
+            "CONTACT": {
+              "value": 2,
+              "description": "Visibility of the target from a surface site, subject to a horizon or mask constraint."
+            },
+            "INTRUSION": {
+              "value": 3,
+              "description": "Entry of a body or object into a sensor field of view."
+            },
+            "APSIDES": {
+              "value": 4,
+              "description": "Passage of the target through an apsis of its orbit."
+            },
+            "NODE_CROSSING": {
+              "value": 5,
+              "description": "Passage of the target through the node line of a stated coordinate system."
+            },
+            "PARAMETER_CONDITION": {
+              "value": 6,
+              "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "TARGET_OBJECT_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_START_EPOCH": {
+          "type": "string",
+          "description": "Interval actually searched, ISO 8601. A BUDGET_EXCEEDED run reports the\ninterval it reached, not the interval it was asked for.",
+          "x-flatbuffer-type": "string"
+        },
+        "SCAN_STOP_EPOCH": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system of the epochs, named by the $TIM timingStandard member name.",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EVLEvent"
+          },
+          "description": "Events in chronological order of START_EPOCH.",
+          "x-flatbuffer-type": "[EVLEvent]"
+        },
+        "FUNCTION_EVALUATION_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Event-function evaluations actually performed, for step-independence\nevidence.",
+          "x-flatbuffer-type": "uint"
+        },
+        "EOP_DATA_SET_CID": {
+          "type": "string",
+          "description": "Content identifier of the Earth-orientation data set actually used.",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACE_ID": {
+          "type": "string",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVL": {
+      "type": "object",
+      "description": "Event Locator\n\nOne request and one report for every class of located event: shadow\npassage, site visibility, sensor-field-of-view intrusion, apsis passage,\nnode crossing, and the generic condition on any $PCE catalog parameter.\nEvery class is the same pair of an event function and a refined root, so a\nnew class is a configuration table and a vocabulary member, never a new\nrecord. Entry and exit epochs, duration, the occulting or observed body and\nthe parameter values captured at each event's instants are reported in one\nshape, and the predicate of the generic class is $PCE's\nPCEParameterCondition rather than a second spelling of the same idea.\n\nAngles are radians, durations seconds, epochs ISO 8601 in a named time\nsystem.",
+      "properties": {
+        "LOCATION_REQUEST": {
+          "$ref": "#/definitions/EVLEventLocationRequest",
+          "x-flatbuffer-type": "EVLEventLocationRequest"
+        },
+        "EVENT_REPORT": {
+          "$ref": "#/definitions/EVLEventReport",
+          "x-flatbuffer-type": "EVLEventReport"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFGaussianPrior": {
+      "type": "object",
+      "description": "A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps\nthe theory's own sigma and moves only the mean.",
+      "properties": {
+        "MEAN": {
+          "type": "number",
+          "description": "Prior mean, in the unit of the parameter it is attached to. Default 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "SIGMA": {
+          "type": "number",
+          "description": "Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "HAS_SIGMA": {
+          "type": "boolean",
+          "description": "True when SIGMA carries a value; false keeps the theory's own sigma.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFEmpiricalTerms": {
+      "type": "object",
+      "description": "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
+      "properties": {
+        "ONCE_PER_REVOLUTION": {
+          "type": "boolean",
+          "description": "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "TAU0_RULE_LIMIT_M2_KG": {
+          "type": "number",
+          "description": "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.5"
+        },
+        "HAS_TAU0_RULE_LIMIT_M2_KG": {
+          "type": "boolean",
+          "description": "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "HELD_ABOVE_DRAG_REGIME": {
+          "type": "boolean",
+          "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "PERSISTENCE_HOURS": {
+          "type": "number",
+          "description": "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "24"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFMeanElementOptions": {
+      "type": "object",
+      "description": "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
+      "properties": {
+        "M_DAILY_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "12"
+        },
+        "ZONAL_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "20"
+        },
+        "SHORT_PERIODIC_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "7"
+        },
+        "ENABLE_RESONANCE": {
+          "type": "boolean",
+          "description": "Resonance terms on or off. Default true.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "RESONANCE_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Highest odd degree of the shallow-resonance terms. Default 31.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "31"
+        },
+        "RESONANCE_BAND": {
+          "type": "number",
+          "description": "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.045"
+        },
+        "RESONANCE_MAXIMUM_K": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "1"
+        },
+        "NEAR_RESONANCE_BAND": {
+          "type": "number",
+          "description": "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "GRID_STEP_DIVISOR": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Divisor of the integration grid step; >= 1. Default 1.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "1"
+        },
+        "DENSITY_KERNEL": {
+          "type": "boolean",
+          "description": "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "DRAG_REGIME_PERIGEE_KM": {
+          "type": "number",
+          "description": "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "2500"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFSegmentOptions": {
+      "type": "object",
+      "description": "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
+      "properties": {
+        "MOON_GRAVITY_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Moon-centered gravity field degree. Default 70.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "70"
+        },
+        "MOON_SHORT_PERIODIC_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Moon-centered short-periodic degree. Default 8.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "8"
+        },
+        "MOON_ECCENTRICITY_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
+          "x-flatbuffer-type": "ubyte",
+          "x-flatbuffer-default": "2"
+        },
+        "MOON_STEP_SECONDS": {
+          "type": "number",
+          "description": "Moon-centered integration step, seconds. Default 240.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "240"
+        },
+        "CISLUNAR_STEP_SECONDS": {
+          "type": "number",
+          "description": "Cislunar integration step, seconds. Default 60.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "60"
+        },
+        "HELIOCENTRIC_STEP_SECONDS": {
+          "type": "number",
+          "description": "Heliocentric integration step, seconds. Default 1800.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1800"
+        },
+        "SEGMENT_RMS_FACTOR": {
+          "type": "number",
+          "description": "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "2"
+        },
+        "SEGMENT_RMS_MARGIN_KM": {
+          "type": "number",
+          "description": "The additive term of the same rule, km. Default 0.05.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.05"
+        },
+        "CISLUNAR_MINIMUM_SEGMENT_HOURS": {
+          "type": "number",
+          "description": "Shortest cislunar segment, hours. Default 6.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "6"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFFitPolicy": {
+      "type": "object",
+      "description": "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
+      "properties": {
+        "DEFAULT_SPAN_HOURS": {
+          "type": "number",
+          "description": "Fit span used when the span rule is not run, hours. Default 48.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "48"
+        },
+        "MINIMUM_SPAN_HOURS": {
+          "type": "number",
+          "description": "Shortest span a fit may take, hours. Default 24.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "24"
+        },
+        "MAXIMUM_SPAN_HOURS": {
+          "type": "number",
+          "description": "Longest span a fit may take, hours. Default 120.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "120"
+        },
+        "CANDIDATE_SPANS_HOURS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Spans the extension rule scores, ascending, hours, each within\n[MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with\n24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.",
+          "x-flatbuffer-type": "[double]"
+        },
+        "TAIL_HOURS": {
+          "type": "number",
+          "description": "Validation tail: each candidate is fitted to the data before the latest\nTAIL_HOURS and scored on that tail, hours. Default 24.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "24"
+        },
+        "EXTENSION_MARGIN": {
+          "type": "number",
+          "description": "Extension rule: a longer candidate is taken only when its tail error is\nat most this fraction of the best shorter candidate's. Default 0.9.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.9"
+        },
+        "HOLDOUT_HOURS": {
+          "type": "number",
+          "description": "Hours held out at the end of the data and reported as error growth; the\nfit then ends HOLDOUT_HOURS before the data does. Absent, the data\nblock's own useable stop time decides.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "HAS_HOLDOUT_HOURS": {
+          "type": "boolean",
+          "description": "True when HOLDOUT_HOURS carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ECCENTRICITY_THRESHOLD": {
+          "type": "number",
+          "description": "Eccentricity above which the eccentric-orbit rule applies. Default 0.5.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.5"
+        },
+        "ECCENTRIC_DEFAULT_SPAN_HOURS": {
+          "type": "number",
+          "description": "Eccentric orbits: the default span, hours. Default 24.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "24"
+        },
+        "ECCENTRIC_EXTENSION_MARGIN": {
+          "type": "number",
+          "description": "Eccentric orbits: EXTENSION_MARGIN. Default 0.7.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.7"
+        },
+        "ECCENTRIC_MAXIMUM_PERIOD_HOURS": {
+          "type": "number",
+          "description": "Eccentric orbits: no candidate longer than this is tried once the orbital\nperiod passes it, hours. Default 36.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "36"
+        },
+        "IMPLAUSIBLE_RMS_KM": {
+          "type": "number",
+          "description": "A fit whose RMS passes this is refused as fit-implausible, km. Default\n100.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "100"
+        },
+        "DRAG_PRIOR": {
+          "$ref": "#/definitions/PCFGaussianPrior",
+          "description": "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+          "x-flatbuffer-type": "PCFGaussianPrior"
+        },
+        "SRP_PRIOR": {
+          "$ref": "#/definitions/PCFGaussianPrior",
+          "description": "Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.\nAbsent or without sigma: mean 0, sigma 0.05.",
+          "x-flatbuffer-type": "PCFGaussianPrior"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFEventDefinition": {
+      "type": "object",
+      "description": "One event a propagator locates while it integrates. The vocabulary is\n$EVL's: a locator class with its configuration, and $PCE's parameter\ncondition for the generic case (an altitude, radius, speed, radial\nvelocity or mass crossing is a $PCE parameter, not a class of its own).",
+      "properties": {
+        "NAME": {
+          "type": "string",
+          "description": "The caller's name for the event, echoed in the result. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "LOCATOR_CLASS": {
+          "$ref": "#/definitions/evlLocatorClass",
+          "description": "Which locator. Default PARAMETER_CONDITION.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "ECLIPSE": {
+              "value": 1,
+              "description": "Passage of the target through the shadow of one or more occulting bodies."
+            },
+            "CONTACT": {
+              "value": 2,
+              "description": "Visibility of the target from a surface site, subject to a horizon or mask constraint."
+            },
+            "INTRUSION": {
+              "value": 3,
+              "description": "Entry of a body or object into a sensor field of view."
+            },
+            "APSIDES": {
+              "value": 4,
+              "description": "Passage of the target through an apsis of its orbit."
+            },
+            "NODE_CROSSING": {
+              "value": 5,
+              "description": "Passage of the target through the node line of a stated coordinate system."
+            },
+            "PARAMETER_CONDITION": {
+              "value": 6,
+              "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+            }
+          },
+          "x-flatbuffer-default": "PARAMETER_CONDITION"
+        },
+        "CONDITION": {
+          "$ref": "#/definitions/PCEParameterCondition",
+          "description": "Exactly the one of the next five that matches LOCATOR_CLASS is present\n(any other combination is refused as MISSING_CONFIGURATION, as in\n$EVL). The condition carries its own direction, goal value, goal\ntolerance and occurrence.",
+          "x-flatbuffer-type": "PCEParameterCondition"
+        },
+        "ECLIPSE": {
+          "$ref": "#/definitions/EVLEclipseConfiguration",
+          "x-flatbuffer-type": "EVLEclipseConfiguration"
+        },
+        "CONTACT": {
+          "$ref": "#/definitions/EVLContactConfiguration",
+          "x-flatbuffer-type": "EVLContactConfiguration"
+        },
+        "INTRUSION": {
+          "$ref": "#/definitions/EVLIntrusionConfiguration",
+          "x-flatbuffer-type": "EVLIntrusionConfiguration"
+        },
+        "APSIDES": {
+          "$ref": "#/definitions/EVLApsidesConfiguration",
+          "x-flatbuffer-type": "EVLApsidesConfiguration"
+        },
+        "NODE_CROSSING": {
+          "$ref": "#/definitions/EVLNodeCrossingConfiguration",
+          "x-flatbuffer-type": "EVLNodeCrossingConfiguration"
+        },
+        "ACTION": {
+          "$ref": "#/definitions/pcfEventAction",
+          "description": "What the propagator does at the event. Default RECORD.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "STOP": {
+              "value": 1,
+              "description": "End the propagation at the event; the result carries its epoch and state."
+            },
+            "CONTINUE": {
+              "value": 2,
+              "description": "Make the event a step boundary only (the dynamics may change there) and report nothing about it."
+            },
+            "RECORD": {
+              "value": 3,
+              "description": "Report the event in the result and keep propagating."
+            }
+          },
+          "x-flatbuffer-default": "RECORD"
+        },
+        "EPOCH_TOLERANCE_SECONDS": {
+          "type": "number",
+          "description": "Convergence bar on the located epoch, seconds. Default 1e-9.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-9"
+        },
+        "SCAN_STEP_SECONDS": {
+          "type": "number",
+          "description": "Step at which the event function is sampled before refinement, seconds;\n0 samples at the integrator's accepted steps. A root is found only when\nthe function changes sign within one sample interval. Default 0.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "MAXIMUM_EVENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Largest number of occurrences reported; 0 is no bound. Default 0.",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "0"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFManeuverDetection": {
+      "type": "object",
+      "description": "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
+      "properties": {
+        "FALSE_ALARMS_PER_OBJECT_YEAR": {
+          "type": "number",
+          "description": "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "CORRELATION_MODEL": {
+          "$ref": "#/definitions/pcfInnovationCorrelation",
+          "description": "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "WHITE": {
+              "value": 1,
+              "description": "Every sample independent (the white-noise assumption)."
+            },
+            "ONE_SAMPLE_PER_REVOLUTION": {
+              "value": 2,
+              "description": "One sample per revolution counts, so a revolution is one independent innovation."
+            },
+            "CORRELATION_TIME": {
+              "value": 3,
+              "description": "An exponential correlation of the innovations over a correlation time."
+            }
+          },
+          "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
+        },
+        "THRESHOLD": {
+          "type": "number",
+          "description": "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "20"
+        },
+        "MARGIN_STATES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "States kept clear at each end of the arc when scanning. Default 12.",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "12"
+        },
+        "REFINE_WINDOW_HOURS": {
+          "type": "number",
+          "description": "Half-width of the window the burn epoch is refined in, hours. Default 2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "2"
+        },
+        "MINIMUM_STATES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Fewest states an arc must hold to be scanned. Default 48.",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "48"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFReentry": {
+      "type": "object",
+      "description": "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
+      "properties": {
+        "ALTITUDE_KM": {
+          "type": "number",
+          "description": "Altitude at which the trajectory ends as reentered, km. Default 80.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "80"
+        },
+        "HANDOFF_PERIGEE_ALTITUDE_KM": {
+          "type": "number",
+          "description": "Hand-off when the perigee altitude falls below this, km. Default 180.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "180"
+        },
+        "HANDOFF_DECAY_RATIO": {
+          "type": "number",
+          "description": "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.05"
+        },
+        "HANDOFF_ECCENTRICITY_COLLAPSE": {
+          "type": "number",
+          "description": "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.01"
+        },
+        "HANDOFF_MINIMUM_ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity above which the collapse test applies. Default 0.01.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.01"
+        },
+        "NODE_STEP_MINUTES": {
+          "type": "number",
+          "description": "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "30"
+        },
+        "HORIZON_DAYS": {
+          "type": "number",
+          "description": "Longest look-ahead for a hand-off or reentry, days. Default 120.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "120"
+        },
+        "WINDOW_METHOD": {
+          "$ref": "#/definitions/pcfReentryWindowMethod",
+          "description": "How the reentry window is computed. Default LINEAR.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "LINEAR": {
+              "value": 1,
+              "description": "First-order propagation of the ballistic and density sigmas through the remaining life."
+            },
+            "UNSCENTED": {
+              "value": 2,
+              "description": "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
+            }
+          },
+          "x-flatbuffer-default": "LINEAR"
+        },
+        "WINDOW_DENSITY_SIGMA": {
+          "type": "number",
+          "description": "Fractional 1-sigma density error of the window. Default 0.15.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.15"
+        },
+        "WINDOW_CORRELATION_DAYS": {
+          "type": "number",
+          "description": "Correlation time of the density error, days. Default 2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "2"
+        },
+        "WINDOW_BALLISTIC_SIGMA": {
+          "type": "number",
+          "description": "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.05"
+        },
+        "OSCULATING_STEP_SECONDS": {
+          "type": "number",
+          "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "10"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFLaunch": {
+      "type": "object",
+      "description": "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
+      "properties": {
+        "DRAG_AREA_OVER_MASS_PRIOR_M2_KG": {
+          "type": "number",
+          "description": "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.01"
+        },
+        "SRP_AREA_OVER_MASS_PRIOR_M2_KG": {
+          "type": "number",
+          "description": "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0.01"
+        },
+        "SEPARATION_SIGMA_M_S": {
+          "type": "number",
+          "description": "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "SHRINK_SIGMA_M2_KG": {
+          "type": "number",
+          "description": "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "HAS_SHRINK_SIGMA_M2_KG": {
+          "type": "boolean",
+          "description": "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "BATCH_MEAN_SIGMA_M2_KG": {
+          "type": "number",
+          "description": "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFOutput": {
+      "type": "object",
+      "description": "Output states: frame, step and size.",
+      "properties": {
+        "FRAME": {
+          "$ref": "#/definitions/pcfOutputFrame",
+          "description": "Frame of the output states. Default UNSPECIFIED (the grid template's\nframe, TEME without one).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The grid template's frame; TEME without one."
+            },
+            "TEME": {
+              "value": 1,
+              "description": "True equator, mean equinox of date."
+            },
+            "GCRF": {
+              "value": 2,
+              "description": "Geocentric Celestial Reference Frame."
+            },
+            "EME2000": {
+              "value": 3,
+              "description": "Mean equator and equinox of J2000.0."
+            },
+            "ITRF": {
+              "value": 4,
+              "description": "International Terrestrial Reference Frame (Earth-fixed)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "STEP_SECONDS": {
+          "type": "number",
+          "description": "Spacing of the output states, seconds, when no grid template names the\nepochs; a grid template's epochs win. Default 60.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "60"
+        },
+        "MAXIMUM_STATES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Most states one request may produce. Default 500000.",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "500000"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFSpaceWeather": {
+      "type": "object",
+      "description": "Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.\nThe TIM epoch is UTC; flux is in SFU (1e-22 W/m2/Hz).",
+      "properties": {
+        "EPOCH": {
+          "$ref": "#/definitions/TIMInstant",
+          "description": "Epoch the values apply to. Required; no default.",
+          "x-flatbuffer-type": "TIMInstant",
+          "x-flatbuffer-required": true
+        },
+        "F107": {
+          "type": "number",
+          "description": "Daily F10.7 solar radio flux, SFU. Default 150.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "150"
+        },
+        "F107_AVERAGE": {
+          "type": "number",
+          "description": "Centered 81-day average of F10.7, SFU. Default 150.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "150"
+        },
+        "AP_INDEX": {
+          "type": "number",
+          "description": "Conventional daily Ap index value, dimensionless (not an acceleration).\nDefault 15.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "15"
+        },
+        "KP_INDEX": {
+          "type": "number",
+          "description": "Conventional three-hour Kp index value, dimensionless (not an\nacceleration). Default 3.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "3"
+        }
+      },
+      "required": [
+        "EPOCH"
+      ],
+      "additionalProperties": false
+    },
+    "PCFEcom2": {
+      "type": "object",
+      "description": "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in the D-Y-B frame, added to the a\npriori model and scaled by the visible Sun fraction. Every coefficient is in\nm/s^2 and defaults to 0.",
+      "properties": {
+        "D0_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "Y0_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B0_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D2_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D2_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D4_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "D4_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B1_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B1_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B3_COS_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        },
+        "B3_SIN_M_S2": {
+          "type": "number",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PCFIntegratorSettings": {
+      "type": "object",
+      "description": "Integrator and its settings, shared by $PCF and $PRW. Units are SI. A scalar\nlegacy tolerance must be expanded by the adapter.",
+      "properties": {
+        "ALGORITHM": {
+          "$ref": "#/definitions/pcfIntegratorAlgorithm",
+          "description": "Algorithm. Default UNSPECIFIED (the provider's own).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The provider's own algorithm."
+            },
+            "RK4": {
+              "value": 1,
+              "description": "Classical fourth-order Runge-Kutta, fixed step INITIAL_STEP_SECONDS."
+            },
+            "RKF45": {
+              "value": 2,
+              "description": "Runge-Kutta-Fehlberg 4(5) (Fehlberg 1969, NASA TR R-315), adaptive."
+            },
+            "RKF78": {
+              "value": 3,
+              "description": "Runge-Kutta-Fehlberg 7(8) (Fehlberg 1968, NASA TR R-287), adaptive."
+            },
+            "RK78": {
+              "value": 4,
+              "description": "The same Fehlberg 7(8) pair under the name the full force model's catalog profile uses, adaptive."
+            },
+            "RKDP87": {
+              "value": 5,
+              "description": "Prince-Dormand 8(7), thirteen stages, \"RK8(7)13M\" (Prince and Dormand 1981, J. Comput. Appl. Math. 7), adaptive."
+            },
+            "ABM": {
+              "value": 6,
+              "description": "Adams-Bashforth-Moulton predictor-corrector multistep."
+            },
+            "BS": {
+              "value": 7,
+              "description": "Gragg-Bulirsch-Stoer extrapolation."
+            },
+            "COWELL": {
+              "value": 8,
+              "description": "Cowell's method: Cartesian position and velocity."
+            },
+            "ENCKE": {
+              "value": 9,
+              "description": "Encke's method: the deviation from a reference conic."
+            },
+            "EQUINOCTIAL_VOP": {
+              "value": 10,
+              "description": "Variation of parameters in equinoctial elements."
+            },
+            "DOPRI5": {
+              "value": 11,
+              "description": "Dormand-Prince 5(4), seven stages (Dormand and Prince 1980, J. Comput. Appl. Math. 6)."
+            },
+            "RK65_8M": {
+              "value": 12,
+              "description": "Prince-Dormand 6(5), eight stages, minimized error coefficients, \"RK6(5)8M\" (Prince and Dormand 1981, J. Comput. Appl. Math. 7)."
+            },
+            "VERNER_98": {
+              "value": 13,
+              "description": "Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53)."
+            },
+            "RKN12_10": {
+              "value": 14,
+              "description": "Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The acceleration must not depend on velocity, so a provider refuses it with drag."
+            },
+            "GAUSS_JACKSON_8": {
+              "value": 15,
+              "description": "Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct, started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci. 52)."
+            },
+            "GAUSS_VOP": {
+              "value": 16,
+              "description": "Gauss's variational equations in classical Keplerian elements."
+            },
+            "DROMO": {
+              "value": 17,
+              "description": "DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97)."
+            },
+            "STIEFEL_SCHEIFELE": {
+              "value": 18,
+              "description": "Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel and Scheifele 1971, Linear and Regular Celestial Mechanics)."
+            },
+            "DOPRI853": {
+              "value": 19,
+              "description": "Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993, Solving Ordinary Differential Equations I)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "INITIAL_STEP_SECONDS": {
+          "type": "number",
+          "description": "First step, seconds; the fixed step of RK4. Default 60.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "60"
+        },
+        "MINIMUM_STEP_SECONDS": {
+          "type": "number",
+          "description": "Smallest step an adaptive algorithm may take, seconds. Default 1.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1"
+        },
+        "MAXIMUM_STEP_SECONDS": {
+          "type": "number",
+          "description": "Largest step, seconds. Default 3600.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "3600"
+        },
+        "ABSOLUTE_TOLERANCES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Six or seven positive tolerances, respectively m, m/s and optional kg.\nRequired; no default.",
+          "x-flatbuffer-type": "[double]",
+          "x-flatbuffer-required": true
+        },
+        "RELATIVE_TOLERANCE": {
+          "type": "number",
+          "description": "Relative tolerance, dimensionless. Default 1e-12.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1e-12"
+        },
+        "MAXIMUM_STEPS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Most steps one propagation may take. Default 100000.",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "100000"
+        }
+      },
+      "required": [
+        "ABSOLUTE_TOLERANCES"
+      ],
+      "additionalProperties": false
+    },
+    "PCFForceModel": {
+      "type": "object",
+      "description": "The forces a propagator applies, shared by $PCF and $PRW. Flags default to\noff unless stated: a force is active only when selected. No implied support\nfor coefficients, drag models or bodies the provider cannot supply; a\nprovider refuses what it cannot apply, by name.",
+      "properties": {
+        "GRAVITY_CHOICE": {
+          "$ref": "#/definitions/pcfGravitySelection",
+          "description": "Gravity field. Default INFER_FLAGS (the ENABLE_ flags decide).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "INFER_FLAGS": {
+              "value": 0
+            },
+            "SPHERICAL_HARMONICS": {
+              "value": 4
+            },
+            "EGM96": {
+              "value": 6,
+              "description": "NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free."
+            },
+            "GRGM660PRIM": {
+              "value": 7,
+              "description": "GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the Moon's field, in the Moon's principal-axis frame."
+            }
+          },
+          "x-flatbuffer-default": "INFER_FLAGS"
+        },
+        "ENABLE_POINT_MASS": {
+          "type": "boolean",
+          "description": "Central-body point-mass term. Default true.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "GRAVITATIONAL_PARAMETER": {
+          "type": "number",
+          "description": "Gravitational parameter of the central body, m3/s2; required positive\nwhen a central gravity term is enabled. Default 0.",
+          "x-flatbuffer-type": "double"
+        },
+        "ENABLE_J2": {
+          "type": "boolean",
+          "description": "J2 zonal term. Default true.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "ENABLE_J3": {
+          "type": "boolean",
+          "description": "J3 zonal term. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ENABLE_J4": {
+          "type": "boolean",
+          "description": "J4 zonal term. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ENABLE_HIGHER_ZONALS": {
+          "type": "boolean",
+          "description": "Zonal terms above J4. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest field degree; dimensionless. Absent selects the explicitly\nreported model default.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "HAS_MAXIMUM_DEGREE": {
+          "type": "boolean",
+          "description": "True when MAXIMUM_DEGREE carries a value; false (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MAXIMUM_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest field order; dimensionless. Absent selects the explicitly\nreported model default.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "HAS_MAXIMUM_ORDER": {
+          "type": "boolean",
+          "description": "True when MAXIMUM_ORDER carries a value; false (the default) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ENABLE_THIRD_BODY": {
+          "type": "boolean",
+          "description": "Third-body gravity of THIRD_BODY_IDS. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "THIRD_BODY_IDS": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "description": "NAIF IDs; explicit vector, e.g. [10,301]. Empty (the default) means no\nthird bodies.",
+          "x-flatbuffer-type": "[int]"
+        },
+        "ENABLE_SRP": {
+          "type": "boolean",
+          "description": "Solar radiation pressure. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "ENABLE_DRAG": {
+          "type": "boolean",
+          "description": "Atmospheric drag. Default false.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "INITIAL_MASS_KG": {
+          "type": "number",
+          "description": "Spacecraft mass, kg. Default 1000.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1000"
+        },
+        "AREA_M2": {
+          "type": "number",
+          "description": "Cross-section area, m2. Default 10.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "10"
+        },
+        "REFLECTIVITY_COEFFICIENT": {
+          "type": "number",
+          "description": "Radiation-pressure coefficient Cr, dimensionless. Default 1.5.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "1.5"
+        },
+        "DRAG_COEFFICIENT": {
+          "type": "number",
+          "description": "Drag coefficient Cd, dimensionless. Default 2.2.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "2.2"
+        },
+        "ATMOSPHERE_MODEL": {
+          "$ref": "#/definitions/pcfAtmosphereFamily",
+          "description": "Atmosphere model. Default NRLMSISE00.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "USSA1976": {
+              "value": 3
+            },
+            "JACCHIA_ROBERTS": {
+              "value": 5,
+              "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
+            },
+            "JB2008": {
+              "value": 6,
+              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
+            }
+          },
+          "x-flatbuffer-default": "NRLMSISE00"
+        },
+        "WEATHER": {
+          "$ref": "#/definitions/PCFSpaceWeather",
+          "description": "Space weather held for the arc when WEATHER_SOURCE selects it. Default\nabsent.",
+          "x-flatbuffer-type": "PCFSpaceWeather"
+        },
+        "EPHEMERIS_SOURCE": {
+          "type": "string",
+          "description": "Actual configured source name, e.g. an analytic series or a planetary SPK\nkernel. Required; no default.",
+          "x-flatbuffer-type": "string",
+          "x-flatbuffer-required": true
+        },
+        "SOLID_TIDES": {
+          "$ref": "#/definitions/pcfSolidTideModel",
+          "description": "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "RELATIVITY": {
+          "$ref": "#/definitions/pcfRelativityTerms",
+          "description": "Post-Newtonian terms. Default NONE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "IN_TRACK_ACCELERATION_M_S2": {
+          "type": "number",
+          "description": "Constant acceleration along the in-track axis, m/s2: T of RTN,\nN cross rhat with N = unit(r cross v) (the \"in-track thrust\" of a VCM).\nDefault absent.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_IN_TRACK_ACCELERATION_M_S2": {
+          "type": "boolean",
+          "description": "True when IN_TRACK_ACCELERATION_M_S2 carries a value; false (the default)\nmeans absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
+          "type": "number",
+          "description": "Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the\nBDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch). Default\nabsent.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
+          "type": "boolean",
+          "description": "True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false (the\ndefault) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "MAXIMUM_TESSERAL_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Highest degree of the tesseral and sectorial terms (order >= 1); the\nzonals run to MAXIMUM_DEGREE. A VCM's \"mmZ,nnT\" is MAXIMUM_DEGREE mm,\nMAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.",
+          "x-flatbuffer-type": "ushort"
+        },
+        "HAS_MAXIMUM_TESSERAL_DEGREE": {
+          "type": "boolean",
+          "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false (the default)\nmeans absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "RADIATION_PRESSURE_MODEL": {
+          "$ref": "#/definitions/pcfRadiationPressureFamily",
+          "description": "Solar radiation pressure model family. Default CANNONBALL.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "CANNONBALL": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "CANNONBALL"
+        },
+        "GNSS_BLOCK": {
+          "$ref": "#/definitions/pcfGnssSpacecraftBlock",
+          "description": "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.\nDefault UNSPECIFIED.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "ECOM2": {
+          "$ref": "#/definitions/PCFEcom2",
+          "description": "ECOM2 coefficients; absent (the default) means no ECOM2 term.",
+          "x-flatbuffer-type": "PCFEcom2"
+        },
+        "EARTH_RADIATION": {
+          "$ref": "#/definitions/pcfEarthRadiationModel",
+          "description": "Earth radiation pressure (albedo and infrared). It reads the Sun's\nposition from the ephemeris source. Default NONE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "EARTH_RADIATION_RESOLUTION_DEG": {
+          "type": "number",
+          "description": "Angular size of the Earth surface elements it sums, degrees. Default 15.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "15"
+        },
+        "EARTH_RADIATION_AREA_OVER_MASS_M2_KG": {
+          "type": "number",
+          "description": "Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the\ncannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and\nfitting SRP_AREA_OVER_MASS scales both.",
+          "x-flatbuffer-type": "double"
+        },
+        "HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG": {
+          "type": "boolean",
+          "description": "True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false (the\ndefault) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "OCEAN_TIDES": {
+          "$ref": "#/definitions/pcfOceanTideModel",
+          "description": "Ocean tides. Their field is Earth-fixed, so a provider needs Earth\norientation (the request's Earth orientation rows) to apply them. Default\nNONE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "OCEAN_TIDE_MAXIMUM_DEGREE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Truncation of the ocean tide field, degree. Default 30.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "30"
+        },
+        "OCEAN_TIDE_MAXIMUM_ORDER": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Truncation of the ocean tide field, order. Default 30.",
+          "x-flatbuffer-type": "ushort",
+          "x-flatbuffer-default": "30"
+        },
+        "CENTRAL_BODY_NAIF_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Central body, a NAIF ID. The gravity field, atmosphere, tides and third\nbodies are those of this body. Default 399 (Earth).",
+          "x-flatbuffer-type": "int",
+          "x-flatbuffer-default": "399"
+        },
+        "EPHEMERIS_KIND": {
+          "$ref": "#/definitions/pcfEphemerisKind",
+          "description": "Where the Sun, Moon and planets are read from. Default UNSPECIFIED (the\nsource named in EPHEMERIS_SOURCE).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The provider's own source, named in EPHEMERIS_SOURCE."
+            },
+            "ANALYTIC_SERIES": {
+              "value": 1,
+              "description": "A closed-form analytic series (low precision, no kernel to load)."
+            },
+            "PLANETARY_KERNEL": {
+              "value": 2,
+              "description": "A planetary ephemeris kernel (SPK), named in EPHEMERIS_SOURCE."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "SHADOW_MODEL": {
+          "$ref": "#/definitions/evlShadowModel",
+          "description": "Shadow model of the radiation-pressure and Earth-radiation terms. Default\nUNSPECIFIED (the provider's: conical).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0
+            },
+            "CYLINDRICAL": {
+              "value": 1,
+              "description": "The occulting body casts a cylinder; no penumbra exists."
+            },
+            "CONICAL": {
+              "value": 2,
+              "description": "A single cone; umbra and penumbra are distinguished."
+            },
+            "DUAL_CONE": {
+              "value": 3,
+              "description": "Umbra and penumbra cones evaluated separately, admitting antumbra."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WEATHER_SOURCE": {
+          "$ref": "#/definitions/pcfWeatherSource",
+          "description": "Where the space weather comes from. Default UNSPECIFIED (inferred).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "Infer: PCFSpaceWeather when the force model carries it, else the daily rows supplied with the request."
+            },
+            "CONSTANT": {
+              "value": 1,
+              "description": "PCFSpaceWeather, held for the whole arc."
+            },
+            "RECORDS": {
+              "value": 2,
+              "description": "Daily rows supplied with the request ($SPW rows; the JB2008 indices for the JB2008 atmosphere)."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "WEATHER_EXTENSION": {
+          "$ref": "#/definitions/pcfWeatherExtension",
+          "description": "What happens past the last space weather row. Default UNSPECIFIED (the\nprovider's rule).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The provider's own rule (the numerical propagator refuses, the advanced mean-element propagator chains forecasts)."
+            },
+            "REFUSE": {
+              "value": 1,
+              "description": "Refuse an arc that reaches past the rows (space-weather-out-of-range)."
+            },
+            "HOLD_LAST": {
+              "value": 2,
+              "description": "Hold the last row's values."
+            },
+            "FORECAST_CHAIN": {
+              "value": 3,
+              "description": "Observed rows, then the three-day forecast, then the 45-day forecast, then the solar-cycle climatology; each hand-off is blended over one day and every evaluation names its tier."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "DENSITY_CORRECTION": {
+          "$ref": "#/definitions/pcfDensityCorrection",
+          "description": "Correction applied to the atmosphere model's density. Default NONE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "Density as the atmosphere model gives it."
+            },
+            "DCA_COMMON_MODE": {
+              "value": 1,
+              "description": "The open-DCA common-mode correction published as $DCL: model density times exp(s(t)), s the log-density scale of the published nodes."
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "DENSITY_CORRECTION_RELAXATION_HOURS": {
+          "type": "number",
+          "description": "Past the last density-correction node the log-density scale relaxes to\nits trailing mean with this time constant, hours; 0 holds the last node.\nAbsent, the provider's rule (the numerical propagator holds; the advanced\nmean-element propagator relaxes with 48 h).",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "0"
+        },
+        "HAS_DENSITY_CORRECTION_RELAXATION_HOURS": {
+          "type": "boolean",
+          "description": "True when DENSITY_CORRECTION_RELAXATION_HOURS carries a value; false (the\ndefault) means absent.",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "false"
+        },
+        "NEUTRAL_WIND": {
+          "$ref": "#/definitions/pcfNeutralWind",
+          "description": "Neutral wind in the drag relative velocity. Default NONE.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0,
+              "description": "Atmosphere co-rotating with the central body, no wind."
+            },
+            "HWM14": {
+              "value": 1,
+              "description": "The HWM14 empirical horizontal wind model (Drob et al. 2015, Earth and Space Science 2, 301-319)."
+            }
+          },
+          "x-flatbuffer-default": "NONE"
+        },
+        "EMPIRICAL_TERMS": {
+          "$ref": "#/definitions/PCFEmpiricalTerms",
+          "description": "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
+          "x-flatbuffer-type": "PCFEmpiricalTerms"
+        }
+      },
+      "required": [
+        "EPHEMERIS_SOURCE"
+      ],
+      "additionalProperties": false
+    },
+    "PCF": {
+      "type": "object",
+      "description": "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+      "properties": {
+        "CONFIGURATION_ID": {
+          "type": "string",
+          "description": "Opaque identifier of this configuration, for provenance. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "PROFILE": {
+          "type": "string",
+          "description": "Named profile this configuration instantiates, for example \"FFM-1\".\nInformational: every value that matters is carried below. Default empty.",
+          "x-flatbuffer-type": "string"
+        },
+        "THEORY": {
+          "$ref": "#/definitions/pcfTheory",
+          "description": "The orbit theory. Default UNSPECIFIED (the receiving module's own).",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "UNSPECIFIED": {
+              "value": 0,
+              "description": "The receiving module's own theory. A module that offers several reads UNSPECIFIED as the one it ingests element sets with (the advanced propagator reads it as SGP4XP)."
+            },
+            "SGP4": {
+              "value": 1,
+              "description": "Mean-element theory of SPACETRACK REPORT No. 3 (SGP4 near Earth, SDP4 deep space)."
+            },
+            "SGP4XP": {
+              "value": 2,
+              "description": "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
+            },
+            "SDNAP": {
+              "value": 3,
+              "description": "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
+            },
+            "FFM": {
+              "value": 4,
+              "description": "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
+            },
+            "KEPLER": {
+              "value": 5,
+              "description": "Two-body (Keplerian) motion about the central body."
+            }
+          },
+          "x-flatbuffer-default": "UNSPECIFIED"
+        },
+        "INTEGRATOR": {
+          "$ref": "#/definitions/PCFIntegratorSettings",
+          "description": "Integrator and settings. Absent: the theory's own.",
+          "x-flatbuffer-type": "PCFIntegratorSettings"
+        },
+        "FORCES": {
+          "$ref": "#/definitions/PCFForceModel",
+          "description": "Forces. Absent: the theory's built-in set.",
+          "x-flatbuffer-type": "PCFForceModel"
+        },
+        "MEAN_ELEMENT": {
+          "$ref": "#/definitions/PCFMeanElementOptions",
+          "description": "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
+          "x-flatbuffer-type": "PCFMeanElementOptions"
+        },
+        "SEGMENTS": {
+          "$ref": "#/definitions/PCFSegmentOptions",
+          "description": "Beyond-Earth segment sets.",
+          "x-flatbuffer-type": "PCFSegmentOptions"
+        },
+        "FIT": {
+          "$ref": "#/definitions/PCFFitPolicy",
+          "description": "Fit policy.",
+          "x-flatbuffer-type": "PCFFitPolicy"
+        },
+        "EVENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PCFEventDefinition"
+          },
+          "description": "Events located while integrating. Default empty.",
+          "x-flatbuffer-type": "[PCFEventDefinition]"
+        },
+        "MANEUVER_DETECTION": {
+          "$ref": "#/definitions/PCFManeuverDetection",
+          "description": "Maneuver detection.",
+          "x-flatbuffer-type": "PCFManeuverDetection"
+        },
+        "REENTRY": {
+          "$ref": "#/definitions/PCFReentry",
+          "description": "Reentry hand-off and window.",
+          "x-flatbuffer-type": "PCFReentry"
+        },
+        "LAUNCH": {
+          "$ref": "#/definitions/PCFLaunch",
+          "description": "Launch initialization priors.",
+          "x-flatbuffer-type": "PCFLaunch"
+        },
+        "OUTPUT": {
+          "$ref": "#/definitions/PCFOutput",
+          "description": "Output states.",
+          "x-flatbuffer-type": "PCFOutput"
+        }
+      },
+      "additionalProperties": false
+    },
     "PRWInit": {
       "type": "object",
       "description": "Propagator initialization request \u2014 assigns TLE / OMM / Keplerian /\npolynomial inputs to entity handles.\n\nThe actual per-entity source record is carried inline as raw bytes\ntagged with SOURCE_KIND and, where useful, a SDS file_identifier.\nCallers encode `OMM`, `OCM`, or a one-off Keplerian set and pass the\nbytes verbatim; the propagator uses SOURCE_KIND to decide how to\nconsume them.",
@@ -15139,57 +18766,6 @@
       },
       "additionalProperties": false
     },
-    "PRWEcom2": {
-      "type": "object",
-      "description": "ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,\ndoi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,\nadded to the a priori model and scaled by the visible Sun fraction.",
-      "properties": {
-        "D0_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "Y0_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "B0_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "D2_COS_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "D2_SIN_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "D4_COS_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "D4_SIN_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "B1_COS_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "B1_SIN_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "B3_COS_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "B3_SIN_M_S2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        }
-      },
-      "additionalProperties": false
-    },
     "PRWInstance": {
       "type": "object",
       "description": "Instance identity is host-provided, opaque, and not a physical quantity.",
@@ -15215,408 +18791,6 @@
       "required": [
         "MODULE_ID",
         "INSTANCE_ID"
-      ],
-      "additionalProperties": false
-    },
-    "PRWIntegratorSettings": {
-      "type": "object",
-      "description": "Units are SI. A scalar legacy tolerance must be expanded by the adapter.",
-      "properties": {
-        "ALGORITHM": {
-          "$ref": "#/definitions/prwSolverAlgorithm",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "UNSPECIFIED": {
-              "value": 0
-            },
-            "RKDP87": {
-              "value": 5
-            },
-            "EQUINOCTIAL_VOP": {
-              "value": 10
-            }
-          },
-          "x-flatbuffer-default": "UNSPECIFIED"
-        },
-        "INITIAL_STEP_SECONDS": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "60"
-        },
-        "MINIMUM_STEP_SECONDS": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "1"
-        },
-        "MAXIMUM_STEP_SECONDS": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "3600"
-        },
-        "ABSOLUTE_TOLERANCES": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          },
-          "description": "Six or seven positive tolerances, respectively m, m/s and optional kg.",
-          "x-flatbuffer-type": "[double]",
-          "x-flatbuffer-required": true
-        },
-        "RELATIVE_TOLERANCE": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "1e-12"
-        },
-        "MAXIMUM_STEPS": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 4294967295,
-          "x-flatbuffer-type": "uint",
-          "x-flatbuffer-default": "100000"
-        }
-      },
-      "required": [
-        "ABSOLUTE_TOLERANCES"
-      ],
-      "additionalProperties": false
-    },
-    "PRWSpaceWeather": {
-      "type": "object",
-      "description": "Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).",
-      "properties": {
-        "EPOCH": {
-          "$ref": "#/definitions/TIMInstant",
-          "x-flatbuffer-type": "TIMInstant",
-          "x-flatbuffer-required": true
-        },
-        "F107": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "150"
-        },
-        "F107_AVERAGE": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "150"
-        },
-        "AP_INDEX": {
-          "type": "number",
-          "description": "Conventional daily Ap and three-hour Kp index values; not accelerations.",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "15"
-        },
-        "KP_INDEX": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "3"
-        }
-      },
-      "required": [
-        "EPOCH"
-      ],
-      "additionalProperties": false
-    },
-    "PRWForceConfiguration": {
-      "type": "object",
-      "description": "Executable subset currently reachable through the FFM module's invoke. No implied\nsupport for coefficients, drag models or bodies the provider cannot supply.",
-      "properties": {
-        "GRAVITY_CHOICE": {
-          "$ref": "#/definitions/prwGravitySelection",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "INFER_FLAGS": {
-              "value": 0
-            },
-            "SPHERICAL_HARMONICS": {
-              "value": 4
-            },
-            "EGM96": {
-              "value": 6,
-              "description": "NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free."
-            }
-          },
-          "x-flatbuffer-default": "INFER_FLAGS"
-        },
-        "ENABLE_POINT_MASS": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "true"
-        },
-        "GRAVITATIONAL_PARAMETER": {
-          "type": "number",
-          "description": "m3/s2; required positive when a central gravity term is enabled.",
-          "x-flatbuffer-type": "double"
-        },
-        "ENABLE_J2": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "true"
-        },
-        "ENABLE_J3": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "ENABLE_J4": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "ENABLE_HIGHER_ZONALS": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "MAXIMUM_DEGREE": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "description": "Optional truncations; absent selects the explicitly reported model default.",
-          "x-flatbuffer-type": "ushort"
-        },
-        "HAS_MAXIMUM_DEGREE": {
-          "type": "boolean",
-          "description": "True when MAXIMUM_DEGREE carries a value; false means absent.",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "MAXIMUM_ORDER": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "x-flatbuffer-type": "ushort"
-        },
-        "HAS_MAXIMUM_ORDER": {
-          "type": "boolean",
-          "description": "True when MAXIMUM_ORDER carries a value; false means absent.",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "ENABLE_THIRD_BODY": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "THIRD_BODY_IDS": {
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "minimum": -2147483648,
-            "maximum": 2147483647
-          },
-          "description": "NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.",
-          "x-flatbuffer-type": "[int]"
-        },
-        "ENABLE_SRP": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "ENABLE_DRAG": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "INITIAL_MASS_KG": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "1000"
-        },
-        "AREA_M2": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "10"
-        },
-        "REFLECTIVITY_COEFFICIENT": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "1.5"
-        },
-        "DRAG_COEFFICIENT": {
-          "type": "number",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "2.2"
-        },
-        "ATMOSPHERE_MODEL": {
-          "$ref": "#/definitions/prwAtmosphereFamily",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "UNSPECIFIED": {
-              "value": 0
-            },
-            "USSA1976": {
-              "value": 3
-            },
-            "JACCHIA_ROBERTS": {
-              "value": 5,
-              "description": "Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form evaluation of Jacchia's static diffusion model with the constants NASA GTDS and GMAT use (inflection temperature, mean molecular mass and 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers: F10.7 of the previous day, that day's 81-day centred average, and the three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held constant). A VCM's JACCHIA_70 is carried here."
-            },
-            "JB2008": {
-              "value": 6,
-              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
-            }
-          },
-          "x-flatbuffer-default": "NRLMSISE00"
-        },
-        "WEATHER": {
-          "$ref": "#/definitions/PRWSpaceWeather",
-          "x-flatbuffer-type": "PRWSpaceWeather"
-        },
-        "EPHEMERIS_SOURCE": {
-          "type": "string",
-          "description": "Actual configured source name, e.g. an analytic series or a planetary SPK kernel.",
-          "x-flatbuffer-type": "string",
-          "x-flatbuffer-required": true
-        },
-        "SOLID_TIDES": {
-          "$ref": "#/definitions/prwSolidTideModel",
-          "description": "Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth\norientation (PRW.EARTH_ORIENTATION) to apply them.",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "NONE": {
-              "value": 0
-            }
-          },
-          "x-flatbuffer-default": "NONE"
-        },
-        "RELATIVITY": {
-          "$ref": "#/definitions/prwRelativityTerms",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "NONE": {
-              "value": 0
-            }
-          },
-          "x-flatbuffer-default": "NONE"
-        },
-        "IN_TRACK_ACCELERATION_M_S2": {
-          "type": "number",
-          "description": "Constant acceleration along the in-track axis, m/s2: T of RTN,\nN cross rhat with N = unit(r cross v) (the \"in-track thrust\" of a VCM).",
-          "x-flatbuffer-type": "double"
-        },
-        "HAS_IN_TRACK_ACCELERATION_M_S2": {
-          "type": "boolean",
-          "description": "True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
-          "type": "number",
-          "description": "Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the\nBDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).",
-          "x-flatbuffer-type": "double"
-        },
-        "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S": {
-          "type": "boolean",
-          "description": "True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "MAXIMUM_TESSERAL_DEGREE": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "description": "Highest degree of the tesseral and sectorial terms (order >= 1); the\nzonals run to MAXIMUM_DEGREE. A VCM's \"mmZ,nnT\" is MAXIMUM_DEGREE mm,\nMAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.",
-          "x-flatbuffer-type": "ushort"
-        },
-        "HAS_MAXIMUM_TESSERAL_DEGREE": {
-          "type": "boolean",
-          "description": "True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "RADIATION_PRESSURE_MODEL": {
-          "$ref": "#/definitions/prwRadiationPressureFamily",
-          "description": "Solar radiation pressure model family (default: the cannonball).",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "CANNONBALL": {
-              "value": 0
-            }
-          },
-          "x-flatbuffer-default": "CANNONBALL"
-        },
-        "GNSS_BLOCK": {
-          "$ref": "#/definitions/prwGnssSpacecraftBlock",
-          "description": "Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "UNSPECIFIED": {
-              "value": 0
-            }
-          },
-          "x-flatbuffer-default": "UNSPECIFIED"
-        },
-        "ECOM2": {
-          "$ref": "#/definitions/PRWEcom2",
-          "description": "ECOM2 coefficients; absent means no ECOM2 term.",
-          "x-flatbuffer-type": "PRWEcom2"
-        },
-        "EARTH_RADIATION": {
-          "$ref": "#/definitions/prwEarthRadiationModel",
-          "description": "Earth radiation pressure (albedo and infrared). It reads the Sun's\nposition from the request's ephemeris source.",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "NONE": {
-              "value": 0
-            }
-          },
-          "x-flatbuffer-default": "NONE"
-        },
-        "EARTH_RADIATION_RESOLUTION_DEG": {
-          "type": "number",
-          "description": "Angular size of the Earth surface elements it sums, degrees.",
-          "x-flatbuffer-type": "double",
-          "x-flatbuffer-default": "15"
-        },
-        "EARTH_RADIATION_AREA_OVER_MASS_M2_KG": {
-          "type": "number",
-          "description": "Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the\ncannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and\nfitting SRP_AREA_OVER_MASS scales both.",
-          "x-flatbuffer-type": "double"
-        },
-        "HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG": {
-          "type": "boolean",
-          "description": "True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.",
-          "x-flatbuffer-type": "bool",
-          "x-flatbuffer-default": "false"
-        },
-        "OCEAN_TIDES": {
-          "$ref": "#/definitions/prwOceanTideModel",
-          "description": "Ocean tides. Their field is Earth-fixed, so a provider needs Earth\norientation (PRW.EARTH_ORIENTATION) to apply them.",
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            "NONE": {
-              "value": 0
-            }
-          },
-          "x-flatbuffer-default": "NONE"
-        },
-        "OCEAN_TIDE_MAXIMUM_DEGREE": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "description": "Truncation of the ocean tide field.",
-          "x-flatbuffer-type": "ushort",
-          "x-flatbuffer-default": "30"
-        },
-        "OCEAN_TIDE_MAXIMUM_ORDER": {
-          "type": "integer",
-          "minimum": 0,
-          "maximum": 65535,
-          "x-flatbuffer-type": "ushort",
-          "x-flatbuffer-default": "30"
-        }
-      },
-      "required": [
-        "EPHEMERIS_SOURCE"
       ],
       "additionalProperties": false
     },
@@ -15779,7 +18953,7 @@
         },
         "IN_TRACK_ACCELERATION_M_S2": {
           "type": "number",
-          "description": "Constant in-track acceleration, m/s2, as PRWForceConfiguration's.",
+          "description": "Constant in-track acceleration, m/s2, as PCFForceModel's.",
           "x-flatbuffer-type": "double"
         },
         "HAS_IN_TRACK_ACCELERATION_M_S2": {
@@ -15969,13 +19143,13 @@
           "x-flatbuffer-required": true
         },
         "INTEGRATOR": {
-          "$ref": "#/definitions/PRWIntegratorSettings",
-          "x-flatbuffer-type": "PRWIntegratorSettings",
+          "$ref": "#/definitions/PCFIntegratorSettings",
+          "x-flatbuffer-type": "PCFIntegratorSettings",
           "x-flatbuffer-required": true
         },
         "FORCES": {
-          "$ref": "#/definitions/PRWForceConfiguration",
-          "x-flatbuffer-type": "PRWForceConfiguration",
+          "$ref": "#/definitions/PCFForceModel",
+          "x-flatbuffer-type": "PCFForceModel",
           "x-flatbuffer-required": true
         },
         "INCLUDE_STM": {
@@ -16716,7 +19890,7 @@
       "description": "Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.",
       "properties": {
         "ATMOSPHERE_MODEL": {
-          "$ref": "#/definitions/prwAtmosphereFamily",
+          "$ref": "#/definitions/pcfAtmosphereFamily",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
@@ -16732,7 +19906,7 @@
             },
             "JB2008": {
               "value": 6,
-              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
+              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
             }
           },
           "x-flatbuffer-default": "NRLMSISE00"
@@ -16822,7 +19996,7 @@
       "type": "object",
       "properties": {
         "ATMOSPHERE_MODEL": {
-          "$ref": "#/definitions/prwAtmosphereFamily",
+          "$ref": "#/definitions/pcfAtmosphereFamily",
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "ubyte",
           "x-flatbuffer-enum-values": {
@@ -16838,7 +20012,7 @@
             },
             "JB2008": {
               "value": 6,
-              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from PRW.JB2008_INDICES."
+              "description": "Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and Dst-derived temperature change from the request's JB2008 indices."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

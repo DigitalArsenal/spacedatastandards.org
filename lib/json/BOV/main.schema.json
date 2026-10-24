@@ -3,31 +3,39 @@
   "definitions": {
     "BOV" : {
       "type" : "object",
-      "description" : "Burn Out Vector Message",
+      "description" : "Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG\n(Earth-fixed) coordinates. Position is in kilometers (km), velocity in\nkilometers per second (km/s) and time in seconds (s); a producer holding\nanother unit converts before writing.",
       "properties" : {
         "E_COORDINATE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "EFG position, E component, km (11 significant figures)."
               },
         "F_COORDINATE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "EFG position, F component, km (11 significant figures)."
               },
         "G_COORDINATE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "EFG position, G component, km (11 significant figures)."
               },
         "E_DOT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "EFG velocity, E component, km/s (9 significant figures)."
               },
         "F_DOT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "EFG velocity, F component, km/s (9 significant figures)."
               },
         "G_DOT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "EFG velocity, G component, km/s (9 significant figures)."
               },
         "EPOCH" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Epoch time, in ISO 8601 UTC format."
               },
         "TIME_FROM_LAUNCH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Time from launch, seconds (s), with appropriate precision."
               }
       },
       "additionalProperties" : false

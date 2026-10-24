@@ -18,7 +18,7 @@ class prwDynamicParameter private constructor() {
         const val SRP_AREA_OVER_MASS: UByte = 3u
         const val IN_TRACK_ACCELERATION: UByte = 4u
         /**
-         * ECOM2 coefficients (PRWEcom2), in their order there.
+         * ECOM2 coefficients (PCFEcom2), in their order there.
          */
         const val ECOM2_D0: UByte = 5u
         const val ECOM2_Y0: UByte = 6u

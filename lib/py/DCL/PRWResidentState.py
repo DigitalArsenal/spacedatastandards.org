@@ -179,7 +179,7 @@ class PRWResidentState(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
-    # Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+    # Constant in-track acceleration, m/s2, as PCFForceModel's.
     # PRWResidentState
     def IN_TRACK_ACCELERATION_M_S2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))

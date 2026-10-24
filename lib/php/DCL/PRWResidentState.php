@@ -192,7 +192,7 @@ class PRWResidentState extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+    /// Constant in-track acceleration, m/s2, as PCFForceModel's.
     /**
      * @return double
      */

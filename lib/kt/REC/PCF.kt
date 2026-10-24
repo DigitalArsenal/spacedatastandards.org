@@ -17,7 +17,18 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Propagator Configuration
+ * Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+ * any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+ * force model, Kepler): the theory, the integrator and its settings, the
+ * forces, the fit policy, the events to locate, maneuver detection, reentry
+ * hand-off, launch priors and the output. A host passes it beside the
+ * request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+ * launch) selects the tables that method reads. An absent table takes the
+ * theory's own defaults; a table or value the selected theory cannot honor is
+ * refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+ * PCFForceModel and their enums, so the runtime wire and the configuration
+ * share one definition of each. Units are in the field names and docs; every
+ * field states its default.
  */
 @Suppress("unused")
 class PCF : Table() {
@@ -29,85 +40,167 @@ class PCF : Table() {
         __init(_i, _bb)
         return this
     }
-    val stepSize : Double
+    /**
+     * Opaque identifier of this configuration, for provenance. Default empty.
+     */
+    val configurationId : String?
         get() {
             val o = __offset(4)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val tolerance : Double
+    val configurationIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun configurationIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Named profile this configuration instantiates, for example "FFM-1".
+     * Informational: every value that matters is carried below. Default empty.
+     */
+    val profile : String?
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val minStep : Double
+    val profileAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
+    fun profileInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * The orbit theory. Default UNSPECIFIED (the receiving module's own).
+     */
+    val theory : UByte
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val maxStep : Double
-        get() {
-            val o = __offset(10)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val maxIterations : UInt
-        get() {
-            val o = __offset(12)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
-        }
-    val gravityDegree : UShort
-        get() {
-            val o = __offset(14)
-            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
-        }
-    val gravityOrder : UShort
-        get() {
-            val o = __offset(16)
-            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
-        }
-    val integrator : UByte
-        get() {
-            val o = __offset(18)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val outputFrame : UByte
-        get() {
-            val o = __offset(20)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
-        }
-    val forceFlags : UShort
-        get() {
-            val o = __offset(22)
-            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
-        }
-    val dragCoefficient : Float
-        get() {
-            val o = __offset(24)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val srpCoefficient : Float
-        get() {
-            val o = __offset(26)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    val areaMassRatio : Float
-        get() {
-            val o = __offset(28)
-            return if(o != 0) bb.getFloat(o + bb_pos) else 0.0f
-        }
-    fun reserved(j: Int) : UByte {
-        val o = __offset(30)
+    /**
+     * Integrator and settings. Absent: the theory's own.
+     */
+    val integrator : PCFIntegratorSettings? get() = integrator(PCFIntegratorSettings())
+    fun integrator(obj: PCFIntegratorSettings) : PCFIntegratorSettings? {
+        val o = __offset(10)
         return if (o != 0) {
-            bb.get(__vector(o) + j * 1).toUByte()
+            obj.__assign(__indirect(o + bb_pos), bb)
         } else {
-            0u
+            null
         }
     }
-    val reservedLength : Int
-        get() {
-            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+    /**
+     * Forces. Absent: the theory's built-in set.
+     */
+    val forces : PCFForceModel? get() = forces(PCFForceModel())
+    fun forces(obj: PCFForceModel) : PCFForceModel? {
+        val o = __offset(12)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
-    val reservedAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(30, 1)
-    fun reservedInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 30, 1)
+    }
+    /**
+     * Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+     */
+    val meanElement : PCFMeanElementOptions? get() = meanElement(PCFMeanElementOptions())
+    fun meanElement(obj: PCFMeanElementOptions) : PCFMeanElementOptions? {
+        val o = __offset(14)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Beyond-Earth segment sets.
+     */
+    val segments : PCFSegmentOptions? get() = segments(PCFSegmentOptions())
+    fun segments(obj: PCFSegmentOptions) : PCFSegmentOptions? {
+        val o = __offset(16)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Fit policy.
+     */
+    val fit : PCFFitPolicy? get() = fit(PCFFitPolicy())
+    fun fit(obj: PCFFitPolicy) : PCFFitPolicy? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Events located while integrating. Default empty.
+     */
+    fun events(j: Int) : PCFEventDefinition? = events(PCFEventDefinition(), j)
+    fun events(obj: PCFEventDefinition, j: Int) : PCFEventDefinition? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val eventsLength : Int
+        get() {
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Maneuver detection.
+     */
+    val maneuverDetection : PCFManeuverDetection? get() = maneuverDetection(PCFManeuverDetection())
+    fun maneuverDetection(obj: PCFManeuverDetection) : PCFManeuverDetection? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Reentry hand-off and window.
+     */
+    val reentry : PCFReentry? get() = reentry(PCFReentry())
+    fun reentry(obj: PCFReentry) : PCFReentry? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Launch initialization priors.
+     */
+    val launch : PCFLaunch? get() = launch(PCFLaunch())
+    fun launch(obj: PCFLaunch) : PCFLaunch? {
+        val o = __offset(26)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Output states.
+     */
+    val output : PCFOutput? get() = output(PCFOutput())
+    fun output(obj: PCFOutput) : PCFOutput? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCF(_bb: ByteBuffer): PCF = getRootAsPCF(_bb, PCF())
@@ -116,48 +209,45 @@ class PCF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PCF")
-        fun createPCF(builder: FlatBufferBuilder, stepSize: Double, tolerance: Double, minStep: Double, maxStep: Double, maxIterations: UInt, gravityDegree: UShort, gravityOrder: UShort, integrator: UByte, outputFrame: UByte, forceFlags: UShort, dragCoefficient: Float, srpCoefficient: Float, areaMassRatio: Float, reservedOffset: Int) : Int {
-            builder.startTable(14)
-            addMAXSTEP(builder, maxStep)
-            addMINSTEP(builder, minStep)
-            addTOLERANCE(builder, tolerance)
-            addSTEPSIZE(builder, stepSize)
-            addRESERVED(builder, reservedOffset)
-            addAREAMASSRATIO(builder, areaMassRatio)
-            addSRPCOEFFICIENT(builder, srpCoefficient)
-            addDRAGCOEFFICIENT(builder, dragCoefficient)
-            addMAXITERATIONS(builder, maxIterations)
-            addFORCEFLAGS(builder, forceFlags)
-            addGRAVITYORDER(builder, gravityOrder)
-            addGRAVITYDEGREE(builder, gravityDegree)
-            addOUTPUTFRAME(builder, outputFrame)
-            addINTEGRATOR(builder, integrator)
+        fun createPCF(builder: FlatBufferBuilder, configurationIdOffset: Int, profileOffset: Int, theory: UByte, integratorOffset: Int, forcesOffset: Int, meanElementOffset: Int, segmentsOffset: Int, fitOffset: Int, eventsOffset: Int, maneuverDetectionOffset: Int, reentryOffset: Int, launchOffset: Int, outputOffset: Int) : Int {
+            builder.startTable(13)
+            addOUTPUT(builder, outputOffset)
+            addLAUNCH(builder, launchOffset)
+            addREENTRY(builder, reentryOffset)
+            addMANEUVERDETECTION(builder, maneuverDetectionOffset)
+            addEVENTS(builder, eventsOffset)
+            addFIT(builder, fitOffset)
+            addSEGMENTS(builder, segmentsOffset)
+            addMEANELEMENT(builder, meanElementOffset)
+            addFORCES(builder, forcesOffset)
+            addINTEGRATOR(builder, integratorOffset)
+            addPROFILE(builder, profileOffset)
+            addCONFIGURATIONID(builder, configurationIdOffset)
+            addTHEORY(builder, theory)
             return endPCF(builder)
         }
-        fun startPCF(builder: FlatBufferBuilder) = builder.startTable(14)
-        fun addSTEPSIZE(builder: FlatBufferBuilder, stepSize: Double) = builder.addDouble(0, stepSize, 0.0)
-        fun addTOLERANCE(builder: FlatBufferBuilder, tolerance: Double) = builder.addDouble(1, tolerance, 0.0)
-        fun addMINSTEP(builder: FlatBufferBuilder, minStep: Double) = builder.addDouble(2, minStep, 0.0)
-        fun addMAXSTEP(builder: FlatBufferBuilder, maxStep: Double) = builder.addDouble(3, maxStep, 0.0)
-        fun addMAXITERATIONS(builder: FlatBufferBuilder, maxIterations: UInt) = builder.addInt(4, maxIterations.toInt(), 0)
-        fun addGRAVITYDEGREE(builder: FlatBufferBuilder, gravityDegree: UShort) = builder.addShort(5, gravityDegree.toShort(), 0)
-        fun addGRAVITYORDER(builder: FlatBufferBuilder, gravityOrder: UShort) = builder.addShort(6, gravityOrder.toShort(), 0)
-        fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: UByte) = builder.addByte(7, integrator.toByte(), 0)
-        fun addOUTPUTFRAME(builder: FlatBufferBuilder, outputFrame: UByte) = builder.addByte(8, outputFrame.toByte(), 0)
-        fun addFORCEFLAGS(builder: FlatBufferBuilder, forceFlags: UShort) = builder.addShort(9, forceFlags.toShort(), 0)
-        fun addDRAGCOEFFICIENT(builder: FlatBufferBuilder, dragCoefficient: Float) = builder.addFloat(10, dragCoefficient, 0.0)
-        fun addSRPCOEFFICIENT(builder: FlatBufferBuilder, srpCoefficient: Float) = builder.addFloat(11, srpCoefficient, 0.0)
-        fun addAREAMASSRATIO(builder: FlatBufferBuilder, areaMassRatio: Float) = builder.addFloat(12, areaMassRatio, 0.0)
-        fun addRESERVED(builder: FlatBufferBuilder, reserved: Int) = builder.addOffset(13, reserved, 0)
-        @kotlin.ExperimentalUnsignedTypes
-        fun createReservedVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
-            builder.startVector(1, data.size, 1)
+        fun startPCF(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun addCONFIGURATIONID(builder: FlatBufferBuilder, configurationId: Int) = builder.addOffset(0, configurationId, 0)
+        fun addPROFILE(builder: FlatBufferBuilder, profile: Int) = builder.addOffset(1, profile, 0)
+        fun addTHEORY(builder: FlatBufferBuilder, theory: UByte) = builder.addByte(2, theory.toByte(), 0)
+        fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: Int) = builder.addOffset(3, integrator, 0)
+        fun addFORCES(builder: FlatBufferBuilder, forces: Int) = builder.addOffset(4, forces, 0)
+        fun addMEANELEMENT(builder: FlatBufferBuilder, meanElement: Int) = builder.addOffset(5, meanElement, 0)
+        fun addSEGMENTS(builder: FlatBufferBuilder, segments: Int) = builder.addOffset(6, segments, 0)
+        fun addFIT(builder: FlatBufferBuilder, fit: Int) = builder.addOffset(7, fit, 0)
+        fun addEVENTS(builder: FlatBufferBuilder, events: Int) = builder.addOffset(8, events, 0)
+        fun createEventsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
-                builder.addByte(data[i].toByte())
+                builder.addOffset(data[i])
             }
             return builder.endVector()
         }
-        fun startReservedVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun startEventsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMANEUVERDETECTION(builder: FlatBufferBuilder, maneuverDetection: Int) = builder.addOffset(9, maneuverDetection, 0)
+        fun addREENTRY(builder: FlatBufferBuilder, reentry: Int) = builder.addOffset(10, reentry, 0)
+        fun addLAUNCH(builder: FlatBufferBuilder, launch: Int) = builder.addOffset(11, launch, 0)
+        fun addOUTPUT(builder: FlatBufferBuilder, output: Int) = builder.addOffset(12, output, 0)
         fun endPCF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

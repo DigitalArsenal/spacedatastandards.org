@@ -7,7 +7,10 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * Burn Out Vector Message
+ * Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+ * (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+ * kilometers per second (km/s) and time in seconds (s); a producer holding
+ * another unit converts before writing.
  */
 export class BOV implements flatbuffers.IUnpackableObject<BOVT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -31,36 +34,57 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$BOV');
 }
 
+/**
+ * EFG position, E component, km (11 significant figures).
+ */
 E_COORDINATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * EFG position, F component, km (11 significant figures).
+ */
 F_COORDINATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * EFG position, G component, km (11 significant figures).
+ */
 G_COORDINATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * EFG velocity, E component, km/s (9 significant figures).
+ */
 E_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * EFG velocity, F component, km/s (9 significant figures).
+ */
 F_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * EFG velocity, G component, km/s (9 significant figures).
+ */
 G_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Epoch time, in ISO 8601 UTC format.
+ */
 EPOCH():string|null
 EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EPOCH(optionalEncoding?:any):string|Uint8Array|null {
@@ -68,6 +92,9 @@ EPOCH(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Time from launch, seconds (s), with appropriate precision.
+ */
 TIME_FROM_LAUNCH():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;

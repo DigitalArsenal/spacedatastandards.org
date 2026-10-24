@@ -47,8 +47,8 @@ class PRWExecutionRequest : Table() {
             throw AssertionError("No value for (required) field targetEpoch")
         }
     }
-    val integrator : PRWIntegratorSettings get() = integrator(PRWIntegratorSettings())
-    fun integrator(obj: PRWIntegratorSettings) : PRWIntegratorSettings {
+    val integrator : PCFIntegratorSettings get() = integrator(PCFIntegratorSettings())
+    fun integrator(obj: PCFIntegratorSettings) : PCFIntegratorSettings {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -56,8 +56,8 @@ class PRWExecutionRequest : Table() {
             throw AssertionError("No value for (required) field integrator")
         }
     }
-    val forces : PRWForceConfiguration get() = forces(PRWForceConfiguration())
-    fun forces(obj: PRWForceConfiguration) : PRWForceConfiguration {
+    val forces : PCFForceModel get() = forces(PCFForceModel())
+    fun forces(obj: PCFForceModel) : PCFForceModel {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)

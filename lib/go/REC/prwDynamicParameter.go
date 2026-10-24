@@ -19,7 +19,7 @@ const (
 	prwDynamicParameterDRAG_AREA_OVER_MASS_RATE prwDynamicParameter = 2
 	prwDynamicParameterSRP_AREA_OVER_MASS       prwDynamicParameter = 3
 	prwDynamicParameterIN_TRACK_ACCELERATION    prwDynamicParameter = 4
-	/// ECOM2 coefficients (PRWEcom2), in their order there.
+	/// ECOM2 coefficients (PCFEcom2), in their order there.
 	prwDynamicParameterECOM2_D0                 prwDynamicParameter = 5
 	prwDynamicParameterECOM2_Y0                 prwDynamicParameter = 6
 	prwDynamicParameterECOM2_B0                 prwDynamicParameter = 7

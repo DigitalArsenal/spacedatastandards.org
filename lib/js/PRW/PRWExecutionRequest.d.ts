@@ -1,8 +1,8 @@
 import * as flatbuffers from 'flatbuffers';
+import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
+import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
 import { PRWFiniteBurn, PRWFiniteBurnT } from './PRWFiniteBurn.js';
-import { PRWForceConfiguration, PRWForceConfigurationT } from './PRWForceConfiguration.js';
 import { PRWImpulse, PRWImpulseT } from './PRWImpulse.js';
-import { PRWIntegratorSettings, PRWIntegratorSettingsT } from './PRWIntegratorSettings.js';
 import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
@@ -21,8 +21,8 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
     static getSizePrefixedRootAsPRWExecutionRequest(bb: flatbuffers.ByteBuffer, obj?: PRWExecutionRequest): PRWExecutionRequest;
     INITIAL(obj?: PRWResidentState): PRWResidentState | null;
     TARGET_EPOCH(obj?: TIMInstant): TIMInstant | null;
-    INTEGRATOR(obj?: PRWIntegratorSettings): PRWIntegratorSettings | null;
-    FORCES(obj?: PRWForceConfiguration): PRWForceConfiguration | null;
+    INTEGRATOR(obj?: PCFIntegratorSettings): PCFIntegratorSettings | null;
+    FORCES(obj?: PCFForceModel): PCFForceModel | null;
     INCLUDE_STM(): boolean;
     STM_TECHNIQUE(): prwDerivativeTechnique;
     DENSITY_TREATMENT(): prwDensityTreatment;
@@ -82,8 +82,8 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
 export declare class PRWExecutionRequestT implements flatbuffers.IGeneratedObject {
     INITIAL: PRWResidentStateT | null;
     TARGET_EPOCH: TIMInstantT | null;
-    INTEGRATOR: PRWIntegratorSettingsT | null;
-    FORCES: PRWForceConfigurationT | null;
+    INTEGRATOR: PCFIntegratorSettingsT | null;
+    FORCES: PCFForceModelT | null;
     INCLUDE_STM: boolean;
     STM_TECHNIQUE: prwDerivativeTechnique;
     DENSITY_TREATMENT: prwDensityTreatment;
@@ -95,7 +95,7 @@ export declare class PRWExecutionRequestT implements flatbuffers.IGeneratedObjec
     FINITE_BURNS: (PRWFiniteBurnT)[];
     PROCESS_NOISE: PRWProcessNoiseT | null;
     DYNAMIC_PARAMETERS: (prwDynamicParameter)[];
-    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PRWIntegratorSettingsT | null, FORCES?: PRWForceConfigurationT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null, DYNAMIC_PARAMETERS?: (prwDynamicParameter)[]);
+    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null, DYNAMIC_PARAMETERS?: (prwDynamicParameter)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWExecutionRequest.d.ts.map

@@ -1,6 +1,9 @@
 import * as flatbuffers from 'flatbuffers';
 /**
- * Burn Out Vector Message
+ * Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+ * (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+ * kilometers per second (km/s) and time in seconds (s); a producer holding
+ * another unit converts before writing.
  */
 export declare class BOV implements flatbuffers.IUnpackableObject<BOVT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -9,14 +12,38 @@ export declare class BOV implements flatbuffers.IUnpackableObject<BOVT> {
     static getRootAsBOV(bb: flatbuffers.ByteBuffer, obj?: BOV): BOV;
     static getSizePrefixedRootAsBOV(bb: flatbuffers.ByteBuffer, obj?: BOV): BOV;
     static bufferHasIdentifier(bb: flatbuffers.ByteBuffer): boolean;
+    /**
+     * EFG position, E component, km (11 significant figures).
+     */
     E_COORDINATE(): number;
+    /**
+     * EFG position, F component, km (11 significant figures).
+     */
     F_COORDINATE(): number;
+    /**
+     * EFG position, G component, km (11 significant figures).
+     */
     G_COORDINATE(): number;
+    /**
+     * EFG velocity, E component, km/s (9 significant figures).
+     */
     E_DOT(): number;
+    /**
+     * EFG velocity, F component, km/s (9 significant figures).
+     */
     F_DOT(): number;
+    /**
+     * EFG velocity, G component, km/s (9 significant figures).
+     */
     G_DOT(): number;
+    /**
+     * Epoch time, in ISO 8601 UTC format.
+     */
     EPOCH(): string | null;
     EPOCH(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * Time from launch, seconds (s), with appropriate precision.
+     */
     TIME_FROM_LAUNCH(): number;
     static startBOV(builder: flatbuffers.Builder): void;
     static addECoordinate(builder: flatbuffers.Builder, E_COORDINATE: number): void;

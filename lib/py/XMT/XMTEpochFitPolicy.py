@@ -52,8 +52,8 @@ class XMTEpochFitPolicy(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from PRWForceConfiguration import PRWForceConfiguration
-            obj = PRWForceConfiguration()
+            from PCFForceModel import PCFForceModel
+            obj = PCFForceModel()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -64,8 +64,8 @@ class XMTEpochFitPolicy(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             x = self._tab.Indirect(o + self._tab.Pos)
-            from PRWIntegratorSettings import PRWIntegratorSettings
-            obj = PRWIntegratorSettings()
+            from PCFIntegratorSettings import PCFIntegratorSettings
+            obj = PCFIntegratorSettings()
             obj.Init(self._tab.Bytes, x)
             return obj
         return None
@@ -246,8 +246,8 @@ def XMTEpochFitPolicyEnd(builder):
 def End(builder):
     return XMTEpochFitPolicyEnd(builder)
 
-import PRWForceConfiguration
-import PRWIntegratorSettings
+import PCFForceModel
+import PCFIntegratorSettings
 try:
     from typing import Optional
 except:
@@ -275,8 +275,8 @@ class XMTEpochFitPolicyT(object):
     ):
         self.PROPAGATOR_ID = PROPAGATOR_ID  # type: Optional[str]
         self.PROPAGATOR_ARTIFACT_SHA256 = PROPAGATOR_ARTIFACT_SHA256  # type: Optional[str]
-        self.FORCE_MODEL = FORCE_MODEL  # type: Optional[PRWForceConfiguration.PRWForceConfigurationT]
-        self.INTEGRATOR = INTEGRATOR  # type: Optional[PRWIntegratorSettings.PRWIntegratorSettingsT]
+        self.FORCE_MODEL = FORCE_MODEL  # type: Optional[PCFForceModel.PCFForceModelT]
+        self.INTEGRATOR = INTEGRATOR  # type: Optional[PCFIntegratorSettings.PCFIntegratorSettingsT]
         self.FORCE_MODEL_LIMITATION = FORCE_MODEL_LIMITATION  # type: Optional[str]
         self.FRAME_TRANSFORMATION_REF = FRAME_TRANSFORMATION_REF  # type: Optional[str]
         self.HOLDOUT_STRIDE = HOLDOUT_STRIDE  # type: int
@@ -312,9 +312,9 @@ class XMTEpochFitPolicyT(object):
         self.PROPAGATOR_ID = XMTEpochFitPolicy.PROPAGATOR_ID()
         self.PROPAGATOR_ARTIFACT_SHA256 = XMTEpochFitPolicy.PROPAGATOR_ARTIFACT_SHA256()
         if XMTEpochFitPolicy.FORCE_MODEL() is not None:
-            self.FORCE_MODEL = PRWForceConfiguration.PRWForceConfigurationT.InitFromObj(XMTEpochFitPolicy.FORCE_MODEL())
+            self.FORCE_MODEL = PCFForceModel.PCFForceModelT.InitFromObj(XMTEpochFitPolicy.FORCE_MODEL())
         if XMTEpochFitPolicy.INTEGRATOR() is not None:
-            self.INTEGRATOR = PRWIntegratorSettings.PRWIntegratorSettingsT.InitFromObj(XMTEpochFitPolicy.INTEGRATOR())
+            self.INTEGRATOR = PCFIntegratorSettings.PCFIntegratorSettingsT.InitFromObj(XMTEpochFitPolicy.INTEGRATOR())
         self.FORCE_MODEL_LIMITATION = XMTEpochFitPolicy.FORCE_MODEL_LIMITATION()
         self.FRAME_TRANSFORMATION_REF = XMTEpochFitPolicy.FRAME_TRANSFORMATION_REF()
         self.HOLDOUT_STRIDE = XMTEpochFitPolicy.HOLDOUT_STRIDE()

@@ -17,7 +17,10 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Burn Out Vector Message
+ * Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+ * (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+ * kilometers per second (km/s) and time in seconds (s); a producer holding
+ * another unit converts before writing.
  */
 @SuppressWarnings("unused")
 public final class BOV extends com.google.flatbuffers.Table {
@@ -28,15 +31,39 @@ public final class BOV extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public BOV __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * EFG position, E component, km (11 significant figures).
+   */
   public double E_COORDINATE() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * EFG position, F component, km (11 significant figures).
+   */
   public double F_COORDINATE() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * EFG position, G component, km (11 significant figures).
+   */
   public double G_COORDINATE() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * EFG velocity, E component, km/s (9 significant figures).
+   */
   public double E_DOT() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * EFG velocity, F component, km/s (9 significant figures).
+   */
   public double F_DOT() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * EFG velocity, G component, km/s (9 significant figures).
+   */
   public double G_DOT() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Epoch time, in ISO 8601 UTC format.
+   */
   public String EPOCH() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Time from launch, seconds (s), with appropriate precision.
+   */
   public double TIME_FROM_LAUNCH() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createBOV(FlatBufferBuilder builder,

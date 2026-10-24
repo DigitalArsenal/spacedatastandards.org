@@ -43,13 +43,13 @@ public final class XMTEpochFitPolicy extends com.google.flatbuffers.Table {
   /**
    * Force model the trajectories were propagated with.
    */
-  public PRWForceConfiguration FORCE_MODEL() { return FORCE_MODEL(new PRWForceConfiguration()); }
-  public PRWForceConfiguration FORCE_MODEL(PRWForceConfiguration obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PCFForceModel FORCE_MODEL() { return FORCE_MODEL(new PCFForceModel()); }
+  public PCFForceModel FORCE_MODEL(PCFForceModel obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Integrator settings, when stated.
    */
-  public PRWIntegratorSettings INTEGRATOR() { return INTEGRATOR(new PRWIntegratorSettings()); }
-  public PRWIntegratorSettings INTEGRATOR(PRWIntegratorSettings obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PCFIntegratorSettings INTEGRATOR() { return INTEGRATOR(new PCFIntegratorSettings()); }
+  public PCFIntegratorSettings INTEGRATOR(PCFIntegratorSettings obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   /**
    * Known limitations of the force model (human-readable).
    */

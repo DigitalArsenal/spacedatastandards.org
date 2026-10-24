@@ -31,10 +31,10 @@ public final class PRWExecutionRequest extends com.google.flatbuffers.Table {
   public PRWResidentState INITIAL(PRWResidentState obj) { int o = __offset(4); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public TIMInstant TARGET_EPOCH() { return TARGET_EPOCH(new TIMInstant()); }
   public TIMInstant TARGET_EPOCH(TIMInstant obj) { int o = __offset(6); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public PRWIntegratorSettings INTEGRATOR() { return INTEGRATOR(new PRWIntegratorSettings()); }
-  public PRWIntegratorSettings INTEGRATOR(PRWIntegratorSettings obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public PRWForceConfiguration FORCES() { return FORCES(new PRWForceConfiguration()); }
-  public PRWForceConfiguration FORCES(PRWForceConfiguration obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PCFIntegratorSettings INTEGRATOR() { return INTEGRATOR(new PCFIntegratorSettings()); }
+  public PCFIntegratorSettings INTEGRATOR(PCFIntegratorSettings obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public PCFForceModel FORCES() { return FORCES(new PCFForceModel()); }
+  public PCFForceModel FORCES(PCFForceModel obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
   public boolean INCLUDE_STM() { int o = __offset(12); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   public int STM_TECHNIQUE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1; }
   public int DENSITY_TREATMENT() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1; }

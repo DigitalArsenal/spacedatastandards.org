@@ -18,7 +18,7 @@ public final class prwDynamicParameter {
   public static final int SRP_AREA_OVER_MASS = 3;
   public static final int IN_TRACK_ACCELERATION = 4;
   /**
-   * ECOM2 coefficients (PRWEcom2), in their order there.
+   * ECOM2 coefficients (PCFEcom2), in their order there.
    */
   public static final int ECOM2_D0 = 5;
   public static final int ECOM2_Y0 = 6;

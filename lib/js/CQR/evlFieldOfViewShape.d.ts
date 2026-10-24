@@ -1,0 +1,20 @@
+/**
+ * Boundary of a sensor acceptance volume. Append new values only.
+ */
+export declare enum evlFieldOfViewShape {
+    UNSPECIFIED = 0,
+    /**
+     * A circular cone about the boresight, bounded by CONE_HALF_ANGLE_RAD.
+     */
+    CONIC = 1,
+    /**
+     * A rectangular pyramid about the boresight, bounded by the two
+     * half-angles.
+     */
+    RECTANGULAR = 2,
+    /**
+     * A custom boundary carried as a boresight-relative angular mask.
+     */
+    CUSTOM_MASK = 3
+}
+//# sourceMappingURL=evlFieldOfViewShape.d.ts.map

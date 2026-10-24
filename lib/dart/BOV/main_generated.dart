@@ -6,7 +6,10 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
 
-///  Burn Out Vector Message
+///  Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+///  (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+///  kilometers per second (km/s) and time in seconds (s); a producer holding
+///  another unit converts before writing.
 class BOV {
   BOV._(this._bc, this._bcOffset);
   factory BOV(List<int> bytes) {
@@ -19,19 +22,27 @@ class BOV {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  EFG position, E component, km (11 significant figures).
   double get E_COORDINATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
   double get eCoordinate => E_COORDINATE;
+  ///  EFG position, F component, km (11 significant figures).
   double get F_COORDINATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
   double get fCoordinate => F_COORDINATE;
+  ///  EFG position, G component, km (11 significant figures).
   double get G_COORDINATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
   double get gCoordinate => G_COORDINATE;
+  ///  EFG velocity, E component, km/s (9 significant figures).
   double get E_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
   double get eDot => E_DOT;
+  ///  EFG velocity, F component, km/s (9 significant figures).
   double get F_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
   double get fDot => F_DOT;
+  ///  EFG velocity, G component, km/s (9 significant figures).
   double get G_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
   double get gDot => G_DOT;
+  ///  Epoch time, in ISO 8601 UTC format.
   String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Time from launch, seconds (s), with appropriate precision.
   double get TIME_FROM_LAUNCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
   double get timeFromLaunch => TIME_FROM_LAUNCH;
 

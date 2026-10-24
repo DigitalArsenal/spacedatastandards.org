@@ -10,6 +10,11 @@ import flatbuffers
 /// Earth orientation, space weather) lives in SDS `OCM` + `OMM` + `PPE` +
 /// `RFM` + `ATM` + `EOP` + `SPW`. PRW is the runtime wire that moves those
 /// across a JS ↔ WASM boundary, not a substitute for any of them.
+///
+/// The integrator settings and the force model a propagation runs under are
+/// `PCF`'s tables (PCFIntegratorSettings, PCFForceModel and their enums); PRW
+/// carries them and does not define them, so a configuration and a request
+/// share one definition of each.
 /// Runtime state-flag bitfield (sized to match a single uint).
 /// Data-interchange equivalents: MANEUVERING is subsumed by OCM.Maneuver;
 /// HAS_COVARIANCE is implicit from OCM.COVARIANCE_DATA. The remaining
@@ -61,50 +66,6 @@ enum prwSourceKind:
     prwSourceKind_PPE = 4
     /// Source is a single classical Keplerian element set.
     prwSourceKind_KEPLERIAN = 5
-
-/// Propagator Runtime Wire — envelope that carries either an init request,
-/// a batch request, or a batch response across a runtime boundary.
-/// New numeric choices are append-only and are not legacy C++ enum ordinals.
-enum prwSolverAlgorithm:
-    prwSolverAlgorithm_UNSPECIFIED = 0
-    prwSolverAlgorithm_RK4 = 1
-    prwSolverAlgorithm_RKF45 = 2
-    prwSolverAlgorithm_RKF78 = 3
-    prwSolverAlgorithm_RK78 = 4
-    prwSolverAlgorithm_RKDP87 = 5
-    prwSolverAlgorithm_ABM = 6
-    prwSolverAlgorithm_BS = 7
-    prwSolverAlgorithm_COWELL = 8
-    prwSolverAlgorithm_ENCKE = 9
-    prwSolverAlgorithm_EQUINOCTIAL_VOP = 10
-
-enum prwGravitySelection:
-    prwGravitySelection_INFER_FLAGS = 0
-    prwGravitySelection_POINT_MASS = 1
-    prwGravitySelection_J2_ONLY = 2
-    prwGravitySelection_J2_TO_J4 = 3
-    prwGravitySelection_SPHERICAL_HARMONICS = 4
-    prwGravitySelection_EGM2008 = 5
-    /// NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
-    prwGravitySelection_EGM96 = 6
-
-enum prwAtmosphereFamily:
-    prwAtmosphereFamily_UNSPECIFIED = 0
-    prwAtmosphereFamily_NRLMSISE00 = 1
-    prwAtmosphereFamily_EXPONENTIAL = 2
-    prwAtmosphereFamily_USSA1976 = 3
-    prwAtmosphereFamily_HARRIS_PRIESTER = 4
-    /// Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
-    /// evaluation of Jacchia's static diffusion model with the constants NASA
-    /// GTDS and GMAT use (inflection temperature, mean molecular mass and
-    /// 100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
-    /// F10.7 of the previous day, that day's 81-day centred average, and the
-    /// three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
-    /// constant). A VCM's JACCHIA_70 is carried here.
-    prwAtmosphereFamily_JACCHIA_ROBERTS = 5
-    /// Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
-    /// Dst-derived temperature change from PRW.JB2008_INDICES.
-    prwAtmosphereFamily_JB2008 = 6
 
 enum prwDerivativeTechnique:
     prwDerivativeTechnique_UNSPECIFIED = 0
@@ -161,26 +122,6 @@ enum prwDensitySpecies:
     prwDensitySpecies_ATOMIC_NITROGEN = 7
     prwDensitySpecies_ANOMALOUS_OXYGEN = 8
 
-/// Solid Earth tide model for the central body's field. NONE leaves the
-/// tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
-/// and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
-/// numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
-/// frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
-/// the permanent tide handled for the field's own tide system. Pole tide is
-/// not included.
-enum prwSolidTideModel:
-    prwSolidTideModel_NONE = 0
-    prwSolidTideModel_IERS_2010 = 1
-
-/// Post-Newtonian corrections to the central body's acceleration (IERS
-/// Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
-/// point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
-/// (geodesic) precession.
-enum prwRelativityTerms:
-    prwRelativityTerms_NONE = 0
-    prwRelativityTerms_SCHWARZSCHILD = 1
-    prwRelativityTerms_IERS_2010 = 2
-
 /// Dynamical model parameters a covariance and STM may carry after the state
 /// (a VCM's B, BDOT, AGOM and T). Values are the request's FORCES, in SI:
 /// DRAG_AREA_OVER_MASS Cd*A/m (m2/kg, DRAG_COEFFICIENT * AREA_M2 /
@@ -194,7 +135,7 @@ enum prwDynamicParameter:
     prwDynamicParameter_DRAG_AREA_OVER_MASS_RATE = 2
     prwDynamicParameter_SRP_AREA_OVER_MASS = 3
     prwDynamicParameter_IN_TRACK_ACCELERATION = 4
-    /// ECOM2 coefficients (PRWEcom2), in their order there.
+    /// ECOM2 coefficients (PCFEcom2), in their order there.
     prwDynamicParameter_ECOM2_D0 = 5
     prwDynamicParameter_ECOM2_Y0 = 6
     prwDynamicParameter_ECOM2_B0 = 7
@@ -206,43 +147,6 @@ enum prwDynamicParameter:
     prwDynamicParameter_ECOM2_B1_SIN = 13
     prwDynamicParameter_ECOM2_B3_COS = 14
     prwDynamicParameter_ECOM2_B3_SIN = 15
-
-/// Solar radiation pressure model family. CANNONBALL uses the
-/// radiation-pressure coefficient and area-to-mass ratio of the force
-/// configuration; GNSS_BOX_WING is the a priori box-wing model of the
-/// spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
-/// Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
-/// under nominal yaw steering, with the mass INITIAL_MASS_KG.
-enum prwRadiationPressureFamily:
-    prwRadiationPressureFamily_CANNONBALL = 0
-    prwRadiationPressureFamily_GNSS_BOX_WING = 1
-    prwRadiationPressureFamily_NONE = 2
-
-/// Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
-/// infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
-/// is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
-/// emissivity zonal to the second Legendre degree with the annual term of
-/// the first, from the elements of the Earth's surface the spacecraft sees
-/// (as Orekit's KnockeRediffusedForceModel evaluates it).
-enum prwEarthRadiationModel:
-    prwEarthRadiationModel_NONE = 0
-    prwEarthRadiationModel_KNOCKE = 1
-
-/// Ocean tide model for the central body's field. FES2004 is IERS
-/// Conventions (2010) section 6.3: the variations of the normalized Stokes
-/// coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
-/// eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
-/// The ocean pole tide is not included.
-enum prwOceanTideModel:
-    prwOceanTideModel_NONE = 0
-    prwOceanTideModel_FES2004 = 1
-
-/// GNSS spacecraft block, selecting the box-wing surfaces.
-enum prwGnssSpacecraftBlock:
-    prwGnssSpacecraftBlock_UNSPECIFIED = 0
-    prwGnssSpacecraftBlock_GPS_IIR = 1
-    prwGnssSpacecraftBlock_GPS_IIR_M = 2
-    prwGnssSpacecraftBlock_GPS_IIF = 3
 
 class PRWInit
 
@@ -256,15 +160,7 @@ class PRWBatchRequest
 
 class PRWBatchResponse
 
-class PRWEcom2
-
 class PRWInstance
-
-class PRWIntegratorSettings
-
-class PRWSpaceWeather
-
-class PRWForceConfiguration
 
 class PRWStateMatrix
 
@@ -654,76 +550,6 @@ def PRWBatchResponseCreateFLAGSVector(b_:flatbuffers.builder, v_:[propagatorStat
     reverse(v_) e_: b_.PrependUint32(e_)
     return b_.EndVector(v_.length)
 
-/// ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
-/// doi:10.1007/s00190-015-0814-4, eq. 5), in m/s^2 in the D-Y-B frame,
-/// added to the a priori model and scaled by the visible Sun fraction.
-class PRWEcom2 : flatbuffers.handle
-    def D0_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 0.0)
-    def Y0_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
-    def B0_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
-    def D2_COS_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    def D2_SIN_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
-    def D4_COS_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
-    def D4_SIN_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
-    def B1_COS_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    def B1_SIN_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
-    def B3_COS_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
-    def B3_SIN_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
-
-def GetRootAsPRWEcom2(buf:string): return PRWEcom2 { buf, flatbuffers.indirect(buf, 0) }
-
-struct PRWEcom2Builder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(11)
-        return this
-    def add_D0_M_S2(D0_M_S2:float):
-        b_.PrependFloat64Slot(0, D0_M_S2, 0.0)
-        return this
-    def add_Y0_M_S2(Y0_M_S2:float):
-        b_.PrependFloat64Slot(1, Y0_M_S2, 0.0)
-        return this
-    def add_B0_M_S2(B0_M_S2:float):
-        b_.PrependFloat64Slot(2, B0_M_S2, 0.0)
-        return this
-    def add_D2_COS_M_S2(D2_COS_M_S2:float):
-        b_.PrependFloat64Slot(3, D2_COS_M_S2, 0.0)
-        return this
-    def add_D2_SIN_M_S2(D2_SIN_M_S2:float):
-        b_.PrependFloat64Slot(4, D2_SIN_M_S2, 0.0)
-        return this
-    def add_D4_COS_M_S2(D4_COS_M_S2:float):
-        b_.PrependFloat64Slot(5, D4_COS_M_S2, 0.0)
-        return this
-    def add_D4_SIN_M_S2(D4_SIN_M_S2:float):
-        b_.PrependFloat64Slot(6, D4_SIN_M_S2, 0.0)
-        return this
-    def add_B1_COS_M_S2(B1_COS_M_S2:float):
-        b_.PrependFloat64Slot(7, B1_COS_M_S2, 0.0)
-        return this
-    def add_B1_SIN_M_S2(B1_SIN_M_S2:float):
-        b_.PrependFloat64Slot(8, B1_SIN_M_S2, 0.0)
-        return this
-    def add_B3_COS_M_S2(B3_COS_M_S2:float):
-        b_.PrependFloat64Slot(9, B3_COS_M_S2, 0.0)
-        return this
-    def add_B3_SIN_M_S2(B3_SIN_M_S2:float):
-        b_.PrependFloat64Slot(10, B3_SIN_M_S2, 0.0)
-        return this
-    def end():
-        return b_.EndObject()
-
 /// Instance identity is host-provided, opaque, and not a physical quantity.
 class PRWInstance : flatbuffers.handle
     def MODULE_ID() -> string:
@@ -752,360 +578,6 @@ struct PRWInstanceBuilder:
         return this
     def end():
         return b_.EndObject()
-
-/// Units are SI. A scalar legacy tolerance must be expanded by the adapter.
-class PRWIntegratorSettings : flatbuffers.handle
-    def ALGORITHM() -> prwSolverAlgorithm:
-        return prwSolverAlgorithm(flatbuffers.field_uint8(buf_, pos_, 4, 0))
-    def INITIAL_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 60.0)
-    def MINIMUM_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 1.0)
-    def MAXIMUM_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 3600.0)
-    /// Six or seven positive tolerances, respectively m, m/s and optional kg.
-    def ABSOLUTE_TOLERANCES(i:int) -> float:
-        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 8)
-    def ABSOLUTE_TOLERANCES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 12)
-    def RELATIVE_TOLERANCE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 1e-12)
-    def MAXIMUM_STEPS() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 16, 100000)
-
-def GetRootAsPRWIntegratorSettings(buf:string): return PRWIntegratorSettings { buf, flatbuffers.indirect(buf, 0) }
-
-struct PRWIntegratorSettingsBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(7)
-        return this
-    def add_ALGORITHM(ALGORITHM:prwSolverAlgorithm):
-        b_.PrependUint8Slot(0, ALGORITHM, 0)
-        return this
-    def add_INITIAL_STEP_SECONDS(INITIAL_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(1, INITIAL_STEP_SECONDS, 60.0)
-        return this
-    def add_MINIMUM_STEP_SECONDS(MINIMUM_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(2, MINIMUM_STEP_SECONDS, 1.0)
-        return this
-    def add_MAXIMUM_STEP_SECONDS(MAXIMUM_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(3, MAXIMUM_STEP_SECONDS, 3600.0)
-        return this
-    def add_ABSOLUTE_TOLERANCES(ABSOLUTE_TOLERANCES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(4, ABSOLUTE_TOLERANCES)
-        return this
-    def add_RELATIVE_TOLERANCE(RELATIVE_TOLERANCE:float):
-        b_.PrependFloat64Slot(5, RELATIVE_TOLERANCE, 1e-12)
-        return this
-    def add_MAXIMUM_STEPS(MAXIMUM_STEPS:int):
-        b_.PrependUint32Slot(6, MAXIMUM_STEPS, 100000)
-        return this
-    def end():
-        return b_.EndObject()
-
-def PRWIntegratorSettingsStartABSOLUTETOLERANCESVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(8, n_, 8)
-def PRWIntegratorSettingsCreateABSOLUTETOLERANCESVector(b_:flatbuffers.builder, v_:[float]):
-    b_.StartVector(8, v_.length, 8)
-    reverse(v_) e_: b_.PrependFloat64(e_)
-    return b_.EndVector(v_.length)
-
-/// Instantaneous space weather. TIM epoch is UTC; flux in SFU (1e-22 W/m2/Hz).
-class PRWSpaceWeather : flatbuffers.handle
-    def EPOCH() -> TIMInstant:
-        let o = flatbuffers.field_table(buf_, pos_, 4)
-        return TIMInstant { buf_, assert o }
-    def F107() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 150.0)
-    def F107_AVERAGE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 150.0)
-    /// Conventional daily Ap and three-hour Kp index values; not accelerations.
-    def AP_INDEX() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 15.0)
-    def KP_INDEX() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 3.0)
-
-def GetRootAsPRWSpaceWeather(buf:string): return PRWSpaceWeather { buf, flatbuffers.indirect(buf, 0) }
-
-struct PRWSpaceWeatherBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(5)
-        return this
-    def add_EPOCH(EPOCH:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, EPOCH)
-        return this
-    def add_F107(F107:float):
-        b_.PrependFloat64Slot(1, F107, 150.0)
-        return this
-    def add_F107_AVERAGE(F107_AVERAGE:float):
-        b_.PrependFloat64Slot(2, F107_AVERAGE, 150.0)
-        return this
-    def add_AP_INDEX(AP_INDEX:float):
-        b_.PrependFloat64Slot(3, AP_INDEX, 15.0)
-        return this
-    def add_KP_INDEX(KP_INDEX:float):
-        b_.PrependFloat64Slot(4, KP_INDEX, 3.0)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Executable subset currently reachable through the FFM module's invoke. No implied
-/// support for coefficients, drag models or bodies the provider cannot supply.
-class PRWForceConfiguration : flatbuffers.handle
-    def GRAVITY_CHOICE() -> prwGravitySelection:
-        return prwGravitySelection(flatbuffers.field_uint8(buf_, pos_, 4, 0))
-    def ENABLE_POINT_MASS() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 6, 1))
-    /// m3/s2; required positive when a central gravity term is enabled.
-    def GRAVITATIONAL_PARAMETER() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 0.0)
-    def ENABLE_J2() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 10, 1))
-    def ENABLE_J3() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
-    def ENABLE_J4() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 14, 0))
-    def ENABLE_HIGHER_ZONALS() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 16, 0))
-    /// Optional truncations; absent selects the explicitly reported model default.
-    def MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 18, 0)
-    /// True when MAXIMUM_DEGREE carries a value; false means absent.
-    def HAS_MAXIMUM_DEGREE() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 20, 0))
-    def MAXIMUM_ORDER() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 22, 0)
-    /// True when MAXIMUM_ORDER carries a value; false means absent.
-    def HAS_MAXIMUM_ORDER() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
-    def ENABLE_THIRD_BODY() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 26, 0))
-    /// NAIF IDs; explicit vector, e.g. [10,301]. Empty means no third bodies.
-    def THIRD_BODY_IDS(i:int) -> int:
-        return read_int32_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 4)
-    def THIRD_BODY_IDS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 28)
-    def ENABLE_SRP() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 30, 0))
-    def ENABLE_DRAG() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 32, 0))
-    def INITIAL_MASS_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 34, 1000.0)
-    def AREA_M2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 36, 10.0)
-    def REFLECTIVITY_COEFFICIENT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 38, 1.5)
-    def DRAG_COEFFICIENT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 40, 2.2)
-    def ATMOSPHERE_MODEL() -> prwAtmosphereFamily:
-        return prwAtmosphereFamily(flatbuffers.field_uint8(buf_, pos_, 42, 1))
-    def WEATHER() -> PRWSpaceWeather?:
-        let o = flatbuffers.field_table(buf_, pos_, 44)
-        return if o: PRWSpaceWeather { buf_, o } else: nil
-    /// Actual configured source name, e.g. an analytic series or a planetary SPK kernel.
-    def EPHEMERIS_SOURCE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 46)
-    /// Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
-    /// orientation (PRW.EARTH_ORIENTATION) to apply them.
-    def SOLID_TIDES() -> prwSolidTideModel:
-        return prwSolidTideModel(flatbuffers.field_uint8(buf_, pos_, 48, 0))
-    def RELATIVITY() -> prwRelativityTerms:
-        return prwRelativityTerms(flatbuffers.field_uint8(buf_, pos_, 50, 0))
-    /// Constant acceleration along the in-track axis, m/s2: T of RTN,
-    /// N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
-    def IN_TRACK_ACCELERATION_M_S2() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
-    /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
-    def HAS_IN_TRACK_ACCELERATION_M_S2() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 54, 0))
-    /// Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
-    /// BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch).
-    def DRAG_AREA_OVER_MASS_RATE_M2_KG_S() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
-    /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
-    def HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 58, 0))
-    /// Highest degree of the tesseral and sectorial terms (order >= 1); the
-    /// zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
-    /// MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn.
-    def MAXIMUM_TESSERAL_DEGREE() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 60, 0)
-    /// True when MAXIMUM_TESSERAL_DEGREE carries a value; false means absent.
-    def HAS_MAXIMUM_TESSERAL_DEGREE() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 62, 0))
-    /// Solar radiation pressure model family (default: the cannonball).
-    def RADIATION_PRESSURE_MODEL() -> prwRadiationPressureFamily:
-        return prwRadiationPressureFamily(flatbuffers.field_uint8(buf_, pos_, 64, 0))
-    /// Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
-    def GNSS_BLOCK() -> prwGnssSpacecraftBlock:
-        return prwGnssSpacecraftBlock(flatbuffers.field_uint8(buf_, pos_, 66, 0))
-    /// ECOM2 coefficients; absent means no ECOM2 term.
-    def ECOM2() -> PRWEcom2?:
-        let o = flatbuffers.field_table(buf_, pos_, 68)
-        return if o: PRWEcom2 { buf_, o } else: nil
-    /// Earth radiation pressure (albedo and infrared). It reads the Sun's
-    /// position from the request's ephemeris source.
-    def EARTH_RADIATION() -> prwEarthRadiationModel:
-        return prwEarthRadiationModel(flatbuffers.field_uint8(buf_, pos_, 70, 0))
-    /// Angular size of the Earth surface elements it sums, degrees.
-    def EARTH_RADIATION_RESOLUTION_DEG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 72, 15.0)
-    /// Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
-    /// cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
-    /// fitting SRP_AREA_OVER_MASS scales both.
-    def EARTH_RADIATION_AREA_OVER_MASS_M2_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 74, 0.0)
-    /// True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false means absent.
-    def HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 76, 0))
-    /// Ocean tides. Their field is Earth-fixed, so a provider needs Earth
-    /// orientation (PRW.EARTH_ORIENTATION) to apply them.
-    def OCEAN_TIDES() -> prwOceanTideModel:
-        return prwOceanTideModel(flatbuffers.field_uint8(buf_, pos_, 78, 0))
-    /// Truncation of the ocean tide field.
-    def OCEAN_TIDE_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 80, 30)
-    def OCEAN_TIDE_MAXIMUM_ORDER() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 82, 30)
-
-def GetRootAsPRWForceConfiguration(buf:string): return PRWForceConfiguration { buf, flatbuffers.indirect(buf, 0) }
-
-struct PRWForceConfigurationBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(40)
-        return this
-    def add_GRAVITY_CHOICE(GRAVITY_CHOICE:prwGravitySelection):
-        b_.PrependUint8Slot(0, GRAVITY_CHOICE, 0)
-        return this
-    def add_ENABLE_POINT_MASS(ENABLE_POINT_MASS:bool):
-        b_.PrependBoolSlot(1, ENABLE_POINT_MASS, 1)
-        return this
-    def add_GRAVITATIONAL_PARAMETER(GRAVITATIONAL_PARAMETER:float):
-        b_.PrependFloat64Slot(2, GRAVITATIONAL_PARAMETER, 0.0)
-        return this
-    def add_ENABLE_J2(ENABLE_J2:bool):
-        b_.PrependBoolSlot(3, ENABLE_J2, 1)
-        return this
-    def add_ENABLE_J3(ENABLE_J3:bool):
-        b_.PrependBoolSlot(4, ENABLE_J3, 0)
-        return this
-    def add_ENABLE_J4(ENABLE_J4:bool):
-        b_.PrependBoolSlot(5, ENABLE_J4, 0)
-        return this
-    def add_ENABLE_HIGHER_ZONALS(ENABLE_HIGHER_ZONALS:bool):
-        b_.PrependBoolSlot(6, ENABLE_HIGHER_ZONALS, 0)
-        return this
-    def add_MAXIMUM_DEGREE(MAXIMUM_DEGREE:int):
-        b_.PrependUint16Slot(7, MAXIMUM_DEGREE, 0)
-        return this
-    def add_HAS_MAXIMUM_DEGREE(HAS_MAXIMUM_DEGREE:bool):
-        b_.PrependBoolSlot(8, HAS_MAXIMUM_DEGREE, 0)
-        return this
-    def add_MAXIMUM_ORDER(MAXIMUM_ORDER:int):
-        b_.PrependUint16Slot(9, MAXIMUM_ORDER, 0)
-        return this
-    def add_HAS_MAXIMUM_ORDER(HAS_MAXIMUM_ORDER:bool):
-        b_.PrependBoolSlot(10, HAS_MAXIMUM_ORDER, 0)
-        return this
-    def add_ENABLE_THIRD_BODY(ENABLE_THIRD_BODY:bool):
-        b_.PrependBoolSlot(11, ENABLE_THIRD_BODY, 0)
-        return this
-    def add_THIRD_BODY_IDS(THIRD_BODY_IDS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, THIRD_BODY_IDS)
-        return this
-    def add_ENABLE_SRP(ENABLE_SRP:bool):
-        b_.PrependBoolSlot(13, ENABLE_SRP, 0)
-        return this
-    def add_ENABLE_DRAG(ENABLE_DRAG:bool):
-        b_.PrependBoolSlot(14, ENABLE_DRAG, 0)
-        return this
-    def add_INITIAL_MASS_KG(INITIAL_MASS_KG:float):
-        b_.PrependFloat64Slot(15, INITIAL_MASS_KG, 1000.0)
-        return this
-    def add_AREA_M2(AREA_M2:float):
-        b_.PrependFloat64Slot(16, AREA_M2, 10.0)
-        return this
-    def add_REFLECTIVITY_COEFFICIENT(REFLECTIVITY_COEFFICIENT:float):
-        b_.PrependFloat64Slot(17, REFLECTIVITY_COEFFICIENT, 1.5)
-        return this
-    def add_DRAG_COEFFICIENT(DRAG_COEFFICIENT:float):
-        b_.PrependFloat64Slot(18, DRAG_COEFFICIENT, 2.2)
-        return this
-    def add_ATMOSPHERE_MODEL(ATMOSPHERE_MODEL:prwAtmosphereFamily):
-        b_.PrependUint8Slot(19, ATMOSPHERE_MODEL, 1)
-        return this
-    def add_WEATHER(WEATHER:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(20, WEATHER)
-        return this
-    def add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(21, EPHEMERIS_SOURCE)
-        return this
-    def add_SOLID_TIDES(SOLID_TIDES:prwSolidTideModel):
-        b_.PrependUint8Slot(22, SOLID_TIDES, 0)
-        return this
-    def add_RELATIVITY(RELATIVITY:prwRelativityTerms):
-        b_.PrependUint8Slot(23, RELATIVITY, 0)
-        return this
-    def add_IN_TRACK_ACCELERATION_M_S2(IN_TRACK_ACCELERATION_M_S2:float):
-        b_.PrependFloat64Slot(24, IN_TRACK_ACCELERATION_M_S2, 0.0)
-        return this
-    def add_HAS_IN_TRACK_ACCELERATION_M_S2(HAS_IN_TRACK_ACCELERATION_M_S2:bool):
-        b_.PrependBoolSlot(25, HAS_IN_TRACK_ACCELERATION_M_S2, 0)
-        return this
-    def add_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(DRAG_AREA_OVER_MASS_RATE_M2_KG_S:float):
-        b_.PrependFloat64Slot(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0.0)
-        return this
-    def add_HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S:bool):
-        b_.PrependBoolSlot(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, 0)
-        return this
-    def add_MAXIMUM_TESSERAL_DEGREE(MAXIMUM_TESSERAL_DEGREE:int):
-        b_.PrependUint16Slot(28, MAXIMUM_TESSERAL_DEGREE, 0)
-        return this
-    def add_HAS_MAXIMUM_TESSERAL_DEGREE(HAS_MAXIMUM_TESSERAL_DEGREE:bool):
-        b_.PrependBoolSlot(29, HAS_MAXIMUM_TESSERAL_DEGREE, 0)
-        return this
-    def add_RADIATION_PRESSURE_MODEL(RADIATION_PRESSURE_MODEL:prwRadiationPressureFamily):
-        b_.PrependUint8Slot(30, RADIATION_PRESSURE_MODEL, 0)
-        return this
-    def add_GNSS_BLOCK(GNSS_BLOCK:prwGnssSpacecraftBlock):
-        b_.PrependUint8Slot(31, GNSS_BLOCK, 0)
-        return this
-    def add_ECOM2(ECOM2:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(32, ECOM2)
-        return this
-    def add_EARTH_RADIATION(EARTH_RADIATION:prwEarthRadiationModel):
-        b_.PrependUint8Slot(33, EARTH_RADIATION, 0)
-        return this
-    def add_EARTH_RADIATION_RESOLUTION_DEG(EARTH_RADIATION_RESOLUTION_DEG:float):
-        b_.PrependFloat64Slot(34, EARTH_RADIATION_RESOLUTION_DEG, 15.0)
-        return this
-    def add_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(EARTH_RADIATION_AREA_OVER_MASS_M2_KG:float):
-        b_.PrependFloat64Slot(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0.0)
-        return this
-    def add_HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG(HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG:bool):
-        b_.PrependBoolSlot(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, 0)
-        return this
-    def add_OCEAN_TIDES(OCEAN_TIDES:prwOceanTideModel):
-        b_.PrependUint8Slot(37, OCEAN_TIDES, 0)
-        return this
-    def add_OCEAN_TIDE_MAXIMUM_DEGREE(OCEAN_TIDE_MAXIMUM_DEGREE:int):
-        b_.PrependUint16Slot(38, OCEAN_TIDE_MAXIMUM_DEGREE, 30)
-        return this
-    def add_OCEAN_TIDE_MAXIMUM_ORDER(OCEAN_TIDE_MAXIMUM_ORDER:int):
-        b_.PrependUint16Slot(39, OCEAN_TIDE_MAXIMUM_ORDER, 30)
-        return this
-    def end():
-        return b_.EndObject()
-
-def PRWForceConfigurationStartTHIRDBODYIDSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def PRWForceConfigurationCreateTHIRDBODYIDSVector(b_:flatbuffers.builder, v_:[int]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependInt32(e_)
-    return b_.EndVector(v_.length)
 
 /// Row-major square matrix on [x,y,z,vx,vy,vz,(mass)], then the execution
 /// request's DYNAMIC_PARAMETERS in order, SI units (prwDynamicParameter).
@@ -1238,7 +710,7 @@ class PRWResidentState : flatbuffers.handle
     /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
     def HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 36, 0))
-    /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+    /// Constant in-track acceleration, m/s2, as PCFForceModel's.
     def IN_TRACK_ACCELERATION_M_S2() -> float:
         return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
     /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
@@ -1495,12 +967,12 @@ class PRWExecutionRequest : flatbuffers.handle
     def TARGET_EPOCH() -> TIMInstant:
         let o = flatbuffers.field_table(buf_, pos_, 6)
         return TIMInstant { buf_, assert o }
-    def INTEGRATOR() -> PRWIntegratorSettings:
+    def INTEGRATOR() -> PCFIntegratorSettings:
         let o = flatbuffers.field_table(buf_, pos_, 8)
-        return PRWIntegratorSettings { buf_, assert o }
-    def FORCES() -> PRWForceConfiguration:
+        return PCFIntegratorSettings { buf_, assert o }
+    def FORCES() -> PCFForceModel:
         let o = flatbuffers.field_table(buf_, pos_, 10)
-        return PRWForceConfiguration { buf_, assert o }
+        return PCFForceModel { buf_, assert o }
     def INCLUDE_STM() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
     def STM_TECHNIQUE() -> prwDerivativeTechnique:
@@ -2438,8 +1910,8 @@ struct PRWEphemerisResultBuilder:
 
 /// Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
 class PRWAtmosphereRequest : flatbuffers.handle
-    def ATMOSPHERE_MODEL() -> prwAtmosphereFamily:
-        return prwAtmosphereFamily(flatbuffers.field_uint8(buf_, pos_, 4, 1))
+    def ATMOSPHERE_MODEL() -> pcfAtmosphereFamily:
+        return pcfAtmosphereFamily(flatbuffers.field_uint8(buf_, pos_, 4, 1))
     def EPOCH() -> TIMInstant:
         let o = flatbuffers.field_table(buf_, pos_, 6)
         return TIMInstant { buf_, assert o }
@@ -2471,7 +1943,7 @@ struct PRWAtmosphereRequestBuilder:
     def start():
         b_.StartObject(11)
         return this
-    def add_ATMOSPHERE_MODEL(ATMOSPHERE_MODEL:prwAtmosphereFamily):
+    def add_ATMOSPHERE_MODEL(ATMOSPHERE_MODEL:pcfAtmosphereFamily):
         b_.PrependUint8Slot(0, ATMOSPHERE_MODEL, 1)
         return this
     def add_EPOCH(EPOCH:flatbuffers.offset):
@@ -2530,8 +2002,8 @@ struct PRWSpeciesDensityBuilder:
         return b_.EndObject()
 
 class PRWAtmosphereResult : flatbuffers.handle
-    def ATMOSPHERE_MODEL() -> prwAtmosphereFamily:
-        return prwAtmosphereFamily(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    def ATMOSPHERE_MODEL() -> pcfAtmosphereFamily:
+        return pcfAtmosphereFamily(flatbuffers.field_uint8(buf_, pos_, 4, 0))
     def VARIANT() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     def ALTITUDE_M() -> float:
@@ -2565,7 +2037,7 @@ struct PRWAtmosphereResultBuilder:
     def start():
         b_.StartObject(11)
         return this
-    def add_ATMOSPHERE_MODEL(ATMOSPHERE_MODEL:prwAtmosphereFamily):
+    def add_ATMOSPHERE_MODEL(ATMOSPHERE_MODEL:pcfAtmosphereFamily):
         b_.PrependUint8Slot(0, ATMOSPHERE_MODEL, 0)
         return this
     def add_VARIANT(VARIANT:flatbuffers.offset):

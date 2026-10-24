@@ -8,7 +8,10 @@ import Common
 
 import FlatBuffers
 
-///  Burn Out Vector Message
+///  Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+///  (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+///  kilometers per second (km/s) and time in seconds (s); a producer holding
+///  another unit converts before writing.
 public struct BOV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -31,14 +34,22 @@ public struct BOV: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let TIME_FROM_LAUNCH: VOffset = 18
   }
 
+  ///  EFG position, E component, km (11 significant figures).
   public var E_COORDINATE: Double { let o = _accessor.offset(VT.E_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EFG position, F component, km (11 significant figures).
   public var F_COORDINATE: Double { let o = _accessor.offset(VT.F_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EFG position, G component, km (11 significant figures).
   public var G_COORDINATE: Double { let o = _accessor.offset(VT.G_COORDINATE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EFG velocity, E component, km/s (9 significant figures).
   public var E_DOT: Double { let o = _accessor.offset(VT.E_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EFG velocity, F component, km/s (9 significant figures).
   public var F_DOT: Double { let o = _accessor.offset(VT.F_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EFG velocity, G component, km/s (9 significant figures).
   public var G_DOT: Double { let o = _accessor.offset(VT.G_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Epoch time, in ISO 8601 UTC format.
   public var EPOCH: String? { let o = _accessor.offset(VT.EPOCH); return o == 0 ? nil : _accessor.string(at: o) }
   public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.EPOCH) }
+  ///  Time from launch, seconds (s), with appropriate precision.
   public var TIME_FROM_LAUNCH: Double { let o = _accessor.offset(VT.TIME_FROM_LAUNCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startBOV(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(E_COORDINATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: E_COORDINATE, def: 0.0, at: VT.E_COORDINATE) }

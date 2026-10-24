@@ -147,7 +147,7 @@ HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S():boolean {
 }
 
 /**
- * Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+ * Constant in-track acceleration, m/s2, as PCFForceModel's.
  */
 IN_TRACK_ACCELERATION_M_S2():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);

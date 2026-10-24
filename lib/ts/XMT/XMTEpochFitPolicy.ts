@@ -4,8 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { PRWForceConfiguration, PRWForceConfigurationT } from './PRWForceConfiguration.js';
-import { PRWIntegratorSettings, PRWIntegratorSettingsT } from './PRWIntegratorSettings.js';
+import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
+import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
 
 
 /**
@@ -53,17 +53,17 @@ PROPAGATOR_ARTIFACT_SHA256(optionalEncoding?:any):string|Uint8Array|null {
 /**
  * Force model the trajectories were propagated with.
  */
-FORCE_MODEL(obj?:PRWForceConfiguration):PRWForceConfiguration|null {
+FORCE_MODEL(obj?:PCFForceModel):PCFForceModel|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? (obj || new PRWForceConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? (obj || new PCFForceModel()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * Integrator settings, when stated.
  */
-INTEGRATOR(obj?:PRWIntegratorSettings):PRWIntegratorSettings|null {
+INTEGRATOR(obj?:PCFIntegratorSettings):PCFIntegratorSettings|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? (obj || new PRWIntegratorSettings()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? (obj || new PCFIntegratorSettings()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
@@ -258,8 +258,8 @@ export class XMTEpochFitPolicyT implements flatbuffers.IGeneratedObject {
 constructor(
   public PROPAGATOR_ID: string|Uint8Array|null = null,
   public PROPAGATOR_ARTIFACT_SHA256: string|Uint8Array|null = null,
-  public FORCE_MODEL: PRWForceConfigurationT|null = null,
-  public INTEGRATOR: PRWIntegratorSettingsT|null = null,
+  public FORCE_MODEL: PCFForceModelT|null = null,
+  public INTEGRATOR: PCFIntegratorSettingsT|null = null,
   public FORCE_MODEL_LIMITATION: string|Uint8Array|null = null,
   public FRAME_TRANSFORMATION_REF: string|Uint8Array|null = null,
   public HOLDOUT_STRIDE: number = 0,

@@ -17,7 +17,10 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Burn Out Vector Message
+ * Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+ * (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+ * kilometers per second (km/s) and time in seconds (s); a producer holding
+ * another unit converts before writing.
  */
 @Suppress("unused")
 class BOV : Table() {
@@ -29,36 +32,57 @@ class BOV : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * EFG position, E component, km (11 significant figures).
+     */
     val eCoordinate : Double
         get() {
             val o = __offset(4)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * EFG position, F component, km (11 significant figures).
+     */
     val fCoordinate : Double
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * EFG position, G component, km (11 significant figures).
+     */
     val gCoordinate : Double
         get() {
             val o = __offset(8)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * EFG velocity, E component, km/s (9 significant figures).
+     */
     val eDot : Double
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * EFG velocity, F component, km/s (9 significant figures).
+     */
     val fDot : Double
         get() {
             val o = __offset(12)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * EFG velocity, G component, km/s (9 significant figures).
+     */
     val gDot : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Epoch time, in ISO 8601 UTC format.
+     */
     val epoch : String?
         get() {
             val o = __offset(16)
@@ -70,6 +94,9 @@ class BOV : Table() {
         }
     val epochAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
     fun epochInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Time from launch, seconds (s), with appropriate precision.
+     */
     val timeFromLaunch : Double
         get() {
             val o = __offset(18)

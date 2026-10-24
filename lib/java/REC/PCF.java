@@ -17,7 +17,18 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Propagator Configuration
+ * Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+ * any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+ * force model, Kepler): the theory, the integrator and its settings, the
+ * forces, the fit policy, the events to locate, maneuver detection, reentry
+ * hand-off, launch priors and the output. A host passes it beside the
+ * request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+ * launch) selects the tables that method reads. An absent table takes the
+ * theory's own defaults; a table or value the selected theory cannot honor is
+ * refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+ * PCFForceModel and their enums, so the runtime wire and the configuration
+ * share one definition of each. Units are in the field names and docs; every
+ * field states its default.
  */
 @SuppressWarnings("unused")
 public final class PCF extends com.google.flatbuffers.Table {
@@ -28,77 +39,124 @@ public final class PCF extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public PCF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public double STEP_SIZE() { int o = __offset(4); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double TOLERANCE() { int o = __offset(6); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MIN_STEP() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MAX_STEP() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public long MAX_ITERATIONS() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
-  public int GRAVITY_DEGREE() { int o = __offset(14); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
-  public int GRAVITY_ORDER() { int o = __offset(16); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
-  public int INTEGRATOR() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
-  public int OUTPUT_FRAME() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
-  public int FORCE_FLAGS() { int o = __offset(22); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
-  public float DRAG_COEFFICIENT() { int o = __offset(24); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float SRP_COEFFICIENT() { int o = __offset(26); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public float AREA_MASS_RATIO() { int o = __offset(28); return o != 0 ? bb.getFloat(o + bb_pos) : 0.0f; }
-  public int RESERVED(int j) { int o = __offset(30); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
-  public int RESERVEDLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
-  public ByteVector reservedVector() { return reservedVector(new ByteVector()); }
-  public ByteVector reservedVector(ByteVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
-  public ByteBuffer RESERVEDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer RESERVEDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Opaque identifier of this configuration, for provenance. Default empty.
+   */
+  public String CONFIGURATION_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONFIGURATION_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer CONFIGURATION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Named profile this configuration instantiates, for example "FFM-1".
+   * Informational: every value that matters is carried below. Default empty.
+   */
+  public String PROFILE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PROFILEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer PROFILEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * The orbit theory. Default UNSPECIFIED (the receiving module's own).
+   */
+  public int THEORY() { int o = __offset(8); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Integrator and settings. Absent: the theory's own.
+   */
+  public PCFIntegratorSettings INTEGRATOR() { return INTEGRATOR(new PCFIntegratorSettings()); }
+  public PCFIntegratorSettings INTEGRATOR(PCFIntegratorSettings obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Forces. Absent: the theory's built-in set.
+   */
+  public PCFForceModel FORCES() { return FORCES(new PCFForceModel()); }
+  public PCFForceModel FORCES(PCFForceModel obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+   */
+  public PCFMeanElementOptions MEAN_ELEMENT() { return MEAN_ELEMENT(new PCFMeanElementOptions()); }
+  public PCFMeanElementOptions MEAN_ELEMENT(PCFMeanElementOptions obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Beyond-Earth segment sets.
+   */
+  public PCFSegmentOptions SEGMENTS() { return SEGMENTS(new PCFSegmentOptions()); }
+  public PCFSegmentOptions SEGMENTS(PCFSegmentOptions obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Fit policy.
+   */
+  public PCFFitPolicy FIT() { return FIT(new PCFFitPolicy()); }
+  public PCFFitPolicy FIT(PCFFitPolicy obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Events located while integrating. Default empty.
+   */
+  public PCFEventDefinition EVENTS(int j) { return EVENTS(new PCFEventDefinition(), j); }
+  public PCFEventDefinition EVENTS(PCFEventDefinition obj, int j) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EVENTSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public PCFEventDefinition.Vector eventsVector() { return eventsVector(new PCFEventDefinition.Vector()); }
+  public PCFEventDefinition.Vector eventsVector(PCFEventDefinition.Vector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Maneuver detection.
+   */
+  public PCFManeuverDetection MANEUVER_DETECTION() { return MANEUVER_DETECTION(new PCFManeuverDetection()); }
+  public PCFManeuverDetection MANEUVER_DETECTION(PCFManeuverDetection obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Reentry hand-off and window.
+   */
+  public PCFReentry REENTRY() { return REENTRY(new PCFReentry()); }
+  public PCFReentry REENTRY(PCFReentry obj) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Launch initialization priors.
+   */
+  public PCFLaunch LAUNCH() { return LAUNCH(new PCFLaunch()); }
+  public PCFLaunch LAUNCH(PCFLaunch obj) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Output states.
+   */
+  public PCFOutput OUTPUT() { return OUTPUT(new PCFOutput()); }
+  public PCFOutput OUTPUT(PCFOutput obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPCF(FlatBufferBuilder builder,
-      double STEP_SIZE,
-      double TOLERANCE,
-      double MIN_STEP,
-      double MAX_STEP,
-      long MAX_ITERATIONS,
-      int GRAVITY_DEGREE,
-      int GRAVITY_ORDER,
-      int INTEGRATOR,
-      int OUTPUT_FRAME,
-      int FORCE_FLAGS,
-      float DRAG_COEFFICIENT,
-      float SRP_COEFFICIENT,
-      float AREA_MASS_RATIO,
-      int RESERVEDOffset) {
-    builder.startTable(14);
-    PCF.addMaxStep(builder, MAX_STEP);
-    PCF.addMinStep(builder, MIN_STEP);
-    PCF.addTolerance(builder, TOLERANCE);
-    PCF.addStepSize(builder, STEP_SIZE);
-    PCF.addReserved(builder, RESERVEDOffset);
-    PCF.addAreaMassRatio(builder, AREA_MASS_RATIO);
-    PCF.addSrpCoefficient(builder, SRP_COEFFICIENT);
-    PCF.addDragCoefficient(builder, DRAG_COEFFICIENT);
-    PCF.addMaxIterations(builder, MAX_ITERATIONS);
-    PCF.addForceFlags(builder, FORCE_FLAGS);
-    PCF.addGravityOrder(builder, GRAVITY_ORDER);
-    PCF.addGravityDegree(builder, GRAVITY_DEGREE);
-    PCF.addOutputFrame(builder, OUTPUT_FRAME);
-    PCF.addIntegrator(builder, INTEGRATOR);
+      int CONFIGURATION_IDOffset,
+      int PROFILEOffset,
+      int THEORY,
+      int INTEGRATOROffset,
+      int FORCESOffset,
+      int MEAN_ELEMENTOffset,
+      int SEGMENTSOffset,
+      int FITOffset,
+      int EVENTSOffset,
+      int MANEUVER_DETECTIONOffset,
+      int REENTRYOffset,
+      int LAUNCHOffset,
+      int OUTPUTOffset) {
+    builder.startTable(13);
+    PCF.addOutput(builder, OUTPUTOffset);
+    PCF.addLaunch(builder, LAUNCHOffset);
+    PCF.addReentry(builder, REENTRYOffset);
+    PCF.addManeuverDetection(builder, MANEUVER_DETECTIONOffset);
+    PCF.addEvents(builder, EVENTSOffset);
+    PCF.addFit(builder, FITOffset);
+    PCF.addSegments(builder, SEGMENTSOffset);
+    PCF.addMeanElement(builder, MEAN_ELEMENTOffset);
+    PCF.addForces(builder, FORCESOffset);
+    PCF.addIntegrator(builder, INTEGRATOROffset);
+    PCF.addProfile(builder, PROFILEOffset);
+    PCF.addConfigurationId(builder, CONFIGURATION_IDOffset);
+    PCF.addTheory(builder, THEORY);
     return PCF.endPCF(builder);
   }
 
-  public static void startPCF(FlatBufferBuilder builder) { builder.startTable(14); }
-  public static void addStepSize(FlatBufferBuilder builder, double STEP_SIZE) { builder.addDouble(0, STEP_SIZE, 0.0); }
-  public static void addTolerance(FlatBufferBuilder builder, double TOLERANCE) { builder.addDouble(1, TOLERANCE, 0.0); }
-  public static void addMinStep(FlatBufferBuilder builder, double MIN_STEP) { builder.addDouble(2, MIN_STEP, 0.0); }
-  public static void addMaxStep(FlatBufferBuilder builder, double MAX_STEP) { builder.addDouble(3, MAX_STEP, 0.0); }
-  public static void addMaxIterations(FlatBufferBuilder builder, long MAX_ITERATIONS) { builder.addInt(4, (int) MAX_ITERATIONS, (int) 0L); }
-  public static void addGravityDegree(FlatBufferBuilder builder, int GRAVITY_DEGREE) { builder.addShort(5, (short) GRAVITY_DEGREE, (short) 0); }
-  public static void addGravityOrder(FlatBufferBuilder builder, int GRAVITY_ORDER) { builder.addShort(6, (short) GRAVITY_ORDER, (short) 0); }
-  public static void addIntegrator(FlatBufferBuilder builder, int INTEGRATOR) { builder.addByte(7, (byte) INTEGRATOR, (byte) 0); }
-  public static void addOutputFrame(FlatBufferBuilder builder, int OUTPUT_FRAME) { builder.addByte(8, (byte) OUTPUT_FRAME, (byte) 0); }
-  public static void addForceFlags(FlatBufferBuilder builder, int FORCE_FLAGS) { builder.addShort(9, (short) FORCE_FLAGS, (short) 0); }
-  public static void addDragCoefficient(FlatBufferBuilder builder, float DRAG_COEFFICIENT) { builder.addFloat(10, DRAG_COEFFICIENT, 0.0f); }
-  public static void addSrpCoefficient(FlatBufferBuilder builder, float SRP_COEFFICIENT) { builder.addFloat(11, SRP_COEFFICIENT, 0.0f); }
-  public static void addAreaMassRatio(FlatBufferBuilder builder, float AREA_MASS_RATIO) { builder.addFloat(12, AREA_MASS_RATIO, 0.0f); }
-  public static void addReserved(FlatBufferBuilder builder, int RESERVEDOffset) { builder.addOffset(13, RESERVEDOffset, 0); }
-  public static int createReservedVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
-  public static int createReservedVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
-  public static void startReservedVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void startPCF(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void addConfigurationId(FlatBufferBuilder builder, int CONFIGURATION_IDOffset) { builder.addOffset(0, CONFIGURATION_IDOffset, 0); }
+  public static void addProfile(FlatBufferBuilder builder, int PROFILEOffset) { builder.addOffset(1, PROFILEOffset, 0); }
+  public static void addTheory(FlatBufferBuilder builder, int THEORY) { builder.addByte(2, (byte) THEORY, (byte) 0); }
+  public static void addIntegrator(FlatBufferBuilder builder, int INTEGRATOROffset) { builder.addOffset(3, INTEGRATOROffset, 0); }
+  public static void addForces(FlatBufferBuilder builder, int FORCESOffset) { builder.addOffset(4, FORCESOffset, 0); }
+  public static void addMeanElement(FlatBufferBuilder builder, int MEAN_ELEMENTOffset) { builder.addOffset(5, MEAN_ELEMENTOffset, 0); }
+  public static void addSegments(FlatBufferBuilder builder, int SEGMENTSOffset) { builder.addOffset(6, SEGMENTSOffset, 0); }
+  public static void addFit(FlatBufferBuilder builder, int FITOffset) { builder.addOffset(7, FITOffset, 0); }
+  public static void addEvents(FlatBufferBuilder builder, int EVENTSOffset) { builder.addOffset(8, EVENTSOffset, 0); }
+  public static int createEventsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEventsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManeuverDetection(FlatBufferBuilder builder, int MANEUVER_DETECTIONOffset) { builder.addOffset(9, MANEUVER_DETECTIONOffset, 0); }
+  public static void addReentry(FlatBufferBuilder builder, int REENTRYOffset) { builder.addOffset(10, REENTRYOffset, 0); }
+  public static void addLaunch(FlatBufferBuilder builder, int LAUNCHOffset) { builder.addOffset(11, LAUNCHOffset, 0); }
+  public static void addOutput(FlatBufferBuilder builder, int OUTPUTOffset) { builder.addOffset(12, OUTPUTOffset, 0); }
   public static int endPCF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

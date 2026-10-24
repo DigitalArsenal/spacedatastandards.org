@@ -8,25 +8,2055 @@ import Common
 
 import FlatBuffers
 
-public enum IntegratorType: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  The orbit theory that computes the states. Append new values only; never
+///  reorder or reuse a value.
+public enum pcfTheory: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
-  case rk4 = 0
-  case rk45 = 1
-  case rk78 = 2
-  case dopri5 = 3
-  case dopri853 = 4
-  case abm = 5
-  case bs = 6
-  case analytical = 255
+  ///  The receiving module's own theory. A module that offers several reads
+  ///  UNSPECIFIED as the one it ingests element sets with (the advanced
+  ///  propagator reads it as SGP4XP).
+  case unspecified = 0
+  ///  Mean-element theory of SPACETRACK REPORT No. 3 (SGP4 near Earth, SDP4
+  ///  deep space).
+  case sgp4 = 1
+  ///  SGP4 with extended perturbations (SGP4-XP, as published in the 2022
+  ///  astrodynamics conference literature); the same value as $MET SGP4XP.
+  case sgp4xp = 2
+  ///  SDN's own advanced mean-element theory, labeled as its own; carried in
+  ///  $OMM as a user-defined theory until $MET appends it.
+  case sdnap = 3
+  ///  Numerical integration of the equations of motion under the full force
+  ///  model of PCFForceModel (profile FFM-1).
+  case ffm = 4
+  ///  Two-body (Keplerian) motion about the central body.
+  case kepler = 5
 
-  public static var max: IntegratorType { return .analytical }
-  public static var min: IntegratorType { return .rk4 }
+  public static var max: pcfTheory { return .kepler }
+  public static var min: pcfTheory { return .unspecified }
 }
 
 
-///  Propagator Configuration
+///  How a propagator learns the space weather beyond the daily rows it was
+///  given. Append new values only.
+public enum pcfWeatherExtension: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  The provider's own rule (the numerical propagator refuses, the advanced
+  ///  mean-element propagator chains forecasts).
+  case unspecified = 0
+  ///  Refuse an arc that reaches past the rows (space-weather-out-of-range).
+  case refuse = 1
+  ///  Hold the last row's values.
+  case holdLast = 2
+  ///  Observed rows, then the three-day forecast, then the 45-day forecast,
+  ///  then the solar-cycle climatology; each hand-off is blended over one day
+  ///  and every evaluation names its tier.
+  case forecastChain = 3
+
+  public static var max: pcfWeatherExtension { return .forecastChain }
+  public static var min: pcfWeatherExtension { return .unspecified }
+}
+
+
+///  Where the space weather of a propagation comes from. Append new values
+///  only.
+public enum pcfWeatherSource: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Infer: PCFSpaceWeather when the force model carries it, else the daily
+  ///  rows supplied with the request.
+  case unspecified = 0
+  ///  PCFSpaceWeather, held for the whole arc.
+  case constant = 1
+  ///  Daily rows supplied with the request ($SPW rows; the JB2008 indices
+  ///  for the JB2008 atmosphere).
+  case records = 2
+
+  public static var max: pcfWeatherSource { return .records }
+  public static var min: pcfWeatherSource { return .unspecified }
+}
+
+
+///  Correction applied to the atmosphere model's density. Append new values
+///  only.
+public enum pcfDensityCorrection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Density as the atmosphere model gives it.
+  case none_ = 0
+  ///  The open-DCA common-mode correction published as $DCL: model density
+  ///  times exp(s(t)), s the log-density scale of the published nodes.
+  case dcaCommonMode = 1
+
+  public static var max: pcfDensityCorrection { return .dcaCommonMode }
+  public static var min: pcfDensityCorrection { return .none_ }
+}
+
+
+///  Neutral wind in the drag relative velocity. Append new values only.
+public enum pcfNeutralWind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Atmosphere co-rotating with the central body, no wind.
+  case none_ = 0
+  ///  The HWM14 empirical horizontal wind model (Drob et al. 2015, Earth and
+  ///  Space Science 2, 301-319).
+  case hwm14 = 1
+
+  public static var max: pcfNeutralWind { return .hwm14 }
+  public static var min: pcfNeutralWind { return .none_ }
+}
+
+
+///  Where the Sun, Moon and planets are read from. Append new values only.
+public enum pcfEphemerisKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  The provider's own source, named in EPHEMERIS_SOURCE.
+  case unspecified = 0
+  ///  A closed-form analytic series (low precision, no kernel to load).
+  case analyticSeries = 1
+  ///  A planetary ephemeris kernel (SPK), named in EPHEMERIS_SOURCE.
+  case planetaryKernel = 2
+
+  public static var max: pcfEphemerisKind { return .planetaryKernel }
+  public static var min: pcfEphemerisKind { return .unspecified }
+}
+
+
+///  What a propagator does when a located event occurs. Append new values
+///  only.
+public enum pcfEventAction: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  End the propagation at the event; the result carries its epoch and state.
+  case stop = 1
+  ///  Make the event a step boundary only (the dynamics may change there) and
+  ///  report nothing about it.
+  case continue_ = 2
+  ///  Report the event in the result and keep propagating.
+  case record = 3
+
+  public static var max: pcfEventAction { return .record }
+  public static var min: pcfEventAction { return .unspecified }
+}
+
+
+///  How the correlation of maneuver-detection innovations is weighted. Append
+///  new values only.
+public enum pcfInnovationCorrelation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Every sample independent (the white-noise assumption).
+  case white = 1
+  ///  One sample per revolution counts, so a revolution is one independent
+  ///  innovation.
+  case oneSamplePerRevolution = 2
+  ///  An exponential correlation of the innovations over a correlation time.
+  case correlationTime = 3
+
+  public static var max: pcfInnovationCorrelation { return .correlationTime }
+  public static var min: pcfInnovationCorrelation { return .unspecified }
+}
+
+
+///  How the reentry-time window is computed. Append new values only.
+public enum pcfReentryWindowMethod: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  First-order propagation of the ballistic and density sigmas through the
+  ///  remaining life.
+  case linear = 1
+  ///  The unscented transform over the hand-off state, the ballistic
+  ///  coefficient and the density level.
+  case unscented = 2
+
+  public static var max: pcfReentryWindowMethod { return .unscented }
+  public static var min: pcfReentryWindowMethod { return .unspecified }
+}
+
+
+///  Frame of the output states. Append new values only.
+public enum pcfOutputFrame: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  The grid template's frame; TEME without one.
+  case unspecified = 0
+  ///  True equator, mean equinox of date.
+  case teme = 1
+  ///  Geocentric Celestial Reference Frame.
+  case gcrf = 2
+  ///  Mean equator and equinox of J2000.0.
+  case eme2000 = 3
+  ///  International Terrestrial Reference Frame (Earth-fixed).
+  case itrf = 4
+
+  public static var max: pcfOutputFrame { return .itrf }
+  public static var min: pcfOutputFrame { return .unspecified }
+}
+
+
+///  Integration algorithm, shared by $PCF and $PRW (one definition). Values 1 to
+///  10 are the numbers $PRW has always carried; new values are appended only,
+///  never reordered or reused. A scheme value names the stepping method; a
+///  formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
+///  STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+///  scheme that steps them is the provider's, reported in its result.
+public enum pcfIntegratorAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  The provider's own algorithm.
+  case unspecified = 0
+  ///  Classical fourth-order Runge-Kutta, fixed step INITIAL_STEP_SECONDS.
+  case rk4 = 1
+  ///  Runge-Kutta-Fehlberg 4(5) (Fehlberg 1969, NASA TR R-315), adaptive.
+  case rkf45 = 2
+  ///  Runge-Kutta-Fehlberg 7(8) (Fehlberg 1968, NASA TR R-287), adaptive.
+  case rkf78 = 3
+  ///  The same Fehlberg 7(8) pair under the name the full force model's catalog
+  ///  profile uses, adaptive.
+  case rk78 = 4
+  ///  Prince-Dormand 8(7), thirteen stages, "RK8(7)13M" (Prince and Dormand 1981,
+  ///  J. Comput. Appl. Math. 7), adaptive.
+  case rkdp87 = 5
+  ///  Adams-Bashforth-Moulton predictor-corrector multistep.
+  case abm = 6
+  ///  Gragg-Bulirsch-Stoer extrapolation.
+  case bs = 7
+  ///  Cowell's method: Cartesian position and velocity.
+  case cowell = 8
+  ///  Encke's method: the deviation from a reference conic.
+  case encke = 9
+  ///  Variation of parameters in equinoctial elements.
+  case equinoctialVop = 10
+  ///  Dormand-Prince 5(4), seven stages (Dormand and Prince 1980, J. Comput.
+  ///  Appl. Math. 6).
+  case dopri5 = 11
+  ///  Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
+  ///  (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
+  case rk658m = 12
+  ///  Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
+  case verner98 = 13
+  ///  Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
+  ///  (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
+  ///  acceleration must not depend on velocity, so a provider refuses it with
+  ///  drag.
+  case rkn1210 = 14
+  ///  Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
+  ///  started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
+  ///  52).
+  case gaussJackson8 = 15
+  ///  Gauss's variational equations in classical Keplerian elements.
+  case gaussVop = 16
+  ///  DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
+  ///  Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+  case dromo = 17
+  ///  Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
+  ///  and Scheifele 1971, Linear and Regular Celestial Mechanics).
+  case stiefelScheifele = 18
+  ///  Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
+  ///  Solving Ordinary Differential Equations I).
+  case dopri853 = 19
+
+  public static var max: pcfIntegratorAlgorithm { return .dopri853 }
+  public static var min: pcfIntegratorAlgorithm { return .unspecified }
+}
+
+
+public enum pcfGravitySelection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case inferFlags = 0
+  case pointMass = 1
+  case j2Only = 2
+  case j2ToJ4 = 3
+  case sphericalHarmonics = 4
+  case egm2008 = 5
+  ///  NGA EGM96 (Lemoine et al. 1998, NASA/TP-1998-206861), tide-free.
+  case egm96 = 6
+  ///  GRGM660PRIM (Lemoine et al. 2013, J. Geophys. Res. Planets 118), the
+  ///  Moon's field, in the Moon's principal-axis frame.
+  case grgm660prim = 7
+
+  public static var max: pcfGravitySelection { return .grgm660prim }
+  public static var min: pcfGravitySelection { return .inferFlags }
+}
+
+
+public enum pcfAtmosphereFamily: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case nrlmsise00 = 1
+  case exponential = 2
+  case ussa1976 = 3
+  case harrisPriester = 4
+  ///  Jacchia-Roberts (Roberts, Celestial Mechanics 4, 1971): the closed-form
+  ///  evaluation of Jacchia's static diffusion model with the constants NASA
+  ///  GTDS and GMAT use (inflection temperature, mean molecular mass and
+  ///  100 km composition of Jacchia 1971, SAO SR 332; ATM's JR71). The drivers:
+  ///  F10.7 of the previous day, that day's 81-day centred average, and the
+  ///  three-hour Kp 6.7 h earlier (PRW.SPACE_WEATHER, or WEATHER's values held
+  ///  constant). A VCM's JACCHIA_70 is carried here.
+  case jacchiaRoberts = 5
+  ///  Jacchia-Bowman 2008 (Bowman et al., AIAA 2008-6438): solar indices and
+  ///  Dst-derived temperature change from the request's JB2008 indices.
+  case jb2008 = 6
+
+  public static var max: pcfAtmosphereFamily { return .jb2008 }
+  public static var min: pcfAtmosphereFamily { return .unspecified }
+}
+
+
+///  Solid Earth tide model for the central body's field. NONE leaves the
+///  tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+///  and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+///  numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+///  the permanent tide handled for the field's own tide system. Pole tide is
+///  not included.
+public enum pcfSolidTideModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case iers2010 = 1
+
+  public static var max: pcfSolidTideModel { return .iers2010 }
+  public static var min: pcfSolidTideModel { return .none_ }
+}
+
+
+///  Post-Newtonian corrections to the central body's acceleration (IERS
+///  Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+///  point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+///  (geodesic) precession.
+public enum pcfRelativityTerms: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case schwarzschild = 1
+  case iers2010 = 2
+
+  public static var max: pcfRelativityTerms { return .iers2010 }
+  public static var min: pcfRelativityTerms { return .none_ }
+}
+
+
+///  Solar radiation pressure model family. CANNONBALL uses the
+///  radiation-pressure coefficient and area-to-mass ratio of the force
+///  configuration; GNSS_BOX_WING is the a priori box-wing model of the
+///  spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+///  Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+///  under nominal yaw steering, with the mass INITIAL_MASS_KG.
+public enum pcfRadiationPressureFamily: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case cannonball = 0
+  case gnssBoxWing = 1
+  case none_ = 2
+
+  public static var max: pcfRadiationPressureFamily { return .none_ }
+  public static var min: pcfRadiationPressureFamily { return .cannonball }
+}
+
+
+///  Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+///  infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+///  is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+///  emissivity zonal to the second Legendre degree with the annual term of
+///  the first, from the elements of the Earth's surface the spacecraft sees
+///  (as Orekit's KnockeRediffusedForceModel evaluates it).
+public enum pcfEarthRadiationModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case knocke = 1
+
+  public static var max: pcfEarthRadiationModel { return .knocke }
+  public static var min: pcfEarthRadiationModel { return .none_ }
+}
+
+
+///  Ocean tide model for the central body's field. FES2004 is IERS
+///  Conventions (2010) section 6.3: the variations of the normalized Stokes
+///  coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+///  eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+///  The ocean pole tide is not included.
+public enum pcfOceanTideModel: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case none_ = 0
+  case fes2004 = 1
+
+  public static var max: pcfOceanTideModel { return .fes2004 }
+  public static var min: pcfOceanTideModel { return .none_ }
+}
+
+
+///  GNSS spacecraft block, selecting the box-wing surfaces.
+public enum pcfGnssSpacecraftBlock: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  case gpsIir = 1
+  case gpsIirM = 2
+  case gpsIif = 3
+
+  public static var max: pcfGnssSpacecraftBlock { return .gpsIif }
+  public static var min: pcfGnssSpacecraftBlock { return .unspecified }
+}
+
+
+///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
+///  the theory's own sigma and moves only the mean.
+public struct PCFGaussianPrior: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFGaussianPrior.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MEAN: VOffset = 4
+    static let SIGMA: VOffset = 6
+    static let HAS_SIGMA: VOffset = 8
+  }
+
+  ///  Prior mean, in the unit of the parameter it is attached to. Default 0.
+  public var MEAN: Double { let o = _accessor.offset(VT.MEAN); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  public var SIGMA: Double { let o = _accessor.offset(VT.SIGMA); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SIGMA carries a value; false keeps the theory's own sigma.
+  public var HAS_SIGMA: Bool { let o = _accessor.offset(VT.HAS_SIGMA); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startPCFGaussianPrior(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(MEAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN, def: 0.0, at: VT.MEAN) }
+  public static func add(SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SIGMA, def: 0.0, at: VT.SIGMA) }
+  public static func add(HAS_SIGMA: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SIGMA, def: false,
+   at: VT.HAS_SIGMA) }
+  public static func endPCFGaussianPrior(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFGaussianPrior(
+    _ fbb: inout FlatBufferBuilder,
+    MEAN: Double = 0.0,
+    SIGMA: Double = 0.0,
+    HAS_SIGMA: Bool = false
+  ) -> Offset {
+    let __start = PCFGaussianPrior.startPCFGaussianPrior(&fbb)
+    PCFGaussianPrior.add(MEAN: MEAN, &fbb)
+    PCFGaussianPrior.add(SIGMA: SIGMA, &fbb)
+    PCFGaussianPrior.add(HAS_SIGMA: HAS_SIGMA, &fbb)
+    return PCFGaussianPrior.endPCFGaussianPrior(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MEAN, fieldName: "MEAN", required: false, type: Double.self)
+    try _v.visit(field: VT.SIGMA, fieldName: "SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SIGMA, fieldName: "HAS_SIGMA", required: false, type: Bool.self)
+    _v.finish()
+  }
+}
+
+///  Empirical along-track terms of the averaged theories: a transverse
+///  acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
+///  latitude and g = 1 on the fit arc.
+public struct PCFEmpiricalTerms: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFEmpiricalTerms.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ONCE_PER_REVOLUTION: VOffset = 4
+    static let TAU0_RULE_LIMIT_M2_KG: VOffset = 6
+    static let HAS_TAU0_RULE_LIMIT_M2_KG: VOffset = 8
+    static let HELD_ABOVE_DRAG_REGIME: VOffset = 10
+    static let PERSISTENCE_HOURS: VOffset = 12
+  }
+
+  ///  Fit the once-per-revolution pair (TAUC, TAUS). Default true.
+  public var ONCE_PER_REVOLUTION: Bool { let o = _accessor.offset(VT.ONCE_PER_REVOLUTION); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  The constant term TAU0 is free only when this rule selects it: a fitted
+  ///  B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
+  ///  prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
+  public var TAU0_RULE_LIMIT_M2_KG: Double { let o = _accessor.offset(VT.TAU0_RULE_LIMIT_M2_KG); return o == 0 ? 0.5 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
+  ///  default) leaves TAU0 off.
+  public var HAS_TAU0_RULE_LIMIT_M2_KG: Bool { let o = _accessor.offset(VT.HAS_TAU0_RULE_LIMIT_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True holds TAUC and TAUS after the arc end above the drag regime
+  ///  instead of decaying them. Default false.
+  public var HELD_ABOVE_DRAG_REGIME: Bool { let o = _accessor.offset(VT.HELD_ABOVE_DRAG_REGIME); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Persistence time of the empirical force after the arc end, hours.
+  ///  Default 24.
+  public var PERSISTENCE_HOURS: Double { let o = _accessor.offset(VT.PERSISTENCE_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFEmpiricalTerms(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(ONCE_PER_REVOLUTION: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ONCE_PER_REVOLUTION, def: true,
+   at: VT.ONCE_PER_REVOLUTION) }
+  public static func add(TAU0_RULE_LIMIT_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAU0_RULE_LIMIT_M2_KG, def: 0.5, at: VT.TAU0_RULE_LIMIT_M2_KG) }
+  public static func add(HAS_TAU0_RULE_LIMIT_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAU0_RULE_LIMIT_M2_KG, def: false,
+   at: VT.HAS_TAU0_RULE_LIMIT_M2_KG) }
+  public static func add(HELD_ABOVE_DRAG_REGIME: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HELD_ABOVE_DRAG_REGIME, def: false,
+   at: VT.HELD_ABOVE_DRAG_REGIME) }
+  public static func add(PERSISTENCE_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERSISTENCE_HOURS, def: 24.0, at: VT.PERSISTENCE_HOURS) }
+  public static func endPCFEmpiricalTerms(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFEmpiricalTerms(
+    _ fbb: inout FlatBufferBuilder,
+    ONCE_PER_REVOLUTION: Bool = true,
+    TAU0_RULE_LIMIT_M2_KG: Double = 0.5,
+    HAS_TAU0_RULE_LIMIT_M2_KG: Bool = false,
+    HELD_ABOVE_DRAG_REGIME: Bool = false,
+    PERSISTENCE_HOURS: Double = 24.0
+  ) -> Offset {
+    let __start = PCFEmpiricalTerms.startPCFEmpiricalTerms(&fbb)
+    PCFEmpiricalTerms.add(ONCE_PER_REVOLUTION: ONCE_PER_REVOLUTION, &fbb)
+    PCFEmpiricalTerms.add(TAU0_RULE_LIMIT_M2_KG: TAU0_RULE_LIMIT_M2_KG, &fbb)
+    PCFEmpiricalTerms.add(HAS_TAU0_RULE_LIMIT_M2_KG: HAS_TAU0_RULE_LIMIT_M2_KG, &fbb)
+    PCFEmpiricalTerms.add(HELD_ABOVE_DRAG_REGIME: HELD_ABOVE_DRAG_REGIME, &fbb)
+    PCFEmpiricalTerms.add(PERSISTENCE_HOURS: PERSISTENCE_HOURS, &fbb)
+    return PCFEmpiricalTerms.endPCFEmpiricalTerms(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ONCE_PER_REVOLUTION, fieldName: "ONCE_PER_REVOLUTION", required: false, type: Bool.self)
+    try _v.visit(field: VT.TAU0_RULE_LIMIT_M2_KG, fieldName: "TAU0_RULE_LIMIT_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_TAU0_RULE_LIMIT_M2_KG, fieldName: "HAS_TAU0_RULE_LIMIT_M2_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.HELD_ABOVE_DRAG_REGIME, fieldName: "HELD_ABOVE_DRAG_REGIME", required: false, type: Bool.self)
+    try _v.visit(field: VT.PERSISTENCE_HOURS, fieldName: "PERSISTENCE_HOURS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Truncations and switches of the averaged (mean-element) theories SGP4XP
+///  and SDNAP. SGP4's constants are fixed by its specification and are not
+///  options.
+public struct PCFMeanElementOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFMeanElementOptions.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let M_DAILY_MAXIMUM_DEGREE: VOffset = 4
+    static let ZONAL_MAXIMUM_DEGREE: VOffset = 6
+    static let SHORT_PERIODIC_MAXIMUM_DEGREE: VOffset = 8
+    static let ENABLE_RESONANCE: VOffset = 10
+    static let RESONANCE_MAXIMUM_DEGREE: VOffset = 12
+    static let RESONANCE_BAND: VOffset = 14
+    static let RESONANCE_MAXIMUM_K: VOffset = 16
+    static let NEAR_RESONANCE_BAND: VOffset = 18
+    static let GRID_STEP_DIVISOR: VOffset = 20
+    static let DENSITY_KERNEL: VOffset = 22
+    static let DRAG_REGIME_PERIGEE_KM: VOffset = 24
+  }
+
+  ///  Highest even degree of the m-daily short-periodic gravity terms; 0
+  ///  omits them. Range 0 to 16. Default 12.
+  public var M_DAILY_MAXIMUM_DEGREE: UInt8 { let o = _accessor.offset(VT.M_DAILY_MAXIMUM_DEGREE); return o == 0 ? 12 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Highest degree of the zonal tail (secular and long-period terms past
+  ///  J5). Range 6 to 70. Default 20.
+  public var ZONAL_MAXIMUM_DEGREE: UInt8 { let o = _accessor.offset(VT.ZONAL_MAXIMUM_DEGREE); return o == 0 ? 20 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Highest degree of the eccentricity-vector short-periodic terms. Range
+  ///  2 to 16. Default 7.
+  public var SHORT_PERIODIC_MAXIMUM_DEGREE: UInt8 { let o = _accessor.offset(VT.SHORT_PERIODIC_MAXIMUM_DEGREE); return o == 0 ? 7 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Resonance terms on or off. Default true.
+  public var ENABLE_RESONANCE: Bool { let o = _accessor.offset(VT.ENABLE_RESONANCE); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Highest odd degree of the shallow-resonance terms. Default 31.
+  public var RESONANCE_MAXIMUM_DEGREE: UInt8 { let o = _accessor.offset(VT.RESONANCE_MAXIMUM_DEGREE); return o == 0 ? 31 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Resonance band: terms whose angle drifts slower than this fraction of
+  ///  the mean motion are integrated with the rates. Default 0.045.
+  public var RESONANCE_BAND: Double { let o = _accessor.offset(VT.RESONANCE_BAND); return o == 0 ? 0.045 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Highest multiple of the mean anomaly in a resonance angle. Default 1.
+  public var RESONANCE_MAXIMUM_K: UInt8 { let o = _accessor.offset(VT.RESONANCE_MAXIMUM_K); return o == 0 ? 1 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Near-resonance band at output time, as a fraction of the mean motion
+  ///  beyond RESONANCE_BAND; 0 is off. Default 0.
+  public var NEAR_RESONANCE_BAND: Double { let o = _accessor.offset(VT.NEAR_RESONANCE_BAND); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Divisor of the integration grid step; >= 1. Default 1.
+  public var GRID_STEP_DIVISOR: UInt8 { let o = _accessor.offset(VT.GRID_STEP_DIVISOR); return o == 0 ? 1 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  The catalog-shared density kernel (a gridded log-density table shared by
+  ///  every object) on or off; off evaluates the atmosphere model directly.
+  ///  Default true.
+  public var DENSITY_KERNEL: Bool { let o = _accessor.offset(VT.DENSITY_KERNEL); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Perigee height below which B_eff and TAU0 act (the drag regime), km.
+  ///  Default 2500.
+  public var DRAG_REGIME_PERIGEE_KM: Double { let o = _accessor.offset(VT.DRAG_REGIME_PERIGEE_KM); return o == 0 ? 2500.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFMeanElementOptions(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(M_DAILY_MAXIMUM_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M_DAILY_MAXIMUM_DEGREE, def: 12, at: VT.M_DAILY_MAXIMUM_DEGREE) }
+  public static func add(ZONAL_MAXIMUM_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ZONAL_MAXIMUM_DEGREE, def: 20, at: VT.ZONAL_MAXIMUM_DEGREE) }
+  public static func add(SHORT_PERIODIC_MAXIMUM_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHORT_PERIODIC_MAXIMUM_DEGREE, def: 7, at: VT.SHORT_PERIODIC_MAXIMUM_DEGREE) }
+  public static func add(ENABLE_RESONANCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_RESONANCE, def: true,
+   at: VT.ENABLE_RESONANCE) }
+  public static func add(RESONANCE_MAXIMUM_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESONANCE_MAXIMUM_DEGREE, def: 31, at: VT.RESONANCE_MAXIMUM_DEGREE) }
+  public static func add(RESONANCE_BAND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESONANCE_BAND, def: 0.045, at: VT.RESONANCE_BAND) }
+  public static func add(RESONANCE_MAXIMUM_K: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESONANCE_MAXIMUM_K, def: 1, at: VT.RESONANCE_MAXIMUM_K) }
+  public static func add(NEAR_RESONANCE_BAND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEAR_RESONANCE_BAND, def: 0.0, at: VT.NEAR_RESONANCE_BAND) }
+  public static func add(GRID_STEP_DIVISOR: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRID_STEP_DIVISOR, def: 1, at: VT.GRID_STEP_DIVISOR) }
+  public static func add(DENSITY_KERNEL: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_KERNEL, def: true,
+   at: VT.DENSITY_KERNEL) }
+  public static func add(DRAG_REGIME_PERIGEE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_REGIME_PERIGEE_KM, def: 2500.0, at: VT.DRAG_REGIME_PERIGEE_KM) }
+  public static func endPCFMeanElementOptions(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFMeanElementOptions(
+    _ fbb: inout FlatBufferBuilder,
+    M_DAILY_MAXIMUM_DEGREE: UInt8 = 12,
+    ZONAL_MAXIMUM_DEGREE: UInt8 = 20,
+    SHORT_PERIODIC_MAXIMUM_DEGREE: UInt8 = 7,
+    ENABLE_RESONANCE: Bool = true,
+    RESONANCE_MAXIMUM_DEGREE: UInt8 = 31,
+    RESONANCE_BAND: Double = 0.045,
+    RESONANCE_MAXIMUM_K: UInt8 = 1,
+    NEAR_RESONANCE_BAND: Double = 0.0,
+    GRID_STEP_DIVISOR: UInt8 = 1,
+    DENSITY_KERNEL: Bool = true,
+    DRAG_REGIME_PERIGEE_KM: Double = 2500.0
+  ) -> Offset {
+    let __start = PCFMeanElementOptions.startPCFMeanElementOptions(&fbb)
+    PCFMeanElementOptions.add(M_DAILY_MAXIMUM_DEGREE: M_DAILY_MAXIMUM_DEGREE, &fbb)
+    PCFMeanElementOptions.add(ZONAL_MAXIMUM_DEGREE: ZONAL_MAXIMUM_DEGREE, &fbb)
+    PCFMeanElementOptions.add(SHORT_PERIODIC_MAXIMUM_DEGREE: SHORT_PERIODIC_MAXIMUM_DEGREE, &fbb)
+    PCFMeanElementOptions.add(ENABLE_RESONANCE: ENABLE_RESONANCE, &fbb)
+    PCFMeanElementOptions.add(RESONANCE_MAXIMUM_DEGREE: RESONANCE_MAXIMUM_DEGREE, &fbb)
+    PCFMeanElementOptions.add(RESONANCE_BAND: RESONANCE_BAND, &fbb)
+    PCFMeanElementOptions.add(RESONANCE_MAXIMUM_K: RESONANCE_MAXIMUM_K, &fbb)
+    PCFMeanElementOptions.add(NEAR_RESONANCE_BAND: NEAR_RESONANCE_BAND, &fbb)
+    PCFMeanElementOptions.add(GRID_STEP_DIVISOR: GRID_STEP_DIVISOR, &fbb)
+    PCFMeanElementOptions.add(DENSITY_KERNEL: DENSITY_KERNEL, &fbb)
+    PCFMeanElementOptions.add(DRAG_REGIME_PERIGEE_KM: DRAG_REGIME_PERIGEE_KM, &fbb)
+    return PCFMeanElementOptions.endPCFMeanElementOptions(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.M_DAILY_MAXIMUM_DEGREE, fieldName: "M_DAILY_MAXIMUM_DEGREE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ZONAL_MAXIMUM_DEGREE, fieldName: "ZONAL_MAXIMUM_DEGREE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.SHORT_PERIODIC_MAXIMUM_DEGREE, fieldName: "SHORT_PERIODIC_MAXIMUM_DEGREE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.ENABLE_RESONANCE, fieldName: "ENABLE_RESONANCE", required: false, type: Bool.self)
+    try _v.visit(field: VT.RESONANCE_MAXIMUM_DEGREE, fieldName: "RESONANCE_MAXIMUM_DEGREE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.RESONANCE_BAND, fieldName: "RESONANCE_BAND", required: false, type: Double.self)
+    try _v.visit(field: VT.RESONANCE_MAXIMUM_K, fieldName: "RESONANCE_MAXIMUM_K", required: false, type: UInt8.self)
+    try _v.visit(field: VT.NEAR_RESONANCE_BAND, fieldName: "NEAR_RESONANCE_BAND", required: false, type: Double.self)
+    try _v.visit(field: VT.GRID_STEP_DIVISOR, fieldName: "GRID_STEP_DIVISOR", required: false, type: UInt8.self)
+    try _v.visit(field: VT.DENSITY_KERNEL, fieldName: "DENSITY_KERNEL", required: false, type: Bool.self)
+    try _v.visit(field: VT.DRAG_REGIME_PERIGEE_KM, fieldName: "DRAG_REGIME_PERIGEE_KM", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
+///  cut into segments at maneuvers and sphere-of-influence passages.
+public struct PCFSegmentOptions: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFSegmentOptions.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let MOON_GRAVITY_MAXIMUM_DEGREE: VOffset = 4
+    static let MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: VOffset = 6
+    static let MOON_ECCENTRICITY_ORDER: VOffset = 8
+    static let MOON_STEP_SECONDS: VOffset = 10
+    static let CISLUNAR_STEP_SECONDS: VOffset = 12
+    static let HELIOCENTRIC_STEP_SECONDS: VOffset = 14
+    static let SEGMENT_RMS_FACTOR: VOffset = 16
+    static let SEGMENT_RMS_MARGIN_KM: VOffset = 18
+    static let CISLUNAR_MINIMUM_SEGMENT_HOURS: VOffset = 20
+  }
+
+  ///  Moon-centered gravity field degree. Default 70.
+  public var MOON_GRAVITY_MAXIMUM_DEGREE: UInt16 { let o = _accessor.offset(VT.MOON_GRAVITY_MAXIMUM_DEGREE); return o == 0 ? 70 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Moon-centered short-periodic degree. Default 8.
+  public var MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: UInt8 { let o = _accessor.offset(VT.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE); return o == 0 ? 8 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Moon-centered eccentricity order (highest |q| of the mean-anomaly
+  ///  multiple kept). Default 2.
+  public var MOON_ECCENTRICITY_ORDER: UInt8 { let o = _accessor.offset(VT.MOON_ECCENTRICITY_ORDER); return o == 0 ? 2 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Moon-centered integration step, seconds. Default 240.
+  public var MOON_STEP_SECONDS: Double { let o = _accessor.offset(VT.MOON_STEP_SECONDS); return o == 0 ? 240.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Cislunar integration step, seconds. Default 60.
+  public var CISLUNAR_STEP_SECONDS: Double { let o = _accessor.offset(VT.CISLUNAR_STEP_SECONDS); return o == 0 ? 60.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Heliocentric integration step, seconds. Default 1800.
+  public var HELIOCENTRIC_STEP_SECONDS: Double { let o = _accessor.offset(VT.HELIOCENTRIC_STEP_SECONDS); return o == 0 ? 1800.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  A segment is accepted when its RMS is within max(RMS_FACTOR x the
+  ///  cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
+  public var SEGMENT_RMS_FACTOR: Double { let o = _accessor.offset(VT.SEGMENT_RMS_FACTOR); return o == 0 ? 2.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The additive term of the same rule, km. Default 0.05.
+  public var SEGMENT_RMS_MARGIN_KM: Double { let o = _accessor.offset(VT.SEGMENT_RMS_MARGIN_KM); return o == 0 ? 0.05 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Shortest cislunar segment, hours. Default 6.
+  public var CISLUNAR_MINIMUM_SEGMENT_HOURS: Double { let o = _accessor.offset(VT.CISLUNAR_MINIMUM_SEGMENT_HOURS); return o == 0 ? 6.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFSegmentOptions(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(MOON_GRAVITY_MAXIMUM_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOON_GRAVITY_MAXIMUM_DEGREE, def: 70, at: VT.MOON_GRAVITY_MAXIMUM_DEGREE) }
+  public static func add(MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, def: 8, at: VT.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE) }
+  public static func add(MOON_ECCENTRICITY_ORDER: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOON_ECCENTRICITY_ORDER, def: 2, at: VT.MOON_ECCENTRICITY_ORDER) }
+  public static func add(MOON_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOON_STEP_SECONDS, def: 240.0, at: VT.MOON_STEP_SECONDS) }
+  public static func add(CISLUNAR_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CISLUNAR_STEP_SECONDS, def: 60.0, at: VT.CISLUNAR_STEP_SECONDS) }
+  public static func add(HELIOCENTRIC_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HELIOCENTRIC_STEP_SECONDS, def: 1800.0, at: VT.HELIOCENTRIC_STEP_SECONDS) }
+  public static func add(SEGMENT_RMS_FACTOR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_RMS_FACTOR, def: 2.0, at: VT.SEGMENT_RMS_FACTOR) }
+  public static func add(SEGMENT_RMS_MARGIN_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEGMENT_RMS_MARGIN_KM, def: 0.05, at: VT.SEGMENT_RMS_MARGIN_KM) }
+  public static func add(CISLUNAR_MINIMUM_SEGMENT_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CISLUNAR_MINIMUM_SEGMENT_HOURS, def: 6.0, at: VT.CISLUNAR_MINIMUM_SEGMENT_HOURS) }
+  public static func endPCFSegmentOptions(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFSegmentOptions(
+    _ fbb: inout FlatBufferBuilder,
+    MOON_GRAVITY_MAXIMUM_DEGREE: UInt16 = 70,
+    MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: UInt8 = 8,
+    MOON_ECCENTRICITY_ORDER: UInt8 = 2,
+    MOON_STEP_SECONDS: Double = 240.0,
+    CISLUNAR_STEP_SECONDS: Double = 60.0,
+    HELIOCENTRIC_STEP_SECONDS: Double = 1800.0,
+    SEGMENT_RMS_FACTOR: Double = 2.0,
+    SEGMENT_RMS_MARGIN_KM: Double = 0.05,
+    CISLUNAR_MINIMUM_SEGMENT_HOURS: Double = 6.0
+  ) -> Offset {
+    let __start = PCFSegmentOptions.startPCFSegmentOptions(&fbb)
+    PCFSegmentOptions.add(MOON_GRAVITY_MAXIMUM_DEGREE: MOON_GRAVITY_MAXIMUM_DEGREE, &fbb)
+    PCFSegmentOptions.add(MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, &fbb)
+    PCFSegmentOptions.add(MOON_ECCENTRICITY_ORDER: MOON_ECCENTRICITY_ORDER, &fbb)
+    PCFSegmentOptions.add(MOON_STEP_SECONDS: MOON_STEP_SECONDS, &fbb)
+    PCFSegmentOptions.add(CISLUNAR_STEP_SECONDS: CISLUNAR_STEP_SECONDS, &fbb)
+    PCFSegmentOptions.add(HELIOCENTRIC_STEP_SECONDS: HELIOCENTRIC_STEP_SECONDS, &fbb)
+    PCFSegmentOptions.add(SEGMENT_RMS_FACTOR: SEGMENT_RMS_FACTOR, &fbb)
+    PCFSegmentOptions.add(SEGMENT_RMS_MARGIN_KM: SEGMENT_RMS_MARGIN_KM, &fbb)
+    PCFSegmentOptions.add(CISLUNAR_MINIMUM_SEGMENT_HOURS: CISLUNAR_MINIMUM_SEGMENT_HOURS, &fbb)
+    return PCFSegmentOptions.endPCFSegmentOptions(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.MOON_GRAVITY_MAXIMUM_DEGREE, fieldName: "MOON_GRAVITY_MAXIMUM_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, fieldName: "MOON_SHORT_PERIODIC_MAXIMUM_DEGREE", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MOON_ECCENTRICITY_ORDER, fieldName: "MOON_ECCENTRICITY_ORDER", required: false, type: UInt8.self)
+    try _v.visit(field: VT.MOON_STEP_SECONDS, fieldName: "MOON_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.CISLUNAR_STEP_SECONDS, fieldName: "CISLUNAR_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HELIOCENTRIC_STEP_SECONDS, fieldName: "HELIOCENTRIC_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.SEGMENT_RMS_FACTOR, fieldName: "SEGMENT_RMS_FACTOR", required: false, type: Double.self)
+    try _v.visit(field: VT.SEGMENT_RMS_MARGIN_KM, fieldName: "SEGMENT_RMS_MARGIN_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.CISLUNAR_MINIMUM_SEGMENT_HOURS, fieldName: "CISLUNAR_MINIMUM_SEGMENT_HOURS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Fit policy: how long an arc a fit uses, how that is validated, and what a
+///  fit refuses.
+public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFFitPolicy.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DEFAULT_SPAN_HOURS: VOffset = 4
+    static let MINIMUM_SPAN_HOURS: VOffset = 6
+    static let MAXIMUM_SPAN_HOURS: VOffset = 8
+    static let CANDIDATE_SPANS_HOURS: VOffset = 10
+    static let TAIL_HOURS: VOffset = 12
+    static let EXTENSION_MARGIN: VOffset = 14
+    static let HOLDOUT_HOURS: VOffset = 16
+    static let HAS_HOLDOUT_HOURS: VOffset = 18
+    static let ECCENTRICITY_THRESHOLD: VOffset = 20
+    static let ECCENTRIC_DEFAULT_SPAN_HOURS: VOffset = 22
+    static let ECCENTRIC_EXTENSION_MARGIN: VOffset = 24
+    static let ECCENTRIC_MAXIMUM_PERIOD_HOURS: VOffset = 26
+    static let IMPLAUSIBLE_RMS_KM: VOffset = 28
+    static let DRAG_PRIOR: VOffset = 30
+    static let SRP_PRIOR: VOffset = 32
+  }
+
+  ///  Fit span used when the span rule is not run, hours. Default 48.
+  public var DEFAULT_SPAN_HOURS: Double { let o = _accessor.offset(VT.DEFAULT_SPAN_HOURS); return o == 0 ? 48.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Shortest span a fit may take, hours. Default 24.
+  public var MINIMUM_SPAN_HOURS: Double { let o = _accessor.offset(VT.MINIMUM_SPAN_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longest span a fit may take, hours. Default 120.
+  public var MAXIMUM_SPAN_HOURS: Double { let o = _accessor.offset(VT.MAXIMUM_SPAN_HOURS); return o == 0 ? 120.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Spans the extension rule scores, ascending, hours, each within
+  ///  [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
+  ///  24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  public var CANDIDATE_SPANS_HOURS: FlatbufferVector<Double> { return _accessor.vector(at: VT.CANDIDATE_SPANS_HOURS, byteSize: 8) }
+  public func withUnsafePointerToCandidateSpansHours<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.CANDIDATE_SPANS_HOURS, body: body) }
+  ///  Validation tail: each candidate is fitted to the data before the latest
+  ///  TAIL_HOURS and scored on that tail, hours. Default 24.
+  public var TAIL_HOURS: Double { let o = _accessor.offset(VT.TAIL_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Extension rule: a longer candidate is taken only when its tail error is
+  ///  at most this fraction of the best shorter candidate's. Default 0.9.
+  public var EXTENSION_MARGIN: Double { let o = _accessor.offset(VT.EXTENSION_MARGIN); return o == 0 ? 0.9 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Hours held out at the end of the data and reported as error growth; the
+  ///  fit then ends HOLDOUT_HOURS before the data does. Absent, the data
+  ///  block's own useable stop time decides.
+  public var HOLDOUT_HOURS: Double { let o = _accessor.offset(VT.HOLDOUT_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when HOLDOUT_HOURS carries a value; false means absent.
+  public var HAS_HOLDOUT_HOURS: Bool { let o = _accessor.offset(VT.HAS_HOLDOUT_HOURS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+  public var ECCENTRICITY_THRESHOLD: Double { let o = _accessor.offset(VT.ECCENTRICITY_THRESHOLD); return o == 0 ? 0.5 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentric orbits: the default span, hours. Default 24.
+  public var ECCENTRIC_DEFAULT_SPAN_HOURS: Double { let o = _accessor.offset(VT.ECCENTRIC_DEFAULT_SPAN_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+  public var ECCENTRIC_EXTENSION_MARGIN: Double { let o = _accessor.offset(VT.ECCENTRIC_EXTENSION_MARGIN); return o == 0 ? 0.7 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentric orbits: no candidate longer than this is tried once the orbital
+  ///  period passes it, hours. Default 36.
+  public var ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double { let o = _accessor.offset(VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS); return o == 0 ? 36.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  A fit whose RMS passes this is refused as fit-implausible, km. Default
+  ///  100.
+  public var IMPLAUSIBLE_RMS_KM: Double { let o = _accessor.offset(VT.IMPLAUSIBLE_RMS_KM); return o == 0 ? 100.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
+  ///  or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  public var DRAG_PRIOR: PCFGaussianPrior? { let o = _accessor.offset(VT.DRAG_PRIOR); return o == 0 ? nil : PCFGaussianPrior(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
+  ///  Absent or without sigma: mean 0, sigma 0.05.
+  public var SRP_PRIOR: PCFGaussianPrior? { let o = _accessor.offset(VT.SRP_PRIOR); return o == 0 ? nil : PCFGaussianPrior(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPCFFitPolicy(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  public static func add(DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEFAULT_SPAN_HOURS, def: 48.0, at: VT.DEFAULT_SPAN_HOURS) }
+  public static func add(MINIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_SPAN_HOURS, def: 24.0, at: VT.MINIMUM_SPAN_HOURS) }
+  public static func add(MAXIMUM_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_SPAN_HOURS, def: 120.0, at: VT.MAXIMUM_SPAN_HOURS) }
+  public static func addVectorOf(CANDIDATE_SPANS_HOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CANDIDATE_SPANS_HOURS, at: VT.CANDIDATE_SPANS_HOURS) }
+  public static func add(TAIL_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAIL_HOURS, def: 24.0, at: VT.TAIL_HOURS) }
+  public static func add(EXTENSION_MARGIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EXTENSION_MARGIN, def: 0.9, at: VT.EXTENSION_MARGIN) }
+  public static func add(HOLDOUT_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HOLDOUT_HOURS, def: 0.0, at: VT.HOLDOUT_HOURS) }
+  public static func add(HAS_HOLDOUT_HOURS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_HOLDOUT_HOURS, def: false,
+   at: VT.HAS_HOLDOUT_HOURS) }
+  public static func add(ECCENTRICITY_THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY_THRESHOLD, def: 0.5, at: VT.ECCENTRICITY_THRESHOLD) }
+  public static func add(ECCENTRIC_DEFAULT_SPAN_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_DEFAULT_SPAN_HOURS, def: 24.0, at: VT.ECCENTRIC_DEFAULT_SPAN_HOURS) }
+  public static func add(ECCENTRIC_EXTENSION_MARGIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_EXTENSION_MARGIN, def: 0.7, at: VT.ECCENTRIC_EXTENSION_MARGIN) }
+  public static func add(ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRIC_MAXIMUM_PERIOD_HOURS, def: 36.0, at: VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS) }
+  public static func add(IMPLAUSIBLE_RMS_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPLAUSIBLE_RMS_KM, def: 100.0, at: VT.IMPLAUSIBLE_RMS_KM) }
+  public static func add(DRAG_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DRAG_PRIOR, at: VT.DRAG_PRIOR) }
+  public static func add(SRP_PRIOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SRP_PRIOR, at: VT.SRP_PRIOR) }
+  public static func endPCFFitPolicy(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFFitPolicy(
+    _ fbb: inout FlatBufferBuilder,
+    DEFAULT_SPAN_HOURS: Double = 48.0,
+    MINIMUM_SPAN_HOURS: Double = 24.0,
+    MAXIMUM_SPAN_HOURS: Double = 120.0,
+    CANDIDATE_SPANS_HOURSVectorOffset CANDIDATE_SPANS_HOURS: Offset = Offset(),
+    TAIL_HOURS: Double = 24.0,
+    EXTENSION_MARGIN: Double = 0.9,
+    HOLDOUT_HOURS: Double = 0.0,
+    HAS_HOLDOUT_HOURS: Bool = false,
+    ECCENTRICITY_THRESHOLD: Double = 0.5,
+    ECCENTRIC_DEFAULT_SPAN_HOURS: Double = 24.0,
+    ECCENTRIC_EXTENSION_MARGIN: Double = 0.7,
+    ECCENTRIC_MAXIMUM_PERIOD_HOURS: Double = 36.0,
+    IMPLAUSIBLE_RMS_KM: Double = 100.0,
+    DRAG_PRIOROffset DRAG_PRIOR: Offset = Offset(),
+    SRP_PRIOROffset SRP_PRIOR: Offset = Offset()
+  ) -> Offset {
+    let __start = PCFFitPolicy.startPCFFitPolicy(&fbb)
+    PCFFitPolicy.add(DEFAULT_SPAN_HOURS: DEFAULT_SPAN_HOURS, &fbb)
+    PCFFitPolicy.add(MINIMUM_SPAN_HOURS: MINIMUM_SPAN_HOURS, &fbb)
+    PCFFitPolicy.add(MAXIMUM_SPAN_HOURS: MAXIMUM_SPAN_HOURS, &fbb)
+    PCFFitPolicy.addVectorOf(CANDIDATE_SPANS_HOURS: CANDIDATE_SPANS_HOURS, &fbb)
+    PCFFitPolicy.add(TAIL_HOURS: TAIL_HOURS, &fbb)
+    PCFFitPolicy.add(EXTENSION_MARGIN: EXTENSION_MARGIN, &fbb)
+    PCFFitPolicy.add(HOLDOUT_HOURS: HOLDOUT_HOURS, &fbb)
+    PCFFitPolicy.add(HAS_HOLDOUT_HOURS: HAS_HOLDOUT_HOURS, &fbb)
+    PCFFitPolicy.add(ECCENTRICITY_THRESHOLD: ECCENTRICITY_THRESHOLD, &fbb)
+    PCFFitPolicy.add(ECCENTRIC_DEFAULT_SPAN_HOURS: ECCENTRIC_DEFAULT_SPAN_HOURS, &fbb)
+    PCFFitPolicy.add(ECCENTRIC_EXTENSION_MARGIN: ECCENTRIC_EXTENSION_MARGIN, &fbb)
+    PCFFitPolicy.add(ECCENTRIC_MAXIMUM_PERIOD_HOURS: ECCENTRIC_MAXIMUM_PERIOD_HOURS, &fbb)
+    PCFFitPolicy.add(IMPLAUSIBLE_RMS_KM: IMPLAUSIBLE_RMS_KM, &fbb)
+    PCFFitPolicy.add(DRAG_PRIOR: DRAG_PRIOR, &fbb)
+    PCFFitPolicy.add(SRP_PRIOR: SRP_PRIOR, &fbb)
+    return PCFFitPolicy.endPCFFitPolicy(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DEFAULT_SPAN_HOURS, fieldName: "DEFAULT_SPAN_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_SPAN_HOURS, fieldName: "MINIMUM_SPAN_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_SPAN_HOURS, fieldName: "MAXIMUM_SPAN_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.CANDIDATE_SPANS_HOURS, fieldName: "CANDIDATE_SPANS_HOURS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.TAIL_HOURS, fieldName: "TAIL_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.EXTENSION_MARGIN, fieldName: "EXTENSION_MARGIN", required: false, type: Double.self)
+    try _v.visit(field: VT.HOLDOUT_HOURS, fieldName: "HOLDOUT_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_HOLDOUT_HOURS, fieldName: "HAS_HOLDOUT_HOURS", required: false, type: Bool.self)
+    try _v.visit(field: VT.ECCENTRICITY_THRESHOLD, fieldName: "ECCENTRICITY_THRESHOLD", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRIC_DEFAULT_SPAN_HOURS, fieldName: "ECCENTRIC_DEFAULT_SPAN_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRIC_EXTENSION_MARGIN, fieldName: "ECCENTRIC_EXTENSION_MARGIN", required: false, type: Double.self)
+    try _v.visit(field: VT.ECCENTRIC_MAXIMUM_PERIOD_HOURS, fieldName: "ECCENTRIC_MAXIMUM_PERIOD_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.IMPLAUSIBLE_RMS_KM, fieldName: "IMPLAUSIBLE_RMS_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_PRIOR, fieldName: "DRAG_PRIOR", required: false, type: ForwardOffset<PCFGaussianPrior>.self)
+    try _v.visit(field: VT.SRP_PRIOR, fieldName: "SRP_PRIOR", required: false, type: ForwardOffset<PCFGaussianPrior>.self)
+    _v.finish()
+  }
+}
+
+///  One event a propagator locates while it integrates. The vocabulary is
+///  $EVL's: a locator class with its configuration, and $PCE's parameter
+///  condition for the generic case (an altitude, radius, speed, radial
+///  velocity or mass crossing is a $PCE parameter, not a class of its own).
+public struct PCFEventDefinition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFEventDefinition.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let NAME: VOffset = 4
+    static let LOCATOR_CLASS: VOffset = 6
+    static let CONDITION: VOffset = 8
+    static let ECLIPSE: VOffset = 10
+    static let CONTACT: VOffset = 12
+    static let INTRUSION: VOffset = 14
+    static let APSIDES: VOffset = 16
+    static let NODE_CROSSING: VOffset = 18
+    static let ACTION: VOffset = 20
+    static let EPOCH_TOLERANCE_SECONDS: VOffset = 22
+    static let SCAN_STEP_SECONDS: VOffset = 24
+    static let MAXIMUM_EVENTS: VOffset = 26
+  }
+
+  ///  The caller's name for the event, echoed in the result. Default empty.
+  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
+  ///  Which locator. Default PARAMETER_CONDITION.
+  public var LOCATOR_CLASS: evlLocatorClass { let o = _accessor.offset(VT.LOCATOR_CLASS); return o == 0 ? .parameterCondition : evlLocatorClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .parameterCondition }
+  ///  Exactly the one of the next five that matches LOCATOR_CLASS is present
+  ///  (any other combination is refused as MISSING_CONFIGURATION, as in
+  ///  $EVL). The condition carries its own direction, goal value, goal
+  ///  tolerance and occurrence.
+  public var CONDITION: PCEParameterCondition? { let o = _accessor.offset(VT.CONDITION); return o == 0 ? nil : PCEParameterCondition(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var ECLIPSE: EVLEclipseConfiguration? { let o = _accessor.offset(VT.ECLIPSE); return o == 0 ? nil : EVLEclipseConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var CONTACT: EVLContactConfiguration? { let o = _accessor.offset(VT.CONTACT); return o == 0 ? nil : EVLContactConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INTRUSION: EVLIntrusionConfiguration? { let o = _accessor.offset(VT.INTRUSION); return o == 0 ? nil : EVLIntrusionConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var APSIDES: EVLApsidesConfiguration? { let o = _accessor.offset(VT.APSIDES); return o == 0 ? nil : EVLApsidesConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var NODE_CROSSING: EVLNodeCrossingConfiguration? { let o = _accessor.offset(VT.NODE_CROSSING); return o == 0 ? nil : EVLNodeCrossingConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  What the propagator does at the event. Default RECORD.
+  public var ACTION: pcfEventAction { let o = _accessor.offset(VT.ACTION); return o == 0 ? .record : pcfEventAction(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .record }
+  ///  Convergence bar on the located epoch, seconds. Default 1e-9.
+  public var EPOCH_TOLERANCE_SECONDS: Double { let o = _accessor.offset(VT.EPOCH_TOLERANCE_SECONDS); return o == 0 ? 1e-9 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Step at which the event function is sampled before refinement, seconds;
+  ///  0 samples at the integrator's accepted steps. A root is found only when
+  ///  the function changes sign within one sample interval. Default 0.
+  public var SCAN_STEP_SECONDS: Double { let o = _accessor.offset(VT.SCAN_STEP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Largest number of occurrences reported; 0 is no bound. Default 0.
+  public var MAXIMUM_EVENTS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_EVENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPCFEventDefinition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
+  public static func add(LOCATOR_CLASS: evlLocatorClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATOR_CLASS.rawValue, def: 6, at: VT.LOCATOR_CLASS) }
+  public static func add(CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITION, at: VT.CONDITION) }
+  public static func add(ECLIPSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECLIPSE, at: VT.ECLIPSE) }
+  public static func add(CONTACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT, at: VT.CONTACT) }
+  public static func add(INTRUSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTRUSION, at: VT.INTRUSION) }
+  public static func add(APSIDES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APSIDES, at: VT.APSIDES) }
+  public static func add(NODE_CROSSING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_CROSSING, at: VT.NODE_CROSSING) }
+  public static func add(ACTION: pcfEventAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTION.rawValue, def: 3, at: VT.ACTION) }
+  public static func add(EPOCH_TOLERANCE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_TOLERANCE_SECONDS, def: 1e-9, at: VT.EPOCH_TOLERANCE_SECONDS) }
+  public static func add(SCAN_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_STEP_SECONDS, def: 0.0, at: VT.SCAN_STEP_SECONDS) }
+  public static func add(MAXIMUM_EVENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_EVENTS, def: 0, at: VT.MAXIMUM_EVENTS) }
+  public static func endPCFEventDefinition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFEventDefinition(
+    _ fbb: inout FlatBufferBuilder,
+    NAMEOffset NAME: Offset = Offset(),
+    LOCATOR_CLASS: evlLocatorClass = .parameterCondition,
+    CONDITIONOffset CONDITION: Offset = Offset(),
+    ECLIPSEOffset ECLIPSE: Offset = Offset(),
+    CONTACTOffset CONTACT: Offset = Offset(),
+    INTRUSIONOffset INTRUSION: Offset = Offset(),
+    APSIDESOffset APSIDES: Offset = Offset(),
+    NODE_CROSSINGOffset NODE_CROSSING: Offset = Offset(),
+    ACTION: pcfEventAction = .record,
+    EPOCH_TOLERANCE_SECONDS: Double = 1e-9,
+    SCAN_STEP_SECONDS: Double = 0.0,
+    MAXIMUM_EVENTS: UInt32 = 0
+  ) -> Offset {
+    let __start = PCFEventDefinition.startPCFEventDefinition(&fbb)
+    PCFEventDefinition.add(NAME: NAME, &fbb)
+    PCFEventDefinition.add(LOCATOR_CLASS: LOCATOR_CLASS, &fbb)
+    PCFEventDefinition.add(CONDITION: CONDITION, &fbb)
+    PCFEventDefinition.add(ECLIPSE: ECLIPSE, &fbb)
+    PCFEventDefinition.add(CONTACT: CONTACT, &fbb)
+    PCFEventDefinition.add(INTRUSION: INTRUSION, &fbb)
+    PCFEventDefinition.add(APSIDES: APSIDES, &fbb)
+    PCFEventDefinition.add(NODE_CROSSING: NODE_CROSSING, &fbb)
+    PCFEventDefinition.add(ACTION: ACTION, &fbb)
+    PCFEventDefinition.add(EPOCH_TOLERANCE_SECONDS: EPOCH_TOLERANCE_SECONDS, &fbb)
+    PCFEventDefinition.add(SCAN_STEP_SECONDS: SCAN_STEP_SECONDS, &fbb)
+    PCFEventDefinition.add(MAXIMUM_EVENTS: MAXIMUM_EVENTS, &fbb)
+    return PCFEventDefinition.endPCFEventDefinition(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LOCATOR_CLASS, fieldName: "LOCATOR_CLASS", required: false, type: evlLocatorClass.self)
+    try _v.visit(field: VT.CONDITION, fieldName: "CONDITION", required: false, type: ForwardOffset<PCEParameterCondition>.self)
+    try _v.visit(field: VT.ECLIPSE, fieldName: "ECLIPSE", required: false, type: ForwardOffset<EVLEclipseConfiguration>.self)
+    try _v.visit(field: VT.CONTACT, fieldName: "CONTACT", required: false, type: ForwardOffset<EVLContactConfiguration>.self)
+    try _v.visit(field: VT.INTRUSION, fieldName: "INTRUSION", required: false, type: ForwardOffset<EVLIntrusionConfiguration>.self)
+    try _v.visit(field: VT.APSIDES, fieldName: "APSIDES", required: false, type: ForwardOffset<EVLApsidesConfiguration>.self)
+    try _v.visit(field: VT.NODE_CROSSING, fieldName: "NODE_CROSSING", required: false, type: ForwardOffset<EVLNodeCrossingConfiguration>.self)
+    try _v.visit(field: VT.ACTION, fieldName: "ACTION", required: false, type: pcfEventAction.self)
+    try _v.visit(field: VT.EPOCH_TOLERANCE_SECONDS, fieldName: "EPOCH_TOLERANCE_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.SCAN_STEP_SECONDS, fieldName: "SCAN_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_EVENTS, fieldName: "MAXIMUM_EVENTS", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  Maneuver detection from fit innovations: a generalized-likelihood-ratio
+///  scan of the six mean elements.
+public struct PCFManeuverDetection: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFManeuverDetection.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let FALSE_ALARMS_PER_OBJECT_YEAR: VOffset = 4
+    static let CORRELATION_MODEL: VOffset = 6
+    static let THRESHOLD: VOffset = 8
+    static let MARGIN_STATES: VOffset = 10
+    static let REFINE_WINDOW_HOURS: VOffset = 12
+    static let MINIMUM_STATES: VOffset = 14
+  }
+
+  ///  False-alarm rate the THRESHOLD is calibrated for, per object-year. A
+  ///  provider that cannot recalibrate refuses another rate. Default 1.
+  public var FALSE_ALARMS_PER_OBJECT_YEAR: Double { let o = _accessor.offset(VT.FALSE_ALARMS_PER_OBJECT_YEAR); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
+  public var CORRELATION_MODEL: pcfInnovationCorrelation { let o = _accessor.offset(VT.CORRELATION_MODEL); return o == 0 ? .oneSamplePerRevolution : pcfInnovationCorrelation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .oneSamplePerRevolution }
+  ///  The statistic Lambda (chi-square, 3 degrees of freedom) above which a
+  ///  maneuver is declared. Default 20.
+  public var THRESHOLD: Double { let o = _accessor.offset(VT.THRESHOLD); return o == 0 ? 20.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  States kept clear at each end of the arc when scanning. Default 12.
+  public var MARGIN_STATES: UInt32 { let o = _accessor.offset(VT.MARGIN_STATES); return o == 0 ? 12 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Half-width of the window the burn epoch is refined in, hours. Default 2.
+  public var REFINE_WINDOW_HOURS: Double { let o = _accessor.offset(VT.REFINE_WINDOW_HOURS); return o == 0 ? 2.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fewest states an arc must hold to be scanned. Default 48.
+  public var MINIMUM_STATES: UInt32 { let o = _accessor.offset(VT.MINIMUM_STATES); return o == 0 ? 48 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPCFManeuverDetection(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(FALSE_ALARMS_PER_OBJECT_YEAR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FALSE_ALARMS_PER_OBJECT_YEAR, def: 1.0, at: VT.FALSE_ALARMS_PER_OBJECT_YEAR) }
+  public static func add(CORRELATION_MODEL: pcfInnovationCorrelation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORRELATION_MODEL.rawValue, def: 2, at: VT.CORRELATION_MODEL) }
+  public static func add(THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THRESHOLD, def: 20.0, at: VT.THRESHOLD) }
+  public static func add(MARGIN_STATES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MARGIN_STATES, def: 12, at: VT.MARGIN_STATES) }
+  public static func add(REFINE_WINDOW_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFINE_WINDOW_HOURS, def: 2.0, at: VT.REFINE_WINDOW_HOURS) }
+  public static func add(MINIMUM_STATES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_STATES, def: 48, at: VT.MINIMUM_STATES) }
+  public static func endPCFManeuverDetection(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFManeuverDetection(
+    _ fbb: inout FlatBufferBuilder,
+    FALSE_ALARMS_PER_OBJECT_YEAR: Double = 1.0,
+    CORRELATION_MODEL: pcfInnovationCorrelation = .oneSamplePerRevolution,
+    THRESHOLD: Double = 20.0,
+    MARGIN_STATES: UInt32 = 12,
+    REFINE_WINDOW_HOURS: Double = 2.0,
+    MINIMUM_STATES: UInt32 = 48
+  ) -> Offset {
+    let __start = PCFManeuverDetection.startPCFManeuverDetection(&fbb)
+    PCFManeuverDetection.add(FALSE_ALARMS_PER_OBJECT_YEAR: FALSE_ALARMS_PER_OBJECT_YEAR, &fbb)
+    PCFManeuverDetection.add(CORRELATION_MODEL: CORRELATION_MODEL, &fbb)
+    PCFManeuverDetection.add(THRESHOLD: THRESHOLD, &fbb)
+    PCFManeuverDetection.add(MARGIN_STATES: MARGIN_STATES, &fbb)
+    PCFManeuverDetection.add(REFINE_WINDOW_HOURS: REFINE_WINDOW_HOURS, &fbb)
+    PCFManeuverDetection.add(MINIMUM_STATES: MINIMUM_STATES, &fbb)
+    return PCFManeuverDetection.endPCFManeuverDetection(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.FALSE_ALARMS_PER_OBJECT_YEAR, fieldName: "FALSE_ALARMS_PER_OBJECT_YEAR", required: false, type: Double.self)
+    try _v.visit(field: VT.CORRELATION_MODEL, fieldName: "CORRELATION_MODEL", required: false, type: pcfInnovationCorrelation.self)
+    try _v.visit(field: VT.THRESHOLD, fieldName: "THRESHOLD", required: false, type: Double.self)
+    try _v.visit(field: VT.MARGIN_STATES, fieldName: "MARGIN_STATES", required: false, type: UInt32.self)
+    try _v.visit(field: VT.REFINE_WINDOW_HOURS, fieldName: "REFINE_WINDOW_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_STATES, fieldName: "MINIMUM_STATES", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  Reentry: where the averaged theory hands off to osculating integration,
+///  where the trajectory ends, and the width of the reentry window.
+public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFReentry.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ALTITUDE_KM: VOffset = 4
+    static let HANDOFF_PERIGEE_ALTITUDE_KM: VOffset = 6
+    static let HANDOFF_DECAY_RATIO: VOffset = 8
+    static let HANDOFF_ECCENTRICITY_COLLAPSE: VOffset = 10
+    static let HANDOFF_MINIMUM_ECCENTRICITY: VOffset = 12
+    static let NODE_STEP_MINUTES: VOffset = 14
+    static let HORIZON_DAYS: VOffset = 16
+    static let WINDOW_METHOD: VOffset = 18
+    static let WINDOW_DENSITY_SIGMA: VOffset = 20
+    static let WINDOW_CORRELATION_DAYS: VOffset = 22
+    static let WINDOW_BALLISTIC_SIGMA: VOffset = 24
+    static let OSCULATING_STEP_SECONDS: VOffset = 26
+  }
+
+  ///  Altitude at which the trajectory ends as reentered, km. Default 80.
+  public var ALTITUDE_KM: Double { let o = _accessor.offset(VT.ALTITUDE_KM); return o == 0 ? 80.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Hand-off when the perigee altitude falls below this, km. Default 180.
+  public var HANDOFF_PERIGEE_ALTITUDE_KM: Double { let o = _accessor.offset(VT.HANDOFF_PERIGEE_ALTITUDE_KM); return o == 0 ? 180.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
+  ///  fraction of the density scale height H. Default 0.05.
+  public var HANDOFF_DECAY_RATIO: Double { let o = _accessor.offset(VT.HANDOFF_DECAY_RATIO); return o == 0 ? 0.05 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Hand-off when the eccentricity collapses by more than this fraction of
+  ///  a e per revolution, with the eccentricity above
+  ///  HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
+  public var HANDOFF_ECCENTRICITY_COLLAPSE: Double { let o = _accessor.offset(VT.HANDOFF_ECCENTRICITY_COLLAPSE); return o == 0 ? 0.01 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity above which the collapse test applies. Default 0.01.
+  public var HANDOFF_MINIMUM_ECCENTRICITY: Double { let o = _accessor.offset(VT.HANDOFF_MINIMUM_ECCENTRICITY); return o == 0 ? 0.01 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Spacing of the nodes the hand-off tests are evaluated at, minutes.
+  ///  Default 30.
+  public var NODE_STEP_MINUTES: Double { let o = _accessor.offset(VT.NODE_STEP_MINUTES); return o == 0 ? 30.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longest look-ahead for a hand-off or reentry, days. Default 120.
+  public var HORIZON_DAYS: Double { let o = _accessor.offset(VT.HORIZON_DAYS); return o == 0 ? 120.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  How the reentry window is computed. Default LINEAR.
+  public var WINDOW_METHOD: pcfReentryWindowMethod { let o = _accessor.offset(VT.WINDOW_METHOD); return o == 0 ? .linear : pcfReentryWindowMethod(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .linear }
+  ///  Fractional 1-sigma density error of the window. Default 0.15.
+  public var WINDOW_DENSITY_SIGMA: Double { let o = _accessor.offset(VT.WINDOW_DENSITY_SIGMA); return o == 0 ? 0.15 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Correlation time of the density error, days. Default 2.
+  public var WINDOW_CORRELATION_DAYS: Double { let o = _accessor.offset(VT.WINDOW_CORRELATION_DAYS); return o == 0 ? 2.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
+  public var WINDOW_BALLISTIC_SIGMA: Double { let o = _accessor.offset(VT.WINDOW_BALLISTIC_SIGMA); return o == 0 ? 0.05 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Step of the osculating integration after the hand-off, seconds. Default
+  ///  10.
+  public var OSCULATING_STEP_SECONDS: Double { let o = _accessor.offset(VT.OSCULATING_STEP_SECONDS); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFReentry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  public static func add(ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_KM, def: 80.0, at: VT.ALTITUDE_KM) }
+  public static func add(HANDOFF_PERIGEE_ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_PERIGEE_ALTITUDE_KM, def: 180.0, at: VT.HANDOFF_PERIGEE_ALTITUDE_KM) }
+  public static func add(HANDOFF_DECAY_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_DECAY_RATIO, def: 0.05, at: VT.HANDOFF_DECAY_RATIO) }
+  public static func add(HANDOFF_ECCENTRICITY_COLLAPSE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_ECCENTRICITY_COLLAPSE, def: 0.01, at: VT.HANDOFF_ECCENTRICITY_COLLAPSE) }
+  public static func add(HANDOFF_MINIMUM_ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_MINIMUM_ECCENTRICITY, def: 0.01, at: VT.HANDOFF_MINIMUM_ECCENTRICITY) }
+  public static func add(NODE_STEP_MINUTES: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NODE_STEP_MINUTES, def: 30.0, at: VT.NODE_STEP_MINUTES) }
+  public static func add(HORIZON_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HORIZON_DAYS, def: 120.0, at: VT.HORIZON_DAYS) }
+  public static func add(WINDOW_METHOD: pcfReentryWindowMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_METHOD.rawValue, def: 1, at: VT.WINDOW_METHOD) }
+  public static func add(WINDOW_DENSITY_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_DENSITY_SIGMA, def: 0.15, at: VT.WINDOW_DENSITY_SIGMA) }
+  public static func add(WINDOW_CORRELATION_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_CORRELATION_DAYS, def: 2.0, at: VT.WINDOW_CORRELATION_DAYS) }
+  public static func add(WINDOW_BALLISTIC_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_BALLISTIC_SIGMA, def: 0.05, at: VT.WINDOW_BALLISTIC_SIGMA) }
+  public static func add(OSCULATING_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OSCULATING_STEP_SECONDS, def: 10.0, at: VT.OSCULATING_STEP_SECONDS) }
+  public static func endPCFReentry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFReentry(
+    _ fbb: inout FlatBufferBuilder,
+    ALTITUDE_KM: Double = 80.0,
+    HANDOFF_PERIGEE_ALTITUDE_KM: Double = 180.0,
+    HANDOFF_DECAY_RATIO: Double = 0.05,
+    HANDOFF_ECCENTRICITY_COLLAPSE: Double = 0.01,
+    HANDOFF_MINIMUM_ECCENTRICITY: Double = 0.01,
+    NODE_STEP_MINUTES: Double = 30.0,
+    HORIZON_DAYS: Double = 120.0,
+    WINDOW_METHOD: pcfReentryWindowMethod = .linear,
+    WINDOW_DENSITY_SIGMA: Double = 0.15,
+    WINDOW_CORRELATION_DAYS: Double = 2.0,
+    WINDOW_BALLISTIC_SIGMA: Double = 0.05,
+    OSCULATING_STEP_SECONDS: Double = 10.0
+  ) -> Offset {
+    let __start = PCFReentry.startPCFReentry(&fbb)
+    PCFReentry.add(ALTITUDE_KM: ALTITUDE_KM, &fbb)
+    PCFReentry.add(HANDOFF_PERIGEE_ALTITUDE_KM: HANDOFF_PERIGEE_ALTITUDE_KM, &fbb)
+    PCFReentry.add(HANDOFF_DECAY_RATIO: HANDOFF_DECAY_RATIO, &fbb)
+    PCFReentry.add(HANDOFF_ECCENTRICITY_COLLAPSE: HANDOFF_ECCENTRICITY_COLLAPSE, &fbb)
+    PCFReentry.add(HANDOFF_MINIMUM_ECCENTRICITY: HANDOFF_MINIMUM_ECCENTRICITY, &fbb)
+    PCFReentry.add(NODE_STEP_MINUTES: NODE_STEP_MINUTES, &fbb)
+    PCFReentry.add(HORIZON_DAYS: HORIZON_DAYS, &fbb)
+    PCFReentry.add(WINDOW_METHOD: WINDOW_METHOD, &fbb)
+    PCFReentry.add(WINDOW_DENSITY_SIGMA: WINDOW_DENSITY_SIGMA, &fbb)
+    PCFReentry.add(WINDOW_CORRELATION_DAYS: WINDOW_CORRELATION_DAYS, &fbb)
+    PCFReentry.add(WINDOW_BALLISTIC_SIGMA: WINDOW_BALLISTIC_SIGMA, &fbb)
+    PCFReentry.add(OSCULATING_STEP_SECONDS: OSCULATING_STEP_SECONDS, &fbb)
+    return PCFReentry.endPCFReentry(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ALTITUDE_KM, fieldName: "ALTITUDE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.HANDOFF_PERIGEE_ALTITUDE_KM, fieldName: "HANDOFF_PERIGEE_ALTITUDE_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.HANDOFF_DECAY_RATIO, fieldName: "HANDOFF_DECAY_RATIO", required: false, type: Double.self)
+    try _v.visit(field: VT.HANDOFF_ECCENTRICITY_COLLAPSE, fieldName: "HANDOFF_ECCENTRICITY_COLLAPSE", required: false, type: Double.self)
+    try _v.visit(field: VT.HANDOFF_MINIMUM_ECCENTRICITY, fieldName: "HANDOFF_MINIMUM_ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VT.NODE_STEP_MINUTES, fieldName: "NODE_STEP_MINUTES", required: false, type: Double.self)
+    try _v.visit(field: VT.HORIZON_DAYS, fieldName: "HORIZON_DAYS", required: false, type: Double.self)
+    try _v.visit(field: VT.WINDOW_METHOD, fieldName: "WINDOW_METHOD", required: false, type: pcfReentryWindowMethod.self)
+    try _v.visit(field: VT.WINDOW_DENSITY_SIGMA, fieldName: "WINDOW_DENSITY_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.WINDOW_CORRELATION_DAYS, fieldName: "WINDOW_CORRELATION_DAYS", required: false, type: Double.self)
+    try _v.visit(field: VT.WINDOW_BALLISTIC_SIGMA, fieldName: "WINDOW_BALLISTIC_SIGMA", required: false, type: Double.self)
+    try _v.visit(field: VT.OSCULATING_STEP_SECONDS, fieldName: "OSCULATING_STEP_SECONDS", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Launch initialization: priors for the first element sets of new objects
+///  and for a deployment batch fitted jointly.
+public struct PCFLaunch: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFLaunch.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let DRAG_AREA_OVER_MASS_PRIOR_M2_KG: VOffset = 4
+    static let SRP_AREA_OVER_MASS_PRIOR_M2_KG: VOffset = 6
+    static let SEPARATION_SIGMA_M_S: VOffset = 8
+    static let SHRINK_SIGMA_M2_KG: VOffset = 10
+    static let HAS_SHRINK_SIGMA_M2_KG: VOffset = 12
+    static let BATCH_MEAN_SIGMA_M2_KG: VOffset = 14
+  }
+
+  ///  A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
+  public var DRAG_AREA_OVER_MASS_PRIOR_M2_KG: Double { let o = _accessor.offset(VT.DRAG_AREA_OVER_MASS_PRIOR_M2_KG); return o == 0 ? 0.01 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
+  public var SRP_AREA_OVER_MASS_PRIOR_M2_KG: Double { let o = _accessor.offset(VT.SRP_AREA_OVER_MASS_PRIOR_M2_KG); return o == 0 ? 0.01 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Prior 1-sigma of each object's separation velocity per axis, m/s.
+  ///  Default 1.
+  public var SEPARATION_SIGMA_M_S: Double { let o = _accessor.offset(VT.SEPARATION_SIGMA_M_S); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
+  ///  Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
+  public var SHRINK_SIGMA_M2_KG: Double { let o = _accessor.offset(VT.SHRINK_SIGMA_M2_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
+  public var HAS_SHRINK_SIGMA_M2_KG: Bool { let o = _accessor.offset(VT.HAS_SHRINK_SIGMA_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
+  public var BATCH_MEAN_SIGMA_M2_KG: Double { let o = _accessor.offset(VT.BATCH_MEAN_SIGMA_M2_KG); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFLaunch(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(DRAG_AREA_OVER_MASS_PRIOR_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA_OVER_MASS_PRIOR_M2_KG, def: 0.01, at: VT.DRAG_AREA_OVER_MASS_PRIOR_M2_KG) }
+  public static func add(SRP_AREA_OVER_MASS_PRIOR_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_AREA_OVER_MASS_PRIOR_M2_KG, def: 0.01, at: VT.SRP_AREA_OVER_MASS_PRIOR_M2_KG) }
+  public static func add(SEPARATION_SIGMA_M_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEPARATION_SIGMA_M_S, def: 1.0, at: VT.SEPARATION_SIGMA_M_S) }
+  public static func add(SHRINK_SIGMA_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHRINK_SIGMA_M2_KG, def: 0.0, at: VT.SHRINK_SIGMA_M2_KG) }
+  public static func add(HAS_SHRINK_SIGMA_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_SHRINK_SIGMA_M2_KG, def: false,
+   at: VT.HAS_SHRINK_SIGMA_M2_KG) }
+  public static func add(BATCH_MEAN_SIGMA_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BATCH_MEAN_SIGMA_M2_KG, def: 1.0, at: VT.BATCH_MEAN_SIGMA_M2_KG) }
+  public static func endPCFLaunch(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFLaunch(
+    _ fbb: inout FlatBufferBuilder,
+    DRAG_AREA_OVER_MASS_PRIOR_M2_KG: Double = 0.01,
+    SRP_AREA_OVER_MASS_PRIOR_M2_KG: Double = 0.01,
+    SEPARATION_SIGMA_M_S: Double = 1.0,
+    SHRINK_SIGMA_M2_KG: Double = 0.0,
+    HAS_SHRINK_SIGMA_M2_KG: Bool = false,
+    BATCH_MEAN_SIGMA_M2_KG: Double = 1.0
+  ) -> Offset {
+    let __start = PCFLaunch.startPCFLaunch(&fbb)
+    PCFLaunch.add(DRAG_AREA_OVER_MASS_PRIOR_M2_KG: DRAG_AREA_OVER_MASS_PRIOR_M2_KG, &fbb)
+    PCFLaunch.add(SRP_AREA_OVER_MASS_PRIOR_M2_KG: SRP_AREA_OVER_MASS_PRIOR_M2_KG, &fbb)
+    PCFLaunch.add(SEPARATION_SIGMA_M_S: SEPARATION_SIGMA_M_S, &fbb)
+    PCFLaunch.add(SHRINK_SIGMA_M2_KG: SHRINK_SIGMA_M2_KG, &fbb)
+    PCFLaunch.add(HAS_SHRINK_SIGMA_M2_KG: HAS_SHRINK_SIGMA_M2_KG, &fbb)
+    PCFLaunch.add(BATCH_MEAN_SIGMA_M2_KG: BATCH_MEAN_SIGMA_M2_KG, &fbb)
+    return PCFLaunch.endPCFLaunch(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.DRAG_AREA_OVER_MASS_PRIOR_M2_KG, fieldName: "DRAG_AREA_OVER_MASS_PRIOR_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.SRP_AREA_OVER_MASS_PRIOR_M2_KG, fieldName: "SRP_AREA_OVER_MASS_PRIOR_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.SEPARATION_SIGMA_M_S, fieldName: "SEPARATION_SIGMA_M_S", required: false, type: Double.self)
+    try _v.visit(field: VT.SHRINK_SIGMA_M2_KG, fieldName: "SHRINK_SIGMA_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_SHRINK_SIGMA_M2_KG, fieldName: "HAS_SHRINK_SIGMA_M2_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.BATCH_MEAN_SIGMA_M2_KG, fieldName: "BATCH_MEAN_SIGMA_M2_KG", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Output states: frame, step and size.
+public struct PCFOutput: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFOutput.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let FRAME: VOffset = 4
+    static let STEP_SECONDS: VOffset = 6
+    static let MAXIMUM_STATES: VOffset = 8
+  }
+
+  ///  Frame of the output states. Default UNSPECIFIED (the grid template's
+  ///  frame, TEME without one).
+  public var FRAME: pcfOutputFrame { let o = _accessor.offset(VT.FRAME); return o == 0 ? .unspecified : pcfOutputFrame(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Spacing of the output states, seconds, when no grid template names the
+  ///  epochs; a grid template's epochs win. Default 60.
+  public var STEP_SECONDS: Double { let o = _accessor.offset(VT.STEP_SECONDS); return o == 0 ? 60.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Most states one request may produce. Default 500000.
+  public var MAXIMUM_STATES: UInt32 { let o = _accessor.offset(VT.MAXIMUM_STATES); return o == 0 ? 500000 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPCFOutput(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(FRAME: pcfOutputFrame, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FRAME.rawValue, def: 0, at: VT.FRAME) }
+  public static func add(STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SECONDS, def: 60.0, at: VT.STEP_SECONDS) }
+  public static func add(MAXIMUM_STATES: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_STATES, def: 500000, at: VT.MAXIMUM_STATES) }
+  public static func endPCFOutput(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFOutput(
+    _ fbb: inout FlatBufferBuilder,
+    FRAME: pcfOutputFrame = .unspecified,
+    STEP_SECONDS: Double = 60.0,
+    MAXIMUM_STATES: UInt32 = 500000
+  ) -> Offset {
+    let __start = PCFOutput.startPCFOutput(&fbb)
+    PCFOutput.add(FRAME: FRAME, &fbb)
+    PCFOutput.add(STEP_SECONDS: STEP_SECONDS, &fbb)
+    PCFOutput.add(MAXIMUM_STATES: MAXIMUM_STATES, &fbb)
+    return PCFOutput.endPCFOutput(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.FRAME, fieldName: "FRAME", required: false, type: pcfOutputFrame.self)
+    try _v.visit(field: VT.STEP_SECONDS, fieldName: "STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_STATES, fieldName: "MAXIMUM_STATES", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.
+///  The TIM epoch is UTC; flux is in SFU (1e-22 W/m2/Hz).
+public struct PCFSpaceWeather: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFSpaceWeather.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EPOCH: VOffset = 4
+    static let F107: VOffset = 6
+    static let F107_AVERAGE: VOffset = 8
+    static let AP_INDEX: VOffset = 10
+    static let KP_INDEX: VOffset = 12
+  }
+
+  ///  Epoch the values apply to. Required; no default.
+  public var EPOCH: TIMInstant! { let o = _accessor.offset(VT.EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Daily F10.7 solar radio flux, SFU. Default 150.
+  public var F107: Double { let o = _accessor.offset(VT.F107); return o == 0 ? 150.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Centered 81-day average of F10.7, SFU. Default 150.
+  public var F107_AVERAGE: Double { let o = _accessor.offset(VT.F107_AVERAGE); return o == 0 ? 150.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Conventional daily Ap index value, dimensionless (not an acceleration).
+  ///  Default 15.
+  public var AP_INDEX: Double { let o = _accessor.offset(VT.AP_INDEX); return o == 0 ? 15.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Conventional three-hour Kp index value, dimensionless (not an
+  ///  acceleration). Default 3.
+  public var KP_INDEX: Double { let o = _accessor.offset(VT.KP_INDEX); return o == 0 ? 3.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFSpaceWeather(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(F107: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107, def: 150.0, at: VT.F107) }
+  public static func add(F107_AVERAGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: F107_AVERAGE, def: 150.0, at: VT.F107_AVERAGE) }
+  public static func add(AP_INDEX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AP_INDEX, def: 15.0, at: VT.AP_INDEX) }
+  public static func add(KP_INDEX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KP_INDEX, def: 3.0, at: VT.KP_INDEX) }
+  public static func endPCFSpaceWeather(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4]); return end }
+  public static func createPCFSpaceWeather(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset,
+    F107: Double = 150.0,
+    F107_AVERAGE: Double = 150.0,
+    AP_INDEX: Double = 15.0,
+    KP_INDEX: Double = 3.0
+  ) -> Offset {
+    let __start = PCFSpaceWeather.startPCFSpaceWeather(&fbb)
+    PCFSpaceWeather.add(EPOCH: EPOCH, &fbb)
+    PCFSpaceWeather.add(F107: F107, &fbb)
+    PCFSpaceWeather.add(F107_AVERAGE: F107_AVERAGE, &fbb)
+    PCFSpaceWeather.add(AP_INDEX: AP_INDEX, &fbb)
+    PCFSpaceWeather.add(KP_INDEX: KP_INDEX, &fbb)
+    return PCFSpaceWeather.endPCFSpaceWeather(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.F107, fieldName: "F107", required: false, type: Double.self)
+    try _v.visit(field: VT.F107_AVERAGE, fieldName: "F107_AVERAGE", required: false, type: Double.self)
+    try _v.visit(field: VT.AP_INDEX, fieldName: "AP_INDEX", required: false, type: Double.self)
+    try _v.visit(field: VT.KP_INDEX, fieldName: "KP_INDEX", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+///  doi:10.1007/s00190-015-0814-4, eq. 5), in the D-Y-B frame, added to the a
+///  priori model and scaled by the visible Sun fraction. Every coefficient is in
+///  m/s^2 and defaults to 0.
+public struct PCFEcom2: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFEcom2.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let D0_M_S2: VOffset = 4
+    static let Y0_M_S2: VOffset = 6
+    static let B0_M_S2: VOffset = 8
+    static let D2_COS_M_S2: VOffset = 10
+    static let D2_SIN_M_S2: VOffset = 12
+    static let D4_COS_M_S2: VOffset = 14
+    static let D4_SIN_M_S2: VOffset = 16
+    static let B1_COS_M_S2: VOffset = 18
+    static let B1_SIN_M_S2: VOffset = 20
+    static let B3_COS_M_S2: VOffset = 22
+    static let B3_SIN_M_S2: VOffset = 24
+  }
+
+  public var D0_M_S2: Double { let o = _accessor.offset(VT.D0_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var Y0_M_S2: Double { let o = _accessor.offset(VT.Y0_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B0_M_S2: Double { let o = _accessor.offset(VT.B0_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D2_COS_M_S2: Double { let o = _accessor.offset(VT.D2_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D2_SIN_M_S2: Double { let o = _accessor.offset(VT.D2_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D4_COS_M_S2: Double { let o = _accessor.offset(VT.D4_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var D4_SIN_M_S2: Double { let o = _accessor.offset(VT.D4_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B1_COS_M_S2: Double { let o = _accessor.offset(VT.B1_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B1_SIN_M_S2: Double { let o = _accessor.offset(VT.B1_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B3_COS_M_S2: Double { let o = _accessor.offset(VT.B3_COS_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public var B3_SIN_M_S2: Double { let o = _accessor.offset(VT.B3_SIN_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFEcom2(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 11) }
+  public static func add(D0_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D0_M_S2, def: 0.0, at: VT.D0_M_S2) }
+  public static func add(Y0_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y0_M_S2, def: 0.0, at: VT.Y0_M_S2) }
+  public static func add(B0_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B0_M_S2, def: 0.0, at: VT.B0_M_S2) }
+  public static func add(D2_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D2_COS_M_S2, def: 0.0, at: VT.D2_COS_M_S2) }
+  public static func add(D2_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D2_SIN_M_S2, def: 0.0, at: VT.D2_SIN_M_S2) }
+  public static func add(D4_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D4_COS_M_S2, def: 0.0, at: VT.D4_COS_M_S2) }
+  public static func add(D4_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: D4_SIN_M_S2, def: 0.0, at: VT.D4_SIN_M_S2) }
+  public static func add(B1_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B1_COS_M_S2, def: 0.0, at: VT.B1_COS_M_S2) }
+  public static func add(B1_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B1_SIN_M_S2, def: 0.0, at: VT.B1_SIN_M_S2) }
+  public static func add(B3_COS_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B3_COS_M_S2, def: 0.0, at: VT.B3_COS_M_S2) }
+  public static func add(B3_SIN_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: B3_SIN_M_S2, def: 0.0, at: VT.B3_SIN_M_S2) }
+  public static func endPCFEcom2(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFEcom2(
+    _ fbb: inout FlatBufferBuilder,
+    D0_M_S2: Double = 0.0,
+    Y0_M_S2: Double = 0.0,
+    B0_M_S2: Double = 0.0,
+    D2_COS_M_S2: Double = 0.0,
+    D2_SIN_M_S2: Double = 0.0,
+    D4_COS_M_S2: Double = 0.0,
+    D4_SIN_M_S2: Double = 0.0,
+    B1_COS_M_S2: Double = 0.0,
+    B1_SIN_M_S2: Double = 0.0,
+    B3_COS_M_S2: Double = 0.0,
+    B3_SIN_M_S2: Double = 0.0
+  ) -> Offset {
+    let __start = PCFEcom2.startPCFEcom2(&fbb)
+    PCFEcom2.add(D0_M_S2: D0_M_S2, &fbb)
+    PCFEcom2.add(Y0_M_S2: Y0_M_S2, &fbb)
+    PCFEcom2.add(B0_M_S2: B0_M_S2, &fbb)
+    PCFEcom2.add(D2_COS_M_S2: D2_COS_M_S2, &fbb)
+    PCFEcom2.add(D2_SIN_M_S2: D2_SIN_M_S2, &fbb)
+    PCFEcom2.add(D4_COS_M_S2: D4_COS_M_S2, &fbb)
+    PCFEcom2.add(D4_SIN_M_S2: D4_SIN_M_S2, &fbb)
+    PCFEcom2.add(B1_COS_M_S2: B1_COS_M_S2, &fbb)
+    PCFEcom2.add(B1_SIN_M_S2: B1_SIN_M_S2, &fbb)
+    PCFEcom2.add(B3_COS_M_S2: B3_COS_M_S2, &fbb)
+    PCFEcom2.add(B3_SIN_M_S2: B3_SIN_M_S2, &fbb)
+    return PCFEcom2.endPCFEcom2(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.D0_M_S2, fieldName: "D0_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.Y0_M_S2, fieldName: "Y0_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B0_M_S2, fieldName: "B0_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D2_COS_M_S2, fieldName: "D2_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D2_SIN_M_S2, fieldName: "D2_SIN_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D4_COS_M_S2, fieldName: "D4_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.D4_SIN_M_S2, fieldName: "D4_SIN_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B1_COS_M_S2, fieldName: "B1_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B1_SIN_M_S2, fieldName: "B1_SIN_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B3_COS_M_S2, fieldName: "B3_COS_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.B3_SIN_M_S2, fieldName: "B3_SIN_M_S2", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Integrator and its settings, shared by $PCF and $PRW. Units are SI. A scalar
+///  legacy tolerance must be expanded by the adapter.
+public struct PCFIntegratorSettings: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFIntegratorSettings.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let ALGORITHM: VOffset = 4
+    static let INITIAL_STEP_SECONDS: VOffset = 6
+    static let MINIMUM_STEP_SECONDS: VOffset = 8
+    static let MAXIMUM_STEP_SECONDS: VOffset = 10
+    static let ABSOLUTE_TOLERANCES: VOffset = 12
+    static let RELATIVE_TOLERANCE: VOffset = 14
+    static let MAXIMUM_STEPS: VOffset = 16
+  }
+
+  ///  Algorithm. Default UNSPECIFIED (the provider's own).
+  public var ALGORITHM: pcfIntegratorAlgorithm { let o = _accessor.offset(VT.ALGORITHM); return o == 0 ? .unspecified : pcfIntegratorAlgorithm(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  First step, seconds; the fixed step of RK4. Default 60.
+  public var INITIAL_STEP_SECONDS: Double { let o = _accessor.offset(VT.INITIAL_STEP_SECONDS); return o == 0 ? 60.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Smallest step an adaptive algorithm may take, seconds. Default 1.
+  public var MINIMUM_STEP_SECONDS: Double { let o = _accessor.offset(VT.MINIMUM_STEP_SECONDS); return o == 0 ? 1.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Largest step, seconds. Default 3600.
+  public var MAXIMUM_STEP_SECONDS: Double { let o = _accessor.offset(VT.MAXIMUM_STEP_SECONDS); return o == 0 ? 3600.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Six or seven positive tolerances, respectively m, m/s and optional kg.
+  ///  Required; no default.
+  public var ABSOLUTE_TOLERANCES: FlatbufferVector<Double> { return _accessor.vector(at: VT.ABSOLUTE_TOLERANCES, byteSize: 8) }
+  public func withUnsafePointerToAbsoluteTolerances<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.ABSOLUTE_TOLERANCES, body: body) }
+  ///  Relative tolerance, dimensionless. Default 1e-12.
+  public var RELATIVE_TOLERANCE: Double { let o = _accessor.offset(VT.RELATIVE_TOLERANCE); return o == 0 ? 1e-12 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Most steps one propagation may take. Default 100000.
+  public var MAXIMUM_STEPS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_STEPS); return o == 0 ? 100000 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPCFIntegratorSettings(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(ALGORITHM: pcfIntegratorAlgorithm, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALGORITHM.rawValue, def: 0, at: VT.ALGORITHM) }
+  public static func add(INITIAL_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_STEP_SECONDS, def: 60.0, at: VT.INITIAL_STEP_SECONDS) }
+  public static func add(MINIMUM_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MINIMUM_STEP_SECONDS, def: 1.0, at: VT.MINIMUM_STEP_SECONDS) }
+  public static func add(MAXIMUM_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_STEP_SECONDS, def: 3600.0, at: VT.MAXIMUM_STEP_SECONDS) }
+  public static func addVectorOf(ABSOLUTE_TOLERANCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ABSOLUTE_TOLERANCES, at: VT.ABSOLUTE_TOLERANCES) }
+  public static func add(RELATIVE_TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVE_TOLERANCE, def: 1e-12, at: VT.RELATIVE_TOLERANCE) }
+  public static func add(MAXIMUM_STEPS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_STEPS, def: 100000, at: VT.MAXIMUM_STEPS) }
+  public static func endPCFIntegratorSettings(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [12]); return end }
+  public static func createPCFIntegratorSettings(
+    _ fbb: inout FlatBufferBuilder,
+    ALGORITHM: pcfIntegratorAlgorithm = .unspecified,
+    INITIAL_STEP_SECONDS: Double = 60.0,
+    MINIMUM_STEP_SECONDS: Double = 1.0,
+    MAXIMUM_STEP_SECONDS: Double = 3600.0,
+    ABSOLUTE_TOLERANCESVectorOffset ABSOLUTE_TOLERANCES: Offset,
+    RELATIVE_TOLERANCE: Double = 1e-12,
+    MAXIMUM_STEPS: UInt32 = 100000
+  ) -> Offset {
+    let __start = PCFIntegratorSettings.startPCFIntegratorSettings(&fbb)
+    PCFIntegratorSettings.add(ALGORITHM: ALGORITHM, &fbb)
+    PCFIntegratorSettings.add(INITIAL_STEP_SECONDS: INITIAL_STEP_SECONDS, &fbb)
+    PCFIntegratorSettings.add(MINIMUM_STEP_SECONDS: MINIMUM_STEP_SECONDS, &fbb)
+    PCFIntegratorSettings.add(MAXIMUM_STEP_SECONDS: MAXIMUM_STEP_SECONDS, &fbb)
+    PCFIntegratorSettings.addVectorOf(ABSOLUTE_TOLERANCES: ABSOLUTE_TOLERANCES, &fbb)
+    PCFIntegratorSettings.add(RELATIVE_TOLERANCE: RELATIVE_TOLERANCE, &fbb)
+    PCFIntegratorSettings.add(MAXIMUM_STEPS: MAXIMUM_STEPS, &fbb)
+    return PCFIntegratorSettings.endPCFIntegratorSettings(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: pcfIntegratorAlgorithm.self)
+    try _v.visit(field: VT.INITIAL_STEP_SECONDS, fieldName: "INITIAL_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MINIMUM_STEP_SECONDS, fieldName: "MINIMUM_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_STEP_SECONDS, fieldName: "MAXIMUM_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.ABSOLUTE_TOLERANCES, fieldName: "ABSOLUTE_TOLERANCES", required: true, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VT.RELATIVE_TOLERANCE, fieldName: "RELATIVE_TOLERANCE", required: false, type: Double.self)
+    try _v.visit(field: VT.MAXIMUM_STEPS, fieldName: "MAXIMUM_STEPS", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
+///  The forces a propagator applies, shared by $PCF and $PRW. Flags default to
+///  off unless stated: a force is active only when selected. No implied support
+///  for coefficients, drag models or bodies the provider cannot supply; a
+///  provider refuses what it cannot apply, by name.
+public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFForceModel.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let GRAVITY_CHOICE: VOffset = 4
+    static let ENABLE_POINT_MASS: VOffset = 6
+    static let GRAVITATIONAL_PARAMETER: VOffset = 8
+    static let ENABLE_J2: VOffset = 10
+    static let ENABLE_J3: VOffset = 12
+    static let ENABLE_J4: VOffset = 14
+    static let ENABLE_HIGHER_ZONALS: VOffset = 16
+    static let MAXIMUM_DEGREE: VOffset = 18
+    static let HAS_MAXIMUM_DEGREE: VOffset = 20
+    static let MAXIMUM_ORDER: VOffset = 22
+    static let HAS_MAXIMUM_ORDER: VOffset = 24
+    static let ENABLE_THIRD_BODY: VOffset = 26
+    static let THIRD_BODY_IDS: VOffset = 28
+    static let ENABLE_SRP: VOffset = 30
+    static let ENABLE_DRAG: VOffset = 32
+    static let INITIAL_MASS_KG: VOffset = 34
+    static let AREA_M2: VOffset = 36
+    static let REFLECTIVITY_COEFFICIENT: VOffset = 38
+    static let DRAG_COEFFICIENT: VOffset = 40
+    static let ATMOSPHERE_MODEL: VOffset = 42
+    static let WEATHER: VOffset = 44
+    static let EPHEMERIS_SOURCE: VOffset = 46
+    static let SOLID_TIDES: VOffset = 48
+    static let RELATIVITY: VOffset = 50
+    static let IN_TRACK_ACCELERATION_M_S2: VOffset = 52
+    static let HAS_IN_TRACK_ACCELERATION_M_S2: VOffset = 54
+    static let DRAG_AREA_OVER_MASS_RATE_M2_KG_S: VOffset = 56
+    static let HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: VOffset = 58
+    static let MAXIMUM_TESSERAL_DEGREE: VOffset = 60
+    static let HAS_MAXIMUM_TESSERAL_DEGREE: VOffset = 62
+    static let RADIATION_PRESSURE_MODEL: VOffset = 64
+    static let GNSS_BLOCK: VOffset = 66
+    static let ECOM2: VOffset = 68
+    static let EARTH_RADIATION: VOffset = 70
+    static let EARTH_RADIATION_RESOLUTION_DEG: VOffset = 72
+    static let EARTH_RADIATION_AREA_OVER_MASS_M2_KG: VOffset = 74
+    static let HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: VOffset = 76
+    static let OCEAN_TIDES: VOffset = 78
+    static let OCEAN_TIDE_MAXIMUM_DEGREE: VOffset = 80
+    static let OCEAN_TIDE_MAXIMUM_ORDER: VOffset = 82
+    static let CENTRAL_BODY_NAIF_ID: VOffset = 84
+    static let EPHEMERIS_KIND: VOffset = 86
+    static let SHADOW_MODEL: VOffset = 88
+    static let WEATHER_SOURCE: VOffset = 90
+    static let WEATHER_EXTENSION: VOffset = 92
+    static let DENSITY_CORRECTION: VOffset = 94
+    static let DENSITY_CORRECTION_RELAXATION_HOURS: VOffset = 96
+    static let HAS_DENSITY_CORRECTION_RELAXATION_HOURS: VOffset = 98
+    static let NEUTRAL_WIND: VOffset = 100
+    static let EMPIRICAL_TERMS: VOffset = 102
+  }
+
+  ///  Gravity field. Default INFER_FLAGS (the ENABLE_ flags decide).
+  public var GRAVITY_CHOICE: pcfGravitySelection { let o = _accessor.offset(VT.GRAVITY_CHOICE); return o == 0 ? .inferFlags : pcfGravitySelection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .inferFlags }
+  ///  Central-body point-mass term. Default true.
+  public var ENABLE_POINT_MASS: Bool { let o = _accessor.offset(VT.ENABLE_POINT_MASS); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Gravitational parameter of the central body, m3/s2; required positive
+  ///  when a central gravity term is enabled. Default 0.
+  public var GRAVITATIONAL_PARAMETER: Double { let o = _accessor.offset(VT.GRAVITATIONAL_PARAMETER); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  J2 zonal term. Default true.
+  public var ENABLE_J2: Bool { let o = _accessor.offset(VT.ENABLE_J2); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  J3 zonal term. Default false.
+  public var ENABLE_J3: Bool { let o = _accessor.offset(VT.ENABLE_J3); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  J4 zonal term. Default false.
+  public var ENABLE_J4: Bool { let o = _accessor.offset(VT.ENABLE_J4); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Zonal terms above J4. Default false.
+  public var ENABLE_HIGHER_ZONALS: Bool { let o = _accessor.offset(VT.ENABLE_HIGHER_ZONALS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Highest field degree; dimensionless. Absent selects the explicitly
+  ///  reported model default.
+  public var MAXIMUM_DEGREE: UInt16 { let o = _accessor.offset(VT.MAXIMUM_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  True when MAXIMUM_DEGREE carries a value; false (the default) means absent.
+  public var HAS_MAXIMUM_DEGREE: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_DEGREE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Highest field order; dimensionless. Absent selects the explicitly
+  ///  reported model default.
+  public var MAXIMUM_ORDER: UInt16 { let o = _accessor.offset(VT.MAXIMUM_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  True when MAXIMUM_ORDER carries a value; false (the default) means absent.
+  public var HAS_MAXIMUM_ORDER: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_ORDER); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Third-body gravity of THIRD_BODY_IDS. Default false.
+  public var ENABLE_THIRD_BODY: Bool { let o = _accessor.offset(VT.ENABLE_THIRD_BODY); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  NAIF IDs; explicit vector, e.g. [10,301]. Empty (the default) means no
+  ///  third bodies.
+  public var THIRD_BODY_IDS: FlatbufferVector<Int32> { return _accessor.vector(at: VT.THIRD_BODY_IDS, byteSize: 4) }
+  public func withUnsafePointerToThirdBodyIds<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.THIRD_BODY_IDS, body: body) }
+  ///  Solar radiation pressure. Default false.
+  public var ENABLE_SRP: Bool { let o = _accessor.offset(VT.ENABLE_SRP); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Atmospheric drag. Default false.
+  public var ENABLE_DRAG: Bool { let o = _accessor.offset(VT.ENABLE_DRAG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Spacecraft mass, kg. Default 1000.
+  public var INITIAL_MASS_KG: Double { let o = _accessor.offset(VT.INITIAL_MASS_KG); return o == 0 ? 1000.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Cross-section area, m2. Default 10.
+  public var AREA_M2: Double { let o = _accessor.offset(VT.AREA_M2); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radiation-pressure coefficient Cr, dimensionless. Default 1.5.
+  public var REFLECTIVITY_COEFFICIENT: Double { let o = _accessor.offset(VT.REFLECTIVITY_COEFFICIENT); return o == 0 ? 1.5 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Drag coefficient Cd, dimensionless. Default 2.2.
+  public var DRAG_COEFFICIENT: Double { let o = _accessor.offset(VT.DRAG_COEFFICIENT); return o == 0 ? 2.2 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Atmosphere model. Default NRLMSISE00.
+  public var ATMOSPHERE_MODEL: pcfAtmosphereFamily { let o = _accessor.offset(VT.ATMOSPHERE_MODEL); return o == 0 ? .nrlmsise00 : pcfAtmosphereFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .nrlmsise00 }
+  ///  Space weather held for the arc when WEATHER_SOURCE selects it. Default
+  ///  absent.
+  public var WEATHER: PCFSpaceWeather? { let o = _accessor.offset(VT.WEATHER); return o == 0 ? nil : PCFSpaceWeather(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Actual configured source name, e.g. an analytic series or a planetary SPK
+  ///  kernel. Required; no default.
+  public var EPHEMERIS_SOURCE: String! { let o = _accessor.offset(VT.EPHEMERIS_SOURCE); return _accessor.string(at: o) }
+  public var EPHEMERIS_SOURCESegmentArray: [UInt8]! { return _accessor.getVector(at: VT.EPHEMERIS_SOURCE) }
+  ///  Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (the request's Earth orientation rows) to apply them. Default
+  ///  NONE.
+  public var SOLID_TIDES: pcfSolidTideModel { let o = _accessor.offset(VT.SOLID_TIDES); return o == 0 ? .none_ : pcfSolidTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Post-Newtonian terms. Default NONE.
+  public var RELATIVITY: pcfRelativityTerms { let o = _accessor.offset(VT.RELATIVITY); return o == 0 ? .none_ : pcfRelativityTerms(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Constant acceleration along the in-track axis, m/s2: T of RTN,
+  ///  N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  ///  Default absent.
+  public var IN_TRACK_ACCELERATION_M_S2: Double { let o = _accessor.offset(VT.IN_TRACK_ACCELERATION_M_S2); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when IN_TRACK_ACCELERATION_M_S2 carries a value; false (the default)
+  ///  means absent.
+  public var HAS_IN_TRACK_ACCELERATION_M_S2: Bool { let o = _accessor.offset(VT.HAS_IN_TRACK_ACCELERATION_M_S2); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  ///  BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch). Default
+  ///  absent.
+  public var DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double { let o = _accessor.offset(VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false (the
+  ///  default) means absent.
+  public var HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool { let o = _accessor.offset(VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Highest degree of the tesseral and sectorial terms (order >= 1); the
+  ///  zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  ///  MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.
+  public var MAXIMUM_TESSERAL_DEGREE: UInt16 { let o = _accessor.offset(VT.MAXIMUM_TESSERAL_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  True when MAXIMUM_TESSERAL_DEGREE carries a value; false (the default)
+  ///  means absent.
+  public var HAS_MAXIMUM_TESSERAL_DEGREE: Bool { let o = _accessor.offset(VT.HAS_MAXIMUM_TESSERAL_DEGREE); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Solar radiation pressure model family. Default CANNONBALL.
+  public var RADIATION_PRESSURE_MODEL: pcfRadiationPressureFamily { let o = _accessor.offset(VT.RADIATION_PRESSURE_MODEL); return o == 0 ? .cannonball : pcfRadiationPressureFamily(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .cannonball }
+  ///  Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  ///  Default UNSPECIFIED.
+  public var GNSS_BLOCK: pcfGnssSpacecraftBlock { let o = _accessor.offset(VT.GNSS_BLOCK); return o == 0 ? .unspecified : pcfGnssSpacecraftBlock(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  ECOM2 coefficients; absent (the default) means no ECOM2 term.
+  public var ECOM2: PCFEcom2? { let o = _accessor.offset(VT.ECOM2); return o == 0 ? nil : PCFEcom2(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Earth radiation pressure (albedo and infrared). It reads the Sun's
+  ///  position from the ephemeris source. Default NONE.
+  public var EARTH_RADIATION: pcfEarthRadiationModel { let o = _accessor.offset(VT.EARTH_RADIATION); return o == 0 ? .none_ : pcfEarthRadiationModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Angular size of the Earth surface elements it sums, degrees. Default 15.
+  public var EARTH_RADIATION_RESOLUTION_DEG: Double { let o = _accessor.offset(VT.EARTH_RADIATION_RESOLUTION_DEG); return o == 0 ? 15.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  ///  cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  ///  fitting SRP_AREA_OVER_MASS scales both.
+  public var EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Double { let o = _accessor.offset(VT.EARTH_RADIATION_AREA_OVER_MASS_M2_KG); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false (the
+  ///  default) means absent.
+  public var HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Bool { let o = _accessor.offset(VT.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (the request's Earth orientation rows) to apply them. Default
+  ///  NONE.
+  public var OCEAN_TIDES: pcfOceanTideModel { let o = _accessor.offset(VT.OCEAN_TIDES); return o == 0 ? .none_ : pcfOceanTideModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Truncation of the ocean tide field, degree. Default 30.
+  public var OCEAN_TIDE_MAXIMUM_DEGREE: UInt16 { let o = _accessor.offset(VT.OCEAN_TIDE_MAXIMUM_DEGREE); return o == 0 ? 30 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Truncation of the ocean tide field, order. Default 30.
+  public var OCEAN_TIDE_MAXIMUM_ORDER: UInt16 { let o = _accessor.offset(VT.OCEAN_TIDE_MAXIMUM_ORDER); return o == 0 ? 30 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Central body, a NAIF ID. The gravity field, atmosphere, tides and third
+  ///  bodies are those of this body. Default 399 (Earth).
+  public var CENTRAL_BODY_NAIF_ID: Int32 { let o = _accessor.offset(VT.CENTRAL_BODY_NAIF_ID); return o == 0 ? 399 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Where the Sun, Moon and planets are read from. Default UNSPECIFIED (the
+  ///  source named in EPHEMERIS_SOURCE).
+  public var EPHEMERIS_KIND: pcfEphemerisKind { let o = _accessor.offset(VT.EPHEMERIS_KIND); return o == 0 ? .unspecified : pcfEphemerisKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Shadow model of the radiation-pressure and Earth-radiation terms. Default
+  ///  UNSPECIFIED (the provider's: conical).
+  public var SHADOW_MODEL: evlShadowModel { let o = _accessor.offset(VT.SHADOW_MODEL); return o == 0 ? .unspecified : evlShadowModel(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Where the space weather comes from. Default UNSPECIFIED (inferred).
+  public var WEATHER_SOURCE: pcfWeatherSource { let o = _accessor.offset(VT.WEATHER_SOURCE); return o == 0 ? .unspecified : pcfWeatherSource(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  What happens past the last space weather row. Default UNSPECIFIED (the
+  ///  provider's rule).
+  public var WEATHER_EXTENSION: pcfWeatherExtension { let o = _accessor.offset(VT.WEATHER_EXTENSION); return o == 0 ? .unspecified : pcfWeatherExtension(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Correction applied to the atmosphere model's density. Default NONE.
+  public var DENSITY_CORRECTION: pcfDensityCorrection { let o = _accessor.offset(VT.DENSITY_CORRECTION); return o == 0 ? .none_ : pcfDensityCorrection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Past the last density-correction node the log-density scale relaxes to
+  ///  its trailing mean with this time constant, hours; 0 holds the last node.
+  ///  Absent, the provider's rule (the numerical propagator holds; the advanced
+  ///  mean-element propagator relaxes with 48 h).
+  public var DENSITY_CORRECTION_RELAXATION_HOURS: Double { let o = _accessor.offset(VT.DENSITY_CORRECTION_RELAXATION_HOURS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True when DENSITY_CORRECTION_RELAXATION_HOURS carries a value; false (the
+  ///  default) means absent.
+  public var HAS_DENSITY_CORRECTION_RELAXATION_HOURS: Bool { let o = _accessor.offset(VT.HAS_DENSITY_CORRECTION_RELAXATION_HOURS); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Neutral wind in the drag relative velocity. Default NONE.
+  public var NEUTRAL_WIND: pcfNeutralWind { let o = _accessor.offset(VT.NEUTRAL_WIND); return o == 0 ? .none_ : pcfNeutralWind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .none_ }
+  ///  Empirical along-track terms of the averaged theories. Absent (the
+  ///  default): the theory's own.
+  public var EMPIRICAL_TERMS: PCFEmpiricalTerms? { let o = _accessor.offset(VT.EMPIRICAL_TERMS); return o == 0 ? nil : PCFEmpiricalTerms(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPCFForceModel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 50) }
+  public static func add(GRAVITY_CHOICE: pcfGravitySelection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_CHOICE.rawValue, def: 0, at: VT.GRAVITY_CHOICE) }
+  public static func add(ENABLE_POINT_MASS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_POINT_MASS, def: true,
+   at: VT.ENABLE_POINT_MASS) }
+  public static func add(GRAVITATIONAL_PARAMETER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITATIONAL_PARAMETER, def: 0.0, at: VT.GRAVITATIONAL_PARAMETER) }
+  public static func add(ENABLE_J2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_J2, def: true,
+   at: VT.ENABLE_J2) }
+  public static func add(ENABLE_J3: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_J3, def: false,
+   at: VT.ENABLE_J3) }
+  public static func add(ENABLE_J4: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_J4, def: false,
+   at: VT.ENABLE_J4) }
+  public static func add(ENABLE_HIGHER_ZONALS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_HIGHER_ZONALS, def: false,
+   at: VT.ENABLE_HIGHER_ZONALS) }
+  public static func add(MAXIMUM_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_DEGREE, def: 0, at: VT.MAXIMUM_DEGREE) }
+  public static func add(HAS_MAXIMUM_DEGREE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_DEGREE, def: false,
+   at: VT.HAS_MAXIMUM_DEGREE) }
+  public static func add(MAXIMUM_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_ORDER, def: 0, at: VT.MAXIMUM_ORDER) }
+  public static func add(HAS_MAXIMUM_ORDER: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_ORDER, def: false,
+   at: VT.HAS_MAXIMUM_ORDER) }
+  public static func add(ENABLE_THIRD_BODY: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_THIRD_BODY, def: false,
+   at: VT.ENABLE_THIRD_BODY) }
+  public static func addVectorOf(THIRD_BODY_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THIRD_BODY_IDS, at: VT.THIRD_BODY_IDS) }
+  public static func add(ENABLE_SRP: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_SRP, def: false,
+   at: VT.ENABLE_SRP) }
+  public static func add(ENABLE_DRAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENABLE_DRAG, def: false,
+   at: VT.ENABLE_DRAG) }
+  public static func add(INITIAL_MASS_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_MASS_KG, def: 1000.0, at: VT.INITIAL_MASS_KG) }
+  public static func add(AREA_M2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_M2, def: 10.0, at: VT.AREA_M2) }
+  public static func add(REFLECTIVITY_COEFFICIENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REFLECTIVITY_COEFFICIENT, def: 1.5, at: VT.REFLECTIVITY_COEFFICIENT) }
+  public static func add(DRAG_COEFFICIENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFFICIENT, def: 2.2, at: VT.DRAG_COEFFICIENT) }
+  public static func add(ATMOSPHERE_MODEL: pcfAtmosphereFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATMOSPHERE_MODEL.rawValue, def: 1, at: VT.ATMOSPHERE_MODEL) }
+  public static func add(WEATHER: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WEATHER, at: VT.WEATHER) }
+  public static func add(EPHEMERIS_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPHEMERIS_SOURCE, at: VT.EPHEMERIS_SOURCE) }
+  public static func add(SOLID_TIDES: pcfSolidTideModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLID_TIDES.rawValue, def: 0, at: VT.SOLID_TIDES) }
+  public static func add(RELATIVITY: pcfRelativityTerms, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RELATIVITY.rawValue, def: 0, at: VT.RELATIVITY) }
+  public static func add(IN_TRACK_ACCELERATION_M_S2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IN_TRACK_ACCELERATION_M_S2, def: 0.0, at: VT.IN_TRACK_ACCELERATION_M_S2) }
+  public static func add(HAS_IN_TRACK_ACCELERATION_M_S2: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_IN_TRACK_ACCELERATION_M_S2, def: false,
+   at: VT.HAS_IN_TRACK_ACCELERATION_M_S2) }
+  public static func add(DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA_OVER_MASS_RATE_M2_KG_S, def: 0.0, at: VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S) }
+  public static func add(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, def: false,
+   at: VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) }
+  public static func add(MAXIMUM_TESSERAL_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_TESSERAL_DEGREE, def: 0, at: VT.MAXIMUM_TESSERAL_DEGREE) }
+  public static func add(HAS_MAXIMUM_TESSERAL_DEGREE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_MAXIMUM_TESSERAL_DEGREE, def: false,
+   at: VT.HAS_MAXIMUM_TESSERAL_DEGREE) }
+  public static func add(RADIATION_PRESSURE_MODEL: pcfRadiationPressureFamily, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RADIATION_PRESSURE_MODEL.rawValue, def: 0, at: VT.RADIATION_PRESSURE_MODEL) }
+  public static func add(GNSS_BLOCK: pcfGnssSpacecraftBlock, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNSS_BLOCK.rawValue, def: 0, at: VT.GNSS_BLOCK) }
+  public static func add(ECOM2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECOM2, at: VT.ECOM2) }
+  public static func add(EARTH_RADIATION: pcfEarthRadiationModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_RADIATION.rawValue, def: 0, at: VT.EARTH_RADIATION) }
+  public static func add(EARTH_RADIATION_RESOLUTION_DEG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_RADIATION_RESOLUTION_DEG, def: 15.0, at: VT.EARTH_RADIATION_RESOLUTION_DEG) }
+  public static func add(EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EARTH_RADIATION_AREA_OVER_MASS_M2_KG, def: 0.0, at: VT.EARTH_RADIATION_AREA_OVER_MASS_M2_KG) }
+  public static func add(HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, def: false,
+   at: VT.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG) }
+  public static func add(OCEAN_TIDES: pcfOceanTideModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDES.rawValue, def: 0, at: VT.OCEAN_TIDES) }
+  public static func add(OCEAN_TIDE_MAXIMUM_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDE_MAXIMUM_DEGREE, def: 30, at: VT.OCEAN_TIDE_MAXIMUM_DEGREE) }
+  public static func add(OCEAN_TIDE_MAXIMUM_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCEAN_TIDE_MAXIMUM_ORDER, def: 30, at: VT.OCEAN_TIDE_MAXIMUM_ORDER) }
+  public static func add(CENTRAL_BODY_NAIF_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY_NAIF_ID, def: 399, at: VT.CENTRAL_BODY_NAIF_ID) }
+  public static func add(EPHEMERIS_KIND: pcfEphemerisKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPHEMERIS_KIND.rawValue, def: 0, at: VT.EPHEMERIS_KIND) }
+  public static func add(SHADOW_MODEL: evlShadowModel, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SHADOW_MODEL.rawValue, def: 0, at: VT.SHADOW_MODEL) }
+  public static func add(WEATHER_SOURCE: pcfWeatherSource, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEATHER_SOURCE.rawValue, def: 0, at: VT.WEATHER_SOURCE) }
+  public static func add(WEATHER_EXTENSION: pcfWeatherExtension, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEATHER_EXTENSION.rawValue, def: 0, at: VT.WEATHER_EXTENSION) }
+  public static func add(DENSITY_CORRECTION: pcfDensityCorrection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_CORRECTION.rawValue, def: 0, at: VT.DENSITY_CORRECTION) }
+  public static func add(DENSITY_CORRECTION_RELAXATION_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_CORRECTION_RELAXATION_HOURS, def: 0.0, at: VT.DENSITY_CORRECTION_RELAXATION_HOURS) }
+  public static func add(HAS_DENSITY_CORRECTION_RELAXATION_HOURS: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_DENSITY_CORRECTION_RELAXATION_HOURS, def: false,
+   at: VT.HAS_DENSITY_CORRECTION_RELAXATION_HOURS) }
+  public static func add(NEUTRAL_WIND: pcfNeutralWind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEUTRAL_WIND.rawValue, def: 0, at: VT.NEUTRAL_WIND) }
+  public static func add(EMPIRICAL_TERMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EMPIRICAL_TERMS, at: VT.EMPIRICAL_TERMS) }
+  public static func endPCFForceModel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [46]); return end }
+  public static func createPCFForceModel(
+    _ fbb: inout FlatBufferBuilder,
+    GRAVITY_CHOICE: pcfGravitySelection = .inferFlags,
+    ENABLE_POINT_MASS: Bool = true,
+    GRAVITATIONAL_PARAMETER: Double = 0.0,
+    ENABLE_J2: Bool = true,
+    ENABLE_J3: Bool = false,
+    ENABLE_J4: Bool = false,
+    ENABLE_HIGHER_ZONALS: Bool = false,
+    MAXIMUM_DEGREE: UInt16 = 0,
+    HAS_MAXIMUM_DEGREE: Bool = false,
+    MAXIMUM_ORDER: UInt16 = 0,
+    HAS_MAXIMUM_ORDER: Bool = false,
+    ENABLE_THIRD_BODY: Bool = false,
+    THIRD_BODY_IDSVectorOffset THIRD_BODY_IDS: Offset = Offset(),
+    ENABLE_SRP: Bool = false,
+    ENABLE_DRAG: Bool = false,
+    INITIAL_MASS_KG: Double = 1000.0,
+    AREA_M2: Double = 10.0,
+    REFLECTIVITY_COEFFICIENT: Double = 1.5,
+    DRAG_COEFFICIENT: Double = 2.2,
+    ATMOSPHERE_MODEL: pcfAtmosphereFamily = .nrlmsise00,
+    WEATHEROffset WEATHER: Offset = Offset(),
+    EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset,
+    SOLID_TIDES: pcfSolidTideModel = .none_,
+    RELATIVITY: pcfRelativityTerms = .none_,
+    IN_TRACK_ACCELERATION_M_S2: Double = 0.0,
+    HAS_IN_TRACK_ACCELERATION_M_S2: Bool = false,
+    DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Double = 0.0,
+    HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: Bool = false,
+    MAXIMUM_TESSERAL_DEGREE: UInt16 = 0,
+    HAS_MAXIMUM_TESSERAL_DEGREE: Bool = false,
+    RADIATION_PRESSURE_MODEL: pcfRadiationPressureFamily = .cannonball,
+    GNSS_BLOCK: pcfGnssSpacecraftBlock = .unspecified,
+    ECOM2Offset ECOM2: Offset = Offset(),
+    EARTH_RADIATION: pcfEarthRadiationModel = .none_,
+    EARTH_RADIATION_RESOLUTION_DEG: Double = 15.0,
+    EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Double = 0.0,
+    HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: Bool = false,
+    OCEAN_TIDES: pcfOceanTideModel = .none_,
+    OCEAN_TIDE_MAXIMUM_DEGREE: UInt16 = 30,
+    OCEAN_TIDE_MAXIMUM_ORDER: UInt16 = 30,
+    CENTRAL_BODY_NAIF_ID: Int32 = 399,
+    EPHEMERIS_KIND: pcfEphemerisKind = .unspecified,
+    SHADOW_MODEL: evlShadowModel = .unspecified,
+    WEATHER_SOURCE: pcfWeatherSource = .unspecified,
+    WEATHER_EXTENSION: pcfWeatherExtension = .unspecified,
+    DENSITY_CORRECTION: pcfDensityCorrection = .none_,
+    DENSITY_CORRECTION_RELAXATION_HOURS: Double = 0.0,
+    HAS_DENSITY_CORRECTION_RELAXATION_HOURS: Bool = false,
+    NEUTRAL_WIND: pcfNeutralWind = .none_,
+    EMPIRICAL_TERMSOffset EMPIRICAL_TERMS: Offset = Offset()
+  ) -> Offset {
+    let __start = PCFForceModel.startPCFForceModel(&fbb)
+    PCFForceModel.add(GRAVITY_CHOICE: GRAVITY_CHOICE, &fbb)
+    PCFForceModel.add(ENABLE_POINT_MASS: ENABLE_POINT_MASS, &fbb)
+    PCFForceModel.add(GRAVITATIONAL_PARAMETER: GRAVITATIONAL_PARAMETER, &fbb)
+    PCFForceModel.add(ENABLE_J2: ENABLE_J2, &fbb)
+    PCFForceModel.add(ENABLE_J3: ENABLE_J3, &fbb)
+    PCFForceModel.add(ENABLE_J4: ENABLE_J4, &fbb)
+    PCFForceModel.add(ENABLE_HIGHER_ZONALS: ENABLE_HIGHER_ZONALS, &fbb)
+    PCFForceModel.add(MAXIMUM_DEGREE: MAXIMUM_DEGREE, &fbb)
+    PCFForceModel.add(HAS_MAXIMUM_DEGREE: HAS_MAXIMUM_DEGREE, &fbb)
+    PCFForceModel.add(MAXIMUM_ORDER: MAXIMUM_ORDER, &fbb)
+    PCFForceModel.add(HAS_MAXIMUM_ORDER: HAS_MAXIMUM_ORDER, &fbb)
+    PCFForceModel.add(ENABLE_THIRD_BODY: ENABLE_THIRD_BODY, &fbb)
+    PCFForceModel.addVectorOf(THIRD_BODY_IDS: THIRD_BODY_IDS, &fbb)
+    PCFForceModel.add(ENABLE_SRP: ENABLE_SRP, &fbb)
+    PCFForceModel.add(ENABLE_DRAG: ENABLE_DRAG, &fbb)
+    PCFForceModel.add(INITIAL_MASS_KG: INITIAL_MASS_KG, &fbb)
+    PCFForceModel.add(AREA_M2: AREA_M2, &fbb)
+    PCFForceModel.add(REFLECTIVITY_COEFFICIENT: REFLECTIVITY_COEFFICIENT, &fbb)
+    PCFForceModel.add(DRAG_COEFFICIENT: DRAG_COEFFICIENT, &fbb)
+    PCFForceModel.add(ATMOSPHERE_MODEL: ATMOSPHERE_MODEL, &fbb)
+    PCFForceModel.add(WEATHER: WEATHER, &fbb)
+    PCFForceModel.add(EPHEMERIS_SOURCE: EPHEMERIS_SOURCE, &fbb)
+    PCFForceModel.add(SOLID_TIDES: SOLID_TIDES, &fbb)
+    PCFForceModel.add(RELATIVITY: RELATIVITY, &fbb)
+    PCFForceModel.add(IN_TRACK_ACCELERATION_M_S2: IN_TRACK_ACCELERATION_M_S2, &fbb)
+    PCFForceModel.add(HAS_IN_TRACK_ACCELERATION_M_S2: HAS_IN_TRACK_ACCELERATION_M_S2, &fbb)
+    PCFForceModel.add(DRAG_AREA_OVER_MASS_RATE_M2_KG_S: DRAG_AREA_OVER_MASS_RATE_M2_KG_S, &fbb)
+    PCFForceModel.add(HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S: HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, &fbb)
+    PCFForceModel.add(MAXIMUM_TESSERAL_DEGREE: MAXIMUM_TESSERAL_DEGREE, &fbb)
+    PCFForceModel.add(HAS_MAXIMUM_TESSERAL_DEGREE: HAS_MAXIMUM_TESSERAL_DEGREE, &fbb)
+    PCFForceModel.add(RADIATION_PRESSURE_MODEL: RADIATION_PRESSURE_MODEL, &fbb)
+    PCFForceModel.add(GNSS_BLOCK: GNSS_BLOCK, &fbb)
+    PCFForceModel.add(ECOM2: ECOM2, &fbb)
+    PCFForceModel.add(EARTH_RADIATION: EARTH_RADIATION, &fbb)
+    PCFForceModel.add(EARTH_RADIATION_RESOLUTION_DEG: EARTH_RADIATION_RESOLUTION_DEG, &fbb)
+    PCFForceModel.add(EARTH_RADIATION_AREA_OVER_MASS_M2_KG: EARTH_RADIATION_AREA_OVER_MASS_M2_KG, &fbb)
+    PCFForceModel.add(HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG: HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, &fbb)
+    PCFForceModel.add(OCEAN_TIDES: OCEAN_TIDES, &fbb)
+    PCFForceModel.add(OCEAN_TIDE_MAXIMUM_DEGREE: OCEAN_TIDE_MAXIMUM_DEGREE, &fbb)
+    PCFForceModel.add(OCEAN_TIDE_MAXIMUM_ORDER: OCEAN_TIDE_MAXIMUM_ORDER, &fbb)
+    PCFForceModel.add(CENTRAL_BODY_NAIF_ID: CENTRAL_BODY_NAIF_ID, &fbb)
+    PCFForceModel.add(EPHEMERIS_KIND: EPHEMERIS_KIND, &fbb)
+    PCFForceModel.add(SHADOW_MODEL: SHADOW_MODEL, &fbb)
+    PCFForceModel.add(WEATHER_SOURCE: WEATHER_SOURCE, &fbb)
+    PCFForceModel.add(WEATHER_EXTENSION: WEATHER_EXTENSION, &fbb)
+    PCFForceModel.add(DENSITY_CORRECTION: DENSITY_CORRECTION, &fbb)
+    PCFForceModel.add(DENSITY_CORRECTION_RELAXATION_HOURS: DENSITY_CORRECTION_RELAXATION_HOURS, &fbb)
+    PCFForceModel.add(HAS_DENSITY_CORRECTION_RELAXATION_HOURS: HAS_DENSITY_CORRECTION_RELAXATION_HOURS, &fbb)
+    PCFForceModel.add(NEUTRAL_WIND: NEUTRAL_WIND, &fbb)
+    PCFForceModel.add(EMPIRICAL_TERMS: EMPIRICAL_TERMS, &fbb)
+    return PCFForceModel.endPCFForceModel(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.GRAVITY_CHOICE, fieldName: "GRAVITY_CHOICE", required: false, type: pcfGravitySelection.self)
+    try _v.visit(field: VT.ENABLE_POINT_MASS, fieldName: "ENABLE_POINT_MASS", required: false, type: Bool.self)
+    try _v.visit(field: VT.GRAVITATIONAL_PARAMETER, fieldName: "GRAVITATIONAL_PARAMETER", required: false, type: Double.self)
+    try _v.visit(field: VT.ENABLE_J2, fieldName: "ENABLE_J2", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_J3, fieldName: "ENABLE_J3", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_J4, fieldName: "ENABLE_J4", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_HIGHER_ZONALS, fieldName: "ENABLE_HIGHER_ZONALS", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_DEGREE, fieldName: "MAXIMUM_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_DEGREE, fieldName: "HAS_MAXIMUM_DEGREE", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_ORDER, fieldName: "MAXIMUM_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_ORDER, fieldName: "HAS_MAXIMUM_ORDER", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_THIRD_BODY, fieldName: "ENABLE_THIRD_BODY", required: false, type: Bool.self)
+    try _v.visit(field: VT.THIRD_BODY_IDS, fieldName: "THIRD_BODY_IDS", required: false, type: ForwardOffset<Vector<Int32, Int32>>.self)
+    try _v.visit(field: VT.ENABLE_SRP, fieldName: "ENABLE_SRP", required: false, type: Bool.self)
+    try _v.visit(field: VT.ENABLE_DRAG, fieldName: "ENABLE_DRAG", required: false, type: Bool.self)
+    try _v.visit(field: VT.INITIAL_MASS_KG, fieldName: "INITIAL_MASS_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.AREA_M2, fieldName: "AREA_M2", required: false, type: Double.self)
+    try _v.visit(field: VT.REFLECTIVITY_COEFFICIENT, fieldName: "REFLECTIVITY_COEFFICIENT", required: false, type: Double.self)
+    try _v.visit(field: VT.DRAG_COEFFICIENT, fieldName: "DRAG_COEFFICIENT", required: false, type: Double.self)
+    try _v.visit(field: VT.ATMOSPHERE_MODEL, fieldName: "ATMOSPHERE_MODEL", required: false, type: pcfAtmosphereFamily.self)
+    try _v.visit(field: VT.WEATHER, fieldName: "WEATHER", required: false, type: ForwardOffset<PCFSpaceWeather>.self)
+    try _v.visit(field: VT.EPHEMERIS_SOURCE, fieldName: "EPHEMERIS_SOURCE", required: true, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.SOLID_TIDES, fieldName: "SOLID_TIDES", required: false, type: pcfSolidTideModel.self)
+    try _v.visit(field: VT.RELATIVITY, fieldName: "RELATIVITY", required: false, type: pcfRelativityTerms.self)
+    try _v.visit(field: VT.IN_TRACK_ACCELERATION_M_S2, fieldName: "IN_TRACK_ACCELERATION_M_S2", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_IN_TRACK_ACCELERATION_M_S2, fieldName: "HAS_IN_TRACK_ACCELERATION_M_S2", required: false, type: Bool.self)
+    try _v.visit(field: VT.DRAG_AREA_OVER_MASS_RATE_M2_KG_S, fieldName: "DRAG_AREA_OVER_MASS_RATE_M2_KG_S", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, fieldName: "HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S", required: false, type: Bool.self)
+    try _v.visit(field: VT.MAXIMUM_TESSERAL_DEGREE, fieldName: "MAXIMUM_TESSERAL_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.HAS_MAXIMUM_TESSERAL_DEGREE, fieldName: "HAS_MAXIMUM_TESSERAL_DEGREE", required: false, type: Bool.self)
+    try _v.visit(field: VT.RADIATION_PRESSURE_MODEL, fieldName: "RADIATION_PRESSURE_MODEL", required: false, type: pcfRadiationPressureFamily.self)
+    try _v.visit(field: VT.GNSS_BLOCK, fieldName: "GNSS_BLOCK", required: false, type: pcfGnssSpacecraftBlock.self)
+    try _v.visit(field: VT.ECOM2, fieldName: "ECOM2", required: false, type: ForwardOffset<PCFEcom2>.self)
+    try _v.visit(field: VT.EARTH_RADIATION, fieldName: "EARTH_RADIATION", required: false, type: pcfEarthRadiationModel.self)
+    try _v.visit(field: VT.EARTH_RADIATION_RESOLUTION_DEG, fieldName: "EARTH_RADIATION_RESOLUTION_DEG", required: false, type: Double.self)
+    try _v.visit(field: VT.EARTH_RADIATION_AREA_OVER_MASS_M2_KG, fieldName: "EARTH_RADIATION_AREA_OVER_MASS_M2_KG", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, fieldName: "HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG", required: false, type: Bool.self)
+    try _v.visit(field: VT.OCEAN_TIDES, fieldName: "OCEAN_TIDES", required: false, type: pcfOceanTideModel.self)
+    try _v.visit(field: VT.OCEAN_TIDE_MAXIMUM_DEGREE, fieldName: "OCEAN_TIDE_MAXIMUM_DEGREE", required: false, type: UInt16.self)
+    try _v.visit(field: VT.OCEAN_TIDE_MAXIMUM_ORDER, fieldName: "OCEAN_TIDE_MAXIMUM_ORDER", required: false, type: UInt16.self)
+    try _v.visit(field: VT.CENTRAL_BODY_NAIF_ID, fieldName: "CENTRAL_BODY_NAIF_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.EPHEMERIS_KIND, fieldName: "EPHEMERIS_KIND", required: false, type: pcfEphemerisKind.self)
+    try _v.visit(field: VT.SHADOW_MODEL, fieldName: "SHADOW_MODEL", required: false, type: evlShadowModel.self)
+    try _v.visit(field: VT.WEATHER_SOURCE, fieldName: "WEATHER_SOURCE", required: false, type: pcfWeatherSource.self)
+    try _v.visit(field: VT.WEATHER_EXTENSION, fieldName: "WEATHER_EXTENSION", required: false, type: pcfWeatherExtension.self)
+    try _v.visit(field: VT.DENSITY_CORRECTION, fieldName: "DENSITY_CORRECTION", required: false, type: pcfDensityCorrection.self)
+    try _v.visit(field: VT.DENSITY_CORRECTION_RELAXATION_HOURS, fieldName: "DENSITY_CORRECTION_RELAXATION_HOURS", required: false, type: Double.self)
+    try _v.visit(field: VT.HAS_DENSITY_CORRECTION_RELAXATION_HOURS, fieldName: "HAS_DENSITY_CORRECTION_RELAXATION_HOURS", required: false, type: Bool.self)
+    try _v.visit(field: VT.NEUTRAL_WIND, fieldName: "NEUTRAL_WIND", required: false, type: pcfNeutralWind.self)
+    try _v.visit(field: VT.EMPIRICAL_TERMS, fieldName: "EMPIRICAL_TERMS", required: false, type: ForwardOffset<PCFEmpiricalTerms>.self)
+    _v.finish()
+  }
+}
+
+///  Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+///  any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+///  force model, Kepler): the theory, the integrator and its settings, the
+///  forces, the fit policy, the events to locate, maneuver detection, reentry
+///  hand-off, launch priors and the output. A host passes it beside the
+///  request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+///  launch) selects the tables that method reads. An absent table takes the
+///  theory's own defaults; a table or value the selected theory cannot honor is
+///  refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+///  PCFForceModel and their enums, so the runtime wire and the configuration
+///  share one definition of each. Units are in the field names and docs; every
+///  field states its default.
 public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -39,104 +2069,113 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let STEP_SIZE: VOffset = 4
-    static let TOLERANCE: VOffset = 6
-    static let MIN_STEP: VOffset = 8
-    static let MAX_STEP: VOffset = 10
-    static let MAX_ITERATIONS: VOffset = 12
-    static let GRAVITY_DEGREE: VOffset = 14
-    static let GRAVITY_ORDER: VOffset = 16
-    static let INTEGRATOR: VOffset = 18
-    static let OUTPUT_FRAME: VOffset = 20
-    static let FORCE_FLAGS: VOffset = 22
-    static let DRAG_COEFFICIENT: VOffset = 24
-    static let SRP_COEFFICIENT: VOffset = 26
-    static let AREA_MASS_RATIO: VOffset = 28
-    static let RESERVED: VOffset = 30
+    static let CONFIGURATION_ID: VOffset = 4
+    static let PROFILE: VOffset = 6
+    static let THEORY: VOffset = 8
+    static let INTEGRATOR: VOffset = 10
+    static let FORCES: VOffset = 12
+    static let MEAN_ELEMENT: VOffset = 14
+    static let SEGMENTS: VOffset = 16
+    static let FIT: VOffset = 18
+    static let EVENTS: VOffset = 20
+    static let MANEUVER_DETECTION: VOffset = 22
+    static let REENTRY: VOffset = 24
+    static let LAUNCH: VOffset = 26
+    static let OUTPUT: VOffset = 28
   }
 
-  public var STEP_SIZE: Double { let o = _accessor.offset(VT.STEP_SIZE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var TOLERANCE: Double { let o = _accessor.offset(VT.TOLERANCE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MIN_STEP: Double { let o = _accessor.offset(VT.MIN_STEP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_STEP: Double { let o = _accessor.offset(VT.MAX_STEP); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var MAX_ITERATIONS: UInt32 { let o = _accessor.offset(VT.MAX_ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public var GRAVITY_DEGREE: UInt16 { let o = _accessor.offset(VT.GRAVITY_DEGREE); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var GRAVITY_ORDER: UInt16 { let o = _accessor.offset(VT.GRAVITY_ORDER); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var INTEGRATOR: UInt8 { let o = _accessor.offset(VT.INTEGRATOR); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var OUTPUT_FRAME: UInt8 { let o = _accessor.offset(VT.OUTPUT_FRAME); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
-  public var FORCE_FLAGS: UInt16 { let o = _accessor.offset(VT.FORCE_FLAGS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
-  public var DRAG_COEFFICIENT: Float32 { let o = _accessor.offset(VT.DRAG_COEFFICIENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var SRP_COEFFICIENT: Float32 { let o = _accessor.offset(VT.SRP_COEFFICIENT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var AREA_MASS_RATIO: Float32 { let o = _accessor.offset(VT.AREA_MASS_RATIO); return o == 0 ? 0.0 : _accessor.readBuffer(of: Float32.self, at: o) }
-  public var RESERVED: FlatbufferVector<UInt8> { return _accessor.vector(at: VT.RESERVED, byteSize: 1) }
-  public func withUnsafePointerToReserved<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.RESERVED, body: body) }
-  public static func startPCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
-  public static func add(STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STEP_SIZE, def: 0.0, at: VT.STEP_SIZE) }
-  public static func add(TOLERANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE, def: 0.0, at: VT.TOLERANCE) }
-  public static func add(MIN_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MIN_STEP, def: 0.0, at: VT.MIN_STEP) }
-  public static func add(MAX_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_STEP, def: 0.0, at: VT.MAX_STEP) }
-  public static func add(MAX_ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_ITERATIONS, def: 0, at: VT.MAX_ITERATIONS) }
-  public static func add(GRAVITY_DEGREE: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_DEGREE, def: 0, at: VT.GRAVITY_DEGREE) }
-  public static func add(GRAVITY_ORDER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GRAVITY_ORDER, def: 0, at: VT.GRAVITY_ORDER) }
-  public static func add(INTEGRATOR: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATOR, def: 0, at: VT.INTEGRATOR) }
-  public static func add(OUTPUT_FRAME: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OUTPUT_FRAME, def: 0, at: VT.OUTPUT_FRAME) }
-  public static func add(FORCE_FLAGS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORCE_FLAGS, def: 0, at: VT.FORCE_FLAGS) }
-  public static func add(DRAG_COEFFICIENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_COEFFICIENT, def: 0.0, at: VT.DRAG_COEFFICIENT) }
-  public static func add(SRP_COEFFICIENT: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SRP_COEFFICIENT, def: 0.0, at: VT.SRP_COEFFICIENT) }
-  public static func add(AREA_MASS_RATIO: Float32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AREA_MASS_RATIO, def: 0.0, at: VT.AREA_MASS_RATIO) }
-  public static func addVectorOf(RESERVED: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RESERVED, at: VT.RESERVED) }
+  ///  Opaque identifier of this configuration, for provenance. Default empty.
+  public var CONFIGURATION_ID: String? { let o = _accessor.offset(VT.CONFIGURATION_ID); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONFIGURATION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CONFIGURATION_ID) }
+  ///  Named profile this configuration instantiates, for example "FFM-1".
+  ///  Informational: every value that matters is carried below. Default empty.
+  public var PROFILE: String? { let o = _accessor.offset(VT.PROFILE); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PROFILESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROFILE) }
+  ///  The orbit theory. Default UNSPECIFIED (the receiving module's own).
+  public var THEORY: pcfTheory { let o = _accessor.offset(VT.THEORY); return o == 0 ? .unspecified : pcfTheory(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Integrator and settings. Absent: the theory's own.
+  public var INTEGRATOR: PCFIntegratorSettings? { let o = _accessor.offset(VT.INTEGRATOR); return o == 0 ? nil : PCFIntegratorSettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Forces. Absent: the theory's built-in set.
+  public var FORCES: PCFForceModel? { let o = _accessor.offset(VT.FORCES); return o == 0 ? nil : PCFForceModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+  public var MEAN_ELEMENT: PCFMeanElementOptions? { let o = _accessor.offset(VT.MEAN_ELEMENT); return o == 0 ? nil : PCFMeanElementOptions(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Beyond-Earth segment sets.
+  public var SEGMENTS: PCFSegmentOptions? { let o = _accessor.offset(VT.SEGMENTS); return o == 0 ? nil : PCFSegmentOptions(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Fit policy.
+  public var FIT: PCFFitPolicy? { let o = _accessor.offset(VT.FIT); return o == 0 ? nil : PCFFitPolicy(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Events located while integrating. Default empty.
+  public var EVENTS: FlatbufferVector<PCFEventDefinition> { return _accessor.vector(at: VT.EVENTS, byteSize: 4) }
+  ///  Maneuver detection.
+  public var MANEUVER_DETECTION: PCFManeuverDetection? { let o = _accessor.offset(VT.MANEUVER_DETECTION); return o == 0 ? nil : PCFManeuverDetection(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Reentry hand-off and window.
+  public var REENTRY: PCFReentry? { let o = _accessor.offset(VT.REENTRY); return o == 0 ? nil : PCFReentry(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Launch initialization priors.
+  public var LAUNCH: PCFLaunch? { let o = _accessor.offset(VT.LAUNCH); return o == 0 ? nil : PCFLaunch(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Output states.
+  public var OUTPUT: PCFOutput? { let o = _accessor.offset(VT.OUTPUT); return o == 0 ? nil : PCFOutput(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  public static func add(CONFIGURATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIGURATION_ID, at: VT.CONFIGURATION_ID) }
+  public static func add(PROFILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROFILE, at: VT.PROFILE) }
+  public static func add(THEORY: pcfTheory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THEORY.rawValue, def: 0, at: VT.THEORY) }
+  public static func add(INTEGRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATOR, at: VT.INTEGRATOR) }
+  public static func add(FORCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORCES, at: VT.FORCES) }
+  public static func add(MEAN_ELEMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEAN_ELEMENT, at: VT.MEAN_ELEMENT) }
+  public static func add(SEGMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEGMENTS, at: VT.SEGMENTS) }
+  public static func add(FIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FIT, at: VT.FIT) }
+  public static func addVectorOf(EVENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENTS, at: VT.EVENTS) }
+  public static func add(MANEUVER_DETECTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MANEUVER_DETECTION, at: VT.MANEUVER_DETECTION) }
+  public static func add(REENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY, at: VT.REENTRY) }
+  public static func add(LAUNCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH, at: VT.LAUNCH) }
+  public static func add(OUTPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT, at: VT.OUTPUT) }
   public static func endPCF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCF(
     _ fbb: inout FlatBufferBuilder,
-    STEP_SIZE: Double = 0.0,
-    TOLERANCE: Double = 0.0,
-    MIN_STEP: Double = 0.0,
-    MAX_STEP: Double = 0.0,
-    MAX_ITERATIONS: UInt32 = 0,
-    GRAVITY_DEGREE: UInt16 = 0,
-    GRAVITY_ORDER: UInt16 = 0,
-    INTEGRATOR: UInt8 = 0,
-    OUTPUT_FRAME: UInt8 = 0,
-    FORCE_FLAGS: UInt16 = 0,
-    DRAG_COEFFICIENT: Float32 = 0.0,
-    SRP_COEFFICIENT: Float32 = 0.0,
-    AREA_MASS_RATIO: Float32 = 0.0,
-    RESERVEDVectorOffset RESERVED: Offset = Offset()
+    CONFIGURATION_IDOffset CONFIGURATION_ID: Offset = Offset(),
+    PROFILEOffset PROFILE: Offset = Offset(),
+    THEORY: pcfTheory = .unspecified,
+    INTEGRATOROffset INTEGRATOR: Offset = Offset(),
+    FORCESOffset FORCES: Offset = Offset(),
+    MEAN_ELEMENTOffset MEAN_ELEMENT: Offset = Offset(),
+    SEGMENTSOffset SEGMENTS: Offset = Offset(),
+    FITOffset FIT: Offset = Offset(),
+    EVENTSVectorOffset EVENTS: Offset = Offset(),
+    MANEUVER_DETECTIONOffset MANEUVER_DETECTION: Offset = Offset(),
+    REENTRYOffset REENTRY: Offset = Offset(),
+    LAUNCHOffset LAUNCH: Offset = Offset(),
+    OUTPUTOffset OUTPUT: Offset = Offset()
   ) -> Offset {
     let __start = PCF.startPCF(&fbb)
-    PCF.add(STEP_SIZE: STEP_SIZE, &fbb)
-    PCF.add(TOLERANCE: TOLERANCE, &fbb)
-    PCF.add(MIN_STEP: MIN_STEP, &fbb)
-    PCF.add(MAX_STEP: MAX_STEP, &fbb)
-    PCF.add(MAX_ITERATIONS: MAX_ITERATIONS, &fbb)
-    PCF.add(GRAVITY_DEGREE: GRAVITY_DEGREE, &fbb)
-    PCF.add(GRAVITY_ORDER: GRAVITY_ORDER, &fbb)
+    PCF.add(CONFIGURATION_ID: CONFIGURATION_ID, &fbb)
+    PCF.add(PROFILE: PROFILE, &fbb)
+    PCF.add(THEORY: THEORY, &fbb)
     PCF.add(INTEGRATOR: INTEGRATOR, &fbb)
-    PCF.add(OUTPUT_FRAME: OUTPUT_FRAME, &fbb)
-    PCF.add(FORCE_FLAGS: FORCE_FLAGS, &fbb)
-    PCF.add(DRAG_COEFFICIENT: DRAG_COEFFICIENT, &fbb)
-    PCF.add(SRP_COEFFICIENT: SRP_COEFFICIENT, &fbb)
-    PCF.add(AREA_MASS_RATIO: AREA_MASS_RATIO, &fbb)
-    PCF.addVectorOf(RESERVED: RESERVED, &fbb)
+    PCF.add(FORCES: FORCES, &fbb)
+    PCF.add(MEAN_ELEMENT: MEAN_ELEMENT, &fbb)
+    PCF.add(SEGMENTS: SEGMENTS, &fbb)
+    PCF.add(FIT: FIT, &fbb)
+    PCF.addVectorOf(EVENTS: EVENTS, &fbb)
+    PCF.add(MANEUVER_DETECTION: MANEUVER_DETECTION, &fbb)
+    PCF.add(REENTRY: REENTRY, &fbb)
+    PCF.add(LAUNCH: LAUNCH, &fbb)
+    PCF.add(OUTPUT: OUTPUT, &fbb)
     return PCF.endPCF(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.STEP_SIZE, fieldName: "STEP_SIZE", required: false, type: Double.self)
-    try _v.visit(field: VT.TOLERANCE, fieldName: "TOLERANCE", required: false, type: Double.self)
-    try _v.visit(field: VT.MIN_STEP, fieldName: "MIN_STEP", required: false, type: Double.self)
-    try _v.visit(field: VT.MAX_STEP, fieldName: "MAX_STEP", required: false, type: Double.self)
-    try _v.visit(field: VT.MAX_ITERATIONS, fieldName: "MAX_ITERATIONS", required: false, type: UInt32.self)
-    try _v.visit(field: VT.GRAVITY_DEGREE, fieldName: "GRAVITY_DEGREE", required: false, type: UInt16.self)
-    try _v.visit(field: VT.GRAVITY_ORDER, fieldName: "GRAVITY_ORDER", required: false, type: UInt16.self)
-    try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: false, type: UInt8.self)
-    try _v.visit(field: VT.OUTPUT_FRAME, fieldName: "OUTPUT_FRAME", required: false, type: UInt8.self)
-    try _v.visit(field: VT.FORCE_FLAGS, fieldName: "FORCE_FLAGS", required: false, type: UInt16.self)
-    try _v.visit(field: VT.DRAG_COEFFICIENT, fieldName: "DRAG_COEFFICIENT", required: false, type: Float32.self)
-    try _v.visit(field: VT.SRP_COEFFICIENT, fieldName: "SRP_COEFFICIENT", required: false, type: Float32.self)
-    try _v.visit(field: VT.AREA_MASS_RATIO, fieldName: "AREA_MASS_RATIO", required: false, type: Float32.self)
-    try _v.visit(field: VT.RESERVED, fieldName: "RESERVED", required: false, type: ForwardOffset<Vector<UInt8, UInt8>>.self)
+    try _v.visit(field: VT.CONFIGURATION_ID, fieldName: "CONFIGURATION_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.PROFILE, fieldName: "PROFILE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.THEORY, fieldName: "THEORY", required: false, type: pcfTheory.self)
+    try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: false, type: ForwardOffset<PCFIntegratorSettings>.self)
+    try _v.visit(field: VT.FORCES, fieldName: "FORCES", required: false, type: ForwardOffset<PCFForceModel>.self)
+    try _v.visit(field: VT.MEAN_ELEMENT, fieldName: "MEAN_ELEMENT", required: false, type: ForwardOffset<PCFMeanElementOptions>.self)
+    try _v.visit(field: VT.SEGMENTS, fieldName: "SEGMENTS", required: false, type: ForwardOffset<PCFSegmentOptions>.self)
+    try _v.visit(field: VT.FIT, fieldName: "FIT", required: false, type: ForwardOffset<PCFFitPolicy>.self)
+    try _v.visit(field: VT.EVENTS, fieldName: "EVENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCFEventDefinition>, PCFEventDefinition>>.self)
+    try _v.visit(field: VT.MANEUVER_DETECTION, fieldName: "MANEUVER_DETECTION", required: false, type: ForwardOffset<PCFManeuverDetection>.self)
+    try _v.visit(field: VT.REENTRY, fieldName: "REENTRY", required: false, type: ForwardOffset<PCFReentry>.self)
+    try _v.visit(field: VT.LAUNCH, fieldName: "LAUNCH", required: false, type: ForwardOffset<PCFLaunch>.self)
+    try _v.visit(field: VT.OUTPUT, fieldName: "OUTPUT", required: false, type: ForwardOffset<PCFOutput>.self)
     _v.finish()
   }
 }

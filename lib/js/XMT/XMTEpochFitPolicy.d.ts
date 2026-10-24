@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
-import { PRWForceConfiguration, PRWForceConfigurationT } from './PRWForceConfiguration.js';
-import { PRWIntegratorSettings, PRWIntegratorSettingsT } from './PRWIntegratorSettings.js';
+import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
+import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
 /**
  * Policy of an epoch-state fit to a provider ephemeris, validated on
  * held-out samples.
@@ -24,11 +24,11 @@ export declare class XMTEpochFitPolicy implements flatbuffers.IUnpackableObject<
     /**
      * Force model the trajectories were propagated with.
      */
-    FORCE_MODEL(obj?: PRWForceConfiguration): PRWForceConfiguration | null;
+    FORCE_MODEL(obj?: PCFForceModel): PCFForceModel | null;
     /**
      * Integrator settings, when stated.
      */
-    INTEGRATOR(obj?: PRWIntegratorSettings): PRWIntegratorSettings | null;
+    INTEGRATOR(obj?: PCFIntegratorSettings): PCFIntegratorSettings | null;
     /**
      * Known limitations of the force model (human-readable).
      */
@@ -93,8 +93,8 @@ export declare class XMTEpochFitPolicy implements flatbuffers.IUnpackableObject<
 export declare class XMTEpochFitPolicyT implements flatbuffers.IGeneratedObject {
     PROPAGATOR_ID: string | Uint8Array | null;
     PROPAGATOR_ARTIFACT_SHA256: string | Uint8Array | null;
-    FORCE_MODEL: PRWForceConfigurationT | null;
-    INTEGRATOR: PRWIntegratorSettingsT | null;
+    FORCE_MODEL: PCFForceModelT | null;
+    INTEGRATOR: PCFIntegratorSettingsT | null;
     FORCE_MODEL_LIMITATION: string | Uint8Array | null;
     FRAME_TRANSFORMATION_REF: string | Uint8Array | null;
     HOLDOUT_STRIDE: number;
@@ -105,7 +105,7 @@ export declare class XMTEpochFitPolicyT implements flatbuffers.IGeneratedObject 
     POSITION_WEIGHT_KM: number;
     POSITION_REGULARIZATION_KM: number;
     VELOCITY_REGULARIZATION_KM_S: number;
-    constructor(PROPAGATOR_ID?: string | Uint8Array | null, PROPAGATOR_ARTIFACT_SHA256?: string | Uint8Array | null, FORCE_MODEL?: PRWForceConfigurationT | null, INTEGRATOR?: PRWIntegratorSettingsT | null, FORCE_MODEL_LIMITATION?: string | Uint8Array | null, FRAME_TRANSFORMATION_REF?: string | Uint8Array | null, HOLDOUT_STRIDE?: number, POSITION_TOLERANCE_KM?: number, MAXIMUM_HOLDOUT_RMS_KM?: number, POSITION_PERTURBATION_KM?: number, VELOCITY_PERTURBATION_KM_S?: number, POSITION_WEIGHT_KM?: number, POSITION_REGULARIZATION_KM?: number, VELOCITY_REGULARIZATION_KM_S?: number);
+    constructor(PROPAGATOR_ID?: string | Uint8Array | null, PROPAGATOR_ARTIFACT_SHA256?: string | Uint8Array | null, FORCE_MODEL?: PCFForceModelT | null, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCE_MODEL_LIMITATION?: string | Uint8Array | null, FRAME_TRANSFORMATION_REF?: string | Uint8Array | null, HOLDOUT_STRIDE?: number, POSITION_TOLERANCE_KM?: number, MAXIMUM_HOLDOUT_RMS_KM?: number, POSITION_PERTURBATION_KM?: number, VELOCITY_PERTURBATION_KM_S?: number, POSITION_WEIGHT_KM?: number, POSITION_REGULARIZATION_KM?: number, VELOCITY_REGULARIZATION_KM_S?: number);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=XMTEpochFitPolicy.d.ts.map

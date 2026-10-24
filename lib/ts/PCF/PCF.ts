@@ -4,10 +4,32 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js';
+import { PCFFitPolicy, PCFFitPolicyT } from './PCFFitPolicy.js';
+import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
+import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
+import { PCFLaunch, PCFLaunchT } from './PCFLaunch.js';
+import { PCFManeuverDetection, PCFManeuverDetectionT } from './PCFManeuverDetection.js';
+import { PCFMeanElementOptions, PCFMeanElementOptionsT } from './PCFMeanElementOptions.js';
+import { PCFOutput, PCFOutputT } from './PCFOutput.js';
+import { PCFReentry, PCFReentryT } from './PCFReentry.js';
+import { PCFSegmentOptions, PCFSegmentOptionsT } from './PCFSegmentOptions.js';
+import { pcfTheory } from './pcfTheory.js';
 
 
 /**
- * Propagator Configuration
+ * Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+ * any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+ * force model, Kepler): the theory, the integrator and its settings, the
+ * forces, the fit policy, the events to locate, maneuver detection, reentry
+ * hand-off, launch priors and the output. A host passes it beside the
+ * request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+ * launch) selects the tables that method reads. An absent table takes the
+ * theory's own defaults; a table or value the selected theory cannot honor is
+ * refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+ * PCFForceModel and their enums, so the runtime wire and the configuration
+ * share one definition of each. Units are in the field names and docs; every
+ * field states its default.
  */
 export class PCF implements flatbuffers.IUnpackableObject<PCFT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -31,156 +53,186 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$PCF');
 }
 
-STEP_SIZE():number {
+/**
+ * Opaque identifier of this configuration, for provenance. Default empty.
+ */
+CONFIGURATION_ID():string|null
+CONFIGURATION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CONFIGURATION_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TOLERANCE():number {
+/**
+ * Named profile this configuration instantiates, for example "FFM-1".
+ * Informational: every value that matters is carried below. Default empty.
+ */
+PROFILE():string|null
+PROFILE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PROFILE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MIN_STEP():number {
+/**
+ * The orbit theory. Default UNSPECIFIED (the receiving module's own).
+ */
+THEORY():pcfTheory {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfTheory.UNSPECIFIED;
 }
 
-MAX_STEP():number {
+/**
+ * Integrator and settings. Absent: the theory's own.
+ */
+INTEGRATOR(obj?:PCFIntegratorSettings):PCFIntegratorSettings|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? (obj || new PCFIntegratorSettings()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-MAX_ITERATIONS():number {
+/**
+ * Forces. Absent: the theory's built-in set.
+ */
+FORCES(obj?:PCFForceModel):PCFForceModel|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+  return offset ? (obj || new PCFForceModel()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-GRAVITY_DEGREE():number {
+/**
+ * Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+ */
+MEAN_ELEMENT(obj?:PCFMeanElementOptions):PCFMeanElementOptions|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+  return offset ? (obj || new PCFMeanElementOptions()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-GRAVITY_ORDER():number {
+/**
+ * Beyond-Earth segment sets.
+ */
+SEGMENTS(obj?:PCFSegmentOptions):PCFSegmentOptions|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+  return offset ? (obj || new PCFSegmentOptions()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-INTEGRATOR():number {
+/**
+ * Fit policy.
+ */
+FIT(obj?:PCFFitPolicy):PCFFitPolicy|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+  return offset ? (obj || new PCFFitPolicy()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-OUTPUT_FRAME():number {
+/**
+ * Events located while integrating. Default empty.
+ */
+EVENTS(index: number, obj?:PCFEventDefinition):PCFEventDefinition|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+  return offset ? (obj || new PCFEventDefinition()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
-FORCE_FLAGS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
-}
-
-DRAG_COEFFICIENT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-SRP_COEFFICIENT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-AREA_MASS_RATIO():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat32(this.bb_pos + offset) : 0.0;
-}
-
-RESERVED(index: number):number|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index) : 0;
-}
-
-reservedLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+eventsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-reservedArray():Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+/**
+ * Maneuver detection.
+ */
+MANEUVER_DETECTION(obj?:PCFManeuverDetection):PCFManeuverDetection|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new PCFManeuverDetection()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Reentry hand-off and window.
+ */
+REENTRY(obj?:PCFReentry):PCFReentry|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new PCFReentry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Launch initialization priors.
+ */
+LAUNCH(obj?:PCFLaunch):PCFLaunch|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new PCFLaunch()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Output states.
+ */
+OUTPUT(obj?:PCFOutput):PCFOutput|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new PCFOutput()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 static startPCF(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(13);
 }
 
-static addStepSize(builder:flatbuffers.Builder, STEP_SIZE:number) {
-  builder.addFieldFloat64(0, STEP_SIZE, 0.0);
+static addConfigurationId(builder:flatbuffers.Builder, CONFIGURATION_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, CONFIGURATION_IDOffset, 0);
 }
 
-static addTolerance(builder:flatbuffers.Builder, TOLERANCE:number) {
-  builder.addFieldFloat64(1, TOLERANCE, 0.0);
+static addProfile(builder:flatbuffers.Builder, PROFILEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, PROFILEOffset, 0);
 }
 
-static addMinStep(builder:flatbuffers.Builder, MIN_STEP:number) {
-  builder.addFieldFloat64(2, MIN_STEP, 0.0);
+static addTheory(builder:flatbuffers.Builder, THEORY:pcfTheory) {
+  builder.addFieldInt8(2, THEORY, pcfTheory.UNSPECIFIED);
 }
 
-static addMaxStep(builder:flatbuffers.Builder, MAX_STEP:number) {
-  builder.addFieldFloat64(3, MAX_STEP, 0.0);
+static addIntegrator(builder:flatbuffers.Builder, INTEGRATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, INTEGRATOROffset, 0);
 }
 
-static addMaxIterations(builder:flatbuffers.Builder, MAX_ITERATIONS:number) {
-  builder.addFieldInt32(4, MAX_ITERATIONS, 0);
+static addForces(builder:flatbuffers.Builder, FORCESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, FORCESOffset, 0);
 }
 
-static addGravityDegree(builder:flatbuffers.Builder, GRAVITY_DEGREE:number) {
-  builder.addFieldInt16(5, GRAVITY_DEGREE, 0);
+static addMeanElement(builder:flatbuffers.Builder, MEAN_ELEMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, MEAN_ELEMENTOffset, 0);
 }
 
-static addGravityOrder(builder:flatbuffers.Builder, GRAVITY_ORDER:number) {
-  builder.addFieldInt16(6, GRAVITY_ORDER, 0);
+static addSegments(builder:flatbuffers.Builder, SEGMENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SEGMENTSOffset, 0);
 }
 
-static addIntegrator(builder:flatbuffers.Builder, INTEGRATOR:number) {
-  builder.addFieldInt8(7, INTEGRATOR, 0);
+static addFit(builder:flatbuffers.Builder, FITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, FITOffset, 0);
 }
 
-static addOutputFrame(builder:flatbuffers.Builder, OUTPUT_FRAME:number) {
-  builder.addFieldInt8(8, OUTPUT_FRAME, 0);
+static addEvents(builder:flatbuffers.Builder, EVENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, EVENTSOffset, 0);
 }
 
-static addForceFlags(builder:flatbuffers.Builder, FORCE_FLAGS:number) {
-  builder.addFieldInt16(9, FORCE_FLAGS, 0);
-}
-
-static addDragCoefficient(builder:flatbuffers.Builder, DRAG_COEFFICIENT:number) {
-  builder.addFieldFloat32(10, DRAG_COEFFICIENT, 0.0);
-}
-
-static addSrpCoefficient(builder:flatbuffers.Builder, SRP_COEFFICIENT:number) {
-  builder.addFieldFloat32(11, SRP_COEFFICIENT, 0.0);
-}
-
-static addAreaMassRatio(builder:flatbuffers.Builder, AREA_MASS_RATIO:number) {
-  builder.addFieldFloat32(12, AREA_MASS_RATIO, 0.0);
-}
-
-static addReserved(builder:flatbuffers.Builder, RESERVEDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, RESERVEDOffset, 0);
-}
-
-static createReservedVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset {
-  builder.startVector(1, data.length, 1);
+static createEventsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addInt8(data[i]!);
+    builder.addOffset(data[i]!);
   }
   return builder.endVector();
 }
 
-static startReservedVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(1, numElems, 1);
+static startEventsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addManeuverDetection(builder:flatbuffers.Builder, MANEUVER_DETECTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, MANEUVER_DETECTIONOffset, 0);
+}
+
+static addReentry(builder:flatbuffers.Builder, REENTRYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, REENTRYOffset, 0);
+}
+
+static addLaunch(builder:flatbuffers.Builder, LAUNCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, LAUNCHOffset, 0);
+}
+
+static addOutput(builder:flatbuffers.Builder, OUTPUTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, OUTPUTOffset, 0);
 }
 
 static endPCF(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -196,100 +248,90 @@ static finishSizePrefixedPCFBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$PCF', true);
 }
 
-static createPCF(builder:flatbuffers.Builder, STEP_SIZE:number, TOLERANCE:number, MIN_STEP:number, MAX_STEP:number, MAX_ITERATIONS:number, GRAVITY_DEGREE:number, GRAVITY_ORDER:number, INTEGRATOR:number, OUTPUT_FRAME:number, FORCE_FLAGS:number, DRAG_COEFFICIENT:number, SRP_COEFFICIENT:number, AREA_MASS_RATIO:number, RESERVEDOffset:flatbuffers.Offset):flatbuffers.Offset {
-  PCF.startPCF(builder);
-  PCF.addStepSize(builder, STEP_SIZE);
-  PCF.addTolerance(builder, TOLERANCE);
-  PCF.addMinStep(builder, MIN_STEP);
-  PCF.addMaxStep(builder, MAX_STEP);
-  PCF.addMaxIterations(builder, MAX_ITERATIONS);
-  PCF.addGravityDegree(builder, GRAVITY_DEGREE);
-  PCF.addGravityOrder(builder, GRAVITY_ORDER);
-  PCF.addIntegrator(builder, INTEGRATOR);
-  PCF.addOutputFrame(builder, OUTPUT_FRAME);
-  PCF.addForceFlags(builder, FORCE_FLAGS);
-  PCF.addDragCoefficient(builder, DRAG_COEFFICIENT);
-  PCF.addSrpCoefficient(builder, SRP_COEFFICIENT);
-  PCF.addAreaMassRatio(builder, AREA_MASS_RATIO);
-  PCF.addReserved(builder, RESERVEDOffset);
-  return PCF.endPCF(builder);
-}
 
 unpack(): PCFT {
   return new PCFT(
-    this.STEP_SIZE(),
-    this.TOLERANCE(),
-    this.MIN_STEP(),
-    this.MAX_STEP(),
-    this.MAX_ITERATIONS(),
-    this.GRAVITY_DEGREE(),
-    this.GRAVITY_ORDER(),
-    this.INTEGRATOR(),
-    this.OUTPUT_FRAME(),
-    this.FORCE_FLAGS(),
-    this.DRAG_COEFFICIENT(),
-    this.SRP_COEFFICIENT(),
-    this.AREA_MASS_RATIO(),
-    this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength())
+    this.CONFIGURATION_ID(),
+    this.PROFILE(),
+    this.THEORY(),
+    (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null),
+    (this.FORCES() !== null ? this.FORCES()!.unpack() : null),
+    (this.MEAN_ELEMENT() !== null ? this.MEAN_ELEMENT()!.unpack() : null),
+    (this.SEGMENTS() !== null ? this.SEGMENTS()!.unpack() : null),
+    (this.FIT() !== null ? this.FIT()!.unpack() : null),
+    this.bb!.createObjList<PCFEventDefinition, PCFEventDefinitionT>(this.EVENTS.bind(this), this.eventsLength()),
+    (this.MANEUVER_DETECTION() !== null ? this.MANEUVER_DETECTION()!.unpack() : null),
+    (this.REENTRY() !== null ? this.REENTRY()!.unpack() : null),
+    (this.LAUNCH() !== null ? this.LAUNCH()!.unpack() : null),
+    (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null)
   );
 }
 
 
 unpackTo(_o: PCFT): void {
-  _o.STEP_SIZE = this.STEP_SIZE();
-  _o.TOLERANCE = this.TOLERANCE();
-  _o.MIN_STEP = this.MIN_STEP();
-  _o.MAX_STEP = this.MAX_STEP();
-  _o.MAX_ITERATIONS = this.MAX_ITERATIONS();
-  _o.GRAVITY_DEGREE = this.GRAVITY_DEGREE();
-  _o.GRAVITY_ORDER = this.GRAVITY_ORDER();
-  _o.INTEGRATOR = this.INTEGRATOR();
-  _o.OUTPUT_FRAME = this.OUTPUT_FRAME();
-  _o.FORCE_FLAGS = this.FORCE_FLAGS();
-  _o.DRAG_COEFFICIENT = this.DRAG_COEFFICIENT();
-  _o.SRP_COEFFICIENT = this.SRP_COEFFICIENT();
-  _o.AREA_MASS_RATIO = this.AREA_MASS_RATIO();
-  _o.RESERVED = this.bb!.createScalarList<number>(this.RESERVED.bind(this), this.reservedLength());
+  _o.CONFIGURATION_ID = this.CONFIGURATION_ID();
+  _o.PROFILE = this.PROFILE();
+  _o.THEORY = this.THEORY();
+  _o.INTEGRATOR = (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null);
+  _o.FORCES = (this.FORCES() !== null ? this.FORCES()!.unpack() : null);
+  _o.MEAN_ELEMENT = (this.MEAN_ELEMENT() !== null ? this.MEAN_ELEMENT()!.unpack() : null);
+  _o.SEGMENTS = (this.SEGMENTS() !== null ? this.SEGMENTS()!.unpack() : null);
+  _o.FIT = (this.FIT() !== null ? this.FIT()!.unpack() : null);
+  _o.EVENTS = this.bb!.createObjList<PCFEventDefinition, PCFEventDefinitionT>(this.EVENTS.bind(this), this.eventsLength());
+  _o.MANEUVER_DETECTION = (this.MANEUVER_DETECTION() !== null ? this.MANEUVER_DETECTION()!.unpack() : null);
+  _o.REENTRY = (this.REENTRY() !== null ? this.REENTRY()!.unpack() : null);
+  _o.LAUNCH = (this.LAUNCH() !== null ? this.LAUNCH()!.unpack() : null);
+  _o.OUTPUT = (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null);
 }
 }
 
 export class PCFT implements flatbuffers.IGeneratedObject {
 constructor(
-  public STEP_SIZE: number = 0.0,
-  public TOLERANCE: number = 0.0,
-  public MIN_STEP: number = 0.0,
-  public MAX_STEP: number = 0.0,
-  public MAX_ITERATIONS: number = 0,
-  public GRAVITY_DEGREE: number = 0,
-  public GRAVITY_ORDER: number = 0,
-  public INTEGRATOR: number = 0,
-  public OUTPUT_FRAME: number = 0,
-  public FORCE_FLAGS: number = 0,
-  public DRAG_COEFFICIENT: number = 0.0,
-  public SRP_COEFFICIENT: number = 0.0,
-  public AREA_MASS_RATIO: number = 0.0,
-  public RESERVED: (number)[] = []
+  public CONFIGURATION_ID: string|Uint8Array|null = null,
+  public PROFILE: string|Uint8Array|null = null,
+  public THEORY: pcfTheory = pcfTheory.UNSPECIFIED,
+  public INTEGRATOR: PCFIntegratorSettingsT|null = null,
+  public FORCES: PCFForceModelT|null = null,
+  public MEAN_ELEMENT: PCFMeanElementOptionsT|null = null,
+  public SEGMENTS: PCFSegmentOptionsT|null = null,
+  public FIT: PCFFitPolicyT|null = null,
+  public EVENTS: (PCFEventDefinitionT)[] = [],
+  public MANEUVER_DETECTION: PCFManeuverDetectionT|null = null,
+  public REENTRY: PCFReentryT|null = null,
+  public LAUNCH: PCFLaunchT|null = null,
+  public OUTPUT: PCFOutputT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const RESERVED = PCF.createReservedVector(builder, this.RESERVED);
+  const CONFIGURATION_ID = (this.CONFIGURATION_ID !== null ? builder.createString(this.CONFIGURATION_ID!) : 0);
+  const PROFILE = (this.PROFILE !== null ? builder.createString(this.PROFILE!) : 0);
+  const INTEGRATOR = (this.INTEGRATOR !== null ? this.INTEGRATOR!.pack(builder) : 0);
+  const FORCES = (this.FORCES !== null ? this.FORCES!.pack(builder) : 0);
+  const MEAN_ELEMENT = (this.MEAN_ELEMENT !== null ? this.MEAN_ELEMENT!.pack(builder) : 0);
+  const SEGMENTS = (this.SEGMENTS !== null ? this.SEGMENTS!.pack(builder) : 0);
+  const FIT = (this.FIT !== null ? this.FIT!.pack(builder) : 0);
+  const EVENTS = PCF.createEventsVector(builder, builder.createObjectOffsetList(this.EVENTS));
+  const MANEUVER_DETECTION = (this.MANEUVER_DETECTION !== null ? this.MANEUVER_DETECTION!.pack(builder) : 0);
+  const REENTRY = (this.REENTRY !== null ? this.REENTRY!.pack(builder) : 0);
+  const LAUNCH = (this.LAUNCH !== null ? this.LAUNCH!.pack(builder) : 0);
+  const OUTPUT = (this.OUTPUT !== null ? this.OUTPUT!.pack(builder) : 0);
 
-  return PCF.createPCF(builder,
-    this.STEP_SIZE,
-    this.TOLERANCE,
-    this.MIN_STEP,
-    this.MAX_STEP,
-    this.MAX_ITERATIONS,
-    this.GRAVITY_DEGREE,
-    this.GRAVITY_ORDER,
-    this.INTEGRATOR,
-    this.OUTPUT_FRAME,
-    this.FORCE_FLAGS,
-    this.DRAG_COEFFICIENT,
-    this.SRP_COEFFICIENT,
-    this.AREA_MASS_RATIO,
-    RESERVED
-  );
+  PCF.startPCF(builder);
+  PCF.addConfigurationId(builder, CONFIGURATION_ID);
+  PCF.addProfile(builder, PROFILE);
+  PCF.addTheory(builder, this.THEORY);
+  PCF.addIntegrator(builder, INTEGRATOR);
+  PCF.addForces(builder, FORCES);
+  PCF.addMeanElement(builder, MEAN_ELEMENT);
+  PCF.addSegments(builder, SEGMENTS);
+  PCF.addFit(builder, FIT);
+  PCF.addEvents(builder, EVENTS);
+  PCF.addManeuverDetection(builder, MANEUVER_DETECTION);
+  PCF.addReentry(builder, REENTRY);
+  PCF.addLaunch(builder, LAUNCH);
+  PCF.addOutput(builder, OUTPUT);
+
+  return PCF.endPCF(builder);
 }
 }

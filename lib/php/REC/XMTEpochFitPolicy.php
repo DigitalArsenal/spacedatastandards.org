@@ -59,7 +59,7 @@ class XMTEpochFitPolicy extends Table
     /// Force model the trajectories were propagated with.
     public function getFORCE_MODEL()
     {
-        $obj = new PRWForceConfiguration();
+        $obj = new PCFForceModel();
         $o = $this->__offset(8);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
@@ -67,7 +67,7 @@ class XMTEpochFitPolicy extends Table
     /// Integrator settings, when stated.
     public function getINTEGRATOR()
     {
-        $obj = new PRWIntegratorSettings();
+        $obj = new PCFIntegratorSettings();
         $o = $this->__offset(10);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }

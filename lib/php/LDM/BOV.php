@@ -6,7 +6,10 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 class BOV extends Table
 {
     /**
@@ -41,6 +44,7 @@ class BOV extends Table
         return $this;
     }
 
+    /// EFG position, E component, km (11 significant figures).
     /**
      * @return double
      */
@@ -50,6 +54,7 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// EFG position, F component, km (11 significant figures).
     /**
      * @return double
      */
@@ -59,6 +64,7 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// EFG position, G component, km (11 significant figures).
     /**
      * @return double
      */
@@ -68,6 +74,7 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// EFG velocity, E component, km/s (9 significant figures).
     /**
      * @return double
      */
@@ -77,6 +84,7 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// EFG velocity, F component, km/s (9 significant figures).
     /**
      * @return double
      */
@@ -86,6 +94,7 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// EFG velocity, G component, km/s (9 significant figures).
     /**
      * @return double
      */
@@ -95,12 +104,14 @@ class BOV extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Epoch time, in ISO 8601 UTC format.
     public function getEPOCH()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time from launch, seconds (s), with appropriate precision.
     /**
      * @return double
      */

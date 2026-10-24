@@ -35,9 +35,9 @@ public struct XMTEpochFitPolicy : IFlatbufferObject
 #endif
   public byte[] GetPROPAGATOR_ARTIFACT_SHA256Array() { return __p.__vector_as_array<byte>(6); }
   /// Force model the trajectories were propagated with.
-  public PRWForceConfiguration? FORCE_MODEL { get { int o = __p.__offset(8); return o != 0 ? (PRWForceConfiguration?)(new PRWForceConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PCFForceModel? FORCE_MODEL { get { int o = __p.__offset(8); return o != 0 ? (PCFForceModel?)(new PCFForceModel()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Integrator settings, when stated.
-  public PRWIntegratorSettings? INTEGRATOR { get { int o = __p.__offset(10); return o != 0 ? (PRWIntegratorSettings?)(new PRWIntegratorSettings()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PCFIntegratorSettings? INTEGRATOR { get { int o = __p.__offset(10); return o != 0 ? (PCFIntegratorSettings?)(new PCFIntegratorSettings()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Known limitations of the force model (human-readable).
   public string FORCE_MODEL_LIMITATION { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -74,8 +74,8 @@ public struct XMTEpochFitPolicy : IFlatbufferObject
   public static Offset<XMTEpochFitPolicy> CreateXMTEpochFitPolicy(FlatBufferBuilder builder,
       StringOffset PROPAGATOR_IDOffset = default(StringOffset),
       StringOffset PROPAGATOR_ARTIFACT_SHA256Offset = default(StringOffset),
-      Offset<PRWForceConfiguration> FORCE_MODELOffset = default(Offset<PRWForceConfiguration>),
-      Offset<PRWIntegratorSettings> INTEGRATOROffset = default(Offset<PRWIntegratorSettings>),
+      Offset<PCFForceModel> FORCE_MODELOffset = default(Offset<PCFForceModel>),
+      Offset<PCFIntegratorSettings> INTEGRATOROffset = default(Offset<PCFIntegratorSettings>),
       StringOffset FORCE_MODEL_LIMITATIONOffset = default(StringOffset),
       StringOffset FRAME_TRANSFORMATION_REFOffset = default(StringOffset),
       byte HOLDOUT_STRIDE = 0,
@@ -107,8 +107,8 @@ public struct XMTEpochFitPolicy : IFlatbufferObject
   public static void StartXMTEpochFitPolicy(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddPROPAGATOR_ID(FlatBufferBuilder builder, StringOffset PROPAGATOR_IDOffset) { builder.AddOffset(0, PROPAGATOR_IDOffset.Value, 0); }
   public static void AddPROPAGATOR_ARTIFACT_SHA256(FlatBufferBuilder builder, StringOffset PROPAGATOR_ARTIFACT_SHA256Offset) { builder.AddOffset(1, PROPAGATOR_ARTIFACT_SHA256Offset.Value, 0); }
-  public static void AddFORCE_MODEL(FlatBufferBuilder builder, Offset<PRWForceConfiguration> FORCE_MODELOffset) { builder.AddOffset(2, FORCE_MODELOffset.Value, 0); }
-  public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<PRWIntegratorSettings> INTEGRATOROffset) { builder.AddOffset(3, INTEGRATOROffset.Value, 0); }
+  public static void AddFORCE_MODEL(FlatBufferBuilder builder, Offset<PCFForceModel> FORCE_MODELOffset) { builder.AddOffset(2, FORCE_MODELOffset.Value, 0); }
+  public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<PCFIntegratorSettings> INTEGRATOROffset) { builder.AddOffset(3, INTEGRATOROffset.Value, 0); }
   public static void AddFORCE_MODEL_LIMITATION(FlatBufferBuilder builder, StringOffset FORCE_MODEL_LIMITATIONOffset) { builder.AddOffset(4, FORCE_MODEL_LIMITATIONOffset.Value, 0); }
   public static void AddFRAME_TRANSFORMATION_REF(FlatBufferBuilder builder, StringOffset FRAME_TRANSFORMATION_REFOffset) { builder.AddOffset(5, FRAME_TRANSFORMATION_REFOffset.Value, 0); }
   public static void AddHOLDOUT_STRIDE(FlatBufferBuilder builder, byte HOLDOUT_STRIDE) { builder.AddByte(6, HOLDOUT_STRIDE, 0); }
@@ -148,8 +148,8 @@ public struct XMTEpochFitPolicy : IFlatbufferObject
     if (_o == null) return default(Offset<XMTEpochFitPolicy>);
     var _PROPAGATOR_ID = _o.PROPAGATOR_ID == null ? default(StringOffset) : builder.CreateString(_o.PROPAGATOR_ID);
     var _PROPAGATOR_ARTIFACT_SHA256 = _o.PROPAGATOR_ARTIFACT_SHA256 == null ? default(StringOffset) : builder.CreateString(_o.PROPAGATOR_ARTIFACT_SHA256);
-    var _FORCE_MODEL = _o.FORCE_MODEL == null ? default(Offset<PRWForceConfiguration>) : PRWForceConfiguration.Pack(builder, _o.FORCE_MODEL);
-    var _INTEGRATOR = _o.INTEGRATOR == null ? default(Offset<PRWIntegratorSettings>) : PRWIntegratorSettings.Pack(builder, _o.INTEGRATOR);
+    var _FORCE_MODEL = _o.FORCE_MODEL == null ? default(Offset<PCFForceModel>) : PCFForceModel.Pack(builder, _o.FORCE_MODEL);
+    var _INTEGRATOR = _o.INTEGRATOR == null ? default(Offset<PCFIntegratorSettings>) : PCFIntegratorSettings.Pack(builder, _o.INTEGRATOR);
     var _FORCE_MODEL_LIMITATION = _o.FORCE_MODEL_LIMITATION == null ? default(StringOffset) : builder.CreateString(_o.FORCE_MODEL_LIMITATION);
     var _FRAME_TRANSFORMATION_REF = _o.FRAME_TRANSFORMATION_REF == null ? default(StringOffset) : builder.CreateString(_o.FRAME_TRANSFORMATION_REF);
     return CreateXMTEpochFitPolicy(
@@ -175,8 +175,8 @@ public class XMTEpochFitPolicyT
 {
   public string PROPAGATOR_ID { get; set; }
   public string PROPAGATOR_ARTIFACT_SHA256 { get; set; }
-  public PRWForceConfigurationT FORCE_MODEL { get; set; }
-  public PRWIntegratorSettingsT INTEGRATOR { get; set; }
+  public PCFForceModelT FORCE_MODEL { get; set; }
+  public PCFIntegratorSettingsT INTEGRATOR { get; set; }
   public string FORCE_MODEL_LIMITATION { get; set; }
   public string FRAME_TRANSFORMATION_REF { get; set; }
   public byte HOLDOUT_STRIDE { get; set; }
@@ -214,8 +214,8 @@ static public class XMTEpochFitPolicyVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*PROPAGATOR_ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*PROPAGATOR_ARTIFACT_SHA256*/, false)
-      && verifier.VerifyTable(tablePos, 8 /*FORCE_MODEL*/, PRWForceConfigurationVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 10 /*INTEGRATOR*/, PRWIntegratorSettingsVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 8 /*FORCE_MODEL*/, PCFForceModelVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 10 /*INTEGRATOR*/, PCFIntegratorSettingsVerify.Verify, false)
       && verifier.VerifyString(tablePos, 12 /*FORCE_MODEL_LIMITATION*/, false)
       && verifier.VerifyString(tablePos, 14 /*FRAME_TRANSFORMATION_REF*/, false)
       && verifier.VerifyField(tablePos, 16 /*HOLDOUT_STRIDE*/, 1 /*byte*/, 1, false)

@@ -6,7 +6,10 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 public struct BOV : IFlatbufferObject
 {
   private Table __p;
@@ -19,12 +22,19 @@ public struct BOV : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public BOV __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// EFG position, E component, km (11 significant figures).
   public double E_COORDINATE { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// EFG position, F component, km (11 significant figures).
   public double F_COORDINATE { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// EFG position, G component, km (11 significant figures).
   public double G_COORDINATE { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// EFG velocity, E component, km/s (9 significant figures).
   public double E_DOT { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// EFG velocity, F component, km/s (9 significant figures).
   public double F_DOT { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// EFG velocity, G component, km/s (9 significant figures).
   public double G_DOT { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Epoch time, in ISO 8601 UTC format.
   public string EPOCH { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(16, 1); }
@@ -32,6 +42,7 @@ public struct BOV : IFlatbufferObject
   public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(16); }
+  /// Time from launch, seconds (s), with appropriate precision.
   public double TIME_FROM_LAUNCH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<BOV> CreateBOV(FlatBufferBuilder builder,

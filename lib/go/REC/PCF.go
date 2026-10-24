@@ -6,7 +6,18 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Propagator Configuration
+/// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+/// force model, Kepler): the theory, the integrator and its settings, the
+/// forces, the fit policy, the events to locate, maneuver detection, reentry
+/// hand-off, launch priors and the output. A host passes it beside the
+/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+/// launch) selects the tables that method reads. An absent table takes the
+/// theory's own defaults; a table or value the selected theory cannot honor is
+/// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+/// PCFForceModel and their enums, so the runtime wire and the configuration
+/// share one definition of each. Units are in the field names and docs; every
+/// field states its default.
 type PCF struct {
 	_tab flatbuffers.Table
 }
@@ -54,408 +65,348 @@ func (rcv *PCF) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *PCF) STEP_SIZE() float64 {
+/// Opaque identifier of this configuration, for provenance. Default empty.
+func (rcv *PCF) CONFIGURATION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) StepSize() float64 {
-	return rcv.STEP_SIZE()
-}
-
-func (rcv *PCF) MutateSTEP_SIZE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(4, n)
-}
-
-func (rcv *PCF) MutateStepSize(n float64) bool {
-	return rcv.MutateSTEP_SIZE(n)
-}
-
-func (rcv *PCF) TOLERANCE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) Tolerance() float64 {
-	return rcv.TOLERANCE()
-}
-
-func (rcv *PCF) MutateTOLERANCE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(6, n)
-}
-
-func (rcv *PCF) MutateTolerance(n float64) bool {
-	return rcv.MutateTOLERANCE(n)
-}
-
-func (rcv *PCF) MIN_STEP() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) MinStep() float64 {
-	return rcv.MIN_STEP()
-}
-
-func (rcv *PCF) MutateMIN_STEP(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(8, n)
-}
-
-func (rcv *PCF) MutateMinStep(n float64) bool {
-	return rcv.MutateMIN_STEP(n)
-}
-
-func (rcv *PCF) MAX_STEP() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) MaxStep() float64 {
-	return rcv.MAX_STEP()
-}
-
-func (rcv *PCF) MutateMAX_STEP(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(10, n)
-}
-
-func (rcv *PCF) MutateMaxStep(n float64) bool {
-	return rcv.MutateMAX_STEP(n)
-}
-
-func (rcv *PCF) MAX_ITERATIONS() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PCF) MaxIterations() uint32 {
-	return rcv.MAX_ITERATIONS()
-}
-
-func (rcv *PCF) MutateMAX_ITERATIONS(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(12, n)
-}
-
-func (rcv *PCF) MutateMaxIterations(n uint32) bool {
-	return rcv.MutateMAX_ITERATIONS(n)
-}
-
-func (rcv *PCF) GRAVITY_DEGREE() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PCF) GravityDegree() uint16 {
-	return rcv.GRAVITY_DEGREE()
-}
-
-func (rcv *PCF) MutateGRAVITY_DEGREE(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(14, n)
-}
-
-func (rcv *PCF) MutateGravityDegree(n uint16) bool {
-	return rcv.MutateGRAVITY_DEGREE(n)
-}
-
-func (rcv *PCF) GRAVITY_ORDER() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PCF) GravityOrder() uint16 {
-	return rcv.GRAVITY_ORDER()
-}
-
-func (rcv *PCF) MutateGRAVITY_ORDER(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(16, n)
-}
-
-func (rcv *PCF) MutateGravityOrder(n uint16) bool {
-	return rcv.MutateGRAVITY_ORDER(n)
-}
-
-func (rcv *PCF) INTEGRATOR() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PCF) Integrator() byte {
-	return rcv.INTEGRATOR()
-}
-
-func (rcv *PCF) MutateINTEGRATOR(n byte) bool {
-	return rcv._tab.MutateByteSlot(18, n)
-}
-
-func (rcv *PCF) MutateIntegrator(n byte) bool {
-	return rcv.MutateINTEGRATOR(n)
-}
-
-func (rcv *PCF) OUTPUT_FRAME() byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		return rcv._tab.GetByte(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PCF) OutputFrame() byte {
-	return rcv.OUTPUT_FRAME()
-}
-
-func (rcv *PCF) MutateOUTPUT_FRAME(n byte) bool {
-	return rcv._tab.MutateByteSlot(20, n)
-}
-
-func (rcv *PCF) MutateOutputFrame(n byte) bool {
-	return rcv.MutateOUTPUT_FRAME(n)
-}
-
-func (rcv *PCF) FORCE_FLAGS() uint16 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.GetUint16(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *PCF) ForceFlags() uint16 {
-	return rcv.FORCE_FLAGS()
-}
-
-func (rcv *PCF) MutateFORCE_FLAGS(n uint16) bool {
-	return rcv._tab.MutateUint16Slot(22, n)
-}
-
-func (rcv *PCF) MutateForceFlags(n uint16) bool {
-	return rcv.MutateFORCE_FLAGS(n)
-}
-
-func (rcv *PCF) DRAG_COEFFICIENT() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) DragCoefficient() float32 {
-	return rcv.DRAG_COEFFICIENT()
-}
-
-func (rcv *PCF) MutateDRAG_COEFFICIENT(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(24, n)
-}
-
-func (rcv *PCF) MutateDragCoefficient(n float32) bool {
-	return rcv.MutateDRAG_COEFFICIENT(n)
-}
-
-func (rcv *PCF) SRP_COEFFICIENT() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) SrpCoefficient() float32 {
-	return rcv.SRP_COEFFICIENT()
-}
-
-func (rcv *PCF) MutateSRP_COEFFICIENT(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(26, n)
-}
-
-func (rcv *PCF) MutateSrpCoefficient(n float32) bool {
-	return rcv.MutateSRP_COEFFICIENT(n)
-}
-
-func (rcv *PCF) AREA_MASS_RATIO() float32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.GetFloat32(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *PCF) AreaMassRatio() float32 {
-	return rcv.AREA_MASS_RATIO()
-}
-
-func (rcv *PCF) MutateAREA_MASS_RATIO(n float32) bool {
-	return rcv._tab.MutateFloat32Slot(28, n)
-}
-
-func (rcv *PCF) MutateAreaMassRatio(n float32) bool {
-	return rcv.MutateAREA_MASS_RATIO(n)
-}
-
-func (rcv *PCF) RESERVED(j int) byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.GetByte(a + flatbuffers.UOffsetT(j*1))
-	}
-	return 0
-}
-
-func (rcv *PCF) Reserved(j int) byte {
-	return rcv.RESERVED(j)
-}
-
-func (rcv *PCF) RESERVEDLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *PCF) ReservedLength() int {
-	return rcv.RESERVEDLength()
-}
-
-func (rcv *PCF) RESERVEDBytes() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *PCF) ReservedBytes() []byte {
-	return rcv.RESERVEDBytes()
+func (rcv *PCF) ConfigurationId() []byte {
+	return rcv.CONFIGURATION_ID()
 }
 
-func (rcv *PCF) MutateRESERVED(j int, n byte) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+/// Opaque identifier of this configuration, for provenance. Default empty.
+/// Named profile this configuration instantiates, for example "FFM-1".
+/// Informational: every value that matters is carried below. Default empty.
+func (rcv *PCF) PROFILE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.MutateByte(a+flatbuffers.UOffsetT(j*1), n)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+func (rcv *PCF) Profile() []byte {
+	return rcv.PROFILE()
+}
+
+/// Named profile this configuration instantiates, for example "FFM-1".
+/// Informational: every value that matters is carried below. Default empty.
+/// The orbit theory. Default UNSPECIFIED (the receiving module's own).
+func (rcv *PCF) THEORY() pcfTheory {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return pcfTheory(rcv._tab.GetByte(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+func (rcv *PCF) Theory() pcfTheory {
+	return rcv.THEORY()
+}
+
+/// The orbit theory. Default UNSPECIFIED (the receiving module's own).
+func (rcv *PCF) MutateTHEORY(n pcfTheory) bool {
+	return rcv._tab.MutateByteSlot(8, byte(n))
+}
+
+func (rcv *PCF) MutateTheory(n pcfTheory) bool {
+	return rcv.MutateTHEORY(n)
+}
+
+/// Integrator and settings. Absent: the theory's own.
+func (rcv *PCF) INTEGRATOR(obj *PCFIntegratorSettings) *PCFIntegratorSettings {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFIntegratorSettings)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Integrator(obj *PCFIntegratorSettings) *PCFIntegratorSettings {
+	return rcv.INTEGRATOR(obj)
+}
+
+/// Integrator and settings. Absent: the theory's own.
+/// Forces. Absent: the theory's built-in set.
+func (rcv *PCF) FORCES(obj *PCFForceModel) *PCFForceModel {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFForceModel)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Forces(obj *PCFForceModel) *PCFForceModel {
+	return rcv.FORCES(obj)
+}
+
+/// Forces. Absent: the theory's built-in set.
+/// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+func (rcv *PCF) MEAN_ELEMENT(obj *PCFMeanElementOptions) *PCFMeanElementOptions {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFMeanElementOptions)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) MeanElement(obj *PCFMeanElementOptions) *PCFMeanElementOptions {
+	return rcv.MEAN_ELEMENT(obj)
+}
+
+/// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+/// Beyond-Earth segment sets.
+func (rcv *PCF) SEGMENTS(obj *PCFSegmentOptions) *PCFSegmentOptions {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFSegmentOptions)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Segments(obj *PCFSegmentOptions) *PCFSegmentOptions {
+	return rcv.SEGMENTS(obj)
+}
+
+/// Beyond-Earth segment sets.
+/// Fit policy.
+func (rcv *PCF) FIT(obj *PCFFitPolicy) *PCFFitPolicy {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFFitPolicy)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Fit(obj *PCFFitPolicy) *PCFFitPolicy {
+	return rcv.FIT(obj)
+}
+
+/// Fit policy.
+/// Events located while integrating. Default empty.
+func (rcv *PCF) EVENTS(obj *PCFEventDefinition, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PCFEventDefinition)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
 	}
 	return false
 }
 
-func (rcv *PCF) MutateReserved(j int, n byte) bool {
-	return rcv.MutateRESERVED(j, n)
+func (rcv *PCF) Events(obj *PCFEventDefinition, j int) bool {
+	return rcv.EVENTS(obj, j)
 }
 
+func (rcv *PCF) EVENTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PCF) EventsLength() int {
+	return rcv.EVENTSLength()
+}
+
+/// Events located while integrating. Default empty.
+/// Maneuver detection.
+func (rcv *PCF) MANEUVER_DETECTION(obj *PCFManeuverDetection) *PCFManeuverDetection {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFManeuverDetection)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) ManeuverDetection(obj *PCFManeuverDetection) *PCFManeuverDetection {
+	return rcv.MANEUVER_DETECTION(obj)
+}
+
+/// Maneuver detection.
+/// Reentry hand-off and window.
+func (rcv *PCF) REENTRY(obj *PCFReentry) *PCFReentry {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFReentry)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Reentry(obj *PCFReentry) *PCFReentry {
+	return rcv.REENTRY(obj)
+}
+
+/// Reentry hand-off and window.
+/// Launch initialization priors.
+func (rcv *PCF) LAUNCH(obj *PCFLaunch) *PCFLaunch {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFLaunch)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Launch(obj *PCFLaunch) *PCFLaunch {
+	return rcv.LAUNCH(obj)
+}
+
+/// Launch initialization priors.
+/// Output states.
+func (rcv *PCF) OUTPUT(obj *PCFOutput) *PCFOutput {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFOutput)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) Output(obj *PCFOutput) *PCFOutput {
+	return rcv.OUTPUT(obj)
+}
+
+/// Output states.
 func PCFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(13)
 }
-func PCFAddSTEP_SIZE(builder *flatbuffers.Builder, STEP_SIZE float64) {
-	builder.PrependFloat64Slot(0, STEP_SIZE, 0.0)
+func PCFAddCONFIGURATION_ID(builder *flatbuffers.Builder, CONFIGURATION_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONFIGURATION_ID), 0)
 }
-func PCFAddStepSize(builder *flatbuffers.Builder, STEP_SIZE float64) {
-	PCFAddSTEP_SIZE(builder, STEP_SIZE)
+func PCFAddConfigurationId(builder *flatbuffers.Builder, CONFIGURATION_ID flatbuffers.UOffsetT) {
+	PCFAddCONFIGURATION_ID(builder, CONFIGURATION_ID)
 }
-func PCFAddTOLERANCE(builder *flatbuffers.Builder, TOLERANCE float64) {
-	builder.PrependFloat64Slot(1, TOLERANCE, 0.0)
+func PCFAddPROFILE(builder *flatbuffers.Builder, PROFILE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PROFILE), 0)
 }
-func PCFAddTolerance(builder *flatbuffers.Builder, TOLERANCE float64) {
-	PCFAddTOLERANCE(builder, TOLERANCE)
+func PCFAddProfile(builder *flatbuffers.Builder, PROFILE flatbuffers.UOffsetT) {
+	PCFAddPROFILE(builder, PROFILE)
 }
-func PCFAddMIN_STEP(builder *flatbuffers.Builder, MIN_STEP float64) {
-	builder.PrependFloat64Slot(2, MIN_STEP, 0.0)
+func PCFAddTHEORY(builder *flatbuffers.Builder, THEORY pcfTheory) {
+	builder.PrependByteSlot(2, byte(THEORY), 0)
 }
-func PCFAddMinStep(builder *flatbuffers.Builder, MIN_STEP float64) {
-	PCFAddMIN_STEP(builder, MIN_STEP)
+func PCFAddTheory(builder *flatbuffers.Builder, THEORY pcfTheory) {
+	PCFAddTHEORY(builder, THEORY)
 }
-func PCFAddMAX_STEP(builder *flatbuffers.Builder, MAX_STEP float64) {
-	builder.PrependFloat64Slot(3, MAX_STEP, 0.0)
+func PCFAddINTEGRATOR(builder *flatbuffers.Builder, INTEGRATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(INTEGRATOR), 0)
 }
-func PCFAddMaxStep(builder *flatbuffers.Builder, MAX_STEP float64) {
-	PCFAddMAX_STEP(builder, MAX_STEP)
-}
-func PCFAddMAX_ITERATIONS(builder *flatbuffers.Builder, MAX_ITERATIONS uint32) {
-	builder.PrependUint32Slot(4, MAX_ITERATIONS, 0)
-}
-func PCFAddMaxIterations(builder *flatbuffers.Builder, MAX_ITERATIONS uint32) {
-	PCFAddMAX_ITERATIONS(builder, MAX_ITERATIONS)
-}
-func PCFAddGRAVITY_DEGREE(builder *flatbuffers.Builder, GRAVITY_DEGREE uint16) {
-	builder.PrependUint16Slot(5, GRAVITY_DEGREE, 0)
-}
-func PCFAddGravityDegree(builder *flatbuffers.Builder, GRAVITY_DEGREE uint16) {
-	PCFAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
-}
-func PCFAddGRAVITY_ORDER(builder *flatbuffers.Builder, GRAVITY_ORDER uint16) {
-	builder.PrependUint16Slot(6, GRAVITY_ORDER, 0)
-}
-func PCFAddGravityOrder(builder *flatbuffers.Builder, GRAVITY_ORDER uint16) {
-	PCFAddGRAVITY_ORDER(builder, GRAVITY_ORDER)
-}
-func PCFAddINTEGRATOR(builder *flatbuffers.Builder, INTEGRATOR byte) {
-	builder.PrependByteSlot(7, INTEGRATOR, 0)
-}
-func PCFAddIntegrator(builder *flatbuffers.Builder, INTEGRATOR byte) {
+func PCFAddIntegrator(builder *flatbuffers.Builder, INTEGRATOR flatbuffers.UOffsetT) {
 	PCFAddINTEGRATOR(builder, INTEGRATOR)
 }
-func PCFAddOUTPUT_FRAME(builder *flatbuffers.Builder, OUTPUT_FRAME byte) {
-	builder.PrependByteSlot(8, OUTPUT_FRAME, 0)
+func PCFAddFORCES(builder *flatbuffers.Builder, FORCES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(FORCES), 0)
 }
-func PCFAddOutputFrame(builder *flatbuffers.Builder, OUTPUT_FRAME byte) {
-	PCFAddOUTPUT_FRAME(builder, OUTPUT_FRAME)
+func PCFAddForces(builder *flatbuffers.Builder, FORCES flatbuffers.UOffsetT) {
+	PCFAddFORCES(builder, FORCES)
 }
-func PCFAddFORCE_FLAGS(builder *flatbuffers.Builder, FORCE_FLAGS uint16) {
-	builder.PrependUint16Slot(9, FORCE_FLAGS, 0)
+func PCFAddMEAN_ELEMENT(builder *flatbuffers.Builder, MEAN_ELEMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(MEAN_ELEMENT), 0)
 }
-func PCFAddForceFlags(builder *flatbuffers.Builder, FORCE_FLAGS uint16) {
-	PCFAddFORCE_FLAGS(builder, FORCE_FLAGS)
+func PCFAddMeanElement(builder *flatbuffers.Builder, MEAN_ELEMENT flatbuffers.UOffsetT) {
+	PCFAddMEAN_ELEMENT(builder, MEAN_ELEMENT)
 }
-func PCFAddDRAG_COEFFICIENT(builder *flatbuffers.Builder, DRAG_COEFFICIENT float32) {
-	builder.PrependFloat32Slot(10, DRAG_COEFFICIENT, 0.0)
+func PCFAddSEGMENTS(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SEGMENTS), 0)
 }
-func PCFAddDragCoefficient(builder *flatbuffers.Builder, DRAG_COEFFICIENT float32) {
-	PCFAddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT)
+func PCFAddSegments(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
+	PCFAddSEGMENTS(builder, SEGMENTS)
 }
-func PCFAddSRP_COEFFICIENT(builder *flatbuffers.Builder, SRP_COEFFICIENT float32) {
-	builder.PrependFloat32Slot(11, SRP_COEFFICIENT, 0.0)
+func PCFAddFIT(builder *flatbuffers.Builder, FIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(FIT), 0)
 }
-func PCFAddSrpCoefficient(builder *flatbuffers.Builder, SRP_COEFFICIENT float32) {
-	PCFAddSRP_COEFFICIENT(builder, SRP_COEFFICIENT)
+func PCFAddFit(builder *flatbuffers.Builder, FIT flatbuffers.UOffsetT) {
+	PCFAddFIT(builder, FIT)
 }
-func PCFAddAREA_MASS_RATIO(builder *flatbuffers.Builder, AREA_MASS_RATIO float32) {
-	builder.PrependFloat32Slot(12, AREA_MASS_RATIO, 0.0)
+func PCFAddEVENTS(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EVENTS), 0)
 }
-func PCFAddAreaMassRatio(builder *flatbuffers.Builder, AREA_MASS_RATIO float32) {
-	PCFAddAREA_MASS_RATIO(builder, AREA_MASS_RATIO)
+func PCFAddEvents(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
+	PCFAddEVENTS(builder, EVENTS)
 }
-func PCFAddRESERVED(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(RESERVED), 0)
+func PCFStartEVENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
 }
-func PCFAddReserved(builder *flatbuffers.Builder, RESERVED flatbuffers.UOffsetT) {
-	PCFAddRESERVED(builder, RESERVED)
+func PCFStartEventsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PCFStartEVENTSVector(builder, numElems)
 }
-func PCFStartRESERVEDVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(1, numElems, 1)
+func PCFAddMANEUVER_DETECTION(builder *flatbuffers.Builder, MANEUVER_DETECTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(MANEUVER_DETECTION), 0)
 }
-func PCFStartReservedVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return PCFStartRESERVEDVector(builder, numElems)
+func PCFAddManeuverDetection(builder *flatbuffers.Builder, MANEUVER_DETECTION flatbuffers.UOffsetT) {
+	PCFAddMANEUVER_DETECTION(builder, MANEUVER_DETECTION)
+}
+func PCFAddREENTRY(builder *flatbuffers.Builder, REENTRY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(REENTRY), 0)
+}
+func PCFAddReentry(builder *flatbuffers.Builder, REENTRY flatbuffers.UOffsetT) {
+	PCFAddREENTRY(builder, REENTRY)
+}
+func PCFAddLAUNCH(builder *flatbuffers.Builder, LAUNCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(LAUNCH), 0)
+}
+func PCFAddLaunch(builder *flatbuffers.Builder, LAUNCH flatbuffers.UOffsetT) {
+	PCFAddLAUNCH(builder, LAUNCH)
+}
+func PCFAddOUTPUT(builder *flatbuffers.Builder, OUTPUT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OUTPUT), 0)
+}
+func PCFAddOutput(builder *flatbuffers.Builder, OUTPUT flatbuffers.UOffsetT) {
+	PCFAddOUTPUT(builder, OUTPUT)
 }
 func PCFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

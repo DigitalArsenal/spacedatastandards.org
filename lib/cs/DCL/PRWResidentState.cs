@@ -51,7 +51,7 @@ public struct PRWResidentState : IFlatbufferObject
   public double DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false means absent.
   public bool HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S { get { int o = __p.__offset(36); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  /// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+  /// Constant in-track acceleration, m/s2, as PCFForceModel's.
   public double IN_TRACK_ACCELERATION_M_S2 { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// True when IN_TRACK_ACCELERATION_M_S2 carries a value; false means absent.
   public bool HAS_IN_TRACK_ACCELERATION_M_S2 { get { int o = __p.__offset(40); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }

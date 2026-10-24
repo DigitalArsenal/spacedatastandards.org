@@ -6,7 +6,18 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Propagator Configuration
+# Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+# any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+# force model, Kepler): the theory, the integrator and its settings, the
+# forces, the fit policy, the events to locate, maneuver detection, reentry
+# hand-off, launch priors and the output. A host passes it beside the
+# request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+# launch) selects the tables that method reads. An absent table takes the
+# theory's own defaults; a table or value the selected theory cannot honor is
+# refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+# PCFForceModel and their enums, so the runtime wire and the configuration
+# share one definition of each. Units are in the field names and docs; every
+# field states its default.
 class PCF(object):
     __slots__ = ['_tab']
 
@@ -29,229 +40,260 @@ class PCF(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Opaque identifier of this configuration, for provenance. Default empty.
     # PCF
-    def STEP_SIZE(self):
+    def CONFIGURATION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Named profile this configuration instantiates, for example "FFM-1".
+    # Informational: every value that matters is carried below. Default empty.
     # PCF
-    def TOLERANCE(self):
+    def PROFILE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # The orbit theory. Default UNSPECIFIED (the receiving module's own).
     # PCF
-    def MIN_STEP(self):
+    def THEORY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # PCF
-    def MAX_STEP(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # PCF
-    def MAX_ITERATIONS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # PCF
-    def GRAVITY_DEGREE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
-        return 0
-
-    # PCF
-    def GRAVITY_ORDER(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
-        return 0
-
+    # Integrator and settings. Absent: the theory's own.
     # PCF
     def INTEGRATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFIntegratorSettings import PCFIntegratorSettings
+            obj = PCFIntegratorSettings()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Forces. Absent: the theory's built-in set.
+    # PCF
+    def FORCES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFForceModel import PCFForceModel
+            obj = PCFForceModel()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+    # PCF
+    def MEAN_ELEMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFMeanElementOptions import PCFMeanElementOptions
+            obj = PCFMeanElementOptions()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Beyond-Earth segment sets.
+    # PCF
+    def SEGMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFSegmentOptions import PCFSegmentOptions
+            obj = PCFSegmentOptions()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Fit policy.
+    # PCF
+    def FIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFFitPolicy import PCFFitPolicy
+            obj = PCFFitPolicy()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
+    # Events located while integrating. Default empty.
     # PCF
-    def OUTPUT_FRAME(self):
+    def EVENTS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PCFEventDefinition import PCFEventDefinition
+            obj = PCFEventDefinition()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # PCF
-    def FORCE_FLAGS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
-        return 0
-
-    # PCF
-    def DRAG_COEFFICIENT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # PCF
-    def SRP_COEFFICIENT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # PCF
-    def AREA_MASS_RATIO(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float32Flags, o + self._tab.Pos)
-        return 0.0
-
-    # PCF
-    def RESERVED(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.Get(flatbuffers.number_types.Uint8Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 1))
-        return 0
-
-    # PCF
-    def RESERVEDAsNumpy(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint8Flags, o)
-        return 0
-
-    # PCF
-    def RESERVEDLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+    def EVENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # PCF
-    def RESERVEDIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+    def EVENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
+    # Maneuver detection.
+    # PCF
+    def MANEUVER_DETECTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFManeuverDetection import PCFManeuverDetection
+            obj = PCFManeuverDetection()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Reentry hand-off and window.
+    # PCF
+    def REENTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFReentry import PCFReentry
+            obj = PCFReentry()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Launch initialization priors.
+    # PCF
+    def LAUNCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFLaunch import PCFLaunch
+            obj = PCFLaunch()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Output states.
+    # PCF
+    def OUTPUT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFOutput import PCFOutput
+            obj = PCFOutput()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PCFStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(13)
 
 def Start(builder):
     PCFStart(builder)
 
-def PCFAddSTEP_SIZE(builder, STEP_SIZE):
-    builder.PrependFloat64Slot(0, STEP_SIZE, 0.0)
+def PCFAddCONFIGURATION_ID(builder, CONFIGURATION_ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(CONFIGURATION_ID), 0)
 
-def AddSTEP_SIZE(builder, STEP_SIZE):
-    PCFAddSTEP_SIZE(builder, STEP_SIZE)
+def AddCONFIGURATION_ID(builder, CONFIGURATION_ID):
+    PCFAddCONFIGURATION_ID(builder, CONFIGURATION_ID)
 
-def PCFAddTOLERANCE(builder, TOLERANCE):
-    builder.PrependFloat64Slot(1, TOLERANCE, 0.0)
+def PCFAddPROFILE(builder, PROFILE):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PROFILE), 0)
 
-def AddTOLERANCE(builder, TOLERANCE):
-    PCFAddTOLERANCE(builder, TOLERANCE)
+def AddPROFILE(builder, PROFILE):
+    PCFAddPROFILE(builder, PROFILE)
 
-def PCFAddMIN_STEP(builder, MIN_STEP):
-    builder.PrependFloat64Slot(2, MIN_STEP, 0.0)
+def PCFAddTHEORY(builder, THEORY):
+    builder.PrependUint8Slot(2, THEORY, 0)
 
-def AddMIN_STEP(builder, MIN_STEP):
-    PCFAddMIN_STEP(builder, MIN_STEP)
-
-def PCFAddMAX_STEP(builder, MAX_STEP):
-    builder.PrependFloat64Slot(3, MAX_STEP, 0.0)
-
-def AddMAX_STEP(builder, MAX_STEP):
-    PCFAddMAX_STEP(builder, MAX_STEP)
-
-def PCFAddMAX_ITERATIONS(builder, MAX_ITERATIONS):
-    builder.PrependUint32Slot(4, MAX_ITERATIONS, 0)
-
-def AddMAX_ITERATIONS(builder, MAX_ITERATIONS):
-    PCFAddMAX_ITERATIONS(builder, MAX_ITERATIONS)
-
-def PCFAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE):
-    builder.PrependUint16Slot(5, GRAVITY_DEGREE, 0)
-
-def AddGRAVITY_DEGREE(builder, GRAVITY_DEGREE):
-    PCFAddGRAVITY_DEGREE(builder, GRAVITY_DEGREE)
-
-def PCFAddGRAVITY_ORDER(builder, GRAVITY_ORDER):
-    builder.PrependUint16Slot(6, GRAVITY_ORDER, 0)
-
-def AddGRAVITY_ORDER(builder, GRAVITY_ORDER):
-    PCFAddGRAVITY_ORDER(builder, GRAVITY_ORDER)
+def AddTHEORY(builder, THEORY):
+    PCFAddTHEORY(builder, THEORY)
 
 def PCFAddINTEGRATOR(builder, INTEGRATOR):
-    builder.PrependUint8Slot(7, INTEGRATOR, 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(INTEGRATOR), 0)
 
 def AddINTEGRATOR(builder, INTEGRATOR):
     PCFAddINTEGRATOR(builder, INTEGRATOR)
 
-def PCFAddOUTPUT_FRAME(builder, OUTPUT_FRAME):
-    builder.PrependUint8Slot(8, OUTPUT_FRAME, 0)
+def PCFAddFORCES(builder, FORCES):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FORCES), 0)
 
-def AddOUTPUT_FRAME(builder, OUTPUT_FRAME):
-    PCFAddOUTPUT_FRAME(builder, OUTPUT_FRAME)
+def AddFORCES(builder, FORCES):
+    PCFAddFORCES(builder, FORCES)
 
-def PCFAddFORCE_FLAGS(builder, FORCE_FLAGS):
-    builder.PrependUint16Slot(9, FORCE_FLAGS, 0)
+def PCFAddMEAN_ELEMENT(builder, MEAN_ELEMENT):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(MEAN_ELEMENT), 0)
 
-def AddFORCE_FLAGS(builder, FORCE_FLAGS):
-    PCFAddFORCE_FLAGS(builder, FORCE_FLAGS)
+def AddMEAN_ELEMENT(builder, MEAN_ELEMENT):
+    PCFAddMEAN_ELEMENT(builder, MEAN_ELEMENT)
 
-def PCFAddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT):
-    builder.PrependFloat32Slot(10, DRAG_COEFFICIENT, 0.0)
+def PCFAddSEGMENTS(builder, SEGMENTS):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SEGMENTS), 0)
 
-def AddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT):
-    PCFAddDRAG_COEFFICIENT(builder, DRAG_COEFFICIENT)
+def AddSEGMENTS(builder, SEGMENTS):
+    PCFAddSEGMENTS(builder, SEGMENTS)
 
-def PCFAddSRP_COEFFICIENT(builder, SRP_COEFFICIENT):
-    builder.PrependFloat32Slot(11, SRP_COEFFICIENT, 0.0)
+def PCFAddFIT(builder, FIT):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(FIT), 0)
 
-def AddSRP_COEFFICIENT(builder, SRP_COEFFICIENT):
-    PCFAddSRP_COEFFICIENT(builder, SRP_COEFFICIENT)
+def AddFIT(builder, FIT):
+    PCFAddFIT(builder, FIT)
 
-def PCFAddAREA_MASS_RATIO(builder, AREA_MASS_RATIO):
-    builder.PrependFloat32Slot(12, AREA_MASS_RATIO, 0.0)
+def PCFAddEVENTS(builder, EVENTS):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EVENTS), 0)
 
-def AddAREA_MASS_RATIO(builder, AREA_MASS_RATIO):
-    PCFAddAREA_MASS_RATIO(builder, AREA_MASS_RATIO)
+def AddEVENTS(builder, EVENTS):
+    PCFAddEVENTS(builder, EVENTS)
 
-def PCFAddRESERVED(builder, RESERVED):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(RESERVED), 0)
+def PCFStartEVENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
 
-def AddRESERVED(builder, RESERVED):
-    PCFAddRESERVED(builder, RESERVED)
+def StartEVENTSVector(builder, numElems):
+    return PCFStartEVENTSVector(builder, numElems)
 
-def PCFStartRESERVEDVector(builder, numElems):
-    return builder.StartVector(1, numElems, 1)
+def PCFCreateEVENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
 
-def StartRESERVEDVector(builder, numElems):
-    return PCFStartRESERVEDVector(builder, numElems)
+def CreateEVENTSVector(builder, data):
+    return PCFCreateEVENTSVector(builder, data)
 
-def PCFCreateRESERVEDVector(builder, data):
-    data = list(data)
-    builder.StartVector(1, len(data), 1)
-    for item in reversed(data):
-        builder.PrependUint8(item)
-    return builder.EndVector()
+def PCFAddMANEUVER_DETECTION(builder, MANEUVER_DETECTION):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVER_DETECTION), 0)
 
-def CreateRESERVEDVector(builder, data):
-    return PCFCreateRESERVEDVector(builder, data)
+def AddMANEUVER_DETECTION(builder, MANEUVER_DETECTION):
+    PCFAddMANEUVER_DETECTION(builder, MANEUVER_DETECTION)
+
+def PCFAddREENTRY(builder, REENTRY):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(REENTRY), 0)
+
+def AddREENTRY(builder, REENTRY):
+    PCFAddREENTRY(builder, REENTRY)
+
+def PCFAddLAUNCH(builder, LAUNCH):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH), 0)
+
+def AddLAUNCH(builder, LAUNCH):
+    PCFAddLAUNCH(builder, LAUNCH)
+
+def PCFAddOUTPUT(builder, OUTPUT):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OUTPUT), 0)
+
+def AddOUTPUT(builder, OUTPUT):
+    PCFAddOUTPUT(builder, OUTPUT)
 
 def PCFEnd(builder):
     return builder.EndObject()
@@ -259,8 +301,18 @@ def PCFEnd(builder):
 def End(builder):
     return PCFEnd(builder)
 
+import PCFEventDefinition
+import PCFFitPolicy
+import PCFForceModel
+import PCFIntegratorSettings
+import PCFLaunch
+import PCFManeuverDetection
+import PCFMeanElementOptions
+import PCFOutput
+import PCFReentry
+import PCFSegmentOptions
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -269,35 +321,33 @@ class PCFT(object):
     # PCFT
     def __init__(
         self,
-        STEP_SIZE = 0.0,
-        TOLERANCE = 0.0,
-        MIN_STEP = 0.0,
-        MAX_STEP = 0.0,
-        MAX_ITERATIONS = 0,
-        GRAVITY_DEGREE = 0,
-        GRAVITY_ORDER = 0,
-        INTEGRATOR = 0,
-        OUTPUT_FRAME = 0,
-        FORCE_FLAGS = 0,
-        DRAG_COEFFICIENT = 0.0,
-        SRP_COEFFICIENT = 0.0,
-        AREA_MASS_RATIO = 0.0,
-        RESERVED = None,
+        CONFIGURATION_ID = None,
+        PROFILE = None,
+        THEORY = 0,
+        INTEGRATOR = None,
+        FORCES = None,
+        MEAN_ELEMENT = None,
+        SEGMENTS = None,
+        FIT = None,
+        EVENTS = None,
+        MANEUVER_DETECTION = None,
+        REENTRY = None,
+        LAUNCH = None,
+        OUTPUT = None,
     ):
-        self.STEP_SIZE = STEP_SIZE  # type: float
-        self.TOLERANCE = TOLERANCE  # type: float
-        self.MIN_STEP = MIN_STEP  # type: float
-        self.MAX_STEP = MAX_STEP  # type: float
-        self.MAX_ITERATIONS = MAX_ITERATIONS  # type: int
-        self.GRAVITY_DEGREE = GRAVITY_DEGREE  # type: int
-        self.GRAVITY_ORDER = GRAVITY_ORDER  # type: int
-        self.INTEGRATOR = INTEGRATOR  # type: int
-        self.OUTPUT_FRAME = OUTPUT_FRAME  # type: int
-        self.FORCE_FLAGS = FORCE_FLAGS  # type: int
-        self.DRAG_COEFFICIENT = DRAG_COEFFICIENT  # type: float
-        self.SRP_COEFFICIENT = SRP_COEFFICIENT  # type: float
-        self.AREA_MASS_RATIO = AREA_MASS_RATIO  # type: float
-        self.RESERVED = RESERVED  # type: Optional[List[int]]
+        self.CONFIGURATION_ID = CONFIGURATION_ID  # type: Optional[str]
+        self.PROFILE = PROFILE  # type: Optional[str]
+        self.THEORY = THEORY  # type: int
+        self.INTEGRATOR = INTEGRATOR  # type: Optional[PCFIntegratorSettings.PCFIntegratorSettingsT]
+        self.FORCES = FORCES  # type: Optional[PCFForceModel.PCFForceModelT]
+        self.MEAN_ELEMENT = MEAN_ELEMENT  # type: Optional[PCFMeanElementOptions.PCFMeanElementOptionsT]
+        self.SEGMENTS = SEGMENTS  # type: Optional[PCFSegmentOptions.PCFSegmentOptionsT]
+        self.FIT = FIT  # type: Optional[PCFFitPolicy.PCFFitPolicyT]
+        self.EVENTS = EVENTS  # type: Optional[List[PCFEventDefinition.PCFEventDefinitionT]]
+        self.MANEUVER_DETECTION = MANEUVER_DETECTION  # type: Optional[PCFManeuverDetection.PCFManeuverDetectionT]
+        self.REENTRY = REENTRY  # type: Optional[PCFReentry.PCFReentryT]
+        self.LAUNCH = LAUNCH  # type: Optional[PCFLaunch.PCFLaunchT]
+        self.OUTPUT = OUTPUT  # type: Optional[PCFOutput.PCFOutputT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -320,52 +370,93 @@ class PCFT(object):
     def _UnPack(self, PCF):
         if PCF is None:
             return
-        self.STEP_SIZE = PCF.STEP_SIZE()
-        self.TOLERANCE = PCF.TOLERANCE()
-        self.MIN_STEP = PCF.MIN_STEP()
-        self.MAX_STEP = PCF.MAX_STEP()
-        self.MAX_ITERATIONS = PCF.MAX_ITERATIONS()
-        self.GRAVITY_DEGREE = PCF.GRAVITY_DEGREE()
-        self.GRAVITY_ORDER = PCF.GRAVITY_ORDER()
-        self.INTEGRATOR = PCF.INTEGRATOR()
-        self.OUTPUT_FRAME = PCF.OUTPUT_FRAME()
-        self.FORCE_FLAGS = PCF.FORCE_FLAGS()
-        self.DRAG_COEFFICIENT = PCF.DRAG_COEFFICIENT()
-        self.SRP_COEFFICIENT = PCF.SRP_COEFFICIENT()
-        self.AREA_MASS_RATIO = PCF.AREA_MASS_RATIO()
-        if not PCF.RESERVEDIsNone():
-            if np is None:
-                self.RESERVED = []
-                for i in range(PCF.RESERVEDLength()):
-                    self.RESERVED.append(PCF.RESERVED(i))
-            else:
-                self.RESERVED = PCF.RESERVEDAsNumpy()
+        self.CONFIGURATION_ID = PCF.CONFIGURATION_ID()
+        self.PROFILE = PCF.PROFILE()
+        self.THEORY = PCF.THEORY()
+        if PCF.INTEGRATOR() is not None:
+            self.INTEGRATOR = PCFIntegratorSettings.PCFIntegratorSettingsT.InitFromObj(PCF.INTEGRATOR())
+        if PCF.FORCES() is not None:
+            self.FORCES = PCFForceModel.PCFForceModelT.InitFromObj(PCF.FORCES())
+        if PCF.MEAN_ELEMENT() is not None:
+            self.MEAN_ELEMENT = PCFMeanElementOptions.PCFMeanElementOptionsT.InitFromObj(PCF.MEAN_ELEMENT())
+        if PCF.SEGMENTS() is not None:
+            self.SEGMENTS = PCFSegmentOptions.PCFSegmentOptionsT.InitFromObj(PCF.SEGMENTS())
+        if PCF.FIT() is not None:
+            self.FIT = PCFFitPolicy.PCFFitPolicyT.InitFromObj(PCF.FIT())
+        if not PCF.EVENTSIsNone():
+            self.EVENTS = []
+            for i in range(PCF.EVENTSLength()):
+                if PCF.EVENTS(i) is None:
+                    self.EVENTS.append(None)
+                else:
+                    pCFEventDefinition_ = PCFEventDefinition.PCFEventDefinitionT.InitFromObj(PCF.EVENTS(i))
+                    self.EVENTS.append(pCFEventDefinition_)
+        if PCF.MANEUVER_DETECTION() is not None:
+            self.MANEUVER_DETECTION = PCFManeuverDetection.PCFManeuverDetectionT.InitFromObj(PCF.MANEUVER_DETECTION())
+        if PCF.REENTRY() is not None:
+            self.REENTRY = PCFReentry.PCFReentryT.InitFromObj(PCF.REENTRY())
+        if PCF.LAUNCH() is not None:
+            self.LAUNCH = PCFLaunch.PCFLaunchT.InitFromObj(PCF.LAUNCH())
+        if PCF.OUTPUT() is not None:
+            self.OUTPUT = PCFOutput.PCFOutputT.InitFromObj(PCF.OUTPUT())
 
     # PCFT
     def Pack(self, builder):
-        if self.RESERVED is not None:
-            if np is not None and type(self.RESERVED) is np.ndarray:
-                RESERVED = builder.CreateNumpyVector(self.RESERVED)
-            else:
-                PCFStartRESERVEDVector(builder, len(self.RESERVED))
-                for i in reversed(range(len(self.RESERVED))):
-                    builder.PrependUint8(self.RESERVED[i])
-                RESERVED = builder.EndVector()
+        if self.CONFIGURATION_ID is not None:
+            CONFIGURATION_ID = builder.CreateString(self.CONFIGURATION_ID)
+        if self.PROFILE is not None:
+            PROFILE = builder.CreateString(self.PROFILE)
+        if self.INTEGRATOR is not None:
+            INTEGRATOR = self.INTEGRATOR.Pack(builder)
+        if self.FORCES is not None:
+            FORCES = self.FORCES.Pack(builder)
+        if self.MEAN_ELEMENT is not None:
+            MEAN_ELEMENT = self.MEAN_ELEMENT.Pack(builder)
+        if self.SEGMENTS is not None:
+            SEGMENTS = self.SEGMENTS.Pack(builder)
+        if self.FIT is not None:
+            FIT = self.FIT.Pack(builder)
+        if self.EVENTS is not None:
+            EVENTSlist = []
+            for i in range(len(self.EVENTS)):
+                EVENTSlist.append(self.EVENTS[i].Pack(builder))
+            PCFStartEVENTSVector(builder, len(self.EVENTS))
+            for i in reversed(range(len(self.EVENTS))):
+                builder.PrependUOffsetTRelative(EVENTSlist[i])
+            EVENTS = builder.EndVector()
+        if self.MANEUVER_DETECTION is not None:
+            MANEUVER_DETECTION = self.MANEUVER_DETECTION.Pack(builder)
+        if self.REENTRY is not None:
+            REENTRY = self.REENTRY.Pack(builder)
+        if self.LAUNCH is not None:
+            LAUNCH = self.LAUNCH.Pack(builder)
+        if self.OUTPUT is not None:
+            OUTPUT = self.OUTPUT.Pack(builder)
         PCFStart(builder)
-        PCFAddSTEP_SIZE(builder, self.STEP_SIZE)
-        PCFAddTOLERANCE(builder, self.TOLERANCE)
-        PCFAddMIN_STEP(builder, self.MIN_STEP)
-        PCFAddMAX_STEP(builder, self.MAX_STEP)
-        PCFAddMAX_ITERATIONS(builder, self.MAX_ITERATIONS)
-        PCFAddGRAVITY_DEGREE(builder, self.GRAVITY_DEGREE)
-        PCFAddGRAVITY_ORDER(builder, self.GRAVITY_ORDER)
-        PCFAddINTEGRATOR(builder, self.INTEGRATOR)
-        PCFAddOUTPUT_FRAME(builder, self.OUTPUT_FRAME)
-        PCFAddFORCE_FLAGS(builder, self.FORCE_FLAGS)
-        PCFAddDRAG_COEFFICIENT(builder, self.DRAG_COEFFICIENT)
-        PCFAddSRP_COEFFICIENT(builder, self.SRP_COEFFICIENT)
-        PCFAddAREA_MASS_RATIO(builder, self.AREA_MASS_RATIO)
-        if self.RESERVED is not None:
-            PCFAddRESERVED(builder, RESERVED)
+        if self.CONFIGURATION_ID is not None:
+            PCFAddCONFIGURATION_ID(builder, CONFIGURATION_ID)
+        if self.PROFILE is not None:
+            PCFAddPROFILE(builder, PROFILE)
+        PCFAddTHEORY(builder, self.THEORY)
+        if self.INTEGRATOR is not None:
+            PCFAddINTEGRATOR(builder, INTEGRATOR)
+        if self.FORCES is not None:
+            PCFAddFORCES(builder, FORCES)
+        if self.MEAN_ELEMENT is not None:
+            PCFAddMEAN_ELEMENT(builder, MEAN_ELEMENT)
+        if self.SEGMENTS is not None:
+            PCFAddSEGMENTS(builder, SEGMENTS)
+        if self.FIT is not None:
+            PCFAddFIT(builder, FIT)
+        if self.EVENTS is not None:
+            PCFAddEVENTS(builder, EVENTS)
+        if self.MANEUVER_DETECTION is not None:
+            PCFAddMANEUVER_DETECTION(builder, MANEUVER_DETECTION)
+        if self.REENTRY is not None:
+            PCFAddREENTRY(builder, REENTRY)
+        if self.LAUNCH is not None:
+            PCFAddLAUNCH(builder, LAUNCH)
+        if self.OUTPUT is not None:
+            PCFAddOUTPUT(builder, OUTPUT)
         PCF = PCFEnd(builder)
         return PCF

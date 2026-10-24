@@ -76,12 +76,12 @@ func (rcv *PRWExecutionRequest) TargetEpoch(obj *TIMInstant) *TIMInstant {
 	return rcv.TARGET_EPOCH(obj)
 }
 
-func (rcv *PRWExecutionRequest) INTEGRATOR(obj *PRWIntegratorSettings) *PRWIntegratorSettings {
+func (rcv *PRWExecutionRequest) INTEGRATOR(obj *PCFIntegratorSettings) *PCFIntegratorSettings {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(PRWIntegratorSettings)
+			obj = new(PCFIntegratorSettings)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -89,16 +89,16 @@ func (rcv *PRWExecutionRequest) INTEGRATOR(obj *PRWIntegratorSettings) *PRWInteg
 	return nil
 }
 
-func (rcv *PRWExecutionRequest) Integrator(obj *PRWIntegratorSettings) *PRWIntegratorSettings {
+func (rcv *PRWExecutionRequest) Integrator(obj *PCFIntegratorSettings) *PCFIntegratorSettings {
 	return rcv.INTEGRATOR(obj)
 }
 
-func (rcv *PRWExecutionRequest) FORCES(obj *PRWForceConfiguration) *PRWForceConfiguration {
+func (rcv *PRWExecutionRequest) FORCES(obj *PCFForceModel) *PCFForceModel {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(PRWForceConfiguration)
+			obj = new(PCFForceModel)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -106,7 +106,7 @@ func (rcv *PRWExecutionRequest) FORCES(obj *PRWForceConfiguration) *PRWForceConf
 	return nil
 }
 
-func (rcv *PRWExecutionRequest) Forces(obj *PRWForceConfiguration) *PRWForceConfiguration {
+func (rcv *PRWExecutionRequest) Forces(obj *PCFForceModel) *PCFForceModel {
 	return rcv.FORCES(obj)
 }
 

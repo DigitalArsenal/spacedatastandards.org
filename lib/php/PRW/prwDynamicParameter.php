@@ -15,7 +15,7 @@ class prwDynamicParameter
     const DRAG_AREA_OVER_MASS_RATE = 2;
     const SRP_AREA_OVER_MASS = 3;
     const IN_TRACK_ACCELERATION = 4;
-    /// ECOM2 coefficients (PRWEcom2), in their order there.
+    /// ECOM2 coefficients (PCFEcom2), in their order there.
     const ECOM2_D0 = 5;
     const ECOM2_Y0 = 6;
     const ECOM2_B0 = 7;

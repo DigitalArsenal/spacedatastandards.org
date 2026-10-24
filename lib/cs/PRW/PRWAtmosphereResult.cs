@@ -16,7 +16,7 @@ public struct PRWAtmosphereResult : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PRWAtmosphereResult __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public prwAtmosphereFamily ATMOSPHERE_MODEL { get { int o = __p.__offset(4); return o != 0 ? (prwAtmosphereFamily)__p.bb.Get(o + __p.bb_pos) : prwAtmosphereFamily.UNSPECIFIED; } }
+  public pcfAtmosphereFamily ATMOSPHERE_MODEL { get { int o = __p.__offset(4); return o != 0 ? (pcfAtmosphereFamily)__p.bb.Get(o + __p.bb_pos) : pcfAtmosphereFamily.UNSPECIFIED; } }
   public string VARIANT { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVARIANTBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -39,7 +39,7 @@ public struct PRWAtmosphereResult : IFlatbufferObject
   public int NUMBER_DENSITIESLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<PRWAtmosphereResult> CreatePRWAtmosphereResult(FlatBufferBuilder builder,
-      prwAtmosphereFamily ATMOSPHERE_MODEL = prwAtmosphereFamily.UNSPECIFIED,
+      pcfAtmosphereFamily ATMOSPHERE_MODEL = pcfAtmosphereFamily.UNSPECIFIED,
       StringOffset VARIANTOffset = default(StringOffset),
       double ALTITUDE_M = 0.0,
       double DENSITY_KG_M3 = 0.0,
@@ -66,7 +66,7 @@ public struct PRWAtmosphereResult : IFlatbufferObject
   }
 
   public static void StartPRWAtmosphereResult(FlatBufferBuilder builder) { builder.StartTable(11); }
-  public static void AddATMOSPHERE_MODEL(FlatBufferBuilder builder, prwAtmosphereFamily ATMOSPHERE_MODEL) { builder.AddByte(0, (byte)ATMOSPHERE_MODEL, 0); }
+  public static void AddATMOSPHERE_MODEL(FlatBufferBuilder builder, pcfAtmosphereFamily ATMOSPHERE_MODEL) { builder.AddByte(0, (byte)ATMOSPHERE_MODEL, 0); }
   public static void AddVARIANT(FlatBufferBuilder builder, StringOffset VARIANTOffset) { builder.AddOffset(1, VARIANTOffset.Value, 0); }
   public static void AddALTITUDE_M(FlatBufferBuilder builder, double ALTITUDE_M) { builder.AddDouble(2, ALTITUDE_M, 0.0); }
   public static void AddDENSITY_KG_M3(FlatBufferBuilder builder, double DENSITY_KG_M3) { builder.AddDouble(3, DENSITY_KG_M3, 0.0); }
@@ -132,7 +132,7 @@ public struct PRWAtmosphereResult : IFlatbufferObject
 
 public class PRWAtmosphereResultT
 {
-  public prwAtmosphereFamily ATMOSPHERE_MODEL { get; set; }
+  public pcfAtmosphereFamily ATMOSPHERE_MODEL { get; set; }
   public string VARIANT { get; set; }
   public double ALTITUDE_M { get; set; }
   public double DENSITY_KG_M3 { get; set; }
@@ -145,7 +145,7 @@ public class PRWAtmosphereResultT
   public List<PRWSpeciesDensityT> NUMBER_DENSITIES { get; set; }
 
   public PRWAtmosphereResultT() {
-    this.ATMOSPHERE_MODEL = prwAtmosphereFamily.UNSPECIFIED;
+    this.ATMOSPHERE_MODEL = pcfAtmosphereFamily.UNSPECIFIED;
     this.VARIANT = null;
     this.ALTITUDE_M = 0.0;
     this.DENSITY_KG_M3 = 0.0;
@@ -165,7 +165,7 @@ static public class PRWAtmosphereResultVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*ATMOSPHERE_MODEL*/, 1 /*prwAtmosphereFamily*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*ATMOSPHERE_MODEL*/, 1 /*pcfAtmosphereFamily*/, 1, false)
       && verifier.VerifyString(tablePos, 6 /*VARIANT*/, false)
       && verifier.VerifyField(tablePos, 8 /*ALTITUDE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*DENSITY_KG_M3*/, 8 /*double*/, 8, false)

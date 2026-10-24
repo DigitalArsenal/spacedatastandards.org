@@ -16,7 +16,10 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct BOV;
 struct BOVBuilder;
 
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef BOVBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -29,27 +32,35 @@ struct BOV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_EPOCH = 16,
     VT_TIME_FROM_LAUNCH = 18
   };
+  /// EFG position, E component, km (11 significant figures).
   double E_COORDINATE() const {
     return GetField<double>(VT_E_COORDINATE, 0.0);
   }
+  /// EFG position, F component, km (11 significant figures).
   double F_COORDINATE() const {
     return GetField<double>(VT_F_COORDINATE, 0.0);
   }
+  /// EFG position, G component, km (11 significant figures).
   double G_COORDINATE() const {
     return GetField<double>(VT_G_COORDINATE, 0.0);
   }
+  /// EFG velocity, E component, km/s (9 significant figures).
   double E_DOT() const {
     return GetField<double>(VT_E_DOT, 0.0);
   }
+  /// EFG velocity, F component, km/s (9 significant figures).
   double F_DOT() const {
     return GetField<double>(VT_F_DOT, 0.0);
   }
+  /// EFG velocity, G component, km/s (9 significant figures).
   double G_DOT() const {
     return GetField<double>(VT_G_DOT, 0.0);
   }
+  /// Epoch time, in ISO 8601 UTC format.
   const ::flatbuffers::String *EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
+  /// Time from launch, seconds (s), with appropriate precision.
   double TIME_FROM_LAUNCH() const {
     return GetField<double>(VT_TIME_FROM_LAUNCH, 0.0);
   }

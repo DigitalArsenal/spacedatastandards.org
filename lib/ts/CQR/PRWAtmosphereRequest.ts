@@ -5,7 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
-import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { pcfAtmosphereFamily } from './pcfAtmosphereFamily.js';
 
 
 /**
@@ -29,9 +29,9 @@ static getSizePrefixedRootAsPRWAtmosphereRequest(bb:flatbuffers.ByteBuffer, obj?
   return (obj || new PRWAtmosphereRequest()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-ATMOSPHERE_MODEL():prwAtmosphereFamily {
+ATMOSPHERE_MODEL():pcfAtmosphereFamily {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwAtmosphereFamily.NRLMSISE00;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfAtmosphereFamily.NRLMSISE00;
 }
 
 EPOCH(obj?:TIMInstant):TIMInstant|null {
@@ -94,8 +94,8 @@ static startPRWAtmosphereRequest(builder:flatbuffers.Builder) {
   builder.startObject(11);
 }
 
-static addAtmosphereModel(builder:flatbuffers.Builder, ATMOSPHERE_MODEL:prwAtmosphereFamily) {
-  builder.addFieldInt8(0, ATMOSPHERE_MODEL, prwAtmosphereFamily.NRLMSISE00);
+static addAtmosphereModel(builder:flatbuffers.Builder, ATMOSPHERE_MODEL:pcfAtmosphereFamily) {
+  builder.addFieldInt8(0, ATMOSPHERE_MODEL, pcfAtmosphereFamily.NRLMSISE00);
 }
 
 static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
@@ -179,7 +179,7 @@ unpackTo(_o: PRWAtmosphereRequestT): void {
 
 export class PRWAtmosphereRequestT implements flatbuffers.IGeneratedObject {
 constructor(
-  public ATMOSPHERE_MODEL: prwAtmosphereFamily = prwAtmosphereFamily.NRLMSISE00,
+  public ATMOSPHERE_MODEL: pcfAtmosphereFamily = pcfAtmosphereFamily.NRLMSISE00,
   public EPOCH: TIMInstantT|null = null,
   public ALTITUDE_M: number = 0.0,
   public LATITUDE_RAD: number = 0.0,

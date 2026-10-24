@@ -41,23 +41,23 @@ func (rcv *PRWAtmosphereResult) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *PRWAtmosphereResult) ATMOSPHERE_MODEL() prwAtmosphereFamily {
+func (rcv *PRWAtmosphereResult) ATMOSPHERE_MODEL() pcfAtmosphereFamily {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return prwAtmosphereFamily(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return pcfAtmosphereFamily(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *PRWAtmosphereResult) AtmosphereModel() prwAtmosphereFamily {
+func (rcv *PRWAtmosphereResult) AtmosphereModel() pcfAtmosphereFamily {
 	return rcv.ATMOSPHERE_MODEL()
 }
 
-func (rcv *PRWAtmosphereResult) MutateATMOSPHERE_MODEL(n prwAtmosphereFamily) bool {
+func (rcv *PRWAtmosphereResult) MutateATMOSPHERE_MODEL(n pcfAtmosphereFamily) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
-func (rcv *PRWAtmosphereResult) MutateAtmosphereModel(n prwAtmosphereFamily) bool {
+func (rcv *PRWAtmosphereResult) MutateAtmosphereModel(n pcfAtmosphereFamily) bool {
 	return rcv.MutateATMOSPHERE_MODEL(n)
 }
 
@@ -273,10 +273,10 @@ func (rcv *PRWAtmosphereResult) NumberDensitiesLength() int {
 func PRWAtmosphereResultStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
 }
-func PRWAtmosphereResultAddATMOSPHERE_MODEL(builder *flatbuffers.Builder, ATMOSPHERE_MODEL prwAtmosphereFamily) {
+func PRWAtmosphereResultAddATMOSPHERE_MODEL(builder *flatbuffers.Builder, ATMOSPHERE_MODEL pcfAtmosphereFamily) {
 	builder.PrependByteSlot(0, byte(ATMOSPHERE_MODEL), 0)
 }
-func PRWAtmosphereResultAddAtmosphereModel(builder *flatbuffers.Builder, ATMOSPHERE_MODEL prwAtmosphereFamily) {
+func PRWAtmosphereResultAddAtmosphereModel(builder *flatbuffers.Builder, ATMOSPHERE_MODEL pcfAtmosphereFamily) {
 	PRWAtmosphereResultAddATMOSPHERE_MODEL(builder, ATMOSPHERE_MODEL)
 }
 func PRWAtmosphereResultAddVARIANT(builder *flatbuffers.Builder, VARIANT flatbuffers.UOffsetT) {

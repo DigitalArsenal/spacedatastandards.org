@@ -17,7 +17,7 @@ public struct PRWAtmosphereRequest : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PRWAtmosphereRequest __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public prwAtmosphereFamily ATMOSPHERE_MODEL { get { int o = __p.__offset(4); return o != 0 ? (prwAtmosphereFamily)__p.bb.Get(o + __p.bb_pos) : prwAtmosphereFamily.NRLMSISE00; } }
+  public pcfAtmosphereFamily ATMOSPHERE_MODEL { get { int o = __p.__offset(4); return o != 0 ? (pcfAtmosphereFamily)__p.bb.Get(o + __p.bb_pos) : pcfAtmosphereFamily.NRLMSISE00; } }
   public TIMInstant? EPOCH { get { int o = __p.__offset(6); return o != 0 ? (TIMInstant?)(new TIMInstant()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public double ALTITUDE_M { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   public double LATITUDE_RAD { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
@@ -32,7 +32,7 @@ public struct PRWAtmosphereRequest : IFlatbufferObject
   public bool INCLUDE_ANOMALOUS_OXYGEN { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<PRWAtmosphereRequest> CreatePRWAtmosphereRequest(FlatBufferBuilder builder,
-      prwAtmosphereFamily ATMOSPHERE_MODEL = prwAtmosphereFamily.NRLMSISE00,
+      pcfAtmosphereFamily ATMOSPHERE_MODEL = pcfAtmosphereFamily.NRLMSISE00,
       Offset<TIMInstant> EPOCHOffset = default(Offset<TIMInstant>),
       double ALTITUDE_M = 0.0,
       double LATITUDE_RAD = 0.0,
@@ -59,7 +59,7 @@ public struct PRWAtmosphereRequest : IFlatbufferObject
   }
 
   public static void StartPRWAtmosphereRequest(FlatBufferBuilder builder) { builder.StartTable(11); }
-  public static void AddATMOSPHERE_MODEL(FlatBufferBuilder builder, prwAtmosphereFamily ATMOSPHERE_MODEL) { builder.AddByte(0, (byte)ATMOSPHERE_MODEL, 1); }
+  public static void AddATMOSPHERE_MODEL(FlatBufferBuilder builder, pcfAtmosphereFamily ATMOSPHERE_MODEL) { builder.AddByte(0, (byte)ATMOSPHERE_MODEL, 1); }
   public static void AddEPOCH(FlatBufferBuilder builder, Offset<TIMInstant> EPOCHOffset) { builder.AddOffset(1, EPOCHOffset.Value, 0); }
   public static void AddALTITUDE_M(FlatBufferBuilder builder, double ALTITUDE_M) { builder.AddDouble(2, ALTITUDE_M, 0.0); }
   public static void AddLATITUDE_RAD(FlatBufferBuilder builder, double LATITUDE_RAD) { builder.AddDouble(3, LATITUDE_RAD, 0.0); }
@@ -114,7 +114,7 @@ public struct PRWAtmosphereRequest : IFlatbufferObject
 
 public class PRWAtmosphereRequestT
 {
-  public prwAtmosphereFamily ATMOSPHERE_MODEL { get; set; }
+  public pcfAtmosphereFamily ATMOSPHERE_MODEL { get; set; }
   public TIMInstantT EPOCH { get; set; }
   public double ALTITUDE_M { get; set; }
   public double LATITUDE_RAD { get; set; }
@@ -127,7 +127,7 @@ public class PRWAtmosphereRequestT
   public bool INCLUDE_ANOMALOUS_OXYGEN { get; set; }
 
   public PRWAtmosphereRequestT() {
-    this.ATMOSPHERE_MODEL = prwAtmosphereFamily.NRLMSISE00;
+    this.ATMOSPHERE_MODEL = pcfAtmosphereFamily.NRLMSISE00;
     this.EPOCH = null;
     this.ALTITUDE_M = 0.0;
     this.LATITUDE_RAD = 0.0;
@@ -147,7 +147,7 @@ static public class PRWAtmosphereRequestVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyField(tablePos, 4 /*ATMOSPHERE_MODEL*/, 1 /*prwAtmosphereFamily*/, 1, false)
+      && verifier.VerifyField(tablePos, 4 /*ATMOSPHERE_MODEL*/, 1 /*pcfAtmosphereFamily*/, 1, false)
       && verifier.VerifyTable(tablePos, 6 /*EPOCH*/, TIMInstantVerify.Verify, true)
       && verifier.VerifyField(tablePos, 8 /*ALTITUDE_M*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 10 /*LATITUDE_RAD*/, 8 /*double*/, 8, false)

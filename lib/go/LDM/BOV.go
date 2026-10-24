@@ -6,7 +6,10 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 type BOV struct {
 	_tab flatbuffers.Table
 }
@@ -54,6 +57,7 @@ func (rcv *BOV) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// EFG position, E component, km (11 significant figures).
 func (rcv *BOV) E_COORDINATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -66,6 +70,7 @@ func (rcv *BOV) ECoordinate() float64 {
 	return rcv.E_COORDINATE()
 }
 
+/// EFG position, E component, km (11 significant figures).
 func (rcv *BOV) MutateE_COORDINATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(4, n)
 }
@@ -74,6 +79,7 @@ func (rcv *BOV) MutateECoordinate(n float64) bool {
 	return rcv.MutateE_COORDINATE(n)
 }
 
+/// EFG position, F component, km (11 significant figures).
 func (rcv *BOV) F_COORDINATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -86,6 +92,7 @@ func (rcv *BOV) FCoordinate() float64 {
 	return rcv.F_COORDINATE()
 }
 
+/// EFG position, F component, km (11 significant figures).
 func (rcv *BOV) MutateF_COORDINATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(6, n)
 }
@@ -94,6 +101,7 @@ func (rcv *BOV) MutateFCoordinate(n float64) bool {
 	return rcv.MutateF_COORDINATE(n)
 }
 
+/// EFG position, G component, km (11 significant figures).
 func (rcv *BOV) G_COORDINATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -106,6 +114,7 @@ func (rcv *BOV) GCoordinate() float64 {
 	return rcv.G_COORDINATE()
 }
 
+/// EFG position, G component, km (11 significant figures).
 func (rcv *BOV) MutateG_COORDINATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(8, n)
 }
@@ -114,6 +123,7 @@ func (rcv *BOV) MutateGCoordinate(n float64) bool {
 	return rcv.MutateG_COORDINATE(n)
 }
 
+/// EFG velocity, E component, km/s (9 significant figures).
 func (rcv *BOV) E_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -126,6 +136,7 @@ func (rcv *BOV) EDot() float64 {
 	return rcv.E_DOT()
 }
 
+/// EFG velocity, E component, km/s (9 significant figures).
 func (rcv *BOV) MutateE_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(10, n)
 }
@@ -134,6 +145,7 @@ func (rcv *BOV) MutateEDot(n float64) bool {
 	return rcv.MutateE_DOT(n)
 }
 
+/// EFG velocity, F component, km/s (9 significant figures).
 func (rcv *BOV) F_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -146,6 +158,7 @@ func (rcv *BOV) FDot() float64 {
 	return rcv.F_DOT()
 }
 
+/// EFG velocity, F component, km/s (9 significant figures).
 func (rcv *BOV) MutateF_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(12, n)
 }
@@ -154,6 +167,7 @@ func (rcv *BOV) MutateFDot(n float64) bool {
 	return rcv.MutateF_DOT(n)
 }
 
+/// EFG velocity, G component, km/s (9 significant figures).
 func (rcv *BOV) G_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -166,6 +180,7 @@ func (rcv *BOV) GDot() float64 {
 	return rcv.G_DOT()
 }
 
+/// EFG velocity, G component, km/s (9 significant figures).
 func (rcv *BOV) MutateG_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
@@ -174,6 +189,7 @@ func (rcv *BOV) MutateGDot(n float64) bool {
 	return rcv.MutateG_DOT(n)
 }
 
+/// Epoch time, in ISO 8601 UTC format.
 func (rcv *BOV) EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -186,6 +202,8 @@ func (rcv *BOV) Epoch() []byte {
 	return rcv.EPOCH()
 }
 
+/// Epoch time, in ISO 8601 UTC format.
+/// Time from launch, seconds (s), with appropriate precision.
 func (rcv *BOV) TIME_FROM_LAUNCH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -198,6 +216,7 @@ func (rcv *BOV) TimeFromLaunch() float64 {
 	return rcv.TIME_FROM_LAUNCH()
 }
 
+/// Time from launch, seconds (s), with appropriate precision.
 func (rcv *BOV) MutateTIME_FROM_LAUNCH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }

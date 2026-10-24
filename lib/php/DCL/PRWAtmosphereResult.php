@@ -46,7 +46,7 @@ class PRWAtmosphereResult extends Table
     public function getATMOSPHERE_MODEL()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwAtmosphereFamily::UNSPECIFIED;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfAtmosphereFamily::UNSPECIFIED;
     }
 
     public function getVARIANT()

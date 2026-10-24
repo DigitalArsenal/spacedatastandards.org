@@ -5,54 +5,3627 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+import './main_generated.dart';
 
-enum IntegratorType {
-  RK4(0),
-  RK45(1),
-  RK78(2),
-  DOPRI5(3),
-  DOPRI853(4),
-  ABM(5),
-  BS(6),
-  ANALYTICAL(255);
+///  The orbit theory that computes the states. Append new values only; never
+///  reorder or reuse a value.
+enum pcfTheory {
+  UNSPECIFIED(0),
+  SGP4(1),
+  SGP4XP(2),
+  SDNAP(3),
+  FFM(4),
+  KEPLER(5);
 
   final int value;
-  const IntegratorType(this.value);
+  const pcfTheory(this.value);
 
-  factory IntegratorType.fromValue(int value) {
+  factory pcfTheory.fromValue(int value) {
     switch (value) {
-      case 0: return IntegratorType.RK4;
-      case 1: return IntegratorType.RK45;
-      case 2: return IntegratorType.RK78;
-      case 3: return IntegratorType.DOPRI5;
-      case 4: return IntegratorType.DOPRI853;
-      case 5: return IntegratorType.ABM;
-      case 6: return IntegratorType.BS;
-      case 255: return IntegratorType.ANALYTICAL;
+      case 0: return pcfTheory.UNSPECIFIED;
+      case 1: return pcfTheory.SGP4;
+      case 2: return pcfTheory.SGP4XP;
+      case 3: return pcfTheory.SDNAP;
+      case 4: return pcfTheory.FFM;
+      case 5: return pcfTheory.KEPLER;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
 
-  static IntegratorType? _createOrNull(int? value) =>
-      value == null ? null : IntegratorType.fromValue(value);
+  static pcfTheory? _createOrNull(int? value) =>
+      value == null ? null : pcfTheory.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 255;
-  static const fb.Reader<IntegratorType> reader = _IntegratorTypeReader();
+  static const int maxValue = 5;
+  static const fb.Reader<pcfTheory> reader = _pcfTheoryReader();
 }
 
-class _IntegratorTypeReader extends fb.Reader<IntegratorType> {
-  const _IntegratorTypeReader();
+class _pcfTheoryReader extends fb.Reader<pcfTheory> {
+  const _pcfTheoryReader();
 
   @override
   int get size => 1;
 
   @override
-  IntegratorType read(fb.BufferContext bc, int offset) =>
-      IntegratorType.fromValue(const fb.Uint8Reader().read(bc, offset));
+  pcfTheory read(fb.BufferContext bc, int offset) =>
+      pcfTheory.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  Propagator Configuration
+///  How a propagator learns the space weather beyond the daily rows it was
+///  given. Append new values only.
+enum pcfWeatherExtension {
+  UNSPECIFIED(0),
+  REFUSE(1),
+  HOLD_LAST(2),
+  FORECAST_CHAIN(3);
+
+  final int value;
+  const pcfWeatherExtension(this.value);
+
+  factory pcfWeatherExtension.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfWeatherExtension.UNSPECIFIED;
+      case 1: return pcfWeatherExtension.REFUSE;
+      case 2: return pcfWeatherExtension.HOLD_LAST;
+      case 3: return pcfWeatherExtension.FORECAST_CHAIN;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfWeatherExtension? _createOrNull(int? value) =>
+      value == null ? null : pcfWeatherExtension.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<pcfWeatherExtension> reader = _pcfWeatherExtensionReader();
+}
+
+class _pcfWeatherExtensionReader extends fb.Reader<pcfWeatherExtension> {
+  const _pcfWeatherExtensionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfWeatherExtension read(fb.BufferContext bc, int offset) =>
+      pcfWeatherExtension.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Where the space weather of a propagation comes from. Append new values
+///  only.
+enum pcfWeatherSource {
+  UNSPECIFIED(0),
+  CONSTANT(1),
+  RECORDS(2);
+
+  final int value;
+  const pcfWeatherSource(this.value);
+
+  factory pcfWeatherSource.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfWeatherSource.UNSPECIFIED;
+      case 1: return pcfWeatherSource.CONSTANT;
+      case 2: return pcfWeatherSource.RECORDS;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfWeatherSource? _createOrNull(int? value) =>
+      value == null ? null : pcfWeatherSource.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pcfWeatherSource> reader = _pcfWeatherSourceReader();
+}
+
+class _pcfWeatherSourceReader extends fb.Reader<pcfWeatherSource> {
+  const _pcfWeatherSourceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfWeatherSource read(fb.BufferContext bc, int offset) =>
+      pcfWeatherSource.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Correction applied to the atmosphere model's density. Append new values
+///  only.
+enum pcfDensityCorrection {
+  NONE(0),
+  DCA_COMMON_MODE(1);
+
+  final int value;
+  const pcfDensityCorrection(this.value);
+
+  factory pcfDensityCorrection.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfDensityCorrection.NONE;
+      case 1: return pcfDensityCorrection.DCA_COMMON_MODE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfDensityCorrection? _createOrNull(int? value) =>
+      value == null ? null : pcfDensityCorrection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfDensityCorrection> reader = _pcfDensityCorrectionReader();
+}
+
+class _pcfDensityCorrectionReader extends fb.Reader<pcfDensityCorrection> {
+  const _pcfDensityCorrectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfDensityCorrection read(fb.BufferContext bc, int offset) =>
+      pcfDensityCorrection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Neutral wind in the drag relative velocity. Append new values only.
+enum pcfNeutralWind {
+  NONE(0),
+  HWM14(1);
+
+  final int value;
+  const pcfNeutralWind(this.value);
+
+  factory pcfNeutralWind.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfNeutralWind.NONE;
+      case 1: return pcfNeutralWind.HWM14;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfNeutralWind? _createOrNull(int? value) =>
+      value == null ? null : pcfNeutralWind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfNeutralWind> reader = _pcfNeutralWindReader();
+}
+
+class _pcfNeutralWindReader extends fb.Reader<pcfNeutralWind> {
+  const _pcfNeutralWindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfNeutralWind read(fb.BufferContext bc, int offset) =>
+      pcfNeutralWind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Where the Sun, Moon and planets are read from. Append new values only.
+enum pcfEphemerisKind {
+  UNSPECIFIED(0),
+  ANALYTIC_SERIES(1),
+  PLANETARY_KERNEL(2);
+
+  final int value;
+  const pcfEphemerisKind(this.value);
+
+  factory pcfEphemerisKind.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfEphemerisKind.UNSPECIFIED;
+      case 1: return pcfEphemerisKind.ANALYTIC_SERIES;
+      case 2: return pcfEphemerisKind.PLANETARY_KERNEL;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfEphemerisKind? _createOrNull(int? value) =>
+      value == null ? null : pcfEphemerisKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pcfEphemerisKind> reader = _pcfEphemerisKindReader();
+}
+
+class _pcfEphemerisKindReader extends fb.Reader<pcfEphemerisKind> {
+  const _pcfEphemerisKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfEphemerisKind read(fb.BufferContext bc, int offset) =>
+      pcfEphemerisKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  What a propagator does when a located event occurs. Append new values
+///  only.
+enum pcfEventAction {
+  UNSPECIFIED(0),
+  STOP(1),
+  CONTINUE(2),
+  RECORD(3);
+
+  final int value;
+  const pcfEventAction(this.value);
+
+  factory pcfEventAction.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfEventAction.UNSPECIFIED;
+      case 1: return pcfEventAction.STOP;
+      case 2: return pcfEventAction.CONTINUE;
+      case 3: return pcfEventAction.RECORD;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfEventAction? _createOrNull(int? value) =>
+      value == null ? null : pcfEventAction.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<pcfEventAction> reader = _pcfEventActionReader();
+}
+
+class _pcfEventActionReader extends fb.Reader<pcfEventAction> {
+  const _pcfEventActionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfEventAction read(fb.BufferContext bc, int offset) =>
+      pcfEventAction.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  How the correlation of maneuver-detection innovations is weighted. Append
+///  new values only.
+enum pcfInnovationCorrelation {
+  UNSPECIFIED(0),
+  WHITE(1),
+  ONE_SAMPLE_PER_REVOLUTION(2),
+  CORRELATION_TIME(3);
+
+  final int value;
+  const pcfInnovationCorrelation(this.value);
+
+  factory pcfInnovationCorrelation.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfInnovationCorrelation.UNSPECIFIED;
+      case 1: return pcfInnovationCorrelation.WHITE;
+      case 2: return pcfInnovationCorrelation.ONE_SAMPLE_PER_REVOLUTION;
+      case 3: return pcfInnovationCorrelation.CORRELATION_TIME;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfInnovationCorrelation? _createOrNull(int? value) =>
+      value == null ? null : pcfInnovationCorrelation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<pcfInnovationCorrelation> reader = _pcfInnovationCorrelationReader();
+}
+
+class _pcfInnovationCorrelationReader extends fb.Reader<pcfInnovationCorrelation> {
+  const _pcfInnovationCorrelationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfInnovationCorrelation read(fb.BufferContext bc, int offset) =>
+      pcfInnovationCorrelation.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  How the reentry-time window is computed. Append new values only.
+enum pcfReentryWindowMethod {
+  UNSPECIFIED(0),
+  LINEAR(1),
+  UNSCENTED(2);
+
+  final int value;
+  const pcfReentryWindowMethod(this.value);
+
+  factory pcfReentryWindowMethod.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfReentryWindowMethod.UNSPECIFIED;
+      case 1: return pcfReentryWindowMethod.LINEAR;
+      case 2: return pcfReentryWindowMethod.UNSCENTED;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfReentryWindowMethod? _createOrNull(int? value) =>
+      value == null ? null : pcfReentryWindowMethod.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pcfReentryWindowMethod> reader = _pcfReentryWindowMethodReader();
+}
+
+class _pcfReentryWindowMethodReader extends fb.Reader<pcfReentryWindowMethod> {
+  const _pcfReentryWindowMethodReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfReentryWindowMethod read(fb.BufferContext bc, int offset) =>
+      pcfReentryWindowMethod.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Frame of the output states. Append new values only.
+enum pcfOutputFrame {
+  UNSPECIFIED(0),
+  TEME(1),
+  GCRF(2),
+  EME2000(3),
+  ITRF(4);
+
+  final int value;
+  const pcfOutputFrame(this.value);
+
+  factory pcfOutputFrame.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfOutputFrame.UNSPECIFIED;
+      case 1: return pcfOutputFrame.TEME;
+      case 2: return pcfOutputFrame.GCRF;
+      case 3: return pcfOutputFrame.EME2000;
+      case 4: return pcfOutputFrame.ITRF;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfOutputFrame? _createOrNull(int? value) =>
+      value == null ? null : pcfOutputFrame.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static const fb.Reader<pcfOutputFrame> reader = _pcfOutputFrameReader();
+}
+
+class _pcfOutputFrameReader extends fb.Reader<pcfOutputFrame> {
+  const _pcfOutputFrameReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfOutputFrame read(fb.BufferContext bc, int offset) =>
+      pcfOutputFrame.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Integration algorithm, shared by $PCF and $PRW (one definition). Values 1 to
+///  10 are the numbers $PRW has always carried; new values are appended only,
+///  never reordered or reused. A scheme value names the stepping method; a
+///  formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
+///  STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+///  scheme that steps them is the provider's, reported in its result.
+enum pcfIntegratorAlgorithm {
+  UNSPECIFIED(0),
+  RK4(1),
+  RKF45(2),
+  RKF78(3),
+  RK78(4),
+  RKDP87(5),
+  ABM(6),
+  BS(7),
+  COWELL(8),
+  ENCKE(9),
+  EQUINOCTIAL_VOP(10),
+  DOPRI5(11),
+  RK65_8M(12),
+  VERNER_98(13),
+  RKN12_10(14),
+  GAUSS_JACKSON_8(15),
+  GAUSS_VOP(16),
+  DROMO(17),
+  STIEFEL_SCHEIFELE(18),
+  DOPRI853(19);
+
+  final int value;
+  const pcfIntegratorAlgorithm(this.value);
+
+  factory pcfIntegratorAlgorithm.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfIntegratorAlgorithm.UNSPECIFIED;
+      case 1: return pcfIntegratorAlgorithm.RK4;
+      case 2: return pcfIntegratorAlgorithm.RKF45;
+      case 3: return pcfIntegratorAlgorithm.RKF78;
+      case 4: return pcfIntegratorAlgorithm.RK78;
+      case 5: return pcfIntegratorAlgorithm.RKDP87;
+      case 6: return pcfIntegratorAlgorithm.ABM;
+      case 7: return pcfIntegratorAlgorithm.BS;
+      case 8: return pcfIntegratorAlgorithm.COWELL;
+      case 9: return pcfIntegratorAlgorithm.ENCKE;
+      case 10: return pcfIntegratorAlgorithm.EQUINOCTIAL_VOP;
+      case 11: return pcfIntegratorAlgorithm.DOPRI5;
+      case 12: return pcfIntegratorAlgorithm.RK65_8M;
+      case 13: return pcfIntegratorAlgorithm.VERNER_98;
+      case 14: return pcfIntegratorAlgorithm.RKN12_10;
+      case 15: return pcfIntegratorAlgorithm.GAUSS_JACKSON_8;
+      case 16: return pcfIntegratorAlgorithm.GAUSS_VOP;
+      case 17: return pcfIntegratorAlgorithm.DROMO;
+      case 18: return pcfIntegratorAlgorithm.STIEFEL_SCHEIFELE;
+      case 19: return pcfIntegratorAlgorithm.DOPRI853;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfIntegratorAlgorithm? _createOrNull(int? value) =>
+      value == null ? null : pcfIntegratorAlgorithm.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 19;
+  static const fb.Reader<pcfIntegratorAlgorithm> reader = _pcfIntegratorAlgorithmReader();
+}
+
+class _pcfIntegratorAlgorithmReader extends fb.Reader<pcfIntegratorAlgorithm> {
+  const _pcfIntegratorAlgorithmReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfIntegratorAlgorithm read(fb.BufferContext bc, int offset) =>
+      pcfIntegratorAlgorithm.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum pcfGravitySelection {
+  INFER_FLAGS(0),
+  POINT_MASS(1),
+  J2_ONLY(2),
+  J2_TO_J4(3),
+  SPHERICAL_HARMONICS(4),
+  EGM2008(5),
+  EGM96(6),
+  GRGM660PRIM(7);
+
+  final int value;
+  const pcfGravitySelection(this.value);
+
+  factory pcfGravitySelection.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfGravitySelection.INFER_FLAGS;
+      case 1: return pcfGravitySelection.POINT_MASS;
+      case 2: return pcfGravitySelection.J2_ONLY;
+      case 3: return pcfGravitySelection.J2_TO_J4;
+      case 4: return pcfGravitySelection.SPHERICAL_HARMONICS;
+      case 5: return pcfGravitySelection.EGM2008;
+      case 6: return pcfGravitySelection.EGM96;
+      case 7: return pcfGravitySelection.GRGM660PRIM;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfGravitySelection? _createOrNull(int? value) =>
+      value == null ? null : pcfGravitySelection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static const fb.Reader<pcfGravitySelection> reader = _pcfGravitySelectionReader();
+}
+
+class _pcfGravitySelectionReader extends fb.Reader<pcfGravitySelection> {
+  const _pcfGravitySelectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfGravitySelection read(fb.BufferContext bc, int offset) =>
+      pcfGravitySelection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+enum pcfAtmosphereFamily {
+  UNSPECIFIED(0),
+  NRLMSISE00(1),
+  EXPONENTIAL(2),
+  USSA1976(3),
+  HARRIS_PRIESTER(4),
+  JACCHIA_ROBERTS(5),
+  JB2008(6);
+
+  final int value;
+  const pcfAtmosphereFamily(this.value);
+
+  factory pcfAtmosphereFamily.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfAtmosphereFamily.UNSPECIFIED;
+      case 1: return pcfAtmosphereFamily.NRLMSISE00;
+      case 2: return pcfAtmosphereFamily.EXPONENTIAL;
+      case 3: return pcfAtmosphereFamily.USSA1976;
+      case 4: return pcfAtmosphereFamily.HARRIS_PRIESTER;
+      case 5: return pcfAtmosphereFamily.JACCHIA_ROBERTS;
+      case 6: return pcfAtmosphereFamily.JB2008;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfAtmosphereFamily? _createOrNull(int? value) =>
+      value == null ? null : pcfAtmosphereFamily.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static const fb.Reader<pcfAtmosphereFamily> reader = _pcfAtmosphereFamilyReader();
+}
+
+class _pcfAtmosphereFamilyReader extends fb.Reader<pcfAtmosphereFamily> {
+  const _pcfAtmosphereFamilyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfAtmosphereFamily read(fb.BufferContext bc, int offset) =>
+      pcfAtmosphereFamily.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Solid Earth tide model for the central body's field. NONE leaves the
+///  tides out. IERS_2010 is IERS Conventions (2010) section 6.2: the degree 2
+///  and 3 tides raised by the Sun and Moon with Table 6.3's anelastic Love
+///  numbers and the degree 4 terms through k+ (step 1, eqs. 6.6-6.7), the
+///  frequency-dependent corrections of Tables 6.5a-c (step 2, eq. 6.8), and
+///  the permanent tide handled for the field's own tide system. Pole tide is
+///  not included.
+enum pcfSolidTideModel {
+  NONE(0),
+  IERS_2010(1);
+
+  final int value;
+  const pcfSolidTideModel(this.value);
+
+  factory pcfSolidTideModel.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfSolidTideModel.NONE;
+      case 1: return pcfSolidTideModel.IERS_2010;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfSolidTideModel? _createOrNull(int? value) =>
+      value == null ? null : pcfSolidTideModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfSolidTideModel> reader = _pcfSolidTideModelReader();
+}
+
+class _pcfSolidTideModelReader extends fb.Reader<pcfSolidTideModel> {
+  const _pcfSolidTideModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfSolidTideModel read(fb.BufferContext bc, int offset) =>
+      pcfSolidTideModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Post-Newtonian corrections to the central body's acceleration (IERS
+///  Conventions (2010) eq. 10.12). NONE leaves them out. SCHWARZSCHILD is the
+///  point-mass term only. IERS_2010 adds Lense-Thirring and de Sitter
+///  (geodesic) precession.
+enum pcfRelativityTerms {
+  NONE(0),
+  SCHWARZSCHILD(1),
+  IERS_2010(2);
+
+  final int value;
+  const pcfRelativityTerms(this.value);
+
+  factory pcfRelativityTerms.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfRelativityTerms.NONE;
+      case 1: return pcfRelativityTerms.SCHWARZSCHILD;
+      case 2: return pcfRelativityTerms.IERS_2010;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfRelativityTerms? _createOrNull(int? value) =>
+      value == null ? null : pcfRelativityTerms.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pcfRelativityTerms> reader = _pcfRelativityTermsReader();
+}
+
+class _pcfRelativityTermsReader extends fb.Reader<pcfRelativityTerms> {
+  const _pcfRelativityTermsReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfRelativityTerms read(fb.BufferContext bc, int offset) =>
+      pcfRelativityTerms.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Solar radiation pressure model family. CANNONBALL uses the
+///  radiation-pressure coefficient and area-to-mass ratio of the force
+///  configuration; GNSS_BOX_WING is the a priori box-wing model of the
+///  spacecraft block in GNSS_BLOCK (Rodriguez-Solano, Hugentobler and
+///  Steigenberger 2012, Adv. Space Res. 49, doi:10.1016/j.asr.2012.01.016)
+///  under nominal yaw steering, with the mass INITIAL_MASS_KG.
+enum pcfRadiationPressureFamily {
+  CANNONBALL(0),
+  GNSS_BOX_WING(1),
+  NONE(2);
+
+  final int value;
+  const pcfRadiationPressureFamily(this.value);
+
+  factory pcfRadiationPressureFamily.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfRadiationPressureFamily.CANNONBALL;
+      case 1: return pcfRadiationPressureFamily.GNSS_BOX_WING;
+      case 2: return pcfRadiationPressureFamily.NONE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfRadiationPressureFamily? _createOrNull(int? value) =>
+      value == null ? null : pcfRadiationPressureFamily.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pcfRadiationPressureFamily> reader = _pcfRadiationPressureFamilyReader();
+}
+
+class _pcfRadiationPressureFamilyReader extends fb.Reader<pcfRadiationPressureFamily> {
+  const _pcfRadiationPressureFamilyReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfRadiationPressureFamily read(fb.BufferContext bc, int offset) =>
+      pcfRadiationPressureFamily.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Earth radiation pressure: the sunlight the Earth reflects (albedo) and the
+///  infrared it emits, pushing on an isotropic (cannonball) spacecraft. KNOCKE
+///  is Knocke, Ries and Tapley (1988, AIAA paper 88-4292): albedo and
+///  emissivity zonal to the second Legendre degree with the annual term of
+///  the first, from the elements of the Earth's surface the spacecraft sees
+///  (as Orekit's KnockeRediffusedForceModel evaluates it).
+enum pcfEarthRadiationModel {
+  NONE(0),
+  KNOCKE(1);
+
+  final int value;
+  const pcfEarthRadiationModel(this.value);
+
+  factory pcfEarthRadiationModel.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfEarthRadiationModel.NONE;
+      case 1: return pcfEarthRadiationModel.KNOCKE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfEarthRadiationModel? _createOrNull(int? value) =>
+      value == null ? null : pcfEarthRadiationModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfEarthRadiationModel> reader = _pcfEarthRadiationModelReader();
+}
+
+class _pcfEarthRadiationModelReader extends fb.Reader<pcfEarthRadiationModel> {
+  const _pcfEarthRadiationModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfEarthRadiationModel read(fb.BufferContext bc, int offset) =>
+      pcfEarthRadiationModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Ocean tide model for the central body's field. FES2004 is IERS
+///  Conventions (2010) section 6.3: the variations of the normalized Stokes
+///  coefficients of the FES2004 waves (the IERS file fes2004_Cnm-Snm.dat,
+///  eq. 6.15) at their Doodson arguments, in the field's Earth-fixed axes.
+///  The ocean pole tide is not included.
+enum pcfOceanTideModel {
+  NONE(0),
+  FES2004(1);
+
+  final int value;
+  const pcfOceanTideModel(this.value);
+
+  factory pcfOceanTideModel.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfOceanTideModel.NONE;
+      case 1: return pcfOceanTideModel.FES2004;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfOceanTideModel? _createOrNull(int? value) =>
+      value == null ? null : pcfOceanTideModel.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfOceanTideModel> reader = _pcfOceanTideModelReader();
+}
+
+class _pcfOceanTideModelReader extends fb.Reader<pcfOceanTideModel> {
+  const _pcfOceanTideModelReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfOceanTideModel read(fb.BufferContext bc, int offset) =>
+      pcfOceanTideModel.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  GNSS spacecraft block, selecting the box-wing surfaces.
+enum pcfGnssSpacecraftBlock {
+  UNSPECIFIED(0),
+  GPS_IIR(1),
+  GPS_IIR_M(2),
+  GPS_IIF(3);
+
+  final int value;
+  const pcfGnssSpacecraftBlock(this.value);
+
+  factory pcfGnssSpacecraftBlock.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfGnssSpacecraftBlock.UNSPECIFIED;
+      case 1: return pcfGnssSpacecraftBlock.GPS_IIR;
+      case 2: return pcfGnssSpacecraftBlock.GPS_IIR_M;
+      case 3: return pcfGnssSpacecraftBlock.GPS_IIF;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfGnssSpacecraftBlock? _createOrNull(int? value) =>
+      value == null ? null : pcfGnssSpacecraftBlock.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static const fb.Reader<pcfGnssSpacecraftBlock> reader = _pcfGnssSpacecraftBlockReader();
+}
+
+class _pcfGnssSpacecraftBlockReader extends fb.Reader<pcfGnssSpacecraftBlock> {
+  const _pcfGnssSpacecraftBlockReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfGnssSpacecraftBlock read(fb.BufferContext bc, int offset) =>
+      pcfGnssSpacecraftBlock.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  A Gaussian prior on a fitted parameter. A prior with HAS_SIGMA false keeps
+///  the theory's own sigma and moves only the mean.
+class PCFGaussianPrior {
+  PCFGaussianPrior._(this._bc, this._bcOffset);
+  factory PCFGaussianPrior(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFGaussianPrior> reader = _PCFGaussianPriorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Prior mean, in the unit of the parameter it is attached to. Default 0.
+  double get MEAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Prior standard deviation, in the same unit; > 0 when HAS_SIGMA.
+  double get SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  True when SIGMA carries a value; false keeps the theory's own sigma.
+  bool get HAS_SIGMA => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get hasSigma => HAS_SIGMA;
+
+  @override
+  String toString() {
+    return 'PCFGaussianPrior{MEAN: ${MEAN}, SIGMA: ${SIGMA}, hasSigma: ${hasSigma}}';
+  }
+}
+
+class _PCFGaussianPriorReader extends fb.TableReader<PCFGaussianPrior> {
+  const _PCFGaussianPriorReader();
+
+  @override
+  PCFGaussianPrior createObject(fb.BufferContext bc, int offset) =>
+    PCFGaussianPrior._(bc, offset);
+}
+
+class PCFGaussianPriorBuilder {
+  PCFGaussianPriorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addMean(double? MEAN) {
+    fbBuilder.addFloat64(0, MEAN);
+    return fbBuilder.offset;
+  }
+  int addSigma(double? SIGMA) {
+    fbBuilder.addFloat64(1, SIGMA);
+    return fbBuilder.offset;
+  }
+  int addHasSigma(bool? HAS_SIGMA) {
+    fbBuilder.addBool(2, HAS_SIGMA);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFGaussianPriorObjectBuilder extends fb.ObjectBuilder {
+  final double? _MEAN;
+  final double? _SIGMA;
+  final bool? _HAS_SIGMA;
+
+  PCFGaussianPriorObjectBuilder({
+    double? MEAN,
+    double? SIGMA,
+    bool? HAS_SIGMA,
+    bool? hasSigma,
+  })
+      : _MEAN = MEAN,
+        _SIGMA = SIGMA,
+        _HAS_SIGMA = hasSigma ?? HAS_SIGMA;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _MEAN);
+    fbBuilder.addFloat64(1, _SIGMA);
+    fbBuilder.addBool(2, _HAS_SIGMA);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Empirical along-track terms of the averaged theories: a transverse
+///  acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
+///  latitude and g = 1 on the fit arc.
+class PCFEmpiricalTerms {
+  PCFEmpiricalTerms._(this._bc, this._bcOffset);
+  factory PCFEmpiricalTerms(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFEmpiricalTerms> reader = _PCFEmpiricalTermsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Fit the once-per-revolution pair (TAUC, TAUS). Default true.
+  bool get ONCE_PER_REVOLUTION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 4, true);
+  bool get oncePerRevolution => ONCE_PER_REVOLUTION;
+  ///  The constant term TAU0 is free only when this rule selects it: a fitted
+  ///  B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
+  ///  prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
+  double get TAU0_RULE_LIMIT_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.5);
+  double get tau0RuleLimitM2Kg => TAU0_RULE_LIMIT_M2_KG;
+  ///  True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
+  ///  default) leaves TAU0 off.
+  bool get HAS_TAU0_RULE_LIMIT_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
+  bool get hasTau0RuleLimitM2Kg => HAS_TAU0_RULE_LIMIT_M2_KG;
+  ///  True holds TAUC and TAUS after the arc end above the drag regime
+  ///  instead of decaying them. Default false.
+  bool get HELD_ABOVE_DRAG_REGIME => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  bool get heldAboveDragRegime => HELD_ABOVE_DRAG_REGIME;
+  ///  Persistence time of the empirical force after the arc end, hours.
+  ///  Default 24.
+  double get PERSISTENCE_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 24.0);
+  double get persistenceHours => PERSISTENCE_HOURS;
+
+  @override
+  String toString() {
+    return 'PCFEmpiricalTerms{oncePerRevolution: ${oncePerRevolution}, tau0RuleLimitM2Kg: ${tau0RuleLimitM2Kg}, hasTau0RuleLimitM2Kg: ${hasTau0RuleLimitM2Kg}, heldAboveDragRegime: ${heldAboveDragRegime}, persistenceHours: ${persistenceHours}}';
+  }
+}
+
+class _PCFEmpiricalTermsReader extends fb.TableReader<PCFEmpiricalTerms> {
+  const _PCFEmpiricalTermsReader();
+
+  @override
+  PCFEmpiricalTerms createObject(fb.BufferContext bc, int offset) =>
+    PCFEmpiricalTerms._(bc, offset);
+}
+
+class PCFEmpiricalTermsBuilder {
+  PCFEmpiricalTermsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addOncePerRevolution(bool? ONCE_PER_REVOLUTION) {
+    fbBuilder.addBool(0, ONCE_PER_REVOLUTION);
+    return fbBuilder.offset;
+  }
+  int addTau0RuleLimitM2Kg(double? TAU0_RULE_LIMIT_M2_KG) {
+    fbBuilder.addFloat64(1, TAU0_RULE_LIMIT_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHasTau0RuleLimitM2Kg(bool? HAS_TAU0_RULE_LIMIT_M2_KG) {
+    fbBuilder.addBool(2, HAS_TAU0_RULE_LIMIT_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHeldAboveDragRegime(bool? HELD_ABOVE_DRAG_REGIME) {
+    fbBuilder.addBool(3, HELD_ABOVE_DRAG_REGIME);
+    return fbBuilder.offset;
+  }
+  int addPersistenceHours(double? PERSISTENCE_HOURS) {
+    fbBuilder.addFloat64(4, PERSISTENCE_HOURS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFEmpiricalTermsObjectBuilder extends fb.ObjectBuilder {
+  final bool? _ONCE_PER_REVOLUTION;
+  final double? _TAU0_RULE_LIMIT_M2_KG;
+  final bool? _HAS_TAU0_RULE_LIMIT_M2_KG;
+  final bool? _HELD_ABOVE_DRAG_REGIME;
+  final double? _PERSISTENCE_HOURS;
+
+  PCFEmpiricalTermsObjectBuilder({
+    bool? ONCE_PER_REVOLUTION,
+    bool? oncePerRevolution,
+    double? TAU0_RULE_LIMIT_M2_KG,
+    double? tau0RuleLimitM2Kg,
+    bool? HAS_TAU0_RULE_LIMIT_M2_KG,
+    bool? hasTau0RuleLimitM2Kg,
+    bool? HELD_ABOVE_DRAG_REGIME,
+    bool? heldAboveDragRegime,
+    double? PERSISTENCE_HOURS,
+    double? persistenceHours,
+  })
+      : _ONCE_PER_REVOLUTION = oncePerRevolution ?? ONCE_PER_REVOLUTION,
+        _TAU0_RULE_LIMIT_M2_KG = tau0RuleLimitM2Kg ?? TAU0_RULE_LIMIT_M2_KG,
+        _HAS_TAU0_RULE_LIMIT_M2_KG = hasTau0RuleLimitM2Kg ?? HAS_TAU0_RULE_LIMIT_M2_KG,
+        _HELD_ABOVE_DRAG_REGIME = heldAboveDragRegime ?? HELD_ABOVE_DRAG_REGIME,
+        _PERSISTENCE_HOURS = persistenceHours ?? PERSISTENCE_HOURS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(5);
+    fbBuilder.addBool(0, _ONCE_PER_REVOLUTION);
+    fbBuilder.addFloat64(1, _TAU0_RULE_LIMIT_M2_KG);
+    fbBuilder.addBool(2, _HAS_TAU0_RULE_LIMIT_M2_KG);
+    fbBuilder.addBool(3, _HELD_ABOVE_DRAG_REGIME);
+    fbBuilder.addFloat64(4, _PERSISTENCE_HOURS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Truncations and switches of the averaged (mean-element) theories SGP4XP
+///  and SDNAP. SGP4's constants are fixed by its specification and are not
+///  options.
+class PCFMeanElementOptions {
+  PCFMeanElementOptions._(this._bc, this._bcOffset);
+  factory PCFMeanElementOptions(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFMeanElementOptions> reader = _PCFMeanElementOptionsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Highest even degree of the m-daily short-periodic gravity terms; 0
+  ///  omits them. Range 0 to 16. Default 12.
+  int get M_DAILY_MAXIMUM_DEGREE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 12);
+  int get mDailyMaximumDegree => M_DAILY_MAXIMUM_DEGREE;
+  ///  Highest degree of the zonal tail (secular and long-period terms past
+  ///  J5). Range 6 to 70. Default 20.
+  int get ZONAL_MAXIMUM_DEGREE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 20);
+  int get zonalMaximumDegree => ZONAL_MAXIMUM_DEGREE;
+  ///  Highest degree of the eccentricity-vector short-periodic terms. Range
+  ///  2 to 16. Default 7.
+  int get SHORT_PERIODIC_MAXIMUM_DEGREE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 7);
+  int get shortPeriodicMaximumDegree => SHORT_PERIODIC_MAXIMUM_DEGREE;
+  ///  Resonance terms on or off. Default true.
+  bool get ENABLE_RESONANCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, true);
+  bool get enableResonance => ENABLE_RESONANCE;
+  ///  Highest odd degree of the shallow-resonance terms. Default 31.
+  int get RESONANCE_MAXIMUM_DEGREE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 31);
+  int get resonanceMaximumDegree => RESONANCE_MAXIMUM_DEGREE;
+  ///  Resonance band: terms whose angle drifts slower than this fraction of
+  ///  the mean motion are integrated with the rates. Default 0.045.
+  double get RESONANCE_BAND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.045);
+  double get resonanceBand => RESONANCE_BAND;
+  ///  Highest multiple of the mean anomaly in a resonance angle. Default 1.
+  int get RESONANCE_MAXIMUM_K => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 1);
+  int get resonanceMaximumK => RESONANCE_MAXIMUM_K;
+  ///  Near-resonance band at output time, as a fraction of the mean motion
+  ///  beyond RESONANCE_BAND; 0 is off. Default 0.
+  double get NEAR_RESONANCE_BAND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get nearResonanceBand => NEAR_RESONANCE_BAND;
+  ///  Divisor of the integration grid step; >= 1. Default 1.
+  int get GRID_STEP_DIVISOR => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 1);
+  int get gridStepDivisor => GRID_STEP_DIVISOR;
+  ///  The catalog-shared density kernel (a gridded log-density table shared by
+  ///  every object) on or off; off evaluates the atmosphere model directly.
+  ///  Default true.
+  bool get DENSITY_KERNEL => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, true);
+  bool get densityKernel => DENSITY_KERNEL;
+  ///  Perigee height below which B_eff and TAU0 act (the drag regime), km.
+  ///  Default 2500.
+  double get DRAG_REGIME_PERIGEE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 2500.0);
+  double get dragRegimePerigeeKm => DRAG_REGIME_PERIGEE_KM;
+
+  @override
+  String toString() {
+    return 'PCFMeanElementOptions{mDailyMaximumDegree: ${mDailyMaximumDegree}, zonalMaximumDegree: ${zonalMaximumDegree}, shortPeriodicMaximumDegree: ${shortPeriodicMaximumDegree}, enableResonance: ${enableResonance}, resonanceMaximumDegree: ${resonanceMaximumDegree}, resonanceBand: ${resonanceBand}, resonanceMaximumK: ${resonanceMaximumK}, nearResonanceBand: ${nearResonanceBand}, gridStepDivisor: ${gridStepDivisor}, densityKernel: ${densityKernel}, dragRegimePerigeeKm: ${dragRegimePerigeeKm}}';
+  }
+}
+
+class _PCFMeanElementOptionsReader extends fb.TableReader<PCFMeanElementOptions> {
+  const _PCFMeanElementOptionsReader();
+
+  @override
+  PCFMeanElementOptions createObject(fb.BufferContext bc, int offset) =>
+    PCFMeanElementOptions._(bc, offset);
+}
+
+class PCFMeanElementOptionsBuilder {
+  PCFMeanElementOptionsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addMDailyMaximumDegree(int? M_DAILY_MAXIMUM_DEGREE) {
+    fbBuilder.addUint8(0, M_DAILY_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addZonalMaximumDegree(int? ZONAL_MAXIMUM_DEGREE) {
+    fbBuilder.addUint8(1, ZONAL_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addShortPeriodicMaximumDegree(int? SHORT_PERIODIC_MAXIMUM_DEGREE) {
+    fbBuilder.addUint8(2, SHORT_PERIODIC_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addEnableResonance(bool? ENABLE_RESONANCE) {
+    fbBuilder.addBool(3, ENABLE_RESONANCE);
+    return fbBuilder.offset;
+  }
+  int addResonanceMaximumDegree(int? RESONANCE_MAXIMUM_DEGREE) {
+    fbBuilder.addUint8(4, RESONANCE_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addResonanceBand(double? RESONANCE_BAND) {
+    fbBuilder.addFloat64(5, RESONANCE_BAND);
+    return fbBuilder.offset;
+  }
+  int addResonanceMaximumK(int? RESONANCE_MAXIMUM_K) {
+    fbBuilder.addUint8(6, RESONANCE_MAXIMUM_K);
+    return fbBuilder.offset;
+  }
+  int addNearResonanceBand(double? NEAR_RESONANCE_BAND) {
+    fbBuilder.addFloat64(7, NEAR_RESONANCE_BAND);
+    return fbBuilder.offset;
+  }
+  int addGridStepDivisor(int? GRID_STEP_DIVISOR) {
+    fbBuilder.addUint8(8, GRID_STEP_DIVISOR);
+    return fbBuilder.offset;
+  }
+  int addDensityKernel(bool? DENSITY_KERNEL) {
+    fbBuilder.addBool(9, DENSITY_KERNEL);
+    return fbBuilder.offset;
+  }
+  int addDragRegimePerigeeKm(double? DRAG_REGIME_PERIGEE_KM) {
+    fbBuilder.addFloat64(10, DRAG_REGIME_PERIGEE_KM);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFMeanElementOptionsObjectBuilder extends fb.ObjectBuilder {
+  final int? _M_DAILY_MAXIMUM_DEGREE;
+  final int? _ZONAL_MAXIMUM_DEGREE;
+  final int? _SHORT_PERIODIC_MAXIMUM_DEGREE;
+  final bool? _ENABLE_RESONANCE;
+  final int? _RESONANCE_MAXIMUM_DEGREE;
+  final double? _RESONANCE_BAND;
+  final int? _RESONANCE_MAXIMUM_K;
+  final double? _NEAR_RESONANCE_BAND;
+  final int? _GRID_STEP_DIVISOR;
+  final bool? _DENSITY_KERNEL;
+  final double? _DRAG_REGIME_PERIGEE_KM;
+
+  PCFMeanElementOptionsObjectBuilder({
+    int? M_DAILY_MAXIMUM_DEGREE,
+    int? mDailyMaximumDegree,
+    int? ZONAL_MAXIMUM_DEGREE,
+    int? zonalMaximumDegree,
+    int? SHORT_PERIODIC_MAXIMUM_DEGREE,
+    int? shortPeriodicMaximumDegree,
+    bool? ENABLE_RESONANCE,
+    bool? enableResonance,
+    int? RESONANCE_MAXIMUM_DEGREE,
+    int? resonanceMaximumDegree,
+    double? RESONANCE_BAND,
+    double? resonanceBand,
+    int? RESONANCE_MAXIMUM_K,
+    int? resonanceMaximumK,
+    double? NEAR_RESONANCE_BAND,
+    double? nearResonanceBand,
+    int? GRID_STEP_DIVISOR,
+    int? gridStepDivisor,
+    bool? DENSITY_KERNEL,
+    bool? densityKernel,
+    double? DRAG_REGIME_PERIGEE_KM,
+    double? dragRegimePerigeeKm,
+  })
+      : _M_DAILY_MAXIMUM_DEGREE = mDailyMaximumDegree ?? M_DAILY_MAXIMUM_DEGREE,
+        _ZONAL_MAXIMUM_DEGREE = zonalMaximumDegree ?? ZONAL_MAXIMUM_DEGREE,
+        _SHORT_PERIODIC_MAXIMUM_DEGREE = shortPeriodicMaximumDegree ?? SHORT_PERIODIC_MAXIMUM_DEGREE,
+        _ENABLE_RESONANCE = enableResonance ?? ENABLE_RESONANCE,
+        _RESONANCE_MAXIMUM_DEGREE = resonanceMaximumDegree ?? RESONANCE_MAXIMUM_DEGREE,
+        _RESONANCE_BAND = resonanceBand ?? RESONANCE_BAND,
+        _RESONANCE_MAXIMUM_K = resonanceMaximumK ?? RESONANCE_MAXIMUM_K,
+        _NEAR_RESONANCE_BAND = nearResonanceBand ?? NEAR_RESONANCE_BAND,
+        _GRID_STEP_DIVISOR = gridStepDivisor ?? GRID_STEP_DIVISOR,
+        _DENSITY_KERNEL = densityKernel ?? DENSITY_KERNEL,
+        _DRAG_REGIME_PERIGEE_KM = dragRegimePerigeeKm ?? DRAG_REGIME_PERIGEE_KM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(11);
+    fbBuilder.addUint8(0, _M_DAILY_MAXIMUM_DEGREE);
+    fbBuilder.addUint8(1, _ZONAL_MAXIMUM_DEGREE);
+    fbBuilder.addUint8(2, _SHORT_PERIODIC_MAXIMUM_DEGREE);
+    fbBuilder.addBool(3, _ENABLE_RESONANCE);
+    fbBuilder.addUint8(4, _RESONANCE_MAXIMUM_DEGREE);
+    fbBuilder.addFloat64(5, _RESONANCE_BAND);
+    fbBuilder.addUint8(6, _RESONANCE_MAXIMUM_K);
+    fbBuilder.addFloat64(7, _NEAR_RESONANCE_BAND);
+    fbBuilder.addUint8(8, _GRID_STEP_DIVISOR);
+    fbBuilder.addBool(9, _DENSITY_KERNEL);
+    fbBuilder.addFloat64(10, _DRAG_REGIME_PERIGEE_KM);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
+///  cut into segments at maneuvers and sphere-of-influence passages.
+class PCFSegmentOptions {
+  PCFSegmentOptions._(this._bc, this._bcOffset);
+  factory PCFSegmentOptions(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFSegmentOptions> reader = _PCFSegmentOptionsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Moon-centered gravity field degree. Default 70.
+  int get MOON_GRAVITY_MAXIMUM_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 4, 70);
+  int get moonGravityMaximumDegree => MOON_GRAVITY_MAXIMUM_DEGREE;
+  ///  Moon-centered short-periodic degree. Default 8.
+  int get MOON_SHORT_PERIODIC_MAXIMUM_DEGREE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 8);
+  int get moonShortPeriodicMaximumDegree => MOON_SHORT_PERIODIC_MAXIMUM_DEGREE;
+  ///  Moon-centered eccentricity order (highest |q| of the mean-anomaly
+  ///  multiple kept). Default 2.
+  int get MOON_ECCENTRICITY_ORDER => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 2);
+  int get moonEccentricityOrder => MOON_ECCENTRICITY_ORDER;
+  ///  Moon-centered integration step, seconds. Default 240.
+  double get MOON_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 240.0);
+  double get moonStepSeconds => MOON_STEP_SECONDS;
+  ///  Cislunar integration step, seconds. Default 60.
+  double get CISLUNAR_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 60.0);
+  double get cislunarStepSeconds => CISLUNAR_STEP_SECONDS;
+  ///  Heliocentric integration step, seconds. Default 1800.
+  double get HELIOCENTRIC_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1800.0);
+  double get heliocentricStepSeconds => HELIOCENTRIC_STEP_SECONDS;
+  ///  A segment is accepted when its RMS is within max(RMS_FACTOR x the
+  ///  cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
+  double get SEGMENT_RMS_FACTOR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 2.0);
+  double get segmentRmsFactor => SEGMENT_RMS_FACTOR;
+  ///  The additive term of the same rule, km. Default 0.05.
+  double get SEGMENT_RMS_MARGIN_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.05);
+  double get segmentRmsMarginKm => SEGMENT_RMS_MARGIN_KM;
+  ///  Shortest cislunar segment, hours. Default 6.
+  double get CISLUNAR_MINIMUM_SEGMENT_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 6.0);
+  double get cislunarMinimumSegmentHours => CISLUNAR_MINIMUM_SEGMENT_HOURS;
+
+  @override
+  String toString() {
+    return 'PCFSegmentOptions{moonGravityMaximumDegree: ${moonGravityMaximumDegree}, moonShortPeriodicMaximumDegree: ${moonShortPeriodicMaximumDegree}, moonEccentricityOrder: ${moonEccentricityOrder}, moonStepSeconds: ${moonStepSeconds}, cislunarStepSeconds: ${cislunarStepSeconds}, heliocentricStepSeconds: ${heliocentricStepSeconds}, segmentRmsFactor: ${segmentRmsFactor}, segmentRmsMarginKm: ${segmentRmsMarginKm}, cislunarMinimumSegmentHours: ${cislunarMinimumSegmentHours}}';
+  }
+}
+
+class _PCFSegmentOptionsReader extends fb.TableReader<PCFSegmentOptions> {
+  const _PCFSegmentOptionsReader();
+
+  @override
+  PCFSegmentOptions createObject(fb.BufferContext bc, int offset) =>
+    PCFSegmentOptions._(bc, offset);
+}
+
+class PCFSegmentOptionsBuilder {
+  PCFSegmentOptionsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(9);
+  }
+
+  int addMoonGravityMaximumDegree(int? MOON_GRAVITY_MAXIMUM_DEGREE) {
+    fbBuilder.addUint16(0, MOON_GRAVITY_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addMoonShortPeriodicMaximumDegree(int? MOON_SHORT_PERIODIC_MAXIMUM_DEGREE) {
+    fbBuilder.addUint8(1, MOON_SHORT_PERIODIC_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addMoonEccentricityOrder(int? MOON_ECCENTRICITY_ORDER) {
+    fbBuilder.addUint8(2, MOON_ECCENTRICITY_ORDER);
+    return fbBuilder.offset;
+  }
+  int addMoonStepSeconds(double? MOON_STEP_SECONDS) {
+    fbBuilder.addFloat64(3, MOON_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addCislunarStepSeconds(double? CISLUNAR_STEP_SECONDS) {
+    fbBuilder.addFloat64(4, CISLUNAR_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addHeliocentricStepSeconds(double? HELIOCENTRIC_STEP_SECONDS) {
+    fbBuilder.addFloat64(5, HELIOCENTRIC_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addSegmentRmsFactor(double? SEGMENT_RMS_FACTOR) {
+    fbBuilder.addFloat64(6, SEGMENT_RMS_FACTOR);
+    return fbBuilder.offset;
+  }
+  int addSegmentRmsMarginKm(double? SEGMENT_RMS_MARGIN_KM) {
+    fbBuilder.addFloat64(7, SEGMENT_RMS_MARGIN_KM);
+    return fbBuilder.offset;
+  }
+  int addCislunarMinimumSegmentHours(double? CISLUNAR_MINIMUM_SEGMENT_HOURS) {
+    fbBuilder.addFloat64(8, CISLUNAR_MINIMUM_SEGMENT_HOURS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFSegmentOptionsObjectBuilder extends fb.ObjectBuilder {
+  final int? _MOON_GRAVITY_MAXIMUM_DEGREE;
+  final int? _MOON_SHORT_PERIODIC_MAXIMUM_DEGREE;
+  final int? _MOON_ECCENTRICITY_ORDER;
+  final double? _MOON_STEP_SECONDS;
+  final double? _CISLUNAR_STEP_SECONDS;
+  final double? _HELIOCENTRIC_STEP_SECONDS;
+  final double? _SEGMENT_RMS_FACTOR;
+  final double? _SEGMENT_RMS_MARGIN_KM;
+  final double? _CISLUNAR_MINIMUM_SEGMENT_HOURS;
+
+  PCFSegmentOptionsObjectBuilder({
+    int? MOON_GRAVITY_MAXIMUM_DEGREE,
+    int? moonGravityMaximumDegree,
+    int? MOON_SHORT_PERIODIC_MAXIMUM_DEGREE,
+    int? moonShortPeriodicMaximumDegree,
+    int? MOON_ECCENTRICITY_ORDER,
+    int? moonEccentricityOrder,
+    double? MOON_STEP_SECONDS,
+    double? moonStepSeconds,
+    double? CISLUNAR_STEP_SECONDS,
+    double? cislunarStepSeconds,
+    double? HELIOCENTRIC_STEP_SECONDS,
+    double? heliocentricStepSeconds,
+    double? SEGMENT_RMS_FACTOR,
+    double? segmentRmsFactor,
+    double? SEGMENT_RMS_MARGIN_KM,
+    double? segmentRmsMarginKm,
+    double? CISLUNAR_MINIMUM_SEGMENT_HOURS,
+    double? cislunarMinimumSegmentHours,
+  })
+      : _MOON_GRAVITY_MAXIMUM_DEGREE = moonGravityMaximumDegree ?? MOON_GRAVITY_MAXIMUM_DEGREE,
+        _MOON_SHORT_PERIODIC_MAXIMUM_DEGREE = moonShortPeriodicMaximumDegree ?? MOON_SHORT_PERIODIC_MAXIMUM_DEGREE,
+        _MOON_ECCENTRICITY_ORDER = moonEccentricityOrder ?? MOON_ECCENTRICITY_ORDER,
+        _MOON_STEP_SECONDS = moonStepSeconds ?? MOON_STEP_SECONDS,
+        _CISLUNAR_STEP_SECONDS = cislunarStepSeconds ?? CISLUNAR_STEP_SECONDS,
+        _HELIOCENTRIC_STEP_SECONDS = heliocentricStepSeconds ?? HELIOCENTRIC_STEP_SECONDS,
+        _SEGMENT_RMS_FACTOR = segmentRmsFactor ?? SEGMENT_RMS_FACTOR,
+        _SEGMENT_RMS_MARGIN_KM = segmentRmsMarginKm ?? SEGMENT_RMS_MARGIN_KM,
+        _CISLUNAR_MINIMUM_SEGMENT_HOURS = cislunarMinimumSegmentHours ?? CISLUNAR_MINIMUM_SEGMENT_HOURS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(9);
+    fbBuilder.addUint16(0, _MOON_GRAVITY_MAXIMUM_DEGREE);
+    fbBuilder.addUint8(1, _MOON_SHORT_PERIODIC_MAXIMUM_DEGREE);
+    fbBuilder.addUint8(2, _MOON_ECCENTRICITY_ORDER);
+    fbBuilder.addFloat64(3, _MOON_STEP_SECONDS);
+    fbBuilder.addFloat64(4, _CISLUNAR_STEP_SECONDS);
+    fbBuilder.addFloat64(5, _HELIOCENTRIC_STEP_SECONDS);
+    fbBuilder.addFloat64(6, _SEGMENT_RMS_FACTOR);
+    fbBuilder.addFloat64(7, _SEGMENT_RMS_MARGIN_KM);
+    fbBuilder.addFloat64(8, _CISLUNAR_MINIMUM_SEGMENT_HOURS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Fit policy: how long an arc a fit uses, how that is validated, and what a
+///  fit refuses.
+class PCFFitPolicy {
+  PCFFitPolicy._(this._bc, this._bcOffset);
+  factory PCFFitPolicy(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFFitPolicy> reader = _PCFFitPolicyReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Fit span used when the span rule is not run, hours. Default 48.
+  double get DEFAULT_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 48.0);
+  double get defaultSpanHours => DEFAULT_SPAN_HOURS;
+  ///  Shortest span a fit may take, hours. Default 24.
+  double get MINIMUM_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 24.0);
+  double get minimumSpanHours => MINIMUM_SPAN_HOURS;
+  ///  Longest span a fit may take, hours. Default 120.
+  double get MAXIMUM_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 120.0);
+  double get maximumSpanHours => MAXIMUM_SPAN_HOURS;
+  ///  Spans the extension rule scores, ascending, hours, each within
+  ///  [MINIMUM_SPAN_HOURS, MAXIMUM_SPAN_HOURS]. Empty: 48, 72 and 120; with
+  ///  24 in front when the eccentricity exceeds ECCENTRICITY_THRESHOLD.
+  List<double>? get CANDIDATE_SPANS_HOURS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+  List<double>? get candidateSpansHours => CANDIDATE_SPANS_HOURS;
+  ///  Validation tail: each candidate is fitted to the data before the latest
+  ///  TAIL_HOURS and scored on that tail, hours. Default 24.
+  double get TAIL_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 24.0);
+  double get tailHours => TAIL_HOURS;
+  ///  Extension rule: a longer candidate is taken only when its tail error is
+  ///  at most this fraction of the best shorter candidate's. Default 0.9.
+  double get EXTENSION_MARGIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.9);
+  double get extensionMargin => EXTENSION_MARGIN;
+  ///  Hours held out at the end of the data and reported as error growth; the
+  ///  fit then ends HOLDOUT_HOURS before the data does. Absent, the data
+  ///  block's own useable stop time decides.
+  double get HOLDOUT_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get holdoutHours => HOLDOUT_HOURS;
+  ///  True when HOLDOUT_HOURS carries a value; false means absent.
+  bool get HAS_HOLDOUT_HOURS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  bool get hasHoldoutHours => HAS_HOLDOUT_HOURS;
+  ///  Eccentricity above which the eccentric-orbit rule applies. Default 0.5.
+  double get ECCENTRICITY_THRESHOLD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.5);
+  double get eccentricityThreshold => ECCENTRICITY_THRESHOLD;
+  ///  Eccentric orbits: the default span, hours. Default 24.
+  double get ECCENTRIC_DEFAULT_SPAN_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 24.0);
+  double get eccentricDefaultSpanHours => ECCENTRIC_DEFAULT_SPAN_HOURS;
+  ///  Eccentric orbits: EXTENSION_MARGIN. Default 0.7.
+  double get ECCENTRIC_EXTENSION_MARGIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.7);
+  double get eccentricExtensionMargin => ECCENTRIC_EXTENSION_MARGIN;
+  ///  Eccentric orbits: no candidate longer than this is tried once the orbital
+  ///  period passes it, hours. Default 36.
+  double get ECCENTRIC_MAXIMUM_PERIOD_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 36.0);
+  double get eccentricMaximumPeriodHours => ECCENTRIC_MAXIMUM_PERIOD_HOURS;
+  ///  A fit whose RMS passes this is refused as fit-implausible, km. Default
+  ///  100.
+  double get IMPLAUSIBLE_RMS_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 100.0);
+  double get implausibleRmsKm => IMPLAUSIBLE_RMS_KM;
+  ///  Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
+  ///  or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  PCFGaussianPrior? get DRAG_PRIOR => PCFGaussianPrior.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  PCFGaussianPrior? get dragPrior => DRAG_PRIOR;
+  ///  Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
+  ///  Absent or without sigma: mean 0, sigma 0.05.
+  PCFGaussianPrior? get SRP_PRIOR => PCFGaussianPrior.reader.vTableGetNullable(_bc, _bcOffset, 32);
+  PCFGaussianPrior? get srpPrior => SRP_PRIOR;
+
+  @override
+  String toString() {
+    return 'PCFFitPolicy{defaultSpanHours: ${defaultSpanHours}, minimumSpanHours: ${minimumSpanHours}, maximumSpanHours: ${maximumSpanHours}, candidateSpansHours: ${candidateSpansHours}, tailHours: ${tailHours}, extensionMargin: ${extensionMargin}, holdoutHours: ${holdoutHours}, hasHoldoutHours: ${hasHoldoutHours}, eccentricityThreshold: ${eccentricityThreshold}, eccentricDefaultSpanHours: ${eccentricDefaultSpanHours}, eccentricExtensionMargin: ${eccentricExtensionMargin}, eccentricMaximumPeriodHours: ${eccentricMaximumPeriodHours}, implausibleRmsKm: ${implausibleRmsKm}, dragPrior: ${dragPrior}, srpPrior: ${srpPrior}}';
+  }
+}
+
+class _PCFFitPolicyReader extends fb.TableReader<PCFFitPolicy> {
+  const _PCFFitPolicyReader();
+
+  @override
+  PCFFitPolicy createObject(fb.BufferContext bc, int offset) =>
+    PCFFitPolicy._(bc, offset);
+}
+
+class PCFFitPolicyBuilder {
+  PCFFitPolicyBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addDefaultSpanHours(double? DEFAULT_SPAN_HOURS) {
+    fbBuilder.addFloat64(0, DEFAULT_SPAN_HOURS);
+    return fbBuilder.offset;
+  }
+  int addMinimumSpanHours(double? MINIMUM_SPAN_HOURS) {
+    fbBuilder.addFloat64(1, MINIMUM_SPAN_HOURS);
+    return fbBuilder.offset;
+  }
+  int addMaximumSpanHours(double? MAXIMUM_SPAN_HOURS) {
+    fbBuilder.addFloat64(2, MAXIMUM_SPAN_HOURS);
+    return fbBuilder.offset;
+  }
+  int addCandidateSpansHoursOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addTailHours(double? TAIL_HOURS) {
+    fbBuilder.addFloat64(4, TAIL_HOURS);
+    return fbBuilder.offset;
+  }
+  int addExtensionMargin(double? EXTENSION_MARGIN) {
+    fbBuilder.addFloat64(5, EXTENSION_MARGIN);
+    return fbBuilder.offset;
+  }
+  int addHoldoutHours(double? HOLDOUT_HOURS) {
+    fbBuilder.addFloat64(6, HOLDOUT_HOURS);
+    return fbBuilder.offset;
+  }
+  int addHasHoldoutHours(bool? HAS_HOLDOUT_HOURS) {
+    fbBuilder.addBool(7, HAS_HOLDOUT_HOURS);
+    return fbBuilder.offset;
+  }
+  int addEccentricityThreshold(double? ECCENTRICITY_THRESHOLD) {
+    fbBuilder.addFloat64(8, ECCENTRICITY_THRESHOLD);
+    return fbBuilder.offset;
+  }
+  int addEccentricDefaultSpanHours(double? ECCENTRIC_DEFAULT_SPAN_HOURS) {
+    fbBuilder.addFloat64(9, ECCENTRIC_DEFAULT_SPAN_HOURS);
+    return fbBuilder.offset;
+  }
+  int addEccentricExtensionMargin(double? ECCENTRIC_EXTENSION_MARGIN) {
+    fbBuilder.addFloat64(10, ECCENTRIC_EXTENSION_MARGIN);
+    return fbBuilder.offset;
+  }
+  int addEccentricMaximumPeriodHours(double? ECCENTRIC_MAXIMUM_PERIOD_HOURS) {
+    fbBuilder.addFloat64(11, ECCENTRIC_MAXIMUM_PERIOD_HOURS);
+    return fbBuilder.offset;
+  }
+  int addImplausibleRmsKm(double? IMPLAUSIBLE_RMS_KM) {
+    fbBuilder.addFloat64(12, IMPLAUSIBLE_RMS_KM);
+    return fbBuilder.offset;
+  }
+  int addDragPriorOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addSrpPriorOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
+  final double? _DEFAULT_SPAN_HOURS;
+  final double? _MINIMUM_SPAN_HOURS;
+  final double? _MAXIMUM_SPAN_HOURS;
+  final List<double>? _CANDIDATE_SPANS_HOURS;
+  final double? _TAIL_HOURS;
+  final double? _EXTENSION_MARGIN;
+  final double? _HOLDOUT_HOURS;
+  final bool? _HAS_HOLDOUT_HOURS;
+  final double? _ECCENTRICITY_THRESHOLD;
+  final double? _ECCENTRIC_DEFAULT_SPAN_HOURS;
+  final double? _ECCENTRIC_EXTENSION_MARGIN;
+  final double? _ECCENTRIC_MAXIMUM_PERIOD_HOURS;
+  final double? _IMPLAUSIBLE_RMS_KM;
+  final PCFGaussianPriorObjectBuilder? _DRAG_PRIOR;
+  final PCFGaussianPriorObjectBuilder? _SRP_PRIOR;
+
+  PCFFitPolicyObjectBuilder({
+    double? DEFAULT_SPAN_HOURS,
+    double? defaultSpanHours,
+    double? MINIMUM_SPAN_HOURS,
+    double? minimumSpanHours,
+    double? MAXIMUM_SPAN_HOURS,
+    double? maximumSpanHours,
+    List<double>? CANDIDATE_SPANS_HOURS,
+    List<double>? candidateSpansHours,
+    double? TAIL_HOURS,
+    double? tailHours,
+    double? EXTENSION_MARGIN,
+    double? extensionMargin,
+    double? HOLDOUT_HOURS,
+    double? holdoutHours,
+    bool? HAS_HOLDOUT_HOURS,
+    bool? hasHoldoutHours,
+    double? ECCENTRICITY_THRESHOLD,
+    double? eccentricityThreshold,
+    double? ECCENTRIC_DEFAULT_SPAN_HOURS,
+    double? eccentricDefaultSpanHours,
+    double? ECCENTRIC_EXTENSION_MARGIN,
+    double? eccentricExtensionMargin,
+    double? ECCENTRIC_MAXIMUM_PERIOD_HOURS,
+    double? eccentricMaximumPeriodHours,
+    double? IMPLAUSIBLE_RMS_KM,
+    double? implausibleRmsKm,
+    PCFGaussianPriorObjectBuilder? DRAG_PRIOR,
+    PCFGaussianPriorObjectBuilder? dragPrior,
+    PCFGaussianPriorObjectBuilder? SRP_PRIOR,
+    PCFGaussianPriorObjectBuilder? srpPrior,
+  })
+      : _DEFAULT_SPAN_HOURS = defaultSpanHours ?? DEFAULT_SPAN_HOURS,
+        _MINIMUM_SPAN_HOURS = minimumSpanHours ?? MINIMUM_SPAN_HOURS,
+        _MAXIMUM_SPAN_HOURS = maximumSpanHours ?? MAXIMUM_SPAN_HOURS,
+        _CANDIDATE_SPANS_HOURS = candidateSpansHours ?? CANDIDATE_SPANS_HOURS,
+        _TAIL_HOURS = tailHours ?? TAIL_HOURS,
+        _EXTENSION_MARGIN = extensionMargin ?? EXTENSION_MARGIN,
+        _HOLDOUT_HOURS = holdoutHours ?? HOLDOUT_HOURS,
+        _HAS_HOLDOUT_HOURS = hasHoldoutHours ?? HAS_HOLDOUT_HOURS,
+        _ECCENTRICITY_THRESHOLD = eccentricityThreshold ?? ECCENTRICITY_THRESHOLD,
+        _ECCENTRIC_DEFAULT_SPAN_HOURS = eccentricDefaultSpanHours ?? ECCENTRIC_DEFAULT_SPAN_HOURS,
+        _ECCENTRIC_EXTENSION_MARGIN = eccentricExtensionMargin ?? ECCENTRIC_EXTENSION_MARGIN,
+        _ECCENTRIC_MAXIMUM_PERIOD_HOURS = eccentricMaximumPeriodHours ?? ECCENTRIC_MAXIMUM_PERIOD_HOURS,
+        _IMPLAUSIBLE_RMS_KM = implausibleRmsKm ?? IMPLAUSIBLE_RMS_KM,
+        _DRAG_PRIOR = dragPrior ?? DRAG_PRIOR,
+        _SRP_PRIOR = srpPrior ?? SRP_PRIOR;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CANDIDATE_SPANS_HOURSOffset = _CANDIDATE_SPANS_HOURS == null ? null
+        : fbBuilder.writeListFloat64(_CANDIDATE_SPANS_HOURS!);
+    final int? DRAG_PRIOROffset = _DRAG_PRIOR?.getOrCreateOffset(fbBuilder);
+    final int? SRP_PRIOROffset = _SRP_PRIOR?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(15);
+    fbBuilder.addFloat64(0, _DEFAULT_SPAN_HOURS);
+    fbBuilder.addFloat64(1, _MINIMUM_SPAN_HOURS);
+    fbBuilder.addFloat64(2, _MAXIMUM_SPAN_HOURS);
+    fbBuilder.addOffset(3, CANDIDATE_SPANS_HOURSOffset);
+    fbBuilder.addFloat64(4, _TAIL_HOURS);
+    fbBuilder.addFloat64(5, _EXTENSION_MARGIN);
+    fbBuilder.addFloat64(6, _HOLDOUT_HOURS);
+    fbBuilder.addBool(7, _HAS_HOLDOUT_HOURS);
+    fbBuilder.addFloat64(8, _ECCENTRICITY_THRESHOLD);
+    fbBuilder.addFloat64(9, _ECCENTRIC_DEFAULT_SPAN_HOURS);
+    fbBuilder.addFloat64(10, _ECCENTRIC_EXTENSION_MARGIN);
+    fbBuilder.addFloat64(11, _ECCENTRIC_MAXIMUM_PERIOD_HOURS);
+    fbBuilder.addFloat64(12, _IMPLAUSIBLE_RMS_KM);
+    fbBuilder.addOffset(13, DRAG_PRIOROffset);
+    fbBuilder.addOffset(14, SRP_PRIOROffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One event a propagator locates while it integrates. The vocabulary is
+///  $EVL's: a locator class with its configuration, and $PCE's parameter
+///  condition for the generic case (an altitude, radius, speed, radial
+///  velocity or mass crossing is a $PCE parameter, not a class of its own).
+class PCFEventDefinition {
+  PCFEventDefinition._(this._bc, this._bcOffset);
+  factory PCFEventDefinition(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFEventDefinition> reader = _PCFEventDefinitionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The caller's name for the event, echoed in the result. Default empty.
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Which locator. Default PARAMETER_CONDITION.
+  evlLocatorClass get LOCATOR_CLASS => evlLocatorClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 6));
+  evlLocatorClass get locatorClass => LOCATOR_CLASS;
+  ///  Exactly the one of the next five that matches LOCATOR_CLASS is present
+  ///  (any other combination is refused as MISSING_CONFIGURATION, as in
+  ///  $EVL). The condition carries its own direction, goal value, goal
+  ///  tolerance and occurrence.
+  PCEParameterCondition? get CONDITION => PCEParameterCondition.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  EVLEclipseConfiguration? get ECLIPSE => EVLEclipseConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  EVLContactConfiguration? get CONTACT => EVLContactConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  EVLIntrusionConfiguration? get INTRUSION => EVLIntrusionConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  EVLApsidesConfiguration? get APSIDES => EVLApsidesConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  EVLNodeCrossingConfiguration? get NODE_CROSSING => EVLNodeCrossingConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  EVLNodeCrossingConfiguration? get nodeCrossing => NODE_CROSSING;
+  ///  What the propagator does at the event. Default RECORD.
+  pcfEventAction get ACTION => pcfEventAction.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 3));
+  ///  Convergence bar on the located epoch, seconds. Default 1e-9.
+  double get EPOCH_TOLERANCE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 1e-9);
+  double get epochToleranceSeconds => EPOCH_TOLERANCE_SECONDS;
+  ///  Step at which the event function is sampled before refinement, seconds;
+  ///  0 samples at the integrator's accepted steps. A root is found only when
+  ///  the function changes sign within one sample interval. Default 0.
+  double get SCAN_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get scanStepSeconds => SCAN_STEP_SECONDS;
+  ///  Largest number of occurrences reported; 0 is no bound. Default 0.
+  int get MAXIMUM_EVENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  int get maximumEvents => MAXIMUM_EVENTS;
+
+  @override
+  String toString() {
+    return 'PCFEventDefinition{NAME: ${NAME}, locatorClass: ${locatorClass}, CONDITION: ${CONDITION}, ECLIPSE: ${ECLIPSE}, CONTACT: ${CONTACT}, INTRUSION: ${INTRUSION}, APSIDES: ${APSIDES}, nodeCrossing: ${nodeCrossing}, ACTION: ${ACTION}, epochToleranceSeconds: ${epochToleranceSeconds}, scanStepSeconds: ${scanStepSeconds}, maximumEvents: ${maximumEvents}}';
+  }
+}
+
+class _PCFEventDefinitionReader extends fb.TableReader<PCFEventDefinition> {
+  const _PCFEventDefinitionReader();
+
+  @override
+  PCFEventDefinition createObject(fb.BufferContext bc, int offset) =>
+    PCFEventDefinition._(bc, offset);
+}
+
+class PCFEventDefinitionBuilder {
+  PCFEventDefinitionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addLocatorClass(evlLocatorClass? LOCATOR_CLASS) {
+    fbBuilder.addUint8(1, LOCATOR_CLASS?.value);
+    return fbBuilder.offset;
+  }
+  int addConditionOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addEclipseOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addContactOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addIntrusionOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addApsidesOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addNodeCrossingOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addAction(pcfEventAction? ACTION) {
+    fbBuilder.addUint8(8, ACTION?.value);
+    return fbBuilder.offset;
+  }
+  int addEpochToleranceSeconds(double? EPOCH_TOLERANCE_SECONDS) {
+    fbBuilder.addFloat64(9, EPOCH_TOLERANCE_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addScanStepSeconds(double? SCAN_STEP_SECONDS) {
+    fbBuilder.addFloat64(10, SCAN_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMaximumEvents(int? MAXIMUM_EVENTS) {
+    fbBuilder.addUint32(11, MAXIMUM_EVENTS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFEventDefinitionObjectBuilder extends fb.ObjectBuilder {
+  final String? _NAME;
+  final evlLocatorClass? _LOCATOR_CLASS;
+  final PCEParameterConditionObjectBuilder? _CONDITION;
+  final EVLEclipseConfigurationObjectBuilder? _ECLIPSE;
+  final EVLContactConfigurationObjectBuilder? _CONTACT;
+  final EVLIntrusionConfigurationObjectBuilder? _INTRUSION;
+  final EVLApsidesConfigurationObjectBuilder? _APSIDES;
+  final EVLNodeCrossingConfigurationObjectBuilder? _NODE_CROSSING;
+  final pcfEventAction? _ACTION;
+  final double? _EPOCH_TOLERANCE_SECONDS;
+  final double? _SCAN_STEP_SECONDS;
+  final int? _MAXIMUM_EVENTS;
+
+  PCFEventDefinitionObjectBuilder({
+    String? NAME,
+    evlLocatorClass? LOCATOR_CLASS,
+    evlLocatorClass? locatorClass,
+    PCEParameterConditionObjectBuilder? CONDITION,
+    EVLEclipseConfigurationObjectBuilder? ECLIPSE,
+    EVLContactConfigurationObjectBuilder? CONTACT,
+    EVLIntrusionConfigurationObjectBuilder? INTRUSION,
+    EVLApsidesConfigurationObjectBuilder? APSIDES,
+    EVLNodeCrossingConfigurationObjectBuilder? NODE_CROSSING,
+    EVLNodeCrossingConfigurationObjectBuilder? nodeCrossing,
+    pcfEventAction? ACTION,
+    double? EPOCH_TOLERANCE_SECONDS,
+    double? epochToleranceSeconds,
+    double? SCAN_STEP_SECONDS,
+    double? scanStepSeconds,
+    int? MAXIMUM_EVENTS,
+    int? maximumEvents,
+  })
+      : _NAME = NAME,
+        _LOCATOR_CLASS = locatorClass ?? LOCATOR_CLASS,
+        _CONDITION = CONDITION,
+        _ECLIPSE = ECLIPSE,
+        _CONTACT = CONTACT,
+        _INTRUSION = INTRUSION,
+        _APSIDES = APSIDES,
+        _NODE_CROSSING = nodeCrossing ?? NODE_CROSSING,
+        _ACTION = ACTION,
+        _EPOCH_TOLERANCE_SECONDS = epochToleranceSeconds ?? EPOCH_TOLERANCE_SECONDS,
+        _SCAN_STEP_SECONDS = scanStepSeconds ?? SCAN_STEP_SECONDS,
+        _MAXIMUM_EVENTS = maximumEvents ?? MAXIMUM_EVENTS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? CONDITIONOffset = _CONDITION?.getOrCreateOffset(fbBuilder);
+    final int? ECLIPSEOffset = _ECLIPSE?.getOrCreateOffset(fbBuilder);
+    final int? CONTACTOffset = _CONTACT?.getOrCreateOffset(fbBuilder);
+    final int? INTRUSIONOffset = _INTRUSION?.getOrCreateOffset(fbBuilder);
+    final int? APSIDESOffset = _APSIDES?.getOrCreateOffset(fbBuilder);
+    final int? NODE_CROSSINGOffset = _NODE_CROSSING?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(12);
+    fbBuilder.addOffset(0, NAMEOffset);
+    fbBuilder.addUint8(1, _LOCATOR_CLASS?.value);
+    fbBuilder.addOffset(2, CONDITIONOffset);
+    fbBuilder.addOffset(3, ECLIPSEOffset);
+    fbBuilder.addOffset(4, CONTACTOffset);
+    fbBuilder.addOffset(5, INTRUSIONOffset);
+    fbBuilder.addOffset(6, APSIDESOffset);
+    fbBuilder.addOffset(7, NODE_CROSSINGOffset);
+    fbBuilder.addUint8(8, _ACTION?.value);
+    fbBuilder.addFloat64(9, _EPOCH_TOLERANCE_SECONDS);
+    fbBuilder.addFloat64(10, _SCAN_STEP_SECONDS);
+    fbBuilder.addUint32(11, _MAXIMUM_EVENTS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Maneuver detection from fit innovations: a generalized-likelihood-ratio
+///  scan of the six mean elements.
+class PCFManeuverDetection {
+  PCFManeuverDetection._(this._bc, this._bcOffset);
+  factory PCFManeuverDetection(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFManeuverDetection> reader = _PCFManeuverDetectionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  False-alarm rate the THRESHOLD is calibrated for, per object-year. A
+  ///  provider that cannot recalibrate refuses another rate. Default 1.
+  double get FALSE_ALARMS_PER_OBJECT_YEAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 1.0);
+  double get falseAlarmsPerObjectYear => FALSE_ALARMS_PER_OBJECT_YEAR;
+  ///  How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
+  pcfInnovationCorrelation get CORRELATION_MODEL => pcfInnovationCorrelation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 2));
+  pcfInnovationCorrelation get correlationModel => CORRELATION_MODEL;
+  ///  The statistic Lambda (chi-square, 3 degrees of freedom) above which a
+  ///  maneuver is declared. Default 20.
+  double get THRESHOLD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 20.0);
+  ///  States kept clear at each end of the arc when scanning. Default 12.
+  int get MARGIN_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 12);
+  int get marginStates => MARGIN_STATES;
+  ///  Half-width of the window the burn epoch is refined in, hours. Default 2.
+  double get REFINE_WINDOW_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 2.0);
+  double get refineWindowHours => REFINE_WINDOW_HOURS;
+  ///  Fewest states an arc must hold to be scanned. Default 48.
+  int get MINIMUM_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 48);
+  int get minimumStates => MINIMUM_STATES;
+
+  @override
+  String toString() {
+    return 'PCFManeuverDetection{falseAlarmsPerObjectYear: ${falseAlarmsPerObjectYear}, correlationModel: ${correlationModel}, THRESHOLD: ${THRESHOLD}, marginStates: ${marginStates}, refineWindowHours: ${refineWindowHours}, minimumStates: ${minimumStates}}';
+  }
+}
+
+class _PCFManeuverDetectionReader extends fb.TableReader<PCFManeuverDetection> {
+  const _PCFManeuverDetectionReader();
+
+  @override
+  PCFManeuverDetection createObject(fb.BufferContext bc, int offset) =>
+    PCFManeuverDetection._(bc, offset);
+}
+
+class PCFManeuverDetectionBuilder {
+  PCFManeuverDetectionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addFalseAlarmsPerObjectYear(double? FALSE_ALARMS_PER_OBJECT_YEAR) {
+    fbBuilder.addFloat64(0, FALSE_ALARMS_PER_OBJECT_YEAR);
+    return fbBuilder.offset;
+  }
+  int addCorrelationModel(pcfInnovationCorrelation? CORRELATION_MODEL) {
+    fbBuilder.addUint8(1, CORRELATION_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addThreshold(double? THRESHOLD) {
+    fbBuilder.addFloat64(2, THRESHOLD);
+    return fbBuilder.offset;
+  }
+  int addMarginStates(int? MARGIN_STATES) {
+    fbBuilder.addUint32(3, MARGIN_STATES);
+    return fbBuilder.offset;
+  }
+  int addRefineWindowHours(double? REFINE_WINDOW_HOURS) {
+    fbBuilder.addFloat64(4, REFINE_WINDOW_HOURS);
+    return fbBuilder.offset;
+  }
+  int addMinimumStates(int? MINIMUM_STATES) {
+    fbBuilder.addUint32(5, MINIMUM_STATES);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFManeuverDetectionObjectBuilder extends fb.ObjectBuilder {
+  final double? _FALSE_ALARMS_PER_OBJECT_YEAR;
+  final pcfInnovationCorrelation? _CORRELATION_MODEL;
+  final double? _THRESHOLD;
+  final int? _MARGIN_STATES;
+  final double? _REFINE_WINDOW_HOURS;
+  final int? _MINIMUM_STATES;
+
+  PCFManeuverDetectionObjectBuilder({
+    double? FALSE_ALARMS_PER_OBJECT_YEAR,
+    double? falseAlarmsPerObjectYear,
+    pcfInnovationCorrelation? CORRELATION_MODEL,
+    pcfInnovationCorrelation? correlationModel,
+    double? THRESHOLD,
+    int? MARGIN_STATES,
+    int? marginStates,
+    double? REFINE_WINDOW_HOURS,
+    double? refineWindowHours,
+    int? MINIMUM_STATES,
+    int? minimumStates,
+  })
+      : _FALSE_ALARMS_PER_OBJECT_YEAR = falseAlarmsPerObjectYear ?? FALSE_ALARMS_PER_OBJECT_YEAR,
+        _CORRELATION_MODEL = correlationModel ?? CORRELATION_MODEL,
+        _THRESHOLD = THRESHOLD,
+        _MARGIN_STATES = marginStates ?? MARGIN_STATES,
+        _REFINE_WINDOW_HOURS = refineWindowHours ?? REFINE_WINDOW_HOURS,
+        _MINIMUM_STATES = minimumStates ?? MINIMUM_STATES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _FALSE_ALARMS_PER_OBJECT_YEAR);
+    fbBuilder.addUint8(1, _CORRELATION_MODEL?.value);
+    fbBuilder.addFloat64(2, _THRESHOLD);
+    fbBuilder.addUint32(3, _MARGIN_STATES);
+    fbBuilder.addFloat64(4, _REFINE_WINDOW_HOURS);
+    fbBuilder.addUint32(5, _MINIMUM_STATES);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Reentry: where the averaged theory hands off to osculating integration,
+///  where the trajectory ends, and the width of the reentry window.
+class PCFReentry {
+  PCFReentry._(this._bc, this._bcOffset);
+  factory PCFReentry(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFReentry> reader = _PCFReentryReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Altitude at which the trajectory ends as reentered, km. Default 80.
+  double get ALTITUDE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 80.0);
+  double get altitudeKm => ALTITUDE_KM;
+  ///  Hand-off when the perigee altitude falls below this, km. Default 180.
+  double get HANDOFF_PERIGEE_ALTITUDE_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 180.0);
+  double get handoffPerigeeAltitudeKm => HANDOFF_PERIGEE_ALTITUDE_KM;
+  ///  Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
+  ///  fraction of the density scale height H. Default 0.05.
+  double get HANDOFF_DECAY_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.05);
+  double get handoffDecayRatio => HANDOFF_DECAY_RATIO;
+  ///  Hand-off when the eccentricity collapses by more than this fraction of
+  ///  a e per revolution, with the eccentricity above
+  ///  HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
+  double get HANDOFF_ECCENTRICITY_COLLAPSE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.01);
+  double get handoffEccentricityCollapse => HANDOFF_ECCENTRICITY_COLLAPSE;
+  ///  Eccentricity above which the collapse test applies. Default 0.01.
+  double get HANDOFF_MINIMUM_ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.01);
+  double get handoffMinimumEccentricity => HANDOFF_MINIMUM_ECCENTRICITY;
+  ///  Spacing of the nodes the hand-off tests are evaluated at, minutes.
+  ///  Default 30.
+  double get NODE_STEP_MINUTES => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 30.0);
+  double get nodeStepMinutes => NODE_STEP_MINUTES;
+  ///  Longest look-ahead for a hand-off or reentry, days. Default 120.
+  double get HORIZON_DAYS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 120.0);
+  double get horizonDays => HORIZON_DAYS;
+  ///  How the reentry window is computed. Default LINEAR.
+  pcfReentryWindowMethod get WINDOW_METHOD => pcfReentryWindowMethod.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 1));
+  pcfReentryWindowMethod get windowMethod => WINDOW_METHOD;
+  ///  Fractional 1-sigma density error of the window. Default 0.15.
+  double get WINDOW_DENSITY_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.15);
+  double get windowDensitySigma => WINDOW_DENSITY_SIGMA;
+  ///  Correlation time of the density error, days. Default 2.
+  double get WINDOW_CORRELATION_DAYS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 2.0);
+  double get windowCorrelationDays => WINDOW_CORRELATION_DAYS;
+  ///  Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
+  double get WINDOW_BALLISTIC_SIGMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.05);
+  double get windowBallisticSigma => WINDOW_BALLISTIC_SIGMA;
+  ///  Step of the osculating integration after the hand-off, seconds. Default
+  ///  10.
+  double get OSCULATING_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 10.0);
+  double get osculatingStepSeconds => OSCULATING_STEP_SECONDS;
+
+  @override
+  String toString() {
+    return 'PCFReentry{altitudeKm: ${altitudeKm}, handoffPerigeeAltitudeKm: ${handoffPerigeeAltitudeKm}, handoffDecayRatio: ${handoffDecayRatio}, handoffEccentricityCollapse: ${handoffEccentricityCollapse}, handoffMinimumEccentricity: ${handoffMinimumEccentricity}, nodeStepMinutes: ${nodeStepMinutes}, horizonDays: ${horizonDays}, windowMethod: ${windowMethod}, windowDensitySigma: ${windowDensitySigma}, windowCorrelationDays: ${windowCorrelationDays}, windowBallisticSigma: ${windowBallisticSigma}, osculatingStepSeconds: ${osculatingStepSeconds}}';
+  }
+}
+
+class _PCFReentryReader extends fb.TableReader<PCFReentry> {
+  const _PCFReentryReader();
+
+  @override
+  PCFReentry createObject(fb.BufferContext bc, int offset) =>
+    PCFReentry._(bc, offset);
+}
+
+class PCFReentryBuilder {
+  PCFReentryBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(12);
+  }
+
+  int addAltitudeKm(double? ALTITUDE_KM) {
+    fbBuilder.addFloat64(0, ALTITUDE_KM);
+    return fbBuilder.offset;
+  }
+  int addHandoffPerigeeAltitudeKm(double? HANDOFF_PERIGEE_ALTITUDE_KM) {
+    fbBuilder.addFloat64(1, HANDOFF_PERIGEE_ALTITUDE_KM);
+    return fbBuilder.offset;
+  }
+  int addHandoffDecayRatio(double? HANDOFF_DECAY_RATIO) {
+    fbBuilder.addFloat64(2, HANDOFF_DECAY_RATIO);
+    return fbBuilder.offset;
+  }
+  int addHandoffEccentricityCollapse(double? HANDOFF_ECCENTRICITY_COLLAPSE) {
+    fbBuilder.addFloat64(3, HANDOFF_ECCENTRICITY_COLLAPSE);
+    return fbBuilder.offset;
+  }
+  int addHandoffMinimumEccentricity(double? HANDOFF_MINIMUM_ECCENTRICITY) {
+    fbBuilder.addFloat64(4, HANDOFF_MINIMUM_ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addNodeStepMinutes(double? NODE_STEP_MINUTES) {
+    fbBuilder.addFloat64(5, NODE_STEP_MINUTES);
+    return fbBuilder.offset;
+  }
+  int addHorizonDays(double? HORIZON_DAYS) {
+    fbBuilder.addFloat64(6, HORIZON_DAYS);
+    return fbBuilder.offset;
+  }
+  int addWindowMethod(pcfReentryWindowMethod? WINDOW_METHOD) {
+    fbBuilder.addUint8(7, WINDOW_METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addWindowDensitySigma(double? WINDOW_DENSITY_SIGMA) {
+    fbBuilder.addFloat64(8, WINDOW_DENSITY_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addWindowCorrelationDays(double? WINDOW_CORRELATION_DAYS) {
+    fbBuilder.addFloat64(9, WINDOW_CORRELATION_DAYS);
+    return fbBuilder.offset;
+  }
+  int addWindowBallisticSigma(double? WINDOW_BALLISTIC_SIGMA) {
+    fbBuilder.addFloat64(10, WINDOW_BALLISTIC_SIGMA);
+    return fbBuilder.offset;
+  }
+  int addOsculatingStepSeconds(double? OSCULATING_STEP_SECONDS) {
+    fbBuilder.addFloat64(11, OSCULATING_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFReentryObjectBuilder extends fb.ObjectBuilder {
+  final double? _ALTITUDE_KM;
+  final double? _HANDOFF_PERIGEE_ALTITUDE_KM;
+  final double? _HANDOFF_DECAY_RATIO;
+  final double? _HANDOFF_ECCENTRICITY_COLLAPSE;
+  final double? _HANDOFF_MINIMUM_ECCENTRICITY;
+  final double? _NODE_STEP_MINUTES;
+  final double? _HORIZON_DAYS;
+  final pcfReentryWindowMethod? _WINDOW_METHOD;
+  final double? _WINDOW_DENSITY_SIGMA;
+  final double? _WINDOW_CORRELATION_DAYS;
+  final double? _WINDOW_BALLISTIC_SIGMA;
+  final double? _OSCULATING_STEP_SECONDS;
+
+  PCFReentryObjectBuilder({
+    double? ALTITUDE_KM,
+    double? altitudeKm,
+    double? HANDOFF_PERIGEE_ALTITUDE_KM,
+    double? handoffPerigeeAltitudeKm,
+    double? HANDOFF_DECAY_RATIO,
+    double? handoffDecayRatio,
+    double? HANDOFF_ECCENTRICITY_COLLAPSE,
+    double? handoffEccentricityCollapse,
+    double? HANDOFF_MINIMUM_ECCENTRICITY,
+    double? handoffMinimumEccentricity,
+    double? NODE_STEP_MINUTES,
+    double? nodeStepMinutes,
+    double? HORIZON_DAYS,
+    double? horizonDays,
+    pcfReentryWindowMethod? WINDOW_METHOD,
+    pcfReentryWindowMethod? windowMethod,
+    double? WINDOW_DENSITY_SIGMA,
+    double? windowDensitySigma,
+    double? WINDOW_CORRELATION_DAYS,
+    double? windowCorrelationDays,
+    double? WINDOW_BALLISTIC_SIGMA,
+    double? windowBallisticSigma,
+    double? OSCULATING_STEP_SECONDS,
+    double? osculatingStepSeconds,
+  })
+      : _ALTITUDE_KM = altitudeKm ?? ALTITUDE_KM,
+        _HANDOFF_PERIGEE_ALTITUDE_KM = handoffPerigeeAltitudeKm ?? HANDOFF_PERIGEE_ALTITUDE_KM,
+        _HANDOFF_DECAY_RATIO = handoffDecayRatio ?? HANDOFF_DECAY_RATIO,
+        _HANDOFF_ECCENTRICITY_COLLAPSE = handoffEccentricityCollapse ?? HANDOFF_ECCENTRICITY_COLLAPSE,
+        _HANDOFF_MINIMUM_ECCENTRICITY = handoffMinimumEccentricity ?? HANDOFF_MINIMUM_ECCENTRICITY,
+        _NODE_STEP_MINUTES = nodeStepMinutes ?? NODE_STEP_MINUTES,
+        _HORIZON_DAYS = horizonDays ?? HORIZON_DAYS,
+        _WINDOW_METHOD = windowMethod ?? WINDOW_METHOD,
+        _WINDOW_DENSITY_SIGMA = windowDensitySigma ?? WINDOW_DENSITY_SIGMA,
+        _WINDOW_CORRELATION_DAYS = windowCorrelationDays ?? WINDOW_CORRELATION_DAYS,
+        _WINDOW_BALLISTIC_SIGMA = windowBallisticSigma ?? WINDOW_BALLISTIC_SIGMA,
+        _OSCULATING_STEP_SECONDS = osculatingStepSeconds ?? OSCULATING_STEP_SECONDS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(12);
+    fbBuilder.addFloat64(0, _ALTITUDE_KM);
+    fbBuilder.addFloat64(1, _HANDOFF_PERIGEE_ALTITUDE_KM);
+    fbBuilder.addFloat64(2, _HANDOFF_DECAY_RATIO);
+    fbBuilder.addFloat64(3, _HANDOFF_ECCENTRICITY_COLLAPSE);
+    fbBuilder.addFloat64(4, _HANDOFF_MINIMUM_ECCENTRICITY);
+    fbBuilder.addFloat64(5, _NODE_STEP_MINUTES);
+    fbBuilder.addFloat64(6, _HORIZON_DAYS);
+    fbBuilder.addUint8(7, _WINDOW_METHOD?.value);
+    fbBuilder.addFloat64(8, _WINDOW_DENSITY_SIGMA);
+    fbBuilder.addFloat64(9, _WINDOW_CORRELATION_DAYS);
+    fbBuilder.addFloat64(10, _WINDOW_BALLISTIC_SIGMA);
+    fbBuilder.addFloat64(11, _OSCULATING_STEP_SECONDS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Launch initialization: priors for the first element sets of new objects
+///  and for a deployment batch fitted jointly.
+class PCFLaunch {
+  PCFLaunch._(this._bc, this._bcOffset);
+  factory PCFLaunch(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFLaunch> reader = _PCFLaunchReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
+  double get DRAG_AREA_OVER_MASS_PRIOR_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.01);
+  double get dragAreaOverMassPriorM2Kg => DRAG_AREA_OVER_MASS_PRIOR_M2_KG;
+  ///  A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
+  double get SRP_AREA_OVER_MASS_PRIOR_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.01);
+  double get srpAreaOverMassPriorM2Kg => SRP_AREA_OVER_MASS_PRIOR_M2_KG;
+  ///  Prior 1-sigma of each object's separation velocity per axis, m/s.
+  ///  Default 1.
+  double get SEPARATION_SIGMA_M_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 1.0);
+  double get separationSigmaMS => SEPARATION_SIGMA_M_S;
+  ///  Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
+  ///  Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
+  double get SHRINK_SIGMA_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get shrinkSigmaM2Kg => SHRINK_SIGMA_M2_KG;
+  ///  True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
+  bool get HAS_SHRINK_SIGMA_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get hasShrinkSigmaM2Kg => HAS_SHRINK_SIGMA_M2_KG;
+  ///  Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
+  double get BATCH_MEAN_SIGMA_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1.0);
+  double get batchMeanSigmaM2Kg => BATCH_MEAN_SIGMA_M2_KG;
+
+  @override
+  String toString() {
+    return 'PCFLaunch{dragAreaOverMassPriorM2Kg: ${dragAreaOverMassPriorM2Kg}, srpAreaOverMassPriorM2Kg: ${srpAreaOverMassPriorM2Kg}, separationSigmaMS: ${separationSigmaMS}, shrinkSigmaM2Kg: ${shrinkSigmaM2Kg}, hasShrinkSigmaM2Kg: ${hasShrinkSigmaM2Kg}, batchMeanSigmaM2Kg: ${batchMeanSigmaM2Kg}}';
+  }
+}
+
+class _PCFLaunchReader extends fb.TableReader<PCFLaunch> {
+  const _PCFLaunchReader();
+
+  @override
+  PCFLaunch createObject(fb.BufferContext bc, int offset) =>
+    PCFLaunch._(bc, offset);
+}
+
+class PCFLaunchBuilder {
+  PCFLaunchBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addDragAreaOverMassPriorM2Kg(double? DRAG_AREA_OVER_MASS_PRIOR_M2_KG) {
+    fbBuilder.addFloat64(0, DRAG_AREA_OVER_MASS_PRIOR_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addSrpAreaOverMassPriorM2Kg(double? SRP_AREA_OVER_MASS_PRIOR_M2_KG) {
+    fbBuilder.addFloat64(1, SRP_AREA_OVER_MASS_PRIOR_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addSeparationSigmaMS(double? SEPARATION_SIGMA_M_S) {
+    fbBuilder.addFloat64(2, SEPARATION_SIGMA_M_S);
+    return fbBuilder.offset;
+  }
+  int addShrinkSigmaM2Kg(double? SHRINK_SIGMA_M2_KG) {
+    fbBuilder.addFloat64(3, SHRINK_SIGMA_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHasShrinkSigmaM2Kg(bool? HAS_SHRINK_SIGMA_M2_KG) {
+    fbBuilder.addBool(4, HAS_SHRINK_SIGMA_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addBatchMeanSigmaM2Kg(double? BATCH_MEAN_SIGMA_M2_KG) {
+    fbBuilder.addFloat64(5, BATCH_MEAN_SIGMA_M2_KG);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFLaunchObjectBuilder extends fb.ObjectBuilder {
+  final double? _DRAG_AREA_OVER_MASS_PRIOR_M2_KG;
+  final double? _SRP_AREA_OVER_MASS_PRIOR_M2_KG;
+  final double? _SEPARATION_SIGMA_M_S;
+  final double? _SHRINK_SIGMA_M2_KG;
+  final bool? _HAS_SHRINK_SIGMA_M2_KG;
+  final double? _BATCH_MEAN_SIGMA_M2_KG;
+
+  PCFLaunchObjectBuilder({
+    double? DRAG_AREA_OVER_MASS_PRIOR_M2_KG,
+    double? dragAreaOverMassPriorM2Kg,
+    double? SRP_AREA_OVER_MASS_PRIOR_M2_KG,
+    double? srpAreaOverMassPriorM2Kg,
+    double? SEPARATION_SIGMA_M_S,
+    double? separationSigmaMS,
+    double? SHRINK_SIGMA_M2_KG,
+    double? shrinkSigmaM2Kg,
+    bool? HAS_SHRINK_SIGMA_M2_KG,
+    bool? hasShrinkSigmaM2Kg,
+    double? BATCH_MEAN_SIGMA_M2_KG,
+    double? batchMeanSigmaM2Kg,
+  })
+      : _DRAG_AREA_OVER_MASS_PRIOR_M2_KG = dragAreaOverMassPriorM2Kg ?? DRAG_AREA_OVER_MASS_PRIOR_M2_KG,
+        _SRP_AREA_OVER_MASS_PRIOR_M2_KG = srpAreaOverMassPriorM2Kg ?? SRP_AREA_OVER_MASS_PRIOR_M2_KG,
+        _SEPARATION_SIGMA_M_S = separationSigmaMS ?? SEPARATION_SIGMA_M_S,
+        _SHRINK_SIGMA_M2_KG = shrinkSigmaM2Kg ?? SHRINK_SIGMA_M2_KG,
+        _HAS_SHRINK_SIGMA_M2_KG = hasShrinkSigmaM2Kg ?? HAS_SHRINK_SIGMA_M2_KG,
+        _BATCH_MEAN_SIGMA_M2_KG = batchMeanSigmaM2Kg ?? BATCH_MEAN_SIGMA_M2_KG;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _DRAG_AREA_OVER_MASS_PRIOR_M2_KG);
+    fbBuilder.addFloat64(1, _SRP_AREA_OVER_MASS_PRIOR_M2_KG);
+    fbBuilder.addFloat64(2, _SEPARATION_SIGMA_M_S);
+    fbBuilder.addFloat64(3, _SHRINK_SIGMA_M2_KG);
+    fbBuilder.addBool(4, _HAS_SHRINK_SIGMA_M2_KG);
+    fbBuilder.addFloat64(5, _BATCH_MEAN_SIGMA_M2_KG);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Output states: frame, step and size.
+class PCFOutput {
+  PCFOutput._(this._bc, this._bcOffset);
+  factory PCFOutput(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFOutput> reader = _PCFOutputReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Frame of the output states. Default UNSPECIFIED (the grid template's
+  ///  frame, TEME without one).
+  pcfOutputFrame get FRAME => pcfOutputFrame.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Spacing of the output states, seconds, when no grid template names the
+  ///  epochs; a grid template's epochs win. Default 60.
+  double get STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 60.0);
+  double get stepSeconds => STEP_SECONDS;
+  ///  Most states one request may produce. Default 500000.
+  int get MAXIMUM_STATES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 500000);
+  int get maximumStates => MAXIMUM_STATES;
+
+  @override
+  String toString() {
+    return 'PCFOutput{FRAME: ${FRAME}, stepSeconds: ${stepSeconds}, maximumStates: ${maximumStates}}';
+  }
+}
+
+class _PCFOutputReader extends fb.TableReader<PCFOutput> {
+  const _PCFOutputReader();
+
+  @override
+  PCFOutput createObject(fb.BufferContext bc, int offset) =>
+    PCFOutput._(bc, offset);
+}
+
+class PCFOutputBuilder {
+  PCFOutputBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addFrame(pcfOutputFrame? FRAME) {
+    fbBuilder.addUint8(0, FRAME?.value);
+    return fbBuilder.offset;
+  }
+  int addStepSeconds(double? STEP_SECONDS) {
+    fbBuilder.addFloat64(1, STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMaximumStates(int? MAXIMUM_STATES) {
+    fbBuilder.addUint32(2, MAXIMUM_STATES);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFOutputObjectBuilder extends fb.ObjectBuilder {
+  final pcfOutputFrame? _FRAME;
+  final double? _STEP_SECONDS;
+  final int? _MAXIMUM_STATES;
+
+  PCFOutputObjectBuilder({
+    pcfOutputFrame? FRAME,
+    double? STEP_SECONDS,
+    double? stepSeconds,
+    int? MAXIMUM_STATES,
+    int? maximumStates,
+  })
+      : _FRAME = FRAME,
+        _STEP_SECONDS = stepSeconds ?? STEP_SECONDS,
+        _MAXIMUM_STATES = maximumStates ?? MAXIMUM_STATES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addUint8(0, _FRAME?.value);
+    fbBuilder.addFloat64(1, _STEP_SECONDS);
+    fbBuilder.addUint32(2, _MAXIMUM_STATES);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Instantaneous space weather, held for an arc when WEATHER_SOURCE selects it.
+///  The TIM epoch is UTC; flux is in SFU (1e-22 W/m2/Hz).
+class PCFSpaceWeather {
+  PCFSpaceWeather._(this._bc, this._bcOffset);
+  factory PCFSpaceWeather(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFSpaceWeather> reader = _PCFSpaceWeatherReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch the values apply to. Required; no default.
+  TIMInstant? get EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Daily F10.7 solar radio flux, SFU. Default 150.
+  double get F107 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 150.0);
+  ///  Centered 81-day average of F10.7, SFU. Default 150.
+  double get F107_AVERAGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 150.0);
+  double get f107Average => F107_AVERAGE;
+  ///  Conventional daily Ap index value, dimensionless (not an acceleration).
+  ///  Default 15.
+  double get AP_INDEX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 15.0);
+  double get apIndex => AP_INDEX;
+  ///  Conventional three-hour Kp index value, dimensionless (not an
+  ///  acceleration). Default 3.
+  double get KP_INDEX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 3.0);
+  double get kpIndex => KP_INDEX;
+
+  @override
+  String toString() {
+    return 'PCFSpaceWeather{EPOCH: ${EPOCH}, F107: ${F107}, f107Average: ${f107Average}, apIndex: ${apIndex}, kpIndex: ${kpIndex}}';
+  }
+}
+
+class _PCFSpaceWeatherReader extends fb.TableReader<PCFSpaceWeather> {
+  const _PCFSpaceWeatherReader();
+
+  @override
+  PCFSpaceWeather createObject(fb.BufferContext bc, int offset) =>
+    PCFSpaceWeather._(bc, offset);
+}
+
+class PCFSpaceWeatherBuilder {
+  PCFSpaceWeatherBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addF107(double? F107) {
+    fbBuilder.addFloat64(1, F107);
+    return fbBuilder.offset;
+  }
+  int addF107Average(double? F107_AVERAGE) {
+    fbBuilder.addFloat64(2, F107_AVERAGE);
+    return fbBuilder.offset;
+  }
+  int addApIndex(double? AP_INDEX) {
+    fbBuilder.addFloat64(3, AP_INDEX);
+    return fbBuilder.offset;
+  }
+  int addKpIndex(double? KP_INDEX) {
+    fbBuilder.addFloat64(4, KP_INDEX);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFSpaceWeatherObjectBuilder extends fb.ObjectBuilder {
+  final TIMInstantObjectBuilder? _EPOCH;
+  final double? _F107;
+  final double? _F107_AVERAGE;
+  final double? _AP_INDEX;
+  final double? _KP_INDEX;
+
+  PCFSpaceWeatherObjectBuilder({
+    TIMInstantObjectBuilder? EPOCH,
+    double? F107,
+    double? F107_AVERAGE,
+    double? f107Average,
+    double? AP_INDEX,
+    double? apIndex,
+    double? KP_INDEX,
+    double? kpIndex,
+  })
+      : _EPOCH = EPOCH,
+        _F107 = F107,
+        _F107_AVERAGE = f107Average ?? F107_AVERAGE,
+        _AP_INDEX = apIndex ?? AP_INDEX,
+        _KP_INDEX = kpIndex ?? KP_INDEX;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _F107);
+    fbBuilder.addFloat64(2, _F107_AVERAGE);
+    fbBuilder.addFloat64(3, _AP_INDEX);
+    fbBuilder.addFloat64(4, _KP_INDEX);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  ECOM2 empirical solar radiation pressure (Arnold et al. 2015, J. Geod. 89,
+///  doi:10.1007/s00190-015-0814-4, eq. 5), in the D-Y-B frame, added to the a
+///  priori model and scaled by the visible Sun fraction. Every coefficient is in
+///  m/s^2 and defaults to 0.
+class PCFEcom2 {
+  PCFEcom2._(this._bc, this._bcOffset);
+  factory PCFEcom2(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFEcom2> reader = _PCFEcom2Reader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  double get D0_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  double get d0MS2 => D0_M_S2;
+  double get Y0_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  double get y0MS2 => Y0_M_S2;
+  double get B0_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get b0MS2 => B0_M_S2;
+  double get D2_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  double get d2CosMS2 => D2_COS_M_S2;
+  double get D2_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get d2SinMS2 => D2_SIN_M_S2;
+  double get D4_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get d4CosMS2 => D4_COS_M_S2;
+  double get D4_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  double get d4SinMS2 => D4_SIN_M_S2;
+  double get B1_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  double get b1CosMS2 => B1_COS_M_S2;
+  double get B1_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  double get b1SinMS2 => B1_SIN_M_S2;
+  double get B3_COS_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  double get b3CosMS2 => B3_COS_M_S2;
+  double get B3_SIN_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  double get b3SinMS2 => B3_SIN_M_S2;
+
+  @override
+  String toString() {
+    return 'PCFEcom2{d0MS2: ${d0MS2}, y0MS2: ${y0MS2}, b0MS2: ${b0MS2}, d2CosMS2: ${d2CosMS2}, d2SinMS2: ${d2SinMS2}, d4CosMS2: ${d4CosMS2}, d4SinMS2: ${d4SinMS2}, b1CosMS2: ${b1CosMS2}, b1SinMS2: ${b1SinMS2}, b3CosMS2: ${b3CosMS2}, b3SinMS2: ${b3SinMS2}}';
+  }
+}
+
+class _PCFEcom2Reader extends fb.TableReader<PCFEcom2> {
+  const _PCFEcom2Reader();
+
+  @override
+  PCFEcom2 createObject(fb.BufferContext bc, int offset) =>
+    PCFEcom2._(bc, offset);
+}
+
+class PCFEcom2Builder {
+  PCFEcom2Builder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(11);
+  }
+
+  int addD0MS2(double? D0_M_S2) {
+    fbBuilder.addFloat64(0, D0_M_S2);
+    return fbBuilder.offset;
+  }
+  int addY0MS2(double? Y0_M_S2) {
+    fbBuilder.addFloat64(1, Y0_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB0MS2(double? B0_M_S2) {
+    fbBuilder.addFloat64(2, B0_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD2CosMS2(double? D2_COS_M_S2) {
+    fbBuilder.addFloat64(3, D2_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD2SinMS2(double? D2_SIN_M_S2) {
+    fbBuilder.addFloat64(4, D2_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD4CosMS2(double? D4_COS_M_S2) {
+    fbBuilder.addFloat64(5, D4_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addD4SinMS2(double? D4_SIN_M_S2) {
+    fbBuilder.addFloat64(6, D4_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB1CosMS2(double? B1_COS_M_S2) {
+    fbBuilder.addFloat64(7, B1_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB1SinMS2(double? B1_SIN_M_S2) {
+    fbBuilder.addFloat64(8, B1_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB3CosMS2(double? B3_COS_M_S2) {
+    fbBuilder.addFloat64(9, B3_COS_M_S2);
+    return fbBuilder.offset;
+  }
+  int addB3SinMS2(double? B3_SIN_M_S2) {
+    fbBuilder.addFloat64(10, B3_SIN_M_S2);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFEcom2ObjectBuilder extends fb.ObjectBuilder {
+  final double? _D0_M_S2;
+  final double? _Y0_M_S2;
+  final double? _B0_M_S2;
+  final double? _D2_COS_M_S2;
+  final double? _D2_SIN_M_S2;
+  final double? _D4_COS_M_S2;
+  final double? _D4_SIN_M_S2;
+  final double? _B1_COS_M_S2;
+  final double? _B1_SIN_M_S2;
+  final double? _B3_COS_M_S2;
+  final double? _B3_SIN_M_S2;
+
+  PCFEcom2ObjectBuilder({
+    double? D0_M_S2,
+    double? d0MS2,
+    double? Y0_M_S2,
+    double? y0MS2,
+    double? B0_M_S2,
+    double? b0MS2,
+    double? D2_COS_M_S2,
+    double? d2CosMS2,
+    double? D2_SIN_M_S2,
+    double? d2SinMS2,
+    double? D4_COS_M_S2,
+    double? d4CosMS2,
+    double? D4_SIN_M_S2,
+    double? d4SinMS2,
+    double? B1_COS_M_S2,
+    double? b1CosMS2,
+    double? B1_SIN_M_S2,
+    double? b1SinMS2,
+    double? B3_COS_M_S2,
+    double? b3CosMS2,
+    double? B3_SIN_M_S2,
+    double? b3SinMS2,
+  })
+      : _D0_M_S2 = d0MS2 ?? D0_M_S2,
+        _Y0_M_S2 = y0MS2 ?? Y0_M_S2,
+        _B0_M_S2 = b0MS2 ?? B0_M_S2,
+        _D2_COS_M_S2 = d2CosMS2 ?? D2_COS_M_S2,
+        _D2_SIN_M_S2 = d2SinMS2 ?? D2_SIN_M_S2,
+        _D4_COS_M_S2 = d4CosMS2 ?? D4_COS_M_S2,
+        _D4_SIN_M_S2 = d4SinMS2 ?? D4_SIN_M_S2,
+        _B1_COS_M_S2 = b1CosMS2 ?? B1_COS_M_S2,
+        _B1_SIN_M_S2 = b1SinMS2 ?? B1_SIN_M_S2,
+        _B3_COS_M_S2 = b3CosMS2 ?? B3_COS_M_S2,
+        _B3_SIN_M_S2 = b3SinMS2 ?? B3_SIN_M_S2;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(11);
+    fbBuilder.addFloat64(0, _D0_M_S2);
+    fbBuilder.addFloat64(1, _Y0_M_S2);
+    fbBuilder.addFloat64(2, _B0_M_S2);
+    fbBuilder.addFloat64(3, _D2_COS_M_S2);
+    fbBuilder.addFloat64(4, _D2_SIN_M_S2);
+    fbBuilder.addFloat64(5, _D4_COS_M_S2);
+    fbBuilder.addFloat64(6, _D4_SIN_M_S2);
+    fbBuilder.addFloat64(7, _B1_COS_M_S2);
+    fbBuilder.addFloat64(8, _B1_SIN_M_S2);
+    fbBuilder.addFloat64(9, _B3_COS_M_S2);
+    fbBuilder.addFloat64(10, _B3_SIN_M_S2);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Integrator and its settings, shared by $PCF and $PRW. Units are SI. A scalar
+///  legacy tolerance must be expanded by the adapter.
+class PCFIntegratorSettings {
+  PCFIntegratorSettings._(this._bc, this._bcOffset);
+  factory PCFIntegratorSettings(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFIntegratorSettings> reader = _PCFIntegratorSettingsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Algorithm. Default UNSPECIFIED (the provider's own).
+  pcfIntegratorAlgorithm get ALGORITHM => pcfIntegratorAlgorithm.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  First step, seconds; the fixed step of RK4. Default 60.
+  double get INITIAL_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 60.0);
+  double get initialStepSeconds => INITIAL_STEP_SECONDS;
+  ///  Smallest step an adaptive algorithm may take, seconds. Default 1.
+  double get MINIMUM_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 1.0);
+  double get minimumStepSeconds => MINIMUM_STEP_SECONDS;
+  ///  Largest step, seconds. Default 3600.
+  double get MAXIMUM_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 3600.0);
+  double get maximumStepSeconds => MAXIMUM_STEP_SECONDS;
+  ///  Six or seven positive tolerances, respectively m, m/s and optional kg.
+  ///  Required; no default.
+  List<double>? get ABSOLUTE_TOLERANCES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 12);
+  List<double>? get absoluteTolerances => ABSOLUTE_TOLERANCES;
+  ///  Relative tolerance, dimensionless. Default 1e-12.
+  double get RELATIVE_TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 1e-12);
+  double get relativeTolerance => RELATIVE_TOLERANCE;
+  ///  Most steps one propagation may take. Default 100000.
+  int get MAXIMUM_STEPS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 100000);
+  int get maximumSteps => MAXIMUM_STEPS;
+
+  @override
+  String toString() {
+    return 'PCFIntegratorSettings{ALGORITHM: ${ALGORITHM}, initialStepSeconds: ${initialStepSeconds}, minimumStepSeconds: ${minimumStepSeconds}, maximumStepSeconds: ${maximumStepSeconds}, absoluteTolerances: ${absoluteTolerances}, relativeTolerance: ${relativeTolerance}, maximumSteps: ${maximumSteps}}';
+  }
+}
+
+class _PCFIntegratorSettingsReader extends fb.TableReader<PCFIntegratorSettings> {
+  const _PCFIntegratorSettingsReader();
+
+  @override
+  PCFIntegratorSettings createObject(fb.BufferContext bc, int offset) =>
+    PCFIntegratorSettings._(bc, offset);
+}
+
+class PCFIntegratorSettingsBuilder {
+  PCFIntegratorSettingsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addAlgorithm(pcfIntegratorAlgorithm? ALGORITHM) {
+    fbBuilder.addUint8(0, ALGORITHM?.value);
+    return fbBuilder.offset;
+  }
+  int addInitialStepSeconds(double? INITIAL_STEP_SECONDS) {
+    fbBuilder.addFloat64(1, INITIAL_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMinimumStepSeconds(double? MINIMUM_STEP_SECONDS) {
+    fbBuilder.addFloat64(2, MINIMUM_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addMaximumStepSeconds(double? MAXIMUM_STEP_SECONDS) {
+    fbBuilder.addFloat64(3, MAXIMUM_STEP_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addAbsoluteTolerancesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addRelativeTolerance(double? RELATIVE_TOLERANCE) {
+    fbBuilder.addFloat64(5, RELATIVE_TOLERANCE);
+    return fbBuilder.offset;
+  }
+  int addMaximumSteps(int? MAXIMUM_STEPS) {
+    fbBuilder.addUint32(6, MAXIMUM_STEPS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFIntegratorSettingsObjectBuilder extends fb.ObjectBuilder {
+  final pcfIntegratorAlgorithm? _ALGORITHM;
+  final double? _INITIAL_STEP_SECONDS;
+  final double? _MINIMUM_STEP_SECONDS;
+  final double? _MAXIMUM_STEP_SECONDS;
+  final List<double>? _ABSOLUTE_TOLERANCES;
+  final double? _RELATIVE_TOLERANCE;
+  final int? _MAXIMUM_STEPS;
+
+  PCFIntegratorSettingsObjectBuilder({
+    pcfIntegratorAlgorithm? ALGORITHM,
+    double? INITIAL_STEP_SECONDS,
+    double? initialStepSeconds,
+    double? MINIMUM_STEP_SECONDS,
+    double? minimumStepSeconds,
+    double? MAXIMUM_STEP_SECONDS,
+    double? maximumStepSeconds,
+    List<double>? ABSOLUTE_TOLERANCES,
+    List<double>? absoluteTolerances,
+    double? RELATIVE_TOLERANCE,
+    double? relativeTolerance,
+    int? MAXIMUM_STEPS,
+    int? maximumSteps,
+  })
+      : _ALGORITHM = ALGORITHM,
+        _INITIAL_STEP_SECONDS = initialStepSeconds ?? INITIAL_STEP_SECONDS,
+        _MINIMUM_STEP_SECONDS = minimumStepSeconds ?? MINIMUM_STEP_SECONDS,
+        _MAXIMUM_STEP_SECONDS = maximumStepSeconds ?? MAXIMUM_STEP_SECONDS,
+        _ABSOLUTE_TOLERANCES = absoluteTolerances ?? ABSOLUTE_TOLERANCES,
+        _RELATIVE_TOLERANCE = relativeTolerance ?? RELATIVE_TOLERANCE,
+        _MAXIMUM_STEPS = maximumSteps ?? MAXIMUM_STEPS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ABSOLUTE_TOLERANCESOffset = _ABSOLUTE_TOLERANCES == null ? null
+        : fbBuilder.writeListFloat64(_ABSOLUTE_TOLERANCES!);
+    fbBuilder.startTable(7);
+    fbBuilder.addUint8(0, _ALGORITHM?.value);
+    fbBuilder.addFloat64(1, _INITIAL_STEP_SECONDS);
+    fbBuilder.addFloat64(2, _MINIMUM_STEP_SECONDS);
+    fbBuilder.addFloat64(3, _MAXIMUM_STEP_SECONDS);
+    fbBuilder.addOffset(4, ABSOLUTE_TOLERANCESOffset);
+    fbBuilder.addFloat64(5, _RELATIVE_TOLERANCE);
+    fbBuilder.addUint32(6, _MAXIMUM_STEPS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  The forces a propagator applies, shared by $PCF and $PRW. Flags default to
+///  off unless stated: a force is active only when selected. No implied support
+///  for coefficients, drag models or bodies the provider cannot supply; a
+///  provider refuses what it cannot apply, by name.
+class PCFForceModel {
+  PCFForceModel._(this._bc, this._bcOffset);
+  factory PCFForceModel(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFForceModel> reader = _PCFForceModelReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Gravity field. Default INFER_FLAGS (the ENABLE_ flags decide).
+  pcfGravitySelection get GRAVITY_CHOICE => pcfGravitySelection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  pcfGravitySelection get gravityChoice => GRAVITY_CHOICE;
+  ///  Central-body point-mass term. Default true.
+  bool get ENABLE_POINT_MASS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
+  bool get enablePointMass => ENABLE_POINT_MASS;
+  ///  Gravitational parameter of the central body, m3/s2; required positive
+  ///  when a central gravity term is enabled. Default 0.
+  double get GRAVITATIONAL_PARAMETER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  double get gravitationalParameter => GRAVITATIONAL_PARAMETER;
+  ///  J2 zonal term. Default true.
+  bool get ENABLE_J2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, true);
+  bool get enableJ2 => ENABLE_J2;
+  ///  J3 zonal term. Default false.
+  bool get ENABLE_J3 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 12, false);
+  bool get enableJ3 => ENABLE_J3;
+  ///  J4 zonal term. Default false.
+  bool get ENABLE_J4 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  bool get enableJ4 => ENABLE_J4;
+  ///  Zonal terms above J4. Default false.
+  bool get ENABLE_HIGHER_ZONALS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  bool get enableHigherZonals => ENABLE_HIGHER_ZONALS;
+  ///  Highest field degree; dimensionless. Absent selects the explicitly
+  ///  reported model default.
+  int get MAXIMUM_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  int get maximumDegree => MAXIMUM_DEGREE;
+  ///  True when MAXIMUM_DEGREE carries a value; false (the default) means absent.
+  bool get HAS_MAXIMUM_DEGREE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  bool get hasMaximumDegree => HAS_MAXIMUM_DEGREE;
+  ///  Highest field order; dimensionless. Absent selects the explicitly
+  ///  reported model default.
+  int get MAXIMUM_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  int get maximumOrder => MAXIMUM_ORDER;
+  ///  True when MAXIMUM_ORDER carries a value; false (the default) means absent.
+  bool get HAS_MAXIMUM_ORDER => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
+  bool get hasMaximumOrder => HAS_MAXIMUM_ORDER;
+  ///  Third-body gravity of THIRD_BODY_IDS. Default false.
+  bool get ENABLE_THIRD_BODY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  bool get enableThirdBody => ENABLE_THIRD_BODY;
+  ///  NAIF IDs; explicit vector, e.g. [10,301]. Empty (the default) means no
+  ///  third bodies.
+  List<int>? get THIRD_BODY_IDS => const fb.ListReader<int>(fb.Int32Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  List<int>? get thirdBodyIds => THIRD_BODY_IDS;
+  ///  Solar radiation pressure. Default false.
+  bool get ENABLE_SRP => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
+  bool get enableSrp => ENABLE_SRP;
+  ///  Atmospheric drag. Default false.
+  bool get ENABLE_DRAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  bool get enableDrag => ENABLE_DRAG;
+  ///  Spacecraft mass, kg. Default 1000.
+  double get INITIAL_MASS_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 1000.0);
+  double get initialMassKg => INITIAL_MASS_KG;
+  ///  Cross-section area, m2. Default 10.
+  double get AREA_M2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 10.0);
+  double get areaM2 => AREA_M2;
+  ///  Radiation-pressure coefficient Cr, dimensionless. Default 1.5.
+  double get REFLECTIVITY_COEFFICIENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 1.5);
+  double get reflectivityCoefficient => REFLECTIVITY_COEFFICIENT;
+  ///  Drag coefficient Cd, dimensionless. Default 2.2.
+  double get DRAG_COEFFICIENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 2.2);
+  double get dragCoefficient => DRAG_COEFFICIENT;
+  ///  Atmosphere model. Default NRLMSISE00.
+  pcfAtmosphereFamily get ATMOSPHERE_MODEL => pcfAtmosphereFamily.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 42, 1));
+  pcfAtmosphereFamily get atmosphereModel => ATMOSPHERE_MODEL;
+  ///  Space weather held for the arc when WEATHER_SOURCE selects it. Default
+  ///  absent.
+  PCFSpaceWeather? get WEATHER => PCFSpaceWeather.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Actual configured source name, e.g. an analytic series or a planetary SPK
+  ///  kernel. Required; no default.
+  String? get EPHEMERIS_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  String? get ephemerisSource => EPHEMERIS_SOURCE;
+  ///  Solid Earth tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (the request's Earth orientation rows) to apply them. Default
+  ///  NONE.
+  pcfSolidTideModel get SOLID_TIDES => pcfSolidTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 48, 0));
+  pcfSolidTideModel get solidTides => SOLID_TIDES;
+  ///  Post-Newtonian terms. Default NONE.
+  pcfRelativityTerms get RELATIVITY => pcfRelativityTerms.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 50, 0));
+  ///  Constant acceleration along the in-track axis, m/s2: T of RTN,
+  ///  N cross rhat with N = unit(r cross v) (the "in-track thrust" of a VCM).
+  ///  Default absent.
+  double get IN_TRACK_ACCELERATION_M_S2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  double get inTrackAccelerationMS2 => IN_TRACK_ACCELERATION_M_S2;
+  ///  True when IN_TRACK_ACCELERATION_M_S2 carries a value; false (the default)
+  ///  means absent.
+  bool get HAS_IN_TRACK_ACCELERATION_M_S2 => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  bool get hasInTrackAccelerationMS2 => HAS_IN_TRACK_ACCELERATION_M_S2;
+  ///  Rate of change of the drag ballistic coefficient Cd*A/m, m2/kg/s (the
+  ///  BDOT of a VCM). Drag uses Cd*A/m + rate * (t - initial epoch). Default
+  ///  absent.
+  double get DRAG_AREA_OVER_MASS_RATE_M2_KG_S => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  double get dragAreaOverMassRateM2KgS => DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  ///  True when DRAG_AREA_OVER_MASS_RATE_M2_KG_S carries a value; false (the
+  ///  default) means absent.
+  bool get HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
+  bool get hasDragAreaOverMassRateM2KgS => HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  ///  Highest degree of the tesseral and sectorial terms (order >= 1); the
+  ///  zonals run to MAXIMUM_DEGREE. A VCM's "mmZ,nnT" is MAXIMUM_DEGREE mm,
+  ///  MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.
+  int get MAXIMUM_TESSERAL_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  int get maximumTesseralDegree => MAXIMUM_TESSERAL_DEGREE;
+  ///  True when MAXIMUM_TESSERAL_DEGREE carries a value; false (the default)
+  ///  means absent.
+  bool get HAS_MAXIMUM_TESSERAL_DEGREE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 62, false);
+  bool get hasMaximumTesseralDegree => HAS_MAXIMUM_TESSERAL_DEGREE;
+  ///  Solar radiation pressure model family. Default CANNONBALL.
+  pcfRadiationPressureFamily get RADIATION_PRESSURE_MODEL => pcfRadiationPressureFamily.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 64, 0));
+  pcfRadiationPressureFamily get radiationPressureModel => RADIATION_PRESSURE_MODEL;
+  ///  Spacecraft block; required when RADIATION_PRESSURE_MODEL is GNSS_BOX_WING.
+  ///  Default UNSPECIFIED.
+  pcfGnssSpacecraftBlock get GNSS_BLOCK => pcfGnssSpacecraftBlock.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 66, 0));
+  pcfGnssSpacecraftBlock get gnssBlock => GNSS_BLOCK;
+  ///  ECOM2 coefficients; absent (the default) means no ECOM2 term.
+  PCFEcom2? get ECOM2 => PCFEcom2.reader.vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Earth radiation pressure (albedo and infrared). It reads the Sun's
+  ///  position from the ephemeris source. Default NONE.
+  pcfEarthRadiationModel get EARTH_RADIATION => pcfEarthRadiationModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 70, 0));
+  pcfEarthRadiationModel get earthRadiation => EARTH_RADIATION;
+  ///  Angular size of the Earth surface elements it sums, degrees. Default 15.
+  double get EARTH_RADIATION_RESOLUTION_DEG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 15.0);
+  double get earthRadiationResolutionDeg => EARTH_RADIATION_RESOLUTION_DEG;
+  ///  Isotropic Cr*A/m, m2/kg, the Earth's radiation acts on. Absent, it is the
+  ///  cannonball's REFLECTIVITY_COEFFICIENT * AREA_M2 / INITIAL_MASS_KG, and
+  ///  fitting SRP_AREA_OVER_MASS scales both.
+  double get EARTH_RADIATION_AREA_OVER_MASS_M2_KG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  double get earthRadiationAreaOverMassM2Kg => EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  ///  True when EARTH_RADIATION_AREA_OVER_MASS_M2_KG carries a value; false (the
+  ///  default) means absent.
+  bool get HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 76, false);
+  bool get hasEarthRadiationAreaOverMassM2Kg => HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  ///  Ocean tides. Their field is Earth-fixed, so a provider needs Earth
+  ///  orientation (the request's Earth orientation rows) to apply them. Default
+  ///  NONE.
+  pcfOceanTideModel get OCEAN_TIDES => pcfOceanTideModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 78, 0));
+  pcfOceanTideModel get oceanTides => OCEAN_TIDES;
+  ///  Truncation of the ocean tide field, degree. Default 30.
+  int get OCEAN_TIDE_MAXIMUM_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 80, 30);
+  int get oceanTideMaximumDegree => OCEAN_TIDE_MAXIMUM_DEGREE;
+  ///  Truncation of the ocean tide field, order. Default 30.
+  int get OCEAN_TIDE_MAXIMUM_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 82, 30);
+  int get oceanTideMaximumOrder => OCEAN_TIDE_MAXIMUM_ORDER;
+  ///  Central body, a NAIF ID. The gravity field, atmosphere, tides and third
+  ///  bodies are those of this body. Default 399 (Earth).
+  int get CENTRAL_BODY_NAIF_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 84, 399);
+  int get centralBodyNaifId => CENTRAL_BODY_NAIF_ID;
+  ///  Where the Sun, Moon and planets are read from. Default UNSPECIFIED (the
+  ///  source named in EPHEMERIS_SOURCE).
+  pcfEphemerisKind get EPHEMERIS_KIND => pcfEphemerisKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 86, 0));
+  pcfEphemerisKind get ephemerisKind => EPHEMERIS_KIND;
+  ///  Shadow model of the radiation-pressure and Earth-radiation terms. Default
+  ///  UNSPECIFIED (the provider's: conical).
+  evlShadowModel get SHADOW_MODEL => evlShadowModel.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 88, 0));
+  evlShadowModel get shadowModel => SHADOW_MODEL;
+  ///  Where the space weather comes from. Default UNSPECIFIED (inferred).
+  pcfWeatherSource get WEATHER_SOURCE => pcfWeatherSource.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 90, 0));
+  pcfWeatherSource get weatherSource => WEATHER_SOURCE;
+  ///  What happens past the last space weather row. Default UNSPECIFIED (the
+  ///  provider's rule).
+  pcfWeatherExtension get WEATHER_EXTENSION => pcfWeatherExtension.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 92, 0));
+  pcfWeatherExtension get weatherExtension => WEATHER_EXTENSION;
+  ///  Correction applied to the atmosphere model's density. Default NONE.
+  pcfDensityCorrection get DENSITY_CORRECTION => pcfDensityCorrection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 94, 0));
+  pcfDensityCorrection get densityCorrection => DENSITY_CORRECTION;
+  ///  Past the last density-correction node the log-density scale relaxes to
+  ///  its trailing mean with this time constant, hours; 0 holds the last node.
+  ///  Absent, the provider's rule (the numerical propagator holds; the advanced
+  ///  mean-element propagator relaxes with 48 h).
+  double get DENSITY_CORRECTION_RELAXATION_HOURS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  double get densityCorrectionRelaxationHours => DENSITY_CORRECTION_RELAXATION_HOURS;
+  ///  True when DENSITY_CORRECTION_RELAXATION_HOURS carries a value; false (the
+  ///  default) means absent.
+  bool get HAS_DENSITY_CORRECTION_RELAXATION_HOURS => const fb.BoolReader().vTableGet(_bc, _bcOffset, 98, false);
+  bool get hasDensityCorrectionRelaxationHours => HAS_DENSITY_CORRECTION_RELAXATION_HOURS;
+  ///  Neutral wind in the drag relative velocity. Default NONE.
+  pcfNeutralWind get NEUTRAL_WIND => pcfNeutralWind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 100, 0));
+  pcfNeutralWind get neutralWind => NEUTRAL_WIND;
+  ///  Empirical along-track terms of the averaged theories. Absent (the
+  ///  default): the theory's own.
+  PCFEmpiricalTerms? get EMPIRICAL_TERMS => PCFEmpiricalTerms.reader.vTableGetNullable(_bc, _bcOffset, 102);
+  PCFEmpiricalTerms? get empiricalTerms => EMPIRICAL_TERMS;
+
+  @override
+  String toString() {
+    return 'PCFForceModel{gravityChoice: ${gravityChoice}, enablePointMass: ${enablePointMass}, gravitationalParameter: ${gravitationalParameter}, enableJ2: ${enableJ2}, enableJ3: ${enableJ3}, enableJ4: ${enableJ4}, enableHigherZonals: ${enableHigherZonals}, maximumDegree: ${maximumDegree}, hasMaximumDegree: ${hasMaximumDegree}, maximumOrder: ${maximumOrder}, hasMaximumOrder: ${hasMaximumOrder}, enableThirdBody: ${enableThirdBody}, thirdBodyIds: ${thirdBodyIds}, enableSrp: ${enableSrp}, enableDrag: ${enableDrag}, initialMassKg: ${initialMassKg}, areaM2: ${areaM2}, reflectivityCoefficient: ${reflectivityCoefficient}, dragCoefficient: ${dragCoefficient}, atmosphereModel: ${atmosphereModel}, WEATHER: ${WEATHER}, ephemerisSource: ${ephemerisSource}, solidTides: ${solidTides}, RELATIVITY: ${RELATIVITY}, inTrackAccelerationMS2: ${inTrackAccelerationMS2}, hasInTrackAccelerationMS2: ${hasInTrackAccelerationMS2}, dragAreaOverMassRateM2KgS: ${dragAreaOverMassRateM2KgS}, hasDragAreaOverMassRateM2KgS: ${hasDragAreaOverMassRateM2KgS}, maximumTesseralDegree: ${maximumTesseralDegree}, hasMaximumTesseralDegree: ${hasMaximumTesseralDegree}, radiationPressureModel: ${radiationPressureModel}, gnssBlock: ${gnssBlock}, ECOM2: ${ECOM2}, earthRadiation: ${earthRadiation}, earthRadiationResolutionDeg: ${earthRadiationResolutionDeg}, earthRadiationAreaOverMassM2Kg: ${earthRadiationAreaOverMassM2Kg}, hasEarthRadiationAreaOverMassM2Kg: ${hasEarthRadiationAreaOverMassM2Kg}, oceanTides: ${oceanTides}, oceanTideMaximumDegree: ${oceanTideMaximumDegree}, oceanTideMaximumOrder: ${oceanTideMaximumOrder}, centralBodyNaifId: ${centralBodyNaifId}, ephemerisKind: ${ephemerisKind}, shadowModel: ${shadowModel}, weatherSource: ${weatherSource}, weatherExtension: ${weatherExtension}, densityCorrection: ${densityCorrection}, densityCorrectionRelaxationHours: ${densityCorrectionRelaxationHours}, hasDensityCorrectionRelaxationHours: ${hasDensityCorrectionRelaxationHours}, neutralWind: ${neutralWind}, empiricalTerms: ${empiricalTerms}}';
+  }
+}
+
+class _PCFForceModelReader extends fb.TableReader<PCFForceModel> {
+  const _PCFForceModelReader();
+
+  @override
+  PCFForceModel createObject(fb.BufferContext bc, int offset) =>
+    PCFForceModel._(bc, offset);
+}
+
+class PCFForceModelBuilder {
+  PCFForceModelBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(50);
+  }
+
+  int addGravityChoice(pcfGravitySelection? GRAVITY_CHOICE) {
+    fbBuilder.addUint8(0, GRAVITY_CHOICE?.value);
+    return fbBuilder.offset;
+  }
+  int addEnablePointMass(bool? ENABLE_POINT_MASS) {
+    fbBuilder.addBool(1, ENABLE_POINT_MASS);
+    return fbBuilder.offset;
+  }
+  int addGravitationalParameter(double? GRAVITATIONAL_PARAMETER) {
+    fbBuilder.addFloat64(2, GRAVITATIONAL_PARAMETER);
+    return fbBuilder.offset;
+  }
+  int addEnableJ2(bool? ENABLE_J2) {
+    fbBuilder.addBool(3, ENABLE_J2);
+    return fbBuilder.offset;
+  }
+  int addEnableJ3(bool? ENABLE_J3) {
+    fbBuilder.addBool(4, ENABLE_J3);
+    return fbBuilder.offset;
+  }
+  int addEnableJ4(bool? ENABLE_J4) {
+    fbBuilder.addBool(5, ENABLE_J4);
+    return fbBuilder.offset;
+  }
+  int addEnableHigherZonals(bool? ENABLE_HIGHER_ZONALS) {
+    fbBuilder.addBool(6, ENABLE_HIGHER_ZONALS);
+    return fbBuilder.offset;
+  }
+  int addMaximumDegree(int? MAXIMUM_DEGREE) {
+    fbBuilder.addUint16(7, MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumDegree(bool? HAS_MAXIMUM_DEGREE) {
+    fbBuilder.addBool(8, HAS_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addMaximumOrder(int? MAXIMUM_ORDER) {
+    fbBuilder.addUint16(9, MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumOrder(bool? HAS_MAXIMUM_ORDER) {
+    fbBuilder.addBool(10, HAS_MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
+  int addEnableThirdBody(bool? ENABLE_THIRD_BODY) {
+    fbBuilder.addBool(11, ENABLE_THIRD_BODY);
+    return fbBuilder.offset;
+  }
+  int addThirdBodyIdsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addEnableSrp(bool? ENABLE_SRP) {
+    fbBuilder.addBool(13, ENABLE_SRP);
+    return fbBuilder.offset;
+  }
+  int addEnableDrag(bool? ENABLE_DRAG) {
+    fbBuilder.addBool(14, ENABLE_DRAG);
+    return fbBuilder.offset;
+  }
+  int addInitialMassKg(double? INITIAL_MASS_KG) {
+    fbBuilder.addFloat64(15, INITIAL_MASS_KG);
+    return fbBuilder.offset;
+  }
+  int addAreaM2(double? AREA_M2) {
+    fbBuilder.addFloat64(16, AREA_M2);
+    return fbBuilder.offset;
+  }
+  int addReflectivityCoefficient(double? REFLECTIVITY_COEFFICIENT) {
+    fbBuilder.addFloat64(17, REFLECTIVITY_COEFFICIENT);
+    return fbBuilder.offset;
+  }
+  int addDragCoefficient(double? DRAG_COEFFICIENT) {
+    fbBuilder.addFloat64(18, DRAG_COEFFICIENT);
+    return fbBuilder.offset;
+  }
+  int addAtmosphereModel(pcfAtmosphereFamily? ATMOSPHERE_MODEL) {
+    fbBuilder.addUint8(19, ATMOSPHERE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addWeatherOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addEphemerisSourceOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSolidTides(pcfSolidTideModel? SOLID_TIDES) {
+    fbBuilder.addUint8(22, SOLID_TIDES?.value);
+    return fbBuilder.offset;
+  }
+  int addRelativity(pcfRelativityTerms? RELATIVITY) {
+    fbBuilder.addUint8(23, RELATIVITY?.value);
+    return fbBuilder.offset;
+  }
+  int addInTrackAccelerationMS2(double? IN_TRACK_ACCELERATION_M_S2) {
+    fbBuilder.addFloat64(24, IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addHasInTrackAccelerationMS2(bool? HAS_IN_TRACK_ACCELERATION_M_S2) {
+    fbBuilder.addBool(25, HAS_IN_TRACK_ACCELERATION_M_S2);
+    return fbBuilder.offset;
+  }
+  int addDragAreaOverMassRateM2KgS(double? DRAG_AREA_OVER_MASS_RATE_M2_KG_S) {
+    fbBuilder.addFloat64(26, DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    return fbBuilder.offset;
+  }
+  int addHasDragAreaOverMassRateM2KgS(bool? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S) {
+    fbBuilder.addBool(27, HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    return fbBuilder.offset;
+  }
+  int addMaximumTesseralDegree(int? MAXIMUM_TESSERAL_DEGREE) {
+    fbBuilder.addUint16(28, MAXIMUM_TESSERAL_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addHasMaximumTesseralDegree(bool? HAS_MAXIMUM_TESSERAL_DEGREE) {
+    fbBuilder.addBool(29, HAS_MAXIMUM_TESSERAL_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addRadiationPressureModel(pcfRadiationPressureFamily? RADIATION_PRESSURE_MODEL) {
+    fbBuilder.addUint8(30, RADIATION_PRESSURE_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addGnssBlock(pcfGnssSpacecraftBlock? GNSS_BLOCK) {
+    fbBuilder.addUint8(31, GNSS_BLOCK?.value);
+    return fbBuilder.offset;
+  }
+  int addEcom2Offset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addEarthRadiation(pcfEarthRadiationModel? EARTH_RADIATION) {
+    fbBuilder.addUint8(33, EARTH_RADIATION?.value);
+    return fbBuilder.offset;
+  }
+  int addEarthRadiationResolutionDeg(double? EARTH_RADIATION_RESOLUTION_DEG) {
+    fbBuilder.addFloat64(34, EARTH_RADIATION_RESOLUTION_DEG);
+    return fbBuilder.offset;
+  }
+  int addEarthRadiationAreaOverMassM2Kg(double? EARTH_RADIATION_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addFloat64(35, EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addHasEarthRadiationAreaOverMassM2Kg(bool? HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG) {
+    fbBuilder.addBool(36, HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    return fbBuilder.offset;
+  }
+  int addOceanTides(pcfOceanTideModel? OCEAN_TIDES) {
+    fbBuilder.addUint8(37, OCEAN_TIDES?.value);
+    return fbBuilder.offset;
+  }
+  int addOceanTideMaximumDegree(int? OCEAN_TIDE_MAXIMUM_DEGREE) {
+    fbBuilder.addUint16(38, OCEAN_TIDE_MAXIMUM_DEGREE);
+    return fbBuilder.offset;
+  }
+  int addOceanTideMaximumOrder(int? OCEAN_TIDE_MAXIMUM_ORDER) {
+    fbBuilder.addUint16(39, OCEAN_TIDE_MAXIMUM_ORDER);
+    return fbBuilder.offset;
+  }
+  int addCentralBodyNaifId(int? CENTRAL_BODY_NAIF_ID) {
+    fbBuilder.addInt32(40, CENTRAL_BODY_NAIF_ID);
+    return fbBuilder.offset;
+  }
+  int addEphemerisKind(pcfEphemerisKind? EPHEMERIS_KIND) {
+    fbBuilder.addUint8(41, EPHEMERIS_KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addShadowModel(evlShadowModel? SHADOW_MODEL) {
+    fbBuilder.addUint8(42, SHADOW_MODEL?.value);
+    return fbBuilder.offset;
+  }
+  int addWeatherSource(pcfWeatherSource? WEATHER_SOURCE) {
+    fbBuilder.addUint8(43, WEATHER_SOURCE?.value);
+    return fbBuilder.offset;
+  }
+  int addWeatherExtension(pcfWeatherExtension? WEATHER_EXTENSION) {
+    fbBuilder.addUint8(44, WEATHER_EXTENSION?.value);
+    return fbBuilder.offset;
+  }
+  int addDensityCorrection(pcfDensityCorrection? DENSITY_CORRECTION) {
+    fbBuilder.addUint8(45, DENSITY_CORRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addDensityCorrectionRelaxationHours(double? DENSITY_CORRECTION_RELAXATION_HOURS) {
+    fbBuilder.addFloat64(46, DENSITY_CORRECTION_RELAXATION_HOURS);
+    return fbBuilder.offset;
+  }
+  int addHasDensityCorrectionRelaxationHours(bool? HAS_DENSITY_CORRECTION_RELAXATION_HOURS) {
+    fbBuilder.addBool(47, HAS_DENSITY_CORRECTION_RELAXATION_HOURS);
+    return fbBuilder.offset;
+  }
+  int addNeutralWind(pcfNeutralWind? NEUTRAL_WIND) {
+    fbBuilder.addUint8(48, NEUTRAL_WIND?.value);
+    return fbBuilder.offset;
+  }
+  int addEmpiricalTermsOffset(int? offset) {
+    fbBuilder.addOffset(49, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
+  final pcfGravitySelection? _GRAVITY_CHOICE;
+  final bool? _ENABLE_POINT_MASS;
+  final double? _GRAVITATIONAL_PARAMETER;
+  final bool? _ENABLE_J2;
+  final bool? _ENABLE_J3;
+  final bool? _ENABLE_J4;
+  final bool? _ENABLE_HIGHER_ZONALS;
+  final int? _MAXIMUM_DEGREE;
+  final bool? _HAS_MAXIMUM_DEGREE;
+  final int? _MAXIMUM_ORDER;
+  final bool? _HAS_MAXIMUM_ORDER;
+  final bool? _ENABLE_THIRD_BODY;
+  final List<int>? _THIRD_BODY_IDS;
+  final bool? _ENABLE_SRP;
+  final bool? _ENABLE_DRAG;
+  final double? _INITIAL_MASS_KG;
+  final double? _AREA_M2;
+  final double? _REFLECTIVITY_COEFFICIENT;
+  final double? _DRAG_COEFFICIENT;
+  final pcfAtmosphereFamily? _ATMOSPHERE_MODEL;
+  final PCFSpaceWeatherObjectBuilder? _WEATHER;
+  final String? _EPHEMERIS_SOURCE;
+  final pcfSolidTideModel? _SOLID_TIDES;
+  final pcfRelativityTerms? _RELATIVITY;
+  final double? _IN_TRACK_ACCELERATION_M_S2;
+  final bool? _HAS_IN_TRACK_ACCELERATION_M_S2;
+  final double? _DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  final bool? _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S;
+  final int? _MAXIMUM_TESSERAL_DEGREE;
+  final bool? _HAS_MAXIMUM_TESSERAL_DEGREE;
+  final pcfRadiationPressureFamily? _RADIATION_PRESSURE_MODEL;
+  final pcfGnssSpacecraftBlock? _GNSS_BLOCK;
+  final PCFEcom2ObjectBuilder? _ECOM2;
+  final pcfEarthRadiationModel? _EARTH_RADIATION;
+  final double? _EARTH_RADIATION_RESOLUTION_DEG;
+  final double? _EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  final bool? _HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG;
+  final pcfOceanTideModel? _OCEAN_TIDES;
+  final int? _OCEAN_TIDE_MAXIMUM_DEGREE;
+  final int? _OCEAN_TIDE_MAXIMUM_ORDER;
+  final int? _CENTRAL_BODY_NAIF_ID;
+  final pcfEphemerisKind? _EPHEMERIS_KIND;
+  final evlShadowModel? _SHADOW_MODEL;
+  final pcfWeatherSource? _WEATHER_SOURCE;
+  final pcfWeatherExtension? _WEATHER_EXTENSION;
+  final pcfDensityCorrection? _DENSITY_CORRECTION;
+  final double? _DENSITY_CORRECTION_RELAXATION_HOURS;
+  final bool? _HAS_DENSITY_CORRECTION_RELAXATION_HOURS;
+  final pcfNeutralWind? _NEUTRAL_WIND;
+  final PCFEmpiricalTermsObjectBuilder? _EMPIRICAL_TERMS;
+
+  PCFForceModelObjectBuilder({
+    pcfGravitySelection? GRAVITY_CHOICE,
+    pcfGravitySelection? gravityChoice,
+    bool? ENABLE_POINT_MASS,
+    bool? enablePointMass,
+    double? GRAVITATIONAL_PARAMETER,
+    double? gravitationalParameter,
+    bool? ENABLE_J2,
+    bool? enableJ2,
+    bool? ENABLE_J3,
+    bool? enableJ3,
+    bool? ENABLE_J4,
+    bool? enableJ4,
+    bool? ENABLE_HIGHER_ZONALS,
+    bool? enableHigherZonals,
+    int? MAXIMUM_DEGREE,
+    int? maximumDegree,
+    bool? HAS_MAXIMUM_DEGREE,
+    bool? hasMaximumDegree,
+    int? MAXIMUM_ORDER,
+    int? maximumOrder,
+    bool? HAS_MAXIMUM_ORDER,
+    bool? hasMaximumOrder,
+    bool? ENABLE_THIRD_BODY,
+    bool? enableThirdBody,
+    List<int>? THIRD_BODY_IDS,
+    List<int>? thirdBodyIds,
+    bool? ENABLE_SRP,
+    bool? enableSrp,
+    bool? ENABLE_DRAG,
+    bool? enableDrag,
+    double? INITIAL_MASS_KG,
+    double? initialMassKg,
+    double? AREA_M2,
+    double? areaM2,
+    double? REFLECTIVITY_COEFFICIENT,
+    double? reflectivityCoefficient,
+    double? DRAG_COEFFICIENT,
+    double? dragCoefficient,
+    pcfAtmosphereFamily? ATMOSPHERE_MODEL,
+    pcfAtmosphereFamily? atmosphereModel,
+    PCFSpaceWeatherObjectBuilder? WEATHER,
+    String? EPHEMERIS_SOURCE,
+    String? ephemerisSource,
+    pcfSolidTideModel? SOLID_TIDES,
+    pcfSolidTideModel? solidTides,
+    pcfRelativityTerms? RELATIVITY,
+    double? IN_TRACK_ACCELERATION_M_S2,
+    double? inTrackAccelerationMS2,
+    bool? HAS_IN_TRACK_ACCELERATION_M_S2,
+    bool? hasInTrackAccelerationMS2,
+    double? DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+    double? dragAreaOverMassRateM2KgS,
+    bool? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+    bool? hasDragAreaOverMassRateM2KgS,
+    int? MAXIMUM_TESSERAL_DEGREE,
+    int? maximumTesseralDegree,
+    bool? HAS_MAXIMUM_TESSERAL_DEGREE,
+    bool? hasMaximumTesseralDegree,
+    pcfRadiationPressureFamily? RADIATION_PRESSURE_MODEL,
+    pcfRadiationPressureFamily? radiationPressureModel,
+    pcfGnssSpacecraftBlock? GNSS_BLOCK,
+    pcfGnssSpacecraftBlock? gnssBlock,
+    PCFEcom2ObjectBuilder? ECOM2,
+    pcfEarthRadiationModel? EARTH_RADIATION,
+    pcfEarthRadiationModel? earthRadiation,
+    double? EARTH_RADIATION_RESOLUTION_DEG,
+    double? earthRadiationResolutionDeg,
+    double? EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+    double? earthRadiationAreaOverMassM2Kg,
+    bool? HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+    bool? hasEarthRadiationAreaOverMassM2Kg,
+    pcfOceanTideModel? OCEAN_TIDES,
+    pcfOceanTideModel? oceanTides,
+    int? OCEAN_TIDE_MAXIMUM_DEGREE,
+    int? oceanTideMaximumDegree,
+    int? OCEAN_TIDE_MAXIMUM_ORDER,
+    int? oceanTideMaximumOrder,
+    int? CENTRAL_BODY_NAIF_ID,
+    int? centralBodyNaifId,
+    pcfEphemerisKind? EPHEMERIS_KIND,
+    pcfEphemerisKind? ephemerisKind,
+    evlShadowModel? SHADOW_MODEL,
+    evlShadowModel? shadowModel,
+    pcfWeatherSource? WEATHER_SOURCE,
+    pcfWeatherSource? weatherSource,
+    pcfWeatherExtension? WEATHER_EXTENSION,
+    pcfWeatherExtension? weatherExtension,
+    pcfDensityCorrection? DENSITY_CORRECTION,
+    pcfDensityCorrection? densityCorrection,
+    double? DENSITY_CORRECTION_RELAXATION_HOURS,
+    double? densityCorrectionRelaxationHours,
+    bool? HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
+    bool? hasDensityCorrectionRelaxationHours,
+    pcfNeutralWind? NEUTRAL_WIND,
+    pcfNeutralWind? neutralWind,
+    PCFEmpiricalTermsObjectBuilder? EMPIRICAL_TERMS,
+    PCFEmpiricalTermsObjectBuilder? empiricalTerms,
+  })
+      : _GRAVITY_CHOICE = gravityChoice ?? GRAVITY_CHOICE,
+        _ENABLE_POINT_MASS = enablePointMass ?? ENABLE_POINT_MASS,
+        _GRAVITATIONAL_PARAMETER = gravitationalParameter ?? GRAVITATIONAL_PARAMETER,
+        _ENABLE_J2 = enableJ2 ?? ENABLE_J2,
+        _ENABLE_J3 = enableJ3 ?? ENABLE_J3,
+        _ENABLE_J4 = enableJ4 ?? ENABLE_J4,
+        _ENABLE_HIGHER_ZONALS = enableHigherZonals ?? ENABLE_HIGHER_ZONALS,
+        _MAXIMUM_DEGREE = maximumDegree ?? MAXIMUM_DEGREE,
+        _HAS_MAXIMUM_DEGREE = hasMaximumDegree ?? HAS_MAXIMUM_DEGREE,
+        _MAXIMUM_ORDER = maximumOrder ?? MAXIMUM_ORDER,
+        _HAS_MAXIMUM_ORDER = hasMaximumOrder ?? HAS_MAXIMUM_ORDER,
+        _ENABLE_THIRD_BODY = enableThirdBody ?? ENABLE_THIRD_BODY,
+        _THIRD_BODY_IDS = thirdBodyIds ?? THIRD_BODY_IDS,
+        _ENABLE_SRP = enableSrp ?? ENABLE_SRP,
+        _ENABLE_DRAG = enableDrag ?? ENABLE_DRAG,
+        _INITIAL_MASS_KG = initialMassKg ?? INITIAL_MASS_KG,
+        _AREA_M2 = areaM2 ?? AREA_M2,
+        _REFLECTIVITY_COEFFICIENT = reflectivityCoefficient ?? REFLECTIVITY_COEFFICIENT,
+        _DRAG_COEFFICIENT = dragCoefficient ?? DRAG_COEFFICIENT,
+        _ATMOSPHERE_MODEL = atmosphereModel ?? ATMOSPHERE_MODEL,
+        _WEATHER = WEATHER,
+        _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
+        _SOLID_TIDES = solidTides ?? SOLID_TIDES,
+        _RELATIVITY = RELATIVITY,
+        _IN_TRACK_ACCELERATION_M_S2 = inTrackAccelerationMS2 ?? IN_TRACK_ACCELERATION_M_S2,
+        _HAS_IN_TRACK_ACCELERATION_M_S2 = hasInTrackAccelerationMS2 ?? HAS_IN_TRACK_ACCELERATION_M_S2,
+        _DRAG_AREA_OVER_MASS_RATE_M2_KG_S = dragAreaOverMassRateM2KgS ?? DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+        _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S = hasDragAreaOverMassRateM2KgS ?? HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S,
+        _MAXIMUM_TESSERAL_DEGREE = maximumTesseralDegree ?? MAXIMUM_TESSERAL_DEGREE,
+        _HAS_MAXIMUM_TESSERAL_DEGREE = hasMaximumTesseralDegree ?? HAS_MAXIMUM_TESSERAL_DEGREE,
+        _RADIATION_PRESSURE_MODEL = radiationPressureModel ?? RADIATION_PRESSURE_MODEL,
+        _GNSS_BLOCK = gnssBlock ?? GNSS_BLOCK,
+        _ECOM2 = ECOM2,
+        _EARTH_RADIATION = earthRadiation ?? EARTH_RADIATION,
+        _EARTH_RADIATION_RESOLUTION_DEG = earthRadiationResolutionDeg ?? EARTH_RADIATION_RESOLUTION_DEG,
+        _EARTH_RADIATION_AREA_OVER_MASS_M2_KG = earthRadiationAreaOverMassM2Kg ?? EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+        _HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG = hasEarthRadiationAreaOverMassM2Kg ?? HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG,
+        _OCEAN_TIDES = oceanTides ?? OCEAN_TIDES,
+        _OCEAN_TIDE_MAXIMUM_DEGREE = oceanTideMaximumDegree ?? OCEAN_TIDE_MAXIMUM_DEGREE,
+        _OCEAN_TIDE_MAXIMUM_ORDER = oceanTideMaximumOrder ?? OCEAN_TIDE_MAXIMUM_ORDER,
+        _CENTRAL_BODY_NAIF_ID = centralBodyNaifId ?? CENTRAL_BODY_NAIF_ID,
+        _EPHEMERIS_KIND = ephemerisKind ?? EPHEMERIS_KIND,
+        _SHADOW_MODEL = shadowModel ?? SHADOW_MODEL,
+        _WEATHER_SOURCE = weatherSource ?? WEATHER_SOURCE,
+        _WEATHER_EXTENSION = weatherExtension ?? WEATHER_EXTENSION,
+        _DENSITY_CORRECTION = densityCorrection ?? DENSITY_CORRECTION,
+        _DENSITY_CORRECTION_RELAXATION_HOURS = densityCorrectionRelaxationHours ?? DENSITY_CORRECTION_RELAXATION_HOURS,
+        _HAS_DENSITY_CORRECTION_RELAXATION_HOURS = hasDensityCorrectionRelaxationHours ?? HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
+        _NEUTRAL_WIND = neutralWind ?? NEUTRAL_WIND,
+        _EMPIRICAL_TERMS = empiricalTerms ?? EMPIRICAL_TERMS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? THIRD_BODY_IDSOffset = _THIRD_BODY_IDS == null ? null
+        : fbBuilder.writeListInt32(_THIRD_BODY_IDS!);
+    final int? WEATHEROffset = _WEATHER?.getOrCreateOffset(fbBuilder);
+    final int? EPHEMERIS_SOURCEOffset = _EPHEMERIS_SOURCE == null ? null
+        : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
+    final int? ECOM2Offset = _ECOM2?.getOrCreateOffset(fbBuilder);
+    final int? EMPIRICAL_TERMSOffset = _EMPIRICAL_TERMS?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(50);
+    fbBuilder.addUint8(0, _GRAVITY_CHOICE?.value);
+    fbBuilder.addBool(1, _ENABLE_POINT_MASS);
+    fbBuilder.addFloat64(2, _GRAVITATIONAL_PARAMETER);
+    fbBuilder.addBool(3, _ENABLE_J2);
+    fbBuilder.addBool(4, _ENABLE_J3);
+    fbBuilder.addBool(5, _ENABLE_J4);
+    fbBuilder.addBool(6, _ENABLE_HIGHER_ZONALS);
+    fbBuilder.addUint16(7, _MAXIMUM_DEGREE);
+    fbBuilder.addBool(8, _HAS_MAXIMUM_DEGREE);
+    fbBuilder.addUint16(9, _MAXIMUM_ORDER);
+    fbBuilder.addBool(10, _HAS_MAXIMUM_ORDER);
+    fbBuilder.addBool(11, _ENABLE_THIRD_BODY);
+    fbBuilder.addOffset(12, THIRD_BODY_IDSOffset);
+    fbBuilder.addBool(13, _ENABLE_SRP);
+    fbBuilder.addBool(14, _ENABLE_DRAG);
+    fbBuilder.addFloat64(15, _INITIAL_MASS_KG);
+    fbBuilder.addFloat64(16, _AREA_M2);
+    fbBuilder.addFloat64(17, _REFLECTIVITY_COEFFICIENT);
+    fbBuilder.addFloat64(18, _DRAG_COEFFICIENT);
+    fbBuilder.addUint8(19, _ATMOSPHERE_MODEL?.value);
+    fbBuilder.addOffset(20, WEATHEROffset);
+    fbBuilder.addOffset(21, EPHEMERIS_SOURCEOffset);
+    fbBuilder.addUint8(22, _SOLID_TIDES?.value);
+    fbBuilder.addUint8(23, _RELATIVITY?.value);
+    fbBuilder.addFloat64(24, _IN_TRACK_ACCELERATION_M_S2);
+    fbBuilder.addBool(25, _HAS_IN_TRACK_ACCELERATION_M_S2);
+    fbBuilder.addFloat64(26, _DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    fbBuilder.addBool(27, _HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S);
+    fbBuilder.addUint16(28, _MAXIMUM_TESSERAL_DEGREE);
+    fbBuilder.addBool(29, _HAS_MAXIMUM_TESSERAL_DEGREE);
+    fbBuilder.addUint8(30, _RADIATION_PRESSURE_MODEL?.value);
+    fbBuilder.addUint8(31, _GNSS_BLOCK?.value);
+    fbBuilder.addOffset(32, ECOM2Offset);
+    fbBuilder.addUint8(33, _EARTH_RADIATION?.value);
+    fbBuilder.addFloat64(34, _EARTH_RADIATION_RESOLUTION_DEG);
+    fbBuilder.addFloat64(35, _EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addBool(36, _HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
+    fbBuilder.addUint8(37, _OCEAN_TIDES?.value);
+    fbBuilder.addUint16(38, _OCEAN_TIDE_MAXIMUM_DEGREE);
+    fbBuilder.addUint16(39, _OCEAN_TIDE_MAXIMUM_ORDER);
+    fbBuilder.addInt32(40, _CENTRAL_BODY_NAIF_ID);
+    fbBuilder.addUint8(41, _EPHEMERIS_KIND?.value);
+    fbBuilder.addUint8(42, _SHADOW_MODEL?.value);
+    fbBuilder.addUint8(43, _WEATHER_SOURCE?.value);
+    fbBuilder.addUint8(44, _WEATHER_EXTENSION?.value);
+    fbBuilder.addUint8(45, _DENSITY_CORRECTION?.value);
+    fbBuilder.addFloat64(46, _DENSITY_CORRECTION_RELAXATION_HOURS);
+    fbBuilder.addBool(47, _HAS_DENSITY_CORRECTION_RELAXATION_HOURS);
+    fbBuilder.addUint8(48, _NEUTRAL_WIND?.value);
+    fbBuilder.addOffset(49, EMPIRICAL_TERMSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+///  any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+///  force model, Kepler): the theory, the integrator and its settings, the
+///  forces, the fit policy, the events to locate, maneuver detection, reentry
+///  hand-off, launch priors and the output. A host passes it beside the
+///  request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+///  launch) selects the tables that method reads. An absent table takes the
+///  theory's own defaults; a table or value the selected theory cannot honor is
+///  refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+///  PCFForceModel and their enums, so the runtime wire and the configuration
+///  share one definition of each. Units are in the field names and docs; every
+///  field states its default.
 class PCF {
   PCF._(this._bc, this._bcOffset);
   factory PCF(List<int> bytes) {
@@ -65,35 +3638,40 @@ class PCF {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  double get STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
-  double get stepSize => STEP_SIZE;
-  double get TOLERANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
-  double get MIN_STEP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get minStep => MIN_STEP;
-  double get MAX_STEP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get maxStep => MAX_STEP;
-  int get MAX_ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  int get maxIterations => MAX_ITERATIONS;
-  int get GRAVITY_DEGREE => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get gravityDegree => GRAVITY_DEGREE;
-  int get GRAVITY_ORDER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  int get gravityOrder => GRAVITY_ORDER;
-  int get INTEGRATOR => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 18, 0);
-  int get OUTPUT_FRAME => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get outputFrame => OUTPUT_FRAME;
-  int get FORCE_FLAGS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  int get forceFlags => FORCE_FLAGS;
-  double get DRAG_COEFFICIENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get dragCoefficient => DRAG_COEFFICIENT;
-  double get SRP_COEFFICIENT => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get srpCoefficient => SRP_COEFFICIENT;
-  double get AREA_MASS_RATIO => const fb.Float32Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get areaMassRatio => AREA_MASS_RATIO;
-  List<int>? get RESERVED => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Opaque identifier of this configuration, for provenance. Default empty.
+  String? get CONFIGURATION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get configurationId => CONFIGURATION_ID;
+  ///  Named profile this configuration instantiates, for example "FFM-1".
+  ///  Informational: every value that matters is carried below. Default empty.
+  String? get PROFILE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  The orbit theory. Default UNSPECIFIED (the receiving module's own).
+  pcfTheory get THEORY => pcfTheory.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Integrator and settings. Absent: the theory's own.
+  PCFIntegratorSettings? get INTEGRATOR => PCFIntegratorSettings.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Forces. Absent: the theory's built-in set.
+  PCFForceModel? get FORCES => PCFForceModel.reader.vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+  PCFMeanElementOptions? get MEAN_ELEMENT => PCFMeanElementOptions.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  PCFMeanElementOptions? get meanElement => MEAN_ELEMENT;
+  ///  Beyond-Earth segment sets.
+  PCFSegmentOptions? get SEGMENTS => PCFSegmentOptions.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Fit policy.
+  PCFFitPolicy? get FIT => PCFFitPolicy.reader.vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Events located while integrating. Default empty.
+  List<PCFEventDefinition>? get EVENTS => const fb.ListReader<PCFEventDefinition>(PCFEventDefinition.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Maneuver detection.
+  PCFManeuverDetection? get MANEUVER_DETECTION => PCFManeuverDetection.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  PCFManeuverDetection? get maneuverDetection => MANEUVER_DETECTION;
+  ///  Reentry hand-off and window.
+  PCFReentry? get REENTRY => PCFReentry.reader.vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Launch initialization priors.
+  PCFLaunch? get LAUNCH => PCFLaunch.reader.vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Output states.
+  PCFOutput? get OUTPUT => PCFOutput.reader.vTableGetNullable(_bc, _bcOffset, 28);
 
   @override
   String toString() {
-    return 'PCF{stepSize: ${stepSize}, TOLERANCE: ${TOLERANCE}, minStep: ${minStep}, maxStep: ${maxStep}, maxIterations: ${maxIterations}, gravityDegree: ${gravityDegree}, gravityOrder: ${gravityOrder}, INTEGRATOR: ${INTEGRATOR}, outputFrame: ${outputFrame}, forceFlags: ${forceFlags}, dragCoefficient: ${dragCoefficient}, srpCoefficient: ${srpCoefficient}, areaMassRatio: ${areaMassRatio}, RESERVED: ${RESERVED}}';
+    return 'PCF{configurationId: ${configurationId}, PROFILE: ${PROFILE}, THEORY: ${THEORY}, INTEGRATOR: ${INTEGRATOR}, FORCES: ${FORCES}, meanElement: ${meanElement}, SEGMENTS: ${SEGMENTS}, FIT: ${FIT}, EVENTS: ${EVENTS}, maneuverDetection: ${maneuverDetection}, REENTRY: ${REENTRY}, LAUNCH: ${LAUNCH}, OUTPUT: ${OUTPUT}}';
   }
 }
 
@@ -111,63 +3689,59 @@ class PCFBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(13);
   }
 
-  int addStepSize(double? STEP_SIZE) {
-    fbBuilder.addFloat64(0, STEP_SIZE);
+  int addConfigurationIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addTolerance(double? TOLERANCE) {
-    fbBuilder.addFloat64(1, TOLERANCE);
+  int addProfileOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addMinStep(double? MIN_STEP) {
-    fbBuilder.addFloat64(2, MIN_STEP);
+  int addTheory(pcfTheory? THEORY) {
+    fbBuilder.addUint8(2, THEORY?.value);
     return fbBuilder.offset;
   }
-  int addMaxStep(double? MAX_STEP) {
-    fbBuilder.addFloat64(3, MAX_STEP);
+  int addIntegratorOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addMaxIterations(int? MAX_ITERATIONS) {
-    fbBuilder.addUint32(4, MAX_ITERATIONS);
+  int addForcesOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addGravityDegree(int? GRAVITY_DEGREE) {
-    fbBuilder.addUint16(5, GRAVITY_DEGREE);
+  int addMeanElementOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addGravityOrder(int? GRAVITY_ORDER) {
-    fbBuilder.addUint16(6, GRAVITY_ORDER);
+  int addSegmentsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addIntegrator(int? INTEGRATOR) {
-    fbBuilder.addUint8(7, INTEGRATOR);
+  int addFitOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addOutputFrame(int? OUTPUT_FRAME) {
-    fbBuilder.addUint8(8, OUTPUT_FRAME);
+  int addEventsOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addForceFlags(int? FORCE_FLAGS) {
-    fbBuilder.addUint16(9, FORCE_FLAGS);
+  int addManeuverDetectionOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addDragCoefficient(double? DRAG_COEFFICIENT) {
-    fbBuilder.addFloat32(10, DRAG_COEFFICIENT);
+  int addReentryOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addSrpCoefficient(double? SRP_COEFFICIENT) {
-    fbBuilder.addFloat32(11, SRP_COEFFICIENT);
+  int addLaunchOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addAreaMassRatio(double? AREA_MASS_RATIO) {
-    fbBuilder.addFloat32(12, AREA_MASS_RATIO);
-    return fbBuilder.offset;
-  }
-  int addReservedOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
+  int addOutputOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
 
@@ -177,83 +3751,84 @@ class PCFBuilder {
 }
 
 class PCFObjectBuilder extends fb.ObjectBuilder {
-  final double? _STEP_SIZE;
-  final double? _TOLERANCE;
-  final double? _MIN_STEP;
-  final double? _MAX_STEP;
-  final int? _MAX_ITERATIONS;
-  final int? _GRAVITY_DEGREE;
-  final int? _GRAVITY_ORDER;
-  final int? _INTEGRATOR;
-  final int? _OUTPUT_FRAME;
-  final int? _FORCE_FLAGS;
-  final double? _DRAG_COEFFICIENT;
-  final double? _SRP_COEFFICIENT;
-  final double? _AREA_MASS_RATIO;
-  final List<int>? _RESERVED;
+  final String? _CONFIGURATION_ID;
+  final String? _PROFILE;
+  final pcfTheory? _THEORY;
+  final PCFIntegratorSettingsObjectBuilder? _INTEGRATOR;
+  final PCFForceModelObjectBuilder? _FORCES;
+  final PCFMeanElementOptionsObjectBuilder? _MEAN_ELEMENT;
+  final PCFSegmentOptionsObjectBuilder? _SEGMENTS;
+  final PCFFitPolicyObjectBuilder? _FIT;
+  final List<PCFEventDefinitionObjectBuilder>? _EVENTS;
+  final PCFManeuverDetectionObjectBuilder? _MANEUVER_DETECTION;
+  final PCFReentryObjectBuilder? _REENTRY;
+  final PCFLaunchObjectBuilder? _LAUNCH;
+  final PCFOutputObjectBuilder? _OUTPUT;
 
   PCFObjectBuilder({
-    double? STEP_SIZE,
-    double? stepSize,
-    double? TOLERANCE,
-    double? MIN_STEP,
-    double? minStep,
-    double? MAX_STEP,
-    double? maxStep,
-    int? MAX_ITERATIONS,
-    int? maxIterations,
-    int? GRAVITY_DEGREE,
-    int? gravityDegree,
-    int? GRAVITY_ORDER,
-    int? gravityOrder,
-    int? INTEGRATOR,
-    int? OUTPUT_FRAME,
-    int? outputFrame,
-    int? FORCE_FLAGS,
-    int? forceFlags,
-    double? DRAG_COEFFICIENT,
-    double? dragCoefficient,
-    double? SRP_COEFFICIENT,
-    double? srpCoefficient,
-    double? AREA_MASS_RATIO,
-    double? areaMassRatio,
-    List<int>? RESERVED,
+    String? CONFIGURATION_ID,
+    String? configurationId,
+    String? PROFILE,
+    pcfTheory? THEORY,
+    PCFIntegratorSettingsObjectBuilder? INTEGRATOR,
+    PCFForceModelObjectBuilder? FORCES,
+    PCFMeanElementOptionsObjectBuilder? MEAN_ELEMENT,
+    PCFMeanElementOptionsObjectBuilder? meanElement,
+    PCFSegmentOptionsObjectBuilder? SEGMENTS,
+    PCFFitPolicyObjectBuilder? FIT,
+    List<PCFEventDefinitionObjectBuilder>? EVENTS,
+    PCFManeuverDetectionObjectBuilder? MANEUVER_DETECTION,
+    PCFManeuverDetectionObjectBuilder? maneuverDetection,
+    PCFReentryObjectBuilder? REENTRY,
+    PCFLaunchObjectBuilder? LAUNCH,
+    PCFOutputObjectBuilder? OUTPUT,
   })
-      : _STEP_SIZE = stepSize ?? STEP_SIZE,
-        _TOLERANCE = TOLERANCE,
-        _MIN_STEP = minStep ?? MIN_STEP,
-        _MAX_STEP = maxStep ?? MAX_STEP,
-        _MAX_ITERATIONS = maxIterations ?? MAX_ITERATIONS,
-        _GRAVITY_DEGREE = gravityDegree ?? GRAVITY_DEGREE,
-        _GRAVITY_ORDER = gravityOrder ?? GRAVITY_ORDER,
+      : _CONFIGURATION_ID = configurationId ?? CONFIGURATION_ID,
+        _PROFILE = PROFILE,
+        _THEORY = THEORY,
         _INTEGRATOR = INTEGRATOR,
-        _OUTPUT_FRAME = outputFrame ?? OUTPUT_FRAME,
-        _FORCE_FLAGS = forceFlags ?? FORCE_FLAGS,
-        _DRAG_COEFFICIENT = dragCoefficient ?? DRAG_COEFFICIENT,
-        _SRP_COEFFICIENT = srpCoefficient ?? SRP_COEFFICIENT,
-        _AREA_MASS_RATIO = areaMassRatio ?? AREA_MASS_RATIO,
-        _RESERVED = RESERVED;
+        _FORCES = FORCES,
+        _MEAN_ELEMENT = meanElement ?? MEAN_ELEMENT,
+        _SEGMENTS = SEGMENTS,
+        _FIT = FIT,
+        _EVENTS = EVENTS,
+        _MANEUVER_DETECTION = maneuverDetection ?? MANEUVER_DETECTION,
+        _REENTRY = REENTRY,
+        _LAUNCH = LAUNCH,
+        _OUTPUT = OUTPUT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? RESERVEDOffset = _RESERVED == null ? null
-        : fbBuilder.writeListUint8(_RESERVED!);
-    fbBuilder.startTable(14);
-    fbBuilder.addFloat64(0, _STEP_SIZE);
-    fbBuilder.addFloat64(1, _TOLERANCE);
-    fbBuilder.addFloat64(2, _MIN_STEP);
-    fbBuilder.addFloat64(3, _MAX_STEP);
-    fbBuilder.addUint32(4, _MAX_ITERATIONS);
-    fbBuilder.addUint16(5, _GRAVITY_DEGREE);
-    fbBuilder.addUint16(6, _GRAVITY_ORDER);
-    fbBuilder.addUint8(7, _INTEGRATOR);
-    fbBuilder.addUint8(8, _OUTPUT_FRAME);
-    fbBuilder.addUint16(9, _FORCE_FLAGS);
-    fbBuilder.addFloat32(10, _DRAG_COEFFICIENT);
-    fbBuilder.addFloat32(11, _SRP_COEFFICIENT);
-    fbBuilder.addFloat32(12, _AREA_MASS_RATIO);
-    fbBuilder.addOffset(13, RESERVEDOffset);
+    final int? CONFIGURATION_IDOffset = _CONFIGURATION_ID == null ? null
+        : fbBuilder.writeString(_CONFIGURATION_ID!);
+    final int? PROFILEOffset = _PROFILE == null ? null
+        : fbBuilder.writeString(_PROFILE!);
+    final int? INTEGRATOROffset = _INTEGRATOR?.getOrCreateOffset(fbBuilder);
+    final int? FORCESOffset = _FORCES?.getOrCreateOffset(fbBuilder);
+    final int? MEAN_ELEMENTOffset = _MEAN_ELEMENT?.getOrCreateOffset(fbBuilder);
+    final int? SEGMENTSOffset = _SEGMENTS?.getOrCreateOffset(fbBuilder);
+    final int? FITOffset = _FIT?.getOrCreateOffset(fbBuilder);
+    final int? EVENTSOffset = _EVENTS == null ? null
+        : fbBuilder.writeList(_EVENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MANEUVER_DETECTIONOffset = _MANEUVER_DETECTION?.getOrCreateOffset(fbBuilder);
+    final int? REENTRYOffset = _REENTRY?.getOrCreateOffset(fbBuilder);
+    final int? LAUNCHOffset = _LAUNCH?.getOrCreateOffset(fbBuilder);
+    final int? OUTPUTOffset = _OUTPUT?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(13);
+    fbBuilder.addOffset(0, CONFIGURATION_IDOffset);
+    fbBuilder.addOffset(1, PROFILEOffset);
+    fbBuilder.addUint8(2, _THEORY?.value);
+    fbBuilder.addOffset(3, INTEGRATOROffset);
+    fbBuilder.addOffset(4, FORCESOffset);
+    fbBuilder.addOffset(5, MEAN_ELEMENTOffset);
+    fbBuilder.addOffset(6, SEGMENTSOffset);
+    fbBuilder.addOffset(7, FITOffset);
+    fbBuilder.addOffset(8, EVENTSOffset);
+    fbBuilder.addOffset(9, MANEUVER_DETECTIONOffset);
+    fbBuilder.addOffset(10, REENTRYOffset);
+    fbBuilder.addOffset(11, LAUNCHOffset);
+    fbBuilder.addOffset(12, OUTPUTOffset);
     return fbBuilder.endTable();
   }
 

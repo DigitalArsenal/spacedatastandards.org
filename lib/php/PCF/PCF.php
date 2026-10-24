@@ -6,7 +6,18 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Propagator Configuration
+/// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
+/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
+/// force model, Kepler): the theory, the integrator and its settings, the
+/// forces, the fit policy, the events to locate, maneuver detection, reentry
+/// hand-off, launch priors and the output. A host passes it beside the
+/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
+/// launch) selects the tables that method reads. An absent table takes the
+/// theory's own defaults; a table or value the selected theory cannot honor is
+/// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
+/// PCFForceModel and their enums, so the runtime wire and the configuration
+/// share one definition of each. Units are in the field names and docs; every
+/// field states its default.
 class PCF extends Table
 {
     /**
@@ -41,148 +52,121 @@ class PCF extends Table
         return $this;
     }
 
-    /**
-     * @return double
-     */
-    public function getSTEP_SIZE()
+    /// Opaque identifier of this configuration, for provenance. Default empty.
+    public function getCONFIGURATION_ID()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getTOLERANCE()
+    /// Named profile this configuration instantiates, for example "FFM-1".
+    /// Informational: every value that matters is carried below. Default empty.
+    public function getPROFILE()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The orbit theory. Default UNSPECIFIED (the receiving module's own).
     /**
-     * @return double
+     * @return byte
      */
-    public function getMIN_STEP()
+    public function getTHEORY()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfTheory::UNSPECIFIED;
     }
 
-    /**
-     * @return double
-     */
-    public function getMAX_STEP()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return uint
-     */
-    public function getMAX_ITERATIONS()
-    {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return ushort
-     */
-    public function getGRAVITY_DEGREE()
-    {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return ushort
-     */
-    public function getGRAVITY_ORDER()
-    {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return byte
-     */
+    /// Integrator and settings. Absent: the theory's own.
     public function getINTEGRATOR()
     {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+        $obj = new PCFIntegratorSettings();
+        $o = $this->__offset(10);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// Forces. Absent: the theory's built-in set.
+    public function getFORCES()
+    {
+        $obj = new PCFForceModel();
+        $o = $this->__offset(12);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
+    public function getMEAN_ELEMENT()
+    {
+        $obj = new PCFMeanElementOptions();
+        $o = $this->__offset(14);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Beyond-Earth segment sets.
+    public function getSEGMENTS()
+    {
+        $obj = new PCFSegmentOptions();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Fit policy.
+    public function getFIT()
+    {
+        $obj = new PCFFitPolicy();
+        $o = $this->__offset(18);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Events located while integrating. Default empty.
     /**
-     * @return byte
+     * @returnVectorOffset
      */
-    public function getOUTPUT_FRAME()
+    public function getEVENTS($j)
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return ushort
-     */
-    public function getFORCE_FLAGS()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getDRAG_COEFFICIENT()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getSRP_COEFFICIENT()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return float
-     */
-    public function getAREA_MASS_RATIO()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getFloat($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @param int offset
-     * @return byte
-     */
-    public function getRESERVED($j)
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getByte($this->__vector($o) + $j * 1) : 0;
+        $obj = new PCFEventDefinition();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
      * @return int
      */
-    public function getRESERVEDLength()
+    public function getEVENTSLength()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /**
-     * @return string
-     */
-    public function getRESERVEDBytes()
+    /// Maneuver detection.
+    public function getMANEUVER_DETECTION()
     {
-        return $this->__vector_as_bytes(30);
+        $obj = new PCFManeuverDetection();
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Reentry hand-off and window.
+    public function getREENTRY()
+    {
+        $obj = new PCFReentry();
+        $o = $this->__offset(24);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Launch initialization priors.
+    public function getLAUNCH()
+    {
+        $obj = new PCFLaunch();
+        $o = $this->__offset(26);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Output states.
+    public function getOUTPUT()
+    {
+        $obj = new PCFOutput();
+        $o = $this->__offset(28);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -191,102 +175,51 @@ class PCF extends Table
      */
     public static function startPCF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(13);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCF
      */
-    public static function createPCF(FlatBufferBuilder $builder, $STEP_SIZE, $TOLERANCE, $MIN_STEP, $MAX_STEP, $MAX_ITERATIONS, $GRAVITY_DEGREE, $GRAVITY_ORDER, $INTEGRATOR, $OUTPUT_FRAME, $FORCE_FLAGS, $DRAG_COEFFICIENT, $SRP_COEFFICIENT, $AREA_MASS_RATIO, $RESERVED)
+    public static function createPCF(FlatBufferBuilder $builder, $CONFIGURATION_ID, $PROFILE, $THEORY, $INTEGRATOR, $FORCES, $MEAN_ELEMENT, $SEGMENTS, $FIT, $EVENTS, $MANEUVER_DETECTION, $REENTRY, $LAUNCH, $OUTPUT)
     {
-        $builder->startObject(14);
-        self::addSTEP_SIZE($builder, $STEP_SIZE);
-        self::addTOLERANCE($builder, $TOLERANCE);
-        self::addMIN_STEP($builder, $MIN_STEP);
-        self::addMAX_STEP($builder, $MAX_STEP);
-        self::addMAX_ITERATIONS($builder, $MAX_ITERATIONS);
-        self::addGRAVITY_DEGREE($builder, $GRAVITY_DEGREE);
-        self::addGRAVITY_ORDER($builder, $GRAVITY_ORDER);
+        $builder->startObject(13);
+        self::addCONFIGURATION_ID($builder, $CONFIGURATION_ID);
+        self::addPROFILE($builder, $PROFILE);
+        self::addTHEORY($builder, $THEORY);
         self::addINTEGRATOR($builder, $INTEGRATOR);
-        self::addOUTPUT_FRAME($builder, $OUTPUT_FRAME);
-        self::addFORCE_FLAGS($builder, $FORCE_FLAGS);
-        self::addDRAG_COEFFICIENT($builder, $DRAG_COEFFICIENT);
-        self::addSRP_COEFFICIENT($builder, $SRP_COEFFICIENT);
-        self::addAREA_MASS_RATIO($builder, $AREA_MASS_RATIO);
-        self::addRESERVED($builder, $RESERVED);
+        self::addFORCES($builder, $FORCES);
+        self::addMEAN_ELEMENT($builder, $MEAN_ELEMENT);
+        self::addSEGMENTS($builder, $SEGMENTS);
+        self::addFIT($builder, $FIT);
+        self::addEVENTS($builder, $EVENTS);
+        self::addMANEUVER_DETECTION($builder, $MANEUVER_DETECTION);
+        self::addREENTRY($builder, $REENTRY);
+        self::addLAUNCH($builder, $LAUNCH);
+        self::addOUTPUT($builder, $OUTPUT);
         $o = $builder->endObject();
         return $o;
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param StringOffset
      * @return void
      */
-    public static function addSTEP_SIZE(FlatBufferBuilder $builder, $STEP_SIZE)
+    public static function addCONFIGURATION_ID(FlatBufferBuilder $builder, $CONFIGURATION_ID)
     {
-        $builder->addDoubleX(0, $STEP_SIZE, 0.0);
+        $builder->addOffsetX(0, $CONFIGURATION_ID, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param StringOffset
      * @return void
      */
-    public static function addTOLERANCE(FlatBufferBuilder $builder, $TOLERANCE)
+    public static function addPROFILE(FlatBufferBuilder $builder, $PROFILE)
     {
-        $builder->addDoubleX(1, $TOLERANCE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMIN_STEP(FlatBufferBuilder $builder, $MIN_STEP)
-    {
-        $builder->addDoubleX(2, $MIN_STEP, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMAX_STEP(FlatBufferBuilder $builder, $MAX_STEP)
-    {
-        $builder->addDoubleX(3, $MAX_STEP, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param uint
-     * @return void
-     */
-    public static function addMAX_ITERATIONS(FlatBufferBuilder $builder, $MAX_ITERATIONS)
-    {
-        $builder->addUintX(4, $MAX_ITERATIONS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param ushort
-     * @return void
-     */
-    public static function addGRAVITY_DEGREE(FlatBufferBuilder $builder, $GRAVITY_DEGREE)
-    {
-        $builder->addUshortX(5, $GRAVITY_DEGREE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param ushort
-     * @return void
-     */
-    public static function addGRAVITY_ORDER(FlatBufferBuilder $builder, $GRAVITY_ORDER)
-    {
-        $builder->addUshortX(6, $GRAVITY_ORDER, 0);
+        $builder->addOffsetX(1, $PROFILE, 0);
     }
 
     /**
@@ -294,59 +227,9 @@ class PCF extends Table
      * @param byte
      * @return void
      */
-    public static function addINTEGRATOR(FlatBufferBuilder $builder, $INTEGRATOR)
+    public static function addTHEORY(FlatBufferBuilder $builder, $THEORY)
     {
-        $builder->addByteX(7, $INTEGRATOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param byte
-     * @return void
-     */
-    public static function addOUTPUT_FRAME(FlatBufferBuilder $builder, $OUTPUT_FRAME)
-    {
-        $builder->addByteX(8, $OUTPUT_FRAME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param ushort
-     * @return void
-     */
-    public static function addFORCE_FLAGS(FlatBufferBuilder $builder, $FORCE_FLAGS)
-    {
-        $builder->addUshortX(9, $FORCE_FLAGS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addDRAG_COEFFICIENT(FlatBufferBuilder $builder, $DRAG_COEFFICIENT)
-    {
-        $builder->addFloatX(10, $DRAG_COEFFICIENT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addSRP_COEFFICIENT(FlatBufferBuilder $builder, $SRP_COEFFICIENT)
-    {
-        $builder->addFloatX(11, $SRP_COEFFICIENT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param float
-     * @return void
-     */
-    public static function addAREA_MASS_RATIO(FlatBufferBuilder $builder, $AREA_MASS_RATIO)
-    {
-        $builder->addFloatX(12, $AREA_MASS_RATIO, 0.0);
+        $builder->addByteX(2, $THEORY, 0);
     }
 
     /**
@@ -354,9 +237,59 @@ class PCF extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addRESERVED(FlatBufferBuilder $builder, $RESERVED)
+    public static function addINTEGRATOR(FlatBufferBuilder $builder, $INTEGRATOR)
     {
-        $builder->addOffsetX(13, $RESERVED, 0);
+        $builder->addOffsetX(3, $INTEGRATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFORCES(FlatBufferBuilder $builder, $FORCES)
+    {
+        $builder->addOffsetX(4, $FORCES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMEAN_ELEMENT(FlatBufferBuilder $builder, $MEAN_ELEMENT)
+    {
+        $builder->addOffsetX(5, $MEAN_ELEMENT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSEGMENTS(FlatBufferBuilder $builder, $SEGMENTS)
+    {
+        $builder->addOffsetX(6, $SEGMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addFIT(FlatBufferBuilder $builder, $FIT)
+    {
+        $builder->addOffsetX(7, $FIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEVENTS(FlatBufferBuilder $builder, $EVENTS)
+    {
+        $builder->addOffsetX(8, $EVENTS, 0);
     }
 
     /**
@@ -364,11 +297,11 @@ class PCF extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createRESERVEDVector(FlatBufferBuilder $builder, array $data)
+    public static function createEVENTSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(1, count($data), 1);
+        $builder->startVector(4, count($data), 4);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putByte($data[$i]);
+            $builder->putOffset($data[$i]);
         }
         return $builder->endVector();
     }
@@ -378,9 +311,49 @@ class PCF extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startRESERVEDVector(FlatBufferBuilder $builder, $numElems)
+    public static function startEVENTSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(1, $numElems, 1);
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMANEUVER_DETECTION(FlatBufferBuilder $builder, $MANEUVER_DETECTION)
+    {
+        $builder->addOffsetX(9, $MANEUVER_DETECTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addREENTRY(FlatBufferBuilder $builder, $REENTRY)
+    {
+        $builder->addOffsetX(10, $REENTRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLAUNCH(FlatBufferBuilder $builder, $LAUNCH)
+    {
+        $builder->addOffsetX(11, $LAUNCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addOUTPUT(FlatBufferBuilder $builder, $OUTPUT)
+    {
+        $builder->addOffsetX(12, $OUTPUT, 0);
     }
 
     /**

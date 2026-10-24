@@ -61,8 +61,8 @@ class XMTEpochFitPolicy : Table() {
     /**
      * Force model the trajectories were propagated with.
      */
-    val forceModel : PRWForceConfiguration? get() = forceModel(PRWForceConfiguration())
-    fun forceModel(obj: PRWForceConfiguration) : PRWForceConfiguration? {
+    val forceModel : PCFForceModel? get() = forceModel(PCFForceModel())
+    fun forceModel(obj: PCFForceModel) : PCFForceModel? {
         val o = __offset(8)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -73,8 +73,8 @@ class XMTEpochFitPolicy : Table() {
     /**
      * Integrator settings, when stated.
      */
-    val integrator : PRWIntegratorSettings? get() = integrator(PRWIntegratorSettings())
-    fun integrator(obj: PRWIntegratorSettings) : PRWIntegratorSettings? {
+    val integrator : PCFIntegratorSettings? get() = integrator(PCFIntegratorSettings())
+    fun integrator(obj: PCFIntegratorSettings) : PCFIntegratorSettings? {
         val o = __offset(10)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)

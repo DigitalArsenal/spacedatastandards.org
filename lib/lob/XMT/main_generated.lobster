@@ -1796,13 +1796,13 @@ class XMTEpochFitPolicy : flatbuffers.handle
     def PROPAGATOR_ARTIFACT_SHA256() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
     /// Force model the trajectories were propagated with.
-    def FORCE_MODEL() -> PRWForceConfiguration?:
+    def FORCE_MODEL() -> PCFForceModel?:
         let o = flatbuffers.field_table(buf_, pos_, 8)
-        return if o: PRWForceConfiguration { buf_, o } else: nil
+        return if o: PCFForceModel { buf_, o } else: nil
     /// Integrator settings, when stated.
-    def INTEGRATOR() -> PRWIntegratorSettings?:
+    def INTEGRATOR() -> PCFIntegratorSettings?:
         let o = flatbuffers.field_table(buf_, pos_, 10)
-        return if o: PRWIntegratorSettings { buf_, o } else: nil
+        return if o: PCFIntegratorSettings { buf_, o } else: nil
     /// Known limitations of the force model (human-readable).
     def FORCE_MODEL_LIMITATION() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)

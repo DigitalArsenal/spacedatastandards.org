@@ -15,7 +15,7 @@ class prwDynamicParameter(object):
     DRAG_AREA_OVER_MASS_RATE = 2
     SRP_AREA_OVER_MASS = 3
     IN_TRACK_ACCELERATION = 4
-    # ECOM2 coefficients (PRWEcom2), in their order there.
+    # ECOM2 coefficients (PCFEcom2), in their order there.
     ECOM2_D0 = 5
     ECOM2_Y0 = 6
     ECOM2_B0 = 7

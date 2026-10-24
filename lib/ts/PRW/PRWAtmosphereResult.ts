@@ -5,7 +5,7 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { PRWSpeciesDensity, PRWSpeciesDensityT } from './PRWSpeciesDensity.js';
-import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { pcfAtmosphereFamily } from './pcfAtmosphereFamily.js';
 
 
 export class PRWAtmosphereResult implements flatbuffers.IUnpackableObject<PRWAtmosphereResultT> {
@@ -26,9 +26,9 @@ static getSizePrefixedRootAsPRWAtmosphereResult(bb:flatbuffers.ByteBuffer, obj?:
   return (obj || new PRWAtmosphereResult()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
 }
 
-ATMOSPHERE_MODEL():prwAtmosphereFamily {
+ATMOSPHERE_MODEL():pcfAtmosphereFamily {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : prwAtmosphereFamily.UNSPECIFIED;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfAtmosphereFamily.UNSPECIFIED;
 }
 
 VARIANT():string|null
@@ -101,8 +101,8 @@ static startPRWAtmosphereResult(builder:flatbuffers.Builder) {
   builder.startObject(11);
 }
 
-static addAtmosphereModel(builder:flatbuffers.Builder, ATMOSPHERE_MODEL:prwAtmosphereFamily) {
-  builder.addFieldInt8(0, ATMOSPHERE_MODEL, prwAtmosphereFamily.UNSPECIFIED);
+static addAtmosphereModel(builder:flatbuffers.Builder, ATMOSPHERE_MODEL:pcfAtmosphereFamily) {
+  builder.addFieldInt8(0, ATMOSPHERE_MODEL, pcfAtmosphereFamily.UNSPECIFIED);
 }
 
 static addVariant(builder:flatbuffers.Builder, VARIANTOffset:flatbuffers.Offset) {
@@ -162,7 +162,7 @@ static endPRWAtmosphereResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPRWAtmosphereResult(builder:flatbuffers.Builder, ATMOSPHERE_MODEL:prwAtmosphereFamily, VARIANTOffset:flatbuffers.Offset, ALTITUDE_M:number, DENSITY_KG_M3:number, TEMPERATURE_K:number, HAS_TEMPERATURE_K:boolean, EXOSPHERIC_TEMPERATURE_K:number, HAS_EXOSPHERIC_TEMPERATURE_K:boolean, SCALE_HEIGHT_M:number, HAS_SCALE_HEIGHT_M:boolean, NUMBER_DENSITIESOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPRWAtmosphereResult(builder:flatbuffers.Builder, ATMOSPHERE_MODEL:pcfAtmosphereFamily, VARIANTOffset:flatbuffers.Offset, ALTITUDE_M:number, DENSITY_KG_M3:number, TEMPERATURE_K:number, HAS_TEMPERATURE_K:boolean, EXOSPHERIC_TEMPERATURE_K:number, HAS_EXOSPHERIC_TEMPERATURE_K:boolean, SCALE_HEIGHT_M:number, HAS_SCALE_HEIGHT_M:boolean, NUMBER_DENSITIESOffset:flatbuffers.Offset):flatbuffers.Offset {
   PRWAtmosphereResult.startPRWAtmosphereResult(builder);
   PRWAtmosphereResult.addAtmosphereModel(builder, ATMOSPHERE_MODEL);
   PRWAtmosphereResult.addVariant(builder, VARIANTOffset);
@@ -212,7 +212,7 @@ unpackTo(_o: PRWAtmosphereResultT): void {
 
 export class PRWAtmosphereResultT implements flatbuffers.IGeneratedObject {
 constructor(
-  public ATMOSPHERE_MODEL: prwAtmosphereFamily = prwAtmosphereFamily.UNSPECIFIED,
+  public ATMOSPHERE_MODEL: pcfAtmosphereFamily = pcfAtmosphereFamily.UNSPECIFIED,
   public VARIANT: string|Uint8Array|null = null,
   public ALTITUDE_M: number = 0.0,
   public DENSITY_KG_M3: number = 0.0,

@@ -6,7 +6,10 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Burn Out Vector Message
+# Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+# (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+# kilometers per second (km/s) and time in seconds (s); a producer holding
+# another unit converts before writing.
 class BOV(object):
     __slots__ = ['_tab']
 
@@ -29,6 +32,7 @@ class BOV(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # EFG position, E component, km (11 significant figures).
     # BOV
     def E_COORDINATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +40,7 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # EFG position, F component, km (11 significant figures).
     # BOV
     def F_COORDINATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +48,7 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # EFG position, G component, km (11 significant figures).
     # BOV
     def G_COORDINATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +56,7 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # EFG velocity, E component, km/s (9 significant figures).
     # BOV
     def E_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +64,7 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # EFG velocity, F component, km/s (9 significant figures).
     # BOV
     def F_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +72,7 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # EFG velocity, G component, km/s (9 significant figures).
     # BOV
     def G_DOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +80,7 @@ class BOV(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Epoch time, in ISO 8601 UTC format.
     # BOV
     def EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,6 +88,7 @@ class BOV(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Time from launch, seconds (s), with appropriate precision.
     # BOV
     def TIME_FROM_LAUNCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))

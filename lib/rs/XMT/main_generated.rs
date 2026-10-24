@@ -17,6 +17,8 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 extern crate alloc;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -9036,20 +9038,20 @@ impl<'a> XMTEpochFitPolicy<'a> {
 
     /// Force model the trajectories were propagated with.
     #[inline]
-    pub fn FORCE_MODEL(&self) -> Option<PRWForceConfiguration<'a>> {
+    pub fn FORCE_MODEL(&self) -> Option<PCFForceModel<'a>> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWForceConfiguration>>(XMTEpochFitPolicy::VT_FORCE_MODEL, None)}
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFForceModel>>(XMTEpochFitPolicy::VT_FORCE_MODEL, None)}
     }
 
     /// Integrator settings, when stated.
     #[inline]
-    pub fn INTEGRATOR(&self) -> Option<PRWIntegratorSettings<'a>> {
+    pub fn INTEGRATOR(&self) -> Option<PCFIntegratorSettings<'a>> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWIntegratorSettings>>(XMTEpochFitPolicy::VT_INTEGRATOR, None)}
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFIntegratorSettings>>(XMTEpochFitPolicy::VT_INTEGRATOR, None)}
     }
 
     /// Known limitations of the force model (human-readable).
@@ -9151,8 +9153,8 @@ impl ::flatbuffers::Verifiable for XMTEpochFitPolicy<'_> {
         v.visit_table(pos)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROPAGATOR_ID", Self::VT_PROPAGATOR_ID, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PROPAGATOR_ARTIFACT_SHA256", Self::VT_PROPAGATOR_ARTIFACT_SHA256, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PRWForceConfiguration>>("FORCE_MODEL", Self::VT_FORCE_MODEL, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PRWIntegratorSettings>>("INTEGRATOR", Self::VT_INTEGRATOR, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PCFForceModel>>("FORCE_MODEL", Self::VT_FORCE_MODEL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PCFIntegratorSettings>>("INTEGRATOR", Self::VT_INTEGRATOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FORCE_MODEL_LIMITATION", Self::VT_FORCE_MODEL_LIMITATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("FRAME_TRANSFORMATION_REF", Self::VT_FRAME_TRANSFORMATION_REF, false)?
             .visit_field::<u8>("HOLDOUT_STRIDE", Self::VT_HOLDOUT_STRIDE, false)?
@@ -9171,8 +9173,8 @@ impl ::flatbuffers::Verifiable for XMTEpochFitPolicy<'_> {
 pub struct XMTEpochFitPolicyArgs<'a> {
     pub PROPAGATOR_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PROPAGATOR_ARTIFACT_SHA256: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub FORCE_MODEL: Option<::flatbuffers::WIPOffset<PRWForceConfiguration<'a>>>,
-    pub INTEGRATOR: Option<::flatbuffers::WIPOffset<PRWIntegratorSettings<'a>>>,
+    pub FORCE_MODEL: Option<::flatbuffers::WIPOffset<PCFForceModel<'a>>>,
+    pub INTEGRATOR: Option<::flatbuffers::WIPOffset<PCFIntegratorSettings<'a>>>,
     pub FORCE_MODEL_LIMITATION: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub FRAME_TRANSFORMATION_REF: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub HOLDOUT_STRIDE: u8,
@@ -9224,13 +9226,13 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> XMTEpochFitPolicyBuilder<'a, 
     }
 
     #[inline]
-    pub fn add_FORCE_MODEL(&mut self, FORCE_MODEL: ::flatbuffers::WIPOffset<PRWForceConfiguration<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWForceConfiguration>>(XMTEpochFitPolicy::VT_FORCE_MODEL, FORCE_MODEL);
+    pub fn add_FORCE_MODEL(&mut self, FORCE_MODEL: ::flatbuffers::WIPOffset<PCFForceModel<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFForceModel>>(XMTEpochFitPolicy::VT_FORCE_MODEL, FORCE_MODEL);
     }
 
     #[inline]
-    pub fn add_INTEGRATOR(&mut self, INTEGRATOR: ::flatbuffers::WIPOffset<PRWIntegratorSettings<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWIntegratorSettings>>(XMTEpochFitPolicy::VT_INTEGRATOR, INTEGRATOR);
+    pub fn add_INTEGRATOR(&mut self, INTEGRATOR: ::flatbuffers::WIPOffset<PCFIntegratorSettings<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFIntegratorSettings>>(XMTEpochFitPolicy::VT_INTEGRATOR, INTEGRATOR);
     }
 
     #[inline]
@@ -9325,8 +9327,8 @@ impl ::core::fmt::Debug for XMTEpochFitPolicy<'_> {
 pub struct XMTEpochFitPolicyT {
     pub PROPAGATOR_ID: Option<alloc::string::String>,
     pub PROPAGATOR_ARTIFACT_SHA256: Option<alloc::string::String>,
-    pub FORCE_MODEL: Option<alloc::boxed::Box<PRWForceConfigurationT>>,
-    pub INTEGRATOR: Option<alloc::boxed::Box<PRWIntegratorSettingsT>>,
+    pub FORCE_MODEL: Option<alloc::boxed::Box<PCFForceModelT>>,
+    pub INTEGRATOR: Option<alloc::boxed::Box<PCFIntegratorSettingsT>>,
     pub FORCE_MODEL_LIMITATION: Option<alloc::string::String>,
     pub FRAME_TRANSFORMATION_REF: Option<alloc::string::String>,
     pub HOLDOUT_STRIDE: u8,

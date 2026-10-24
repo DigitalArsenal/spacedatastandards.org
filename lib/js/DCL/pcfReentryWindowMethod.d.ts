@@ -1,0 +1,17 @@
+/**
+ * How the reentry-time window is computed. Append new values only.
+ */
+export declare enum pcfReentryWindowMethod {
+    UNSPECIFIED = 0,
+    /**
+     * First-order propagation of the ballistic and density sigmas through the
+     * remaining life.
+     */
+    LINEAR = 1,
+    /**
+     * The unscented transform over the hand-off state, the ballistic
+     * coefficient and the density level.
+     */
+    UNSCENTED = 2
+}
+//# sourceMappingURL=pcfReentryWindowMethod.d.ts.map

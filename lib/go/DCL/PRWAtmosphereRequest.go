@@ -42,23 +42,23 @@ func (rcv *PRWAtmosphereRequest) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-func (rcv *PRWAtmosphereRequest) ATMOSPHERE_MODEL() prwAtmosphereFamily {
+func (rcv *PRWAtmosphereRequest) ATMOSPHERE_MODEL() pcfAtmosphereFamily {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return prwAtmosphereFamily(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return pcfAtmosphereFamily(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
 	return 1
 }
 
-func (rcv *PRWAtmosphereRequest) AtmosphereModel() prwAtmosphereFamily {
+func (rcv *PRWAtmosphereRequest) AtmosphereModel() pcfAtmosphereFamily {
 	return rcv.ATMOSPHERE_MODEL()
 }
 
-func (rcv *PRWAtmosphereRequest) MutateATMOSPHERE_MODEL(n prwAtmosphereFamily) bool {
+func (rcv *PRWAtmosphereRequest) MutateATMOSPHERE_MODEL(n pcfAtmosphereFamily) bool {
 	return rcv._tab.MutateByteSlot(4, byte(n))
 }
 
-func (rcv *PRWAtmosphereRequest) MutateAtmosphereModel(n prwAtmosphereFamily) bool {
+func (rcv *PRWAtmosphereRequest) MutateAtmosphereModel(n pcfAtmosphereFamily) bool {
 	return rcv.MutateATMOSPHERE_MODEL(n)
 }
 
@@ -258,10 +258,10 @@ func (rcv *PRWAtmosphereRequest) MutateIncludeAnomalousOxygen(n bool) bool {
 func PRWAtmosphereRequestStart(builder *flatbuffers.Builder) {
 	builder.StartObject(11)
 }
-func PRWAtmosphereRequestAddATMOSPHERE_MODEL(builder *flatbuffers.Builder, ATMOSPHERE_MODEL prwAtmosphereFamily) {
+func PRWAtmosphereRequestAddATMOSPHERE_MODEL(builder *flatbuffers.Builder, ATMOSPHERE_MODEL pcfAtmosphereFamily) {
 	builder.PrependByteSlot(0, byte(ATMOSPHERE_MODEL), 1)
 }
-func PRWAtmosphereRequestAddAtmosphereModel(builder *flatbuffers.Builder, ATMOSPHERE_MODEL prwAtmosphereFamily) {
+func PRWAtmosphereRequestAddAtmosphereModel(builder *flatbuffers.Builder, ATMOSPHERE_MODEL pcfAtmosphereFamily) {
 	PRWAtmosphereRequestAddATMOSPHERE_MODEL(builder, ATMOSPHERE_MODEL)
 }
 func PRWAtmosphereRequestAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {

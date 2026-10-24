@@ -381,7 +381,7 @@ func (rcv *PRWResidentState) MutateHasDragAreaOverMassRateM2KgS(n bool) bool {
 	return rcv.MutateHAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S(n)
 }
 
-/// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+/// Constant in-track acceleration, m/s2, as PCFForceModel's.
 func (rcv *PRWResidentState) IN_TRACK_ACCELERATION_M_S2() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -394,7 +394,7 @@ func (rcv *PRWResidentState) InTrackAccelerationMS2() float64 {
 	return rcv.IN_TRACK_ACCELERATION_M_S2()
 }
 
-/// Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+/// Constant in-track acceleration, m/s2, as PCFForceModel's.
 func (rcv *PRWResidentState) MutateIN_TRACK_ACCELERATION_M_S2(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }

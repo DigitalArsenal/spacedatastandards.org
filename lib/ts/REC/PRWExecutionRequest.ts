@@ -4,10 +4,10 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
+import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
 import { PRWFiniteBurn, PRWFiniteBurnT } from './PRWFiniteBurn.js';
-import { PRWForceConfiguration, PRWForceConfigurationT } from './PRWForceConfiguration.js';
 import { PRWImpulse, PRWImpulseT } from './PRWImpulse.js';
-import { PRWIntegratorSettings, PRWIntegratorSettingsT } from './PRWIntegratorSettings.js';
 import { PRWProcessNoise, PRWProcessNoiseT } from './PRWProcessNoise.js';
 import { PRWResidentState, PRWResidentStateT } from './PRWResidentState.js';
 import { PRWStateMatrix, PRWStateMatrixT } from './PRWStateMatrix.js';
@@ -48,14 +48,14 @@ TARGET_EPOCH(obj?:TIMInstant):TIMInstant|null {
   return offset ? (obj || new TIMInstant()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-INTEGRATOR(obj?:PRWIntegratorSettings):PRWIntegratorSettings|null {
+INTEGRATOR(obj?:PCFIntegratorSettings):PCFIntegratorSettings|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? (obj || new PRWIntegratorSettings()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? (obj || new PCFIntegratorSettings()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
-FORCES(obj?:PRWForceConfiguration):PRWForceConfiguration|null {
+FORCES(obj?:PCFForceModel):PCFForceModel|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? (obj || new PRWForceConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+  return offset ? (obj || new PCFForceModel()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 INCLUDE_STM():boolean {
@@ -316,8 +316,8 @@ export class PRWExecutionRequestT implements flatbuffers.IGeneratedObject {
 constructor(
   public INITIAL: PRWResidentStateT|null = null,
   public TARGET_EPOCH: TIMInstantT|null = null,
-  public INTEGRATOR: PRWIntegratorSettingsT|null = null,
-  public FORCES: PRWForceConfigurationT|null = null,
+  public INTEGRATOR: PCFIntegratorSettingsT|null = null,
+  public FORCES: PCFForceModelT|null = null,
   public INCLUDE_STM: boolean = false,
   public STM_TECHNIQUE: prwDerivativeTechnique = prwDerivativeTechnique.ANALYTIC,
   public DENSITY_TREATMENT: prwDensityTreatment = prwDensityTreatment.NEGLECTED,

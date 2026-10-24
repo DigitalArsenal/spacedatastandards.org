@@ -14,7 +14,7 @@ export declare enum prwDynamicParameter {
     SRP_AREA_OVER_MASS = 3,
     IN_TRACK_ACCELERATION = 4,
     /**
-     * ECOM2 coefficients (PRWEcom2), in their order there.
+     * ECOM2 coefficients (PCFEcom2), in their order there.
      */
     ECOM2_D0 = 5,
     ECOM2_Y0 = 6,

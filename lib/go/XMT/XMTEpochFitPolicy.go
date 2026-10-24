@@ -73,12 +73,12 @@ func (rcv *XMTEpochFitPolicy) PropagatorArtifactSha256() []byte {
 
 /// SHA-256 hex digest of the propagator artifact.
 /// Force model the trajectories were propagated with.
-func (rcv *XMTEpochFitPolicy) FORCE_MODEL(obj *PRWForceConfiguration) *PRWForceConfiguration {
+func (rcv *XMTEpochFitPolicy) FORCE_MODEL(obj *PCFForceModel) *PCFForceModel {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(PRWForceConfiguration)
+			obj = new(PCFForceModel)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -86,18 +86,18 @@ func (rcv *XMTEpochFitPolicy) FORCE_MODEL(obj *PRWForceConfiguration) *PRWForceC
 	return nil
 }
 
-func (rcv *XMTEpochFitPolicy) ForceModel(obj *PRWForceConfiguration) *PRWForceConfiguration {
+func (rcv *XMTEpochFitPolicy) ForceModel(obj *PCFForceModel) *PCFForceModel {
 	return rcv.FORCE_MODEL(obj)
 }
 
 /// Force model the trajectories were propagated with.
 /// Integrator settings, when stated.
-func (rcv *XMTEpochFitPolicy) INTEGRATOR(obj *PRWIntegratorSettings) *PRWIntegratorSettings {
+func (rcv *XMTEpochFitPolicy) INTEGRATOR(obj *PCFIntegratorSettings) *PCFIntegratorSettings {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
-			obj = new(PRWIntegratorSettings)
+			obj = new(PCFIntegratorSettings)
 		}
 		obj.Init(rcv._tab.Bytes, x)
 		return obj
@@ -105,7 +105,7 @@ func (rcv *XMTEpochFitPolicy) INTEGRATOR(obj *PRWIntegratorSettings) *PRWIntegra
 	return nil
 }
 
-func (rcv *XMTEpochFitPolicy) Integrator(obj *PRWIntegratorSettings) *PRWIntegratorSettings {
+func (rcv *XMTEpochFitPolicy) Integrator(obj *PCFIntegratorSettings) *PCFIntegratorSettings {
 	return rcv.INTEGRATOR(obj)
 }
 

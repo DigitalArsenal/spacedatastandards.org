@@ -1,6 +1,6 @@
 import * as flatbuffers from 'flatbuffers';
 import { TIMInstant, TIMInstantT } from './TIMInstant.js';
-import { prwAtmosphereFamily } from './prwAtmosphereFamily.js';
+import { pcfAtmosphereFamily } from './pcfAtmosphereFamily.js';
 /**
  * Diagnostic atmosphere request; UTC instant replaces ambiguous DOY/year=0.
  */
@@ -10,7 +10,7 @@ export declare class PRWAtmosphereRequest implements flatbuffers.IUnpackableObje
     __init(i: number, bb: flatbuffers.ByteBuffer): PRWAtmosphereRequest;
     static getRootAsPRWAtmosphereRequest(bb: flatbuffers.ByteBuffer, obj?: PRWAtmosphereRequest): PRWAtmosphereRequest;
     static getSizePrefixedRootAsPRWAtmosphereRequest(bb: flatbuffers.ByteBuffer, obj?: PRWAtmosphereRequest): PRWAtmosphereRequest;
-    ATMOSPHERE_MODEL(): prwAtmosphereFamily;
+    ATMOSPHERE_MODEL(): pcfAtmosphereFamily;
     EPOCH(obj?: TIMInstant): TIMInstant | null;
     ALTITUDE_M(): number;
     LATITUDE_RAD(): number;
@@ -28,7 +28,7 @@ export declare class PRWAtmosphereRequest implements flatbuffers.IUnpackableObje
     AP_INDEX(): number;
     INCLUDE_ANOMALOUS_OXYGEN(): boolean;
     static startPRWAtmosphereRequest(builder: flatbuffers.Builder): void;
-    static addAtmosphereModel(builder: flatbuffers.Builder, ATMOSPHERE_MODEL: prwAtmosphereFamily): void;
+    static addAtmosphereModel(builder: flatbuffers.Builder, ATMOSPHERE_MODEL: pcfAtmosphereFamily): void;
     static addEpoch(builder: flatbuffers.Builder, EPOCHOffset: flatbuffers.Offset): void;
     static addAltitudeM(builder: flatbuffers.Builder, ALTITUDE_M: number): void;
     static addLatitudeRad(builder: flatbuffers.Builder, LATITUDE_RAD: number): void;
@@ -44,7 +44,7 @@ export declare class PRWAtmosphereRequest implements flatbuffers.IUnpackableObje
     unpackTo(_o: PRWAtmosphereRequestT): void;
 }
 export declare class PRWAtmosphereRequestT implements flatbuffers.IGeneratedObject {
-    ATMOSPHERE_MODEL: prwAtmosphereFamily;
+    ATMOSPHERE_MODEL: pcfAtmosphereFamily;
     EPOCH: TIMInstantT | null;
     ALTITUDE_M: number;
     LATITUDE_RAD: number;
@@ -55,7 +55,7 @@ export declare class PRWAtmosphereRequestT implements flatbuffers.IGeneratedObje
     F107_AVERAGE: number;
     AP_INDEX: number;
     INCLUDE_ANOMALOUS_OXYGEN: boolean;
-    constructor(ATMOSPHERE_MODEL?: prwAtmosphereFamily, EPOCH?: TIMInstantT | null, ALTITUDE_M?: number, LATITUDE_RAD?: number, LONGITUDE_RAD?: number, LOCAL_SOLAR_TIME_HOURS?: number, HAS_LOCAL_SOLAR_TIME_HOURS?: boolean, F107?: number, F107_AVERAGE?: number, AP_INDEX?: number, INCLUDE_ANOMALOUS_OXYGEN?: boolean);
+    constructor(ATMOSPHERE_MODEL?: pcfAtmosphereFamily, EPOCH?: TIMInstantT | null, ALTITUDE_M?: number, LATITUDE_RAD?: number, LONGITUDE_RAD?: number, LOCAL_SOLAR_TIME_HOURS?: number, HAS_LOCAL_SOLAR_TIME_HOURS?: boolean, F107?: number, F107_AVERAGE?: number, AP_INDEX?: number, INCLUDE_ANOMALOUS_OXYGEN?: boolean);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWAtmosphereRequest.d.ts.map

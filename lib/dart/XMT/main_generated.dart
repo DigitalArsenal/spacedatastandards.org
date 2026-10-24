@@ -4164,10 +4164,10 @@ class XMTEpochFitPolicy {
   String? get PROPAGATOR_ARTIFACT_SHA256 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get propagatorArtifactSha256 => PROPAGATOR_ARTIFACT_SHA256;
   ///  Force model the trajectories were propagated with.
-  PRWForceConfiguration? get FORCE_MODEL => PRWForceConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  PRWForceConfiguration? get forceModel => FORCE_MODEL;
+  PCFForceModel? get FORCE_MODEL => PCFForceModel.reader.vTableGetNullable(_bc, _bcOffset, 8);
+  PCFForceModel? get forceModel => FORCE_MODEL;
   ///  Integrator settings, when stated.
-  PRWIntegratorSettings? get INTEGRATOR => PRWIntegratorSettings.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  PCFIntegratorSettings? get INTEGRATOR => PCFIntegratorSettings.reader.vTableGetNullable(_bc, _bcOffset, 10);
   ///  Known limitations of the force model (human-readable).
   String? get FORCE_MODEL_LIMITATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
   String? get forceModelLimitation => FORCE_MODEL_LIMITATION;
@@ -4287,8 +4287,8 @@ class XMTEpochFitPolicyBuilder {
 class XMTEpochFitPolicyObjectBuilder extends fb.ObjectBuilder {
   final String? _PROPAGATOR_ID;
   final String? _PROPAGATOR_ARTIFACT_SHA256;
-  final PRWForceConfigurationObjectBuilder? _FORCE_MODEL;
-  final PRWIntegratorSettingsObjectBuilder? _INTEGRATOR;
+  final PCFForceModelObjectBuilder? _FORCE_MODEL;
+  final PCFIntegratorSettingsObjectBuilder? _INTEGRATOR;
   final String? _FORCE_MODEL_LIMITATION;
   final String? _FRAME_TRANSFORMATION_REF;
   final int? _HOLDOUT_STRIDE;
@@ -4305,9 +4305,9 @@ class XMTEpochFitPolicyObjectBuilder extends fb.ObjectBuilder {
     String? propagatorId,
     String? PROPAGATOR_ARTIFACT_SHA256,
     String? propagatorArtifactSha256,
-    PRWForceConfigurationObjectBuilder? FORCE_MODEL,
-    PRWForceConfigurationObjectBuilder? forceModel,
-    PRWIntegratorSettingsObjectBuilder? INTEGRATOR,
+    PCFForceModelObjectBuilder? FORCE_MODEL,
+    PCFForceModelObjectBuilder? forceModel,
+    PCFIntegratorSettingsObjectBuilder? INTEGRATOR,
     String? FORCE_MODEL_LIMITATION,
     String? forceModelLimitation,
     String? FRAME_TRANSFORMATION_REF,

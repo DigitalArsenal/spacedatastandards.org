@@ -4,7 +4,10 @@ extern crate alloc;
 
 pub enum BOVOffset {}
 
-/// Burn Out Vector Message
+/// Burn Out Vector Message: the state of a launch vehicle at burnout, in EFG
+/// (Earth-fixed) coordinates. Position is in kilometers (km), velocity in
+/// kilometers per second (km/s) and time in seconds (s); a producer holding
+/// another unit converts before writing.
 #[derive(Copy, Clone, PartialEq)]
 pub struct BOV<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -74,6 +77,7 @@ impl<'a> BOV<'a> {
         }
     }
 
+    /// EFG position, E component, km (11 significant figures).
     #[inline]
     pub fn E_COORDINATE(&self) -> f64 {
         // Safety:
@@ -82,6 +86,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<f64>(BOV::VT_E_COORDINATE, Some(0.0)).unwrap()}
     }
 
+    /// EFG position, F component, km (11 significant figures).
     #[inline]
     pub fn F_COORDINATE(&self) -> f64 {
         // Safety:
@@ -90,6 +95,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<f64>(BOV::VT_F_COORDINATE, Some(0.0)).unwrap()}
     }
 
+    /// EFG position, G component, km (11 significant figures).
     #[inline]
     pub fn G_COORDINATE(&self) -> f64 {
         // Safety:
@@ -98,6 +104,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<f64>(BOV::VT_G_COORDINATE, Some(0.0)).unwrap()}
     }
 
+    /// EFG velocity, E component, km/s (9 significant figures).
     #[inline]
     pub fn E_DOT(&self) -> f64 {
         // Safety:
@@ -106,6 +113,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<f64>(BOV::VT_E_DOT, Some(0.0)).unwrap()}
     }
 
+    /// EFG velocity, F component, km/s (9 significant figures).
     #[inline]
     pub fn F_DOT(&self) -> f64 {
         // Safety:
@@ -114,6 +122,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<f64>(BOV::VT_F_DOT, Some(0.0)).unwrap()}
     }
 
+    /// EFG velocity, G component, km/s (9 significant figures).
     #[inline]
     pub fn G_DOT(&self) -> f64 {
         // Safety:
@@ -122,6 +131,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<f64>(BOV::VT_G_DOT, Some(0.0)).unwrap()}
     }
 
+    /// Epoch time, in ISO 8601 UTC format.
     #[inline]
     pub fn EPOCH(&self) -> Option<&'a str> {
         // Safety:
@@ -130,6 +140,7 @@ impl<'a> BOV<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(BOV::VT_EPOCH, None)}
     }
 
+    /// Time from launch, seconds (s), with appropriate precision.
     #[inline]
     pub fn TIME_FROM_LAUNCH(&self) -> f64 {
         // Safety:

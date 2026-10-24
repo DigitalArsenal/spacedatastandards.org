@@ -47,7 +47,7 @@ class PRWAtmosphereRequest extends Table
     public function getATMOSPHERE_MODEL()
     {
         $o = $this->__offset(4);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \prwAtmosphereFamily::NRLMSISE00;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfAtmosphereFamily::NRLMSISE00;
     }
 
     public function getEPOCH()

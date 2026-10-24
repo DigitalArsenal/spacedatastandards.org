@@ -1,0 +1,103 @@
+/**
+ * Integration algorithm, shared by $PCF and $PRW (one definition). Values 1 to
+ * 10 are the numbers $PRW has always carried; new values are appended only,
+ * never reordered or reused. A scheme value names the stepping method; a
+ * formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
+ * STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+ * scheme that steps them is the provider's, reported in its result.
+ */
+export declare enum pcfIntegratorAlgorithm {
+    /**
+     * The provider's own algorithm.
+     */
+    UNSPECIFIED = 0,
+    /**
+     * Classical fourth-order Runge-Kutta, fixed step INITIAL_STEP_SECONDS.
+     */
+    RK4 = 1,
+    /**
+     * Runge-Kutta-Fehlberg 4(5) (Fehlberg 1969, NASA TR R-315), adaptive.
+     */
+    RKF45 = 2,
+    /**
+     * Runge-Kutta-Fehlberg 7(8) (Fehlberg 1968, NASA TR R-287), adaptive.
+     */
+    RKF78 = 3,
+    /**
+     * The same Fehlberg 7(8) pair under the name the full force model's catalog
+     * profile uses, adaptive.
+     */
+    RK78 = 4,
+    /**
+     * Prince-Dormand 8(7), thirteen stages, "RK8(7)13M" (Prince and Dormand 1981,
+     * J. Comput. Appl. Math. 7), adaptive.
+     */
+    RKDP87 = 5,
+    /**
+     * Adams-Bashforth-Moulton predictor-corrector multistep.
+     */
+    ABM = 6,
+    /**
+     * Gragg-Bulirsch-Stoer extrapolation.
+     */
+    BS = 7,
+    /**
+     * Cowell's method: Cartesian position and velocity.
+     */
+    COWELL = 8,
+    /**
+     * Encke's method: the deviation from a reference conic.
+     */
+    ENCKE = 9,
+    /**
+     * Variation of parameters in equinoctial elements.
+     */
+    EQUINOCTIAL_VOP = 10,
+    /**
+     * Dormand-Prince 5(4), seven stages (Dormand and Prince 1980, J. Comput.
+     * Appl. Math. 6).
+     */
+    DOPRI5 = 11,
+    /**
+     * Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
+     * (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
+     */
+    RK65_8M = 12,
+    /**
+     * Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
+     */
+    VERNER_98 = 13,
+    /**
+     * Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
+     * (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
+     * acceleration must not depend on velocity, so a provider refuses it with
+     * drag.
+     */
+    RKN12_10 = 14,
+    /**
+     * Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
+     * started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
+     * 52).
+     */
+    GAUSS_JACKSON_8 = 15,
+    /**
+     * Gauss's variational equations in classical Keplerian elements.
+     */
+    GAUSS_VOP = 16,
+    /**
+     * DROMO, the regularized special-perturbation formulation (Pelaez, Hedo and
+     * Rodriguez de Andres 2007, Celest. Mech. Dyn. Astron. 97).
+     */
+    DROMO = 17,
+    /**
+     * Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
+     * and Scheifele 1971, Linear and Regular Celestial Mechanics).
+     */
+    STIEFEL_SCHEIFELE = 18,
+    /**
+     * Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
+     * Solving Ordinary Differential Equations I).
+     */
+    DOPRI853 = 19
+}
+//# sourceMappingURL=pcfIntegratorAlgorithm.d.ts.map

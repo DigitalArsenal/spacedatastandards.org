@@ -168,7 +168,7 @@ class PRWResidentState : Table() {
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
     /**
-     * Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+     * Constant in-track acceleration, m/s2, as PCFForceModel's.
      */
     val inTrackAccelerationMS2 : Double
         get() {

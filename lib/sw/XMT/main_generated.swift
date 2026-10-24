@@ -2281,9 +2281,9 @@ public struct XMTEpochFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public var PROPAGATOR_ARTIFACT_SHA256: String? { let o = _accessor.offset(VT.PROPAGATOR_ARTIFACT_SHA256); return o == 0 ? nil : _accessor.string(at: o) }
   public var PROPAGATOR_ARTIFACT_SHA256SegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PROPAGATOR_ARTIFACT_SHA256) }
   ///  Force model the trajectories were propagated with.
-  public var FORCE_MODEL: PRWForceConfiguration? { let o = _accessor.offset(VT.FORCE_MODEL); return o == 0 ? nil : PRWForceConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var FORCE_MODEL: PCFForceModel? { let o = _accessor.offset(VT.FORCE_MODEL); return o == 0 ? nil : PCFForceModel(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Integrator settings, when stated.
-  public var INTEGRATOR: PRWIntegratorSettings? { let o = _accessor.offset(VT.INTEGRATOR); return o == 0 ? nil : PRWIntegratorSettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public var INTEGRATOR: PCFIntegratorSettings? { let o = _accessor.offset(VT.INTEGRATOR); return o == 0 ? nil : PCFIntegratorSettings(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Known limitations of the force model (human-readable).
   public var FORCE_MODEL_LIMITATION: String? { let o = _accessor.offset(VT.FORCE_MODEL_LIMITATION); return o == 0 ? nil : _accessor.string(at: o) }
   public var FORCE_MODEL_LIMITATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.FORCE_MODEL_LIMITATION) }
@@ -2361,8 +2361,8 @@ public struct XMTEpochFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorIni
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VT.PROPAGATOR_ID, fieldName: "PROPAGATOR_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PROPAGATOR_ARTIFACT_SHA256, fieldName: "PROPAGATOR_ARTIFACT_SHA256", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.FORCE_MODEL, fieldName: "FORCE_MODEL", required: false, type: ForwardOffset<PRWForceConfiguration>.self)
-    try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: false, type: ForwardOffset<PRWIntegratorSettings>.self)
+    try _v.visit(field: VT.FORCE_MODEL, fieldName: "FORCE_MODEL", required: false, type: ForwardOffset<PCFForceModel>.self)
+    try _v.visit(field: VT.INTEGRATOR, fieldName: "INTEGRATOR", required: false, type: ForwardOffset<PCFIntegratorSettings>.self)
     try _v.visit(field: VT.FORCE_MODEL_LIMITATION, fieldName: "FORCE_MODEL_LIMITATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.FRAME_TRANSFORMATION_REF, fieldName: "FRAME_TRANSFORMATION_REF", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.HOLDOUT_STRIDE, fieldName: "HOLDOUT_STRIDE", required: false, type: UInt8.self)

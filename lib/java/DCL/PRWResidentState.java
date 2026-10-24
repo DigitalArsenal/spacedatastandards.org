@@ -79,7 +79,7 @@ public final class PRWResidentState extends com.google.flatbuffers.Table {
    */
   public boolean HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
-   * Constant in-track acceleration, m/s2, as PRWForceConfiguration's.
+   * Constant in-track acceleration, m/s2, as PCFForceModel's.
    */
   public double IN_TRACK_ACCELERATION_M_S2() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
