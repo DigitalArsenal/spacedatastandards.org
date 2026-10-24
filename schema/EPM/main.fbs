@@ -1,5 +1,5 @@
-// Hash: 86662db87a157d42d8af0968b31a3b3cac08de3dace2eadbd4415b198d62bd3f
-// Version: 1.0.9
+// Hash: 140a8020d8f8151e20d8912187f35e53c2c25a013a8e977c59aba441dbdebffd
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -139,8 +139,10 @@ table ChainProof {
 /// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 /// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
 table DomainProof {
-  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-  DOMAIN: string;
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+  /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+  /// breaks the generated C++ accessor of a field named DOMAIN.
+  DNS_DOMAIN: string;
   /// Public key for this proof (hex-encoded)
   PUBLIC_KEY: string;
   /// BIP-32 / SLIP-10 derivation path of the proving key. The signer is the

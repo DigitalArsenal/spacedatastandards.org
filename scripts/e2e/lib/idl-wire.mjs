@@ -248,8 +248,6 @@ export function cppCopySource({ model, root, include, populated }) {
     defs.push(body.join('\n'));
   }
   lines.push(
-    // libc's <math.h> defines DOMAIN, which collides with $EPM's DomainProof.DOMAIN accessors; drop the macro before the generated headers.
-    '#include <flatbuffers/flatbuffers.h>', '#ifdef DOMAIN', '#undef DOMAIN', '#endif',
     `#include "${include}"`,
     '#include <cstdio>', '#include <cstdlib>', '#include <fstream>', '#include <iterator>', '#include <vector>',
     decls.join('\n'), defs.join('\n'),
