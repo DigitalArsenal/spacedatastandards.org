@@ -158,6 +158,18 @@ table lamInsertionOrbit {
   PERIAPSIS_ALTITUDE_UNCERTAINTY_M:double;
   /// One-sigma uncertainty of APOAPSIS_ALTITUDE_M in meters.
   APOAPSIS_ALTITUDE_UNCERTAINTY_M:double;
+  /// One-sigma uncertainty of SEMI_MAJOR_AXIS_M in meters. Meaningful only when
+  /// HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M.
+  SEMI_MAJOR_AXIS_UNCERTAINTY_M:double;
+  /// True when SEMI_MAJOR_AXIS_UNCERTAINTY_M carries a value; false (the
+  /// default) means absent, and a consumer applies its vehicle-class default.
+  HAS_SEMI_MAJOR_AXIS_UNCERTAINTY_M:bool = false;
+  /// One-sigma uncertainty of INCLINATION_DEG in degrees. Meaningful only when
+  /// HAS_INCLINATION_UNCERTAINTY_DEG.
+  INCLINATION_UNCERTAINTY_DEG:double;
+  /// True when INCLINATION_UNCERTAINTY_DEG carries a value; false (the default)
+  /// means absent, and a consumer applies its vehicle-class default.
+  HAS_INCLINATION_UNCERTAINTY_DEG:bool = false;
 }
 
 /// Launch Ascent Message

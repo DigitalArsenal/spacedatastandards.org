@@ -7,8 +7,10 @@
 //   - the C++ and Go programs that copy a buffer field by field through the
 //     GENERATED readers and builders (cppCopySource, goCopySource).
 // Nothing is listed by hand, so a field added to a schema is covered by the
-// next run. Unsupported IDL (unions, structs, fixed arrays) in the populated
-// closure fails loudly instead of being skipped.
+// next run. Unsupported IDL (structs, fixed arrays) in the populated
+// closure fails loudly instead of being skipped. Unions are supported: a union
+// field is built with one arm chosen by `pick` (default: the last), every arm
+// has its copy code, and the field's `<name>_type` travels with it.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -27,7 +29,7 @@ function stripComments(text) {
 
 /** Parse schema/<code>/main.fbs and its transitive includes. */
 export function parseIdl(schemaRoot, code) {
-  const model = { tables: new Map(), enums: new Map(), unsupported: new Map(), root: null };
+  const model = { tables: new Map(), enums: new Map(), unions: new Map(), unsupported: new Map(), root: null };
   const seen = new Set();
   const visit = (file) => {
     const real = path.resolve(file);
@@ -49,8 +51,13 @@ export function parseIdl(schemaRoot, code) {
       }
       model.enums.set(m[1], { name: m[1], base: m[2], flags, members });
     }
-    for (const kind of ['struct', 'union']) {
-      for (const m of text.matchAll(new RegExp(`\\b${kind}\\s+(\\w+)\\s*(?::\\s*\\w+)?\\s*(?:\\([^)]*\\))?\\s*\\{`, 'g'))) model.unsupported.set(m[1], kind);
+    for (const m of text.matchAll(/\bstruct\s+(\w+)\s*(?:\([^)]*\))?\s*\{/g)) model.unsupported.set(m[1], 'struct');
+    for (const m of text.matchAll(/\bunion\s+(\w+)\s*(?::\s*\w+)?\s*(?:\([^)]*\))?\s*\{([^}]*)\}/g)) {
+      const arms = m[2].split(',').map((a) => a.trim()).filter(Boolean).map((a) => {
+        const [name, type] = a.includes(':') ? a.split(':').map((x) => x.trim()) : [a, a];
+        return { name, type };
+      });
+      model.unions.set(m[1], { name: m[1], arms });
     }
     for (const m of text.matchAll(/\btable\s+(\w+)\s*(?:\([^)]*\))?\s*\{([^}]*)\}/g)) {
       const fields = [];
@@ -82,23 +89,32 @@ export function kindOf(model, type) {
   if (type === 'string') return 'string';
   if (model.enums.has(type)) return 'enum';
   if (model.tables.has(type)) return 'table';
+  if (model.unions.has(type)) return 'union';
   if (model.unsupported.has(type)) return model.unsupported.get(type);
   throw new Error(`unknown type ${type}`);
 }
 
-/** Tables reachable from `start`, in discovery order; `stop` tables are listed but not entered. */
-export function closure(model, start, stop = new Set()) {
+/** Which arms of a union field are built: the last by default. */
+export const lastArm = (_table, _field, union) => [union.arms.length - 1];
+/** Every arm of every union (what the copy code must handle). */
+export const allArms = (_table, _field, union) => union.arms.map((_, i) => i);
+
+/** Tables reachable from `start`, in discovery order; `arms(table, field, union)` lists the arm indexes to walk. */
+export function closure(model, start, { arms = lastArm } = {}) {
   const order = [];
   const seen = new Set();
   const walk = (name) => {
     if (seen.has(name)) return;
     seen.add(name);
     order.push(name);
-    if (stop.has(name)) return;
     for (const f of model.tables.get(name).fields) {
       const kind = kindOf(model, f.elem);
       if (kind === 'table') walk(f.elem);
-      else if (kind === 'struct' || kind === 'union') throw new Error(`${name}.${f.name}: ${kind} ${f.elem} is not supported by the round-trip harness`);
+      else if (kind === 'union') {
+        if (f.vector) throw new Error(`${name}.${f.name}: a vector of unions is not supported by the round-trip harness`);
+        const union = model.unions.get(f.elem);
+        for (const i of arms(name, f, union)) walk(union.arms[i].type);
+      } else if (kind === 'struct') throw new Error(`${name}.${f.name}: struct ${f.elem} is not supported by the round-trip harness`);
     }
   };
   walk(start);
@@ -119,7 +135,7 @@ function defaultOf(model, field) {
 }
 
 /** A deterministic, non-default value for every field; `visited` collects the tables built. */
-export function populate(model, M, tableName, visited, seed = { n: 1 }, stack = []) {
+export function populate(model, M, tableName, visited, seed = { n: 1 }, stack = [], pick = lastArm) {
   const T = M[`${tableName}T`];
   if (!T) throw new Error(`generated JS has no ${tableName}T`);
   visited.add(tableName);
@@ -127,10 +143,18 @@ export function populate(model, M, tableName, visited, seed = { n: 1 }, stack = 
   for (const f of model.tables.get(tableName).fields) {
     const k = seed.n++;
     const kind = kindOf(model, f.elem);
+    if (kind === 'union') {
+      if (f.vector) throw new Error(`${tableName}.${f.name}: a vector of unions is not supported`);
+      const union = model.unions.get(f.elem);
+      const [index] = pick(tableName, f, union);
+      out[`${f.name}_type`] = index + 1;
+      out[f.name] = populate(model, M, union.arms[index].type, visited, seed, [...stack, tableName], pick);
+      continue;
+    }
     const one = (i) => {
       if (kind === 'table') {
         if (stack.includes(f.elem)) throw new Error(`table cycle ${[...stack, tableName, f.elem].join(' -> ')}`);
-        return populate(model, M, f.elem, visited, seed, [...stack, tableName]);
+        return populate(model, M, f.elem, visited, seed, [...stack, tableName], pick);
       }
       if (kind === 'string') return `${tableName}.${f.name}·${k}:${i}é`;
       if (kind === 'enum') {
@@ -187,6 +211,14 @@ export function cppCopySource({ model, root, include, populated }) {
       const kind = kindOf(model, f.elem);
       const v = `v_${f.name}`;
       if (kind === 'table' && !known.has(f.elem)) { body.push(`  if (s->${f.name}()) { std::fprintf(stderr, "unpopulated table field ${name}.${f.name} is set\\n"); std::abort(); }`); continue; }
+      if (kind === 'union') {
+        const arms = model.unions.get(f.elem).arms;
+        body.push(`  flatbuffers::Offset<void> ${v} = 0;`, `  switch (s->${f.name}_type()) {`,
+          ...arms.map((a) => `    case ${f.elem}_${a.name}: ${v} = copy_${a.type}(b, s->${f.name}_as_${a.name}()).Union(); break;`),
+          '    default: break;', '  }');
+        adds.push(`  x.add_${f.name}_type(s->${f.name}_type());`, `  if (s->${f.name}()) x.add_${f.name}(${v});`);
+        continue;
+      }
       if (f.vector) {
         if (kind === 'table') {
           body.push(`  flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<${f.elem}>>> ${v} = 0;`, `  if (auto l = s->${f.name}()) { std::vector<flatbuffers::Offset<${f.elem}>> t; for (auto e : *l) t.push_back(copy_${f.elem}(b, e)); ${v} = b.CreateVector(t); }`);
@@ -243,6 +275,14 @@ export function goCopySource({ model, root, pkg, populated }) {
       const add = `${name}Add${f.name}`;
       if (kind === 'table' && !known.has(f.elem)) {
         body.push(f.vector ? `  if s.${f.name}Length() > 0 { panic("unpopulated table field ${name}.${f.name} is set") }` : `  if s.${f.name}(nil) != nil { panic("unpopulated table field ${name}.${f.name} is set") }`);
+        continue;
+      }
+      if (kind === 'union') {
+        const arms = model.unions.get(f.elem).arms;
+        body.push(`  var ${v} flatbuffers.UOffsetT`, '  {', '    var t flatbuffers.Table', `    if s.${f.name}(&t) {`, `      switch s.${f.name}_type() {`,
+          ...arms.map((a) => `      case ${f.elem}${a.name}: var w ${a.type}; w.Init(t.Bytes, t.Pos); ${v} = copy${a.type}(b, &w)`),
+          '      }', '    }', '  }');
+        adds.push(`  ${name}Add${f.name}_type(b, s.${f.name}_type())`, `  if ${v} != 0 { ${add}(b, ${v}) }`);
         continue;
       }
       if (f.vector) {
