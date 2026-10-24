@@ -275,6 +275,17 @@ function fixPhpFloatConstants(source) {
   );
 }
 
+// flatc's PHP generator writes the parameter separator by field position, so a
+// DEPRECATED FIRST field (a retired slot 0) leaves an empty parameter in the
+// create function: `createX(FlatBufferBuilder $builder, , $A, $B)`, a parse
+// error. A deprecated field has no accessor and no parameter, so drop the stray
+// separator. Deprecated fields after the first are generated correctly.
+function fixPhpDeprecatedFirstField(source) {
+  return source
+    .replace(/^(\s*public static function create\w+\(FlatBufferBuilder \$builder), , /gm, "$1, ")
+    .replace(/^(\s*public static function create\w+\(FlatBufferBuilder \$builder), \)/gm, "$1)");
+}
+
 // flatc names a C++ include guard after the file, and every standard's file
 // is main.fbs, so every header shared FLATBUFFERS_GENERATED_MAIN_H_: a header
 // that includes another (SKT -> PHB) skipped the included definitions, and no
@@ -308,7 +319,9 @@ async function writeOutputs(baseDir, outputs, datatype, schemaName) {
       normalizedSource = dedupeSwiftEnumStatics(normalizedSource);
     }
     if (datatype?.ext === "php" && relativePath.endsWith(".php")) {
-      normalizedSource = fixPhpFloatConstants(normalizedSource);
+      normalizedSource = fixPhpDeprecatedFirstField(
+        fixPhpFloatConstants(normalizedSource),
+      );
     }
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, normalizedSource, "utf8");
