@@ -1,5 +1,5 @@
-// Hash: 52cb36e4c6c531e40be8247ba2b24789de85898e149a9715196715f4c3af11e1
-// Version: 1.200.0
+// Hash: e2ea9501f2e1ec6f8159fb9f2111c981f4d69f6be12a27d8eee09440bc92339a
+// Version: 1.200.1
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../FRM/main.fbs";
@@ -26,7 +26,10 @@ enum evlLocatorClass : ubyte {
   /// The generic locator: a condition on any $PCE catalog parameter. Altitude
   /// crossings, latitude crossings and beta-angle limits are this class, not
   /// classes of their own.
-  PARAMETER_CONDITION = 6
+  PARAMETER_CONDITION = 6,
+  /// Passage of the target through a maximum or a minimum of its geocentric
+  /// latitude: the zero of the latitude rate, which no catalog parameter is.
+  LATITUDE_EXTREMUM = 7
 }
 
 /// What was found. Append new values only.
@@ -55,7 +58,11 @@ enum evlEventType : ubyte {
   /// Node crossing with the out-of-plane component decreasing.
   DESCENDING_NODE = 11,
   /// A $PCE parameter condition was attained.
-  CONDITION_SATISFIED = 12
+  CONDITION_SATISFIED = 12,
+  /// Geocentric latitude at a maximum.
+  MAXIMUM_LATITUDE = 13,
+  /// Geocentric latitude at a minimum.
+  MINIMUM_LATITUDE = 14
 }
 
 /// Geometry used to decide whether the target is illuminated. Append new
@@ -244,6 +251,22 @@ table EVLNodeCrossingConfiguration {
 
   REPORT_ASCENDING: bool = true;
   REPORT_DESCENDING: bool = true;
+
+  /// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+  /// it need not be a unit vector. Absent or zero: the pole of those axes, which
+  /// makes the crossings the nodes of its equator. Any other normal is an
+  /// arbitrary plane through the center of the system.
+  PLANE_NORMAL: FRMVector3;
+}
+
+/// Configuration for LATITUDE_EXTREMUM.
+table EVLLatitudeExtremumConfiguration {
+  /// Ephemeris body code the latitude is measured about; the pole is that of
+  /// the request context's axes.
+  CENTRAL_BODY_ID: int;
+
+  REPORT_MAXIMUM: bool = true;
+  REPORT_MINIMUM: bool = true;
 }
 
 /// Configuration for PARAMETER_CONDITION, the generic locator.
@@ -359,6 +382,8 @@ table EVLEventLocationRequest {
   PARAMETER_CONDITION_CONFIGURATION: EVLParameterConditionConfiguration;
 
   TRACE_ID: string;
+
+  LATITUDE_EXTREMUM_CONFIGURATION: EVLLatitudeExtremumConfiguration;
 }
 
 /// The events found, and the interval they were actually searched over.

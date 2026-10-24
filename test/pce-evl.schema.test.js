@@ -238,6 +238,7 @@ describe("PCE parameter catalog and EVL event locator schemas", () => {
         ["APSIDES", 4],
         ["NODE_CROSSING", 5],
         ["PARAMETER_CONDITION", 6],
+        ["LATITUDE_EXTREMUM", 7],
       ],
     );
     const types = idlEnumMembers(evl, "evlEventType");
@@ -257,6 +258,8 @@ describe("PCE parameter catalog and EVL event locator schemas", () => {
         ["ASCENDING_NODE", 10],
         ["DESCENDING_NODE", 11],
         ["CONDITION_SATISFIED", 12],
+        ["MAXIMUM_LATITUDE", 13],
+        ["MINIMUM_LATITUDE", 14],
       ],
     );
     assert.deepEqual(idlFieldNames(evl, "EVL"), ["LOCATION_REQUEST", "EVENT_REPORT"]);
@@ -267,6 +270,7 @@ describe("PCE parameter catalog and EVL event locator schemas", () => {
       "APSIDES_CONFIGURATION",
       "NODE_CROSSING_CONFIGURATION",
       "PARAMETER_CONDITION_CONFIGURATION",
+      "LATITUDE_EXTREMUM_CONFIGURATION",
     ]) {
       assert.ok(
         idlFieldNames(evl, "EVLEventLocationRequest").includes(config),
