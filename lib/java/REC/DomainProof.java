@@ -17,12 +17,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Proves control of a DNS domain by the same HD wallet as the signing key —
- * the EPM-record mirror of the DNS TXT wire form (which is deliberately
- * NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
- * canonical statement is 6 fixed LF-terminated lines prefixed
- * "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
- * SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+ * Proves control of one or more DNS domains by the same HD wallet as the
+ * signing key — the EPM-record mirror of the DNS TXT wire form (which is
+ * deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+ * record). The canonical statement is a fixed layout of LF-terminated lines,
+ * versioned by its first line, that names every domain of DOMAINS, and it
+ * verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+ * precedent) — never by JCS.
  */
 @SuppressWarnings("unused")
 public final class DomainProof extends com.google.flatbuffers.Table {
@@ -32,14 +33,6 @@ public final class DomainProof extends com.google.flatbuffers.Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public DomainProof __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /**
-   * Fully-qualified domain name the proof binds (e.g., "node.example.org").
-   * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-   * breaks the generated C++ accessor of a field named DOMAIN.
-   */
-  public String DNS_DOMAIN() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DNS_DOMAINAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer DNS_DOMAINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
    * Public key for this proof (hex-encoded)
    */
@@ -78,34 +71,46 @@ public final class DomainProof extends com.google.flatbuffers.Table {
   public String ENCODING() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ENCODINGAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer ENCODINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * The fully-qualified domain names the proof binds, one or more, each
+   * lowercase ASCII (internationalized names in punycode), e.g.
+   * ["node.example.org", "node.example.com"]. An empty vector is invalid.
+   * SIGNED_PAYLOAD covers every name, in this order.
+   */
+  public String DOMAINS(int j) { int o = __offset(18); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int DOMAINSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector domainsVector() { return domainsVector(new StringVector()); }
+  public StringVector domainsVector(StringVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createDomainProof(FlatBufferBuilder builder,
-      int DNS_DOMAINOffset,
       int PUBLIC_KEYOffset,
       int KEY_PATHOffset,
       int SIGNATUREOffset,
       int SIGNED_PAYLOADOffset,
       int ALGORITHMOffset,
-      int ENCODINGOffset) {
-    builder.startTable(7);
+      int ENCODINGOffset,
+      int DOMAINSOffset) {
+    builder.startTable(8);
+    DomainProof.addDomains(builder, DOMAINSOffset);
     DomainProof.addEncoding(builder, ENCODINGOffset);
     DomainProof.addAlgorithm(builder, ALGORITHMOffset);
     DomainProof.addSignedPayload(builder, SIGNED_PAYLOADOffset);
     DomainProof.addSignature(builder, SIGNATUREOffset);
     DomainProof.addKeyPath(builder, KEY_PATHOffset);
     DomainProof.addPublicKey(builder, PUBLIC_KEYOffset);
-    DomainProof.addDnsDomain(builder, DNS_DOMAINOffset);
     return DomainProof.endDomainProof(builder);
   }
 
-  public static void startDomainProof(FlatBufferBuilder builder) { builder.startTable(7); }
-  public static void addDnsDomain(FlatBufferBuilder builder, int DNS_DOMAINOffset) { builder.addOffset(0, DNS_DOMAINOffset, 0); }
+  public static void startDomainProof(FlatBufferBuilder builder) { builder.startTable(8); }
   public static void addPublicKey(FlatBufferBuilder builder, int PUBLIC_KEYOffset) { builder.addOffset(1, PUBLIC_KEYOffset, 0); }
   public static void addKeyPath(FlatBufferBuilder builder, int KEY_PATHOffset) { builder.addOffset(2, KEY_PATHOffset, 0); }
   public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(3, SIGNATUREOffset, 0); }
   public static void addSignedPayload(FlatBufferBuilder builder, int SIGNED_PAYLOADOffset) { builder.addOffset(4, SIGNED_PAYLOADOffset, 0); }
   public static void addAlgorithm(FlatBufferBuilder builder, int ALGORITHMOffset) { builder.addOffset(5, ALGORITHMOffset, 0); }
   public static void addEncoding(FlatBufferBuilder builder, int ENCODINGOffset) { builder.addOffset(6, ENCODINGOffset, 0); }
+  public static void addDomains(FlatBufferBuilder builder, int DOMAINSOffset) { builder.addOffset(7, DOMAINSOffset, 0); }
+  public static int createDomainsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startDomainsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endDomainProof(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

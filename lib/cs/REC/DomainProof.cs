@@ -6,12 +6,13 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Proves control of a DNS domain by the same HD wallet as the signing key —
-/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
-/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-/// canonical statement is 6 fixed LF-terminated lines prefixed
-/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+/// Proves control of one or more DNS domains by the same HD wallet as the
+/// signing key — the EPM-record mirror of the DNS TXT wire form (which is
+/// deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+/// record). The canonical statement is a fixed layout of LF-terminated lines,
+/// versioned by its first line, that names every domain of DOMAINS, and it
+/// verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+/// precedent) — never by JCS.
 public struct DomainProof : IFlatbufferObject
 {
   private Table __p;
@@ -22,16 +23,6 @@ public struct DomainProof : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DomainProof __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-  /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-  /// breaks the generated C++ accessor of a field named DOMAIN.
-  public string DNS_DOMAIN { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDNS_DOMAINBytes() { return __p.__vector_as_span<byte>(4, 1); }
-#else
-  public ArraySegment<byte>? GetDNS_DOMAINBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
-  public byte[] GetDNS_DOMAINArray() { return __p.__vector_as_array<byte>(4); }
   /// Public key for this proof (hex-encoded)
   public string PUBLIC_KEY { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -82,34 +73,45 @@ public struct DomainProof : IFlatbufferObject
   public ArraySegment<byte>? GetENCODINGBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetENCODINGArray() { return __p.__vector_as_array<byte>(16); }
+  /// The fully-qualified domain names the proof binds, one or more, each
+  /// lowercase ASCII (internationalized names in punycode), e.g.
+  /// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+  /// SIGNED_PAYLOAD covers every name, in this order.
+  public string DOMAINS(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int DOMAINSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<DomainProof> CreateDomainProof(FlatBufferBuilder builder,
-      StringOffset DNS_DOMAINOffset = default(StringOffset),
       StringOffset PUBLIC_KEYOffset = default(StringOffset),
       StringOffset KEY_PATHOffset = default(StringOffset),
       StringOffset SIGNATUREOffset = default(StringOffset),
       StringOffset SIGNED_PAYLOADOffset = default(StringOffset),
       StringOffset ALGORITHMOffset = default(StringOffset),
-      StringOffset ENCODINGOffset = default(StringOffset)) {
-    builder.StartTable(7);
+      StringOffset ENCODINGOffset = default(StringOffset),
+      VectorOffset DOMAINSOffset = default(VectorOffset)) {
+    builder.StartTable(8);
+    DomainProof.AddDOMAINS(builder, DOMAINSOffset);
     DomainProof.AddENCODING(builder, ENCODINGOffset);
     DomainProof.AddALGORITHM(builder, ALGORITHMOffset);
     DomainProof.AddSIGNED_PAYLOAD(builder, SIGNED_PAYLOADOffset);
     DomainProof.AddSIGNATURE(builder, SIGNATUREOffset);
     DomainProof.AddKEY_PATH(builder, KEY_PATHOffset);
     DomainProof.AddPUBLIC_KEY(builder, PUBLIC_KEYOffset);
-    DomainProof.AddDNS_DOMAIN(builder, DNS_DOMAINOffset);
     return DomainProof.EndDomainProof(builder);
   }
 
-  public static void StartDomainProof(FlatBufferBuilder builder) { builder.StartTable(7); }
-  public static void AddDNS_DOMAIN(FlatBufferBuilder builder, StringOffset DNS_DOMAINOffset) { builder.AddOffset(0, DNS_DOMAINOffset.Value, 0); }
+  public static void StartDomainProof(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddPUBLIC_KEY(FlatBufferBuilder builder, StringOffset PUBLIC_KEYOffset) { builder.AddOffset(1, PUBLIC_KEYOffset.Value, 0); }
   public static void AddKEY_PATH(FlatBufferBuilder builder, StringOffset KEY_PATHOffset) { builder.AddOffset(2, KEY_PATHOffset.Value, 0); }
   public static void AddSIGNATURE(FlatBufferBuilder builder, StringOffset SIGNATUREOffset) { builder.AddOffset(3, SIGNATUREOffset.Value, 0); }
   public static void AddSIGNED_PAYLOAD(FlatBufferBuilder builder, StringOffset SIGNED_PAYLOADOffset) { builder.AddOffset(4, SIGNED_PAYLOADOffset.Value, 0); }
   public static void AddALGORITHM(FlatBufferBuilder builder, StringOffset ALGORITHMOffset) { builder.AddOffset(5, ALGORITHMOffset.Value, 0); }
   public static void AddENCODING(FlatBufferBuilder builder, StringOffset ENCODINGOffset) { builder.AddOffset(6, ENCODINGOffset.Value, 0); }
+  public static void AddDOMAINS(FlatBufferBuilder builder, VectorOffset DOMAINSOffset) { builder.AddOffset(7, DOMAINSOffset.Value, 0); }
+  public static VectorOffset CreateDOMAINSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateDOMAINSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOMAINSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOMAINSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDOMAINSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<DomainProof> EndDomainProof(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DomainProof>(o);
@@ -120,53 +122,59 @@ public struct DomainProof : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(DomainProofT _o) {
-    _o.DNS_DOMAIN = this.DNS_DOMAIN;
     _o.PUBLIC_KEY = this.PUBLIC_KEY;
     _o.KEY_PATH = this.KEY_PATH;
     _o.SIGNATURE = this.SIGNATURE;
     _o.SIGNED_PAYLOAD = this.SIGNED_PAYLOAD;
     _o.ALGORITHM = this.ALGORITHM;
     _o.ENCODING = this.ENCODING;
+    _o.DOMAINS = new List<string>();
+    for (var _j = 0; _j < this.DOMAINSLength; ++_j) {_o.DOMAINS.Add(this.DOMAINS(_j));}
   }
   public static Offset<DomainProof> Pack(FlatBufferBuilder builder, DomainProofT _o) {
     if (_o == null) return default(Offset<DomainProof>);
-    var _DNS_DOMAIN = _o.DNS_DOMAIN == null ? default(StringOffset) : builder.CreateString(_o.DNS_DOMAIN);
     var _PUBLIC_KEY = _o.PUBLIC_KEY == null ? default(StringOffset) : builder.CreateString(_o.PUBLIC_KEY);
     var _KEY_PATH = _o.KEY_PATH == null ? default(StringOffset) : builder.CreateString(_o.KEY_PATH);
     var _SIGNATURE = _o.SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE);
     var _SIGNED_PAYLOAD = _o.SIGNED_PAYLOAD == null ? default(StringOffset) : builder.CreateString(_o.SIGNED_PAYLOAD);
     var _ALGORITHM = _o.ALGORITHM == null ? default(StringOffset) : builder.CreateString(_o.ALGORITHM);
     var _ENCODING = _o.ENCODING == null ? default(StringOffset) : builder.CreateString(_o.ENCODING);
+    var _DOMAINS = default(VectorOffset);
+    if (_o.DOMAINS != null) {
+      var __DOMAINS = new StringOffset[_o.DOMAINS.Count];
+      for (var _j = 0; _j < __DOMAINS.Length; ++_j) { __DOMAINS[_j] = builder.CreateString(_o.DOMAINS[_j]); }
+      _DOMAINS = CreateDOMAINSVector(builder, __DOMAINS);
+    }
     return CreateDomainProof(
       builder,
-      _DNS_DOMAIN,
       _PUBLIC_KEY,
       _KEY_PATH,
       _SIGNATURE,
       _SIGNED_PAYLOAD,
       _ALGORITHM,
-      _ENCODING);
+      _ENCODING,
+      _DOMAINS);
   }
 }
 
 public class DomainProofT
 {
-  public string DNS_DOMAIN { get; set; }
   public string PUBLIC_KEY { get; set; }
   public string KEY_PATH { get; set; }
   public string SIGNATURE { get; set; }
   public string SIGNED_PAYLOAD { get; set; }
   public string ALGORITHM { get; set; }
   public string ENCODING { get; set; }
+  public List<string> DOMAINS { get; set; }
 
   public DomainProofT() {
-    this.DNS_DOMAIN = null;
     this.PUBLIC_KEY = null;
     this.KEY_PATH = null;
     this.SIGNATURE = null;
     this.SIGNED_PAYLOAD = null;
     this.ALGORITHM = null;
     this.ENCODING = null;
+    this.DOMAINS = null;
   }
 }
 
@@ -176,13 +184,13 @@ static public class DomainProofVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*DNS_DOMAIN*/, false)
       && verifier.VerifyString(tablePos, 6 /*PUBLIC_KEY*/, false)
       && verifier.VerifyString(tablePos, 8 /*KEY_PATH*/, false)
       && verifier.VerifyString(tablePos, 10 /*SIGNATURE*/, false)
       && verifier.VerifyString(tablePos, 12 /*SIGNED_PAYLOAD*/, false)
       && verifier.VerifyString(tablePos, 14 /*ALGORITHM*/, false)
       && verifier.VerifyString(tablePos, 16 /*ENCODING*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 18 /*DOMAINS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -6,12 +6,13 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Proves control of a DNS domain by the same HD wallet as the signing key —
-# the EPM-record mirror of the DNS TXT wire form (which is deliberately
-# NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-# canonical statement is 6 fixed LF-terminated lines prefixed
-# "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-# SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+# Proves control of one or more DNS domains by the same HD wallet as the
+# signing key — the EPM-record mirror of the DNS TXT wire form (which is
+# deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+# record). The canonical statement is a fixed layout of LF-terminated lines,
+# versioned by its first line, that names every domain of DOMAINS, and it
+# verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+# precedent) — never by JCS.
 class DomainProof(object):
     __slots__ = ['_tab']
 
@@ -33,16 +34,6 @@ class DomainProof(object):
     # DomainProof
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
-
-    # Fully-qualified domain name the proof binds (e.g., "node.example.org").
-    # Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-    # breaks the generated C++ accessor of a field named DOMAIN.
-    # DomainProof
-    def DNS_DOMAIN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
 
     # Public key for this proof (hex-encoded)
     # DomainProof
@@ -94,17 +85,35 @@ class DomainProof(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # The fully-qualified domain names the proof binds, one or more, each
+    # lowercase ASCII (internationalized names in punycode), e.g.
+    # ["node.example.org", "node.example.com"]. An empty vector is invalid.
+    # SIGNED_PAYLOAD covers every name, in this order.
+    # DomainProof
+    def DOMAINS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # DomainProof
+    def DOMAINSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # DomainProof
+    def DOMAINSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
 def DomainProofStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(8)
 
 def Start(builder):
     DomainProofStart(builder)
-
-def DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN):
-    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DNS_DOMAIN), 0)
-
-def AddDNS_DOMAIN(builder, DNS_DOMAIN):
-    DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN)
 
 def DomainProofAddPUBLIC_KEY(builder, PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY), 0)
@@ -142,33 +151,55 @@ def DomainProofAddENCODING(builder, ENCODING):
 def AddENCODING(builder, ENCODING):
     DomainProofAddENCODING(builder, ENCODING)
 
+def DomainProofAddDOMAINS(builder, DOMAINS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(DOMAINS), 0)
+
+def AddDOMAINS(builder, DOMAINS):
+    DomainProofAddDOMAINS(builder, DOMAINS)
+
+def DomainProofStartDOMAINSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartDOMAINSVector(builder, numElems):
+    return DomainProofStartDOMAINSVector(builder, numElems)
+
+def DomainProofCreateDOMAINSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateDOMAINSVector(builder, data):
+    return DomainProofCreateDOMAINSVector(builder, data)
+
 def DomainProofEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return DomainProofEnd(builder)
 
+try:
+    from typing import List
+except:
+    pass
 
 class DomainProofT(object):
 
     # DomainProofT
     def __init__(
         self,
-        DNS_DOMAIN = None,
         PUBLIC_KEY = None,
         KEY_PATH = None,
         SIGNATURE = None,
         SIGNED_PAYLOAD = None,
         ALGORITHM = None,
         ENCODING = None,
+        DOMAINS = None,
     ):
-        self.DNS_DOMAIN = DNS_DOMAIN  # type: Optional[str]
         self.PUBLIC_KEY = PUBLIC_KEY  # type: Optional[str]
         self.KEY_PATH = KEY_PATH  # type: Optional[str]
         self.SIGNATURE = SIGNATURE  # type: Optional[str]
         self.SIGNED_PAYLOAD = SIGNED_PAYLOAD  # type: Optional[str]
         self.ALGORITHM = ALGORITHM  # type: Optional[str]
         self.ENCODING = ENCODING  # type: Optional[str]
+        self.DOMAINS = DOMAINS  # type: Optional[List[Optional[str]]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -191,18 +222,19 @@ class DomainProofT(object):
     def _UnPack(self, DomainProof):
         if DomainProof is None:
             return
-        self.DNS_DOMAIN = DomainProof.DNS_DOMAIN()
         self.PUBLIC_KEY = DomainProof.PUBLIC_KEY()
         self.KEY_PATH = DomainProof.KEY_PATH()
         self.SIGNATURE = DomainProof.SIGNATURE()
         self.SIGNED_PAYLOAD = DomainProof.SIGNED_PAYLOAD()
         self.ALGORITHM = DomainProof.ALGORITHM()
         self.ENCODING = DomainProof.ENCODING()
+        if not DomainProof.DOMAINSIsNone():
+            self.DOMAINS = []
+            for i in range(DomainProof.DOMAINSLength()):
+                self.DOMAINS.append(DomainProof.DOMAINS(i))
 
     # DomainProofT
     def Pack(self, builder):
-        if self.DNS_DOMAIN is not None:
-            DNS_DOMAIN = builder.CreateString(self.DNS_DOMAIN)
         if self.PUBLIC_KEY is not None:
             PUBLIC_KEY = builder.CreateString(self.PUBLIC_KEY)
         if self.KEY_PATH is not None:
@@ -215,9 +247,15 @@ class DomainProofT(object):
             ALGORITHM = builder.CreateString(self.ALGORITHM)
         if self.ENCODING is not None:
             ENCODING = builder.CreateString(self.ENCODING)
+        if self.DOMAINS is not None:
+            DOMAINSlist = []
+            for i in range(len(self.DOMAINS)):
+                DOMAINSlist.append(builder.CreateString(self.DOMAINS[i]))
+            DomainProofStartDOMAINSVector(builder, len(self.DOMAINS))
+            for i in reversed(range(len(self.DOMAINS))):
+                builder.PrependUOffsetTRelative(DOMAINSlist[i])
+            DOMAINS = builder.EndVector()
         DomainProofStart(builder)
-        if self.DNS_DOMAIN is not None:
-            DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN)
         if self.PUBLIC_KEY is not None:
             DomainProofAddPUBLIC_KEY(builder, PUBLIC_KEY)
         if self.KEY_PATH is not None:
@@ -230,5 +268,7 @@ class DomainProofT(object):
             DomainProofAddALGORITHM(builder, ALGORITHM)
         if self.ENCODING is not None:
             DomainProofAddENCODING(builder, ENCODING)
+        if self.DOMAINS is not None:
+            DomainProofAddDOMAINS(builder, DOMAINS)
         DomainProof = DomainProofEnd(builder)
         return DomainProof

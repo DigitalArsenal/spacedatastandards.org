@@ -6,12 +6,13 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Proves control of a DNS domain by the same HD wallet as the signing key —
-/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
-/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-/// canonical statement is 6 fixed LF-terminated lines prefixed
-/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+/// Proves control of one or more DNS domains by the same HD wallet as the
+/// signing key — the EPM-record mirror of the DNS TXT wire form (which is
+/// deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+/// record). The canonical statement is a fixed layout of LF-terminated lines,
+/// versioned by its first line, that names every domain of DOMAINS, and it
+/// verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+/// precedent) — never by JCS.
 type DomainProof struct {
 	_tab flatbuffers.Table
 }
@@ -47,24 +48,6 @@ func (rcv *DomainProof) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-/// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-/// breaks the generated C++ accessor of a field named DOMAIN.
-func (rcv *DomainProof) DNS_DOMAIN() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *DomainProof) DnsDomain() []byte {
-	return rcv.DNS_DOMAIN()
-}
-
-/// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-/// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-/// breaks the generated C++ accessor of a field named DOMAIN.
 /// Public key for this proof (hex-encoded)
 func (rcv *DomainProof) PUBLIC_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -153,14 +136,41 @@ func (rcv *DomainProof) Encoding() []byte {
 
 /// Signature encoding format. ABSENT means the canonical encoding of
 /// ALGORITHM (raw-ed25519 for ed25519)
+/// The fully-qualified domain names the proof binds, one or more, each
+/// lowercase ASCII (internationalized names in punycode), e.g.
+/// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+/// SIGNED_PAYLOAD covers every name, in this order.
+func (rcv *DomainProof) DOMAINS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+	}
+	return nil
+}
+
+func (rcv *DomainProof) Domains(j int) []byte {
+	return rcv.DOMAINS(j)
+}
+
+func (rcv *DomainProof) DOMAINSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *DomainProof) DomainsLength() int {
+	return rcv.DOMAINSLength()
+}
+
+/// The fully-qualified domain names the proof binds, one or more, each
+/// lowercase ASCII (internationalized names in punycode), e.g.
+/// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+/// SIGNED_PAYLOAD covers every name, in this order.
 func DomainProofStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
-}
-func DomainProofAddDNS_DOMAIN(builder *flatbuffers.Builder, DNS_DOMAIN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DNS_DOMAIN), 0)
-}
-func DomainProofAddDnsDomain(builder *flatbuffers.Builder, DNS_DOMAIN flatbuffers.UOffsetT) {
-	DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN)
+	builder.StartObject(8)
 }
 func DomainProofAddPUBLIC_KEY(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PUBLIC_KEY), 0)
@@ -197,6 +207,18 @@ func DomainProofAddENCODING(builder *flatbuffers.Builder, ENCODING flatbuffers.U
 }
 func DomainProofAddEncoding(builder *flatbuffers.Builder, ENCODING flatbuffers.UOffsetT) {
 	DomainProofAddENCODING(builder, ENCODING)
+}
+func DomainProofAddDOMAINS(builder *flatbuffers.Builder, DOMAINS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(DOMAINS), 0)
+}
+func DomainProofAddDomains(builder *flatbuffers.Builder, DOMAINS flatbuffers.UOffsetT) {
+	DomainProofAddDOMAINS(builder, DOMAINS)
+}
+func DomainProofStartDOMAINSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func DomainProofStartDomainsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return DomainProofStartDOMAINSVector(builder, numElems)
 }
 func DomainProofEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

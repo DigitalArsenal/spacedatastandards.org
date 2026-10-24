@@ -374,12 +374,13 @@ public struct ChainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   }
 }
 
-///  Proves control of a DNS domain by the same HD wallet as the signing key —
-///  the EPM-record mirror of the DNS TXT wire form (which is deliberately
-///  NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-///  canonical statement is 6 fixed LF-terminated lines prefixed
-///  "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-///  SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+///  Proves control of one or more DNS domains by the same HD wallet as the
+///  signing key — the EPM-record mirror of the DNS TXT wire form (which is
+///  deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+///  record). The canonical statement is a fixed layout of LF-terminated lines,
+///  versioned by its first line, that names every domain of DOMAINS, and it
+///  verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+///  precedent) — never by JCS.
 public struct DomainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -392,20 +393,15 @@ public struct DomainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let DNS_DOMAIN: VOffset = 4
     static let PUBLIC_KEY: VOffset = 6
     static let KEY_PATH: VOffset = 8
     static let SIGNATURE: VOffset = 10
     static let SIGNED_PAYLOAD: VOffset = 12
     static let ALGORITHM: VOffset = 14
     static let ENCODING: VOffset = 16
+    static let DOMAINS: VOffset = 18
   }
 
-  ///  Fully-qualified domain name the proof binds (e.g., "node.example.org").
-  ///  Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-  ///  breaks the generated C++ accessor of a field named DOMAIN.
-  public var DNS_DOMAIN: String? { let o = _accessor.offset(VT.DNS_DOMAIN); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DNS_DOMAINSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.DNS_DOMAIN) }
   ///  Public key for this proof (hex-encoded)
   public var PUBLIC_KEY: String? { let o = _accessor.offset(VT.PUBLIC_KEY); return o == 0 ? nil : _accessor.string(at: o) }
   public var PUBLIC_KEYSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.PUBLIC_KEY) }
@@ -426,45 +422,50 @@ public struct DomainProof: FlatBufferVerifiableTable, FlatbuffersVectorInitializ
   ///  ALGORITHM (raw-ed25519 for ed25519)
   public var ENCODING: String? { let o = _accessor.offset(VT.ENCODING); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENCODINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.ENCODING) }
-  public static func startDomainProof(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
-  public static func add(DNS_DOMAIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DNS_DOMAIN, at: VT.DNS_DOMAIN) }
+  ///  The fully-qualified domain names the proof binds, one or more, each
+  ///  lowercase ASCII (internationalized names in punycode), e.g.
+  ///  ["node.example.org", "node.example.com"]. An empty vector is invalid.
+  ///  SIGNED_PAYLOAD covers every name, in this order.
+  public var DOMAINS: FlatbufferVector<String?> { return _accessor.vector(at: VT.DOMAINS, byteSize: 4) }
+  public static func startDomainProof(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
   public static func add(PUBLIC_KEY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PUBLIC_KEY, at: VT.PUBLIC_KEY) }
   public static func add(KEY_PATH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEY_PATH, at: VT.KEY_PATH) }
   public static func add(SIGNATURE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNATURE, at: VT.SIGNATURE) }
   public static func add(SIGNED_PAYLOAD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SIGNED_PAYLOAD, at: VT.SIGNED_PAYLOAD) }
   public static func add(ALGORITHM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ALGORITHM, at: VT.ALGORITHM) }
   public static func add(ENCODING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENCODING, at: VT.ENCODING) }
+  public static func addVectorOf(DOMAINS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DOMAINS, at: VT.DOMAINS) }
   public static func endDomainProof(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createDomainProof(
     _ fbb: inout FlatBufferBuilder,
-    DNS_DOMAINOffset DNS_DOMAIN: Offset = Offset(),
     PUBLIC_KEYOffset PUBLIC_KEY: Offset = Offset(),
     KEY_PATHOffset KEY_PATH: Offset = Offset(),
     SIGNATUREOffset SIGNATURE: Offset = Offset(),
     SIGNED_PAYLOADOffset SIGNED_PAYLOAD: Offset = Offset(),
     ALGORITHMOffset ALGORITHM: Offset = Offset(),
-    ENCODINGOffset ENCODING: Offset = Offset()
+    ENCODINGOffset ENCODING: Offset = Offset(),
+    DOMAINSVectorOffset DOMAINS: Offset = Offset()
   ) -> Offset {
     let __start = DomainProof.startDomainProof(&fbb)
-    DomainProof.add(DNS_DOMAIN: DNS_DOMAIN, &fbb)
     DomainProof.add(PUBLIC_KEY: PUBLIC_KEY, &fbb)
     DomainProof.add(KEY_PATH: KEY_PATH, &fbb)
     DomainProof.add(SIGNATURE: SIGNATURE, &fbb)
     DomainProof.add(SIGNED_PAYLOAD: SIGNED_PAYLOAD, &fbb)
     DomainProof.add(ALGORITHM: ALGORITHM, &fbb)
     DomainProof.add(ENCODING: ENCODING, &fbb)
+    DomainProof.addVectorOf(DOMAINS: DOMAINS, &fbb)
     return DomainProof.endDomainProof(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.DNS_DOMAIN, fieldName: "DNS_DOMAIN", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.PUBLIC_KEY, fieldName: "PUBLIC_KEY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.KEY_PATH, fieldName: "KEY_PATH", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SIGNATURE, fieldName: "SIGNATURE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.SIGNED_PAYLOAD, fieldName: "SIGNED_PAYLOAD", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ALGORITHM, fieldName: "ALGORITHM", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.ENCODING, fieldName: "ENCODING", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.DOMAINS, fieldName: "DOMAINS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

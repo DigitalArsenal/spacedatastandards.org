@@ -6,12 +6,13 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Proves control of a DNS domain by the same HD wallet as the signing key —
-/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
-/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-/// canonical statement is 6 fixed LF-terminated lines prefixed
-/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+/// Proves control of one or more DNS domains by the same HD wallet as the
+/// signing key — the EPM-record mirror of the DNS TXT wire form (which is
+/// deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+/// record). The canonical statement is a fixed layout of LF-terminated lines,
+/// versioned by its first line, that names every domain of DOMAINS, and it
+/// verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+/// precedent) — never by JCS.
 class DomainProof extends Table
 {
     /**
@@ -44,15 +45,6 @@ class DomainProof extends Table
         $this->bb_pos = $_i;
         $this->bb = $_bb;
         return $this;
-    }
-
-    /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-    /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-    /// breaks the generated C++ accessor of a field named DOMAIN.
-    public function getDNS_DOMAIN()
-    {
-        $o = $this->__offset(4);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /// Public key for this proof (hex-encoded)
@@ -99,41 +91,54 @@ class DomainProof extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// The fully-qualified domain names the proof binds, one or more, each
+    /// lowercase ASCII (internationalized names in punycode), e.g.
+    /// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+    /// SIGNED_PAYLOAD covers every name, in this order.
+    /**
+     * @param int offset
+     * @return string
+     */
+    public function getDOMAINS($j)
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDOMAINSLength()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startDomainProof(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DomainProof
      */
-    public static function createDomainProof(FlatBufferBuilder $builder, $DNS_DOMAIN, $PUBLIC_KEY, $KEY_PATH, $SIGNATURE, $SIGNED_PAYLOAD, $ALGORITHM, $ENCODING)
+    public static function createDomainProof(FlatBufferBuilder $builder, $PUBLIC_KEY, $KEY_PATH, $SIGNATURE, $SIGNED_PAYLOAD, $ALGORITHM, $ENCODING, $DOMAINS)
     {
-        $builder->startObject(7);
-        self::addDNS_DOMAIN($builder, $DNS_DOMAIN);
+        $builder->startObject(8);
         self::addPUBLIC_KEY($builder, $PUBLIC_KEY);
         self::addKEY_PATH($builder, $KEY_PATH);
         self::addSIGNATURE($builder, $SIGNATURE);
         self::addSIGNED_PAYLOAD($builder, $SIGNED_PAYLOAD);
         self::addALGORITHM($builder, $ALGORITHM);
         self::addENCODING($builder, $ENCODING);
+        self::addDOMAINS($builder, $DOMAINS);
         $o = $builder->endObject();
         return $o;
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDNS_DOMAIN(FlatBufferBuilder $builder, $DNS_DOMAIN)
-    {
-        $builder->addOffsetX(0, $DNS_DOMAIN, 0);
     }
 
     /**
@@ -194,6 +199,40 @@ class DomainProof extends Table
     public static function addENCODING(FlatBufferBuilder $builder, $ENCODING)
     {
         $builder->addOffsetX(6, $ENCODING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addDOMAINS(FlatBufferBuilder $builder, $DOMAINS)
+    {
+        $builder->addOffsetX(7, $DOMAINS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createDOMAINSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startDOMAINSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

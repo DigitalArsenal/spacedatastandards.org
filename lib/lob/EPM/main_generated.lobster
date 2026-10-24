@@ -263,18 +263,14 @@ struct ChainProofBuilder:
     def end():
         return b_.EndObject()
 
-/// Proves control of a DNS domain by the same HD wallet as the signing key —
-/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
-/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-/// canonical statement is 6 fixed LF-terminated lines prefixed
-/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+/// Proves control of one or more DNS domains by the same HD wallet as the
+/// signing key — the EPM-record mirror of the DNS TXT wire form (which is
+/// deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+/// record). The canonical statement is a fixed layout of LF-terminated lines,
+/// versioned by its first line, that names every domain of DOMAINS, and it
+/// verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+/// precedent) — never by JCS.
 class DomainProof : flatbuffers.handle
-    /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-    /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-    /// breaks the generated C++ accessor of a field named DOMAIN.
-    def DNS_DOMAIN() -> string:
-        return flatbuffers.field_string(buf_, pos_, 4)
     /// Public key for this proof (hex-encoded)
     def PUBLIC_KEY() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
@@ -295,16 +291,21 @@ class DomainProof : flatbuffers.handle
     /// ALGORITHM (raw-ed25519 for ed25519)
     def ENCODING() -> string:
         return flatbuffers.field_string(buf_, pos_, 16)
+    /// The fully-qualified domain names the proof binds, one or more, each
+    /// lowercase ASCII (internationalized names in punycode), e.g.
+    /// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+    /// SIGNED_PAYLOAD covers every name, in this order.
+    def DOMAINS(i:int) -> string:
+        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 4)
+    def DOMAINS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
 
 def GetRootAsDomainProof(buf:string): return DomainProof { buf, flatbuffers.indirect(buf, 0) }
 
 struct DomainProofBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
-        return this
-    def add_DNS_DOMAIN(DNS_DOMAIN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, DNS_DOMAIN)
+        b_.StartObject(8)
         return this
     def add_PUBLIC_KEY(PUBLIC_KEY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, PUBLIC_KEY)
@@ -324,8 +325,18 @@ struct DomainProofBuilder:
     def add_ENCODING(ENCODING:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, ENCODING)
         return this
+    def add_DOMAINS(DOMAINS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, DOMAINS)
+        return this
     def end():
         return b_.EndObject()
+
+def DomainProofStartDOMAINSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def DomainProofCreateDOMAINSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
 
 /// Entity Profile Message
 class EPM : flatbuffers.handle

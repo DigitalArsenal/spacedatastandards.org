@@ -17,12 +17,13 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Proves control of a DNS domain by the same HD wallet as the signing key —
- * the EPM-record mirror of the DNS TXT wire form (which is deliberately
- * NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
- * canonical statement is 6 fixed LF-terminated lines prefixed
- * "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
- * SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+ * Proves control of one or more DNS domains by the same HD wallet as the
+ * signing key — the EPM-record mirror of the DNS TXT wire form (which is
+ * deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+ * record). The canonical statement is a fixed layout of LF-terminated lines,
+ * versioned by its first line, that names every domain of DOMAINS, and it
+ * verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+ * precedent) — never by JCS.
  */
 @Suppress("unused")
 class DomainProof : Table() {
@@ -34,22 +35,6 @@ class DomainProof : Table() {
         __init(_i, _bb)
         return this
     }
-    /**
-     * Fully-qualified domain name the proof binds (e.g., "node.example.org").
-     * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-     * breaks the generated C++ accessor of a field named DOMAIN.
-     */
-    val dnsDomain : String?
-        get() {
-            val o = __offset(4)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val dnsDomainAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
-    fun dnsDomainInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Public key for this proof (hex-encoded)
      */
@@ -136,6 +121,24 @@ class DomainProof : Table() {
         }
     val encodingAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
     fun encodingInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * The fully-qualified domain names the proof binds, one or more, each
+     * lowercase ASCII (internationalized names in punycode), e.g.
+     * ["node.example.org", "node.example.com"]. An empty vector is invalid.
+     * SIGNED_PAYLOAD covers every name, in this order.
+     */
+    fun domains(j: Int) : String? {
+        val o = __offset(18)
+        return if (o != 0) {
+            __string(__vector(o) + j * 4)
+        } else {
+            null
+        }
+    }
+    val domainsLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsDomainProof(_bb: ByteBuffer): DomainProof = getRootAsDomainProof(_bb, DomainProof())
@@ -143,25 +146,33 @@ class DomainProof : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDomainProof(builder: FlatBufferBuilder, dnsDomainOffset: Int, publicKeyOffset: Int, keyPathOffset: Int, signatureOffset: Int, signedPayloadOffset: Int, algorithmOffset: Int, encodingOffset: Int) : Int {
-            builder.startTable(7)
+        fun createDomainProof(builder: FlatBufferBuilder, publicKeyOffset: Int, keyPathOffset: Int, signatureOffset: Int, signedPayloadOffset: Int, algorithmOffset: Int, encodingOffset: Int, domainsOffset: Int) : Int {
+            builder.startTable(8)
+            addDOMAINS(builder, domainsOffset)
             addENCODING(builder, encodingOffset)
             addALGORITHM(builder, algorithmOffset)
             addSIGNEDPAYLOAD(builder, signedPayloadOffset)
             addSIGNATURE(builder, signatureOffset)
             addKEYPATH(builder, keyPathOffset)
             addPUBLICKEY(builder, publicKeyOffset)
-            addDNSDOMAIN(builder, dnsDomainOffset)
             return endDomainProof(builder)
         }
-        fun startDomainProof(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addDNSDOMAIN(builder: FlatBufferBuilder, dnsDomain: Int) = builder.addOffset(0, dnsDomain, 0)
+        fun startDomainProof(builder: FlatBufferBuilder) = builder.startTable(8)
         fun addPUBLICKEY(builder: FlatBufferBuilder, publicKey: Int) = builder.addOffset(1, publicKey, 0)
         fun addKEYPATH(builder: FlatBufferBuilder, keyPath: Int) = builder.addOffset(2, keyPath, 0)
         fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(3, signature, 0)
         fun addSIGNEDPAYLOAD(builder: FlatBufferBuilder, signedPayload: Int) = builder.addOffset(4, signedPayload, 0)
         fun addALGORITHM(builder: FlatBufferBuilder, algorithm: Int) = builder.addOffset(5, algorithm, 0)
         fun addENCODING(builder: FlatBufferBuilder, encoding: Int) = builder.addOffset(6, encoding, 0)
+        fun addDOMAINS(builder: FlatBufferBuilder, domains: Int) = builder.addOffset(7, domains, 0)
+        fun createDomainsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startDomainsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endDomainProof(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

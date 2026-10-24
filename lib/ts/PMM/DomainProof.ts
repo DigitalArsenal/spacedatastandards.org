@@ -7,12 +7,13 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * Proves control of a DNS domain by the same HD wallet as the signing key —
- * the EPM-record mirror of the DNS TXT wire form (which is deliberately
- * NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
- * canonical statement is 6 fixed LF-terminated lines prefixed
- * "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
- * SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+ * Proves control of one or more DNS domains by the same HD wallet as the
+ * signing key — the EPM-record mirror of the DNS TXT wire form (which is
+ * deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+ * record). The canonical statement is a fixed layout of LF-terminated lines,
+ * versioned by its first line, that names every domain of DOMAINS, and it
+ * verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+ * precedent) — never by JCS.
  */
 export class DomainProof implements flatbuffers.IUnpackableObject<DomainProofT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -30,18 +31,6 @@ static getRootAsDomainProof(bb:flatbuffers.ByteBuffer, obj?:DomainProof):DomainP
 static getSizePrefixedRootAsDomainProof(bb:flatbuffers.ByteBuffer, obj?:DomainProof):DomainProof {
   bb.setPosition(bb.position() + flatbuffers.SIZE_PREFIX_LENGTH);
   return (obj || new DomainProof()).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-}
-
-/**
- * Fully-qualified domain name the proof binds (e.g., "node.example.org").
- * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
- * breaks the generated C++ accessor of a field named DOMAIN.
- */
-DNS_DOMAIN():string|null
-DNS_DOMAIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DNS_DOMAIN(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 /**
@@ -106,12 +95,26 @@ ENCODING(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-static startDomainProof(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+/**
+ * The fully-qualified domain names the proof binds, one or more, each
+ * lowercase ASCII (internationalized names in punycode), e.g.
+ * ["node.example.org", "node.example.com"]. An empty vector is invalid.
+ * SIGNED_PAYLOAD covers every name, in this order.
+ */
+DOMAINS(index: number):string
+DOMAINS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+DOMAINS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
-static addDnsDomain(builder:flatbuffers.Builder, DNS_DOMAINOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, DNS_DOMAINOffset, 0);
+domainsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+static startDomainProof(builder:flatbuffers.Builder) {
+  builder.startObject(8);
 }
 
 static addPublicKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset) {
@@ -138,76 +141,92 @@ static addEncoding(builder:flatbuffers.Builder, ENCODINGOffset:flatbuffers.Offse
   builder.addFieldOffset(6, ENCODINGOffset, 0);
 }
 
+static addDomains(builder:flatbuffers.Builder, DOMAINSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, DOMAINSOffset, 0);
+}
+
+static createDomainsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startDomainsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endDomainProof(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createDomainProof(builder:flatbuffers.Builder, DNS_DOMAINOffset:flatbuffers.Offset, PUBLIC_KEYOffset:flatbuffers.Offset, KEY_PATHOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset, SIGNED_PAYLOADOffset:flatbuffers.Offset, ALGORITHMOffset:flatbuffers.Offset, ENCODINGOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDomainProof(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset, KEY_PATHOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset, SIGNED_PAYLOADOffset:flatbuffers.Offset, ALGORITHMOffset:flatbuffers.Offset, ENCODINGOffset:flatbuffers.Offset, DOMAINSOffset:flatbuffers.Offset):flatbuffers.Offset {
   DomainProof.startDomainProof(builder);
-  DomainProof.addDnsDomain(builder, DNS_DOMAINOffset);
   DomainProof.addPublicKey(builder, PUBLIC_KEYOffset);
   DomainProof.addKeyPath(builder, KEY_PATHOffset);
   DomainProof.addSignature(builder, SIGNATUREOffset);
   DomainProof.addSignedPayload(builder, SIGNED_PAYLOADOffset);
   DomainProof.addAlgorithm(builder, ALGORITHMOffset);
   DomainProof.addEncoding(builder, ENCODINGOffset);
+  DomainProof.addDomains(builder, DOMAINSOffset);
   return DomainProof.endDomainProof(builder);
 }
 
 unpack(): DomainProofT {
   return new DomainProofT(
-    this.DNS_DOMAIN(),
     this.PUBLIC_KEY(),
     this.KEY_PATH(),
     this.SIGNATURE(),
     this.SIGNED_PAYLOAD(),
     this.ALGORITHM(),
-    this.ENCODING()
+    this.ENCODING(),
+    this.bb!.createScalarList<string>(this.DOMAINS.bind(this), this.domainsLength())
   );
 }
 
 
 unpackTo(_o: DomainProofT): void {
-  _o.DNS_DOMAIN = this.DNS_DOMAIN();
   _o.PUBLIC_KEY = this.PUBLIC_KEY();
   _o.KEY_PATH = this.KEY_PATH();
   _o.SIGNATURE = this.SIGNATURE();
   _o.SIGNED_PAYLOAD = this.SIGNED_PAYLOAD();
   _o.ALGORITHM = this.ALGORITHM();
   _o.ENCODING = this.ENCODING();
+  _o.DOMAINS = this.bb!.createScalarList<string>(this.DOMAINS.bind(this), this.domainsLength());
 }
 }
 
 export class DomainProofT implements flatbuffers.IGeneratedObject {
 constructor(
-  public DNS_DOMAIN: string|Uint8Array|null = null,
   public PUBLIC_KEY: string|Uint8Array|null = null,
   public KEY_PATH: string|Uint8Array|null = null,
   public SIGNATURE: string|Uint8Array|null = null,
   public SIGNED_PAYLOAD: string|Uint8Array|null = null,
   public ALGORITHM: string|Uint8Array|null = null,
-  public ENCODING: string|Uint8Array|null = null
+  public ENCODING: string|Uint8Array|null = null,
+  public DOMAINS: (string)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const DNS_DOMAIN = (this.DNS_DOMAIN !== null ? builder.createString(this.DNS_DOMAIN!) : 0);
   const PUBLIC_KEY = (this.PUBLIC_KEY !== null ? builder.createString(this.PUBLIC_KEY!) : 0);
   const KEY_PATH = (this.KEY_PATH !== null ? builder.createString(this.KEY_PATH!) : 0);
   const SIGNATURE = (this.SIGNATURE !== null ? builder.createString(this.SIGNATURE!) : 0);
   const SIGNED_PAYLOAD = (this.SIGNED_PAYLOAD !== null ? builder.createString(this.SIGNED_PAYLOAD!) : 0);
   const ALGORITHM = (this.ALGORITHM !== null ? builder.createString(this.ALGORITHM!) : 0);
   const ENCODING = (this.ENCODING !== null ? builder.createString(this.ENCODING!) : 0);
+  const DOMAINS = DomainProof.createDomainsVector(builder, builder.createObjectOffsetList(this.DOMAINS));
 
   return DomainProof.createDomainProof(builder,
-    DNS_DOMAIN,
     PUBLIC_KEY,
     KEY_PATH,
     SIGNATURE,
     SIGNED_PAYLOAD,
     ALGORITHM,
-    ENCODING
+    ENCODING,
+    DOMAINS
   );
 }
 }

@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.265.0+1792874245672",
+  version: "1.266.0+1792877975401",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: a8335b1487de6e1252c5814f3238ab1e9737b25327be1a593dfb6dd3777f9633
@@ -5767,8 +5767,8 @@ file_identifier "$OPM";`,
       ]
     },
     EPM: {
-      IDL: `// Hash: 140a8020d8f8151e20d8912187f35e53c2c25a013a8e977c59aba441dbdebffd
-// Version: 1.0.10
+      IDL: `// Hash: 04798b759ecb7bc40ae3dda1d12dcbef718395ae9e523340bb5caab941697630
+// Version: 1.0.11
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -5901,17 +5901,19 @@ table ChainProof {
   ENCODING: string;
 }
 
-/// Proves control of a DNS domain by the same HD wallet as the signing key \u2014
-/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
-/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-/// canonical statement is 6 fixed LF-terminated lines prefixed
-/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-/// SIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.
+/// Proves control of one or more DNS domains by the same HD wallet as the
+/// signing key \u2014 the EPM-record mirror of the DNS TXT wire form (which is
+/// deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+/// record). The canonical statement is a fixed layout of LF-terminated lines,
+/// versioned by its first line, that names every domain of DOMAINS, and it
+/// verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+/// precedent) \u2014 never by JCS.
 table DomainProof {
-  /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-  /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-  /// breaks the generated C++ accessor of a field named DOMAIN.
-  DNS_DOMAIN: string;
+  /// Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0
+  /// and earlier (DOMAIN) carry one domain string here. The slot is deprecated
+  /// in place \u2014 never retyped, renamed or reused \u2014 so those buffers still
+  /// decode; generated code has no accessor for it. Read DOMAINS.
+  DNS_DOMAIN: string (deprecated);
   /// Public key for this proof (hex-encoded)
   PUBLIC_KEY: string;
   /// BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
@@ -5926,6 +5928,11 @@ table DomainProof {
   /// Signature encoding format. ABSENT means the canonical encoding of
   /// ALGORITHM (raw-ed25519 for ed25519)
   ENCODING: string;
+  /// The fully-qualified domain names the proof binds, one or more, each
+  /// lowercase ASCII (internationalized names in punycode), e.g.
+  /// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+  /// SIGNED_PAYLOAD covers every name, in this order.
+  DOMAINS: [string];
 }
 
 /// Entity Profile Message
@@ -44955,13 +44962,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -44986,6 +44992,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -59520,13 +59533,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -59551,6 +59563,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -91091,13 +91110,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -91122,6 +91140,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -111132,13 +111157,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -111163,6 +111187,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -150449,13 +150480,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -150480,6 +150510,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -248839,13 +248876,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -248870,6 +248906,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -267560,13 +267603,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -267591,6 +267633,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -277910,13 +277959,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -277941,6 +277989,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -294266,13 +294321,12 @@ compressed). Nothing hashes the payload before the protocol hash.`
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS."
             },
             PUBLIC_KEY: {
               type: "string",
@@ -294297,6 +294351,13 @@ breaks the generated C++ accessor of a field named DOMAIN.`
             ENCODING: {
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.'
             }
           },
           additionalProperties: false
@@ -362399,13 +362460,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -362437,6 +362497,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -393860,13 +393928,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -393898,6 +393965,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -479512,13 +479587,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -479550,6 +479624,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -520293,13 +520375,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -520331,6 +520412,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -611444,13 +611533,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -611482,6 +611570,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -804993,13 +805089,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -805031,6 +805126,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -843220,13 +843323,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -843258,6 +843360,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -871072,13 +871182,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -871110,6 +871219,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false
@@ -901427,13 +901544,12 @@ compressed). Nothing hashes the payload before the protocol hash.`,
         },
         DomainProof: {
           type: "object",
-          description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
+          description: "Proves control of one or more DNS domains by the same HD wallet as the\nsigning key \u2014 the EPM-record mirror of the DNS TXT wire form (which is\ndeliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT\nrecord). The canonical statement is a fixed layout of LF-terminated lines,\nversioned by its first line, that names every domain of DOMAINS, and it\nverifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof\nprecedent) \u2014 never by JCS.",
           properties: {
             DNS_DOMAIN: {
               type: "string",
-              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
-Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-breaks the generated C++ accessor of a field named DOMAIN.`,
+              deprecated: true,
+              description: "Retired slot. Buffers written by SDS 1.265.0 (DNS_DOMAIN) and by 1.264.0\nand earlier (DOMAIN) carry one domain string here. The slot is deprecated\nin place \u2014 never retyped, renamed or reused \u2014 so those buffers still\ndecode; generated code has no accessor for it. Read DOMAINS.",
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -901465,6 +901581,14 @@ breaks the generated C++ accessor of a field named DOMAIN.`,
               type: "string",
               description: "Signature encoding format. ABSENT means the canonical encoding of\nALGORITHM (raw-ed25519 for ed25519)",
               "x-flatbuffer-type": "string"
+            },
+            DOMAINS: {
+              type: "array",
+              items: {
+                type: "string"
+              },
+              description: 'The fully-qualified domain names the proof binds, one or more, each\nlowercase ASCII (internationalized names in punycode), e.g.\n["node.example.org", "node.example.com"]. An empty vector is invalid.\nSIGNED_PAYLOAD covers every name, in this order.',
+              "x-flatbuffer-type": "[string]"
             }
           },
           additionalProperties: false

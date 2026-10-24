@@ -1307,12 +1307,13 @@ impl ChainProofT {
 
 pub enum DomainProofOffset {}
 
-/// Proves control of a DNS domain by the same HD wallet as the signing key —
-/// the EPM-record mirror of the DNS TXT wire form (which is deliberately
-/// NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-/// canonical statement is 6 fixed LF-terminated lines prefixed
-/// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-/// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+/// Proves control of one or more DNS domains by the same HD wallet as the
+/// signing key — the EPM-record mirror of the DNS TXT wire form (which is
+/// deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+/// record). The canonical statement is a fixed layout of LF-terminated lines,
+/// versioned by its first line, that names every domain of DOMAINS, and it
+/// verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+/// precedent) — never by JCS.
 #[derive(Copy, Clone, PartialEq)]
 pub struct DomainProof<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -1328,13 +1329,13 @@ impl<'a> ::flatbuffers::Follow<'a> for DomainProof<'a> {
 }
 
 impl<'a> DomainProof<'a> {
-    pub const VT_DNS_DOMAIN: ::flatbuffers::VOffsetT = 4;
     pub const VT_PUBLIC_KEY: ::flatbuffers::VOffsetT = 6;
     pub const VT_KEY_PATH: ::flatbuffers::VOffsetT = 8;
     pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 10;
     pub const VT_SIGNED_PAYLOAD: ::flatbuffers::VOffsetT = 12;
     pub const VT_ALGORITHM: ::flatbuffers::VOffsetT = 14;
     pub const VT_ENCODING: ::flatbuffers::VOffsetT = 16;
+    pub const VT_DOMAINS: ::flatbuffers::VOffsetT = 18;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -1347,20 +1348,17 @@ impl<'a> DomainProof<'a> {
         args: &'args DomainProofArgs<'args>
     ) -> ::flatbuffers::WIPOffset<DomainProof<'bldr>> {
         let mut builder = DomainProofBuilder::new(_fbb);
+        if let Some(x) = args.DOMAINS { builder.add_DOMAINS(x); }
         if let Some(x) = args.ENCODING { builder.add_ENCODING(x); }
         if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
         if let Some(x) = args.SIGNED_PAYLOAD { builder.add_SIGNED_PAYLOAD(x); }
         if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
         if let Some(x) = args.KEY_PATH { builder.add_KEY_PATH(x); }
         if let Some(x) = args.PUBLIC_KEY { builder.add_PUBLIC_KEY(x); }
-        if let Some(x) = args.DNS_DOMAIN { builder.add_DNS_DOMAIN(x); }
         builder.finish()
     }
 
     pub fn unpack(&self) -> DomainProofT {
-        let DNS_DOMAIN = self.DNS_DOMAIN().map(|x| {
-            alloc::string::ToString::to_string(x)
-        });
         let PUBLIC_KEY = self.PUBLIC_KEY().map(|x| {
             alloc::string::ToString::to_string(x)
         });
@@ -1379,26 +1377,18 @@ impl<'a> DomainProof<'a> {
         let ENCODING = self.ENCODING().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let DOMAINS = self.DOMAINS().map(|x| {
+            x.iter().map(|s| alloc::string::ToString::to_string(s)).collect()
+        });
         DomainProofT {
-            DNS_DOMAIN,
             PUBLIC_KEY,
             KEY_PATH,
             SIGNATURE,
             SIGNED_PAYLOAD,
             ALGORITHM,
             ENCODING,
+            DOMAINS,
         }
-    }
-
-    /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
-    /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-    /// breaks the generated C++ accessor of a field named DOMAIN.
-    #[inline]
-    pub fn DNS_DOMAIN(&self) -> Option<&'a str> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_DNS_DOMAIN, None)}
     }
 
     /// Public key for this proof (hex-encoded)
@@ -1456,6 +1446,18 @@ impl<'a> DomainProof<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_ENCODING, None)}
     }
+
+    /// The fully-qualified domain names the proof binds, one or more, each
+    /// lowercase ASCII (internationalized names in punycode), e.g.
+    /// ["node.example.org", "node.example.com"]. An empty vector is invalid.
+    /// SIGNED_PAYLOAD covers every name, in this order.
+    #[inline]
+    pub fn DOMAINS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>(DomainProof::VT_DOMAINS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for DomainProof<'_> {
@@ -1464,39 +1466,39 @@ impl ::flatbuffers::Verifiable for DomainProof<'_> {
         v: &mut ::flatbuffers::Verifier, pos: usize
     ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
         v.visit_table(pos)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DNS_DOMAIN", Self::VT_DNS_DOMAIN, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLIC_KEY", Self::VT_PUBLIC_KEY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_PATH", Self::VT_KEY_PATH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNED_PAYLOAD", Self::VT_SIGNED_PAYLOAD, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("ENCODING", Self::VT_ENCODING, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<&'_ str>>>>("DOMAINS", Self::VT_DOMAINS, false)?
             .finish();
         Ok(())
     }
 }
 
 pub struct DomainProofArgs<'a> {
-    pub DNS_DOMAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PUBLIC_KEY: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub KEY_PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNED_PAYLOAD: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ALGORITHM: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub ENCODING: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DOMAINS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 
 impl<'a> Default for DomainProofArgs<'a> {
     #[inline]
     fn default() -> Self {
         DomainProofArgs {
-            DNS_DOMAIN: None,
             PUBLIC_KEY: None,
             KEY_PATH: None,
             SIGNATURE: None,
             SIGNED_PAYLOAD: None,
             ALGORITHM: None,
             ENCODING: None,
+            DOMAINS: None,
         }
     }
 }
@@ -1507,11 +1509,6 @@ pub struct DomainProofBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
 }
 
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DomainProofBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_DNS_DOMAIN(&mut self, DNS_DOMAIN: ::flatbuffers::WIPOffset<&'b  str>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_DNS_DOMAIN, DNS_DOMAIN);
-    }
-
     #[inline]
     pub fn add_PUBLIC_KEY(&mut self, PUBLIC_KEY: ::flatbuffers::WIPOffset<&'b  str>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_PUBLIC_KEY, PUBLIC_KEY);
@@ -1543,6 +1540,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DomainProofBuilder<'a, 'b, A>
     }
 
     #[inline]
+    pub fn add_DOMAINS(&mut self, DOMAINS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<&'b  str>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_DOMAINS, DOMAINS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> DomainProofBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         DomainProofBuilder {
@@ -1561,13 +1563,13 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DomainProofBuilder<'a, 'b, A>
 impl ::core::fmt::Debug for DomainProof<'_> {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
         let mut ds = f.debug_struct("DomainProof");
-        ds.field("DNS_DOMAIN", &self.DNS_DOMAIN());
         ds.field("PUBLIC_KEY", &self.PUBLIC_KEY());
         ds.field("KEY_PATH", &self.KEY_PATH());
         ds.field("SIGNATURE", &self.SIGNATURE());
         ds.field("SIGNED_PAYLOAD", &self.SIGNED_PAYLOAD());
         ds.field("ALGORITHM", &self.ALGORITHM());
         ds.field("ENCODING", &self.ENCODING());
+        ds.field("DOMAINS", &self.DOMAINS());
         ds.finish()
     }
 }
@@ -1575,25 +1577,25 @@ impl ::core::fmt::Debug for DomainProof<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct DomainProofT {
-    pub DNS_DOMAIN: Option<alloc::string::String>,
     pub PUBLIC_KEY: Option<alloc::string::String>,
     pub KEY_PATH: Option<alloc::string::String>,
     pub SIGNATURE: Option<alloc::string::String>,
     pub SIGNED_PAYLOAD: Option<alloc::string::String>,
     pub ALGORITHM: Option<alloc::string::String>,
     pub ENCODING: Option<alloc::string::String>,
+    pub DOMAINS: Option<alloc::vec::Vec<alloc::string::String>>,
 }
 
 impl Default for DomainProofT {
     fn default() -> Self {
         Self {
-            DNS_DOMAIN: None,
             PUBLIC_KEY: None,
             KEY_PATH: None,
             SIGNATURE: None,
             SIGNED_PAYLOAD: None,
             ALGORITHM: None,
             ENCODING: None,
+            DOMAINS: None,
         }
     }
 }
@@ -1603,9 +1605,6 @@ impl DomainProofT {
         &self,
         _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
     ) -> ::flatbuffers::WIPOffset<DomainProof<'b>> {
-        let DNS_DOMAIN = self.DNS_DOMAIN.as_ref().map(|x|{
-            _fbb.create_string(x)
-        });
         let PUBLIC_KEY = self.PUBLIC_KEY.as_ref().map(|x|{
             _fbb.create_string(x)
         });
@@ -1624,14 +1623,17 @@ impl DomainProofT {
         let ENCODING = self.ENCODING.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let DOMAINS = self.DOMAINS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+        });
         DomainProof::create(_fbb, &DomainProofArgs{
-            DNS_DOMAIN,
             PUBLIC_KEY,
             KEY_PATH,
             SIGNATURE,
             SIGNED_PAYLOAD,
             ALGORITHM,
             ENCODING,
+            DOMAINS,
         })
     }
 }

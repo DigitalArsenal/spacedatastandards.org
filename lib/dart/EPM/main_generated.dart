@@ -632,12 +632,13 @@ class ChainProofObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  Proves control of a DNS domain by the same HD wallet as the signing key —
-///  the EPM-record mirror of the DNS TXT wire form (which is deliberately
-///  NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The
-///  canonical statement is 6 fixed LF-terminated lines prefixed
-///  "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
-///  SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
+///  Proves control of one or more DNS domains by the same HD wallet as the
+///  signing key — the EPM-record mirror of the DNS TXT wire form (which is
+///  deliberately NON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT
+///  record). The canonical statement is a fixed layout of LF-terminated lines,
+///  versioned by its first line, that names every domain of DOMAINS, and it
+///  verifies by BYTE-REPLAY of the verbatim SIGNED_PAYLOAD (ChainProof
+///  precedent) — never by JCS.
 class DomainProof {
   DomainProof._(this._bc, this._bcOffset);
   factory DomainProof(List<int> bytes) {
@@ -650,11 +651,6 @@ class DomainProof {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Fully-qualified domain name the proof binds (e.g., "node.example.org").
-  ///  Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
-  ///  breaks the generated C++ accessor of a field named DOMAIN.
-  String? get DNS_DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get dnsDomain => DNS_DOMAIN;
   ///  Public key for this proof (hex-encoded)
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get publicKey => PUBLIC_KEY;
@@ -672,10 +668,15 @@ class DomainProof {
   ///  Signature encoding format. ABSENT means the canonical encoding of
   ///  ALGORITHM (raw-ed25519 for ed25519)
   String? get ENCODING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  The fully-qualified domain names the proof binds, one or more, each
+  ///  lowercase ASCII (internationalized names in punycode), e.g.
+  ///  ["node.example.org", "node.example.com"]. An empty vector is invalid.
+  ///  SIGNED_PAYLOAD covers every name, in this order.
+  List<String>? get DOMAINS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
 
   @override
   String toString() {
-    return 'DomainProof{dnsDomain: ${dnsDomain}, publicKey: ${publicKey}, keyPath: ${keyPath}, SIGNATURE: ${SIGNATURE}, signedPayload: ${signedPayload}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
+    return 'DomainProof{publicKey: ${publicKey}, keyPath: ${keyPath}, SIGNATURE: ${SIGNATURE}, signedPayload: ${signedPayload}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}, DOMAINS: ${DOMAINS}}';
   }
 }
 
@@ -693,13 +694,9 @@ class DomainProofBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(8);
   }
 
-  int addDnsDomainOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
-    return fbBuilder.offset;
-  }
   int addPublicKeyOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
@@ -724,6 +721,10 @@ class DomainProofBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addDomainsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -731,17 +732,15 @@ class DomainProofBuilder {
 }
 
 class DomainProofObjectBuilder extends fb.ObjectBuilder {
-  final String? _DNS_DOMAIN;
   final String? _PUBLIC_KEY;
   final String? _KEY_PATH;
   final String? _SIGNATURE;
   final String? _SIGNED_PAYLOAD;
   final String? _ALGORITHM;
   final String? _ENCODING;
+  final List<String>? _DOMAINS;
 
   DomainProofObjectBuilder({
-    String? DNS_DOMAIN,
-    String? dnsDomain,
     String? PUBLIC_KEY,
     String? publicKey,
     String? KEY_PATH,
@@ -751,20 +750,19 @@ class DomainProofObjectBuilder extends fb.ObjectBuilder {
     String? signedPayload,
     String? ALGORITHM,
     String? ENCODING,
+    List<String>? DOMAINS,
   })
-      : _DNS_DOMAIN = dnsDomain ?? DNS_DOMAIN,
-        _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
+      : _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
         _KEY_PATH = keyPath ?? KEY_PATH,
         _SIGNATURE = SIGNATURE,
         _SIGNED_PAYLOAD = signedPayload ?? SIGNED_PAYLOAD,
         _ALGORITHM = ALGORITHM,
-        _ENCODING = ENCODING;
+        _ENCODING = ENCODING,
+        _DOMAINS = DOMAINS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? DNS_DOMAINOffset = _DNS_DOMAIN == null ? null
-        : fbBuilder.writeString(_DNS_DOMAIN!);
     final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
         : fbBuilder.writeString(_PUBLIC_KEY!);
     final int? KEY_PATHOffset = _KEY_PATH == null ? null
@@ -777,14 +775,16 @@ class DomainProofObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ALGORITHM!);
     final int? ENCODINGOffset = _ENCODING == null ? null
         : fbBuilder.writeString(_ENCODING!);
-    fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, DNS_DOMAINOffset);
+    final int? DOMAINSOffset = _DOMAINS == null ? null
+        : fbBuilder.writeList(_DOMAINS!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(8);
     fbBuilder.addOffset(1, PUBLIC_KEYOffset);
     fbBuilder.addOffset(2, KEY_PATHOffset);
     fbBuilder.addOffset(3, SIGNATUREOffset);
     fbBuilder.addOffset(4, SIGNED_PAYLOADOffset);
     fbBuilder.addOffset(5, ALGORITHMOffset);
     fbBuilder.addOffset(6, ENCODINGOffset);
+    fbBuilder.addOffset(7, DOMAINSOffset);
     return fbBuilder.endTable();
   }
 
