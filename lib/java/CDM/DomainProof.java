@@ -33,11 +33,13 @@ public final class DomainProof extends com.google.flatbuffers.Table {
   public DomainProof __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * Fully-qualified domain name the proof binds (e.g., "node.example.org")
+   * Fully-qualified domain name the proof binds (e.g., "node.example.org").
+   * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+   * breaks the generated C++ accessor of a field named DOMAIN.
    */
-  public String DOMAIN() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DOMAINAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer DOMAINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public String DNS_DOMAIN() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DNS_DOMAINAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer DNS_DOMAINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   /**
    * Public key for this proof (hex-encoded)
    */
@@ -78,7 +80,7 @@ public final class DomainProof extends com.google.flatbuffers.Table {
   public ByteBuffer ENCODINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
 
   public static int createDomainProof(FlatBufferBuilder builder,
-      int DOMAINOffset,
+      int DNS_DOMAINOffset,
       int PUBLIC_KEYOffset,
       int KEY_PATHOffset,
       int SIGNATUREOffset,
@@ -92,12 +94,12 @@ public final class DomainProof extends com.google.flatbuffers.Table {
     DomainProof.addSignature(builder, SIGNATUREOffset);
     DomainProof.addKeyPath(builder, KEY_PATHOffset);
     DomainProof.addPublicKey(builder, PUBLIC_KEYOffset);
-    DomainProof.addDomain(builder, DOMAINOffset);
+    DomainProof.addDnsDomain(builder, DNS_DOMAINOffset);
     return DomainProof.endDomainProof(builder);
   }
 
   public static void startDomainProof(FlatBufferBuilder builder) { builder.startTable(7); }
-  public static void addDomain(FlatBufferBuilder builder, int DOMAINOffset) { builder.addOffset(0, DOMAINOffset, 0); }
+  public static void addDnsDomain(FlatBufferBuilder builder, int DNS_DOMAINOffset) { builder.addOffset(0, DNS_DOMAINOffset, 0); }
   public static void addPublicKey(FlatBufferBuilder builder, int PUBLIC_KEYOffset) { builder.addOffset(1, PUBLIC_KEYOffset, 0); }
   public static void addKeyPath(FlatBufferBuilder builder, int KEY_PATHOffset) { builder.addOffset(2, KEY_PATHOffset, 0); }
   public static void addSignature(FlatBufferBuilder builder, int SIGNATUREOffset) { builder.addOffset(3, SIGNATUREOffset, 0); }

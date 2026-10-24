@@ -22,14 +22,16 @@ public struct DomainProof : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DomainProof __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-  public string DOMAIN { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+  /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+  /// breaks the generated C++ accessor of a field named DOMAIN.
+  public string DNS_DOMAIN { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDOMAINBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetDNS_DOMAINBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetDOMAINBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetDNS_DOMAINBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetDOMAINArray() { return __p.__vector_as_array<byte>(4); }
+  public byte[] GetDNS_DOMAINArray() { return __p.__vector_as_array<byte>(4); }
   /// Public key for this proof (hex-encoded)
   public string PUBLIC_KEY { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
@@ -82,7 +84,7 @@ public struct DomainProof : IFlatbufferObject
   public byte[] GetENCODINGArray() { return __p.__vector_as_array<byte>(16); }
 
   public static Offset<DomainProof> CreateDomainProof(FlatBufferBuilder builder,
-      StringOffset DOMAINOffset = default(StringOffset),
+      StringOffset DNS_DOMAINOffset = default(StringOffset),
       StringOffset PUBLIC_KEYOffset = default(StringOffset),
       StringOffset KEY_PATHOffset = default(StringOffset),
       StringOffset SIGNATUREOffset = default(StringOffset),
@@ -96,12 +98,12 @@ public struct DomainProof : IFlatbufferObject
     DomainProof.AddSIGNATURE(builder, SIGNATUREOffset);
     DomainProof.AddKEY_PATH(builder, KEY_PATHOffset);
     DomainProof.AddPUBLIC_KEY(builder, PUBLIC_KEYOffset);
-    DomainProof.AddDOMAIN(builder, DOMAINOffset);
+    DomainProof.AddDNS_DOMAIN(builder, DNS_DOMAINOffset);
     return DomainProof.EndDomainProof(builder);
   }
 
   public static void StartDomainProof(FlatBufferBuilder builder) { builder.StartTable(7); }
-  public static void AddDOMAIN(FlatBufferBuilder builder, StringOffset DOMAINOffset) { builder.AddOffset(0, DOMAINOffset.Value, 0); }
+  public static void AddDNS_DOMAIN(FlatBufferBuilder builder, StringOffset DNS_DOMAINOffset) { builder.AddOffset(0, DNS_DOMAINOffset.Value, 0); }
   public static void AddPUBLIC_KEY(FlatBufferBuilder builder, StringOffset PUBLIC_KEYOffset) { builder.AddOffset(1, PUBLIC_KEYOffset.Value, 0); }
   public static void AddKEY_PATH(FlatBufferBuilder builder, StringOffset KEY_PATHOffset) { builder.AddOffset(2, KEY_PATHOffset.Value, 0); }
   public static void AddSIGNATURE(FlatBufferBuilder builder, StringOffset SIGNATUREOffset) { builder.AddOffset(3, SIGNATUREOffset.Value, 0); }
@@ -118,7 +120,7 @@ public struct DomainProof : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(DomainProofT _o) {
-    _o.DOMAIN = this.DOMAIN;
+    _o.DNS_DOMAIN = this.DNS_DOMAIN;
     _o.PUBLIC_KEY = this.PUBLIC_KEY;
     _o.KEY_PATH = this.KEY_PATH;
     _o.SIGNATURE = this.SIGNATURE;
@@ -128,7 +130,7 @@ public struct DomainProof : IFlatbufferObject
   }
   public static Offset<DomainProof> Pack(FlatBufferBuilder builder, DomainProofT _o) {
     if (_o == null) return default(Offset<DomainProof>);
-    var _DOMAIN = _o.DOMAIN == null ? default(StringOffset) : builder.CreateString(_o.DOMAIN);
+    var _DNS_DOMAIN = _o.DNS_DOMAIN == null ? default(StringOffset) : builder.CreateString(_o.DNS_DOMAIN);
     var _PUBLIC_KEY = _o.PUBLIC_KEY == null ? default(StringOffset) : builder.CreateString(_o.PUBLIC_KEY);
     var _KEY_PATH = _o.KEY_PATH == null ? default(StringOffset) : builder.CreateString(_o.KEY_PATH);
     var _SIGNATURE = _o.SIGNATURE == null ? default(StringOffset) : builder.CreateString(_o.SIGNATURE);
@@ -137,7 +139,7 @@ public struct DomainProof : IFlatbufferObject
     var _ENCODING = _o.ENCODING == null ? default(StringOffset) : builder.CreateString(_o.ENCODING);
     return CreateDomainProof(
       builder,
-      _DOMAIN,
+      _DNS_DOMAIN,
       _PUBLIC_KEY,
       _KEY_PATH,
       _SIGNATURE,
@@ -149,7 +151,7 @@ public struct DomainProof : IFlatbufferObject
 
 public class DomainProofT
 {
-  public string DOMAIN { get; set; }
+  public string DNS_DOMAIN { get; set; }
   public string PUBLIC_KEY { get; set; }
   public string KEY_PATH { get; set; }
   public string SIGNATURE { get; set; }
@@ -158,7 +160,7 @@ public class DomainProofT
   public string ENCODING { get; set; }
 
   public DomainProofT() {
-    this.DOMAIN = null;
+    this.DNS_DOMAIN = null;
     this.PUBLIC_KEY = null;
     this.KEY_PATH = null;
     this.SIGNATURE = null;
@@ -174,7 +176,7 @@ static public class DomainProofVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*DOMAIN*/, false)
+      && verifier.VerifyString(tablePos, 4 /*DNS_DOMAIN*/, false)
       && verifier.VerifyString(tablePos, 6 /*PUBLIC_KEY*/, false)
       && verifier.VerifyString(tablePos, 8 /*KEY_PATH*/, false)
       && verifier.VerifyString(tablePos, 10 /*SIGNATURE*/, false)

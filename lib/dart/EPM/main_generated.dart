@@ -650,8 +650,11 @@ class DomainProof {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  Fully-qualified domain name the proof binds (e.g., "node.example.org")
-  String? get DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Fully-qualified domain name the proof binds (e.g., "node.example.org").
+  ///  Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+  ///  breaks the generated C++ accessor of a field named DOMAIN.
+  String? get DNS_DOMAIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  String? get dnsDomain => DNS_DOMAIN;
   ///  Public key for this proof (hex-encoded)
   String? get PUBLIC_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
   String? get publicKey => PUBLIC_KEY;
@@ -672,7 +675,7 @@ class DomainProof {
 
   @override
   String toString() {
-    return 'DomainProof{DOMAIN: ${DOMAIN}, publicKey: ${publicKey}, keyPath: ${keyPath}, SIGNATURE: ${SIGNATURE}, signedPayload: ${signedPayload}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
+    return 'DomainProof{dnsDomain: ${dnsDomain}, publicKey: ${publicKey}, keyPath: ${keyPath}, SIGNATURE: ${SIGNATURE}, signedPayload: ${signedPayload}, ALGORITHM: ${ALGORITHM}, ENCODING: ${ENCODING}}';
   }
 }
 
@@ -693,7 +696,7 @@ class DomainProofBuilder {
     fbBuilder.startTable(7);
   }
 
-  int addDomainOffset(int? offset) {
+  int addDnsDomainOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
@@ -728,7 +731,7 @@ class DomainProofBuilder {
 }
 
 class DomainProofObjectBuilder extends fb.ObjectBuilder {
-  final String? _DOMAIN;
+  final String? _DNS_DOMAIN;
   final String? _PUBLIC_KEY;
   final String? _KEY_PATH;
   final String? _SIGNATURE;
@@ -737,7 +740,8 @@ class DomainProofObjectBuilder extends fb.ObjectBuilder {
   final String? _ENCODING;
 
   DomainProofObjectBuilder({
-    String? DOMAIN,
+    String? DNS_DOMAIN,
+    String? dnsDomain,
     String? PUBLIC_KEY,
     String? publicKey,
     String? KEY_PATH,
@@ -748,7 +752,7 @@ class DomainProofObjectBuilder extends fb.ObjectBuilder {
     String? ALGORITHM,
     String? ENCODING,
   })
-      : _DOMAIN = DOMAIN,
+      : _DNS_DOMAIN = dnsDomain ?? DNS_DOMAIN,
         _PUBLIC_KEY = publicKey ?? PUBLIC_KEY,
         _KEY_PATH = keyPath ?? KEY_PATH,
         _SIGNATURE = SIGNATURE,
@@ -759,8 +763,8 @@ class DomainProofObjectBuilder extends fb.ObjectBuilder {
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? DOMAINOffset = _DOMAIN == null ? null
-        : fbBuilder.writeString(_DOMAIN!);
+    final int? DNS_DOMAINOffset = _DNS_DOMAIN == null ? null
+        : fbBuilder.writeString(_DNS_DOMAIN!);
     final int? PUBLIC_KEYOffset = _PUBLIC_KEY == null ? null
         : fbBuilder.writeString(_PUBLIC_KEY!);
     final int? KEY_PATHOffset = _KEY_PATH == null ? null
@@ -774,7 +778,7 @@ class DomainProofObjectBuilder extends fb.ObjectBuilder {
     final int? ENCODINGOffset = _ENCODING == null ? null
         : fbBuilder.writeString(_ENCODING!);
     fbBuilder.startTable(7);
-    fbBuilder.addOffset(0, DOMAINOffset);
+    fbBuilder.addOffset(0, DNS_DOMAINOffset);
     fbBuilder.addOffset(1, PUBLIC_KEYOffset);
     fbBuilder.addOffset(2, KEY_PATHOffset);
     fbBuilder.addOffset(3, SIGNATUREOffset);

@@ -633,7 +633,7 @@ inline ::flatbuffers::Offset<ChainProof> CreateChainProofDirect(
 struct DomainProof FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DomainProofBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_DOMAIN = 4,
+    VT_DNS_DOMAIN = 4,
     VT_PUBLIC_KEY = 6,
     VT_KEY_PATH = 8,
     VT_SIGNATURE = 10,
@@ -641,9 +641,11 @@ struct DomainProof FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ALGORITHM = 14,
     VT_ENCODING = 16
   };
-  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-  const ::flatbuffers::String *DOMAIN() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DOMAIN);
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+  /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+  /// breaks the generated C++ accessor of a field named DOMAIN.
+  const ::flatbuffers::String *DNS_DOMAIN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DNS_DOMAIN);
   }
   /// Public key for this proof (hex-encoded)
   const ::flatbuffers::String *PUBLIC_KEY() const {
@@ -674,8 +676,8 @@ struct DomainProof FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_DOMAIN) &&
-           verifier.VerifyString(DOMAIN()) &&
+           VerifyOffset(verifier, VT_DNS_DOMAIN) &&
+           verifier.VerifyString(DNS_DOMAIN()) &&
            VerifyOffset(verifier, VT_PUBLIC_KEY) &&
            verifier.VerifyString(PUBLIC_KEY()) &&
            VerifyOffset(verifier, VT_KEY_PATH) &&
@@ -696,8 +698,8 @@ struct DomainProofBuilder {
   typedef DomainProof Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_DOMAIN(::flatbuffers::Offset<::flatbuffers::String> DOMAIN) {
-    fbb_.AddOffset(DomainProof::VT_DOMAIN, DOMAIN);
+  void add_DNS_DOMAIN(::flatbuffers::Offset<::flatbuffers::String> DNS_DOMAIN) {
+    fbb_.AddOffset(DomainProof::VT_DNS_DOMAIN, DNS_DOMAIN);
   }
   void add_PUBLIC_KEY(::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY) {
     fbb_.AddOffset(DomainProof::VT_PUBLIC_KEY, PUBLIC_KEY);
@@ -730,7 +732,7 @@ struct DomainProofBuilder {
 
 inline ::flatbuffers::Offset<DomainProof> CreateDomainProof(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> DOMAIN = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DNS_DOMAIN = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PUBLIC_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> KEY_PATH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SIGNATURE = 0,
@@ -744,20 +746,20 @@ inline ::flatbuffers::Offset<DomainProof> CreateDomainProof(
   builder_.add_SIGNATURE(SIGNATURE);
   builder_.add_KEY_PATH(KEY_PATH);
   builder_.add_PUBLIC_KEY(PUBLIC_KEY);
-  builder_.add_DOMAIN(DOMAIN);
+  builder_.add_DNS_DOMAIN(DNS_DOMAIN);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<DomainProof> CreateDomainProofDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *DOMAIN = nullptr,
+    const char *DNS_DOMAIN = nullptr,
     const char *PUBLIC_KEY = nullptr,
     const char *KEY_PATH = nullptr,
     const char *SIGNATURE = nullptr,
     const char *SIGNED_PAYLOAD = nullptr,
     const char *ALGORITHM = nullptr,
     const char *ENCODING = nullptr) {
-  auto DOMAIN__ = DOMAIN ? _fbb.CreateString(DOMAIN) : 0;
+  auto DNS_DOMAIN__ = DNS_DOMAIN ? _fbb.CreateString(DNS_DOMAIN) : 0;
   auto PUBLIC_KEY__ = PUBLIC_KEY ? _fbb.CreateString(PUBLIC_KEY) : 0;
   auto KEY_PATH__ = KEY_PATH ? _fbb.CreateString(KEY_PATH) : 0;
   auto SIGNATURE__ = SIGNATURE ? _fbb.CreateString(SIGNATURE) : 0;
@@ -766,7 +768,7 @@ inline ::flatbuffers::Offset<DomainProof> CreateDomainProofDirect(
   auto ENCODING__ = ENCODING ? _fbb.CreateString(ENCODING) : 0;
   return CreateDomainProof(
       _fbb,
-      DOMAIN__,
+      DNS_DOMAIN__,
       PUBLIC_KEY__,
       KEY_PATH__,
       SIGNATURE__,

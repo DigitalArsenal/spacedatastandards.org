@@ -47,8 +47,10 @@ func (rcv *DomainProof) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-func (rcv *DomainProof) DOMAIN() []byte {
+/// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+/// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+/// breaks the generated C++ accessor of a field named DOMAIN.
+func (rcv *DomainProof) DNS_DOMAIN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -56,11 +58,13 @@ func (rcv *DomainProof) DOMAIN() []byte {
 	return nil
 }
 
-func (rcv *DomainProof) Domain() []byte {
-	return rcv.DOMAIN()
+func (rcv *DomainProof) DnsDomain() []byte {
+	return rcv.DNS_DOMAIN()
 }
 
-/// Fully-qualified domain name the proof binds (e.g., "node.example.org")
+/// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+/// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+/// breaks the generated C++ accessor of a field named DOMAIN.
 /// Public key for this proof (hex-encoded)
 func (rcv *DomainProof) PUBLIC_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
@@ -152,11 +156,11 @@ func (rcv *DomainProof) Encoding() []byte {
 func DomainProofStart(builder *flatbuffers.Builder) {
 	builder.StartObject(7)
 }
-func DomainProofAddDOMAIN(builder *flatbuffers.Builder, DOMAIN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DOMAIN), 0)
+func DomainProofAddDNS_DOMAIN(builder *flatbuffers.Builder, DNS_DOMAIN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(DNS_DOMAIN), 0)
 }
-func DomainProofAddDomain(builder *flatbuffers.Builder, DOMAIN flatbuffers.UOffsetT) {
-	DomainProofAddDOMAIN(builder, DOMAIN)
+func DomainProofAddDnsDomain(builder *flatbuffers.Builder, DNS_DOMAIN flatbuffers.UOffsetT) {
+	DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN)
 }
 func DomainProofAddPUBLIC_KEY(builder *flatbuffers.Builder, PUBLIC_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(PUBLIC_KEY), 0)

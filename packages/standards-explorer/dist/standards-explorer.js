@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.264.0+1792871374963",
+  version: "1.265.0+1792874245672",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: a8335b1487de6e1252c5814f3238ab1e9737b25327be1a593dfb6dd3777f9633
@@ -5767,8 +5767,8 @@ file_identifier "$OPM";`,
       ]
     },
     EPM: {
-      IDL: `// Hash: 86662db87a157d42d8af0968b31a3b3cac08de3dace2eadbd4415b198d62bd3f
-// Version: 1.0.9
+      IDL: `// Hash: 140a8020d8f8151e20d8912187f35e53c2c25a013a8e977c59aba441dbdebffd
+// Version: 1.0.10
 // -----------------------------------END_HEADER
 enum KeyType : byte {
   Signing,
@@ -5908,8 +5908,10 @@ table ChainProof {
 /// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 /// SIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.
 table DomainProof {
-  /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-  DOMAIN: string;
+  /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+  /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+  /// breaks the generated C++ accessor of a field named DOMAIN.
+  DNS_DOMAIN: string;
   /// Public key for this proof (hex-encoded)
   PUBLIC_KEY: string;
   /// BIP-32 / SLIP-10 derivation path of the proving key. The signer is the
@@ -44955,9 +44957,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -59518,9 +59522,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -91087,9 +91093,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -111126,9 +111134,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -150441,9 +150451,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -248829,9 +248841,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -267548,9 +267562,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -277896,9 +277912,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -294250,9 +294268,11 @@ compressed). Nothing hashes the payload before the protocol hash.`
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")'
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`
             },
             PUBLIC_KEY: {
               type: "string",
@@ -362381,9 +362401,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -393840,9 +393862,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -479490,9 +479514,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -520269,9 +520295,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -611418,9 +611446,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -804965,9 +804995,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -843190,9 +843222,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -871040,9 +871074,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {
@@ -901393,9 +901429,11 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           type: "object",
           description: 'Proves control of a DNS domain by the same HD wallet as the signing key \u2014\nthe EPM-record mirror of the DNS TXT wire form (which is deliberately\nNON-SDS: a base64 FlatBuffer would not fit a 255-byte TXT record). The\ncanonical statement is 6 fixed LF-terminated lines prefixed\n"sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim\nSIGNED_PAYLOAD (ChainProof precedent) \u2014 never by JCS.',
           properties: {
-            DOMAIN: {
+            DNS_DOMAIN: {
               type: "string",
-              description: 'Fully-qualified domain name the proof binds (e.g., "node.example.org")',
+              description: `Fully-qualified domain name the proof binds (e.g., "node.example.org").
+Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+breaks the generated C++ accessor of a field named DOMAIN.`,
               "x-flatbuffer-type": "string"
             },
             PUBLIC_KEY: {

@@ -33,11 +33,13 @@ static getSizePrefixedRootAsDomainProof(bb:flatbuffers.ByteBuffer, obj?:DomainPr
 }
 
 /**
- * Fully-qualified domain name the proof binds (e.g., "node.example.org")
+ * Fully-qualified domain name the proof binds (e.g., "node.example.org").
+ * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+ * breaks the generated C++ accessor of a field named DOMAIN.
  */
-DOMAIN():string|null
-DOMAIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DOMAIN(optionalEncoding?:any):string|Uint8Array|null {
+DNS_DOMAIN():string|null
+DNS_DOMAIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DNS_DOMAIN(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -108,8 +110,8 @@ static startDomainProof(builder:flatbuffers.Builder) {
   builder.startObject(7);
 }
 
-static addDomain(builder:flatbuffers.Builder, DOMAINOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, DOMAINOffset, 0);
+static addDnsDomain(builder:flatbuffers.Builder, DNS_DOMAINOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, DNS_DOMAINOffset, 0);
 }
 
 static addPublicKey(builder:flatbuffers.Builder, PUBLIC_KEYOffset:flatbuffers.Offset) {
@@ -141,9 +143,9 @@ static endDomainProof(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createDomainProof(builder:flatbuffers.Builder, DOMAINOffset:flatbuffers.Offset, PUBLIC_KEYOffset:flatbuffers.Offset, KEY_PATHOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset, SIGNED_PAYLOADOffset:flatbuffers.Offset, ALGORITHMOffset:flatbuffers.Offset, ENCODINGOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createDomainProof(builder:flatbuffers.Builder, DNS_DOMAINOffset:flatbuffers.Offset, PUBLIC_KEYOffset:flatbuffers.Offset, KEY_PATHOffset:flatbuffers.Offset, SIGNATUREOffset:flatbuffers.Offset, SIGNED_PAYLOADOffset:flatbuffers.Offset, ALGORITHMOffset:flatbuffers.Offset, ENCODINGOffset:flatbuffers.Offset):flatbuffers.Offset {
   DomainProof.startDomainProof(builder);
-  DomainProof.addDomain(builder, DOMAINOffset);
+  DomainProof.addDnsDomain(builder, DNS_DOMAINOffset);
   DomainProof.addPublicKey(builder, PUBLIC_KEYOffset);
   DomainProof.addKeyPath(builder, KEY_PATHOffset);
   DomainProof.addSignature(builder, SIGNATUREOffset);
@@ -155,7 +157,7 @@ static createDomainProof(builder:flatbuffers.Builder, DOMAINOffset:flatbuffers.O
 
 unpack(): DomainProofT {
   return new DomainProofT(
-    this.DOMAIN(),
+    this.DNS_DOMAIN(),
     this.PUBLIC_KEY(),
     this.KEY_PATH(),
     this.SIGNATURE(),
@@ -167,7 +169,7 @@ unpack(): DomainProofT {
 
 
 unpackTo(_o: DomainProofT): void {
-  _o.DOMAIN = this.DOMAIN();
+  _o.DNS_DOMAIN = this.DNS_DOMAIN();
   _o.PUBLIC_KEY = this.PUBLIC_KEY();
   _o.KEY_PATH = this.KEY_PATH();
   _o.SIGNATURE = this.SIGNATURE();
@@ -179,7 +181,7 @@ unpackTo(_o: DomainProofT): void {
 
 export class DomainProofT implements flatbuffers.IGeneratedObject {
 constructor(
-  public DOMAIN: string|Uint8Array|null = null,
+  public DNS_DOMAIN: string|Uint8Array|null = null,
   public PUBLIC_KEY: string|Uint8Array|null = null,
   public KEY_PATH: string|Uint8Array|null = null,
   public SIGNATURE: string|Uint8Array|null = null,
@@ -190,7 +192,7 @@ constructor(
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const DOMAIN = (this.DOMAIN !== null ? builder.createString(this.DOMAIN!) : 0);
+  const DNS_DOMAIN = (this.DNS_DOMAIN !== null ? builder.createString(this.DNS_DOMAIN!) : 0);
   const PUBLIC_KEY = (this.PUBLIC_KEY !== null ? builder.createString(this.PUBLIC_KEY!) : 0);
   const KEY_PATH = (this.KEY_PATH !== null ? builder.createString(this.KEY_PATH!) : 0);
   const SIGNATURE = (this.SIGNATURE !== null ? builder.createString(this.SIGNATURE!) : 0);
@@ -199,7 +201,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ENCODING = (this.ENCODING !== null ? builder.createString(this.ENCODING!) : 0);
 
   return DomainProof.createDomainProof(builder,
-    DOMAIN,
+    DNS_DOMAIN,
     PUBLIC_KEY,
     KEY_PATH,
     SIGNATURE,

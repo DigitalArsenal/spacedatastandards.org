@@ -35,9 +35,11 @@ class DomainProof : Table() {
         return this
     }
     /**
-     * Fully-qualified domain name the proof binds (e.g., "node.example.org")
+     * Fully-qualified domain name the proof binds (e.g., "node.example.org").
+     * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+     * breaks the generated C++ accessor of a field named DOMAIN.
      */
-    val domain : String?
+    val dnsDomain : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -46,8 +48,8 @@ class DomainProof : Table() {
                 null
             }
         }
-    val domainAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
-    fun domainInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
+    val dnsDomainAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
+    fun dnsDomainInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
      * Public key for this proof (hex-encoded)
      */
@@ -141,7 +143,7 @@ class DomainProof : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createDomainProof(builder: FlatBufferBuilder, domainOffset: Int, publicKeyOffset: Int, keyPathOffset: Int, signatureOffset: Int, signedPayloadOffset: Int, algorithmOffset: Int, encodingOffset: Int) : Int {
+        fun createDomainProof(builder: FlatBufferBuilder, dnsDomainOffset: Int, publicKeyOffset: Int, keyPathOffset: Int, signatureOffset: Int, signedPayloadOffset: Int, algorithmOffset: Int, encodingOffset: Int) : Int {
             builder.startTable(7)
             addENCODING(builder, encodingOffset)
             addALGORITHM(builder, algorithmOffset)
@@ -149,11 +151,11 @@ class DomainProof : Table() {
             addSIGNATURE(builder, signatureOffset)
             addKEYPATH(builder, keyPathOffset)
             addPUBLICKEY(builder, publicKeyOffset)
-            addDOMAIN(builder, domainOffset)
+            addDNSDOMAIN(builder, dnsDomainOffset)
             return endDomainProof(builder)
         }
         fun startDomainProof(builder: FlatBufferBuilder) = builder.startTable(7)
-        fun addDOMAIN(builder: FlatBufferBuilder, domain: Int) = builder.addOffset(0, domain, 0)
+        fun addDNSDOMAIN(builder: FlatBufferBuilder, dnsDomain: Int) = builder.addOffset(0, dnsDomain, 0)
         fun addPUBLICKEY(builder: FlatBufferBuilder, publicKey: Int) = builder.addOffset(1, publicKey, 0)
         fun addKEYPATH(builder: FlatBufferBuilder, keyPath: Int) = builder.addOffset(2, keyPath, 0)
         fun addSIGNATURE(builder: FlatBufferBuilder, signature: Int) = builder.addOffset(3, signature, 0)

@@ -14,10 +14,12 @@ export declare class DomainProof implements flatbuffers.IUnpackableObject<Domain
     static getRootAsDomainProof(bb: flatbuffers.ByteBuffer, obj?: DomainProof): DomainProof;
     static getSizePrefixedRootAsDomainProof(bb: flatbuffers.ByteBuffer, obj?: DomainProof): DomainProof;
     /**
-     * Fully-qualified domain name the proof binds (e.g., "node.example.org")
+     * Fully-qualified domain name the proof binds (e.g., "node.example.org").
+     * Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+     * breaks the generated C++ accessor of a field named DOMAIN.
      */
-    DOMAIN(): string | null;
-    DOMAIN(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    DNS_DOMAIN(): string | null;
+    DNS_DOMAIN(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     /**
      * Public key for this proof (hex-encoded)
      */
@@ -51,7 +53,7 @@ export declare class DomainProof implements flatbuffers.IUnpackableObject<Domain
     ENCODING(): string | null;
     ENCODING(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
     static startDomainProof(builder: flatbuffers.Builder): void;
-    static addDomain(builder: flatbuffers.Builder, DOMAINOffset: flatbuffers.Offset): void;
+    static addDnsDomain(builder: flatbuffers.Builder, DNS_DOMAINOffset: flatbuffers.Offset): void;
     static addPublicKey(builder: flatbuffers.Builder, PUBLIC_KEYOffset: flatbuffers.Offset): void;
     static addKeyPath(builder: flatbuffers.Builder, KEY_PATHOffset: flatbuffers.Offset): void;
     static addSignature(builder: flatbuffers.Builder, SIGNATUREOffset: flatbuffers.Offset): void;
@@ -59,19 +61,19 @@ export declare class DomainProof implements flatbuffers.IUnpackableObject<Domain
     static addAlgorithm(builder: flatbuffers.Builder, ALGORITHMOffset: flatbuffers.Offset): void;
     static addEncoding(builder: flatbuffers.Builder, ENCODINGOffset: flatbuffers.Offset): void;
     static endDomainProof(builder: flatbuffers.Builder): flatbuffers.Offset;
-    static createDomainProof(builder: flatbuffers.Builder, DOMAINOffset: flatbuffers.Offset, PUBLIC_KEYOffset: flatbuffers.Offset, KEY_PATHOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, SIGNED_PAYLOADOffset: flatbuffers.Offset, ALGORITHMOffset: flatbuffers.Offset, ENCODINGOffset: flatbuffers.Offset): flatbuffers.Offset;
+    static createDomainProof(builder: flatbuffers.Builder, DNS_DOMAINOffset: flatbuffers.Offset, PUBLIC_KEYOffset: flatbuffers.Offset, KEY_PATHOffset: flatbuffers.Offset, SIGNATUREOffset: flatbuffers.Offset, SIGNED_PAYLOADOffset: flatbuffers.Offset, ALGORITHMOffset: flatbuffers.Offset, ENCODINGOffset: flatbuffers.Offset): flatbuffers.Offset;
     unpack(): DomainProofT;
     unpackTo(_o: DomainProofT): void;
 }
 export declare class DomainProofT implements flatbuffers.IGeneratedObject {
-    DOMAIN: string | Uint8Array | null;
+    DNS_DOMAIN: string | Uint8Array | null;
     PUBLIC_KEY: string | Uint8Array | null;
     KEY_PATH: string | Uint8Array | null;
     SIGNATURE: string | Uint8Array | null;
     SIGNED_PAYLOAD: string | Uint8Array | null;
     ALGORITHM: string | Uint8Array | null;
     ENCODING: string | Uint8Array | null;
-    constructor(DOMAIN?: string | Uint8Array | null, PUBLIC_KEY?: string | Uint8Array | null, KEY_PATH?: string | Uint8Array | null, SIGNATURE?: string | Uint8Array | null, SIGNED_PAYLOAD?: string | Uint8Array | null, ALGORITHM?: string | Uint8Array | null, ENCODING?: string | Uint8Array | null);
+    constructor(DNS_DOMAIN?: string | Uint8Array | null, PUBLIC_KEY?: string | Uint8Array | null, KEY_PATH?: string | Uint8Array | null, SIGNATURE?: string | Uint8Array | null, SIGNED_PAYLOAD?: string | Uint8Array | null, ALGORITHM?: string | Uint8Array | null, ENCODING?: string | Uint8Array | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=DomainProof.d.ts.map

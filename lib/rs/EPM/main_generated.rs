@@ -1328,7 +1328,7 @@ impl<'a> ::flatbuffers::Follow<'a> for DomainProof<'a> {
 }
 
 impl<'a> DomainProof<'a> {
-    pub const VT_DOMAIN: ::flatbuffers::VOffsetT = 4;
+    pub const VT_DNS_DOMAIN: ::flatbuffers::VOffsetT = 4;
     pub const VT_PUBLIC_KEY: ::flatbuffers::VOffsetT = 6;
     pub const VT_KEY_PATH: ::flatbuffers::VOffsetT = 8;
     pub const VT_SIGNATURE: ::flatbuffers::VOffsetT = 10;
@@ -1353,12 +1353,12 @@ impl<'a> DomainProof<'a> {
         if let Some(x) = args.SIGNATURE { builder.add_SIGNATURE(x); }
         if let Some(x) = args.KEY_PATH { builder.add_KEY_PATH(x); }
         if let Some(x) = args.PUBLIC_KEY { builder.add_PUBLIC_KEY(x); }
-        if let Some(x) = args.DOMAIN { builder.add_DOMAIN(x); }
+        if let Some(x) = args.DNS_DOMAIN { builder.add_DNS_DOMAIN(x); }
         builder.finish()
     }
 
     pub fn unpack(&self) -> DomainProofT {
-        let DOMAIN = self.DOMAIN().map(|x| {
+        let DNS_DOMAIN = self.DNS_DOMAIN().map(|x| {
             alloc::string::ToString::to_string(x)
         });
         let PUBLIC_KEY = self.PUBLIC_KEY().map(|x| {
@@ -1380,7 +1380,7 @@ impl<'a> DomainProof<'a> {
             alloc::string::ToString::to_string(x)
         });
         DomainProofT {
-            DOMAIN,
+            DNS_DOMAIN,
             PUBLIC_KEY,
             KEY_PATH,
             SIGNATURE,
@@ -1390,13 +1390,15 @@ impl<'a> DomainProof<'a> {
         }
     }
 
-    /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
+    /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+    /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+    /// breaks the generated C++ accessor of a field named DOMAIN.
     #[inline]
-    pub fn DOMAIN(&self) -> Option<&'a str> {
+    pub fn DNS_DOMAIN(&self) -> Option<&'a str> {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_DOMAIN, None)}
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(DomainProof::VT_DNS_DOMAIN, None)}
     }
 
     /// Public key for this proof (hex-encoded)
@@ -1462,7 +1464,7 @@ impl ::flatbuffers::Verifiable for DomainProof<'_> {
         v: &mut ::flatbuffers::Verifier, pos: usize
     ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
         v.visit_table(pos)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DOMAIN", Self::VT_DOMAIN, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("DNS_DOMAIN", Self::VT_DNS_DOMAIN, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("PUBLIC_KEY", Self::VT_PUBLIC_KEY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("KEY_PATH", Self::VT_KEY_PATH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SIGNATURE", Self::VT_SIGNATURE, false)?
@@ -1475,7 +1477,7 @@ impl ::flatbuffers::Verifiable for DomainProof<'_> {
 }
 
 pub struct DomainProofArgs<'a> {
-    pub DOMAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub DNS_DOMAIN: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub PUBLIC_KEY: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub KEY_PATH: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub SIGNATURE: Option<::flatbuffers::WIPOffset<&'a str>>,
@@ -1488,7 +1490,7 @@ impl<'a> Default for DomainProofArgs<'a> {
     #[inline]
     fn default() -> Self {
         DomainProofArgs {
-            DOMAIN: None,
+            DNS_DOMAIN: None,
             PUBLIC_KEY: None,
             KEY_PATH: None,
             SIGNATURE: None,
@@ -1506,8 +1508,8 @@ pub struct DomainProofBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
 
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DomainProofBuilder<'a, 'b, A> {
     #[inline]
-    pub fn add_DOMAIN(&mut self, DOMAIN: ::flatbuffers::WIPOffset<&'b  str>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_DOMAIN, DOMAIN);
+    pub fn add_DNS_DOMAIN(&mut self, DNS_DOMAIN: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(DomainProof::VT_DNS_DOMAIN, DNS_DOMAIN);
     }
 
     #[inline]
@@ -1559,7 +1561,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> DomainProofBuilder<'a, 'b, A>
 impl ::core::fmt::Debug for DomainProof<'_> {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
         let mut ds = f.debug_struct("DomainProof");
-        ds.field("DOMAIN", &self.DOMAIN());
+        ds.field("DNS_DOMAIN", &self.DNS_DOMAIN());
         ds.field("PUBLIC_KEY", &self.PUBLIC_KEY());
         ds.field("KEY_PATH", &self.KEY_PATH());
         ds.field("SIGNATURE", &self.SIGNATURE());
@@ -1573,7 +1575,7 @@ impl ::core::fmt::Debug for DomainProof<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct DomainProofT {
-    pub DOMAIN: Option<alloc::string::String>,
+    pub DNS_DOMAIN: Option<alloc::string::String>,
     pub PUBLIC_KEY: Option<alloc::string::String>,
     pub KEY_PATH: Option<alloc::string::String>,
     pub SIGNATURE: Option<alloc::string::String>,
@@ -1585,7 +1587,7 @@ pub struct DomainProofT {
 impl Default for DomainProofT {
     fn default() -> Self {
         Self {
-            DOMAIN: None,
+            DNS_DOMAIN: None,
             PUBLIC_KEY: None,
             KEY_PATH: None,
             SIGNATURE: None,
@@ -1601,7 +1603,7 @@ impl DomainProofT {
         &self,
         _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
     ) -> ::flatbuffers::WIPOffset<DomainProof<'b>> {
-        let DOMAIN = self.DOMAIN.as_ref().map(|x|{
+        let DNS_DOMAIN = self.DNS_DOMAIN.as_ref().map(|x|{
             _fbb.create_string(x)
         });
         let PUBLIC_KEY = self.PUBLIC_KEY.as_ref().map(|x|{
@@ -1623,7 +1625,7 @@ impl DomainProofT {
             _fbb.create_string(x)
         });
         DomainProof::create(_fbb, &DomainProofArgs{
-            DOMAIN,
+            DNS_DOMAIN,
             PUBLIC_KEY,
             KEY_PATH,
             SIGNATURE,

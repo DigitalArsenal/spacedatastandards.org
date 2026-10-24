@@ -34,9 +34,11 @@ class DomainProof(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # Fully-qualified domain name the proof binds (e.g., "node.example.org")
+    # Fully-qualified domain name the proof binds (e.g., "node.example.org").
+    # Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+    # breaks the generated C++ accessor of a field named DOMAIN.
     # DomainProof
-    def DOMAIN(self):
+    def DNS_DOMAIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -98,11 +100,11 @@ def DomainProofStart(builder):
 def Start(builder):
     DomainProofStart(builder)
 
-def DomainProofAddDOMAIN(builder, DOMAIN):
-    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DOMAIN), 0)
+def DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(DNS_DOMAIN), 0)
 
-def AddDOMAIN(builder, DOMAIN):
-    DomainProofAddDOMAIN(builder, DOMAIN)
+def AddDNS_DOMAIN(builder, DNS_DOMAIN):
+    DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN)
 
 def DomainProofAddPUBLIC_KEY(builder, PUBLIC_KEY):
     builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(PUBLIC_KEY), 0)
@@ -152,7 +154,7 @@ class DomainProofT(object):
     # DomainProofT
     def __init__(
         self,
-        DOMAIN = None,
+        DNS_DOMAIN = None,
         PUBLIC_KEY = None,
         KEY_PATH = None,
         SIGNATURE = None,
@@ -160,7 +162,7 @@ class DomainProofT(object):
         ALGORITHM = None,
         ENCODING = None,
     ):
-        self.DOMAIN = DOMAIN  # type: Optional[str]
+        self.DNS_DOMAIN = DNS_DOMAIN  # type: Optional[str]
         self.PUBLIC_KEY = PUBLIC_KEY  # type: Optional[str]
         self.KEY_PATH = KEY_PATH  # type: Optional[str]
         self.SIGNATURE = SIGNATURE  # type: Optional[str]
@@ -189,7 +191,7 @@ class DomainProofT(object):
     def _UnPack(self, DomainProof):
         if DomainProof is None:
             return
-        self.DOMAIN = DomainProof.DOMAIN()
+        self.DNS_DOMAIN = DomainProof.DNS_DOMAIN()
         self.PUBLIC_KEY = DomainProof.PUBLIC_KEY()
         self.KEY_PATH = DomainProof.KEY_PATH()
         self.SIGNATURE = DomainProof.SIGNATURE()
@@ -199,8 +201,8 @@ class DomainProofT(object):
 
     # DomainProofT
     def Pack(self, builder):
-        if self.DOMAIN is not None:
-            DOMAIN = builder.CreateString(self.DOMAIN)
+        if self.DNS_DOMAIN is not None:
+            DNS_DOMAIN = builder.CreateString(self.DNS_DOMAIN)
         if self.PUBLIC_KEY is not None:
             PUBLIC_KEY = builder.CreateString(self.PUBLIC_KEY)
         if self.KEY_PATH is not None:
@@ -214,8 +216,8 @@ class DomainProofT(object):
         if self.ENCODING is not None:
             ENCODING = builder.CreateString(self.ENCODING)
         DomainProofStart(builder)
-        if self.DOMAIN is not None:
-            DomainProofAddDOMAIN(builder, DOMAIN)
+        if self.DNS_DOMAIN is not None:
+            DomainProofAddDNS_DOMAIN(builder, DNS_DOMAIN)
         if self.PUBLIC_KEY is not None:
             DomainProofAddPUBLIC_KEY(builder, PUBLIC_KEY)
         if self.KEY_PATH is not None:

@@ -46,8 +46,10 @@ class DomainProof extends Table
         return $this;
     }
 
-    /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-    public function getDOMAIN()
+    /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+    /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+    /// breaks the generated C++ accessor of a field named DOMAIN.
+    public function getDNS_DOMAIN()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -110,10 +112,10 @@ class DomainProof extends Table
      * @param FlatBufferBuilder $builder
      * @return DomainProof
      */
-    public static function createDomainProof(FlatBufferBuilder $builder, $DOMAIN, $PUBLIC_KEY, $KEY_PATH, $SIGNATURE, $SIGNED_PAYLOAD, $ALGORITHM, $ENCODING)
+    public static function createDomainProof(FlatBufferBuilder $builder, $DNS_DOMAIN, $PUBLIC_KEY, $KEY_PATH, $SIGNATURE, $SIGNED_PAYLOAD, $ALGORITHM, $ENCODING)
     {
         $builder->startObject(7);
-        self::addDOMAIN($builder, $DOMAIN);
+        self::addDNS_DOMAIN($builder, $DNS_DOMAIN);
         self::addPUBLIC_KEY($builder, $PUBLIC_KEY);
         self::addKEY_PATH($builder, $KEY_PATH);
         self::addSIGNATURE($builder, $SIGNATURE);
@@ -129,9 +131,9 @@ class DomainProof extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addDOMAIN(FlatBufferBuilder $builder, $DOMAIN)
+    public static function addDNS_DOMAIN(FlatBufferBuilder $builder, $DNS_DOMAIN)
     {
-        $builder->addOffsetX(0, $DOMAIN, 0);
+        $builder->addOffsetX(0, $DNS_DOMAIN, 0);
     }
 
     /**

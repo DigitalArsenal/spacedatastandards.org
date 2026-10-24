@@ -270,8 +270,10 @@ struct ChainProofBuilder:
 /// "sdn-domain-proof/1", and it verifies by BYTE-REPLAY of the verbatim
 /// SIGNED_PAYLOAD (ChainProof precedent) — never by JCS.
 class DomainProof : flatbuffers.handle
-    /// Fully-qualified domain name the proof binds (e.g., "node.example.org")
-    def DOMAIN() -> string:
+    /// Fully-qualified domain name the proof binds (e.g., "node.example.org").
+    /// Named DNS_DOMAIN because libc's <math.h> defines a DOMAIN macro, which
+    /// breaks the generated C++ accessor of a field named DOMAIN.
+    def DNS_DOMAIN() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
     /// Public key for this proof (hex-encoded)
     def PUBLIC_KEY() -> string:
@@ -301,8 +303,8 @@ struct DomainProofBuilder:
     def start():
         b_.StartObject(7)
         return this
-    def add_DOMAIN(DOMAIN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, DOMAIN)
+    def add_DNS_DOMAIN(DNS_DOMAIN:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, DNS_DOMAIN)
         return this
     def add_PUBLIC_KEY(PUBLIC_KEY:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, PUBLIC_KEY)
