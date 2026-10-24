@@ -131,23 +131,114 @@ public enum pcfEphemerisKind: UInt8, FlatbuffersVectorInitializable, Enum, Verif
 }
 
 
-///  What a propagator does when a located event occurs. Append new values
-///  only.
-public enum pcfEventAction: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+///  The event function of a located event. Each is a continuous function g of the
+///  integrated state, evaluated by the integrator; an event is a zero crossing of g.
+///  The crossing is bracketed on each accepted step, refined to TOLERANCE_SECONDS on
+///  the integrator's continuous extension, and confirmed by re-stepping the
+///  integrator itself, so the epoch does not depend on the step size. Append new
+///  values only.
+public enum pcfEventKind: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
   public var value: UInt8 { return self.rawValue }
   case unspecified = 0
-  ///  End the propagation at the event; the result carries its epoch and state.
-  case stop = 1
-  ///  Make the event a step boundary only (the dynamics may change there) and
-  ///  report nothing about it.
-  case continue_ = 2
-  ///  Report the event in the result and keep propagating.
-  case record = 3
+  ///  g = r . v, the radial rate. INCREASING crossings are periapsis, DECREASING apoapsis.
+  case apsis = 1
+  ///  g = n . r for the plane through the central body's center with normal PLANE_NORMAL
+  ///  (absent: the pole of the request's axes, which makes the crossings the nodes).
+  ///  INCREASING crossings are ascending, DECREASING descending.
+  case planeCrossing = 2
+  ///  g = the true anomaly minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+  case trueAnomaly = 3
+  ///  g = the argument of latitude minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+  case argumentOfLatitude = 4
+  ///  g = r^2 d(z)/dt - z (r . v) with z the component along the pole of the request's
+  ///  axes: the zero of the rate of the geocentric latitude. DECREASING crossings are
+  ///  maxima, INCREASING minima.
+  case latitudeExtremum = 5
+  ///  g = the angular separation of the Sun and the central body's centers minus the
+  ///  difference of their apparent radii, positive in light (the umbra of the conical
+  ///  model). DECREASING is entry, INCREASING exit.
+  case umbra = 6
+  ///  g = the same separation minus the sum of the apparent radii (the penumbra
+  ///  boundary).
+  case penumbra = 7
+  ///  g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
+  ///  the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
+  ///  the range.
+  case closestApproach = 8
+  ///  g = the value of EXPRESSION.
+  case expression = 9
 
-  public static var max: pcfEventAction { return .record }
-  public static var min: pcfEventAction { return .unspecified }
+  public static var max: pcfEventKind { return .expression }
+  public static var min: pcfEventKind { return .unspecified }
+}
+
+
+///  Which zero crossings of the event function count. Append new values only.
+public enum pcfEventDirection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case any = 0
+  ///  g goes from negative to positive.
+  case increasing = 1
+  ///  g goes from positive to negative.
+  case decreasing = 2
+
+  public static var max: pcfEventDirection { return .decreasing }
+  public static var min: pcfEventDirection { return .any }
+}
+
+
+///  What the integrator does at a located event. Append new values only.
+public enum pcfEventAction: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  The event is located and counted; it is not reported.
+  case continue_ = 0
+  ///  The event is located, counted and reported; propagation continues.
+  case record = 1
+  ///  The event is reported and the propagation ends there: the final sample is the
+  ///  state at the OCCURRENCE-th qualifying crossing.
+  case stop = 2
+
+  public static var max: pcfEventAction { return .stop }
+  public static var min: pcfEventAction { return .continue_ }
+}
+
+
+///  Operations of a bounded expression. The expression is data, evaluated by the
+///  provider; no code runs. Append new values only.
+public enum pcfExpressionOperation: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  case unspecified = 0
+  ///  Push VALUE.
+  case constant = 1
+  ///  Push the value of PARAMETER at the integrated state, in the units of the $PCE
+  ///  catalog.
+  case parameter = 2
+  ///  Pop two, push their sum, difference (second minus first popped), product or
+  ///  quotient.
+  case add = 3
+  case subtract = 4
+  case multiply = 5
+  case divide = 6
+  ///  Pop one, push the result.
+  case negate = 7
+  case absolute = 8
+  case squareRoot = 9
+  case sine = 10
+  case cosine = 11
+  ///  Pop two, push the lesser or the greater.
+  case minimum = 12
+  case maximum = 13
+
+  public static var max: pcfExpressionOperation { return .maximum }
+  public static var min: pcfExpressionOperation { return .unspecified }
 }
 
 
@@ -214,7 +305,7 @@ public enum pcfOutputFrame: UInt8, FlatbuffersVectorInitializable, Enum, Verifia
 ///  10 are the numbers $PRW has always carried; new values are appended only,
 ///  never reordered or reused. A scheme value names the stepping method; a
 ///  formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-///  STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+///  STIEFEL) names the variables the equations are written in, and the
 ///  scheme that steps them is the provider's, reported in its result.
 public enum pcfIntegratorAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
@@ -249,9 +340,9 @@ public enum pcfIntegratorAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum,
   case dopri5 = 11
   ///  Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
   ///  (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-  case rk658m = 12
+  case rk65 = 12
   ///  Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-  case verner98 = 13
+  case rkv98 = 13
   ///  Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
   ///  (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
   ///  acceleration must not depend on velocity, so a provider refuses it with
@@ -268,7 +359,7 @@ public enum pcfIntegratorAlgorithm: UInt8, FlatbuffersVectorInitializable, Enum,
   case dromo = 17
   ///  Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
   ///  and Scheifele 1971, Linear and Regular Celestial Mechanics).
-  case stiefelScheifele = 18
+  case stiefel = 18
   ///  Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
   ///  Solving Ordinary Differential Equations I).
   case dopri853 = 19
@@ -921,10 +1012,98 @@ public struct PCFFitPolicy: FlatBufferVerifiableTable, FlatbuffersVectorInitiali
   }
 }
 
-///  One event a propagator locates while it integrates. The vocabulary is
-///  $EVL's: a locator class with its configuration, and $PCE's parameter
-///  condition for the generic case (an altitude, radius, speed, radial
-///  velocity or mass crossing is a $PCE parameter, not a class of its own).
+///  One term of an expression program.
+public struct PCFExpressionTerm: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFExpressionTerm.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let OPERATION: VOffset = 4
+    static let VALUE: VOffset = 6
+    static let PARAMETER: VOffset = 8
+  }
+
+  ///  What the term does. Default UNSPECIFIED (refused).
+  public var OPERATION: pcfExpressionOperation { let o = _accessor.offset(VT.OPERATION); return o == 0 ? .unspecified : pcfExpressionOperation(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  The constant pushed by CONSTANT. Default 0.
+  public var VALUE: Double { let o = _accessor.offset(VT.VALUE); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The catalog parameter pushed by PARAMETER. Default UNSPECIFIED.
+  public var PARAMETER: pceParameter { let o = _accessor.offset(VT.PARAMETER); return o == 0 ? .unspecified : pceParameter(rawValue: _accessor.readBuffer(of: UInt16.self, at: o)) ?? .unspecified }
+  public static func startPCFExpressionTerm(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(OPERATION: pcfExpressionOperation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OPERATION.rawValue, def: 0, at: VT.OPERATION) }
+  public static func add(VALUE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: VALUE, def: 0.0, at: VT.VALUE) }
+  public static func add(PARAMETER: pceParameter, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARAMETER.rawValue, def: 0, at: VT.PARAMETER) }
+  public static func endPCFExpressionTerm(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFExpressionTerm(
+    _ fbb: inout FlatBufferBuilder,
+    OPERATION: pcfExpressionOperation = .unspecified,
+    VALUE: Double = 0.0,
+    PARAMETER: pceParameter = .unspecified
+  ) -> Offset {
+    let __start = PCFExpressionTerm.startPCFExpressionTerm(&fbb)
+    PCFExpressionTerm.add(OPERATION: OPERATION, &fbb)
+    PCFExpressionTerm.add(VALUE: VALUE, &fbb)
+    PCFExpressionTerm.add(PARAMETER: PARAMETER, &fbb)
+    return PCFExpressionTerm.endPCFExpressionTerm(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.OPERATION, fieldName: "OPERATION", required: false, type: pcfExpressionOperation.self)
+    try _v.visit(field: VT.VALUE, fieldName: "VALUE", required: false, type: Double.self)
+    try _v.visit(field: VT.PARAMETER, fieldName: "PARAMETER", required: false, type: pceParameter.self)
+    _v.finish()
+  }
+}
+
+///  A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
+///  number.
+public struct PCFExpression: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFExpression.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let TERMS: VOffset = 4
+  }
+
+  ///  The terms, in evaluation order. Default empty.
+  public var TERMS: FlatbufferVector<PCFExpressionTerm> { return _accessor.vector(at: VT.TERMS, byteSize: 4) }
+  public static func startPCFExpression(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 1) }
+  public static func addVectorOf(TERMS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TERMS, at: VT.TERMS) }
+  public static func endPCFExpression(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFExpression(
+    _ fbb: inout FlatBufferBuilder,
+    TERMSVectorOffset TERMS: Offset = Offset()
+  ) -> Offset {
+    let __start = PCFExpression.startPCFExpression(&fbb)
+    PCFExpression.addVectorOf(TERMS: TERMS, &fbb)
+    return PCFExpression.endPCFExpression(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.TERMS, fieldName: "TERMS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCFExpressionTerm>, PCFExpressionTerm>>.self)
+    _v.finish()
+  }
+}
+
+///  One event to locate inside the integration. A $PCF carries the list; a $PRW
+///  execution request carries the same definitions beside the integrator settings,
+///  and a located event comes back as a PRWEventRecord.
 public struct PCFEventDefinition: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   static func validateVersion() { FlatBuffersVersion_25_12_19() }
@@ -937,104 +1116,85 @@ public struct PCFEventDefinition: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
 
   private struct VT {
-    static let NAME: VOffset = 4
-    static let LOCATOR_CLASS: VOffset = 6
-    static let CONDITION: VOffset = 8
-    static let ECLIPSE: VOffset = 10
-    static let CONTACT: VOffset = 12
-    static let INTRUSION: VOffset = 14
-    static let APSIDES: VOffset = 16
-    static let NODE_CROSSING: VOffset = 18
-    static let ACTION: VOffset = 20
-    static let EPOCH_TOLERANCE_SECONDS: VOffset = 22
-    static let SCAN_STEP_SECONDS: VOffset = 24
-    static let MAXIMUM_EVENTS: VOffset = 26
+    static let KIND: VOffset = 4
+    static let DIRECTION: VOffset = 6
+    static let ACTION: VOffset = 8
+    static let TOLERANCE_SECONDS: VOffset = 10
+    static let OCCURRENCE: VOffset = 12
+    static let ANGLE_RAD: VOffset = 14
+    static let PLANE_NORMAL: VOffset = 16
+    static let SECOND_TRAJECTORY_PORT: VOffset = 18
+    static let EXPRESSION: VOffset = 20
   }
 
-  ///  The caller's name for the event, echoed in the result. Default empty.
-  public var NAME: String? { let o = _accessor.offset(VT.NAME); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.NAME) }
-  ///  Which locator. Default PARAMETER_CONDITION.
-  public var LOCATOR_CLASS: evlLocatorClass { let o = _accessor.offset(VT.LOCATOR_CLASS); return o == 0 ? .parameterCondition : evlLocatorClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .parameterCondition }
-  ///  Exactly the one of the next five that matches LOCATOR_CLASS is present
-  ///  (any other combination is refused as MISSING_CONFIGURATION, as in
-  ///  $EVL). The condition carries its own direction, goal value, goal
-  ///  tolerance and occurrence.
-  public var CONDITION: PCEParameterCondition? { let o = _accessor.offset(VT.CONDITION); return o == 0 ? nil : PCEParameterCondition(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var ECLIPSE: EVLEclipseConfiguration? { let o = _accessor.offset(VT.ECLIPSE); return o == 0 ? nil : EVLEclipseConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var CONTACT: EVLContactConfiguration? { let o = _accessor.offset(VT.CONTACT); return o == 0 ? nil : EVLContactConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var INTRUSION: EVLIntrusionConfiguration? { let o = _accessor.offset(VT.INTRUSION); return o == 0 ? nil : EVLIntrusionConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var APSIDES: EVLApsidesConfiguration? { let o = _accessor.offset(VT.APSIDES); return o == 0 ? nil : EVLApsidesConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public var NODE_CROSSING: EVLNodeCrossingConfiguration? { let o = _accessor.offset(VT.NODE_CROSSING); return o == 0 ? nil : EVLNodeCrossingConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  ///  What the propagator does at the event. Default RECORD.
+  ///  The event function. Default UNSPECIFIED (refused).
+  public var KIND: pcfEventKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : pcfEventKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  Which zero crossings of the event function count. Default ANY.
+  public var DIRECTION: pcfEventDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .any : pcfEventDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .any }
+  ///  What the integrator does at the event. Default RECORD.
   public var ACTION: pcfEventAction { let o = _accessor.offset(VT.ACTION); return o == 0 ? .record : pcfEventAction(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .record }
-  ///  Convergence bar on the located epoch, seconds. Default 1e-9.
-  public var EPOCH_TOLERANCE_SECONDS: Double { let o = _accessor.offset(VT.EPOCH_TOLERANCE_SECONDS); return o == 0 ? 1e-9 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Step at which the event function is sampled before refinement, seconds;
-  ///  0 samples at the integrator's accepted steps. A root is found only when
-  ///  the function changes sign within one sample interval. Default 0.
-  public var SCAN_STEP_SECONDS: Double { let o = _accessor.offset(VT.SCAN_STEP_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Largest number of occurrences reported; 0 is no bound. Default 0.
-  public var MAXIMUM_EVENTS: UInt32 { let o = _accessor.offset(VT.MAXIMUM_EVENTS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
-  public static func startPCFEventDefinition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
-  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VT.NAME) }
-  public static func add(LOCATOR_CLASS: evlLocatorClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATOR_CLASS.rawValue, def: 6, at: VT.LOCATOR_CLASS) }
-  public static func add(CONDITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONDITION, at: VT.CONDITION) }
-  public static func add(ECLIPSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ECLIPSE, at: VT.ECLIPSE) }
-  public static func add(CONTACT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTACT, at: VT.CONTACT) }
-  public static func add(INTRUSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTRUSION, at: VT.INTRUSION) }
-  public static func add(APSIDES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APSIDES, at: VT.APSIDES) }
-  public static func add(NODE_CROSSING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_CROSSING, at: VT.NODE_CROSSING) }
-  public static func add(ACTION: pcfEventAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTION.rawValue, def: 3, at: VT.ACTION) }
-  public static func add(EPOCH_TOLERANCE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_TOLERANCE_SECONDS, def: 1e-9, at: VT.EPOCH_TOLERANCE_SECONDS) }
-  public static func add(SCAN_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SCAN_STEP_SECONDS, def: 0.0, at: VT.SCAN_STEP_SECONDS) }
-  public static func add(MAXIMUM_EVENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAXIMUM_EVENTS, def: 0, at: VT.MAXIMUM_EVENTS) }
+  ///  Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+  public var TOLERANCE_SECONDS: Double { let o = _accessor.offset(VT.TOLERANCE_SECONDS); return o == 0 ? 1e-9 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  STOP acts at this qualifying crossing (1 is the first). Default 1.
+  public var OCCURRENCE: UInt32 { let o = _accessor.offset(VT.OCCURRENCE); return o == 0 ? 1 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+  public var ANGLE_RAD: Double { let o = _accessor.offset(VT.ANGLE_RAD); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+  ///  vector. Default absent (the pole of the axes).
+  public var PLANE_NORMAL: FRMVector3? { let o = _accessor.offset(VT.PLANE_NORMAL); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+  ///  as $OEM. Default empty.
+  public var SECOND_TRAJECTORY_PORT: String? { let o = _accessor.offset(VT.SECOND_TRAJECTORY_PORT); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SECOND_TRAJECTORY_PORTSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.SECOND_TRAJECTORY_PORT) }
+  ///  EXPRESSION: the program. Default absent.
+  public var EXPRESSION: PCFExpression? { let o = _accessor.offset(VT.EXPRESSION); return o == 0 ? nil : PCFExpression(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPCFEventDefinition(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 9) }
+  public static func add(KIND: pcfEventKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(DIRECTION: pcfEventDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
+  public static func add(ACTION: pcfEventAction, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ACTION.rawValue, def: 1, at: VT.ACTION) }
+  public static func add(TOLERANCE_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOLERANCE_SECONDS, def: 1e-9, at: VT.TOLERANCE_SECONDS) }
+  public static func add(OCCURRENCE: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OCCURRENCE, def: 1, at: VT.OCCURRENCE) }
+  public static func add(ANGLE_RAD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ANGLE_RAD, def: 0.0, at: VT.ANGLE_RAD) }
+  public static func add(PLANE_NORMAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLANE_NORMAL, at: VT.PLANE_NORMAL) }
+  public static func add(SECOND_TRAJECTORY_PORT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SECOND_TRAJECTORY_PORT, at: VT.SECOND_TRAJECTORY_PORT) }
+  public static func add(EXPRESSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXPRESSION, at: VT.EXPRESSION) }
   public static func endPCFEventDefinition(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFEventDefinition(
     _ fbb: inout FlatBufferBuilder,
-    NAMEOffset NAME: Offset = Offset(),
-    LOCATOR_CLASS: evlLocatorClass = .parameterCondition,
-    CONDITIONOffset CONDITION: Offset = Offset(),
-    ECLIPSEOffset ECLIPSE: Offset = Offset(),
-    CONTACTOffset CONTACT: Offset = Offset(),
-    INTRUSIONOffset INTRUSION: Offset = Offset(),
-    APSIDESOffset APSIDES: Offset = Offset(),
-    NODE_CROSSINGOffset NODE_CROSSING: Offset = Offset(),
+    KIND: pcfEventKind = .unspecified,
+    DIRECTION: pcfEventDirection = .any,
     ACTION: pcfEventAction = .record,
-    EPOCH_TOLERANCE_SECONDS: Double = 1e-9,
-    SCAN_STEP_SECONDS: Double = 0.0,
-    MAXIMUM_EVENTS: UInt32 = 0
+    TOLERANCE_SECONDS: Double = 1e-9,
+    OCCURRENCE: UInt32 = 1,
+    ANGLE_RAD: Double = 0.0,
+    PLANE_NORMALOffset PLANE_NORMAL: Offset = Offset(),
+    SECOND_TRAJECTORY_PORTOffset SECOND_TRAJECTORY_PORT: Offset = Offset(),
+    EXPRESSIONOffset EXPRESSION: Offset = Offset()
   ) -> Offset {
     let __start = PCFEventDefinition.startPCFEventDefinition(&fbb)
-    PCFEventDefinition.add(NAME: NAME, &fbb)
-    PCFEventDefinition.add(LOCATOR_CLASS: LOCATOR_CLASS, &fbb)
-    PCFEventDefinition.add(CONDITION: CONDITION, &fbb)
-    PCFEventDefinition.add(ECLIPSE: ECLIPSE, &fbb)
-    PCFEventDefinition.add(CONTACT: CONTACT, &fbb)
-    PCFEventDefinition.add(INTRUSION: INTRUSION, &fbb)
-    PCFEventDefinition.add(APSIDES: APSIDES, &fbb)
-    PCFEventDefinition.add(NODE_CROSSING: NODE_CROSSING, &fbb)
+    PCFEventDefinition.add(KIND: KIND, &fbb)
+    PCFEventDefinition.add(DIRECTION: DIRECTION, &fbb)
     PCFEventDefinition.add(ACTION: ACTION, &fbb)
-    PCFEventDefinition.add(EPOCH_TOLERANCE_SECONDS: EPOCH_TOLERANCE_SECONDS, &fbb)
-    PCFEventDefinition.add(SCAN_STEP_SECONDS: SCAN_STEP_SECONDS, &fbb)
-    PCFEventDefinition.add(MAXIMUM_EVENTS: MAXIMUM_EVENTS, &fbb)
+    PCFEventDefinition.add(TOLERANCE_SECONDS: TOLERANCE_SECONDS, &fbb)
+    PCFEventDefinition.add(OCCURRENCE: OCCURRENCE, &fbb)
+    PCFEventDefinition.add(ANGLE_RAD: ANGLE_RAD, &fbb)
+    PCFEventDefinition.add(PLANE_NORMAL: PLANE_NORMAL, &fbb)
+    PCFEventDefinition.add(SECOND_TRAJECTORY_PORT: SECOND_TRAJECTORY_PORT, &fbb)
+    PCFEventDefinition.add(EXPRESSION: EXPRESSION, &fbb)
     return PCFEventDefinition.endPCFEventDefinition(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(field: VT.NAME, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VT.LOCATOR_CLASS, fieldName: "LOCATOR_CLASS", required: false, type: evlLocatorClass.self)
-    try _v.visit(field: VT.CONDITION, fieldName: "CONDITION", required: false, type: ForwardOffset<PCEParameterCondition>.self)
-    try _v.visit(field: VT.ECLIPSE, fieldName: "ECLIPSE", required: false, type: ForwardOffset<EVLEclipseConfiguration>.self)
-    try _v.visit(field: VT.CONTACT, fieldName: "CONTACT", required: false, type: ForwardOffset<EVLContactConfiguration>.self)
-    try _v.visit(field: VT.INTRUSION, fieldName: "INTRUSION", required: false, type: ForwardOffset<EVLIntrusionConfiguration>.self)
-    try _v.visit(field: VT.APSIDES, fieldName: "APSIDES", required: false, type: ForwardOffset<EVLApsidesConfiguration>.self)
-    try _v.visit(field: VT.NODE_CROSSING, fieldName: "NODE_CROSSING", required: false, type: ForwardOffset<EVLNodeCrossingConfiguration>.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: pcfEventKind.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: pcfEventDirection.self)
     try _v.visit(field: VT.ACTION, fieldName: "ACTION", required: false, type: pcfEventAction.self)
-    try _v.visit(field: VT.EPOCH_TOLERANCE_SECONDS, fieldName: "EPOCH_TOLERANCE_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.SCAN_STEP_SECONDS, fieldName: "SCAN_STEP_SECONDS", required: false, type: Double.self)
-    try _v.visit(field: VT.MAXIMUM_EVENTS, fieldName: "MAXIMUM_EVENTS", required: false, type: UInt32.self)
+    try _v.visit(field: VT.TOLERANCE_SECONDS, fieldName: "TOLERANCE_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.OCCURRENCE, fieldName: "OCCURRENCE", required: false, type: UInt32.self)
+    try _v.visit(field: VT.ANGLE_RAD, fieldName: "ANGLE_RAD", required: false, type: Double.self)
+    try _v.visit(field: VT.PLANE_NORMAL, fieldName: "PLANE_NORMAL", required: false, type: ForwardOffset<FRMVector3>.self)
+    try _v.visit(field: VT.SECOND_TRAJECTORY_PORT, fieldName: "SECOND_TRAJECTORY_PORT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.EXPRESSION, fieldName: "EXPRESSION", required: false, type: ForwardOffset<PCFExpression>.self)
     _v.finish()
   }
 }

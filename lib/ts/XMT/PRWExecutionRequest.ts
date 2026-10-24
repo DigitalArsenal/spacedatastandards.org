@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js';
 import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
 import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
 import { PRWFiniteBurn, PRWFiniteBurnT } from './PRWFiniteBurn.js';
@@ -150,8 +151,24 @@ dynamicParametersArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Events located inside the integration (PCFEventDefinition, shared with $PCF).
+ * They apply to a plain state propagation (no STM, covariance, samples, impulses
+ * or burns) by an integrator with a continuous extension; any other request that
+ * names events is refused. Default empty.
+ */
+EVENTS(index: number, obj?:PCFEventDefinition):PCFEventDefinition|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new PCFEventDefinition()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+eventsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
 static startPRWExecutionRequest(builder:flatbuffers.Builder) {
-  builder.startObject(15);
+  builder.startObject(16);
 }
 
 static addInitial(builder:flatbuffers.Builder, INITIALOffset:flatbuffers.Offset) {
@@ -262,6 +279,22 @@ static startDynamicParametersVector(builder:flatbuffers.Builder, numElems:number
   builder.startVector(1, numElems, 1);
 }
 
+static addEvents(builder:flatbuffers.Builder, EVENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, EVENTSOffset, 0);
+}
+
+static createEventsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEventsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
 static endPRWExecutionRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // INITIAL
@@ -288,7 +321,8 @@ unpack(): PRWExecutionRequestT {
     this.INCLUDE_MASS_DYNAMICS(),
     this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength()),
     (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null),
-    this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength())
+    this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength()),
+    this.bb!.createObjList<PCFEventDefinition, PCFEventDefinitionT>(this.EVENTS.bind(this), this.eventsLength())
   );
 }
 
@@ -309,6 +343,7 @@ unpackTo(_o: PRWExecutionRequestT): void {
   _o.FINITE_BURNS = this.bb!.createObjList<PRWFiniteBurn, PRWFiniteBurnT>(this.FINITE_BURNS.bind(this), this.finiteBurnsLength());
   _o.PROCESS_NOISE = (this.PROCESS_NOISE() !== null ? this.PROCESS_NOISE()!.unpack() : null);
   _o.DYNAMIC_PARAMETERS = this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength());
+  _o.EVENTS = this.bb!.createObjList<PCFEventDefinition, PCFEventDefinitionT>(this.EVENTS.bind(this), this.eventsLength());
 }
 }
 
@@ -328,7 +363,8 @@ constructor(
   public INCLUDE_MASS_DYNAMICS: boolean = false,
   public FINITE_BURNS: (PRWFiniteBurnT)[] = [],
   public PROCESS_NOISE: PRWProcessNoiseT|null = null,
-  public DYNAMIC_PARAMETERS: (prwDynamicParameter)[] = []
+  public DYNAMIC_PARAMETERS: (prwDynamicParameter)[] = [],
+  public EVENTS: (PCFEventDefinitionT)[] = []
 ){}
 
 
@@ -344,6 +380,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const FINITE_BURNS = PRWExecutionRequest.createFiniteBurnsVector(builder, builder.createObjectOffsetList(this.FINITE_BURNS));
   const PROCESS_NOISE = (this.PROCESS_NOISE !== null ? this.PROCESS_NOISE!.pack(builder) : 0);
   const DYNAMIC_PARAMETERS = PRWExecutionRequest.createDynamicParametersVector(builder, this.DYNAMIC_PARAMETERS);
+  const EVENTS = PRWExecutionRequest.createEventsVector(builder, builder.createObjectOffsetList(this.EVENTS));
 
   PRWExecutionRequest.startPRWExecutionRequest(builder);
   PRWExecutionRequest.addInitial(builder, INITIAL);
@@ -361,6 +398,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PRWExecutionRequest.addFiniteBurns(builder, FINITE_BURNS);
   PRWExecutionRequest.addProcessNoise(builder, PROCESS_NOISE);
   PRWExecutionRequest.addDynamicParameters(builder, DYNAMIC_PARAMETERS);
+  PRWExecutionRequest.addEvents(builder, EVENTS);
 
   return PRWExecutionRequest.endPRWExecutionRequest(builder);
 }

@@ -4,33 +4,29 @@ package XMT
 
 import "strconv"
 
-/// What a propagator does when a located event occurs. Append new values
-/// only.
+/// What the integrator does at a located event. Append new values only.
 type pcfEventAction byte
 
 const (
-	pcfEventActionUNSPECIFIED pcfEventAction = 0
-	/// End the propagation at the event; the result carries its epoch and state.
-	pcfEventActionSTOP        pcfEventAction = 1
-	/// Make the event a step boundary only (the dynamics may change there) and
-	/// report nothing about it.
-	pcfEventActionCONTINUE    pcfEventAction = 2
-	/// Report the event in the result and keep propagating.
-	pcfEventActionRECORD      pcfEventAction = 3
+	/// The event is located and counted; it is not reported.
+	pcfEventActionCONTINUE pcfEventAction = 0
+	/// The event is located, counted and reported; propagation continues.
+	pcfEventActionRECORD   pcfEventAction = 1
+	/// The event is reported and the propagation ends there: the final sample is the
+	/// state at the OCCURRENCE-th qualifying crossing.
+	pcfEventActionSTOP     pcfEventAction = 2
 )
 
 var EnumNamespcfEventAction = map[pcfEventAction]string{
-	pcfEventActionUNSPECIFIED: "UNSPECIFIED",
-	pcfEventActionSTOP:        "STOP",
-	pcfEventActionCONTINUE:    "CONTINUE",
-	pcfEventActionRECORD:      "RECORD",
+	pcfEventActionCONTINUE: "CONTINUE",
+	pcfEventActionRECORD:   "RECORD",
+	pcfEventActionSTOP:     "STOP",
 }
 
 var EnumValuespcfEventAction = map[string]pcfEventAction{
-	"UNSPECIFIED": pcfEventActionUNSPECIFIED,
-	"STOP":        pcfEventActionSTOP,
-	"CONTINUE":    pcfEventActionCONTINUE,
-	"RECORD":      pcfEventActionRECORD,
+	"CONTINUE": pcfEventActionCONTINUE,
+	"RECORD":   pcfEventActionRECORD,
+	"STOP":     pcfEventActionSTOP,
 }
 
 func (v pcfEventAction) String() string {

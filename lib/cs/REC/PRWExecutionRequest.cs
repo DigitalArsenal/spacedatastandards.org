@@ -48,6 +48,12 @@ public struct PRWExecutionRequest : IFlatbufferObject
   public ArraySegment<byte>? GetDYNAMIC_PARAMETERSBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public prwDynamicParameter[] GetDYNAMIC_PARAMETERSArray() { int o = __p.__offset(32); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); prwDynamicParameter[] a = new prwDynamicParameter[l]; for (int i = 0; i < l; i++) { a[i] = (prwDynamicParameter)__p.bb.Get(p + i * 1); } return a; }
+  /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+  /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+  /// or burns) by an integrator with a continuous extension; any other request that
+  /// names events is refused. Default empty.
+  public PCFEventDefinition? EVENTS(int j) { int o = __p.__offset(34); return o != 0 ? (PCFEventDefinition?)(new PCFEventDefinition()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EVENTSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<PRWExecutionRequest> CreatePRWExecutionRequest(FlatBufferBuilder builder,
       Offset<PRWResidentState> INITIALOffset = default(Offset<PRWResidentState>),
@@ -64,8 +70,10 @@ public struct PRWExecutionRequest : IFlatbufferObject
       bool INCLUDE_MASS_DYNAMICS = false,
       VectorOffset FINITE_BURNSOffset = default(VectorOffset),
       Offset<PRWProcessNoise> PROCESS_NOISEOffset = default(Offset<PRWProcessNoise>),
-      VectorOffset DYNAMIC_PARAMETERSOffset = default(VectorOffset)) {
-    builder.StartTable(15);
+      VectorOffset DYNAMIC_PARAMETERSOffset = default(VectorOffset),
+      VectorOffset EVENTSOffset = default(VectorOffset)) {
+    builder.StartTable(16);
+    PRWExecutionRequest.AddEVENTS(builder, EVENTSOffset);
     PRWExecutionRequest.AddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionRequest.AddPROCESS_NOISE(builder, PROCESS_NOISEOffset);
     PRWExecutionRequest.AddFINITE_BURNS(builder, FINITE_BURNSOffset);
@@ -84,7 +92,7 @@ public struct PRWExecutionRequest : IFlatbufferObject
     return PRWExecutionRequest.EndPRWExecutionRequest(builder);
   }
 
-  public static void StartPRWExecutionRequest(FlatBufferBuilder builder) { builder.StartTable(15); }
+  public static void StartPRWExecutionRequest(FlatBufferBuilder builder) { builder.StartTable(16); }
   public static void AddINITIAL(FlatBufferBuilder builder, Offset<PRWResidentState> INITIALOffset) { builder.AddOffset(0, INITIALOffset.Value, 0); }
   public static void AddTARGET_EPOCH(FlatBufferBuilder builder, Offset<TIMInstant> TARGET_EPOCHOffset) { builder.AddOffset(1, TARGET_EPOCHOffset.Value, 0); }
   public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<PCFIntegratorSettings> INTEGRATOROffset) { builder.AddOffset(2, INTEGRATOROffset.Value, 0); }
@@ -120,6 +128,12 @@ public struct PRWExecutionRequest : IFlatbufferObject
   public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<prwDynamicParameter> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<prwDynamicParameter>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddEVENTS(FlatBufferBuilder builder, VectorOffset EVENTSOffset) { builder.AddOffset(15, EVENTSOffset.Value, 0); }
+  public static VectorOffset CreateEVENTSVector(FlatBufferBuilder builder, Offset<PCFEventDefinition>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, Offset<PCFEventDefinition>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PCFEventDefinition>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PCFEventDefinition>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEVENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<PRWExecutionRequest> EndPRWExecutionRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // INITIAL
@@ -153,6 +167,8 @@ public struct PRWExecutionRequest : IFlatbufferObject
     _o.PROCESS_NOISE = this.PROCESS_NOISE.HasValue ? this.PROCESS_NOISE.Value.UnPack() : null;
     _o.DYNAMIC_PARAMETERS = new List<prwDynamicParameter>();
     for (var _j = 0; _j < this.DYNAMIC_PARAMETERSLength; ++_j) {_o.DYNAMIC_PARAMETERS.Add(this.DYNAMIC_PARAMETERS(_j));}
+    _o.EVENTS = new List<PCFEventDefinitionT>();
+    for (var _j = 0; _j < this.EVENTSLength; ++_j) {_o.EVENTS.Add(this.EVENTS(_j).HasValue ? this.EVENTS(_j).Value.UnPack() : null);}
   }
   public static Offset<PRWExecutionRequest> Pack(FlatBufferBuilder builder, PRWExecutionRequestT _o) {
     if (_o == null) return default(Offset<PRWExecutionRequest>);
@@ -186,6 +202,12 @@ public struct PRWExecutionRequest : IFlatbufferObject
       var __DYNAMIC_PARAMETERS = _o.DYNAMIC_PARAMETERS.ToArray();
       _DYNAMIC_PARAMETERS = CreateDYNAMIC_PARAMETERSVector(builder, __DYNAMIC_PARAMETERS);
     }
+    var _EVENTS = default(VectorOffset);
+    if (_o.EVENTS != null) {
+      var __EVENTS = new Offset<PCFEventDefinition>[_o.EVENTS.Count];
+      for (var _j = 0; _j < __EVENTS.Length; ++_j) { __EVENTS[_j] = PCFEventDefinition.Pack(builder, _o.EVENTS[_j]); }
+      _EVENTS = CreateEVENTSVector(builder, __EVENTS);
+    }
     return CreatePRWExecutionRequest(
       builder,
       _INITIAL,
@@ -202,7 +224,8 @@ public struct PRWExecutionRequest : IFlatbufferObject
       _o.INCLUDE_MASS_DYNAMICS,
       _FINITE_BURNS,
       _PROCESS_NOISE,
-      _DYNAMIC_PARAMETERS);
+      _DYNAMIC_PARAMETERS,
+      _EVENTS);
   }
 }
 
@@ -223,6 +246,7 @@ public class PRWExecutionRequestT
   public List<PRWFiniteBurnT> FINITE_BURNS { get; set; }
   public PRWProcessNoiseT PROCESS_NOISE { get; set; }
   public List<prwDynamicParameter> DYNAMIC_PARAMETERS { get; set; }
+  public List<PCFEventDefinitionT> EVENTS { get; set; }
 
   public PRWExecutionRequestT() {
     this.INITIAL = null;
@@ -240,6 +264,7 @@ public class PRWExecutionRequestT
     this.FINITE_BURNS = null;
     this.PROCESS_NOISE = null;
     this.DYNAMIC_PARAMETERS = null;
+    this.EVENTS = null;
   }
 }
 
@@ -264,6 +289,7 @@ static public class PRWExecutionRequestVerify
       && verifier.VerifyVectorOfTables(tablePos, 28 /*FINITE_BURNS*/, PRWFiniteBurnVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 30 /*PROCESS_NOISE*/, PRWProcessNoiseVerify.Verify, false)
       && verifier.VerifyVectorOfData(tablePos, 32 /*DYNAMIC_PARAMETERS*/, 1 /*prwDynamicParameter*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*EVENTS*/, PCFEventDefinitionVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

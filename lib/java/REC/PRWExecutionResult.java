@@ -46,6 +46,27 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
   public ByteVector dynamicParametersVector(ByteVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
   public ByteBuffer DYNAMIC_PARAMETERSAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer DYNAMIC_PARAMETERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * The located events with ACTION RECORD or STOP, in time order of propagation.
+   */
+  public PRWEventRecord EVENTS(int j) { return EVENTS(new PRWEventRecord(), j); }
+  public PRWEventRecord EVENTS(PRWEventRecord obj, int j) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int EVENTSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public PRWEventRecord.Vector eventsVector() { return eventsVector(new PRWEventRecord.Vector()); }
+  public PRWEventRecord.Vector eventsVector(PRWEventRecord.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Per request EVENTS entry, the qualifying crossings the propagation passed.
+   */
+  public long EVENT_OCCURRENCES(int j) { int o = __offset(20); return o != 0 ? (long)bb.getInt(__vector(o) + j * 4) & 0xFFFFFFFFL : 0; }
+  public int EVENT_OCCURRENCESLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public IntVector eventOccurrencesVector() { return eventOccurrencesVector(new IntVector()); }
+  public IntVector eventOccurrencesVector(IntVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer EVENT_OCCURRENCESAsByteBuffer() { return __vector_as_bytebuffer(20, 4); }
+  public ByteBuffer EVENT_OCCURRENCESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 4); }
+  /**
+   * Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+   */
+  public int STOPPED_BY_EVENT() { int o = __offset(22); return o != 0 ? bb.getInt(o + bb_pos) : -1; }
 
   public static int createPRWExecutionResult(FlatBufferBuilder builder,
       int FINAL_SAMPLEOffset,
@@ -54,9 +75,15 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
       int EPHEMERIS_SOURCEOffset,
       int STM_TECHNIQUE,
       int DENSITY_TREATMENT,
-      int DYNAMIC_PARAMETERSOffset) {
-    builder.startTable(7);
+      int DYNAMIC_PARAMETERSOffset,
+      int EVENTSOffset,
+      int EVENT_OCCURRENCESOffset,
+      int STOPPED_BY_EVENT) {
+    builder.startTable(10);
     PRWExecutionResult.addElapsedSeconds(builder, ELAPSED_SECONDS);
+    PRWExecutionResult.addStoppedByEvent(builder, STOPPED_BY_EVENT);
+    PRWExecutionResult.addEventOccurrences(builder, EVENT_OCCURRENCESOffset);
+    PRWExecutionResult.addEvents(builder, EVENTSOffset);
     PRWExecutionResult.addDynamicParameters(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionResult.addEphemerisSource(builder, EPHEMERIS_SOURCEOffset);
     PRWExecutionResult.addSamples(builder, SAMPLESOffset);
@@ -66,7 +93,7 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
     return PRWExecutionResult.endPRWExecutionResult(builder);
   }
 
-  public static void startPRWExecutionResult(FlatBufferBuilder builder) { builder.startTable(7); }
+  public static void startPRWExecutionResult(FlatBufferBuilder builder) { builder.startTable(10); }
   public static void addFinalSample(FlatBufferBuilder builder, int FINAL_SAMPLEOffset) { builder.addOffset(0, FINAL_SAMPLEOffset, 0); }
   public static void addSamples(FlatBufferBuilder builder, int SAMPLESOffset) { builder.addOffset(1, SAMPLESOffset, 0); }
   public static int createSamplesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
@@ -79,6 +106,13 @@ public final class PRWExecutionResult extends com.google.flatbuffers.Table {
   public static int createDynamicParametersVector(FlatBufferBuilder builder, byte[] data) { return builder.createByteVector(data); }
   public static int createDynamicParametersVector(FlatBufferBuilder builder, ByteBuffer data) { return builder.createByteVector(data); }
   public static void startDynamicParametersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(1, numElems, 1); }
+  public static void addEvents(FlatBufferBuilder builder, int EVENTSOffset) { builder.addOffset(7, EVENTSOffset, 0); }
+  public static int createEventsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startEventsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addEventOccurrences(FlatBufferBuilder builder, int EVENT_OCCURRENCESOffset) { builder.addOffset(8, EVENT_OCCURRENCESOffset, 0); }
+  public static int createEventOccurrencesVector(FlatBufferBuilder builder, long[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addInt((int) data[i]); return builder.endVector(); }
+  public static void startEventOccurrencesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addStoppedByEvent(FlatBufferBuilder builder, int STOPPED_BY_EVENT) { builder.addInt(9, STOPPED_BY_EVENT, -1); }
   public static int endPRWExecutionResult(FlatBufferBuilder builder) {
     int o = builder.endTable();
     builder.required(o, 4);  // FINAL_SAMPLE

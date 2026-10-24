@@ -32,6 +32,9 @@ struct EVLApsidesConfigurationBuilder;
 struct EVLNodeCrossingConfiguration;
 struct EVLNodeCrossingConfigurationBuilder;
 
+struct EVLLatitudeExtremumConfiguration;
+struct EVLLatitudeExtremumConfigurationBuilder;
+
 struct EVLParameterConditionConfiguration;
 struct EVLParameterConditionConfigurationBuilder;
 
@@ -72,11 +75,14 @@ enum evlLocatorClass : uint8_t {
   /// crossings, latitude crossings and beta-angle limits are this class, not
   /// classes of their own.
   evlLocatorClass_PARAMETER_CONDITION = 6,
+  /// Passage of the target through a maximum or a minimum of its geocentric
+  /// latitude: the zero of the latitude rate, which no catalog parameter is.
+  evlLocatorClass_LATITUDE_EXTREMUM = 7,
   evlLocatorClass_MIN = evlLocatorClass_UNSPECIFIED,
-  evlLocatorClass_MAX = evlLocatorClass_PARAMETER_CONDITION
+  evlLocatorClass_MAX = evlLocatorClass_LATITUDE_EXTREMUM
 };
 
-inline const evlLocatorClass (&EnumValuesevlLocatorClass())[7] {
+inline const evlLocatorClass (&EnumValuesevlLocatorClass())[8] {
   static const evlLocatorClass values[] = {
     evlLocatorClass_UNSPECIFIED,
     evlLocatorClass_ECLIPSE,
@@ -84,13 +90,14 @@ inline const evlLocatorClass (&EnumValuesevlLocatorClass())[7] {
     evlLocatorClass_INTRUSION,
     evlLocatorClass_APSIDES,
     evlLocatorClass_NODE_CROSSING,
-    evlLocatorClass_PARAMETER_CONDITION
+    evlLocatorClass_PARAMETER_CONDITION,
+    evlLocatorClass_LATITUDE_EXTREMUM
   };
   return values;
 }
 
 inline const char * const *EnumNamesevlLocatorClass() {
-  static const char * const names[8] = {
+  static const char * const names[9] = {
     "UNSPECIFIED",
     "ECLIPSE",
     "CONTACT",
@@ -98,13 +105,14 @@ inline const char * const *EnumNamesevlLocatorClass() {
     "APSIDES",
     "NODE_CROSSING",
     "PARAMETER_CONDITION",
+    "LATITUDE_EXTREMUM",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameevlLocatorClass(evlLocatorClass e) {
-  if (::flatbuffers::IsOutRange(e, evlLocatorClass_UNSPECIFIED, evlLocatorClass_PARAMETER_CONDITION)) return "";
+  if (::flatbuffers::IsOutRange(e, evlLocatorClass_UNSPECIFIED, evlLocatorClass_LATITUDE_EXTREMUM)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesevlLocatorClass()[index];
 }
@@ -136,11 +144,15 @@ enum evlEventType : uint8_t {
   evlEventType_DESCENDING_NODE = 11,
   /// A $PCE parameter condition was attained.
   evlEventType_CONDITION_SATISFIED = 12,
+  /// Geocentric latitude at a maximum.
+  evlEventType_MAXIMUM_LATITUDE = 13,
+  /// Geocentric latitude at a minimum.
+  evlEventType_MINIMUM_LATITUDE = 14,
   evlEventType_MIN = evlEventType_UNSPECIFIED,
-  evlEventType_MAX = evlEventType_CONDITION_SATISFIED
+  evlEventType_MAX = evlEventType_MINIMUM_LATITUDE
 };
 
-inline const evlEventType (&EnumValuesevlEventType())[13] {
+inline const evlEventType (&EnumValuesevlEventType())[15] {
   static const evlEventType values[] = {
     evlEventType_UNSPECIFIED,
     evlEventType_UMBRA,
@@ -154,13 +166,15 @@ inline const evlEventType (&EnumValuesevlEventType())[13] {
     evlEventType_PERIAPSIS,
     evlEventType_ASCENDING_NODE,
     evlEventType_DESCENDING_NODE,
-    evlEventType_CONDITION_SATISFIED
+    evlEventType_CONDITION_SATISFIED,
+    evlEventType_MAXIMUM_LATITUDE,
+    evlEventType_MINIMUM_LATITUDE
   };
   return values;
 }
 
 inline const char * const *EnumNamesevlEventType() {
-  static const char * const names[14] = {
+  static const char * const names[16] = {
     "UNSPECIFIED",
     "UMBRA",
     "PENUMBRA",
@@ -174,13 +188,15 @@ inline const char * const *EnumNamesevlEventType() {
     "ASCENDING_NODE",
     "DESCENDING_NODE",
     "CONDITION_SATISFIED",
+    "MAXIMUM_LATITUDE",
+    "MINIMUM_LATITUDE",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNameevlEventType(evlEventType e) {
-  if (::flatbuffers::IsOutRange(e, evlEventType_UNSPECIFIED, evlEventType_CONDITION_SATISFIED)) return "";
+  if (::flatbuffers::IsOutRange(e, evlEventType_UNSPECIFIED, evlEventType_MINIMUM_LATITUDE)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesevlEventType()[index];
 }
@@ -985,7 +1001,8 @@ struct EVLNodeCrossingConfiguration FLATBUFFERS_FINAL_CLASS : private ::flatbuff
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_REFERENCE_COORDINATE_SYSTEM_NAME = 4,
     VT_REPORT_ASCENDING = 6,
-    VT_REPORT_DESCENDING = 8
+    VT_REPORT_DESCENDING = 8,
+    VT_PLANE_NORMAL = 10
   };
   /// Coordinate system whose reference plane defines the node line; resolves
   /// against RFMCoordinateSystem.NAME on the request context.
@@ -998,6 +1015,13 @@ struct EVLNodeCrossingConfiguration FLATBUFFERS_FINAL_CLASS : private ::flatbuff
   bool REPORT_DESCENDING() const {
     return GetField<uint8_t>(VT_REPORT_DESCENDING, 1) != 0;
   }
+  /// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+  /// it need not be a unit vector. Absent or zero: the pole of those axes, which
+  /// makes the crossings the nodes of its equator. Any other normal is an
+  /// arbitrary plane through the center of the system.
+  const FRMVector3 *PLANE_NORMAL() const {
+    return GetPointer<const FRMVector3 *>(VT_PLANE_NORMAL);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1005,6 +1029,8 @@ struct EVLNodeCrossingConfiguration FLATBUFFERS_FINAL_CLASS : private ::flatbuff
            verifier.VerifyString(REFERENCE_COORDINATE_SYSTEM_NAME()) &&
            VerifyField<uint8_t>(verifier, VT_REPORT_ASCENDING, 1) &&
            VerifyField<uint8_t>(verifier, VT_REPORT_DESCENDING, 1) &&
+           VerifyOffset(verifier, VT_PLANE_NORMAL) &&
+           verifier.VerifyTable(PLANE_NORMAL()) &&
            verifier.EndTable();
   }
 };
@@ -1022,6 +1048,9 @@ struct EVLNodeCrossingConfigurationBuilder {
   void add_REPORT_DESCENDING(bool REPORT_DESCENDING) {
     fbb_.AddElement<uint8_t>(EVLNodeCrossingConfiguration::VT_REPORT_DESCENDING, static_cast<uint8_t>(REPORT_DESCENDING), 1);
   }
+  void add_PLANE_NORMAL(::flatbuffers::Offset<FRMVector3> PLANE_NORMAL) {
+    fbb_.AddOffset(EVLNodeCrossingConfiguration::VT_PLANE_NORMAL, PLANE_NORMAL);
+  }
   explicit EVLNodeCrossingConfigurationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1037,8 +1066,10 @@ inline ::flatbuffers::Offset<EVLNodeCrossingConfiguration> CreateEVLNodeCrossing
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_COORDINATE_SYSTEM_NAME = 0,
     bool REPORT_ASCENDING = true,
-    bool REPORT_DESCENDING = true) {
+    bool REPORT_DESCENDING = true,
+    ::flatbuffers::Offset<FRMVector3> PLANE_NORMAL = 0) {
   EVLNodeCrossingConfigurationBuilder builder_(_fbb);
+  builder_.add_PLANE_NORMAL(PLANE_NORMAL);
   builder_.add_REFERENCE_COORDINATE_SYSTEM_NAME(REFERENCE_COORDINATE_SYSTEM_NAME);
   builder_.add_REPORT_DESCENDING(REPORT_DESCENDING);
   builder_.add_REPORT_ASCENDING(REPORT_ASCENDING);
@@ -1049,13 +1080,80 @@ inline ::flatbuffers::Offset<EVLNodeCrossingConfiguration> CreateEVLNodeCrossing
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *REFERENCE_COORDINATE_SYSTEM_NAME = nullptr,
     bool REPORT_ASCENDING = true,
-    bool REPORT_DESCENDING = true) {
+    bool REPORT_DESCENDING = true,
+    ::flatbuffers::Offset<FRMVector3> PLANE_NORMAL = 0) {
   auto REFERENCE_COORDINATE_SYSTEM_NAME__ = REFERENCE_COORDINATE_SYSTEM_NAME ? _fbb.CreateString(REFERENCE_COORDINATE_SYSTEM_NAME) : 0;
   return CreateEVLNodeCrossingConfiguration(
       _fbb,
       REFERENCE_COORDINATE_SYSTEM_NAME__,
       REPORT_ASCENDING,
-      REPORT_DESCENDING);
+      REPORT_DESCENDING,
+      PLANE_NORMAL);
+}
+
+/// Configuration for LATITUDE_EXTREMUM.
+struct EVLLatitudeExtremumConfiguration FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef EVLLatitudeExtremumConfigurationBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CENTRAL_BODY_ID = 4,
+    VT_REPORT_MAXIMUM = 6,
+    VT_REPORT_MINIMUM = 8
+  };
+  /// Ephemeris body code the latitude is measured about; the pole is that of
+  /// the request context's axes.
+  int32_t CENTRAL_BODY_ID() const {
+    return GetField<int32_t>(VT_CENTRAL_BODY_ID, 0);
+  }
+  bool REPORT_MAXIMUM() const {
+    return GetField<uint8_t>(VT_REPORT_MAXIMUM, 1) != 0;
+  }
+  bool REPORT_MINIMUM() const {
+    return GetField<uint8_t>(VT_REPORT_MINIMUM, 1) != 0;
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int32_t>(verifier, VT_CENTRAL_BODY_ID, 4) &&
+           VerifyField<uint8_t>(verifier, VT_REPORT_MAXIMUM, 1) &&
+           VerifyField<uint8_t>(verifier, VT_REPORT_MINIMUM, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct EVLLatitudeExtremumConfigurationBuilder {
+  typedef EVLLatitudeExtremumConfiguration Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CENTRAL_BODY_ID(int32_t CENTRAL_BODY_ID) {
+    fbb_.AddElement<int32_t>(EVLLatitudeExtremumConfiguration::VT_CENTRAL_BODY_ID, CENTRAL_BODY_ID, 0);
+  }
+  void add_REPORT_MAXIMUM(bool REPORT_MAXIMUM) {
+    fbb_.AddElement<uint8_t>(EVLLatitudeExtremumConfiguration::VT_REPORT_MAXIMUM, static_cast<uint8_t>(REPORT_MAXIMUM), 1);
+  }
+  void add_REPORT_MINIMUM(bool REPORT_MINIMUM) {
+    fbb_.AddElement<uint8_t>(EVLLatitudeExtremumConfiguration::VT_REPORT_MINIMUM, static_cast<uint8_t>(REPORT_MINIMUM), 1);
+  }
+  explicit EVLLatitudeExtremumConfigurationBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<EVLLatitudeExtremumConfiguration> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<EVLLatitudeExtremumConfiguration>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<EVLLatitudeExtremumConfiguration> CreateEVLLatitudeExtremumConfiguration(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    int32_t CENTRAL_BODY_ID = 0,
+    bool REPORT_MAXIMUM = true,
+    bool REPORT_MINIMUM = true) {
+  EVLLatitudeExtremumConfigurationBuilder builder_(_fbb);
+  builder_.add_CENTRAL_BODY_ID(CENTRAL_BODY_ID);
+  builder_.add_REPORT_MINIMUM(REPORT_MINIMUM);
+  builder_.add_REPORT_MAXIMUM(REPORT_MAXIMUM);
+  return builder_.Finish();
 }
 
 /// Configuration for PARAMETER_CONDITION, the generic locator.
@@ -1456,7 +1554,8 @@ struct EVLEventLocationRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
     VT_APSIDES_CONFIGURATION = 30,
     VT_NODE_CROSSING_CONFIGURATION = 32,
     VT_PARAMETER_CONDITION_CONFIGURATION = 34,
-    VT_TRACE_ID = 36
+    VT_TRACE_ID = 36,
+    VT_LATITUDE_EXTREMUM_CONFIGURATION = 38
   };
   evlLocatorClass LOCATOR_CLASS() const {
     return static_cast<evlLocatorClass>(GetField<uint8_t>(VT_LOCATOR_CLASS, 0));
@@ -1525,6 +1624,9 @@ struct EVLEventLocationRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
   const ::flatbuffers::String *TRACE_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRACE_ID);
   }
+  const EVLLatitudeExtremumConfiguration *LATITUDE_EXTREMUM_CONFIGURATION() const {
+    return GetPointer<const EVLLatitudeExtremumConfiguration *>(VT_LATITUDE_EXTREMUM_CONFIGURATION);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -1559,6 +1661,8 @@ struct EVLEventLocationRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::
            verifier.VerifyTable(PARAMETER_CONDITION_CONFIGURATION()) &&
            VerifyOffset(verifier, VT_TRACE_ID) &&
            verifier.VerifyString(TRACE_ID()) &&
+           VerifyOffset(verifier, VT_LATITUDE_EXTREMUM_CONFIGURATION) &&
+           verifier.VerifyTable(LATITUDE_EXTREMUM_CONFIGURATION()) &&
            verifier.EndTable();
   }
 };
@@ -1618,6 +1722,9 @@ struct EVLEventLocationRequestBuilder {
   void add_TRACE_ID(::flatbuffers::Offset<::flatbuffers::String> TRACE_ID) {
     fbb_.AddOffset(EVLEventLocationRequest::VT_TRACE_ID, TRACE_ID);
   }
+  void add_LATITUDE_EXTREMUM_CONFIGURATION(::flatbuffers::Offset<EVLLatitudeExtremumConfiguration> LATITUDE_EXTREMUM_CONFIGURATION) {
+    fbb_.AddOffset(EVLEventLocationRequest::VT_LATITUDE_EXTREMUM_CONFIGURATION, LATITUDE_EXTREMUM_CONFIGURATION);
+  }
   explicit EVLEventLocationRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -1647,10 +1754,12 @@ inline ::flatbuffers::Offset<EVLEventLocationRequest> CreateEVLEventLocationRequ
     ::flatbuffers::Offset<EVLApsidesConfiguration> APSIDES_CONFIGURATION = 0,
     ::flatbuffers::Offset<EVLNodeCrossingConfiguration> NODE_CROSSING_CONFIGURATION = 0,
     ::flatbuffers::Offset<EVLParameterConditionConfiguration> PARAMETER_CONDITION_CONFIGURATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> TRACE_ID = 0,
+    ::flatbuffers::Offset<EVLLatitudeExtremumConfiguration> LATITUDE_EXTREMUM_CONFIGURATION = 0) {
   EVLEventLocationRequestBuilder builder_(_fbb);
   builder_.add_REFINEMENT_TOLERANCE_SECONDS(REFINEMENT_TOLERANCE_SECONDS);
   builder_.add_SCAN_STEP_SECONDS(SCAN_STEP_SECONDS);
+  builder_.add_LATITUDE_EXTREMUM_CONFIGURATION(LATITUDE_EXTREMUM_CONFIGURATION);
   builder_.add_TRACE_ID(TRACE_ID);
   builder_.add_PARAMETER_CONDITION_CONFIGURATION(PARAMETER_CONDITION_CONFIGURATION);
   builder_.add_NODE_CROSSING_CONFIGURATION(NODE_CROSSING_CONFIGURATION);
@@ -1687,7 +1796,8 @@ inline ::flatbuffers::Offset<EVLEventLocationRequest> CreateEVLEventLocationRequ
     ::flatbuffers::Offset<EVLApsidesConfiguration> APSIDES_CONFIGURATION = 0,
     ::flatbuffers::Offset<EVLNodeCrossingConfiguration> NODE_CROSSING_CONFIGURATION = 0,
     ::flatbuffers::Offset<EVLParameterConditionConfiguration> PARAMETER_CONDITION_CONFIGURATION = 0,
-    const char *TRACE_ID = nullptr) {
+    const char *TRACE_ID = nullptr,
+    ::flatbuffers::Offset<EVLLatitudeExtremumConfiguration> LATITUDE_EXTREMUM_CONFIGURATION = 0) {
   auto TARGET_OBJECT_ID__ = TARGET_OBJECT_ID ? _fbb.CreateString(TARGET_OBJECT_ID) : 0;
   auto SCAN_START_EPOCH__ = SCAN_START_EPOCH ? _fbb.CreateString(SCAN_START_EPOCH) : 0;
   auto SCAN_STOP_EPOCH__ = SCAN_STOP_EPOCH ? _fbb.CreateString(SCAN_STOP_EPOCH) : 0;
@@ -1712,7 +1822,8 @@ inline ::flatbuffers::Offset<EVLEventLocationRequest> CreateEVLEventLocationRequ
       APSIDES_CONFIGURATION,
       NODE_CROSSING_CONFIGURATION,
       PARAMETER_CONDITION_CONFIGURATION,
-      TRACE_ID__);
+      TRACE_ID__,
+      LATITUDE_EXTREMUM_CONFIGURATION);
 }
 
 /// The events found, and the interval they were actually searched over.

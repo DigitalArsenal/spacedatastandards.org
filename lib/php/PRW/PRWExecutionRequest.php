@@ -216,22 +216,45 @@ class PRWExecutionRequest extends Table
         return $this->__vector_as_bytes(32);
     }
 
+    /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+    /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+    /// or burns) by an integrator with a continuous extension; any other request that
+    /// names events is refused. Default empty.
+    /**
+     * @returnVectorOffset
+     */
+    public function getEVENTS($j)
+    {
+        $o = $this->__offset(34);
+        $obj = new PCFEventDefinition();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEVENTSLength()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWExecutionRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(15);
+        $builder->StartObject(16);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWExecutionRequest
      */
-    public static function createPRWExecutionRequest(FlatBufferBuilder $builder, $INITIAL, $TARGET_EPOCH, $INTEGRATOR, $FORCES, $INCLUDE_STM, $STM_TECHNIQUE, $DENSITY_TREATMENT, $INITIAL_COVARIANCE, $INITIAL_MASS_COVARIANCE, $SAMPLE_EPOCHS, $IMPULSES, $INCLUDE_MASS_DYNAMICS, $FINITE_BURNS, $PROCESS_NOISE, $DYNAMIC_PARAMETERS)
+    public static function createPRWExecutionRequest(FlatBufferBuilder $builder, $INITIAL, $TARGET_EPOCH, $INTEGRATOR, $FORCES, $INCLUDE_STM, $STM_TECHNIQUE, $DENSITY_TREATMENT, $INITIAL_COVARIANCE, $INITIAL_MASS_COVARIANCE, $SAMPLE_EPOCHS, $IMPULSES, $INCLUDE_MASS_DYNAMICS, $FINITE_BURNS, $PROCESS_NOISE, $DYNAMIC_PARAMETERS, $EVENTS)
     {
-        $builder->startObject(15);
+        $builder->startObject(16);
         self::addINITIAL($builder, $INITIAL);
         self::addTARGET_EPOCH($builder, $TARGET_EPOCH);
         self::addINTEGRATOR($builder, $INTEGRATOR);
@@ -247,6 +270,7 @@ class PRWExecutionRequest extends Table
         self::addFINITE_BURNS($builder, $FINITE_BURNS);
         self::addPROCESS_NOISE($builder, $PROCESS_NOISE);
         self::addDYNAMIC_PARAMETERS($builder, $DYNAMIC_PARAMETERS);
+        self::addEVENTS($builder, $EVENTS);
         $o = $builder->endObject();
         $builder->required($o, 4);  // INITIAL
         $builder->required($o, 6);  // TARGET_EPOCH
@@ -499,6 +523,40 @@ class PRWExecutionRequest extends Table
     public static function startDYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEVENTS(FlatBufferBuilder $builder, $EVENTS)
+    {
+        $builder->addOffsetX(15, $EVENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEVENTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEVENTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**

@@ -214,6 +214,15 @@ class EVLEventLocationRequest : Table() {
         }
     val traceIdAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(36, 1)
     fun traceIdInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 36, 1)
+    val latitudeExtremumConfiguration : EVLLatitudeExtremumConfiguration? get() = latitudeExtremumConfiguration(EVLLatitudeExtremumConfiguration())
+    fun latitudeExtremumConfiguration(obj: EVLLatitudeExtremumConfiguration) : EVLLatitudeExtremumConfiguration? {
+        val o = __offset(38)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEVLEventLocationRequest(_bb: ByteBuffer): EVLEventLocationRequest = getRootAsEVLEventLocationRequest(_bb, EVLEventLocationRequest())
@@ -221,10 +230,11 @@ class EVLEventLocationRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEVLEventLocationRequest(builder: FlatBufferBuilder, locatorClass: UByte, targetObjectIdOffset: Int, contextOffset: Int, scanStartEpochOffset: Int, scanStopEpochOffset: Int, epochTimeSystemOffset: Int, scanStepSeconds: Double, refinementToleranceSeconds: Double, maximumEvents: UInt, reportParametersOffset: Int, eclipseConfigurationOffset: Int, contactConfigurationOffset: Int, intrusionConfigurationOffset: Int, apsidesConfigurationOffset: Int, nodeCrossingConfigurationOffset: Int, parameterConditionConfigurationOffset: Int, traceIdOffset: Int) : Int {
-            builder.startTable(17)
+        fun createEVLEventLocationRequest(builder: FlatBufferBuilder, locatorClass: UByte, targetObjectIdOffset: Int, contextOffset: Int, scanStartEpochOffset: Int, scanStopEpochOffset: Int, epochTimeSystemOffset: Int, scanStepSeconds: Double, refinementToleranceSeconds: Double, maximumEvents: UInt, reportParametersOffset: Int, eclipseConfigurationOffset: Int, contactConfigurationOffset: Int, intrusionConfigurationOffset: Int, apsidesConfigurationOffset: Int, nodeCrossingConfigurationOffset: Int, parameterConditionConfigurationOffset: Int, traceIdOffset: Int, latitudeExtremumConfigurationOffset: Int) : Int {
+            builder.startTable(18)
             addREFINEMENTTOLERANCESECONDS(builder, refinementToleranceSeconds)
             addSCANSTEPSECONDS(builder, scanStepSeconds)
+            addLATITUDEEXTREMUMCONFIGURATION(builder, latitudeExtremumConfigurationOffset)
             addTRACEID(builder, traceIdOffset)
             addPARAMETERCONDITIONCONFIGURATION(builder, parameterConditionConfigurationOffset)
             addNODECROSSINGCONFIGURATION(builder, nodeCrossingConfigurationOffset)
@@ -242,7 +252,7 @@ class EVLEventLocationRequest : Table() {
             addLOCATORCLASS(builder, locatorClass)
             return endEVLEventLocationRequest(builder)
         }
-        fun startEVLEventLocationRequest(builder: FlatBufferBuilder) = builder.startTable(17)
+        fun startEVLEventLocationRequest(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addLOCATORCLASS(builder: FlatBufferBuilder, locatorClass: UByte) = builder.addByte(0, locatorClass.toByte(), 0)
         fun addTARGETOBJECTID(builder: FlatBufferBuilder, targetObjectId: Int) = builder.addOffset(1, targetObjectId, 0)
         fun addCONTEXT(builder: FlatBufferBuilder, context: Int) = builder.addOffset(2, context, 0)
@@ -268,6 +278,7 @@ class EVLEventLocationRequest : Table() {
         fun addNODECROSSINGCONFIGURATION(builder: FlatBufferBuilder, nodeCrossingConfiguration: Int) = builder.addOffset(14, nodeCrossingConfiguration, 0)
         fun addPARAMETERCONDITIONCONFIGURATION(builder: FlatBufferBuilder, parameterConditionConfiguration: Int) = builder.addOffset(15, parameterConditionConfiguration, 0)
         fun addTRACEID(builder: FlatBufferBuilder, traceId: Int) = builder.addOffset(16, traceId, 0)
+        fun addLATITUDEEXTREMUMCONFIGURATION(builder: FlatBufferBuilder, latitudeExtremumConfiguration: Int) = builder.addOffset(17, latitudeExtremumConfiguration, 0)
         fun endEVLEventLocationRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

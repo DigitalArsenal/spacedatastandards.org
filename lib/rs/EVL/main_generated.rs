@@ -9,11 +9,11 @@ extern crate alloc;
 pub const ENUM_MIN_EVL_LOCATOR_CLASS: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_EVL_LOCATOR_CLASS: u8 = 6;
+pub const ENUM_MAX_EVL_LOCATOR_CLASS: u8 = 7;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_EVL_LOCATOR_CLASS: [evlLocatorClass; 7] = [
+pub const ENUM_VALUES_EVL_LOCATOR_CLASS: [evlLocatorClass; 8] = [
     evlLocatorClass::UNSPECIFIED,
     evlLocatorClass::ECLIPSE,
     evlLocatorClass::CONTACT,
@@ -21,6 +21,7 @@ pub const ENUM_VALUES_EVL_LOCATOR_CLASS: [evlLocatorClass; 7] = [
     evlLocatorClass::APSIDES,
     evlLocatorClass::NODE_CROSSING,
     evlLocatorClass::PARAMETER_CONDITION,
+    evlLocatorClass::LATITUDE_EXTREMUM,
 ];
 
 /// What kind of event is being located. Every class is one instance of the
@@ -50,9 +51,12 @@ impl evlLocatorClass {
     /// crossings, latitude crossings and beta-angle limits are this class, not
     /// classes of their own.
     pub const PARAMETER_CONDITION: Self = Self(6);
+    /// Passage of the target through a maximum or a minimum of its geocentric
+    /// latitude: the zero of the latitude rate, which no catalog parameter is.
+    pub const LATITUDE_EXTREMUM: Self = Self(7);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 6;
+    pub const ENUM_MAX: u8 = 7;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::ECLIPSE,
@@ -61,6 +65,7 @@ impl evlLocatorClass {
         Self::APSIDES,
         Self::NODE_CROSSING,
         Self::PARAMETER_CONDITION,
+        Self::LATITUDE_EXTREMUM,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -73,6 +78,7 @@ impl evlLocatorClass {
             Self::APSIDES => Some("APSIDES"),
             Self::NODE_CROSSING => Some("NODE_CROSSING"),
             Self::PARAMETER_CONDITION => Some("PARAMETER_CONDITION"),
+            Self::LATITUDE_EXTREMUM => Some("LATITUDE_EXTREMUM"),
             _ => None,
         }
     }
@@ -138,11 +144,11 @@ impl ::flatbuffers::SimpleToVerifyInSlice for evlLocatorClass {}
 pub const ENUM_MIN_EVL_EVENT_TYPE: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_EVL_EVENT_TYPE: u8 = 12;
+pub const ENUM_MAX_EVL_EVENT_TYPE: u8 = 14;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_EVL_EVENT_TYPE: [evlEventType; 13] = [
+pub const ENUM_VALUES_EVL_EVENT_TYPE: [evlEventType; 15] = [
     evlEventType::UNSPECIFIED,
     evlEventType::UMBRA,
     evlEventType::PENUMBRA,
@@ -156,6 +162,8 @@ pub const ENUM_VALUES_EVL_EVENT_TYPE: [evlEventType; 13] = [
     evlEventType::ASCENDING_NODE,
     evlEventType::DESCENDING_NODE,
     evlEventType::CONDITION_SATISFIED,
+    evlEventType::MAXIMUM_LATITUDE,
+    evlEventType::MINIMUM_LATITUDE,
 ];
 
 /// What was found. Append new values only.
@@ -190,9 +198,13 @@ impl evlEventType {
     pub const DESCENDING_NODE: Self = Self(11);
     /// A $PCE parameter condition was attained.
     pub const CONDITION_SATISFIED: Self = Self(12);
+    /// Geocentric latitude at a maximum.
+    pub const MAXIMUM_LATITUDE: Self = Self(13);
+    /// Geocentric latitude at a minimum.
+    pub const MINIMUM_LATITUDE: Self = Self(14);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 12;
+    pub const ENUM_MAX: u8 = 14;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
         Self::UMBRA,
@@ -207,6 +219,8 @@ impl evlEventType {
         Self::ASCENDING_NODE,
         Self::DESCENDING_NODE,
         Self::CONDITION_SATISFIED,
+        Self::MAXIMUM_LATITUDE,
+        Self::MINIMUM_LATITUDE,
     ];
 
     /// Returns the variant's name or "" if unknown.
@@ -225,6 +239,8 @@ impl evlEventType {
             Self::ASCENDING_NODE => Some("ASCENDING_NODE"),
             Self::DESCENDING_NODE => Some("DESCENDING_NODE"),
             Self::CONDITION_SATISFIED => Some("CONDITION_SATISFIED"),
+            Self::MAXIMUM_LATITUDE => Some("MAXIMUM_LATITUDE"),
+            Self::MINIMUM_LATITUDE => Some("MINIMUM_LATITUDE"),
             _ => None,
         }
     }
@@ -2160,6 +2176,7 @@ impl<'a> EVLNodeCrossingConfiguration<'a> {
     pub const VT_REFERENCE_COORDINATE_SYSTEM_NAME: ::flatbuffers::VOffsetT = 4;
     pub const VT_REPORT_ASCENDING: ::flatbuffers::VOffsetT = 6;
     pub const VT_REPORT_DESCENDING: ::flatbuffers::VOffsetT = 8;
+    pub const VT_PLANE_NORMAL: ::flatbuffers::VOffsetT = 10;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -2172,6 +2189,7 @@ impl<'a> EVLNodeCrossingConfiguration<'a> {
         args: &'args EVLNodeCrossingConfigurationArgs<'args>
     ) -> ::flatbuffers::WIPOffset<EVLNodeCrossingConfiguration<'bldr>> {
         let mut builder = EVLNodeCrossingConfigurationBuilder::new(_fbb);
+        if let Some(x) = args.PLANE_NORMAL { builder.add_PLANE_NORMAL(x); }
         if let Some(x) = args.REFERENCE_COORDINATE_SYSTEM_NAME { builder.add_REFERENCE_COORDINATE_SYSTEM_NAME(x); }
         builder.add_REPORT_DESCENDING(args.REPORT_DESCENDING);
         builder.add_REPORT_ASCENDING(args.REPORT_ASCENDING);
@@ -2184,10 +2202,14 @@ impl<'a> EVLNodeCrossingConfiguration<'a> {
         });
         let REPORT_ASCENDING = self.REPORT_ASCENDING();
         let REPORT_DESCENDING = self.REPORT_DESCENDING();
+        let PLANE_NORMAL = self.PLANE_NORMAL().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         EVLNodeCrossingConfigurationT {
             REFERENCE_COORDINATE_SYSTEM_NAME,
             REPORT_ASCENDING,
             REPORT_DESCENDING,
+            PLANE_NORMAL,
         }
     }
 
@@ -2216,6 +2238,18 @@ impl<'a> EVLNodeCrossingConfiguration<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<bool>(EVLNodeCrossingConfiguration::VT_REPORT_DESCENDING, Some(true)).unwrap()}
     }
+
+    /// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+    /// it need not be a unit vector. Absent or zero: the pole of those axes, which
+    /// makes the crossings the nodes of its equator. Any other normal is an
+    /// arbitrary plane through the center of the system.
+    #[inline]
+    pub fn PLANE_NORMAL(&self) -> Option<FRMVector3<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FRMVector3>>(EVLNodeCrossingConfiguration::VT_PLANE_NORMAL, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for EVLNodeCrossingConfiguration<'_> {
@@ -2227,6 +2261,7 @@ impl ::flatbuffers::Verifiable for EVLNodeCrossingConfiguration<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("REFERENCE_COORDINATE_SYSTEM_NAME", Self::VT_REFERENCE_COORDINATE_SYSTEM_NAME, false)?
             .visit_field::<bool>("REPORT_ASCENDING", Self::VT_REPORT_ASCENDING, false)?
             .visit_field::<bool>("REPORT_DESCENDING", Self::VT_REPORT_DESCENDING, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<FRMVector3>>("PLANE_NORMAL", Self::VT_PLANE_NORMAL, false)?
             .finish();
         Ok(())
     }
@@ -2236,6 +2271,7 @@ pub struct EVLNodeCrossingConfigurationArgs<'a> {
     pub REFERENCE_COORDINATE_SYSTEM_NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
     pub REPORT_ASCENDING: bool,
     pub REPORT_DESCENDING: bool,
+    pub PLANE_NORMAL: Option<::flatbuffers::WIPOffset<FRMVector3<'a>>>,
 }
 
 impl<'a> Default for EVLNodeCrossingConfigurationArgs<'a> {
@@ -2245,6 +2281,7 @@ impl<'a> Default for EVLNodeCrossingConfigurationArgs<'a> {
             REFERENCE_COORDINATE_SYSTEM_NAME: None,
             REPORT_ASCENDING: true,
             REPORT_DESCENDING: true,
+            PLANE_NORMAL: None,
         }
     }
 }
@@ -2271,6 +2308,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EVLNodeCrossingConfigurationB
     }
 
     #[inline]
+    pub fn add_PLANE_NORMAL(&mut self, PLANE_NORMAL: ::flatbuffers::WIPOffset<FRMVector3<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FRMVector3>>(EVLNodeCrossingConfiguration::VT_PLANE_NORMAL, PLANE_NORMAL);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EVLNodeCrossingConfigurationBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         EVLNodeCrossingConfigurationBuilder {
@@ -2292,6 +2334,7 @@ impl ::core::fmt::Debug for EVLNodeCrossingConfiguration<'_> {
         ds.field("REFERENCE_COORDINATE_SYSTEM_NAME", &self.REFERENCE_COORDINATE_SYSTEM_NAME());
         ds.field("REPORT_ASCENDING", &self.REPORT_ASCENDING());
         ds.field("REPORT_DESCENDING", &self.REPORT_DESCENDING());
+        ds.field("PLANE_NORMAL", &self.PLANE_NORMAL());
         ds.finish()
     }
 }
@@ -2302,6 +2345,7 @@ pub struct EVLNodeCrossingConfigurationT {
     pub REFERENCE_COORDINATE_SYSTEM_NAME: Option<alloc::string::String>,
     pub REPORT_ASCENDING: bool,
     pub REPORT_DESCENDING: bool,
+    pub PLANE_NORMAL: Option<alloc::boxed::Box<FRMVector3T>>,
 }
 
 impl Default for EVLNodeCrossingConfigurationT {
@@ -2310,6 +2354,7 @@ impl Default for EVLNodeCrossingConfigurationT {
             REFERENCE_COORDINATE_SYSTEM_NAME: None,
             REPORT_ASCENDING: true,
             REPORT_DESCENDING: true,
+            PLANE_NORMAL: None,
         }
     }
 }
@@ -2324,10 +2369,203 @@ impl EVLNodeCrossingConfigurationT {
         });
         let REPORT_ASCENDING = self.REPORT_ASCENDING;
         let REPORT_DESCENDING = self.REPORT_DESCENDING;
+        let PLANE_NORMAL = self.PLANE_NORMAL.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         EVLNodeCrossingConfiguration::create(_fbb, &EVLNodeCrossingConfigurationArgs{
             REFERENCE_COORDINATE_SYSTEM_NAME,
             REPORT_ASCENDING,
             REPORT_DESCENDING,
+            PLANE_NORMAL,
+        })
+    }
+}
+
+pub enum EVLLatitudeExtremumConfigurationOffset {}
+
+/// Configuration for LATITUDE_EXTREMUM.
+#[derive(Copy, Clone, PartialEq)]
+pub struct EVLLatitudeExtremumConfiguration<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for EVLLatitudeExtremumConfiguration<'a> {
+    type Inner = EVLLatitudeExtremumConfiguration<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> EVLLatitudeExtremumConfiguration<'a> {
+    pub const VT_CENTRAL_BODY_ID: ::flatbuffers::VOffsetT = 4;
+    pub const VT_REPORT_MAXIMUM: ::flatbuffers::VOffsetT = 6;
+    pub const VT_REPORT_MINIMUM: ::flatbuffers::VOffsetT = 8;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        EVLLatitudeExtremumConfiguration { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args EVLLatitudeExtremumConfigurationArgs
+    ) -> ::flatbuffers::WIPOffset<EVLLatitudeExtremumConfiguration<'bldr>> {
+        let mut builder = EVLLatitudeExtremumConfigurationBuilder::new(_fbb);
+        builder.add_CENTRAL_BODY_ID(args.CENTRAL_BODY_ID);
+        builder.add_REPORT_MINIMUM(args.REPORT_MINIMUM);
+        builder.add_REPORT_MAXIMUM(args.REPORT_MAXIMUM);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> EVLLatitudeExtremumConfigurationT {
+        let CENTRAL_BODY_ID = self.CENTRAL_BODY_ID();
+        let REPORT_MAXIMUM = self.REPORT_MAXIMUM();
+        let REPORT_MINIMUM = self.REPORT_MINIMUM();
+        EVLLatitudeExtremumConfigurationT {
+            CENTRAL_BODY_ID,
+            REPORT_MAXIMUM,
+            REPORT_MINIMUM,
+        }
+    }
+
+    /// Ephemeris body code the latitude is measured about; the pole is that of
+    /// the request context's axes.
+    #[inline]
+    pub fn CENTRAL_BODY_ID(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(EVLLatitudeExtremumConfiguration::VT_CENTRAL_BODY_ID, Some(0)).unwrap()}
+    }
+
+    #[inline]
+    pub fn REPORT_MAXIMUM(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(EVLLatitudeExtremumConfiguration::VT_REPORT_MAXIMUM, Some(true)).unwrap()}
+    }
+
+    #[inline]
+    pub fn REPORT_MINIMUM(&self) -> bool {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<bool>(EVLLatitudeExtremumConfiguration::VT_REPORT_MINIMUM, Some(true)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for EVLLatitudeExtremumConfiguration<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<i32>("CENTRAL_BODY_ID", Self::VT_CENTRAL_BODY_ID, false)?
+            .visit_field::<bool>("REPORT_MAXIMUM", Self::VT_REPORT_MAXIMUM, false)?
+            .visit_field::<bool>("REPORT_MINIMUM", Self::VT_REPORT_MINIMUM, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct EVLLatitudeExtremumConfigurationArgs {
+    pub CENTRAL_BODY_ID: i32,
+    pub REPORT_MAXIMUM: bool,
+    pub REPORT_MINIMUM: bool,
+}
+
+impl<'a> Default for EVLLatitudeExtremumConfigurationArgs {
+    #[inline]
+    fn default() -> Self {
+        EVLLatitudeExtremumConfigurationArgs {
+            CENTRAL_BODY_ID: 0,
+            REPORT_MAXIMUM: true,
+            REPORT_MINIMUM: true,
+        }
+    }
+}
+
+pub struct EVLLatitudeExtremumConfigurationBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EVLLatitudeExtremumConfigurationBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_CENTRAL_BODY_ID(&mut self, CENTRAL_BODY_ID: i32) {
+        self.fbb_.push_slot::<i32>(EVLLatitudeExtremumConfiguration::VT_CENTRAL_BODY_ID, CENTRAL_BODY_ID, 0);
+    }
+
+    #[inline]
+    pub fn add_REPORT_MAXIMUM(&mut self, REPORT_MAXIMUM: bool) {
+        self.fbb_.push_slot::<bool>(EVLLatitudeExtremumConfiguration::VT_REPORT_MAXIMUM, REPORT_MAXIMUM, true);
+    }
+
+    #[inline]
+    pub fn add_REPORT_MINIMUM(&mut self, REPORT_MINIMUM: bool) {
+        self.fbb_.push_slot::<bool>(EVLLatitudeExtremumConfiguration::VT_REPORT_MINIMUM, REPORT_MINIMUM, true);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EVLLatitudeExtremumConfigurationBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        EVLLatitudeExtremumConfigurationBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<EVLLatitudeExtremumConfiguration<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for EVLLatitudeExtremumConfiguration<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("EVLLatitudeExtremumConfiguration");
+        ds.field("CENTRAL_BODY_ID", &self.CENTRAL_BODY_ID());
+        ds.field("REPORT_MAXIMUM", &self.REPORT_MAXIMUM());
+        ds.field("REPORT_MINIMUM", &self.REPORT_MINIMUM());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct EVLLatitudeExtremumConfigurationT {
+    pub CENTRAL_BODY_ID: i32,
+    pub REPORT_MAXIMUM: bool,
+    pub REPORT_MINIMUM: bool,
+}
+
+impl Default for EVLLatitudeExtremumConfigurationT {
+    fn default() -> Self {
+        Self {
+            CENTRAL_BODY_ID: 0,
+            REPORT_MAXIMUM: true,
+            REPORT_MINIMUM: true,
+        }
+    }
+}
+
+impl EVLLatitudeExtremumConfigurationT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<EVLLatitudeExtremumConfiguration<'b>> {
+        let CENTRAL_BODY_ID = self.CENTRAL_BODY_ID;
+        let REPORT_MAXIMUM = self.REPORT_MAXIMUM;
+        let REPORT_MINIMUM = self.REPORT_MINIMUM;
+        EVLLatitudeExtremumConfiguration::create(_fbb, &EVLLatitudeExtremumConfigurationArgs{
+            CENTRAL_BODY_ID,
+            REPORT_MAXIMUM,
+            REPORT_MINIMUM,
         })
     }
 }
@@ -3240,6 +3478,7 @@ impl<'a> EVLEventLocationRequest<'a> {
     pub const VT_NODE_CROSSING_CONFIGURATION: ::flatbuffers::VOffsetT = 32;
     pub const VT_PARAMETER_CONDITION_CONFIGURATION: ::flatbuffers::VOffsetT = 34;
     pub const VT_TRACE_ID: ::flatbuffers::VOffsetT = 36;
+    pub const VT_LATITUDE_EXTREMUM_CONFIGURATION: ::flatbuffers::VOffsetT = 38;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3254,6 +3493,7 @@ impl<'a> EVLEventLocationRequest<'a> {
         let mut builder = EVLEventLocationRequestBuilder::new(_fbb);
         builder.add_REFINEMENT_TOLERANCE_SECONDS(args.REFINEMENT_TOLERANCE_SECONDS);
         builder.add_SCAN_STEP_SECONDS(args.SCAN_STEP_SECONDS);
+        if let Some(x) = args.LATITUDE_EXTREMUM_CONFIGURATION { builder.add_LATITUDE_EXTREMUM_CONFIGURATION(x); }
         if let Some(x) = args.TRACE_ID { builder.add_TRACE_ID(x); }
         if let Some(x) = args.PARAMETER_CONDITION_CONFIGURATION { builder.add_PARAMETER_CONDITION_CONFIGURATION(x); }
         if let Some(x) = args.NODE_CROSSING_CONFIGURATION { builder.add_NODE_CROSSING_CONFIGURATION(x); }
@@ -3316,6 +3556,9 @@ impl<'a> EVLEventLocationRequest<'a> {
         let TRACE_ID = self.TRACE_ID().map(|x| {
             alloc::string::ToString::to_string(x)
         });
+        let LATITUDE_EXTREMUM_CONFIGURATION = self.LATITUDE_EXTREMUM_CONFIGURATION().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         EVLEventLocationRequestT {
             LOCATOR_CLASS,
             TARGET_OBJECT_ID,
@@ -3334,6 +3577,7 @@ impl<'a> EVLEventLocationRequest<'a> {
             NODE_CROSSING_CONFIGURATION,
             PARAMETER_CONDITION_CONFIGURATION,
             TRACE_ID,
+            LATITUDE_EXTREMUM_CONFIGURATION,
         }
     }
 
@@ -3488,6 +3732,14 @@ impl<'a> EVLEventLocationRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(EVLEventLocationRequest::VT_TRACE_ID, None)}
     }
+
+    #[inline]
+    pub fn LATITUDE_EXTREMUM_CONFIGURATION(&self) -> Option<EVLLatitudeExtremumConfiguration<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EVLLatitudeExtremumConfiguration>>(EVLEventLocationRequest::VT_LATITUDE_EXTREMUM_CONFIGURATION, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for EVLEventLocationRequest<'_> {
@@ -3513,6 +3765,7 @@ impl ::flatbuffers::Verifiable for EVLEventLocationRequest<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<EVLNodeCrossingConfiguration>>("NODE_CROSSING_CONFIGURATION", Self::VT_NODE_CROSSING_CONFIGURATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<EVLParameterConditionConfiguration>>("PARAMETER_CONDITION_CONFIGURATION", Self::VT_PARAMETER_CONDITION_CONFIGURATION, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("TRACE_ID", Self::VT_TRACE_ID, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<EVLLatitudeExtremumConfiguration>>("LATITUDE_EXTREMUM_CONFIGURATION", Self::VT_LATITUDE_EXTREMUM_CONFIGURATION, false)?
             .finish();
         Ok(())
     }
@@ -3536,6 +3789,7 @@ pub struct EVLEventLocationRequestArgs<'a> {
     pub NODE_CROSSING_CONFIGURATION: Option<::flatbuffers::WIPOffset<EVLNodeCrossingConfiguration<'a>>>,
     pub PARAMETER_CONDITION_CONFIGURATION: Option<::flatbuffers::WIPOffset<EVLParameterConditionConfiguration<'a>>>,
     pub TRACE_ID: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub LATITUDE_EXTREMUM_CONFIGURATION: Option<::flatbuffers::WIPOffset<EVLLatitudeExtremumConfiguration<'a>>>,
 }
 
 impl<'a> Default for EVLEventLocationRequestArgs<'a> {
@@ -3559,6 +3813,7 @@ impl<'a> Default for EVLEventLocationRequestArgs<'a> {
             NODE_CROSSING_CONFIGURATION: None,
             PARAMETER_CONDITION_CONFIGURATION: None,
             TRACE_ID: None,
+            LATITUDE_EXTREMUM_CONFIGURATION: None,
         }
     }
 }
@@ -3655,6 +3910,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> EVLEventLocationRequestBuilde
     }
 
     #[inline]
+    pub fn add_LATITUDE_EXTREMUM_CONFIGURATION(&mut self, LATITUDE_EXTREMUM_CONFIGURATION: ::flatbuffers::WIPOffset<EVLLatitudeExtremumConfiguration<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EVLLatitudeExtremumConfiguration>>(EVLEventLocationRequest::VT_LATITUDE_EXTREMUM_CONFIGURATION, LATITUDE_EXTREMUM_CONFIGURATION);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> EVLEventLocationRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         EVLEventLocationRequestBuilder {
@@ -3690,6 +3950,7 @@ impl ::core::fmt::Debug for EVLEventLocationRequest<'_> {
         ds.field("NODE_CROSSING_CONFIGURATION", &self.NODE_CROSSING_CONFIGURATION());
         ds.field("PARAMETER_CONDITION_CONFIGURATION", &self.PARAMETER_CONDITION_CONFIGURATION());
         ds.field("TRACE_ID", &self.TRACE_ID());
+        ds.field("LATITUDE_EXTREMUM_CONFIGURATION", &self.LATITUDE_EXTREMUM_CONFIGURATION());
         ds.finish()
     }
 }
@@ -3714,6 +3975,7 @@ pub struct EVLEventLocationRequestT {
     pub NODE_CROSSING_CONFIGURATION: Option<alloc::boxed::Box<EVLNodeCrossingConfigurationT>>,
     pub PARAMETER_CONDITION_CONFIGURATION: Option<alloc::boxed::Box<EVLParameterConditionConfigurationT>>,
     pub TRACE_ID: Option<alloc::string::String>,
+    pub LATITUDE_EXTREMUM_CONFIGURATION: Option<alloc::boxed::Box<EVLLatitudeExtremumConfigurationT>>,
 }
 
 impl Default for EVLEventLocationRequestT {
@@ -3736,6 +3998,7 @@ impl Default for EVLEventLocationRequestT {
             NODE_CROSSING_CONFIGURATION: None,
             PARAMETER_CONDITION_CONFIGURATION: None,
             TRACE_ID: None,
+            LATITUDE_EXTREMUM_CONFIGURATION: None,
         }
     }
 }
@@ -3788,6 +4051,9 @@ impl EVLEventLocationRequestT {
         let TRACE_ID = self.TRACE_ID.as_ref().map(|x|{
             _fbb.create_string(x)
         });
+        let LATITUDE_EXTREMUM_CONFIGURATION = self.LATITUDE_EXTREMUM_CONFIGURATION.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         EVLEventLocationRequest::create(_fbb, &EVLEventLocationRequestArgs{
             LOCATOR_CLASS,
             TARGET_OBJECT_ID,
@@ -3806,6 +4072,7 @@ impl EVLEventLocationRequestT {
             NODE_CROSSING_CONFIGURATION,
             PARAMETER_CONDITION_CONFIGURATION,
             TRACE_ID,
+            LATITUDE_EXTREMUM_CONFIGURATION,
         })
     }
 }

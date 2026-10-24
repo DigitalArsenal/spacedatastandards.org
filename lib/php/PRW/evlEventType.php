@@ -29,6 +29,10 @@ class evlEventType
     const DESCENDING_NODE = 11;
     /// A $PCE parameter condition was attained.
     const CONDITION_SATISFIED = 12;
+    /// Geocentric latitude at a maximum.
+    const MAXIMUM_LATITUDE = 13;
+    /// Geocentric latitude at a minimum.
+    const MINIMUM_LATITUDE = 14;
 
     private static $names = array(
         evlEventType::UNSPECIFIED=>"UNSPECIFIED",
@@ -44,6 +48,8 @@ class evlEventType
         evlEventType::ASCENDING_NODE=>"ASCENDING_NODE",
         evlEventType::DESCENDING_NODE=>"DESCENDING_NODE",
         evlEventType::CONDITION_SATISFIED=>"CONDITION_SATISFIED",
+        evlEventType::MAXIMUM_LATITUDE=>"MAXIMUM_LATITUDE",
+        evlEventType::MINIMUM_LATITUDE=>"MINIMUM_LATITUDE",
     );
 
     public static function Name($e)

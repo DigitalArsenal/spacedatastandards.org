@@ -6,10 +6,9 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
 class PCFEventDefinition extends Table
 {
     /**
@@ -44,109 +43,89 @@ class PCFEventDefinition extends Table
         return $this;
     }
 
-    /// The caller's name for the event, echoed in the result. Default empty.
-    public function getNAME()
-    {
-        $o = $this->__offset(4);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /// Which locator. Default PARAMETER_CONDITION.
+    /// The event function. Default UNSPECIFIED (refused).
     /**
      * @return byte
      */
-    public function getLOCATOR_CLASS()
+    public function getKIND()
+    {
+        $o = $this->__offset(4);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfEventKind::UNSPECIFIED;
+    }
+
+    /// Which zero crossings of the event function count. Default ANY.
+    /**
+     * @return byte
+     */
+    public function getDIRECTION()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \evlLocatorClass::PARAMETER_CONDITION;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfEventDirection::ANY;
     }
 
-    /// Exactly the one of the next five that matches LOCATOR_CLASS is present
-    /// (any other combination is refused as MISSING_CONFIGURATION, as in
-    /// $EVL). The condition carries its own direction, goal value, goal
-    /// tolerance and occurrence.
-    public function getCONDITION()
-    {
-        $obj = new PCEParameterCondition();
-        $o = $this->__offset(8);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    public function getECLIPSE()
-    {
-        $obj = new EVLEclipseConfiguration();
-        $o = $this->__offset(10);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    public function getCONTACT()
-    {
-        $obj = new EVLContactConfiguration();
-        $o = $this->__offset(12);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    public function getINTRUSION()
-    {
-        $obj = new EVLIntrusionConfiguration();
-        $o = $this->__offset(14);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    public function getAPSIDES()
-    {
-        $obj = new EVLApsidesConfiguration();
-        $o = $this->__offset(16);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    public function getNODE_CROSSING()
-    {
-        $obj = new EVLNodeCrossingConfiguration();
-        $o = $this->__offset(18);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    /// What the propagator does at the event. Default RECORD.
+    /// What the integrator does at the event. Default RECORD.
     /**
      * @return byte
      */
     public function getACTION()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(8);
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfEventAction::RECORD;
     }
 
-    /// Convergence bar on the located epoch, seconds. Default 1e-9.
+    /// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
     /**
      * @return double
      */
-    public function getEPOCH_TOLERANCE_SECONDS()
+    public function getTOLERANCE_SECONDS()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(10);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 1e-9;
     }
 
-    /// Step at which the event function is sampled before refinement, seconds;
-    /// 0 samples at the integrator's accepted steps. A root is found only when
-    /// the function changes sign within one sample interval. Default 0.
-    /**
-     * @return double
-     */
-    public function getSCAN_STEP_SECONDS()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /// Largest number of occurrences reported; 0 is no bound. Default 0.
+    /// STOP acts at this qualifying crossing (1 is the first). Default 1.
     /**
      * @return uint
      */
-    public function getMAXIMUM_EVENTS()
+    public function getOCCURRENCE()
     {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 1;
+    }
+
+    /// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+    /**
+     * @return double
+     */
+    public function getANGLE_RAD()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+    /// vector. Default absent (the pole of the axes).
+    public function getPLANE_NORMAL()
+    {
+        $obj = new FRMVector3();
+        $o = $this->__offset(16);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+    /// as $OEM. Default empty.
+    public function getSECOND_TRAJECTORY_PORT()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// EXPRESSION: the program. Default absent.
+    public function getEXPRESSION()
+    {
+        $obj = new PCFExpression();
+        $o = $this->__offset(20);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /**
@@ -155,40 +134,27 @@ class PCFEventDefinition extends Table
      */
     public static function startPCFEventDefinition(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFEventDefinition
      */
-    public static function createPCFEventDefinition(FlatBufferBuilder $builder, $NAME, $LOCATOR_CLASS, $CONDITION, $ECLIPSE, $CONTACT, $INTRUSION, $APSIDES, $NODE_CROSSING, $ACTION, $EPOCH_TOLERANCE_SECONDS, $SCAN_STEP_SECONDS, $MAXIMUM_EVENTS)
+    public static function createPCFEventDefinition(FlatBufferBuilder $builder, $KIND, $DIRECTION, $ACTION, $TOLERANCE_SECONDS, $OCCURRENCE, $ANGLE_RAD, $PLANE_NORMAL, $SECOND_TRAJECTORY_PORT, $EXPRESSION)
     {
-        $builder->startObject(12);
-        self::addNAME($builder, $NAME);
-        self::addLOCATOR_CLASS($builder, $LOCATOR_CLASS);
-        self::addCONDITION($builder, $CONDITION);
-        self::addECLIPSE($builder, $ECLIPSE);
-        self::addCONTACT($builder, $CONTACT);
-        self::addINTRUSION($builder, $INTRUSION);
-        self::addAPSIDES($builder, $APSIDES);
-        self::addNODE_CROSSING($builder, $NODE_CROSSING);
+        $builder->startObject(9);
+        self::addKIND($builder, $KIND);
+        self::addDIRECTION($builder, $DIRECTION);
         self::addACTION($builder, $ACTION);
-        self::addEPOCH_TOLERANCE_SECONDS($builder, $EPOCH_TOLERANCE_SECONDS);
-        self::addSCAN_STEP_SECONDS($builder, $SCAN_STEP_SECONDS);
-        self::addMAXIMUM_EVENTS($builder, $MAXIMUM_EVENTS);
+        self::addTOLERANCE_SECONDS($builder, $TOLERANCE_SECONDS);
+        self::addOCCURRENCE($builder, $OCCURRENCE);
+        self::addANGLE_RAD($builder, $ANGLE_RAD);
+        self::addPLANE_NORMAL($builder, $PLANE_NORMAL);
+        self::addSECOND_TRAJECTORY_PORT($builder, $SECOND_TRAJECTORY_PORT);
+        self::addEXPRESSION($builder, $EXPRESSION);
         $o = $builder->endObject();
         return $o;
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addNAME(FlatBufferBuilder $builder, $NAME)
-    {
-        $builder->addOffsetX(0, $NAME, 0);
     }
 
     /**
@@ -196,69 +162,19 @@ class PCFEventDefinition extends Table
      * @param byte
      * @return void
      */
-    public static function addLOCATOR_CLASS(FlatBufferBuilder $builder, $LOCATOR_CLASS)
+    public static function addKIND(FlatBufferBuilder $builder, $KIND)
     {
-        $builder->addByteX(1, $LOCATOR_CLASS, 6);
+        $builder->addByteX(0, $KIND, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
+     * @param byte
      * @return void
      */
-    public static function addCONDITION(FlatBufferBuilder $builder, $CONDITION)
+    public static function addDIRECTION(FlatBufferBuilder $builder, $DIRECTION)
     {
-        $builder->addOffsetX(2, $CONDITION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addECLIPSE(FlatBufferBuilder $builder, $ECLIPSE)
-    {
-        $builder->addOffsetX(3, $ECLIPSE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addCONTACT(FlatBufferBuilder $builder, $CONTACT)
-    {
-        $builder->addOffsetX(4, $CONTACT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addINTRUSION(FlatBufferBuilder $builder, $INTRUSION)
-    {
-        $builder->addOffsetX(5, $INTRUSION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addAPSIDES(FlatBufferBuilder $builder, $APSIDES)
-    {
-        $builder->addOffsetX(6, $APSIDES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addNODE_CROSSING(FlatBufferBuilder $builder, $NODE_CROSSING)
-    {
-        $builder->addOffsetX(7, $NODE_CROSSING, 0);
+        $builder->addByteX(1, $DIRECTION, 0);
     }
 
     /**
@@ -268,7 +184,7 @@ class PCFEventDefinition extends Table
      */
     public static function addACTION(FlatBufferBuilder $builder, $ACTION)
     {
-        $builder->addByteX(8, $ACTION, 3);
+        $builder->addByteX(2, $ACTION, 1);
     }
 
     /**
@@ -276,19 +192,9 @@ class PCFEventDefinition extends Table
      * @param double
      * @return void
      */
-    public static function addEPOCH_TOLERANCE_SECONDS(FlatBufferBuilder $builder, $EPOCH_TOLERANCE_SECONDS)
+    public static function addTOLERANCE_SECONDS(FlatBufferBuilder $builder, $TOLERANCE_SECONDS)
     {
-        $builder->addDoubleX(9, $EPOCH_TOLERANCE_SECONDS, 1e-9);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSCAN_STEP_SECONDS(FlatBufferBuilder $builder, $SCAN_STEP_SECONDS)
-    {
-        $builder->addDoubleX(10, $SCAN_STEP_SECONDS, 0.0);
+        $builder->addDoubleX(3, $TOLERANCE_SECONDS, 1e-9);
     }
 
     /**
@@ -296,9 +202,49 @@ class PCFEventDefinition extends Table
      * @param uint
      * @return void
      */
-    public static function addMAXIMUM_EVENTS(FlatBufferBuilder $builder, $MAXIMUM_EVENTS)
+    public static function addOCCURRENCE(FlatBufferBuilder $builder, $OCCURRENCE)
     {
-        $builder->addUintX(11, $MAXIMUM_EVENTS, 0);
+        $builder->addUintX(4, $OCCURRENCE, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addANGLE_RAD(FlatBufferBuilder $builder, $ANGLE_RAD)
+    {
+        $builder->addDoubleX(5, $ANGLE_RAD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPLANE_NORMAL(FlatBufferBuilder $builder, $PLANE_NORMAL)
+    {
+        $builder->addOffsetX(6, $PLANE_NORMAL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSECOND_TRAJECTORY_PORT(FlatBufferBuilder $builder, $SECOND_TRAJECTORY_PORT)
+    {
+        $builder->addOffsetX(7, $SECOND_TRAJECTORY_PORT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEXPRESSION(FlatBufferBuilder $builder, $EXPRESSION)
+    {
+        $builder->addOffsetX(8, $EXPRESSION, 0);
     }
 
     /**

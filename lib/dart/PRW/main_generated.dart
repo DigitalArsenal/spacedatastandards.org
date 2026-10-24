@@ -2341,6 +2341,155 @@ class PRWFiniteBurnObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  A located event.
+class PRWEventRecord {
+  PRWEventRecord._(this._bc, this._bcOffset);
+  factory PRWEventRecord(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PRWEventRecord> reader = _PRWEventRecordReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Index into the request's EVENTS.
+  int get EVENT_INDEX => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get eventIndex => EVENT_INDEX;
+  ///  The event function that crossed zero.
+  pcfEventKind get KIND => pcfEventKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  The way g crossed zero: INCREASING or DECREASING.
+  pcfEventDirection get DIRECTION => pcfEventDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Epoch of the crossing.
+  TIMInstant? get EPOCH => TIMInstant.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Seconds from the request's initial epoch, negative for a backward propagation.
+  double get ELAPSED_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  double get elapsedSeconds => ELAPSED_SECONDS;
+  ///  The state at EPOCH in the request's axes.
+  PRWResidentState? get STATE => PRWResidentState.reader.vTableGetNullable(_bc, _bcOffset, 14);
+  ///  g at EPOCH.
+  double get RESIDUAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Refinement steps taken.
+  int get ITERATIONS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+
+  @override
+  String toString() {
+    return 'PRWEventRecord{eventIndex: ${eventIndex}, KIND: ${KIND}, DIRECTION: ${DIRECTION}, EPOCH: ${EPOCH}, elapsedSeconds: ${elapsedSeconds}, STATE: ${STATE}, RESIDUAL: ${RESIDUAL}, ITERATIONS: ${ITERATIONS}}';
+  }
+}
+
+class _PRWEventRecordReader extends fb.TableReader<PRWEventRecord> {
+  const _PRWEventRecordReader();
+
+  @override
+  PRWEventRecord createObject(fb.BufferContext bc, int offset) =>
+    PRWEventRecord._(bc, offset);
+}
+
+class PRWEventRecordBuilder {
+  PRWEventRecordBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addEventIndex(int? EVENT_INDEX) {
+    fbBuilder.addUint32(0, EVENT_INDEX);
+    return fbBuilder.offset;
+  }
+  int addKind(pcfEventKind? KIND) {
+    fbBuilder.addUint8(1, KIND?.value);
+    return fbBuilder.offset;
+  }
+  int addDirection(pcfEventDirection? DIRECTION) {
+    fbBuilder.addUint8(2, DIRECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addElapsedSeconds(double? ELAPSED_SECONDS) {
+    fbBuilder.addFloat64(4, ELAPSED_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addStateOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addResidual(double? RESIDUAL) {
+    fbBuilder.addFloat64(6, RESIDUAL);
+    return fbBuilder.offset;
+  }
+  int addIterations(int? ITERATIONS) {
+    fbBuilder.addUint32(7, ITERATIONS);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PRWEventRecordObjectBuilder extends fb.ObjectBuilder {
+  final int? _EVENT_INDEX;
+  final pcfEventKind? _KIND;
+  final pcfEventDirection? _DIRECTION;
+  final TIMInstantObjectBuilder? _EPOCH;
+  final double? _ELAPSED_SECONDS;
+  final PRWResidentStateObjectBuilder? _STATE;
+  final double? _RESIDUAL;
+  final int? _ITERATIONS;
+
+  PRWEventRecordObjectBuilder({
+    int? EVENT_INDEX,
+    int? eventIndex,
+    pcfEventKind? KIND,
+    pcfEventDirection? DIRECTION,
+    TIMInstantObjectBuilder? EPOCH,
+    double? ELAPSED_SECONDS,
+    double? elapsedSeconds,
+    PRWResidentStateObjectBuilder? STATE,
+    double? RESIDUAL,
+    int? ITERATIONS,
+  })
+      : _EVENT_INDEX = eventIndex ?? EVENT_INDEX,
+        _KIND = KIND,
+        _DIRECTION = DIRECTION,
+        _EPOCH = EPOCH,
+        _ELAPSED_SECONDS = elapsedSeconds ?? ELAPSED_SECONDS,
+        _STATE = STATE,
+        _RESIDUAL = RESIDUAL,
+        _ITERATIONS = ITERATIONS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH?.getOrCreateOffset(fbBuilder);
+    final int? STATEOffset = _STATE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(8);
+    fbBuilder.addUint32(0, _EVENT_INDEX);
+    fbBuilder.addUint8(1, _KIND?.value);
+    fbBuilder.addUint8(2, _DIRECTION?.value);
+    fbBuilder.addOffset(3, EPOCHOffset);
+    fbBuilder.addFloat64(4, _ELAPSED_SECONDS);
+    fbBuilder.addOffset(5, STATEOffset);
+    fbBuilder.addFloat64(6, _RESIDUAL);
+    fbBuilder.addUint32(7, _ITERATIONS);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Fixed endpoint propagation. Provider selected by the host's connected port.
 class PRWExecutionRequest {
   PRWExecutionRequest._(this._bc, this._bcOffset);
@@ -2386,10 +2535,15 @@ class PRWExecutionRequest {
   ///  10x10). Each must be active in FORCES. Empty means the state alone.
   List<prwDynamicParameter>? get DYNAMIC_PARAMETERS => const fb.ListReader<prwDynamicParameter>(prwDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 32);
   List<prwDynamicParameter>? get dynamicParameters => DYNAMIC_PARAMETERS;
+  ///  Events located inside the integration (PCFEventDefinition, shared with $PCF).
+  ///  They apply to a plain state propagation (no STM, covariance, samples, impulses
+  ///  or burns) by an integrator with a continuous extension; any other request that
+  ///  names events is refused. Default empty.
+  List<PCFEventDefinition>? get EVENTS => const fb.ListReader<PCFEventDefinition>(PCFEventDefinition.reader).vTableGetNullable(_bc, _bcOffset, 34);
 
   @override
   String toString() {
-    return 'PRWExecutionRequest{INITIAL: ${INITIAL}, targetEpoch: ${targetEpoch}, INTEGRATOR: ${INTEGRATOR}, FORCES: ${FORCES}, includeStm: ${includeStm}, stmTechnique: ${stmTechnique}, densityTreatment: ${densityTreatment}, initialCovariance: ${initialCovariance}, initialMassCovariance: ${initialMassCovariance}, sampleEpochs: ${sampleEpochs}, IMPULSES: ${IMPULSES}, includeMassDynamics: ${includeMassDynamics}, finiteBurns: ${finiteBurns}, processNoise: ${processNoise}, dynamicParameters: ${dynamicParameters}}';
+    return 'PRWExecutionRequest{INITIAL: ${INITIAL}, targetEpoch: ${targetEpoch}, INTEGRATOR: ${INTEGRATOR}, FORCES: ${FORCES}, includeStm: ${includeStm}, stmTechnique: ${stmTechnique}, densityTreatment: ${densityTreatment}, initialCovariance: ${initialCovariance}, initialMassCovariance: ${initialMassCovariance}, sampleEpochs: ${sampleEpochs}, IMPULSES: ${IMPULSES}, includeMassDynamics: ${includeMassDynamics}, finiteBurns: ${finiteBurns}, processNoise: ${processNoise}, dynamicParameters: ${dynamicParameters}, EVENTS: ${EVENTS}}';
   }
 }
 
@@ -2407,7 +2561,7 @@ class PRWExecutionRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(15);
+    fbBuilder.startTable(16);
   }
 
   int addInitialOffset(int? offset) {
@@ -2470,6 +2624,10 @@ class PRWExecutionRequestBuilder {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addEventsOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2492,6 +2650,7 @@ class PRWExecutionRequestObjectBuilder extends fb.ObjectBuilder {
   final List<PRWFiniteBurnObjectBuilder>? _FINITE_BURNS;
   final PRWProcessNoiseObjectBuilder? _PROCESS_NOISE;
   final List<prwDynamicParameter>? _DYNAMIC_PARAMETERS;
+  final List<PCFEventDefinitionObjectBuilder>? _EVENTS;
 
   PRWExecutionRequestObjectBuilder({
     PRWResidentStateObjectBuilder? INITIAL,
@@ -2520,6 +2679,7 @@ class PRWExecutionRequestObjectBuilder extends fb.ObjectBuilder {
     PRWProcessNoiseObjectBuilder? processNoise,
     List<prwDynamicParameter>? DYNAMIC_PARAMETERS,
     List<prwDynamicParameter>? dynamicParameters,
+    List<PCFEventDefinitionObjectBuilder>? EVENTS,
   })
       : _INITIAL = INITIAL,
         _TARGET_EPOCH = targetEpoch ?? TARGET_EPOCH,
@@ -2535,7 +2695,8 @@ class PRWExecutionRequestObjectBuilder extends fb.ObjectBuilder {
         _INCLUDE_MASS_DYNAMICS = includeMassDynamics ?? INCLUDE_MASS_DYNAMICS,
         _FINITE_BURNS = finiteBurns ?? FINITE_BURNS,
         _PROCESS_NOISE = processNoise ?? PROCESS_NOISE,
-        _DYNAMIC_PARAMETERS = dynamicParameters ?? DYNAMIC_PARAMETERS;
+        _DYNAMIC_PARAMETERS = dynamicParameters ?? DYNAMIC_PARAMETERS,
+        _EVENTS = EVENTS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -2555,7 +2716,9 @@ class PRWExecutionRequestObjectBuilder extends fb.ObjectBuilder {
     final int? PROCESS_NOISEOffset = _PROCESS_NOISE?.getOrCreateOffset(fbBuilder);
     final int? DYNAMIC_PARAMETERSOffset = _DYNAMIC_PARAMETERS == null ? null
         : fbBuilder.writeListUint8(_DYNAMIC_PARAMETERS!.map((f) => f.value).toList());
-    fbBuilder.startTable(15);
+    final int? EVENTSOffset = _EVENTS == null ? null
+        : fbBuilder.writeList(_EVENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(16);
     fbBuilder.addOffset(0, INITIALOffset);
     fbBuilder.addOffset(1, TARGET_EPOCHOffset);
     fbBuilder.addOffset(2, INTEGRATOROffset);
@@ -2571,6 +2734,7 @@ class PRWExecutionRequestObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(12, FINITE_BURNSOffset);
     fbBuilder.addOffset(13, PROCESS_NOISEOffset);
     fbBuilder.addOffset(14, DYNAMIC_PARAMETERSOffset);
+    fbBuilder.addOffset(15, EVENTSOffset);
     return fbBuilder.endTable();
   }
 
@@ -2978,10 +3142,18 @@ class PRWExecutionResult {
   ///  The parameters the samples' STM and COVARIANCE carry after the state.
   List<prwDynamicParameter>? get DYNAMIC_PARAMETERS => const fb.ListReader<prwDynamicParameter>(prwDynamicParameter.reader).vTableGetNullable(_bc, _bcOffset, 16);
   List<prwDynamicParameter>? get dynamicParameters => DYNAMIC_PARAMETERS;
+  ///  The located events with ACTION RECORD or STOP, in time order of propagation.
+  List<PRWEventRecord>? get EVENTS => const fb.ListReader<PRWEventRecord>(PRWEventRecord.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Per request EVENTS entry, the qualifying crossings the propagation passed.
+  List<int>? get EVENT_OCCURRENCES => const fb.ListReader<int>(fb.Uint32Reader()).vTableGetNullable(_bc, _bcOffset, 20);
+  List<int>? get eventOccurrences => EVENT_OCCURRENCES;
+  ///  Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+  int get STOPPED_BY_EVENT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, -1);
+  int get stoppedByEvent => STOPPED_BY_EVENT;
 
   @override
   String toString() {
-    return 'PRWExecutionResult{finalSample: ${finalSample}, SAMPLES: ${SAMPLES}, elapsedSeconds: ${elapsedSeconds}, ephemerisSource: ${ephemerisSource}, stmTechnique: ${stmTechnique}, densityTreatment: ${densityTreatment}, dynamicParameters: ${dynamicParameters}}';
+    return 'PRWExecutionResult{finalSample: ${finalSample}, SAMPLES: ${SAMPLES}, elapsedSeconds: ${elapsedSeconds}, ephemerisSource: ${ephemerisSource}, stmTechnique: ${stmTechnique}, densityTreatment: ${densityTreatment}, dynamicParameters: ${dynamicParameters}, EVENTS: ${EVENTS}, eventOccurrences: ${eventOccurrences}, stoppedByEvent: ${stoppedByEvent}}';
   }
 }
 
@@ -2999,7 +3171,7 @@ class PRWExecutionResultBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(7);
+    fbBuilder.startTable(10);
   }
 
   int addFinalSampleOffset(int? offset) {
@@ -3030,6 +3202,18 @@ class PRWExecutionResultBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
+  int addEventsOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addEventOccurrencesOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addStoppedByEvent(int? STOPPED_BY_EVENT) {
+    fbBuilder.addInt32(9, STOPPED_BY_EVENT);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -3044,6 +3228,9 @@ class PRWExecutionResultObjectBuilder extends fb.ObjectBuilder {
   final prwDerivativeTechnique? _STM_TECHNIQUE;
   final prwDensityTreatment? _DENSITY_TREATMENT;
   final List<prwDynamicParameter>? _DYNAMIC_PARAMETERS;
+  final List<PRWEventRecordObjectBuilder>? _EVENTS;
+  final List<int>? _EVENT_OCCURRENCES;
+  final int? _STOPPED_BY_EVENT;
 
   PRWExecutionResultObjectBuilder({
     PRWPropagationSampleObjectBuilder? FINAL_SAMPLE,
@@ -3059,6 +3246,11 @@ class PRWExecutionResultObjectBuilder extends fb.ObjectBuilder {
     prwDensityTreatment? densityTreatment,
     List<prwDynamicParameter>? DYNAMIC_PARAMETERS,
     List<prwDynamicParameter>? dynamicParameters,
+    List<PRWEventRecordObjectBuilder>? EVENTS,
+    List<int>? EVENT_OCCURRENCES,
+    List<int>? eventOccurrences,
+    int? STOPPED_BY_EVENT,
+    int? stoppedByEvent,
   })
       : _FINAL_SAMPLE = finalSample ?? FINAL_SAMPLE,
         _SAMPLES = SAMPLES,
@@ -3066,7 +3258,10 @@ class PRWExecutionResultObjectBuilder extends fb.ObjectBuilder {
         _EPHEMERIS_SOURCE = ephemerisSource ?? EPHEMERIS_SOURCE,
         _STM_TECHNIQUE = stmTechnique ?? STM_TECHNIQUE,
         _DENSITY_TREATMENT = densityTreatment ?? DENSITY_TREATMENT,
-        _DYNAMIC_PARAMETERS = dynamicParameters ?? DYNAMIC_PARAMETERS;
+        _DYNAMIC_PARAMETERS = dynamicParameters ?? DYNAMIC_PARAMETERS,
+        _EVENTS = EVENTS,
+        _EVENT_OCCURRENCES = eventOccurrences ?? EVENT_OCCURRENCES,
+        _STOPPED_BY_EVENT = stoppedByEvent ?? STOPPED_BY_EVENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -3078,7 +3273,11 @@ class PRWExecutionResultObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EPHEMERIS_SOURCE!);
     final int? DYNAMIC_PARAMETERSOffset = _DYNAMIC_PARAMETERS == null ? null
         : fbBuilder.writeListUint8(_DYNAMIC_PARAMETERS!.map((f) => f.value).toList());
-    fbBuilder.startTable(7);
+    final int? EVENTSOffset = _EVENTS == null ? null
+        : fbBuilder.writeList(_EVENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? EVENT_OCCURRENCESOffset = _EVENT_OCCURRENCES == null ? null
+        : fbBuilder.writeListUint32(_EVENT_OCCURRENCES!);
+    fbBuilder.startTable(10);
     fbBuilder.addOffset(0, FINAL_SAMPLEOffset);
     fbBuilder.addOffset(1, SAMPLESOffset);
     fbBuilder.addFloat64(2, _ELAPSED_SECONDS);
@@ -3086,6 +3285,9 @@ class PRWExecutionResultObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addUint8(4, _STM_TECHNIQUE?.value);
     fbBuilder.addUint8(5, _DENSITY_TREATMENT?.value);
     fbBuilder.addOffset(6, DYNAMIC_PARAMETERSOffset);
+    fbBuilder.addOffset(7, EVENTSOffset);
+    fbBuilder.addOffset(8, EVENT_OCCURRENCESOffset);
+    fbBuilder.addInt32(9, _STOPPED_BY_EVENT);
     return fbBuilder.endTable();
   }
 

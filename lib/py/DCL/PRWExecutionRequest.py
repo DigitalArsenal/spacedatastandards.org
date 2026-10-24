@@ -242,8 +242,37 @@ class PRWExecutionRequest(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # Events located inside the integration (PCFEventDefinition, shared with $PCF).
+    # They apply to a plain state propagation (no STM, covariance, samples, impulses
+    # or burns) by an integrator with a continuous extension; any other request that
+    # names events is refused. Default empty.
+    # PRWExecutionRequest
+    def EVENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PCFEventDefinition import PCFEventDefinition
+            obj = PCFEventDefinition()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRWExecutionRequest
+    def EVENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PRWExecutionRequest
+    def EVENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        return o == 0
+
 def PRWExecutionRequestStart(builder):
-    builder.StartObject(15)
+    builder.StartObject(16)
 
 def Start(builder):
     PRWExecutionRequestStart(builder)
@@ -390,12 +419,31 @@ def PRWExecutionRequestCreateDYNAMIC_PARAMETERSVector(builder, data):
 def CreateDYNAMIC_PARAMETERSVector(builder, data):
     return PRWExecutionRequestCreateDYNAMIC_PARAMETERSVector(builder, data)
 
+def PRWExecutionRequestAddEVENTS(builder, EVENTS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EVENTS), 0)
+
+def AddEVENTS(builder, EVENTS):
+    PRWExecutionRequestAddEVENTS(builder, EVENTS)
+
+def PRWExecutionRequestStartEVENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEVENTSVector(builder, numElems):
+    return PRWExecutionRequestStartEVENTSVector(builder, numElems)
+
+def PRWExecutionRequestCreateEVENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEVENTSVector(builder, data):
+    return PRWExecutionRequestCreateEVENTSVector(builder, data)
+
 def PRWExecutionRequestEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PRWExecutionRequestEnd(builder)
 
+import PCFEventDefinition
 import PCFForceModel
 import PCFIntegratorSettings
 import PRWFiniteBurn
@@ -429,6 +477,7 @@ class PRWExecutionRequestT(object):
         FINITE_BURNS = None,
         PROCESS_NOISE = None,
         DYNAMIC_PARAMETERS = None,
+        EVENTS = None,
     ):
         self.INITIAL = INITIAL  # type: Optional[PRWResidentState.PRWResidentStateT]
         self.TARGET_EPOCH = TARGET_EPOCH  # type: Optional[TIMInstant.TIMInstantT]
@@ -445,6 +494,7 @@ class PRWExecutionRequestT(object):
         self.FINITE_BURNS = FINITE_BURNS  # type: Optional[List[PRWFiniteBurn.PRWFiniteBurnT]]
         self.PROCESS_NOISE = PROCESS_NOISE  # type: Optional[PRWProcessNoise.PRWProcessNoiseT]
         self.DYNAMIC_PARAMETERS = DYNAMIC_PARAMETERS  # type: Optional[List[int]]
+        self.EVENTS = EVENTS  # type: Optional[List[PCFEventDefinition.PCFEventDefinitionT]]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -516,6 +566,14 @@ class PRWExecutionRequestT(object):
                     self.DYNAMIC_PARAMETERS.append(PRWExecutionRequest.DYNAMIC_PARAMETERS(i))
             else:
                 self.DYNAMIC_PARAMETERS = PRWExecutionRequest.DYNAMIC_PARAMETERSAsNumpy()
+        if not PRWExecutionRequest.EVENTSIsNone():
+            self.EVENTS = []
+            for i in range(PRWExecutionRequest.EVENTSLength()):
+                if PRWExecutionRequest.EVENTS(i) is None:
+                    self.EVENTS.append(None)
+                else:
+                    pCFEventDefinition_ = PCFEventDefinition.PCFEventDefinitionT.InitFromObj(PRWExecutionRequest.EVENTS(i))
+                    self.EVENTS.append(pCFEventDefinition_)
 
     # PRWExecutionRequestT
     def Pack(self, builder):
@@ -565,6 +623,14 @@ class PRWExecutionRequestT(object):
                 for i in reversed(range(len(self.DYNAMIC_PARAMETERS))):
                     builder.PrependUint8(self.DYNAMIC_PARAMETERS[i])
                 DYNAMIC_PARAMETERS = builder.EndVector()
+        if self.EVENTS is not None:
+            EVENTSlist = []
+            for i in range(len(self.EVENTS)):
+                EVENTSlist.append(self.EVENTS[i].Pack(builder))
+            PRWExecutionRequestStartEVENTSVector(builder, len(self.EVENTS))
+            for i in reversed(range(len(self.EVENTS))):
+                builder.PrependUOffsetTRelative(EVENTSlist[i])
+            EVENTS = builder.EndVector()
         PRWExecutionRequestStart(builder)
         if self.INITIAL is not None:
             PRWExecutionRequestAddINITIAL(builder, INITIAL)
@@ -592,5 +658,7 @@ class PRWExecutionRequestT(object):
             PRWExecutionRequestAddPROCESS_NOISE(builder, PROCESS_NOISE)
         if self.DYNAMIC_PARAMETERS is not None:
             PRWExecutionRequestAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
+        if self.EVENTS is not None:
+            PRWExecutionRequestAddEVENTS(builder, EVENTS)
         PRWExecutionRequest = PRWExecutionRequestEnd(builder)
         return PRWExecutionRequest

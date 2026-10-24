@@ -38,8 +38,13 @@ public final class evlLocatorClass {
    * classes of their own.
    */
   public static final int PARAMETER_CONDITION = 6;
+  /**
+   * Passage of the target through a maximum or a minimum of its geocentric
+   * latitude: the zero of the latitude rate, which no catalog parameter is.
+   */
+  public static final int LATITUDE_EXTREMUM = 7;
 
-  public static final String[] names = { "UNSPECIFIED", "ECLIPSE", "CONTACT", "INTRUSION", "APSIDES", "NODE_CROSSING", "PARAMETER_CONDITION", };
+  public static final String[] names = { "UNSPECIFIED", "ECLIPSE", "CONTACT", "INTRUSION", "APSIDES", "NODE_CROSSING", "PARAMETER_CONDITION", "LATITUDE_EXTREMUM", };
 
   public static String name(int e) { return names[e]; }
 }

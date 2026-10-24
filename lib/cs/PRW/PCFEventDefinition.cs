@@ -6,10 +6,9 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
 public struct PCFEventDefinition : IFlatbufferObject
 {
   private Table __p;
@@ -20,79 +19,66 @@ public struct PCFEventDefinition : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public PCFEventDefinition __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  /// The caller's name for the event, echoed in the result. Default empty.
-  public string NAME { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// The event function. Default UNSPECIFIED (refused).
+  public pcfEventKind KIND { get { int o = __p.__offset(4); return o != 0 ? (pcfEventKind)__p.bb.Get(o + __p.bb_pos) : pcfEventKind.UNSPECIFIED; } }
+  /// Which zero crossings of the event function count. Default ANY.
+  public pcfEventDirection DIRECTION { get { int o = __p.__offset(6); return o != 0 ? (pcfEventDirection)__p.bb.Get(o + __p.bb_pos) : pcfEventDirection.ANY; } }
+  /// What the integrator does at the event. Default RECORD.
+  public pcfEventAction ACTION { get { int o = __p.__offset(8); return o != 0 ? (pcfEventAction)__p.bb.Get(o + __p.bb_pos) : pcfEventAction.RECORD; } }
+  /// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+  public double TOLERANCE_SECONDS { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)1e-9; } }
+  /// STOP acts at this qualifying crossing (1 is the first). Default 1.
+  public uint OCCURRENCE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)1; } }
+  /// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+  public double ANGLE_RAD { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+  /// vector. Default absent (the pole of the axes).
+  public FRMVector3? PLANE_NORMAL { get { int o = __p.__offset(16); return o != 0 ? (FRMVector3?)(new FRMVector3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+  /// as $OEM. Default empty.
+  public string SECOND_TRAJECTORY_PORT { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetSECOND_TRAJECTORY_PORTBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetSECOND_TRAJECTORY_PORTBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(4); }
-  /// Which locator. Default PARAMETER_CONDITION.
-  public evlLocatorClass LOCATOR_CLASS { get { int o = __p.__offset(6); return o != 0 ? (evlLocatorClass)__p.bb.Get(o + __p.bb_pos) : evlLocatorClass.PARAMETER_CONDITION; } }
-  /// Exactly the one of the next five that matches LOCATOR_CLASS is present
-  /// (any other combination is refused as MISSING_CONFIGURATION, as in
-  /// $EVL). The condition carries its own direction, goal value, goal
-  /// tolerance and occurrence.
-  public PCEParameterCondition? CONDITION { get { int o = __p.__offset(8); return o != 0 ? (PCEParameterCondition?)(new PCEParameterCondition()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public EVLEclipseConfiguration? ECLIPSE { get { int o = __p.__offset(10); return o != 0 ? (EVLEclipseConfiguration?)(new EVLEclipseConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public EVLContactConfiguration? CONTACT { get { int o = __p.__offset(12); return o != 0 ? (EVLContactConfiguration?)(new EVLContactConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public EVLIntrusionConfiguration? INTRUSION { get { int o = __p.__offset(14); return o != 0 ? (EVLIntrusionConfiguration?)(new EVLIntrusionConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public EVLApsidesConfiguration? APSIDES { get { int o = __p.__offset(16); return o != 0 ? (EVLApsidesConfiguration?)(new EVLApsidesConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  public EVLNodeCrossingConfiguration? NODE_CROSSING { get { int o = __p.__offset(18); return o != 0 ? (EVLNodeCrossingConfiguration?)(new EVLNodeCrossingConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// What the propagator does at the event. Default RECORD.
-  public pcfEventAction ACTION { get { int o = __p.__offset(20); return o != 0 ? (pcfEventAction)__p.bb.Get(o + __p.bb_pos) : pcfEventAction.RECORD; } }
-  /// Convergence bar on the located epoch, seconds. Default 1e-9.
-  public double EPOCH_TOLERANCE_SECONDS { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)1e-9; } }
-  /// Step at which the event function is sampled before refinement, seconds;
-  /// 0 samples at the integrator's accepted steps. A root is found only when
-  /// the function changes sign within one sample interval. Default 0.
-  public double SCAN_STEP_SECONDS { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Largest number of occurrences reported; 0 is no bound. Default 0.
-  public uint MAXIMUM_EVENTS { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public byte[] GetSECOND_TRAJECTORY_PORTArray() { return __p.__vector_as_array<byte>(18); }
+  /// EXPRESSION: the program. Default absent.
+  public PCFExpression? EXPRESSION { get { int o = __p.__offset(20); return o != 0 ? (PCFExpression?)(new PCFExpression()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PCFEventDefinition> CreatePCFEventDefinition(FlatBufferBuilder builder,
-      StringOffset NAMEOffset = default(StringOffset),
-      evlLocatorClass LOCATOR_CLASS = evlLocatorClass.PARAMETER_CONDITION,
-      Offset<PCEParameterCondition> CONDITIONOffset = default(Offset<PCEParameterCondition>),
-      Offset<EVLEclipseConfiguration> ECLIPSEOffset = default(Offset<EVLEclipseConfiguration>),
-      Offset<EVLContactConfiguration> CONTACTOffset = default(Offset<EVLContactConfiguration>),
-      Offset<EVLIntrusionConfiguration> INTRUSIONOffset = default(Offset<EVLIntrusionConfiguration>),
-      Offset<EVLApsidesConfiguration> APSIDESOffset = default(Offset<EVLApsidesConfiguration>),
-      Offset<EVLNodeCrossingConfiguration> NODE_CROSSINGOffset = default(Offset<EVLNodeCrossingConfiguration>),
+      pcfEventKind KIND = pcfEventKind.UNSPECIFIED,
+      pcfEventDirection DIRECTION = pcfEventDirection.ANY,
       pcfEventAction ACTION = pcfEventAction.RECORD,
-      double EPOCH_TOLERANCE_SECONDS = 1e-9,
-      double SCAN_STEP_SECONDS = 0.0,
-      uint MAXIMUM_EVENTS = 0) {
-    builder.StartTable(12);
-    PCFEventDefinition.AddSCAN_STEP_SECONDS(builder, SCAN_STEP_SECONDS);
-    PCFEventDefinition.AddEPOCH_TOLERANCE_SECONDS(builder, EPOCH_TOLERANCE_SECONDS);
-    PCFEventDefinition.AddMAXIMUM_EVENTS(builder, MAXIMUM_EVENTS);
-    PCFEventDefinition.AddNODE_CROSSING(builder, NODE_CROSSINGOffset);
-    PCFEventDefinition.AddAPSIDES(builder, APSIDESOffset);
-    PCFEventDefinition.AddINTRUSION(builder, INTRUSIONOffset);
-    PCFEventDefinition.AddCONTACT(builder, CONTACTOffset);
-    PCFEventDefinition.AddECLIPSE(builder, ECLIPSEOffset);
-    PCFEventDefinition.AddCONDITION(builder, CONDITIONOffset);
-    PCFEventDefinition.AddNAME(builder, NAMEOffset);
+      double TOLERANCE_SECONDS = 1e-9,
+      uint OCCURRENCE = 1,
+      double ANGLE_RAD = 0.0,
+      Offset<FRMVector3> PLANE_NORMALOffset = default(Offset<FRMVector3>),
+      StringOffset SECOND_TRAJECTORY_PORTOffset = default(StringOffset),
+      Offset<PCFExpression> EXPRESSIONOffset = default(Offset<PCFExpression>)) {
+    builder.StartTable(9);
+    PCFEventDefinition.AddANGLE_RAD(builder, ANGLE_RAD);
+    PCFEventDefinition.AddTOLERANCE_SECONDS(builder, TOLERANCE_SECONDS);
+    PCFEventDefinition.AddEXPRESSION(builder, EXPRESSIONOffset);
+    PCFEventDefinition.AddSECOND_TRAJECTORY_PORT(builder, SECOND_TRAJECTORY_PORTOffset);
+    PCFEventDefinition.AddPLANE_NORMAL(builder, PLANE_NORMALOffset);
+    PCFEventDefinition.AddOCCURRENCE(builder, OCCURRENCE);
     PCFEventDefinition.AddACTION(builder, ACTION);
-    PCFEventDefinition.AddLOCATOR_CLASS(builder, LOCATOR_CLASS);
+    PCFEventDefinition.AddDIRECTION(builder, DIRECTION);
+    PCFEventDefinition.AddKIND(builder, KIND);
     return PCFEventDefinition.EndPCFEventDefinition(builder);
   }
 
-  public static void StartPCFEventDefinition(FlatBufferBuilder builder) { builder.StartTable(12); }
-  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(0, NAMEOffset.Value, 0); }
-  public static void AddLOCATOR_CLASS(FlatBufferBuilder builder, evlLocatorClass LOCATOR_CLASS) { builder.AddByte(1, (byte)LOCATOR_CLASS, 6); }
-  public static void AddCONDITION(FlatBufferBuilder builder, Offset<PCEParameterCondition> CONDITIONOffset) { builder.AddOffset(2, CONDITIONOffset.Value, 0); }
-  public static void AddECLIPSE(FlatBufferBuilder builder, Offset<EVLEclipseConfiguration> ECLIPSEOffset) { builder.AddOffset(3, ECLIPSEOffset.Value, 0); }
-  public static void AddCONTACT(FlatBufferBuilder builder, Offset<EVLContactConfiguration> CONTACTOffset) { builder.AddOffset(4, CONTACTOffset.Value, 0); }
-  public static void AddINTRUSION(FlatBufferBuilder builder, Offset<EVLIntrusionConfiguration> INTRUSIONOffset) { builder.AddOffset(5, INTRUSIONOffset.Value, 0); }
-  public static void AddAPSIDES(FlatBufferBuilder builder, Offset<EVLApsidesConfiguration> APSIDESOffset) { builder.AddOffset(6, APSIDESOffset.Value, 0); }
-  public static void AddNODE_CROSSING(FlatBufferBuilder builder, Offset<EVLNodeCrossingConfiguration> NODE_CROSSINGOffset) { builder.AddOffset(7, NODE_CROSSINGOffset.Value, 0); }
-  public static void AddACTION(FlatBufferBuilder builder, pcfEventAction ACTION) { builder.AddByte(8, (byte)ACTION, 3); }
-  public static void AddEPOCH_TOLERANCE_SECONDS(FlatBufferBuilder builder, double EPOCH_TOLERANCE_SECONDS) { builder.AddDouble(9, EPOCH_TOLERANCE_SECONDS, 1e-9); }
-  public static void AddSCAN_STEP_SECONDS(FlatBufferBuilder builder, double SCAN_STEP_SECONDS) { builder.AddDouble(10, SCAN_STEP_SECONDS, 0.0); }
-  public static void AddMAXIMUM_EVENTS(FlatBufferBuilder builder, uint MAXIMUM_EVENTS) { builder.AddUint(11, MAXIMUM_EVENTS, 0); }
+  public static void StartPCFEventDefinition(FlatBufferBuilder builder) { builder.StartTable(9); }
+  public static void AddKIND(FlatBufferBuilder builder, pcfEventKind KIND) { builder.AddByte(0, (byte)KIND, 0); }
+  public static void AddDIRECTION(FlatBufferBuilder builder, pcfEventDirection DIRECTION) { builder.AddByte(1, (byte)DIRECTION, 0); }
+  public static void AddACTION(FlatBufferBuilder builder, pcfEventAction ACTION) { builder.AddByte(2, (byte)ACTION, 1); }
+  public static void AddTOLERANCE_SECONDS(FlatBufferBuilder builder, double TOLERANCE_SECONDS) { builder.AddDouble(3, TOLERANCE_SECONDS, 1e-9); }
+  public static void AddOCCURRENCE(FlatBufferBuilder builder, uint OCCURRENCE) { builder.AddUint(4, OCCURRENCE, 1); }
+  public static void AddANGLE_RAD(FlatBufferBuilder builder, double ANGLE_RAD) { builder.AddDouble(5, ANGLE_RAD, 0.0); }
+  public static void AddPLANE_NORMAL(FlatBufferBuilder builder, Offset<FRMVector3> PLANE_NORMALOffset) { builder.AddOffset(6, PLANE_NORMALOffset.Value, 0); }
+  public static void AddSECOND_TRAJECTORY_PORT(FlatBufferBuilder builder, StringOffset SECOND_TRAJECTORY_PORTOffset) { builder.AddOffset(7, SECOND_TRAJECTORY_PORTOffset.Value, 0); }
+  public static void AddEXPRESSION(FlatBufferBuilder builder, Offset<PCFExpression> EXPRESSIONOffset) { builder.AddOffset(8, EXPRESSIONOffset.Value, 0); }
   public static Offset<PCFEventDefinition> EndPCFEventDefinition(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCFEventDefinition>(o);
@@ -103,73 +89,57 @@ public struct PCFEventDefinition : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(PCFEventDefinitionT _o) {
-    _o.NAME = this.NAME;
-    _o.LOCATOR_CLASS = this.LOCATOR_CLASS;
-    _o.CONDITION = this.CONDITION.HasValue ? this.CONDITION.Value.UnPack() : null;
-    _o.ECLIPSE = this.ECLIPSE.HasValue ? this.ECLIPSE.Value.UnPack() : null;
-    _o.CONTACT = this.CONTACT.HasValue ? this.CONTACT.Value.UnPack() : null;
-    _o.INTRUSION = this.INTRUSION.HasValue ? this.INTRUSION.Value.UnPack() : null;
-    _o.APSIDES = this.APSIDES.HasValue ? this.APSIDES.Value.UnPack() : null;
-    _o.NODE_CROSSING = this.NODE_CROSSING.HasValue ? this.NODE_CROSSING.Value.UnPack() : null;
+    _o.KIND = this.KIND;
+    _o.DIRECTION = this.DIRECTION;
     _o.ACTION = this.ACTION;
-    _o.EPOCH_TOLERANCE_SECONDS = this.EPOCH_TOLERANCE_SECONDS;
-    _o.SCAN_STEP_SECONDS = this.SCAN_STEP_SECONDS;
-    _o.MAXIMUM_EVENTS = this.MAXIMUM_EVENTS;
+    _o.TOLERANCE_SECONDS = this.TOLERANCE_SECONDS;
+    _o.OCCURRENCE = this.OCCURRENCE;
+    _o.ANGLE_RAD = this.ANGLE_RAD;
+    _o.PLANE_NORMAL = this.PLANE_NORMAL.HasValue ? this.PLANE_NORMAL.Value.UnPack() : null;
+    _o.SECOND_TRAJECTORY_PORT = this.SECOND_TRAJECTORY_PORT;
+    _o.EXPRESSION = this.EXPRESSION.HasValue ? this.EXPRESSION.Value.UnPack() : null;
   }
   public static Offset<PCFEventDefinition> Pack(FlatBufferBuilder builder, PCFEventDefinitionT _o) {
     if (_o == null) return default(Offset<PCFEventDefinition>);
-    var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
-    var _CONDITION = _o.CONDITION == null ? default(Offset<PCEParameterCondition>) : PCEParameterCondition.Pack(builder, _o.CONDITION);
-    var _ECLIPSE = _o.ECLIPSE == null ? default(Offset<EVLEclipseConfiguration>) : EVLEclipseConfiguration.Pack(builder, _o.ECLIPSE);
-    var _CONTACT = _o.CONTACT == null ? default(Offset<EVLContactConfiguration>) : EVLContactConfiguration.Pack(builder, _o.CONTACT);
-    var _INTRUSION = _o.INTRUSION == null ? default(Offset<EVLIntrusionConfiguration>) : EVLIntrusionConfiguration.Pack(builder, _o.INTRUSION);
-    var _APSIDES = _o.APSIDES == null ? default(Offset<EVLApsidesConfiguration>) : EVLApsidesConfiguration.Pack(builder, _o.APSIDES);
-    var _NODE_CROSSING = _o.NODE_CROSSING == null ? default(Offset<EVLNodeCrossingConfiguration>) : EVLNodeCrossingConfiguration.Pack(builder, _o.NODE_CROSSING);
+    var _PLANE_NORMAL = _o.PLANE_NORMAL == null ? default(Offset<FRMVector3>) : FRMVector3.Pack(builder, _o.PLANE_NORMAL);
+    var _SECOND_TRAJECTORY_PORT = _o.SECOND_TRAJECTORY_PORT == null ? default(StringOffset) : builder.CreateString(_o.SECOND_TRAJECTORY_PORT);
+    var _EXPRESSION = _o.EXPRESSION == null ? default(Offset<PCFExpression>) : PCFExpression.Pack(builder, _o.EXPRESSION);
     return CreatePCFEventDefinition(
       builder,
-      _NAME,
-      _o.LOCATOR_CLASS,
-      _CONDITION,
-      _ECLIPSE,
-      _CONTACT,
-      _INTRUSION,
-      _APSIDES,
-      _NODE_CROSSING,
+      _o.KIND,
+      _o.DIRECTION,
       _o.ACTION,
-      _o.EPOCH_TOLERANCE_SECONDS,
-      _o.SCAN_STEP_SECONDS,
-      _o.MAXIMUM_EVENTS);
+      _o.TOLERANCE_SECONDS,
+      _o.OCCURRENCE,
+      _o.ANGLE_RAD,
+      _PLANE_NORMAL,
+      _SECOND_TRAJECTORY_PORT,
+      _EXPRESSION);
   }
 }
 
 public class PCFEventDefinitionT
 {
-  public string NAME { get; set; }
-  public evlLocatorClass LOCATOR_CLASS { get; set; }
-  public PCEParameterConditionT CONDITION { get; set; }
-  public EVLEclipseConfigurationT ECLIPSE { get; set; }
-  public EVLContactConfigurationT CONTACT { get; set; }
-  public EVLIntrusionConfigurationT INTRUSION { get; set; }
-  public EVLApsidesConfigurationT APSIDES { get; set; }
-  public EVLNodeCrossingConfigurationT NODE_CROSSING { get; set; }
+  public pcfEventKind KIND { get; set; }
+  public pcfEventDirection DIRECTION { get; set; }
   public pcfEventAction ACTION { get; set; }
-  public double EPOCH_TOLERANCE_SECONDS { get; set; }
-  public double SCAN_STEP_SECONDS { get; set; }
-  public uint MAXIMUM_EVENTS { get; set; }
+  public double TOLERANCE_SECONDS { get; set; }
+  public uint OCCURRENCE { get; set; }
+  public double ANGLE_RAD { get; set; }
+  public FRMVector3T PLANE_NORMAL { get; set; }
+  public string SECOND_TRAJECTORY_PORT { get; set; }
+  public PCFExpressionT EXPRESSION { get; set; }
 
   public PCFEventDefinitionT() {
-    this.NAME = null;
-    this.LOCATOR_CLASS = evlLocatorClass.PARAMETER_CONDITION;
-    this.CONDITION = null;
-    this.ECLIPSE = null;
-    this.CONTACT = null;
-    this.INTRUSION = null;
-    this.APSIDES = null;
-    this.NODE_CROSSING = null;
+    this.KIND = pcfEventKind.UNSPECIFIED;
+    this.DIRECTION = pcfEventDirection.ANY;
     this.ACTION = pcfEventAction.RECORD;
-    this.EPOCH_TOLERANCE_SECONDS = 1e-9;
-    this.SCAN_STEP_SECONDS = 0.0;
-    this.MAXIMUM_EVENTS = 0;
+    this.TOLERANCE_SECONDS = 1e-9;
+    this.OCCURRENCE = 1;
+    this.ANGLE_RAD = 0.0;
+    this.PLANE_NORMAL = null;
+    this.SECOND_TRAJECTORY_PORT = null;
+    this.EXPRESSION = null;
   }
 }
 
@@ -179,18 +149,15 @@ static public class PCFEventDefinitionVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*NAME*/, false)
-      && verifier.VerifyField(tablePos, 6 /*LOCATOR_CLASS*/, 1 /*evlLocatorClass*/, 1, false)
-      && verifier.VerifyTable(tablePos, 8 /*CONDITION*/, PCEParameterConditionVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 10 /*ECLIPSE*/, EVLEclipseConfigurationVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 12 /*CONTACT*/, EVLContactConfigurationVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 14 /*INTRUSION*/, EVLIntrusionConfigurationVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 16 /*APSIDES*/, EVLApsidesConfigurationVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 18 /*NODE_CROSSING*/, EVLNodeCrossingConfigurationVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 20 /*ACTION*/, 1 /*pcfEventAction*/, 1, false)
-      && verifier.VerifyField(tablePos, 22 /*EPOCH_TOLERANCE_SECONDS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*SCAN_STEP_SECONDS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*MAXIMUM_EVENTS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 4 /*KIND*/, 1 /*pcfEventKind*/, 1, false)
+      && verifier.VerifyField(tablePos, 6 /*DIRECTION*/, 1 /*pcfEventDirection*/, 1, false)
+      && verifier.VerifyField(tablePos, 8 /*ACTION*/, 1 /*pcfEventAction*/, 1, false)
+      && verifier.VerifyField(tablePos, 10 /*TOLERANCE_SECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 12 /*OCCURRENCE*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 14 /*ANGLE_RAD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 16 /*PLANE_NORMAL*/, FRMVector3Verify.Verify, false)
+      && verifier.VerifyString(tablePos, 18 /*SECOND_TRAJECTORY_PORT*/, false)
+      && verifier.VerifyTable(tablePos, 20 /*EXPRESSION*/, PCFExpressionVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -52,8 +52,23 @@ class EVLNodeCrossingConfiguration(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return True
 
+    # Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+    # it need not be a unit vector. Absent or zero: the pole of those axes, which
+    # makes the crossings the nodes of its equator. Any other normal is an
+    # arbitrary plane through the center of the system.
+    # EVLNodeCrossingConfiguration
+    def PLANE_NORMAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMVector3 import FRMVector3
+            obj = FRMVector3()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def EVLNodeCrossingConfigurationStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(4)
 
 def Start(builder):
     EVLNodeCrossingConfigurationStart(builder)
@@ -76,12 +91,23 @@ def EVLNodeCrossingConfigurationAddREPORT_DESCENDING(builder, REPORT_DESCENDING)
 def AddREPORT_DESCENDING(builder, REPORT_DESCENDING):
     EVLNodeCrossingConfigurationAddREPORT_DESCENDING(builder, REPORT_DESCENDING)
 
+def EVLNodeCrossingConfigurationAddPLANE_NORMAL(builder, PLANE_NORMAL):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(PLANE_NORMAL), 0)
+
+def AddPLANE_NORMAL(builder, PLANE_NORMAL):
+    EVLNodeCrossingConfigurationAddPLANE_NORMAL(builder, PLANE_NORMAL)
+
 def EVLNodeCrossingConfigurationEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return EVLNodeCrossingConfigurationEnd(builder)
 
+import FRMVector3
+try:
+    from typing import Optional
+except:
+    pass
 
 class EVLNodeCrossingConfigurationT(object):
 
@@ -91,10 +117,12 @@ class EVLNodeCrossingConfigurationT(object):
         REFERENCE_COORDINATE_SYSTEM_NAME = None,
         REPORT_ASCENDING = True,
         REPORT_DESCENDING = True,
+        PLANE_NORMAL = None,
     ):
         self.REFERENCE_COORDINATE_SYSTEM_NAME = REFERENCE_COORDINATE_SYSTEM_NAME  # type: Optional[str]
         self.REPORT_ASCENDING = REPORT_ASCENDING  # type: bool
         self.REPORT_DESCENDING = REPORT_DESCENDING  # type: bool
+        self.PLANE_NORMAL = PLANE_NORMAL  # type: Optional[FRMVector3.FRMVector3T]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -120,15 +148,21 @@ class EVLNodeCrossingConfigurationT(object):
         self.REFERENCE_COORDINATE_SYSTEM_NAME = EVLNodeCrossingConfiguration.REFERENCE_COORDINATE_SYSTEM_NAME()
         self.REPORT_ASCENDING = EVLNodeCrossingConfiguration.REPORT_ASCENDING()
         self.REPORT_DESCENDING = EVLNodeCrossingConfiguration.REPORT_DESCENDING()
+        if EVLNodeCrossingConfiguration.PLANE_NORMAL() is not None:
+            self.PLANE_NORMAL = FRMVector3.FRMVector3T.InitFromObj(EVLNodeCrossingConfiguration.PLANE_NORMAL())
 
     # EVLNodeCrossingConfigurationT
     def Pack(self, builder):
         if self.REFERENCE_COORDINATE_SYSTEM_NAME is not None:
             REFERENCE_COORDINATE_SYSTEM_NAME = builder.CreateString(self.REFERENCE_COORDINATE_SYSTEM_NAME)
+        if self.PLANE_NORMAL is not None:
+            PLANE_NORMAL = self.PLANE_NORMAL.Pack(builder)
         EVLNodeCrossingConfigurationStart(builder)
         if self.REFERENCE_COORDINATE_SYSTEM_NAME is not None:
             EVLNodeCrossingConfigurationAddREFERENCE_COORDINATE_SYSTEM_NAME(builder, REFERENCE_COORDINATE_SYSTEM_NAME)
         EVLNodeCrossingConfigurationAddREPORT_ASCENDING(builder, self.REPORT_ASCENDING)
         EVLNodeCrossingConfigurationAddREPORT_DESCENDING(builder, self.REPORT_DESCENDING)
+        if self.PLANE_NORMAL is not None:
+            EVLNodeCrossingConfigurationAddPLANE_NORMAL(builder, PLANE_NORMAL)
         EVLNodeCrossingConfiguration = EVLNodeCrossingConfigurationEnd(builder)
         return EVLNodeCrossingConfiguration

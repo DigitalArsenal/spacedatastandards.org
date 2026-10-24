@@ -24,3 +24,6 @@ class evlLocatorClass(object):
     # crossings, latitude crossings and beta-angle limits are this class, not
     # classes of their own.
     PARAMETER_CONDITION = 6
+    # Passage of the target through a maximum or a minimum of its geocentric
+    # latitude: the zero of the latitude rate, which no catalog parameter is.
+    LATITUDE_EXTREMUM = 7

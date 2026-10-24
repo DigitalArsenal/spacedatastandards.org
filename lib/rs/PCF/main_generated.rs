@@ -653,53 +653,301 @@ impl<'a> ::flatbuffers::Verifiable for pcfEphemerisKind {
 impl ::flatbuffers::SimpleToVerifyInSlice for pcfEphemerisKind {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PCF_EVENT_ACTION: u8 = 0;
+pub const ENUM_MIN_PCF_EVENT_KIND: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_EVENT_ACTION: u8 = 3;
+pub const ENUM_MAX_PCF_EVENT_KIND: u8 = 9;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_EVENT_ACTION: [pcfEventAction; 4] = [
-    pcfEventAction::UNSPECIFIED,
-    pcfEventAction::STOP,
-    pcfEventAction::CONTINUE,
-    pcfEventAction::RECORD,
+pub const ENUM_VALUES_PCF_EVENT_KIND: [pcfEventKind; 10] = [
+    pcfEventKind::UNSPECIFIED,
+    pcfEventKind::APSIS,
+    pcfEventKind::PLANE_CROSSING,
+    pcfEventKind::TRUE_ANOMALY,
+    pcfEventKind::ARGUMENT_OF_LATITUDE,
+    pcfEventKind::LATITUDE_EXTREMUM,
+    pcfEventKind::UMBRA,
+    pcfEventKind::PENUMBRA,
+    pcfEventKind::CLOSEST_APPROACH,
+    pcfEventKind::EXPRESSION,
 ];
 
-/// What a propagator does when a located event occurs. Append new values
-/// only.
+/// The event function of a located event. Each is a continuous function g of the
+/// integrated state, evaluated by the integrator; an event is a zero crossing of g.
+/// The crossing is bracketed on each accepted step, refined to TOLERANCE_SECONDS on
+/// the integrator's continuous extension, and confirmed by re-stepping the
+/// integrator itself, so the epoch does not depend on the step size. Append new
+/// values only.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
-pub struct pcfEventAction(pub u8);
+pub struct pcfEventKind(pub u8);
 
 #[allow(non_upper_case_globals)]
-impl pcfEventAction {
+impl pcfEventKind {
     pub const UNSPECIFIED: Self = Self(0);
-    /// End the propagation at the event; the result carries its epoch and state.
-    pub const STOP: Self = Self(1);
-    /// Make the event a step boundary only (the dynamics may change there) and
-    /// report nothing about it.
-    pub const CONTINUE: Self = Self(2);
-    /// Report the event in the result and keep propagating.
-    pub const RECORD: Self = Self(3);
+    /// g = r . v, the radial rate. INCREASING crossings are periapsis, DECREASING apoapsis.
+    pub const APSIS: Self = Self(1);
+    /// g = n . r for the plane through the central body's center with normal PLANE_NORMAL
+    /// (absent: the pole of the request's axes, which makes the crossings the nodes).
+    /// INCREASING crossings are ascending, DECREASING descending.
+    pub const PLANE_CROSSING: Self = Self(2);
+    /// g = the true anomaly minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+    pub const TRUE_ANOMALY: Self = Self(3);
+    /// g = the argument of latitude minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+    pub const ARGUMENT_OF_LATITUDE: Self = Self(4);
+    /// g = r^2 d(z)/dt - z (r . v) with z the component along the pole of the request's
+    /// axes: the zero of the rate of the geocentric latitude. DECREASING crossings are
+    /// maxima, INCREASING minima.
+    pub const LATITUDE_EXTREMUM: Self = Self(5);
+    /// g = the angular separation of the Sun and the central body's centers minus the
+    /// difference of their apparent radii, positive in light (the umbra of the conical
+    /// model). DECREASING is entry, INCREASING exit.
+    pub const UMBRA: Self = Self(6);
+    /// g = the same separation minus the sum of the apparent radii (the penumbra
+    /// boundary).
+    pub const PENUMBRA: Self = Self(7);
+    /// g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
+    /// the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
+    /// the range.
+    pub const CLOSEST_APPROACH: Self = Self(8);
+    /// g = the value of EXPRESSION.
+    pub const EXPRESSION: Self = Self(9);
 
     pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 3;
+    pub const ENUM_MAX: u8 = 9;
     pub const ENUM_VALUES: &'static [Self] = &[
         Self::UNSPECIFIED,
-        Self::STOP,
-        Self::CONTINUE,
-        Self::RECORD,
+        Self::APSIS,
+        Self::PLANE_CROSSING,
+        Self::TRUE_ANOMALY,
+        Self::ARGUMENT_OF_LATITUDE,
+        Self::LATITUDE_EXTREMUM,
+        Self::UMBRA,
+        Self::PENUMBRA,
+        Self::CLOSEST_APPROACH,
+        Self::EXPRESSION,
     ];
 
     /// Returns the variant's name or "" if unknown.
     pub fn variant_name(self) -> Option<&'static str> {
         match self {
             Self::UNSPECIFIED => Some("UNSPECIFIED"),
-            Self::STOP => Some("STOP"),
+            Self::APSIS => Some("APSIS"),
+            Self::PLANE_CROSSING => Some("PLANE_CROSSING"),
+            Self::TRUE_ANOMALY => Some("TRUE_ANOMALY"),
+            Self::ARGUMENT_OF_LATITUDE => Some("ARGUMENT_OF_LATITUDE"),
+            Self::LATITUDE_EXTREMUM => Some("LATITUDE_EXTREMUM"),
+            Self::UMBRA => Some("UMBRA"),
+            Self::PENUMBRA => Some("PENUMBRA"),
+            Self::CLOSEST_APPROACH => Some("CLOSEST_APPROACH"),
+            Self::EXPRESSION => Some("EXPRESSION"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfEventKind {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfEventKind {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfEventKind {
+    type Output = pcfEventKind;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfEventKind {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfEventKind {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfEventKind {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_EVENT_DIRECTION: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_EVENT_DIRECTION: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_EVENT_DIRECTION: [pcfEventDirection; 3] = [
+    pcfEventDirection::ANY,
+    pcfEventDirection::INCREASING,
+    pcfEventDirection::DECREASING,
+];
+
+/// Which zero crossings of the event function count. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfEventDirection(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfEventDirection {
+    pub const ANY: Self = Self(0);
+    /// g goes from negative to positive.
+    pub const INCREASING: Self = Self(1);
+    /// g goes from positive to negative.
+    pub const DECREASING: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::ANY,
+        Self::INCREASING,
+        Self::DECREASING,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::ANY => Some("ANY"),
+            Self::INCREASING => Some("INCREASING"),
+            Self::DECREASING => Some("DECREASING"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfEventDirection {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfEventDirection {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfEventDirection {
+    type Output = pcfEventDirection;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfEventDirection {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfEventDirection {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfEventDirection {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_EVENT_ACTION: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_EVENT_ACTION: u8 = 2;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_EVENT_ACTION: [pcfEventAction; 3] = [
+    pcfEventAction::CONTINUE,
+    pcfEventAction::RECORD,
+    pcfEventAction::STOP,
+];
+
+/// What the integrator does at a located event. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfEventAction(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfEventAction {
+    /// The event is located and counted; it is not reported.
+    pub const CONTINUE: Self = Self(0);
+    /// The event is located, counted and reported; propagation continues.
+    pub const RECORD: Self = Self(1);
+    /// The event is reported and the propagation ends there: the final sample is the
+    /// state at the OCCURRENCE-th qualifying crossing.
+    pub const STOP: Self = Self(2);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 2;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::CONTINUE,
+        Self::RECORD,
+        Self::STOP,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
             Self::CONTINUE => Some("CONTINUE"),
             Self::RECORD => Some("RECORD"),
+            Self::STOP => Some("STOP"),
             _ => None,
         }
     }
@@ -760,6 +1008,158 @@ impl<'a> ::flatbuffers::Verifiable for pcfEventAction {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for pcfEventAction {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_EXPRESSION_OPERATION: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_EXPRESSION_OPERATION: u8 = 13;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_EXPRESSION_OPERATION: [pcfExpressionOperation; 14] = [
+    pcfExpressionOperation::UNSPECIFIED,
+    pcfExpressionOperation::CONSTANT,
+    pcfExpressionOperation::PARAMETER,
+    pcfExpressionOperation::ADD,
+    pcfExpressionOperation::SUBTRACT,
+    pcfExpressionOperation::MULTIPLY,
+    pcfExpressionOperation::DIVIDE,
+    pcfExpressionOperation::NEGATE,
+    pcfExpressionOperation::ABSOLUTE,
+    pcfExpressionOperation::SQUARE_ROOT,
+    pcfExpressionOperation::SINE,
+    pcfExpressionOperation::COSINE,
+    pcfExpressionOperation::MINIMUM,
+    pcfExpressionOperation::MAXIMUM,
+];
+
+/// Operations of a bounded expression. The expression is data, evaluated by the
+/// provider; no code runs. Append new values only.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfExpressionOperation(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfExpressionOperation {
+    pub const UNSPECIFIED: Self = Self(0);
+    /// Push VALUE.
+    pub const CONSTANT: Self = Self(1);
+    /// Push the value of PARAMETER at the integrated state, in the units of the $PCE
+    /// catalog.
+    pub const PARAMETER: Self = Self(2);
+    /// Pop two, push their sum, difference (second minus first popped), product or
+    /// quotient.
+    pub const ADD: Self = Self(3);
+    pub const SUBTRACT: Self = Self(4);
+    pub const MULTIPLY: Self = Self(5);
+    pub const DIVIDE: Self = Self(6);
+    /// Pop one, push the result.
+    pub const NEGATE: Self = Self(7);
+    pub const ABSOLUTE: Self = Self(8);
+    pub const SQUARE_ROOT: Self = Self(9);
+    pub const SINE: Self = Self(10);
+    pub const COSINE: Self = Self(11);
+    /// Pop two, push the lesser or the greater.
+    pub const MINIMUM: Self = Self(12);
+    pub const MAXIMUM: Self = Self(13);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 13;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::UNSPECIFIED,
+        Self::CONSTANT,
+        Self::PARAMETER,
+        Self::ADD,
+        Self::SUBTRACT,
+        Self::MULTIPLY,
+        Self::DIVIDE,
+        Self::NEGATE,
+        Self::ABSOLUTE,
+        Self::SQUARE_ROOT,
+        Self::SINE,
+        Self::COSINE,
+        Self::MINIMUM,
+        Self::MAXIMUM,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::UNSPECIFIED => Some("UNSPECIFIED"),
+            Self::CONSTANT => Some("CONSTANT"),
+            Self::PARAMETER => Some("PARAMETER"),
+            Self::ADD => Some("ADD"),
+            Self::SUBTRACT => Some("SUBTRACT"),
+            Self::MULTIPLY => Some("MULTIPLY"),
+            Self::DIVIDE => Some("DIVIDE"),
+            Self::NEGATE => Some("NEGATE"),
+            Self::ABSOLUTE => Some("ABSOLUTE"),
+            Self::SQUARE_ROOT => Some("SQUARE_ROOT"),
+            Self::SINE => Some("SINE"),
+            Self::COSINE => Some("COSINE"),
+            Self::MINIMUM => Some("MINIMUM"),
+            Self::MAXIMUM => Some("MAXIMUM"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfExpressionOperation {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfExpressionOperation {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfExpressionOperation {
+    type Output = pcfExpressionOperation;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfExpressionOperation {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfExpressionOperation {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfExpressionOperation {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PCF_INNOVATION_CORRELATION: u8 = 0;
@@ -1108,13 +1508,13 @@ pub const ENUM_VALUES_PCF_INTEGRATOR_ALGORITHM: [pcfIntegratorAlgorithm; 20] = [
     pcfIntegratorAlgorithm::ENCKE,
     pcfIntegratorAlgorithm::EQUINOCTIAL_VOP,
     pcfIntegratorAlgorithm::DOPRI5,
-    pcfIntegratorAlgorithm::RK65_8M,
-    pcfIntegratorAlgorithm::VERNER_98,
-    pcfIntegratorAlgorithm::RKN12_10,
+    pcfIntegratorAlgorithm::RK65,
+    pcfIntegratorAlgorithm::RKV98,
+    pcfIntegratorAlgorithm::RKN1210,
     pcfIntegratorAlgorithm::GAUSS_JACKSON_8,
     pcfIntegratorAlgorithm::GAUSS_VOP,
     pcfIntegratorAlgorithm::DROMO,
-    pcfIntegratorAlgorithm::STIEFEL_SCHEIFELE,
+    pcfIntegratorAlgorithm::STIEFEL,
     pcfIntegratorAlgorithm::DOPRI853,
 ];
 
@@ -1122,7 +1522,7 @@ pub const ENUM_VALUES_PCF_INTEGRATOR_ALGORITHM: [pcfIntegratorAlgorithm; 20] = [
 /// 10 are the numbers $PRW has always carried; new values are appended only,
 /// never reordered or reused. A scheme value names the stepping method; a
 /// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// STIEFEL) names the variables the equations are written in, and the
 /// scheme that steps them is the provider's, reported in its result.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
@@ -1159,14 +1559,14 @@ impl pcfIntegratorAlgorithm {
     pub const DOPRI5: Self = Self(11);
     /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
     /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-    pub const RK65_8M: Self = Self(12);
+    pub const RK65: Self = Self(12);
     /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-    pub const VERNER_98: Self = Self(13);
+    pub const RKV98: Self = Self(13);
     /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
     /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
     /// acceleration must not depend on velocity, so a provider refuses it with
     /// drag.
-    pub const RKN12_10: Self = Self(14);
+    pub const RKN1210: Self = Self(14);
     /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
     /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
     /// 52).
@@ -1178,7 +1578,7 @@ impl pcfIntegratorAlgorithm {
     pub const DROMO: Self = Self(17);
     /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
     /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
-    pub const STIEFEL_SCHEIFELE: Self = Self(18);
+    pub const STIEFEL: Self = Self(18);
     /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
     /// Solving Ordinary Differential Equations I).
     pub const DOPRI853: Self = Self(19);
@@ -1198,13 +1598,13 @@ impl pcfIntegratorAlgorithm {
         Self::ENCKE,
         Self::EQUINOCTIAL_VOP,
         Self::DOPRI5,
-        Self::RK65_8M,
-        Self::VERNER_98,
-        Self::RKN12_10,
+        Self::RK65,
+        Self::RKV98,
+        Self::RKN1210,
         Self::GAUSS_JACKSON_8,
         Self::GAUSS_VOP,
         Self::DROMO,
-        Self::STIEFEL_SCHEIFELE,
+        Self::STIEFEL,
         Self::DOPRI853,
     ];
 
@@ -1223,13 +1623,13 @@ impl pcfIntegratorAlgorithm {
             Self::ENCKE => Some("ENCKE"),
             Self::EQUINOCTIAL_VOP => Some("EQUINOCTIAL_VOP"),
             Self::DOPRI5 => Some("DOPRI5"),
-            Self::RK65_8M => Some("RK65_8M"),
-            Self::VERNER_98 => Some("VERNER_98"),
-            Self::RKN12_10 => Some("RKN12_10"),
+            Self::RK65 => Some("RK65"),
+            Self::RKV98 => Some("RKV98"),
+            Self::RKN1210 => Some("RKN1210"),
             Self::GAUSS_JACKSON_8 => Some("GAUSS_JACKSON_8"),
             Self::GAUSS_VOP => Some("GAUSS_VOP"),
             Self::DROMO => Some("DROMO"),
-            Self::STIEFEL_SCHEIFELE => Some("STIEFEL_SCHEIFELE"),
+            Self::STIEFEL => Some("STIEFEL"),
             Self::DOPRI853 => Some("DOPRI853"),
             _ => None,
         }
@@ -3875,12 +4275,344 @@ impl PCFFitPolicyT {
     }
 }
 
+pub enum PCFExpressionTermOffset {}
+
+/// One term of an expression program.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PCFExpressionTerm<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PCFExpressionTerm<'a> {
+    type Inner = PCFExpressionTerm<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PCFExpressionTerm<'a> {
+    pub const VT_OPERATION: ::flatbuffers::VOffsetT = 4;
+    pub const VT_VALUE: ::flatbuffers::VOffsetT = 6;
+    pub const VT_PARAMETER: ::flatbuffers::VOffsetT = 8;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PCFExpressionTerm { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PCFExpressionTermArgs
+    ) -> ::flatbuffers::WIPOffset<PCFExpressionTerm<'bldr>> {
+        let mut builder = PCFExpressionTermBuilder::new(_fbb);
+        builder.add_VALUE(args.VALUE);
+        builder.add_PARAMETER(args.PARAMETER);
+        builder.add_OPERATION(args.OPERATION);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PCFExpressionTermT {
+        let OPERATION = self.OPERATION();
+        let VALUE = self.VALUE();
+        let PARAMETER = self.PARAMETER();
+        PCFExpressionTermT {
+            OPERATION,
+            VALUE,
+            PARAMETER,
+        }
+    }
+
+    /// What the term does. Default UNSPECIFIED (refused).
+    #[inline]
+    pub fn OPERATION(&self) -> pcfExpressionOperation {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfExpressionOperation>(PCFExpressionTerm::VT_OPERATION, Some(pcfExpressionOperation::UNSPECIFIED)).unwrap()}
+    }
+
+    /// The constant pushed by CONSTANT. Default 0.
+    #[inline]
+    pub fn VALUE(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFExpressionTerm::VT_VALUE, Some(0.0)).unwrap()}
+    }
+
+    /// The catalog parameter pushed by PARAMETER. Default UNSPECIFIED.
+    #[inline]
+    pub fn PARAMETER(&self) -> pceParameter {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pceParameter>(PCFExpressionTerm::VT_PARAMETER, Some(pceParameter::UNSPECIFIED)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PCFExpressionTerm<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<pcfExpressionOperation>("OPERATION", Self::VT_OPERATION, false)?
+            .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
+            .visit_field::<pceParameter>("PARAMETER", Self::VT_PARAMETER, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PCFExpressionTermArgs {
+    pub OPERATION: pcfExpressionOperation,
+    pub VALUE: f64,
+    pub PARAMETER: pceParameter,
+}
+
+impl<'a> Default for PCFExpressionTermArgs {
+    #[inline]
+    fn default() -> Self {
+        PCFExpressionTermArgs {
+            OPERATION: pcfExpressionOperation::UNSPECIFIED,
+            VALUE: 0.0,
+            PARAMETER: pceParameter::UNSPECIFIED,
+        }
+    }
+}
+
+pub struct PCFExpressionTermBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFExpressionTermBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_OPERATION(&mut self, OPERATION: pcfExpressionOperation) {
+        self.fbb_.push_slot::<pcfExpressionOperation>(PCFExpressionTerm::VT_OPERATION, OPERATION, pcfExpressionOperation::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_VALUE(&mut self, VALUE: f64) {
+        self.fbb_.push_slot::<f64>(PCFExpressionTerm::VT_VALUE, VALUE, 0.0);
+    }
+
+    #[inline]
+    pub fn add_PARAMETER(&mut self, PARAMETER: pceParameter) {
+        self.fbb_.push_slot::<pceParameter>(PCFExpressionTerm::VT_PARAMETER, PARAMETER, pceParameter::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFExpressionTermBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PCFExpressionTermBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFExpressionTerm<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PCFExpressionTerm<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PCFExpressionTerm");
+        ds.field("OPERATION", &self.OPERATION());
+        ds.field("VALUE", &self.VALUE());
+        ds.field("PARAMETER", &self.PARAMETER());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PCFExpressionTermT {
+    pub OPERATION: pcfExpressionOperation,
+    pub VALUE: f64,
+    pub PARAMETER: pceParameter,
+}
+
+impl Default for PCFExpressionTermT {
+    fn default() -> Self {
+        Self {
+            OPERATION: pcfExpressionOperation::UNSPECIFIED,
+            VALUE: 0.0,
+            PARAMETER: pceParameter::UNSPECIFIED,
+        }
+    }
+}
+
+impl PCFExpressionTermT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PCFExpressionTerm<'b>> {
+        let OPERATION = self.OPERATION;
+        let VALUE = self.VALUE;
+        let PARAMETER = self.PARAMETER;
+        PCFExpressionTerm::create(_fbb, &PCFExpressionTermArgs{
+            OPERATION,
+            VALUE,
+            PARAMETER,
+        })
+    }
+}
+
+pub enum PCFExpressionOffset {}
+
+/// A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
+/// number.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PCFExpression<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PCFExpression<'a> {
+    type Inner = PCFExpression<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PCFExpression<'a> {
+    pub const VT_TERMS: ::flatbuffers::VOffsetT = 4;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PCFExpression { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PCFExpressionArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PCFExpression<'bldr>> {
+        let mut builder = PCFExpressionBuilder::new(_fbb);
+        if let Some(x) = args.TERMS { builder.add_TERMS(x); }
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PCFExpressionT {
+        let TERMS = self.TERMS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        PCFExpressionT {
+            TERMS,
+        }
+    }
+
+    /// The terms, in evaluation order. Default empty.
+    #[inline]
+    pub fn TERMS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFExpressionTerm<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFExpressionTerm>>>>(PCFExpression::VT_TERMS, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PCFExpression<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PCFExpressionTerm>>>>("TERMS", Self::VT_TERMS, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PCFExpressionArgs<'a> {
+    pub TERMS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFExpressionTerm<'a>>>>>,
+}
+
+impl<'a> Default for PCFExpressionArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PCFExpressionArgs {
+            TERMS: None,
+        }
+    }
+}
+
+pub struct PCFExpressionBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFExpressionBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_TERMS(&mut self, TERMS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PCFExpressionTerm<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFExpression::VT_TERMS, TERMS);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFExpressionBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PCFExpressionBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFExpression<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PCFExpression<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PCFExpression");
+        ds.field("TERMS", &self.TERMS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PCFExpressionT {
+    pub TERMS: Option<alloc::vec::Vec<PCFExpressionTermT>>,
+}
+
+impl Default for PCFExpressionT {
+    fn default() -> Self {
+        Self {
+            TERMS: None,
+        }
+    }
+}
+
+impl PCFExpressionT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PCFExpression<'b>> {
+        let TERMS = self.TERMS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        PCFExpression::create(_fbb, &PCFExpressionArgs{
+            TERMS,
+        })
+    }
+}
+
 pub enum PCFEventDefinitionOffset {}
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
 #[derive(Copy, Clone, PartialEq)]
 pub struct PCFEventDefinition<'a> {
     pub _tab: ::flatbuffers::Table<'a>,
@@ -3896,18 +4628,15 @@ impl<'a> ::flatbuffers::Follow<'a> for PCFEventDefinition<'a> {
 }
 
 impl<'a> PCFEventDefinition<'a> {
-    pub const VT_NAME: ::flatbuffers::VOffsetT = 4;
-    pub const VT_LOCATOR_CLASS: ::flatbuffers::VOffsetT = 6;
-    pub const VT_CONDITION: ::flatbuffers::VOffsetT = 8;
-    pub const VT_ECLIPSE: ::flatbuffers::VOffsetT = 10;
-    pub const VT_CONTACT: ::flatbuffers::VOffsetT = 12;
-    pub const VT_INTRUSION: ::flatbuffers::VOffsetT = 14;
-    pub const VT_APSIDES: ::flatbuffers::VOffsetT = 16;
-    pub const VT_NODE_CROSSING: ::flatbuffers::VOffsetT = 18;
-    pub const VT_ACTION: ::flatbuffers::VOffsetT = 20;
-    pub const VT_EPOCH_TOLERANCE_SECONDS: ::flatbuffers::VOffsetT = 22;
-    pub const VT_SCAN_STEP_SECONDS: ::flatbuffers::VOffsetT = 24;
-    pub const VT_MAXIMUM_EVENTS: ::flatbuffers::VOffsetT = 26;
+    pub const VT_KIND: ::flatbuffers::VOffsetT = 4;
+    pub const VT_DIRECTION: ::flatbuffers::VOffsetT = 6;
+    pub const VT_ACTION: ::flatbuffers::VOffsetT = 8;
+    pub const VT_TOLERANCE_SECONDS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_OCCURRENCE: ::flatbuffers::VOffsetT = 12;
+    pub const VT_ANGLE_RAD: ::flatbuffers::VOffsetT = 14;
+    pub const VT_PLANE_NORMAL: ::flatbuffers::VOffsetT = 16;
+    pub const VT_SECOND_TRAJECTORY_PORT: ::flatbuffers::VOffsetT = 18;
+    pub const VT_EXPRESSION: ::flatbuffers::VOffsetT = 20;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -3920,135 +4649,66 @@ impl<'a> PCFEventDefinition<'a> {
         args: &'args PCFEventDefinitionArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PCFEventDefinition<'bldr>> {
         let mut builder = PCFEventDefinitionBuilder::new(_fbb);
-        builder.add_SCAN_STEP_SECONDS(args.SCAN_STEP_SECONDS);
-        builder.add_EPOCH_TOLERANCE_SECONDS(args.EPOCH_TOLERANCE_SECONDS);
-        builder.add_MAXIMUM_EVENTS(args.MAXIMUM_EVENTS);
-        if let Some(x) = args.NODE_CROSSING { builder.add_NODE_CROSSING(x); }
-        if let Some(x) = args.APSIDES { builder.add_APSIDES(x); }
-        if let Some(x) = args.INTRUSION { builder.add_INTRUSION(x); }
-        if let Some(x) = args.CONTACT { builder.add_CONTACT(x); }
-        if let Some(x) = args.ECLIPSE { builder.add_ECLIPSE(x); }
-        if let Some(x) = args.CONDITION { builder.add_CONDITION(x); }
-        if let Some(x) = args.NAME { builder.add_NAME(x); }
+        builder.add_ANGLE_RAD(args.ANGLE_RAD);
+        builder.add_TOLERANCE_SECONDS(args.TOLERANCE_SECONDS);
+        if let Some(x) = args.EXPRESSION { builder.add_EXPRESSION(x); }
+        if let Some(x) = args.SECOND_TRAJECTORY_PORT { builder.add_SECOND_TRAJECTORY_PORT(x); }
+        if let Some(x) = args.PLANE_NORMAL { builder.add_PLANE_NORMAL(x); }
+        builder.add_OCCURRENCE(args.OCCURRENCE);
         builder.add_ACTION(args.ACTION);
-        builder.add_LOCATOR_CLASS(args.LOCATOR_CLASS);
+        builder.add_DIRECTION(args.DIRECTION);
+        builder.add_KIND(args.KIND);
         builder.finish()
     }
 
     pub fn unpack(&self) -> PCFEventDefinitionT {
-        let NAME = self.NAME().map(|x| {
+        let KIND = self.KIND();
+        let DIRECTION = self.DIRECTION();
+        let ACTION = self.ACTION();
+        let TOLERANCE_SECONDS = self.TOLERANCE_SECONDS();
+        let OCCURRENCE = self.OCCURRENCE();
+        let ANGLE_RAD = self.ANGLE_RAD();
+        let PLANE_NORMAL = self.PLANE_NORMAL().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
+        let SECOND_TRAJECTORY_PORT = self.SECOND_TRAJECTORY_PORT().map(|x| {
             alloc::string::ToString::to_string(x)
         });
-        let LOCATOR_CLASS = self.LOCATOR_CLASS();
-        let CONDITION = self.CONDITION().map(|x| {
+        let EXPRESSION = self.EXPRESSION().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
-        let ECLIPSE = self.ECLIPSE().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let CONTACT = self.CONTACT().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let INTRUSION = self.INTRUSION().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let APSIDES = self.APSIDES().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let NODE_CROSSING = self.NODE_CROSSING().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let ACTION = self.ACTION();
-        let EPOCH_TOLERANCE_SECONDS = self.EPOCH_TOLERANCE_SECONDS();
-        let SCAN_STEP_SECONDS = self.SCAN_STEP_SECONDS();
-        let MAXIMUM_EVENTS = self.MAXIMUM_EVENTS();
         PCFEventDefinitionT {
-            NAME,
-            LOCATOR_CLASS,
-            CONDITION,
-            ECLIPSE,
-            CONTACT,
-            INTRUSION,
-            APSIDES,
-            NODE_CROSSING,
+            KIND,
+            DIRECTION,
             ACTION,
-            EPOCH_TOLERANCE_SECONDS,
-            SCAN_STEP_SECONDS,
-            MAXIMUM_EVENTS,
+            TOLERANCE_SECONDS,
+            OCCURRENCE,
+            ANGLE_RAD,
+            PLANE_NORMAL,
+            SECOND_TRAJECTORY_PORT,
+            EXPRESSION,
         }
     }
 
-    /// The caller's name for the event, echoed in the result. Default empty.
+    /// The event function. Default UNSPECIFIED (refused).
     #[inline]
-    pub fn NAME(&self) -> Option<&'a str> {
+    pub fn KIND(&self) -> pcfEventKind {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PCFEventDefinition::VT_NAME, None)}
+        unsafe { self._tab.get::<pcfEventKind>(PCFEventDefinition::VT_KIND, Some(pcfEventKind::UNSPECIFIED)).unwrap()}
     }
 
-    /// Which locator. Default PARAMETER_CONDITION.
+    /// Which zero crossings of the event function count. Default ANY.
     #[inline]
-    pub fn LOCATOR_CLASS(&self) -> evlLocatorClass {
+    pub fn DIRECTION(&self) -> pcfEventDirection {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<evlLocatorClass>(PCFEventDefinition::VT_LOCATOR_CLASS, Some(evlLocatorClass::PARAMETER_CONDITION)).unwrap()}
+        unsafe { self._tab.get::<pcfEventDirection>(PCFEventDefinition::VT_DIRECTION, Some(pcfEventDirection::ANY)).unwrap()}
     }
 
-    /// Exactly the one of the next five that matches LOCATOR_CLASS is present
-    /// (any other combination is refused as MISSING_CONFIGURATION, as in
-    /// $EVL). The condition carries its own direction, goal value, goal
-    /// tolerance and occurrence.
-    #[inline]
-    pub fn CONDITION(&self) -> Option<PCEParameterCondition<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCEParameterCondition>>(PCFEventDefinition::VT_CONDITION, None)}
-    }
-
-    #[inline]
-    pub fn ECLIPSE(&self) -> Option<EVLEclipseConfiguration<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EVLEclipseConfiguration>>(PCFEventDefinition::VT_ECLIPSE, None)}
-    }
-
-    #[inline]
-    pub fn CONTACT(&self) -> Option<EVLContactConfiguration<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EVLContactConfiguration>>(PCFEventDefinition::VT_CONTACT, None)}
-    }
-
-    #[inline]
-    pub fn INTRUSION(&self) -> Option<EVLIntrusionConfiguration<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EVLIntrusionConfiguration>>(PCFEventDefinition::VT_INTRUSION, None)}
-    }
-
-    #[inline]
-    pub fn APSIDES(&self) -> Option<EVLApsidesConfiguration<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EVLApsidesConfiguration>>(PCFEventDefinition::VT_APSIDES, None)}
-    }
-
-    #[inline]
-    pub fn NODE_CROSSING(&self) -> Option<EVLNodeCrossingConfiguration<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<EVLNodeCrossingConfiguration>>(PCFEventDefinition::VT_NODE_CROSSING, None)}
-    }
-
-    /// What the propagator does at the event. Default RECORD.
+    /// What the integrator does at the event. Default RECORD.
     #[inline]
     pub fn ACTION(&self) -> pcfEventAction {
         // Safety:
@@ -4057,33 +4717,60 @@ impl<'a> PCFEventDefinition<'a> {
         unsafe { self._tab.get::<pcfEventAction>(PCFEventDefinition::VT_ACTION, Some(pcfEventAction::RECORD)).unwrap()}
     }
 
-    /// Convergence bar on the located epoch, seconds. Default 1e-9.
+    /// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
     #[inline]
-    pub fn EPOCH_TOLERANCE_SECONDS(&self) -> f64 {
+    pub fn TOLERANCE_SECONDS(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFEventDefinition::VT_EPOCH_TOLERANCE_SECONDS, Some(1e-9)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFEventDefinition::VT_TOLERANCE_SECONDS, Some(1e-9)).unwrap()}
     }
 
-    /// Step at which the event function is sampled before refinement, seconds;
-    /// 0 samples at the integrator's accepted steps. A root is found only when
-    /// the function changes sign within one sample interval. Default 0.
+    /// STOP acts at this qualifying crossing (1 is the first). Default 1.
     #[inline]
-    pub fn SCAN_STEP_SECONDS(&self) -> f64 {
+    pub fn OCCURRENCE(&self) -> u32 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFEventDefinition::VT_SCAN_STEP_SECONDS, Some(0.0)).unwrap()}
+        unsafe { self._tab.get::<u32>(PCFEventDefinition::VT_OCCURRENCE, Some(1)).unwrap()}
     }
 
-    /// Largest number of occurrences reported; 0 is no bound. Default 0.
+    /// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
     #[inline]
-    pub fn MAXIMUM_EVENTS(&self) -> u32 {
+    pub fn ANGLE_RAD(&self) -> f64 {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<u32>(PCFEventDefinition::VT_MAXIMUM_EVENTS, Some(0)).unwrap()}
+        unsafe { self._tab.get::<f64>(PCFEventDefinition::VT_ANGLE_RAD, Some(0.0)).unwrap()}
+    }
+
+    /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+    /// vector. Default absent (the pole of the axes).
+    #[inline]
+    pub fn PLANE_NORMAL(&self) -> Option<FRMVector3<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<FRMVector3>>(PCFEventDefinition::VT_PLANE_NORMAL, None)}
+    }
+
+    /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+    /// as $OEM. Default empty.
+    #[inline]
+    pub fn SECOND_TRAJECTORY_PORT(&self) -> Option<&'a str> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<&str>>(PCFEventDefinition::VT_SECOND_TRAJECTORY_PORT, None)}
+    }
+
+    /// EXPRESSION: the program. Default absent.
+    #[inline]
+    pub fn EXPRESSION(&self) -> Option<PCFExpression<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFExpression>>(PCFEventDefinition::VT_EXPRESSION, None)}
     }
 }
 
@@ -4093,54 +4780,45 @@ impl ::flatbuffers::Verifiable for PCFEventDefinition<'_> {
         v: &mut ::flatbuffers::Verifier, pos: usize
     ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
         v.visit_table(pos)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-            .visit_field::<evlLocatorClass>("LOCATOR_CLASS", Self::VT_LOCATOR_CLASS, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCEParameterCondition>>("CONDITION", Self::VT_CONDITION, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<EVLEclipseConfiguration>>("ECLIPSE", Self::VT_ECLIPSE, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<EVLContactConfiguration>>("CONTACT", Self::VT_CONTACT, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<EVLIntrusionConfiguration>>("INTRUSION", Self::VT_INTRUSION, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<EVLApsidesConfiguration>>("APSIDES", Self::VT_APSIDES, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<EVLNodeCrossingConfiguration>>("NODE_CROSSING", Self::VT_NODE_CROSSING, false)?
+            .visit_field::<pcfEventKind>("KIND", Self::VT_KIND, false)?
+            .visit_field::<pcfEventDirection>("DIRECTION", Self::VT_DIRECTION, false)?
             .visit_field::<pcfEventAction>("ACTION", Self::VT_ACTION, false)?
-            .visit_field::<f64>("EPOCH_TOLERANCE_SECONDS", Self::VT_EPOCH_TOLERANCE_SECONDS, false)?
-            .visit_field::<f64>("SCAN_STEP_SECONDS", Self::VT_SCAN_STEP_SECONDS, false)?
-            .visit_field::<u32>("MAXIMUM_EVENTS", Self::VT_MAXIMUM_EVENTS, false)?
+            .visit_field::<f64>("TOLERANCE_SECONDS", Self::VT_TOLERANCE_SECONDS, false)?
+            .visit_field::<u32>("OCCURRENCE", Self::VT_OCCURRENCE, false)?
+            .visit_field::<f64>("ANGLE_RAD", Self::VT_ANGLE_RAD, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<FRMVector3>>("PLANE_NORMAL", Self::VT_PLANE_NORMAL, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<&str>>("SECOND_TRAJECTORY_PORT", Self::VT_SECOND_TRAJECTORY_PORT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PCFExpression>>("EXPRESSION", Self::VT_EXPRESSION, false)?
             .finish();
         Ok(())
     }
 }
 
 pub struct PCFEventDefinitionArgs<'a> {
-    pub NAME: Option<::flatbuffers::WIPOffset<&'a str>>,
-    pub LOCATOR_CLASS: evlLocatorClass,
-    pub CONDITION: Option<::flatbuffers::WIPOffset<PCEParameterCondition<'a>>>,
-    pub ECLIPSE: Option<::flatbuffers::WIPOffset<EVLEclipseConfiguration<'a>>>,
-    pub CONTACT: Option<::flatbuffers::WIPOffset<EVLContactConfiguration<'a>>>,
-    pub INTRUSION: Option<::flatbuffers::WIPOffset<EVLIntrusionConfiguration<'a>>>,
-    pub APSIDES: Option<::flatbuffers::WIPOffset<EVLApsidesConfiguration<'a>>>,
-    pub NODE_CROSSING: Option<::flatbuffers::WIPOffset<EVLNodeCrossingConfiguration<'a>>>,
+    pub KIND: pcfEventKind,
+    pub DIRECTION: pcfEventDirection,
     pub ACTION: pcfEventAction,
-    pub EPOCH_TOLERANCE_SECONDS: f64,
-    pub SCAN_STEP_SECONDS: f64,
-    pub MAXIMUM_EVENTS: u32,
+    pub TOLERANCE_SECONDS: f64,
+    pub OCCURRENCE: u32,
+    pub ANGLE_RAD: f64,
+    pub PLANE_NORMAL: Option<::flatbuffers::WIPOffset<FRMVector3<'a>>>,
+    pub SECOND_TRAJECTORY_PORT: Option<::flatbuffers::WIPOffset<&'a str>>,
+    pub EXPRESSION: Option<::flatbuffers::WIPOffset<PCFExpression<'a>>>,
 }
 
 impl<'a> Default for PCFEventDefinitionArgs<'a> {
     #[inline]
     fn default() -> Self {
         PCFEventDefinitionArgs {
-            NAME: None,
-            LOCATOR_CLASS: evlLocatorClass::PARAMETER_CONDITION,
-            CONDITION: None,
-            ECLIPSE: None,
-            CONTACT: None,
-            INTRUSION: None,
-            APSIDES: None,
-            NODE_CROSSING: None,
+            KIND: pcfEventKind::UNSPECIFIED,
+            DIRECTION: pcfEventDirection::ANY,
             ACTION: pcfEventAction::RECORD,
-            EPOCH_TOLERANCE_SECONDS: 1e-9,
-            SCAN_STEP_SECONDS: 0.0,
-            MAXIMUM_EVENTS: 0,
+            TOLERANCE_SECONDS: 1e-9,
+            OCCURRENCE: 1,
+            ANGLE_RAD: 0.0,
+            PLANE_NORMAL: None,
+            SECOND_TRAJECTORY_PORT: None,
+            EXPRESSION: None,
         }
     }
 }
@@ -4152,43 +4830,13 @@ pub struct PCFEventDefinitionBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + '
 
 impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEventDefinitionBuilder<'a, 'b, A> {
     #[inline]
-    pub fn add_NAME(&mut self, NAME: ::flatbuffers::WIPOffset<&'b  str>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFEventDefinition::VT_NAME, NAME);
+    pub fn add_KIND(&mut self, KIND: pcfEventKind) {
+        self.fbb_.push_slot::<pcfEventKind>(PCFEventDefinition::VT_KIND, KIND, pcfEventKind::UNSPECIFIED);
     }
 
     #[inline]
-    pub fn add_LOCATOR_CLASS(&mut self, LOCATOR_CLASS: evlLocatorClass) {
-        self.fbb_.push_slot::<evlLocatorClass>(PCFEventDefinition::VT_LOCATOR_CLASS, LOCATOR_CLASS, evlLocatorClass::PARAMETER_CONDITION);
-    }
-
-    #[inline]
-    pub fn add_CONDITION(&mut self, CONDITION: ::flatbuffers::WIPOffset<PCEParameterCondition<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCEParameterCondition>>(PCFEventDefinition::VT_CONDITION, CONDITION);
-    }
-
-    #[inline]
-    pub fn add_ECLIPSE(&mut self, ECLIPSE: ::flatbuffers::WIPOffset<EVLEclipseConfiguration<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EVLEclipseConfiguration>>(PCFEventDefinition::VT_ECLIPSE, ECLIPSE);
-    }
-
-    #[inline]
-    pub fn add_CONTACT(&mut self, CONTACT: ::flatbuffers::WIPOffset<EVLContactConfiguration<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EVLContactConfiguration>>(PCFEventDefinition::VT_CONTACT, CONTACT);
-    }
-
-    #[inline]
-    pub fn add_INTRUSION(&mut self, INTRUSION: ::flatbuffers::WIPOffset<EVLIntrusionConfiguration<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EVLIntrusionConfiguration>>(PCFEventDefinition::VT_INTRUSION, INTRUSION);
-    }
-
-    #[inline]
-    pub fn add_APSIDES(&mut self, APSIDES: ::flatbuffers::WIPOffset<EVLApsidesConfiguration<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EVLApsidesConfiguration>>(PCFEventDefinition::VT_APSIDES, APSIDES);
-    }
-
-    #[inline]
-    pub fn add_NODE_CROSSING(&mut self, NODE_CROSSING: ::flatbuffers::WIPOffset<EVLNodeCrossingConfiguration<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<EVLNodeCrossingConfiguration>>(PCFEventDefinition::VT_NODE_CROSSING, NODE_CROSSING);
+    pub fn add_DIRECTION(&mut self, DIRECTION: pcfEventDirection) {
+        self.fbb_.push_slot::<pcfEventDirection>(PCFEventDefinition::VT_DIRECTION, DIRECTION, pcfEventDirection::ANY);
     }
 
     #[inline]
@@ -4197,18 +4845,33 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEventDefinitionBuilder<'a,
     }
 
     #[inline]
-    pub fn add_EPOCH_TOLERANCE_SECONDS(&mut self, EPOCH_TOLERANCE_SECONDS: f64) {
-        self.fbb_.push_slot::<f64>(PCFEventDefinition::VT_EPOCH_TOLERANCE_SECONDS, EPOCH_TOLERANCE_SECONDS, 1e-9);
+    pub fn add_TOLERANCE_SECONDS(&mut self, TOLERANCE_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(PCFEventDefinition::VT_TOLERANCE_SECONDS, TOLERANCE_SECONDS, 1e-9);
     }
 
     #[inline]
-    pub fn add_SCAN_STEP_SECONDS(&mut self, SCAN_STEP_SECONDS: f64) {
-        self.fbb_.push_slot::<f64>(PCFEventDefinition::VT_SCAN_STEP_SECONDS, SCAN_STEP_SECONDS, 0.0);
+    pub fn add_OCCURRENCE(&mut self, OCCURRENCE: u32) {
+        self.fbb_.push_slot::<u32>(PCFEventDefinition::VT_OCCURRENCE, OCCURRENCE, 1);
     }
 
     #[inline]
-    pub fn add_MAXIMUM_EVENTS(&mut self, MAXIMUM_EVENTS: u32) {
-        self.fbb_.push_slot::<u32>(PCFEventDefinition::VT_MAXIMUM_EVENTS, MAXIMUM_EVENTS, 0);
+    pub fn add_ANGLE_RAD(&mut self, ANGLE_RAD: f64) {
+        self.fbb_.push_slot::<f64>(PCFEventDefinition::VT_ANGLE_RAD, ANGLE_RAD, 0.0);
+    }
+
+    #[inline]
+    pub fn add_PLANE_NORMAL(&mut self, PLANE_NORMAL: ::flatbuffers::WIPOffset<FRMVector3<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<FRMVector3>>(PCFEventDefinition::VT_PLANE_NORMAL, PLANE_NORMAL);
+    }
+
+    #[inline]
+    pub fn add_SECOND_TRAJECTORY_PORT(&mut self, SECOND_TRAJECTORY_PORT: ::flatbuffers::WIPOffset<&'b  str>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFEventDefinition::VT_SECOND_TRAJECTORY_PORT, SECOND_TRAJECTORY_PORT);
+    }
+
+    #[inline]
+    pub fn add_EXPRESSION(&mut self, EXPRESSION: ::flatbuffers::WIPOffset<PCFExpression<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFExpression>>(PCFEventDefinition::VT_EXPRESSION, EXPRESSION);
     }
 
     #[inline]
@@ -4230,18 +4893,15 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEventDefinitionBuilder<'a,
 impl ::core::fmt::Debug for PCFEventDefinition<'_> {
     fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
         let mut ds = f.debug_struct("PCFEventDefinition");
-        ds.field("NAME", &self.NAME());
-        ds.field("LOCATOR_CLASS", &self.LOCATOR_CLASS());
-        ds.field("CONDITION", &self.CONDITION());
-        ds.field("ECLIPSE", &self.ECLIPSE());
-        ds.field("CONTACT", &self.CONTACT());
-        ds.field("INTRUSION", &self.INTRUSION());
-        ds.field("APSIDES", &self.APSIDES());
-        ds.field("NODE_CROSSING", &self.NODE_CROSSING());
+        ds.field("KIND", &self.KIND());
+        ds.field("DIRECTION", &self.DIRECTION());
         ds.field("ACTION", &self.ACTION());
-        ds.field("EPOCH_TOLERANCE_SECONDS", &self.EPOCH_TOLERANCE_SECONDS());
-        ds.field("SCAN_STEP_SECONDS", &self.SCAN_STEP_SECONDS());
-        ds.field("MAXIMUM_EVENTS", &self.MAXIMUM_EVENTS());
+        ds.field("TOLERANCE_SECONDS", &self.TOLERANCE_SECONDS());
+        ds.field("OCCURRENCE", &self.OCCURRENCE());
+        ds.field("ANGLE_RAD", &self.ANGLE_RAD());
+        ds.field("PLANE_NORMAL", &self.PLANE_NORMAL());
+        ds.field("SECOND_TRAJECTORY_PORT", &self.SECOND_TRAJECTORY_PORT());
+        ds.field("EXPRESSION", &self.EXPRESSION());
         ds.finish()
     }
 }
@@ -4249,35 +4909,29 @@ impl ::core::fmt::Debug for PCFEventDefinition<'_> {
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct PCFEventDefinitionT {
-    pub NAME: Option<alloc::string::String>,
-    pub LOCATOR_CLASS: evlLocatorClass,
-    pub CONDITION: Option<alloc::boxed::Box<PCEParameterConditionT>>,
-    pub ECLIPSE: Option<alloc::boxed::Box<EVLEclipseConfigurationT>>,
-    pub CONTACT: Option<alloc::boxed::Box<EVLContactConfigurationT>>,
-    pub INTRUSION: Option<alloc::boxed::Box<EVLIntrusionConfigurationT>>,
-    pub APSIDES: Option<alloc::boxed::Box<EVLApsidesConfigurationT>>,
-    pub NODE_CROSSING: Option<alloc::boxed::Box<EVLNodeCrossingConfigurationT>>,
+    pub KIND: pcfEventKind,
+    pub DIRECTION: pcfEventDirection,
     pub ACTION: pcfEventAction,
-    pub EPOCH_TOLERANCE_SECONDS: f64,
-    pub SCAN_STEP_SECONDS: f64,
-    pub MAXIMUM_EVENTS: u32,
+    pub TOLERANCE_SECONDS: f64,
+    pub OCCURRENCE: u32,
+    pub ANGLE_RAD: f64,
+    pub PLANE_NORMAL: Option<alloc::boxed::Box<FRMVector3T>>,
+    pub SECOND_TRAJECTORY_PORT: Option<alloc::string::String>,
+    pub EXPRESSION: Option<alloc::boxed::Box<PCFExpressionT>>,
 }
 
 impl Default for PCFEventDefinitionT {
     fn default() -> Self {
         Self {
-            NAME: None,
-            LOCATOR_CLASS: evlLocatorClass::PARAMETER_CONDITION,
-            CONDITION: None,
-            ECLIPSE: None,
-            CONTACT: None,
-            INTRUSION: None,
-            APSIDES: None,
-            NODE_CROSSING: None,
+            KIND: pcfEventKind::UNSPECIFIED,
+            DIRECTION: pcfEventDirection::ANY,
             ACTION: pcfEventAction::RECORD,
-            EPOCH_TOLERANCE_SECONDS: 1e-9,
-            SCAN_STEP_SECONDS: 0.0,
-            MAXIMUM_EVENTS: 0,
+            TOLERANCE_SECONDS: 1e-9,
+            OCCURRENCE: 1,
+            ANGLE_RAD: 0.0,
+            PLANE_NORMAL: None,
+            SECOND_TRAJECTORY_PORT: None,
+            EXPRESSION: None,
         }
     }
 }
@@ -4287,45 +4941,31 @@ impl PCFEventDefinitionT {
         &self,
         _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
     ) -> ::flatbuffers::WIPOffset<PCFEventDefinition<'b>> {
-        let NAME = self.NAME.as_ref().map(|x|{
+        let KIND = self.KIND;
+        let DIRECTION = self.DIRECTION;
+        let ACTION = self.ACTION;
+        let TOLERANCE_SECONDS = self.TOLERANCE_SECONDS;
+        let OCCURRENCE = self.OCCURRENCE;
+        let ANGLE_RAD = self.ANGLE_RAD;
+        let PLANE_NORMAL = self.PLANE_NORMAL.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
+        let SECOND_TRAJECTORY_PORT = self.SECOND_TRAJECTORY_PORT.as_ref().map(|x|{
             _fbb.create_string(x)
         });
-        let LOCATOR_CLASS = self.LOCATOR_CLASS;
-        let CONDITION = self.CONDITION.as_ref().map(|x|{
+        let EXPRESSION = self.EXPRESSION.as_ref().map(|x|{
             x.pack(_fbb)
         });
-        let ECLIPSE = self.ECLIPSE.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let CONTACT = self.CONTACT.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let INTRUSION = self.INTRUSION.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let APSIDES = self.APSIDES.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let NODE_CROSSING = self.NODE_CROSSING.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let ACTION = self.ACTION;
-        let EPOCH_TOLERANCE_SECONDS = self.EPOCH_TOLERANCE_SECONDS;
-        let SCAN_STEP_SECONDS = self.SCAN_STEP_SECONDS;
-        let MAXIMUM_EVENTS = self.MAXIMUM_EVENTS;
         PCFEventDefinition::create(_fbb, &PCFEventDefinitionArgs{
-            NAME,
-            LOCATOR_CLASS,
-            CONDITION,
-            ECLIPSE,
-            CONTACT,
-            INTRUSION,
-            APSIDES,
-            NODE_CROSSING,
+            KIND,
+            DIRECTION,
             ACTION,
-            EPOCH_TOLERANCE_SECONDS,
-            SCAN_STEP_SECONDS,
-            MAXIMUM_EVENTS,
+            TOLERANCE_SECONDS,
+            OCCURRENCE,
+            ANGLE_RAD,
+            PLANE_NORMAL,
+            SECOND_TRAJECTORY_PORT,
+            EXPRESSION,
         })
     }
 }

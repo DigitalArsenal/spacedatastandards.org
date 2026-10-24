@@ -176,6 +176,8 @@ class PRWBurnBoundary
 
 class PRWFiniteBurn
 
+class PRWEventRecord
+
 class PRWExecutionRequest
 
 class PRWBurnReport
@@ -959,6 +961,69 @@ def PRWFiniteBurnCreateTHROTTLEVector(b_:flatbuffers.builder, v_:[flatbuffers.of
     reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
+/// A located event.
+class PRWEventRecord : flatbuffers.handle
+    /// Index into the request's EVENTS.
+    def EVENT_INDEX() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 4, 0)
+    /// The event function that crossed zero.
+    def KIND() -> pcfEventKind:
+        return pcfEventKind(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    /// The way g crossed zero: INCREASING or DECREASING.
+    def DIRECTION() -> pcfEventDirection:
+        return pcfEventDirection(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    /// Epoch of the crossing.
+    def EPOCH() -> TIMInstant:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return TIMInstant { buf_, assert o }
+    /// Seconds from the request's initial epoch, negative for a backward propagation.
+    def ELAPSED_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
+    /// The state at EPOCH in the request's axes.
+    def STATE() -> PRWResidentState:
+        let o = flatbuffers.field_table(buf_, pos_, 14)
+        return PRWResidentState { buf_, assert o }
+    /// g at EPOCH.
+    def RESIDUAL() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Refinement steps taken.
+    def ITERATIONS() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 18, 0)
+
+def GetRootAsPRWEventRecord(buf:string): return PRWEventRecord { buf, flatbuffers.indirect(buf, 0) }
+
+struct PRWEventRecordBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(8)
+        return this
+    def add_EVENT_INDEX(EVENT_INDEX:int):
+        b_.PrependUint32Slot(0, EVENT_INDEX, 0)
+        return this
+    def add_KIND(KIND:pcfEventKind):
+        b_.PrependUint8Slot(1, KIND, 0)
+        return this
+    def add_DIRECTION(DIRECTION:pcfEventDirection):
+        b_.PrependUint8Slot(2, DIRECTION, 0)
+        return this
+    def add_EPOCH(EPOCH:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, EPOCH)
+        return this
+    def add_ELAPSED_SECONDS(ELAPSED_SECONDS:float):
+        b_.PrependFloat64Slot(4, ELAPSED_SECONDS, 0.0)
+        return this
+    def add_STATE(STATE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, STATE)
+        return this
+    def add_RESIDUAL(RESIDUAL:float):
+        b_.PrependFloat64Slot(6, RESIDUAL, 0.0)
+        return this
+    def add_ITERATIONS(ITERATIONS:int):
+        b_.PrependUint32Slot(7, ITERATIONS, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
 /// Fixed endpoint propagation. Provider selected by the host's connected port.
 class PRWExecutionRequest : flatbuffers.handle
     def INITIAL() -> PRWResidentState:
@@ -1012,13 +1077,21 @@ class PRWExecutionRequest : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 1)
     def DYNAMIC_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+    /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+    /// or burns) by an integrator with a continuous extension; any other request that
+    /// names events is refused. Default empty.
+    def EVENTS(i:int) -> PCFEventDefinition:
+        return PCFEventDefinition { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 34) + i * 4) }
+    def EVENTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
 
 def GetRootAsPRWExecutionRequest(buf:string): return PRWExecutionRequest { buf, flatbuffers.indirect(buf, 0) }
 
 struct PRWExecutionRequestBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(15)
+        b_.StartObject(16)
         return this
     def add_INITIAL(INITIAL:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, INITIAL)
@@ -1065,6 +1138,9 @@ struct PRWExecutionRequestBuilder:
     def add_DYNAMIC_PARAMETERS(DYNAMIC_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(14, DYNAMIC_PARAMETERS)
         return this
+    def add_EVENTS(EVENTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, EVENTS)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1094,6 +1170,13 @@ def PRWExecutionRequestStartDYNAMICPARAMETERSVector(b_:flatbuffers.builder, n_:i
 def PRWExecutionRequestCreateDYNAMICPARAMETERSVector(b_:flatbuffers.builder, v_:[prwDynamicParameter]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def PRWExecutionRequestStartEVENTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PRWExecutionRequestCreateEVENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
     return b_.EndVector(v_.length)
 
 /// Burn times absent until reached; zero means an actual edge at initial epoch.
@@ -1274,13 +1357,26 @@ class PRWExecutionResult : flatbuffers.handle
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 1)
     def DYNAMIC_PARAMETERS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 16)
+    /// The located events with ACTION RECORD or STOP, in time order of propagation.
+    def EVENTS(i:int) -> PRWEventRecord:
+        return PRWEventRecord { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 18) + i * 4) }
+    def EVENTS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 18)
+    /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+    def EVENT_OCCURRENCES(i:int) -> int:
+        return read_uint32_le(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
+    def EVENT_OCCURRENCES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 20)
+    /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+    def STOPPED_BY_EVENT() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 22, -1)
 
 def GetRootAsPRWExecutionResult(buf:string): return PRWExecutionResult { buf, flatbuffers.indirect(buf, 0) }
 
 struct PRWExecutionResultBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(7)
+        b_.StartObject(10)
         return this
     def add_FINAL_SAMPLE(FINAL_SAMPLE:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, FINAL_SAMPLE)
@@ -1303,6 +1399,15 @@ struct PRWExecutionResultBuilder:
     def add_DYNAMIC_PARAMETERS(DYNAMIC_PARAMETERS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(6, DYNAMIC_PARAMETERS)
         return this
+    def add_EVENTS(EVENTS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, EVENTS)
+        return this
+    def add_EVENT_OCCURRENCES(EVENT_OCCURRENCES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, EVENT_OCCURRENCES)
+        return this
+    def add_STOPPED_BY_EVENT(STOPPED_BY_EVENT:int):
+        b_.PrependInt32Slot(9, STOPPED_BY_EVENT, -1)
+        return this
     def end():
         return b_.EndObject()
 
@@ -1318,6 +1423,20 @@ def PRWExecutionResultStartDYNAMICPARAMETERSVector(b_:flatbuffers.builder, n_:in
 def PRWExecutionResultCreateDYNAMICPARAMETERSVector(b_:flatbuffers.builder, v_:[prwDynamicParameter]):
     b_.StartVector(1, v_.length, 1)
     reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
+def PRWExecutionResultStartEVENTSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PRWExecutionResultCreateEVENTSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+def PRWExecutionResultStartEVENTOCCURRENCESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PRWExecutionResultCreateEVENTOCCURRENCESVector(b_:flatbuffers.builder, v_:[int]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUint32(e_)
     return b_.EndVector(v_.length)
 
 /// Portable batch request: no output pointer; state records returned via TAB.

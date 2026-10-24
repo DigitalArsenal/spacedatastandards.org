@@ -6,7 +6,7 @@
 /// 10 are the numbers $PRW has always carried; new values are appended only,
 /// never reordered or reused. A scheme value names the stepping method; a
 /// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// STIEFEL) names the variables the equations are written in, and the
 /// scheme that steps them is the provider's, reported in its result.
 public enum pcfIntegratorAlgorithm : byte
 {
@@ -39,14 +39,14 @@ public enum pcfIntegratorAlgorithm : byte
   DOPRI5 = 11,
   /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
   /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-  RK65_8M = 12,
+  RK65 = 12,
   /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-  VERNER_98 = 13,
+  RKV98 = 13,
   /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
   /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
   /// acceleration must not depend on velocity, so a provider refuses it with
   /// drag.
-  RKN12_10 = 14,
+  RKN1210 = 14,
   /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
   /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
   /// 52).
@@ -58,7 +58,7 @@ public enum pcfIntegratorAlgorithm : byte
   DROMO = 17,
   /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
   /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
-  STIEFEL_SCHEIFELE = 18,
+  STIEFEL = 18,
   /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
   /// Solving Ordinary Differential Equations I).
   DOPRI853 = 19,

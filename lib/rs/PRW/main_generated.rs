@@ -5101,6 +5101,340 @@ impl PRWFiniteBurnT {
     }
 }
 
+pub enum PRWEventRecordOffset {}
+
+/// A located event.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PRWEventRecord<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PRWEventRecord<'a> {
+    type Inner = PRWEventRecord<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PRWEventRecord<'a> {
+    pub const VT_EVENT_INDEX: ::flatbuffers::VOffsetT = 4;
+    pub const VT_KIND: ::flatbuffers::VOffsetT = 6;
+    pub const VT_DIRECTION: ::flatbuffers::VOffsetT = 8;
+    pub const VT_EPOCH: ::flatbuffers::VOffsetT = 10;
+    pub const VT_ELAPSED_SECONDS: ::flatbuffers::VOffsetT = 12;
+    pub const VT_STATE: ::flatbuffers::VOffsetT = 14;
+    pub const VT_RESIDUAL: ::flatbuffers::VOffsetT = 16;
+    pub const VT_ITERATIONS: ::flatbuffers::VOffsetT = 18;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PRWEventRecord { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PRWEventRecordArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PRWEventRecord<'bldr>> {
+        let mut builder = PRWEventRecordBuilder::new(_fbb);
+        builder.add_RESIDUAL(args.RESIDUAL);
+        builder.add_ELAPSED_SECONDS(args.ELAPSED_SECONDS);
+        builder.add_ITERATIONS(args.ITERATIONS);
+        if let Some(x) = args.STATE { builder.add_STATE(x); }
+        if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+        builder.add_EVENT_INDEX(args.EVENT_INDEX);
+        builder.add_DIRECTION(args.DIRECTION);
+        builder.add_KIND(args.KIND);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PRWEventRecordT {
+        let EVENT_INDEX = self.EVENT_INDEX();
+        let KIND = self.KIND();
+        let DIRECTION = self.DIRECTION();
+        let EPOCH = {
+            let x = self.EPOCH();
+            alloc::boxed::Box::new(x.unpack())
+        };
+        let ELAPSED_SECONDS = self.ELAPSED_SECONDS();
+        let STATE = {
+            let x = self.STATE();
+            alloc::boxed::Box::new(x.unpack())
+        };
+        let RESIDUAL = self.RESIDUAL();
+        let ITERATIONS = self.ITERATIONS();
+        PRWEventRecordT {
+            EVENT_INDEX,
+            KIND,
+            DIRECTION,
+            EPOCH,
+            ELAPSED_SECONDS,
+            STATE,
+            RESIDUAL,
+            ITERATIONS,
+        }
+    }
+
+    /// Index into the request's EVENTS.
+    #[inline]
+    pub fn EVENT_INDEX(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(PRWEventRecord::VT_EVENT_INDEX, Some(0)).unwrap()}
+    }
+
+    /// The event function that crossed zero.
+    #[inline]
+    pub fn KIND(&self) -> pcfEventKind {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfEventKind>(PRWEventRecord::VT_KIND, Some(pcfEventKind::UNSPECIFIED)).unwrap()}
+    }
+
+    /// The way g crossed zero: INCREASING or DECREASING.
+    #[inline]
+    pub fn DIRECTION(&self) -> pcfEventDirection {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfEventDirection>(PRWEventRecord::VT_DIRECTION, Some(pcfEventDirection::ANY)).unwrap()}
+    }
+
+    /// Epoch of the crossing.
+    #[inline]
+    pub fn EPOCH(&self) -> TIMInstant<'a> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<TIMInstant>>(PRWEventRecord::VT_EPOCH, None).unwrap()}
+    }
+
+    /// Seconds from the request's initial epoch, negative for a backward propagation.
+    #[inline]
+    pub fn ELAPSED_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEventRecord::VT_ELAPSED_SECONDS, Some(0.0)).unwrap()}
+    }
+
+    /// The state at EPOCH in the request's axes.
+    #[inline]
+    pub fn STATE(&self) -> PRWResidentState<'a> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PRWResidentState>>(PRWEventRecord::VT_STATE, None).unwrap()}
+    }
+
+    /// g at EPOCH.
+    #[inline]
+    pub fn RESIDUAL(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PRWEventRecord::VT_RESIDUAL, Some(0.0)).unwrap()}
+    }
+
+    /// Refinement steps taken.
+    #[inline]
+    pub fn ITERATIONS(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(PRWEventRecord::VT_ITERATIONS, Some(0)).unwrap()}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PRWEventRecord<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<u32>("EVENT_INDEX", Self::VT_EVENT_INDEX, false)?
+            .visit_field::<pcfEventKind>("KIND", Self::VT_KIND, false)?
+            .visit_field::<pcfEventDirection>("DIRECTION", Self::VT_DIRECTION, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<TIMInstant>>("EPOCH", Self::VT_EPOCH, true)?
+            .visit_field::<f64>("ELAPSED_SECONDS", Self::VT_ELAPSED_SECONDS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PRWResidentState>>("STATE", Self::VT_STATE, true)?
+            .visit_field::<f64>("RESIDUAL", Self::VT_RESIDUAL, false)?
+            .visit_field::<u32>("ITERATIONS", Self::VT_ITERATIONS, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PRWEventRecordArgs<'a> {
+    pub EVENT_INDEX: u32,
+    pub KIND: pcfEventKind,
+    pub DIRECTION: pcfEventDirection,
+    pub EPOCH: Option<::flatbuffers::WIPOffset<TIMInstant<'a>>>,
+    pub ELAPSED_SECONDS: f64,
+    pub STATE: Option<::flatbuffers::WIPOffset<PRWResidentState<'a>>>,
+    pub RESIDUAL: f64,
+    pub ITERATIONS: u32,
+}
+
+impl<'a> Default for PRWEventRecordArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PRWEventRecordArgs {
+            EVENT_INDEX: 0,
+            KIND: pcfEventKind::UNSPECIFIED,
+            DIRECTION: pcfEventDirection::ANY,
+            EPOCH: None, // required field
+            ELAPSED_SECONDS: 0.0,
+            STATE: None, // required field
+            RESIDUAL: 0.0,
+            ITERATIONS: 0,
+        }
+    }
+}
+
+pub struct PRWEventRecordBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWEventRecordBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_EVENT_INDEX(&mut self, EVENT_INDEX: u32) {
+        self.fbb_.push_slot::<u32>(PRWEventRecord::VT_EVENT_INDEX, EVENT_INDEX, 0);
+    }
+
+    #[inline]
+    pub fn add_KIND(&mut self, KIND: pcfEventKind) {
+        self.fbb_.push_slot::<pcfEventKind>(PRWEventRecord::VT_KIND, KIND, pcfEventKind::UNSPECIFIED);
+    }
+
+    #[inline]
+    pub fn add_DIRECTION(&mut self, DIRECTION: pcfEventDirection) {
+        self.fbb_.push_slot::<pcfEventDirection>(PRWEventRecord::VT_DIRECTION, DIRECTION, pcfEventDirection::ANY);
+    }
+
+    #[inline]
+    pub fn add_EPOCH(&mut self, EPOCH: ::flatbuffers::WIPOffset<TIMInstant<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<TIMInstant>>(PRWEventRecord::VT_EPOCH, EPOCH);
+    }
+
+    #[inline]
+    pub fn add_ELAPSED_SECONDS(&mut self, ELAPSED_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(PRWEventRecord::VT_ELAPSED_SECONDS, ELAPSED_SECONDS, 0.0);
+    }
+
+    #[inline]
+    pub fn add_STATE(&mut self, STATE: ::flatbuffers::WIPOffset<PRWResidentState<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PRWResidentState>>(PRWEventRecord::VT_STATE, STATE);
+    }
+
+    #[inline]
+    pub fn add_RESIDUAL(&mut self, RESIDUAL: f64) {
+        self.fbb_.push_slot::<f64>(PRWEventRecord::VT_RESIDUAL, RESIDUAL, 0.0);
+    }
+
+    #[inline]
+    pub fn add_ITERATIONS(&mut self, ITERATIONS: u32) {
+        self.fbb_.push_slot::<u32>(PRWEventRecord::VT_ITERATIONS, ITERATIONS, 0);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWEventRecordBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PRWEventRecordBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PRWEventRecord<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        self.fbb_.required(o, PRWEventRecord::VT_EPOCH,"EPOCH");
+        self.fbb_.required(o, PRWEventRecord::VT_STATE,"STATE");
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PRWEventRecord<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PRWEventRecord");
+        ds.field("EVENT_INDEX", &self.EVENT_INDEX());
+        ds.field("KIND", &self.KIND());
+        ds.field("DIRECTION", &self.DIRECTION());
+        ds.field("EPOCH", &self.EPOCH());
+        ds.field("ELAPSED_SECONDS", &self.ELAPSED_SECONDS());
+        ds.field("STATE", &self.STATE());
+        ds.field("RESIDUAL", &self.RESIDUAL());
+        ds.field("ITERATIONS", &self.ITERATIONS());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PRWEventRecordT {
+    pub EVENT_INDEX: u32,
+    pub KIND: pcfEventKind,
+    pub DIRECTION: pcfEventDirection,
+    pub EPOCH: alloc::boxed::Box<TIMInstantT>,
+    pub ELAPSED_SECONDS: f64,
+    pub STATE: alloc::boxed::Box<PRWResidentStateT>,
+    pub RESIDUAL: f64,
+    pub ITERATIONS: u32,
+}
+
+impl Default for PRWEventRecordT {
+    fn default() -> Self {
+        Self {
+            EVENT_INDEX: 0,
+            KIND: pcfEventKind::UNSPECIFIED,
+            DIRECTION: pcfEventDirection::ANY,
+            EPOCH: Default::default(),
+            ELAPSED_SECONDS: 0.0,
+            STATE: Default::default(),
+            RESIDUAL: 0.0,
+            ITERATIONS: 0,
+        }
+    }
+}
+
+impl PRWEventRecordT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PRWEventRecord<'b>> {
+        let EVENT_INDEX = self.EVENT_INDEX;
+        let KIND = self.KIND;
+        let DIRECTION = self.DIRECTION;
+        let EPOCH = Some({
+            let x = &self.EPOCH;
+            x.pack(_fbb)
+        });
+        let ELAPSED_SECONDS = self.ELAPSED_SECONDS;
+        let STATE = Some({
+            let x = &self.STATE;
+            x.pack(_fbb)
+        });
+        let RESIDUAL = self.RESIDUAL;
+        let ITERATIONS = self.ITERATIONS;
+        PRWEventRecord::create(_fbb, &PRWEventRecordArgs{
+            EVENT_INDEX,
+            KIND,
+            DIRECTION,
+            EPOCH,
+            ELAPSED_SECONDS,
+            STATE,
+            RESIDUAL,
+            ITERATIONS,
+        })
+    }
+}
+
 pub enum PRWExecutionRequestOffset {}
 
 /// Fixed endpoint propagation. Provider selected by the host's connected port.
@@ -5134,6 +5468,7 @@ impl<'a> PRWExecutionRequest<'a> {
     pub const VT_FINITE_BURNS: ::flatbuffers::VOffsetT = 28;
     pub const VT_PROCESS_NOISE: ::flatbuffers::VOffsetT = 30;
     pub const VT_DYNAMIC_PARAMETERS: ::flatbuffers::VOffsetT = 32;
+    pub const VT_EVENTS: ::flatbuffers::VOffsetT = 34;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5146,6 +5481,7 @@ impl<'a> PRWExecutionRequest<'a> {
         args: &'args PRWExecutionRequestArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PRWExecutionRequest<'bldr>> {
         let mut builder = PRWExecutionRequestBuilder::new(_fbb);
+        if let Some(x) = args.EVENTS { builder.add_EVENTS(x); }
         if let Some(x) = args.DYNAMIC_PARAMETERS { builder.add_DYNAMIC_PARAMETERS(x); }
         if let Some(x) = args.PROCESS_NOISE { builder.add_PROCESS_NOISE(x); }
         if let Some(x) = args.FINITE_BURNS { builder.add_FINITE_BURNS(x); }
@@ -5206,6 +5542,9 @@ impl<'a> PRWExecutionRequest<'a> {
         let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS().map(|x| {
             x.into_iter().collect()
         });
+        let EVENTS = self.EVENTS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
         PRWExecutionRequestT {
             INITIAL,
             TARGET_EPOCH,
@@ -5222,6 +5561,7 @@ impl<'a> PRWExecutionRequest<'a> {
             FINITE_BURNS,
             PROCESS_NOISE,
             DYNAMIC_PARAMETERS,
+            EVENTS,
         }
     }
 
@@ -5350,6 +5690,18 @@ impl<'a> PRWExecutionRequest<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>(PRWExecutionRequest::VT_DYNAMIC_PARAMETERS, None)}
     }
+
+    /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+    /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+    /// or burns) by an integrator with a continuous extension; any other request that
+    /// names events is refused. Default empty.
+    #[inline]
+    pub fn EVENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFEventDefinition<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFEventDefinition>>>>(PRWExecutionRequest::VT_EVENTS, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWExecutionRequest<'_> {
@@ -5373,6 +5725,7 @@ impl ::flatbuffers::Verifiable for PRWExecutionRequest<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn>>>>("FINITE_BURNS", Self::VT_FINITE_BURNS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PRWProcessNoise>>("PROCESS_NOISE", Self::VT_PROCESS_NOISE, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, prwDynamicParameter>>>("DYNAMIC_PARAMETERS", Self::VT_DYNAMIC_PARAMETERS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PCFEventDefinition>>>>("EVENTS", Self::VT_EVENTS, false)?
             .finish();
         Ok(())
     }
@@ -5394,6 +5747,7 @@ pub struct PRWExecutionRequestArgs<'a> {
     pub FINITE_BURNS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWFiniteBurn<'a>>>>>,
     pub PROCESS_NOISE: Option<::flatbuffers::WIPOffset<PRWProcessNoise<'a>>>,
     pub DYNAMIC_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>,
+    pub EVENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFEventDefinition<'a>>>>>,
 }
 
 impl<'a> Default for PRWExecutionRequestArgs<'a> {
@@ -5415,6 +5769,7 @@ impl<'a> Default for PRWExecutionRequestArgs<'a> {
             FINITE_BURNS: None,
             PROCESS_NOISE: None,
             DYNAMIC_PARAMETERS: None,
+            EVENTS: None,
         }
     }
 }
@@ -5501,6 +5856,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWExecutionRequestBuilder<'a
     }
 
     #[inline]
+    pub fn add_EVENTS(&mut self, EVENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PCFEventDefinition<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWExecutionRequest::VT_EVENTS, EVENTS);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWExecutionRequestBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWExecutionRequestBuilder {
@@ -5538,6 +5898,7 @@ impl ::core::fmt::Debug for PRWExecutionRequest<'_> {
         ds.field("FINITE_BURNS", &self.FINITE_BURNS());
         ds.field("PROCESS_NOISE", &self.PROCESS_NOISE());
         ds.field("DYNAMIC_PARAMETERS", &self.DYNAMIC_PARAMETERS());
+        ds.field("EVENTS", &self.EVENTS());
         ds.finish()
     }
 }
@@ -5560,6 +5921,7 @@ pub struct PRWExecutionRequestT {
     pub FINITE_BURNS: Option<alloc::vec::Vec<PRWFiniteBurnT>>,
     pub PROCESS_NOISE: Option<alloc::boxed::Box<PRWProcessNoiseT>>,
     pub DYNAMIC_PARAMETERS: Option<alloc::vec::Vec<prwDynamicParameter>>,
+    pub EVENTS: Option<alloc::vec::Vec<PCFEventDefinitionT>>,
 }
 
 impl Default for PRWExecutionRequestT {
@@ -5580,6 +5942,7 @@ impl Default for PRWExecutionRequestT {
             FINITE_BURNS: None,
             PROCESS_NOISE: None,
             DYNAMIC_PARAMETERS: None,
+            EVENTS: None,
         }
     }
 }
@@ -5630,6 +5993,9 @@ impl PRWExecutionRequestT {
         let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let EVENTS = self.EVENTS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
         PRWExecutionRequest::create(_fbb, &PRWExecutionRequestArgs{
             INITIAL,
             TARGET_EPOCH,
@@ -5646,6 +6012,7 @@ impl PRWExecutionRequestT {
             FINITE_BURNS,
             PROCESS_NOISE,
             DYNAMIC_PARAMETERS,
+            EVENTS,
         })
     }
 }
@@ -6491,6 +6858,9 @@ impl<'a> PRWExecutionResult<'a> {
     pub const VT_STM_TECHNIQUE: ::flatbuffers::VOffsetT = 12;
     pub const VT_DENSITY_TREATMENT: ::flatbuffers::VOffsetT = 14;
     pub const VT_DYNAMIC_PARAMETERS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_EVENTS: ::flatbuffers::VOffsetT = 18;
+    pub const VT_EVENT_OCCURRENCES: ::flatbuffers::VOffsetT = 20;
+    pub const VT_STOPPED_BY_EVENT: ::flatbuffers::VOffsetT = 22;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -6504,6 +6874,9 @@ impl<'a> PRWExecutionResult<'a> {
     ) -> ::flatbuffers::WIPOffset<PRWExecutionResult<'bldr>> {
         let mut builder = PRWExecutionResultBuilder::new(_fbb);
         builder.add_ELAPSED_SECONDS(args.ELAPSED_SECONDS);
+        builder.add_STOPPED_BY_EVENT(args.STOPPED_BY_EVENT);
+        if let Some(x) = args.EVENT_OCCURRENCES { builder.add_EVENT_OCCURRENCES(x); }
+        if let Some(x) = args.EVENTS { builder.add_EVENTS(x); }
         if let Some(x) = args.DYNAMIC_PARAMETERS { builder.add_DYNAMIC_PARAMETERS(x); }
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
         if let Some(x) = args.SAMPLES { builder.add_SAMPLES(x); }
@@ -6531,6 +6904,13 @@ impl<'a> PRWExecutionResult<'a> {
         let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS().map(|x| {
             x.into_iter().collect()
         });
+        let EVENTS = self.EVENTS().map(|x| {
+            x.iter().map(|t| t.unpack()).collect()
+        });
+        let EVENT_OCCURRENCES = self.EVENT_OCCURRENCES().map(|x| {
+            x.into_iter().collect()
+        });
+        let STOPPED_BY_EVENT = self.STOPPED_BY_EVENT();
         PRWExecutionResultT {
             FINAL_SAMPLE,
             SAMPLES,
@@ -6539,6 +6919,9 @@ impl<'a> PRWExecutionResult<'a> {
             STM_TECHNIQUE,
             DENSITY_TREATMENT,
             DYNAMIC_PARAMETERS,
+            EVENTS,
+            EVENT_OCCURRENCES,
+            STOPPED_BY_EVENT,
         }
     }
 
@@ -6598,6 +6981,33 @@ impl<'a> PRWExecutionResult<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>(PRWExecutionResult::VT_DYNAMIC_PARAMETERS, None)}
     }
+
+    /// The located events with ACTION RECORD or STOP, in time order of propagation.
+    #[inline]
+    pub fn EVENTS(&self) -> Option<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWEventRecord<'a>>>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWEventRecord>>>>(PRWExecutionResult::VT_EVENTS, None)}
+    }
+
+    /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+    #[inline]
+    pub fn EVENT_OCCURRENCES(&self) -> Option<::flatbuffers::Vector<'a, u32>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, u32>>>(PRWExecutionResult::VT_EVENT_OCCURRENCES, None)}
+    }
+
+    /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+    #[inline]
+    pub fn STOPPED_BY_EVENT(&self) -> i32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<i32>(PRWExecutionResult::VT_STOPPED_BY_EVENT, Some(-1)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PRWExecutionResult<'_> {
@@ -6613,6 +7023,9 @@ impl ::flatbuffers::Verifiable for PRWExecutionResult<'_> {
             .visit_field::<prwDerivativeTechnique>("STM_TECHNIQUE", Self::VT_STM_TECHNIQUE, false)?
             .visit_field::<prwDensityTreatment>("DENSITY_TREATMENT", Self::VT_DENSITY_TREATMENT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, prwDynamicParameter>>>("DYNAMIC_PARAMETERS", Self::VT_DYNAMIC_PARAMETERS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PRWEventRecord>>>>("EVENTS", Self::VT_EVENTS, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, u32>>>("EVENT_OCCURRENCES", Self::VT_EVENT_OCCURRENCES, false)?
+            .visit_field::<i32>("STOPPED_BY_EVENT", Self::VT_STOPPED_BY_EVENT, false)?
             .finish();
         Ok(())
     }
@@ -6626,6 +7039,9 @@ pub struct PRWExecutionResultArgs<'a> {
     pub STM_TECHNIQUE: prwDerivativeTechnique,
     pub DENSITY_TREATMENT: prwDensityTreatment,
     pub DYNAMIC_PARAMETERS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, prwDynamicParameter>>>,
+    pub EVENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PRWEventRecord<'a>>>>>,
+    pub EVENT_OCCURRENCES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, u32>>>,
+    pub STOPPED_BY_EVENT: i32,
 }
 
 impl<'a> Default for PRWExecutionResultArgs<'a> {
@@ -6639,6 +7055,9 @@ impl<'a> Default for PRWExecutionResultArgs<'a> {
             STM_TECHNIQUE: prwDerivativeTechnique::UNSPECIFIED,
             DENSITY_TREATMENT: prwDensityTreatment::UNSPECIFIED,
             DYNAMIC_PARAMETERS: None,
+            EVENTS: None,
+            EVENT_OCCURRENCES: None,
+            STOPPED_BY_EVENT: -1,
         }
     }
 }
@@ -6685,6 +7104,21 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PRWExecutionResultBuilder<'a,
     }
 
     #[inline]
+    pub fn add_EVENTS(&mut self, EVENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PRWEventRecord<'b >>>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWExecutionResult::VT_EVENTS, EVENTS);
+    }
+
+    #[inline]
+    pub fn add_EVENT_OCCURRENCES(&mut self, EVENT_OCCURRENCES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , u32>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PRWExecutionResult::VT_EVENT_OCCURRENCES, EVENT_OCCURRENCES);
+    }
+
+    #[inline]
+    pub fn add_STOPPED_BY_EVENT(&mut self, STOPPED_BY_EVENT: i32) {
+        self.fbb_.push_slot::<i32>(PRWExecutionResult::VT_STOPPED_BY_EVENT, STOPPED_BY_EVENT, -1);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PRWExecutionResultBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PRWExecutionResultBuilder {
@@ -6712,6 +7146,9 @@ impl ::core::fmt::Debug for PRWExecutionResult<'_> {
         ds.field("STM_TECHNIQUE", &self.STM_TECHNIQUE());
         ds.field("DENSITY_TREATMENT", &self.DENSITY_TREATMENT());
         ds.field("DYNAMIC_PARAMETERS", &self.DYNAMIC_PARAMETERS());
+        ds.field("EVENTS", &self.EVENTS());
+        ds.field("EVENT_OCCURRENCES", &self.EVENT_OCCURRENCES());
+        ds.field("STOPPED_BY_EVENT", &self.STOPPED_BY_EVENT());
         ds.finish()
     }
 }
@@ -6726,6 +7163,9 @@ pub struct PRWExecutionResultT {
     pub STM_TECHNIQUE: prwDerivativeTechnique,
     pub DENSITY_TREATMENT: prwDensityTreatment,
     pub DYNAMIC_PARAMETERS: Option<alloc::vec::Vec<prwDynamicParameter>>,
+    pub EVENTS: Option<alloc::vec::Vec<PRWEventRecordT>>,
+    pub EVENT_OCCURRENCES: Option<alloc::vec::Vec<u32>>,
+    pub STOPPED_BY_EVENT: i32,
 }
 
 impl Default for PRWExecutionResultT {
@@ -6738,6 +7178,9 @@ impl Default for PRWExecutionResultT {
             STM_TECHNIQUE: prwDerivativeTechnique::UNSPECIFIED,
             DENSITY_TREATMENT: prwDensityTreatment::UNSPECIFIED,
             DYNAMIC_PARAMETERS: None,
+            EVENTS: None,
+            EVENT_OCCURRENCES: None,
+            STOPPED_BY_EVENT: -1,
         }
     }
 }
@@ -6764,6 +7207,13 @@ impl PRWExecutionResultT {
         let DYNAMIC_PARAMETERS = self.DYNAMIC_PARAMETERS.as_ref().map(|x|{
             _fbb.create_vector(x)
         });
+        let EVENTS = self.EVENTS.as_ref().map(|x|{
+            let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+        });
+        let EVENT_OCCURRENCES = self.EVENT_OCCURRENCES.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        let STOPPED_BY_EVENT = self.STOPPED_BY_EVENT;
         PRWExecutionResult::create(_fbb, &PRWExecutionResultArgs{
             FINAL_SAMPLE,
             SAMPLES,
@@ -6772,6 +7222,9 @@ impl PRWExecutionResultT {
             STM_TECHNIQUE,
             DENSITY_TREATMENT,
             DYNAMIC_PARAMETERS,
+            EVENTS,
+            EVENT_OCCURRENCES,
+            STOPPED_BY_EVENT,
         })
     }
 }

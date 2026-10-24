@@ -177,6 +177,25 @@ class PRWExecutionRequest : Table() {
         }
     val dynamicParametersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(32, 1)
     fun dynamicParametersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Events located inside the integration (PCFEventDefinition, shared with $PCF).
+     * They apply to a plain state propagation (no STM, covariance, samples, impulses
+     * or burns) by an integrator with a continuous extension; any other request that
+     * names events is refused. Default empty.
+     */
+    fun events(j: Int) : PCFEventDefinition? = events(PCFEventDefinition(), j)
+    fun events(obj: PCFEventDefinition, j: Int) : PCFEventDefinition? {
+        val o = __offset(34)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val eventsLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWExecutionRequest(_bb: ByteBuffer): PRWExecutionRequest = getRootAsPRWExecutionRequest(_bb, PRWExecutionRequest())
@@ -184,8 +203,9 @@ class PRWExecutionRequest : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWExecutionRequest(builder: FlatBufferBuilder, initialOffset: Int, targetEpochOffset: Int, integratorOffset: Int, forcesOffset: Int, includeStm: Boolean, stmTechnique: UByte, densityTreatment: UByte, initialCovarianceOffset: Int, initialMassCovarianceOffset: Int, sampleEpochsOffset: Int, impulsesOffset: Int, includeMassDynamics: Boolean, finiteBurnsOffset: Int, processNoiseOffset: Int, dynamicParametersOffset: Int) : Int {
-            builder.startTable(15)
+        fun createPRWExecutionRequest(builder: FlatBufferBuilder, initialOffset: Int, targetEpochOffset: Int, integratorOffset: Int, forcesOffset: Int, includeStm: Boolean, stmTechnique: UByte, densityTreatment: UByte, initialCovarianceOffset: Int, initialMassCovarianceOffset: Int, sampleEpochsOffset: Int, impulsesOffset: Int, includeMassDynamics: Boolean, finiteBurnsOffset: Int, processNoiseOffset: Int, dynamicParametersOffset: Int, eventsOffset: Int) : Int {
+            builder.startTable(16)
+            addEVENTS(builder, eventsOffset)
             addDYNAMICPARAMETERS(builder, dynamicParametersOffset)
             addPROCESSNOISE(builder, processNoiseOffset)
             addFINITEBURNS(builder, finiteBurnsOffset)
@@ -203,7 +223,7 @@ class PRWExecutionRequest : Table() {
             addINCLUDESTM(builder, includeStm)
             return endPRWExecutionRequest(builder)
         }
-        fun startPRWExecutionRequest(builder: FlatBufferBuilder) = builder.startTable(15)
+        fun startPRWExecutionRequest(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addINITIAL(builder: FlatBufferBuilder, initial: Int) = builder.addOffset(0, initial, 0)
         fun addTARGETEPOCH(builder: FlatBufferBuilder, targetEpoch: Int) = builder.addOffset(1, targetEpoch, 0)
         fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: Int) = builder.addOffset(2, integrator, 0)
@@ -252,6 +272,15 @@ class PRWExecutionRequest : Table() {
             return builder.endVector()
         }
         fun startDynamicParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addEVENTS(builder: FlatBufferBuilder, events: Int) = builder.addOffset(15, events, 0)
+        fun createEventsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEventsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
         fun endPRWExecutionRequest(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

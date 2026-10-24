@@ -50,6 +50,14 @@ export declare enum evlEventType {
     /**
      * A $PCE parameter condition was attained.
      */
-    CONDITION_SATISFIED = 12
+    CONDITION_SATISFIED = 12,
+    /**
+     * Geocentric latitude at a maximum.
+     */
+    MAXIMUM_LATITUDE = 13,
+    /**
+     * Geocentric latitude at a minimum.
+     */
+    MINIMUM_LATITUDE = 14
 }
 //# sourceMappingURL=evlEventType.d.ts.map

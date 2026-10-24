@@ -1235,6 +1235,92 @@ public struct PRWFiniteBurn: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   }
 }
 
+///  A located event.
+public struct PRWEventRecord: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PRW" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PRWEventRecord.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let EVENT_INDEX: VOffset = 4
+    static let KIND: VOffset = 6
+    static let DIRECTION: VOffset = 8
+    static let EPOCH: VOffset = 10
+    static let ELAPSED_SECONDS: VOffset = 12
+    static let STATE: VOffset = 14
+    static let RESIDUAL: VOffset = 16
+    static let ITERATIONS: VOffset = 18
+  }
+
+  ///  Index into the request's EVENTS.
+  public var EVENT_INDEX: UInt32 { let o = _accessor.offset(VT.EVENT_INDEX); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  The event function that crossed zero.
+  public var KIND: pcfEventKind { let o = _accessor.offset(VT.KIND); return o == 0 ? .unspecified : pcfEventKind(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
+  ///  The way g crossed zero: INCREASING or DECREASING.
+  public var DIRECTION: pcfEventDirection { let o = _accessor.offset(VT.DIRECTION); return o == 0 ? .any : pcfEventDirection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .any }
+  ///  Epoch of the crossing.
+  public var EPOCH: TIMInstant! { let o = _accessor.offset(VT.EPOCH); return TIMInstant(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  Seconds from the request's initial epoch, negative for a backward propagation.
+  public var ELAPSED_SECONDS: Double { let o = _accessor.offset(VT.ELAPSED_SECONDS); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The state at EPOCH in the request's axes.
+  public var STATE: PRWResidentState! { let o = _accessor.offset(VT.STATE); return PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  ///  g at EPOCH.
+  public var RESIDUAL: Double { let o = _accessor.offset(VT.RESIDUAL); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Refinement steps taken.
+  public var ITERATIONS: UInt32 { let o = _accessor.offset(VT.ITERATIONS); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  public static func startPRWEventRecord(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(EVENT_INDEX: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EVENT_INDEX, def: 0, at: VT.EVENT_INDEX) }
+  public static func add(KIND: pcfEventKind, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KIND.rawValue, def: 0, at: VT.KIND) }
+  public static func add(DIRECTION: pcfEventDirection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DIRECTION.rawValue, def: 0, at: VT.DIRECTION) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VT.EPOCH) }
+  public static func add(ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_SECONDS, def: 0.0, at: VT.ELAPSED_SECONDS) }
+  public static func add(STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATE, at: VT.STATE) }
+  public static func add(RESIDUAL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESIDUAL, def: 0.0, at: VT.RESIDUAL) }
+  public static func add(ITERATIONS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ITERATIONS, def: 0, at: VT.ITERATIONS) }
+  public static func endPRWEventRecord(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [10, 14]); return end }
+  public static func createPRWEventRecord(
+    _ fbb: inout FlatBufferBuilder,
+    EVENT_INDEX: UInt32 = 0,
+    KIND: pcfEventKind = .unspecified,
+    DIRECTION: pcfEventDirection = .any,
+    EPOCHOffset EPOCH: Offset,
+    ELAPSED_SECONDS: Double = 0.0,
+    STATEOffset STATE: Offset,
+    RESIDUAL: Double = 0.0,
+    ITERATIONS: UInt32 = 0
+  ) -> Offset {
+    let __start = PRWEventRecord.startPRWEventRecord(&fbb)
+    PRWEventRecord.add(EVENT_INDEX: EVENT_INDEX, &fbb)
+    PRWEventRecord.add(KIND: KIND, &fbb)
+    PRWEventRecord.add(DIRECTION: DIRECTION, &fbb)
+    PRWEventRecord.add(EPOCH: EPOCH, &fbb)
+    PRWEventRecord.add(ELAPSED_SECONDS: ELAPSED_SECONDS, &fbb)
+    PRWEventRecord.add(STATE: STATE, &fbb)
+    PRWEventRecord.add(RESIDUAL: RESIDUAL, &fbb)
+    PRWEventRecord.add(ITERATIONS: ITERATIONS, &fbb)
+    return PRWEventRecord.endPRWEventRecord(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.EVENT_INDEX, fieldName: "EVENT_INDEX", required: false, type: UInt32.self)
+    try _v.visit(field: VT.KIND, fieldName: "KIND", required: false, type: pcfEventKind.self)
+    try _v.visit(field: VT.DIRECTION, fieldName: "DIRECTION", required: false, type: pcfEventDirection.self)
+    try _v.visit(field: VT.EPOCH, fieldName: "EPOCH", required: true, type: ForwardOffset<TIMInstant>.self)
+    try _v.visit(field: VT.ELAPSED_SECONDS, fieldName: "ELAPSED_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.STATE, fieldName: "STATE", required: true, type: ForwardOffset<PRWResidentState>.self)
+    try _v.visit(field: VT.RESIDUAL, fieldName: "RESIDUAL", required: false, type: Double.self)
+    try _v.visit(field: VT.ITERATIONS, fieldName: "ITERATIONS", required: false, type: UInt32.self)
+    _v.finish()
+  }
+}
+
 ///  Fixed endpoint propagation. Provider selected by the host's connected port.
 public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
@@ -1263,6 +1349,7 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
     static let FINITE_BURNS: VOffset = 28
     static let PROCESS_NOISE: VOffset = 30
     static let DYNAMIC_PARAMETERS: VOffset = 32
+    static let EVENTS: VOffset = 34
   }
 
   public var INITIAL: PRWResidentState! { let o = _accessor.offset(VT.INITIAL); return PRWResidentState(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -1286,7 +1373,12 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
   ///  covariance carries their uncertainty and correlation (a VCM's 7x7 to
   ///  10x10). Each must be active in FORCES. Empty means the state alone.
   public var DYNAMIC_PARAMETERS: FlatbufferVector<prwDynamicParameter> { return _accessor.vector(at: VT.DYNAMIC_PARAMETERS, byteSize: 1) }
-  public static func startPRWExecutionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
+  ///  Events located inside the integration (PCFEventDefinition, shared with $PCF).
+  ///  They apply to a plain state propagation (no STM, covariance, samples, impulses
+  ///  or burns) by an integrator with a continuous extension; any other request that
+  ///  names events is refused. Default empty.
+  public var EVENTS: FlatbufferVector<PCFEventDefinition> { return _accessor.vector(at: VT.EVENTS, byteSize: 4) }
+  public static func startPRWExecutionRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(INITIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL, at: VT.INITIAL) }
   public static func add(TARGET_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_EPOCH, at: VT.TARGET_EPOCH) }
   public static func add(INTEGRATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INTEGRATOR, at: VT.INTEGRATOR) }
@@ -1304,6 +1396,7 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
   public static func addVectorOf(FINITE_BURNS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINITE_BURNS, at: VT.FINITE_BURNS) }
   public static func add(PROCESS_NOISE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROCESS_NOISE, at: VT.PROCESS_NOISE) }
   public static func addVectorOf(DYNAMIC_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PARAMETERS, at: VT.DYNAMIC_PARAMETERS) }
+  public static func addVectorOf(EVENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENTS, at: VT.EVENTS) }
   public static func endPRWExecutionRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 6, 8, 10]); return end }
   public static func createPRWExecutionRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -1321,7 +1414,8 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
     INCLUDE_MASS_DYNAMICS: Bool = false,
     FINITE_BURNSVectorOffset FINITE_BURNS: Offset = Offset(),
     PROCESS_NOISEOffset PROCESS_NOISE: Offset = Offset(),
-    DYNAMIC_PARAMETERSVectorOffset DYNAMIC_PARAMETERS: Offset = Offset()
+    DYNAMIC_PARAMETERSVectorOffset DYNAMIC_PARAMETERS: Offset = Offset(),
+    EVENTSVectorOffset EVENTS: Offset = Offset()
   ) -> Offset {
     let __start = PRWExecutionRequest.startPRWExecutionRequest(&fbb)
     PRWExecutionRequest.add(INITIAL: INITIAL, &fbb)
@@ -1339,6 +1433,7 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
     PRWExecutionRequest.addVectorOf(FINITE_BURNS: FINITE_BURNS, &fbb)
     PRWExecutionRequest.add(PROCESS_NOISE: PROCESS_NOISE, &fbb)
     PRWExecutionRequest.addVectorOf(DYNAMIC_PARAMETERS: DYNAMIC_PARAMETERS, &fbb)
+    PRWExecutionRequest.addVectorOf(EVENTS: EVENTS, &fbb)
     return PRWExecutionRequest.endPRWExecutionRequest(&fbb, start: __start)
   }
 
@@ -1359,6 +1454,7 @@ public struct PRWExecutionRequest: FlatBufferVerifiableTable, FlatbuffersVectorI
     try _v.visit(field: VT.FINITE_BURNS, fieldName: "FINITE_BURNS", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWFiniteBurn>, PRWFiniteBurn>>.self)
     try _v.visit(field: VT.PROCESS_NOISE, fieldName: "PROCESS_NOISE", required: false, type: ForwardOffset<PRWProcessNoise>.self)
     try _v.visit(field: VT.DYNAMIC_PARAMETERS, fieldName: "DYNAMIC_PARAMETERS", required: false, type: ForwardOffset<Vector<prwDynamicParameter, prwDynamicParameter>>.self)
+    try _v.visit(field: VT.EVENTS, fieldName: "EVENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<PCFEventDefinition>, PCFEventDefinition>>.self)
     _v.finish()
   }
 }
@@ -1584,6 +1680,9 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
     static let STM_TECHNIQUE: VOffset = 12
     static let DENSITY_TREATMENT: VOffset = 14
     static let DYNAMIC_PARAMETERS: VOffset = 16
+    static let EVENTS: VOffset = 18
+    static let EVENT_OCCURRENCES: VOffset = 20
+    static let STOPPED_BY_EVENT: VOffset = 22
   }
 
   public var FINAL_SAMPLE: PRWPropagationSample! { let o = _accessor.offset(VT.FINAL_SAMPLE); return PRWPropagationSample(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
@@ -1595,7 +1694,14 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public var DENSITY_TREATMENT: prwDensityTreatment { let o = _accessor.offset(VT.DENSITY_TREATMENT); return o == 0 ? .unspecified : prwDensityTreatment(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
   ///  The parameters the samples' STM and COVARIANCE carry after the state.
   public var DYNAMIC_PARAMETERS: FlatbufferVector<prwDynamicParameter> { return _accessor.vector(at: VT.DYNAMIC_PARAMETERS, byteSize: 1) }
-  public static func startPRWExecutionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  ///  The located events with ACTION RECORD or STOP, in time order of propagation.
+  public var EVENTS: FlatbufferVector<PRWEventRecord> { return _accessor.vector(at: VT.EVENTS, byteSize: 4) }
+  ///  Per request EVENTS entry, the qualifying crossings the propagation passed.
+  public var EVENT_OCCURRENCES: FlatbufferVector<UInt32> { return _accessor.vector(at: VT.EVENT_OCCURRENCES, byteSize: 4) }
+  public func withUnsafePointerToEventOccurrences<T>(_ body: (UnsafeRawBufferPointer, Int) throws -> T) rethrows -> T? { return try _accessor.withUnsafePointerToSlice(at: VT.EVENT_OCCURRENCES, body: body) }
+  ///  Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+  public var STOPPED_BY_EVENT: Int32 { let o = _accessor.offset(VT.STOPPED_BY_EVENT); return o == 0 ? -1 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public static func startPRWExecutionResult(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
   public static func add(FINAL_SAMPLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FINAL_SAMPLE, at: VT.FINAL_SAMPLE) }
   public static func addVectorOf(SAMPLES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SAMPLES, at: VT.SAMPLES) }
   public static func add(ELAPSED_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELAPSED_SECONDS, def: 0.0, at: VT.ELAPSED_SECONDS) }
@@ -1603,6 +1709,9 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
   public static func add(STM_TECHNIQUE: prwDerivativeTechnique, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STM_TECHNIQUE.rawValue, def: 0, at: VT.STM_TECHNIQUE) }
   public static func add(DENSITY_TREATMENT: prwDensityTreatment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DENSITY_TREATMENT.rawValue, def: 0, at: VT.DENSITY_TREATMENT) }
   public static func addVectorOf(DYNAMIC_PARAMETERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DYNAMIC_PARAMETERS, at: VT.DYNAMIC_PARAMETERS) }
+  public static func addVectorOf(EVENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENTS, at: VT.EVENTS) }
+  public static func addVectorOf(EVENT_OCCURRENCES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_OCCURRENCES, at: VT.EVENT_OCCURRENCES) }
+  public static func add(STOPPED_BY_EVENT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STOPPED_BY_EVENT, def: -1, at: VT.STOPPED_BY_EVENT) }
   public static func endPRWExecutionResult(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); fbb.require(table: end, fields: [4, 10]); return end }
   public static func createPRWExecutionResult(
     _ fbb: inout FlatBufferBuilder,
@@ -1612,7 +1721,10 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
     EPHEMERIS_SOURCEOffset EPHEMERIS_SOURCE: Offset,
     STM_TECHNIQUE: prwDerivativeTechnique = .unspecified,
     DENSITY_TREATMENT: prwDensityTreatment = .unspecified,
-    DYNAMIC_PARAMETERSVectorOffset DYNAMIC_PARAMETERS: Offset = Offset()
+    DYNAMIC_PARAMETERSVectorOffset DYNAMIC_PARAMETERS: Offset = Offset(),
+    EVENTSVectorOffset EVENTS: Offset = Offset(),
+    EVENT_OCCURRENCESVectorOffset EVENT_OCCURRENCES: Offset = Offset(),
+    STOPPED_BY_EVENT: Int32 = -1
   ) -> Offset {
     let __start = PRWExecutionResult.startPRWExecutionResult(&fbb)
     PRWExecutionResult.add(FINAL_SAMPLE: FINAL_SAMPLE, &fbb)
@@ -1622,6 +1734,9 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
     PRWExecutionResult.add(STM_TECHNIQUE: STM_TECHNIQUE, &fbb)
     PRWExecutionResult.add(DENSITY_TREATMENT: DENSITY_TREATMENT, &fbb)
     PRWExecutionResult.addVectorOf(DYNAMIC_PARAMETERS: DYNAMIC_PARAMETERS, &fbb)
+    PRWExecutionResult.addVectorOf(EVENTS: EVENTS, &fbb)
+    PRWExecutionResult.addVectorOf(EVENT_OCCURRENCES: EVENT_OCCURRENCES, &fbb)
+    PRWExecutionResult.add(STOPPED_BY_EVENT: STOPPED_BY_EVENT, &fbb)
     return PRWExecutionResult.endPRWExecutionResult(&fbb, start: __start)
   }
 
@@ -1634,6 +1749,9 @@ public struct PRWExecutionResult: FlatBufferVerifiableTable, FlatbuffersVectorIn
     try _v.visit(field: VT.STM_TECHNIQUE, fieldName: "STM_TECHNIQUE", required: false, type: prwDerivativeTechnique.self)
     try _v.visit(field: VT.DENSITY_TREATMENT, fieldName: "DENSITY_TREATMENT", required: false, type: prwDensityTreatment.self)
     try _v.visit(field: VT.DYNAMIC_PARAMETERS, fieldName: "DYNAMIC_PARAMETERS", required: false, type: ForwardOffset<Vector<prwDynamicParameter, prwDynamicParameter>>.self)
+    try _v.visit(field: VT.EVENTS, fieldName: "EVENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<PRWEventRecord>, PRWEventRecord>>.self)
+    try _v.visit(field: VT.EVENT_OCCURRENCES, fieldName: "EVENT_OCCURRENCES", required: false, type: ForwardOffset<Vector<UInt32, UInt32>>.self)
+    try _v.visit(field: VT.STOPPED_BY_EVENT, fieldName: "STOPPED_BY_EVENT", required: false, type: Int32.self)
     _v.finish()
   }
 }

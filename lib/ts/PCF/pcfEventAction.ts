@@ -3,25 +3,22 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 /**
- * What a propagator does when a located event occurs. Append new values
- * only.
+ * What the integrator does at a located event. Append new values only.
  */
 export enum pcfEventAction {
-  UNSPECIFIED = 0,
+  /**
+   * The event is located and counted; it is not reported.
+   */
+  CONTINUE = 0,
 
   /**
-   * End the propagation at the event; the result carries its epoch and state.
+   * The event is located, counted and reported; propagation continues.
    */
-  STOP = 1,
+  RECORD = 1,
 
   /**
-   * Make the event a step boundary only (the dynamics may change there) and
-   * report nothing about it.
+   * The event is reported and the propagation ends there: the final sample is the
+   * state at the OCCURRENCE-th qualifying crossing.
    */
-  CONTINUE = 2,
-
-  /**
-   * Report the event in the result and keep propagating.
-   */
-  RECORD = 3
+  STOP = 2
 }

@@ -6,10 +6,9 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# One event a propagator locates while it integrates. The vocabulary is
-# $EVL's: a locator class with its configuration, and $PCE's parameter
-# condition for the generic case (an altitude, radius, speed, radial
-# velocity or mass crossing is a $PCE parameter, not a class of its own).
+# One event to locate inside the integration. A $PCF carries the list; a $PRW
+# execution request carries the same definitions beside the integrator settings,
+# and a located event comes back as a PRWEventRecord.
 class PCFEventDefinition(object):
     __slots__ = ['_tab']
 
@@ -32,203 +31,147 @@ class PCFEventDefinition(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
-    # The caller's name for the event, echoed in the result. Default empty.
+    # The event function. Default UNSPECIFIED (refused).
     # PCFEventDefinition
-    def NAME(self):
+    def KIND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
 
-    # Which locator. Default PARAMETER_CONDITION.
+    # Which zero crossings of the event function count. Default ANY.
     # PCFEventDefinition
-    def LOCATOR_CLASS(self):
+    def DIRECTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 6
+        return 0
 
-    # Exactly the one of the next five that matches LOCATOR_CLASS is present
-    # (any other combination is refused as MISSING_CONFIGURATION, as in
-    # $EVL). The condition carries its own direction, goal value, goal
-    # tolerance and occurrence.
-    # PCFEventDefinition
-    def CONDITION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from PCEParameterCondition import PCEParameterCondition
-            obj = PCEParameterCondition()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # PCFEventDefinition
-    def ECLIPSE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from EVLEclipseConfiguration import EVLEclipseConfiguration
-            obj = EVLEclipseConfiguration()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # PCFEventDefinition
-    def CONTACT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from EVLContactConfiguration import EVLContactConfiguration
-            obj = EVLContactConfiguration()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # PCFEventDefinition
-    def INTRUSION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from EVLIntrusionConfiguration import EVLIntrusionConfiguration
-            obj = EVLIntrusionConfiguration()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # PCFEventDefinition
-    def APSIDES(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from EVLApsidesConfiguration import EVLApsidesConfiguration
-            obj = EVLApsidesConfiguration()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # PCFEventDefinition
-    def NODE_CROSSING(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from EVLNodeCrossingConfiguration import EVLNodeCrossingConfiguration
-            obj = EVLNodeCrossingConfiguration()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
-    # What the propagator does at the event. Default RECORD.
+    # What the integrator does at the event. Default RECORD.
     # PCFEventDefinition
     def ACTION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
-        return 3
+        return 1
 
-    # Convergence bar on the located epoch, seconds. Default 1e-9.
+    # Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
     # PCFEventDefinition
-    def EPOCH_TOLERANCE_SECONDS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+    def TOLERANCE_SECONDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 1e-9
 
-    # Step at which the event function is sampled before refinement, seconds;
-    # 0 samples at the integrator's accepted steps. A root is found only when
-    # the function changes sign within one sample interval. Default 0.
+    # STOP acts at this qualifying crossing (1 is the first). Default 1.
     # PCFEventDefinition
-    def SCAN_STEP_SECONDS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+    def OCCURRENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 1
+
+    # TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+    # PCFEventDefinition
+    def ANGLE_RAD(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Largest number of occurrences reported; 0 is no bound. Default 0.
+    # PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+    # vector. Default absent (the pole of the axes).
     # PCFEventDefinition
-    def MAXIMUM_EVENTS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+    def PLANE_NORMAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
-        return 0
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from FRMVector3 import FRMVector3
+            obj = FRMVector3()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+    # as $OEM. Default empty.
+    # PCFEventDefinition
+    def SECOND_TRAJECTORY_PORT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # EXPRESSION: the program. Default absent.
+    # PCFEventDefinition
+    def EXPRESSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFExpression import PCFExpression
+            obj = PCFExpression()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
 def PCFEventDefinitionStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(9)
 
 def Start(builder):
     PCFEventDefinitionStart(builder)
 
-def PCFEventDefinitionAddNAME(builder, NAME):
-    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+def PCFEventDefinitionAddKIND(builder, KIND):
+    builder.PrependUint8Slot(0, KIND, 0)
 
-def AddNAME(builder, NAME):
-    PCFEventDefinitionAddNAME(builder, NAME)
+def AddKIND(builder, KIND):
+    PCFEventDefinitionAddKIND(builder, KIND)
 
-def PCFEventDefinitionAddLOCATOR_CLASS(builder, LOCATOR_CLASS):
-    builder.PrependUint8Slot(1, LOCATOR_CLASS, 6)
+def PCFEventDefinitionAddDIRECTION(builder, DIRECTION):
+    builder.PrependUint8Slot(1, DIRECTION, 0)
 
-def AddLOCATOR_CLASS(builder, LOCATOR_CLASS):
-    PCFEventDefinitionAddLOCATOR_CLASS(builder, LOCATOR_CLASS)
-
-def PCFEventDefinitionAddCONDITION(builder, CONDITION):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(CONDITION), 0)
-
-def AddCONDITION(builder, CONDITION):
-    PCFEventDefinitionAddCONDITION(builder, CONDITION)
-
-def PCFEventDefinitionAddECLIPSE(builder, ECLIPSE):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ECLIPSE), 0)
-
-def AddECLIPSE(builder, ECLIPSE):
-    PCFEventDefinitionAddECLIPSE(builder, ECLIPSE)
-
-def PCFEventDefinitionAddCONTACT(builder, CONTACT):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(CONTACT), 0)
-
-def AddCONTACT(builder, CONTACT):
-    PCFEventDefinitionAddCONTACT(builder, CONTACT)
-
-def PCFEventDefinitionAddINTRUSION(builder, INTRUSION):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(INTRUSION), 0)
-
-def AddINTRUSION(builder, INTRUSION):
-    PCFEventDefinitionAddINTRUSION(builder, INTRUSION)
-
-def PCFEventDefinitionAddAPSIDES(builder, APSIDES):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(APSIDES), 0)
-
-def AddAPSIDES(builder, APSIDES):
-    PCFEventDefinitionAddAPSIDES(builder, APSIDES)
-
-def PCFEventDefinitionAddNODE_CROSSING(builder, NODE_CROSSING):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(NODE_CROSSING), 0)
-
-def AddNODE_CROSSING(builder, NODE_CROSSING):
-    PCFEventDefinitionAddNODE_CROSSING(builder, NODE_CROSSING)
+def AddDIRECTION(builder, DIRECTION):
+    PCFEventDefinitionAddDIRECTION(builder, DIRECTION)
 
 def PCFEventDefinitionAddACTION(builder, ACTION):
-    builder.PrependUint8Slot(8, ACTION, 3)
+    builder.PrependUint8Slot(2, ACTION, 1)
 
 def AddACTION(builder, ACTION):
     PCFEventDefinitionAddACTION(builder, ACTION)
 
-def PCFEventDefinitionAddEPOCH_TOLERANCE_SECONDS(builder, EPOCH_TOLERANCE_SECONDS):
-    builder.PrependFloat64Slot(9, EPOCH_TOLERANCE_SECONDS, 1e-9)
+def PCFEventDefinitionAddTOLERANCE_SECONDS(builder, TOLERANCE_SECONDS):
+    builder.PrependFloat64Slot(3, TOLERANCE_SECONDS, 1e-9)
 
-def AddEPOCH_TOLERANCE_SECONDS(builder, EPOCH_TOLERANCE_SECONDS):
-    PCFEventDefinitionAddEPOCH_TOLERANCE_SECONDS(builder, EPOCH_TOLERANCE_SECONDS)
+def AddTOLERANCE_SECONDS(builder, TOLERANCE_SECONDS):
+    PCFEventDefinitionAddTOLERANCE_SECONDS(builder, TOLERANCE_SECONDS)
 
-def PCFEventDefinitionAddSCAN_STEP_SECONDS(builder, SCAN_STEP_SECONDS):
-    builder.PrependFloat64Slot(10, SCAN_STEP_SECONDS, 0.0)
+def PCFEventDefinitionAddOCCURRENCE(builder, OCCURRENCE):
+    builder.PrependUint32Slot(4, OCCURRENCE, 1)
 
-def AddSCAN_STEP_SECONDS(builder, SCAN_STEP_SECONDS):
-    PCFEventDefinitionAddSCAN_STEP_SECONDS(builder, SCAN_STEP_SECONDS)
+def AddOCCURRENCE(builder, OCCURRENCE):
+    PCFEventDefinitionAddOCCURRENCE(builder, OCCURRENCE)
 
-def PCFEventDefinitionAddMAXIMUM_EVENTS(builder, MAXIMUM_EVENTS):
-    builder.PrependUint32Slot(11, MAXIMUM_EVENTS, 0)
+def PCFEventDefinitionAddANGLE_RAD(builder, ANGLE_RAD):
+    builder.PrependFloat64Slot(5, ANGLE_RAD, 0.0)
 
-def AddMAXIMUM_EVENTS(builder, MAXIMUM_EVENTS):
-    PCFEventDefinitionAddMAXIMUM_EVENTS(builder, MAXIMUM_EVENTS)
+def AddANGLE_RAD(builder, ANGLE_RAD):
+    PCFEventDefinitionAddANGLE_RAD(builder, ANGLE_RAD)
+
+def PCFEventDefinitionAddPLANE_NORMAL(builder, PLANE_NORMAL):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(PLANE_NORMAL), 0)
+
+def AddPLANE_NORMAL(builder, PLANE_NORMAL):
+    PCFEventDefinitionAddPLANE_NORMAL(builder, PLANE_NORMAL)
+
+def PCFEventDefinitionAddSECOND_TRAJECTORY_PORT(builder, SECOND_TRAJECTORY_PORT):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SECOND_TRAJECTORY_PORT), 0)
+
+def AddSECOND_TRAJECTORY_PORT(builder, SECOND_TRAJECTORY_PORT):
+    PCFEventDefinitionAddSECOND_TRAJECTORY_PORT(builder, SECOND_TRAJECTORY_PORT)
+
+def PCFEventDefinitionAddEXPRESSION(builder, EXPRESSION):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EXPRESSION), 0)
+
+def AddEXPRESSION(builder, EXPRESSION):
+    PCFEventDefinitionAddEXPRESSION(builder, EXPRESSION)
 
 def PCFEventDefinitionEnd(builder):
     return builder.EndObject()
@@ -236,12 +179,8 @@ def PCFEventDefinitionEnd(builder):
 def End(builder):
     return PCFEventDefinitionEnd(builder)
 
-import EVLApsidesConfiguration
-import EVLContactConfiguration
-import EVLEclipseConfiguration
-import EVLIntrusionConfiguration
-import EVLNodeCrossingConfiguration
-import PCEParameterCondition
+import FRMVector3
+import PCFExpression
 try:
     from typing import Optional
 except:
@@ -252,31 +191,25 @@ class PCFEventDefinitionT(object):
     # PCFEventDefinitionT
     def __init__(
         self,
-        NAME = None,
-        LOCATOR_CLASS = 6,
-        CONDITION = None,
-        ECLIPSE = None,
-        CONTACT = None,
-        INTRUSION = None,
-        APSIDES = None,
-        NODE_CROSSING = None,
-        ACTION = 3,
-        EPOCH_TOLERANCE_SECONDS = 1e-9,
-        SCAN_STEP_SECONDS = 0.0,
-        MAXIMUM_EVENTS = 0,
+        KIND = 0,
+        DIRECTION = 0,
+        ACTION = 1,
+        TOLERANCE_SECONDS = 1e-9,
+        OCCURRENCE = 1,
+        ANGLE_RAD = 0.0,
+        PLANE_NORMAL = None,
+        SECOND_TRAJECTORY_PORT = None,
+        EXPRESSION = None,
     ):
-        self.NAME = NAME  # type: Optional[str]
-        self.LOCATOR_CLASS = LOCATOR_CLASS  # type: int
-        self.CONDITION = CONDITION  # type: Optional[PCEParameterCondition.PCEParameterConditionT]
-        self.ECLIPSE = ECLIPSE  # type: Optional[EVLEclipseConfiguration.EVLEclipseConfigurationT]
-        self.CONTACT = CONTACT  # type: Optional[EVLContactConfiguration.EVLContactConfigurationT]
-        self.INTRUSION = INTRUSION  # type: Optional[EVLIntrusionConfiguration.EVLIntrusionConfigurationT]
-        self.APSIDES = APSIDES  # type: Optional[EVLApsidesConfiguration.EVLApsidesConfigurationT]
-        self.NODE_CROSSING = NODE_CROSSING  # type: Optional[EVLNodeCrossingConfiguration.EVLNodeCrossingConfigurationT]
+        self.KIND = KIND  # type: int
+        self.DIRECTION = DIRECTION  # type: int
         self.ACTION = ACTION  # type: int
-        self.EPOCH_TOLERANCE_SECONDS = EPOCH_TOLERANCE_SECONDS  # type: float
-        self.SCAN_STEP_SECONDS = SCAN_STEP_SECONDS  # type: float
-        self.MAXIMUM_EVENTS = MAXIMUM_EVENTS  # type: int
+        self.TOLERANCE_SECONDS = TOLERANCE_SECONDS  # type: float
+        self.OCCURRENCE = OCCURRENCE  # type: int
+        self.ANGLE_RAD = ANGLE_RAD  # type: float
+        self.PLANE_NORMAL = PLANE_NORMAL  # type: Optional[FRMVector3.FRMVector3T]
+        self.SECOND_TRAJECTORY_PORT = SECOND_TRAJECTORY_PORT  # type: Optional[str]
+        self.EXPRESSION = EXPRESSION  # type: Optional[PCFExpression.PCFExpressionT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -299,60 +232,38 @@ class PCFEventDefinitionT(object):
     def _UnPack(self, PCFEventDefinition):
         if PCFEventDefinition is None:
             return
-        self.NAME = PCFEventDefinition.NAME()
-        self.LOCATOR_CLASS = PCFEventDefinition.LOCATOR_CLASS()
-        if PCFEventDefinition.CONDITION() is not None:
-            self.CONDITION = PCEParameterCondition.PCEParameterConditionT.InitFromObj(PCFEventDefinition.CONDITION())
-        if PCFEventDefinition.ECLIPSE() is not None:
-            self.ECLIPSE = EVLEclipseConfiguration.EVLEclipseConfigurationT.InitFromObj(PCFEventDefinition.ECLIPSE())
-        if PCFEventDefinition.CONTACT() is not None:
-            self.CONTACT = EVLContactConfiguration.EVLContactConfigurationT.InitFromObj(PCFEventDefinition.CONTACT())
-        if PCFEventDefinition.INTRUSION() is not None:
-            self.INTRUSION = EVLIntrusionConfiguration.EVLIntrusionConfigurationT.InitFromObj(PCFEventDefinition.INTRUSION())
-        if PCFEventDefinition.APSIDES() is not None:
-            self.APSIDES = EVLApsidesConfiguration.EVLApsidesConfigurationT.InitFromObj(PCFEventDefinition.APSIDES())
-        if PCFEventDefinition.NODE_CROSSING() is not None:
-            self.NODE_CROSSING = EVLNodeCrossingConfiguration.EVLNodeCrossingConfigurationT.InitFromObj(PCFEventDefinition.NODE_CROSSING())
+        self.KIND = PCFEventDefinition.KIND()
+        self.DIRECTION = PCFEventDefinition.DIRECTION()
         self.ACTION = PCFEventDefinition.ACTION()
-        self.EPOCH_TOLERANCE_SECONDS = PCFEventDefinition.EPOCH_TOLERANCE_SECONDS()
-        self.SCAN_STEP_SECONDS = PCFEventDefinition.SCAN_STEP_SECONDS()
-        self.MAXIMUM_EVENTS = PCFEventDefinition.MAXIMUM_EVENTS()
+        self.TOLERANCE_SECONDS = PCFEventDefinition.TOLERANCE_SECONDS()
+        self.OCCURRENCE = PCFEventDefinition.OCCURRENCE()
+        self.ANGLE_RAD = PCFEventDefinition.ANGLE_RAD()
+        if PCFEventDefinition.PLANE_NORMAL() is not None:
+            self.PLANE_NORMAL = FRMVector3.FRMVector3T.InitFromObj(PCFEventDefinition.PLANE_NORMAL())
+        self.SECOND_TRAJECTORY_PORT = PCFEventDefinition.SECOND_TRAJECTORY_PORT()
+        if PCFEventDefinition.EXPRESSION() is not None:
+            self.EXPRESSION = PCFExpression.PCFExpressionT.InitFromObj(PCFEventDefinition.EXPRESSION())
 
     # PCFEventDefinitionT
     def Pack(self, builder):
-        if self.NAME is not None:
-            NAME = builder.CreateString(self.NAME)
-        if self.CONDITION is not None:
-            CONDITION = self.CONDITION.Pack(builder)
-        if self.ECLIPSE is not None:
-            ECLIPSE = self.ECLIPSE.Pack(builder)
-        if self.CONTACT is not None:
-            CONTACT = self.CONTACT.Pack(builder)
-        if self.INTRUSION is not None:
-            INTRUSION = self.INTRUSION.Pack(builder)
-        if self.APSIDES is not None:
-            APSIDES = self.APSIDES.Pack(builder)
-        if self.NODE_CROSSING is not None:
-            NODE_CROSSING = self.NODE_CROSSING.Pack(builder)
+        if self.PLANE_NORMAL is not None:
+            PLANE_NORMAL = self.PLANE_NORMAL.Pack(builder)
+        if self.SECOND_TRAJECTORY_PORT is not None:
+            SECOND_TRAJECTORY_PORT = builder.CreateString(self.SECOND_TRAJECTORY_PORT)
+        if self.EXPRESSION is not None:
+            EXPRESSION = self.EXPRESSION.Pack(builder)
         PCFEventDefinitionStart(builder)
-        if self.NAME is not None:
-            PCFEventDefinitionAddNAME(builder, NAME)
-        PCFEventDefinitionAddLOCATOR_CLASS(builder, self.LOCATOR_CLASS)
-        if self.CONDITION is not None:
-            PCFEventDefinitionAddCONDITION(builder, CONDITION)
-        if self.ECLIPSE is not None:
-            PCFEventDefinitionAddECLIPSE(builder, ECLIPSE)
-        if self.CONTACT is not None:
-            PCFEventDefinitionAddCONTACT(builder, CONTACT)
-        if self.INTRUSION is not None:
-            PCFEventDefinitionAddINTRUSION(builder, INTRUSION)
-        if self.APSIDES is not None:
-            PCFEventDefinitionAddAPSIDES(builder, APSIDES)
-        if self.NODE_CROSSING is not None:
-            PCFEventDefinitionAddNODE_CROSSING(builder, NODE_CROSSING)
+        PCFEventDefinitionAddKIND(builder, self.KIND)
+        PCFEventDefinitionAddDIRECTION(builder, self.DIRECTION)
         PCFEventDefinitionAddACTION(builder, self.ACTION)
-        PCFEventDefinitionAddEPOCH_TOLERANCE_SECONDS(builder, self.EPOCH_TOLERANCE_SECONDS)
-        PCFEventDefinitionAddSCAN_STEP_SECONDS(builder, self.SCAN_STEP_SECONDS)
-        PCFEventDefinitionAddMAXIMUM_EVENTS(builder, self.MAXIMUM_EVENTS)
+        PCFEventDefinitionAddTOLERANCE_SECONDS(builder, self.TOLERANCE_SECONDS)
+        PCFEventDefinitionAddOCCURRENCE(builder, self.OCCURRENCE)
+        PCFEventDefinitionAddANGLE_RAD(builder, self.ANGLE_RAD)
+        if self.PLANE_NORMAL is not None:
+            PCFEventDefinitionAddPLANE_NORMAL(builder, PLANE_NORMAL)
+        if self.SECOND_TRAJECTORY_PORT is not None:
+            PCFEventDefinitionAddSECOND_TRAJECTORY_PORT(builder, SECOND_TRAJECTORY_PORT)
+        if self.EXPRESSION is not None:
+            PCFEventDefinitionAddEXPRESSION(builder, EXPRESSION)
         PCFEventDefinition = PCFEventDefinitionEnd(builder)
         return PCFEventDefinition

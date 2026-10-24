@@ -33,6 +33,10 @@ const (
 	evlEventTypeDESCENDING_NODE     evlEventType = 11
 	/// A $PCE parameter condition was attained.
 	evlEventTypeCONDITION_SATISFIED evlEventType = 12
+	/// Geocentric latitude at a maximum.
+	evlEventTypeMAXIMUM_LATITUDE    evlEventType = 13
+	/// Geocentric latitude at a minimum.
+	evlEventTypeMINIMUM_LATITUDE    evlEventType = 14
 )
 
 var EnumNamesevlEventType = map[evlEventType]string{
@@ -49,6 +53,8 @@ var EnumNamesevlEventType = map[evlEventType]string{
 	evlEventTypeASCENDING_NODE:      "ASCENDING_NODE",
 	evlEventTypeDESCENDING_NODE:     "DESCENDING_NODE",
 	evlEventTypeCONDITION_SATISFIED: "CONDITION_SATISFIED",
+	evlEventTypeMAXIMUM_LATITUDE:    "MAXIMUM_LATITUDE",
+	evlEventTypeMINIMUM_LATITUDE:    "MINIMUM_LATITUDE",
 }
 
 var EnumValuesevlEventType = map[string]evlEventType{
@@ -65,6 +71,8 @@ var EnumValuesevlEventType = map[string]evlEventType{
 	"ASCENDING_NODE":      evlEventTypeASCENDING_NODE,
 	"DESCENDING_NODE":     evlEventTypeDESCENDING_NODE,
 	"CONDITION_SATISFIED": evlEventTypeCONDITION_SATISFIED,
+	"MAXIMUM_LATITUDE":    evlEventTypeMAXIMUM_LATITUDE,
+	"MINIMUM_LATITUDE":    evlEventTypeMINIMUM_LATITUDE,
 }
 
 func (v evlEventType) String() string {

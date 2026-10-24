@@ -5,7 +5,7 @@
 /// 10 are the numbers $PRW has always carried; new values are appended only,
 /// never reordered or reused. A scheme value names the stepping method; a
 /// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// STIEFEL) names the variables the equations are written in, and the
 /// scheme that steps them is the provider's, reported in its result.
 class pcfIntegratorAlgorithm
 {
@@ -38,14 +38,14 @@ class pcfIntegratorAlgorithm
     const DOPRI5 = 11;
     /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
     /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-    const RK65_8M = 12;
+    const RK65 = 12;
     /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-    const VERNER_98 = 13;
+    const RKV98 = 13;
     /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
     /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
     /// acceleration must not depend on velocity, so a provider refuses it with
     /// drag.
-    const RKN12_10 = 14;
+    const RKN1210 = 14;
     /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
     /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
     /// 52).
@@ -57,7 +57,7 @@ class pcfIntegratorAlgorithm
     const DROMO = 17;
     /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
     /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
-    const STIEFEL_SCHEIFELE = 18;
+    const STIEFEL = 18;
     /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
     /// Solving Ordinary Differential Equations I).
     const DOPRI853 = 19;
@@ -75,13 +75,13 @@ class pcfIntegratorAlgorithm
         pcfIntegratorAlgorithm::ENCKE=>"ENCKE",
         pcfIntegratorAlgorithm::EQUINOCTIAL_VOP=>"EQUINOCTIAL_VOP",
         pcfIntegratorAlgorithm::DOPRI5=>"DOPRI5",
-        pcfIntegratorAlgorithm::RK65_8M=>"RK65_8M",
-        pcfIntegratorAlgorithm::VERNER_98=>"VERNER_98",
-        pcfIntegratorAlgorithm::RKN12_10=>"RKN12_10",
+        pcfIntegratorAlgorithm::RK65=>"RK65",
+        pcfIntegratorAlgorithm::RKV98=>"RKV98",
+        pcfIntegratorAlgorithm::RKN1210=>"RKN1210",
         pcfIntegratorAlgorithm::GAUSS_JACKSON_8=>"GAUSS_JACKSON_8",
         pcfIntegratorAlgorithm::GAUSS_VOP=>"GAUSS_VOP",
         pcfIntegratorAlgorithm::DROMO=>"DROMO",
-        pcfIntegratorAlgorithm::STIEFEL_SCHEIFELE=>"STIEFEL_SCHEIFELE",
+        pcfIntegratorAlgorithm::STIEFEL=>"STIEFEL",
         pcfIntegratorAlgorithm::DOPRI853=>"DOPRI853",
     );
 

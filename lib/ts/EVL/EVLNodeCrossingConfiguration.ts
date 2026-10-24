@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { FRMVector3, FRMVector3T } from './FRMVector3.js';
 
 
 /**
@@ -48,8 +49,19 @@ REPORT_DESCENDING():boolean {
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : true;
 }
 
+/**
+ * Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+ * it need not be a unit vector. Absent or zero: the pole of those axes, which
+ * makes the crossings the nodes of its equator. Any other normal is an
+ * arbitrary plane through the center of the system.
+ */
+PLANE_NORMAL(obj?:FRMVector3):FRMVector3|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? (obj || new FRMVector3()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startEVLNodeCrossingConfiguration(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 }
 
 static addReferenceCoordinateSystemName(builder:flatbuffers.Builder, REFERENCE_COORDINATE_SYSTEM_NAMEOffset:flatbuffers.Offset) {
@@ -64,24 +76,22 @@ static addReportDescending(builder:flatbuffers.Builder, REPORT_DESCENDING:boolea
   builder.addFieldInt8(2, +REPORT_DESCENDING, +true);
 }
 
+static addPlaneNormal(builder:flatbuffers.Builder, PLANE_NORMALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, PLANE_NORMALOffset, 0);
+}
+
 static endEVLNodeCrossingConfiguration(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createEVLNodeCrossingConfiguration(builder:flatbuffers.Builder, REFERENCE_COORDINATE_SYSTEM_NAMEOffset:flatbuffers.Offset, REPORT_ASCENDING:boolean, REPORT_DESCENDING:boolean):flatbuffers.Offset {
-  EVLNodeCrossingConfiguration.startEVLNodeCrossingConfiguration(builder);
-  EVLNodeCrossingConfiguration.addReferenceCoordinateSystemName(builder, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
-  EVLNodeCrossingConfiguration.addReportAscending(builder, REPORT_ASCENDING);
-  EVLNodeCrossingConfiguration.addReportDescending(builder, REPORT_DESCENDING);
-  return EVLNodeCrossingConfiguration.endEVLNodeCrossingConfiguration(builder);
-}
 
 unpack(): EVLNodeCrossingConfigurationT {
   return new EVLNodeCrossingConfigurationT(
     this.REFERENCE_COORDINATE_SYSTEM_NAME(),
     this.REPORT_ASCENDING(),
-    this.REPORT_DESCENDING()
+    this.REPORT_DESCENDING(),
+    (this.PLANE_NORMAL() !== null ? this.PLANE_NORMAL()!.unpack() : null)
   );
 }
 
@@ -90,6 +100,7 @@ unpackTo(_o: EVLNodeCrossingConfigurationT): void {
   _o.REFERENCE_COORDINATE_SYSTEM_NAME = this.REFERENCE_COORDINATE_SYSTEM_NAME();
   _o.REPORT_ASCENDING = this.REPORT_ASCENDING();
   _o.REPORT_DESCENDING = this.REPORT_DESCENDING();
+  _o.PLANE_NORMAL = (this.PLANE_NORMAL() !== null ? this.PLANE_NORMAL()!.unpack() : null);
 }
 }
 
@@ -97,17 +108,21 @@ export class EVLNodeCrossingConfigurationT implements flatbuffers.IGeneratedObje
 constructor(
   public REFERENCE_COORDINATE_SYSTEM_NAME: string|Uint8Array|null = null,
   public REPORT_ASCENDING: boolean = true,
-  public REPORT_DESCENDING: boolean = true
+  public REPORT_DESCENDING: boolean = true,
+  public PLANE_NORMAL: FRMVector3T|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REFERENCE_COORDINATE_SYSTEM_NAME = (this.REFERENCE_COORDINATE_SYSTEM_NAME !== null ? builder.createString(this.REFERENCE_COORDINATE_SYSTEM_NAME!) : 0);
+  const PLANE_NORMAL = (this.PLANE_NORMAL !== null ? this.PLANE_NORMAL!.pack(builder) : 0);
 
-  return EVLNodeCrossingConfiguration.createEVLNodeCrossingConfiguration(builder,
-    REFERENCE_COORDINATE_SYSTEM_NAME,
-    this.REPORT_ASCENDING,
-    this.REPORT_DESCENDING
-  );
+  EVLNodeCrossingConfiguration.startEVLNodeCrossingConfiguration(builder);
+  EVLNodeCrossingConfiguration.addReferenceCoordinateSystemName(builder, REFERENCE_COORDINATE_SYSTEM_NAME);
+  EVLNodeCrossingConfiguration.addReportAscending(builder, this.REPORT_ASCENDING);
+  EVLNodeCrossingConfiguration.addReportDescending(builder, this.REPORT_DESCENDING);
+  EVLNodeCrossingConfiguration.addPlaneNormal(builder, PLANE_NORMAL);
+
+  return EVLNodeCrossingConfiguration.endEVLNodeCrossingConfiguration(builder);
 }
 }

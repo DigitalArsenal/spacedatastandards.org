@@ -210,8 +210,19 @@ class EVLEventLocationRequest(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # EVLEventLocationRequest
+    def LATITUDE_EXTREMUM_CONFIGURATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from EVLLatitudeExtremumConfiguration import EVLLatitudeExtremumConfiguration
+            obj = EVLLatitudeExtremumConfiguration()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def EVLEventLocationRequestStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(18)
 
 def Start(builder):
     EVLEventLocationRequestStart(builder)
@@ -330,6 +341,12 @@ def EVLEventLocationRequestAddTRACE_ID(builder, TRACE_ID):
 def AddTRACE_ID(builder, TRACE_ID):
     EVLEventLocationRequestAddTRACE_ID(builder, TRACE_ID)
 
+def EVLEventLocationRequestAddLATITUDE_EXTREMUM_CONFIGURATION(builder, LATITUDE_EXTREMUM_CONFIGURATION):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LATITUDE_EXTREMUM_CONFIGURATION), 0)
+
+def AddLATITUDE_EXTREMUM_CONFIGURATION(builder, LATITUDE_EXTREMUM_CONFIGURATION):
+    EVLEventLocationRequestAddLATITUDE_EXTREMUM_CONFIGURATION(builder, LATITUDE_EXTREMUM_CONFIGURATION)
+
 def EVLEventLocationRequestEnd(builder):
     return builder.EndObject()
 
@@ -340,6 +357,7 @@ import EVLApsidesConfiguration
 import EVLContactConfiguration
 import EVLEclipseConfiguration
 import EVLIntrusionConfiguration
+import EVLLatitudeExtremumConfiguration
 import EVLNodeCrossingConfiguration
 import EVLParameterConditionConfiguration
 import PCEEvaluationContext
@@ -371,6 +389,7 @@ class EVLEventLocationRequestT(object):
         NODE_CROSSING_CONFIGURATION = None,
         PARAMETER_CONDITION_CONFIGURATION = None,
         TRACE_ID = None,
+        LATITUDE_EXTREMUM_CONFIGURATION = None,
     ):
         self.LOCATOR_CLASS = LOCATOR_CLASS  # type: int
         self.TARGET_OBJECT_ID = TARGET_OBJECT_ID  # type: Optional[str]
@@ -389,6 +408,7 @@ class EVLEventLocationRequestT(object):
         self.NODE_CROSSING_CONFIGURATION = NODE_CROSSING_CONFIGURATION  # type: Optional[EVLNodeCrossingConfiguration.EVLNodeCrossingConfigurationT]
         self.PARAMETER_CONDITION_CONFIGURATION = PARAMETER_CONDITION_CONFIGURATION  # type: Optional[EVLParameterConditionConfiguration.EVLParameterConditionConfigurationT]
         self.TRACE_ID = TRACE_ID  # type: Optional[str]
+        self.LATITUDE_EXTREMUM_CONFIGURATION = LATITUDE_EXTREMUM_CONFIGURATION  # type: Optional[EVLLatitudeExtremumConfiguration.EVLLatitudeExtremumConfigurationT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -442,6 +462,8 @@ class EVLEventLocationRequestT(object):
         if EVLEventLocationRequest.PARAMETER_CONDITION_CONFIGURATION() is not None:
             self.PARAMETER_CONDITION_CONFIGURATION = EVLParameterConditionConfiguration.EVLParameterConditionConfigurationT.InitFromObj(EVLEventLocationRequest.PARAMETER_CONDITION_CONFIGURATION())
         self.TRACE_ID = EVLEventLocationRequest.TRACE_ID()
+        if EVLEventLocationRequest.LATITUDE_EXTREMUM_CONFIGURATION() is not None:
+            self.LATITUDE_EXTREMUM_CONFIGURATION = EVLLatitudeExtremumConfiguration.EVLLatitudeExtremumConfigurationT.InitFromObj(EVLEventLocationRequest.LATITUDE_EXTREMUM_CONFIGURATION())
 
     # EVLEventLocationRequestT
     def Pack(self, builder):
@@ -477,6 +499,8 @@ class EVLEventLocationRequestT(object):
             PARAMETER_CONDITION_CONFIGURATION = self.PARAMETER_CONDITION_CONFIGURATION.Pack(builder)
         if self.TRACE_ID is not None:
             TRACE_ID = builder.CreateString(self.TRACE_ID)
+        if self.LATITUDE_EXTREMUM_CONFIGURATION is not None:
+            LATITUDE_EXTREMUM_CONFIGURATION = self.LATITUDE_EXTREMUM_CONFIGURATION.Pack(builder)
         EVLEventLocationRequestStart(builder)
         EVLEventLocationRequestAddLOCATOR_CLASS(builder, self.LOCATOR_CLASS)
         if self.TARGET_OBJECT_ID is not None:
@@ -508,5 +532,7 @@ class EVLEventLocationRequestT(object):
             EVLEventLocationRequestAddPARAMETER_CONDITION_CONFIGURATION(builder, PARAMETER_CONDITION_CONFIGURATION)
         if self.TRACE_ID is not None:
             EVLEventLocationRequestAddTRACE_ID(builder, TRACE_ID)
+        if self.LATITUDE_EXTREMUM_CONFIGURATION is not None:
+            EVLEventLocationRequestAddLATITUDE_EXTREMUM_CONFIGURATION(builder, LATITUDE_EXTREMUM_CONFIGURATION)
         EVLEventLocationRequest = EVLEventLocationRequestEnd(builder)
         return EVLEventLocationRequest

@@ -23,6 +23,9 @@ enum evlLocatorClass:
     /// crossings, latitude crossings and beta-angle limits are this class, not
     /// classes of their own.
     evlLocatorClass_PARAMETER_CONDITION = 6
+    /// Passage of the target through a maximum or a minimum of its geocentric
+    /// latitude: the zero of the latitude rate, which no catalog parameter is.
+    evlLocatorClass_LATITUDE_EXTREMUM = 7
 
 /// What was found. Append new values only.
 enum evlEventType:
@@ -51,6 +54,10 @@ enum evlEventType:
     evlEventType_DESCENDING_NODE = 11
     /// A $PCE parameter condition was attained.
     evlEventType_CONDITION_SATISFIED = 12
+    /// Geocentric latitude at a maximum.
+    evlEventType_MAXIMUM_LATITUDE = 13
+    /// Geocentric latitude at a minimum.
+    evlEventType_MINIMUM_LATITUDE = 14
 
 /// Geometry used to decide whether the target is illuminated. Append new
 /// values only.
@@ -132,6 +139,8 @@ class EVLIntrusionConfiguration
 class EVLApsidesConfiguration
 
 class EVLNodeCrossingConfiguration
+
+class EVLLatitudeExtremumConfiguration
 
 class EVLParameterConditionConfiguration
 
@@ -447,13 +456,20 @@ class EVLNodeCrossingConfiguration : flatbuffers.handle
         return bool(flatbuffers.field_int8(buf_, pos_, 6, 1))
     def REPORT_DESCENDING() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 8, 1))
+    /// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+    /// it need not be a unit vector. Absent or zero: the pole of those axes, which
+    /// makes the crossings the nodes of its equator. Any other normal is an
+    /// arbitrary plane through the center of the system.
+    def PLANE_NORMAL() -> FRMVector3?:
+        let o = flatbuffers.field_table(buf_, pos_, 10)
+        return if o: FRMVector3 { buf_, o } else: nil
 
 def GetRootAsEVLNodeCrossingConfiguration(buf:string): return EVLNodeCrossingConfiguration { buf, flatbuffers.indirect(buf, 0) }
 
 struct EVLNodeCrossingConfigurationBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(3)
+        b_.StartObject(4)
         return this
     def add_REFERENCE_COORDINATE_SYSTEM_NAME(REFERENCE_COORDINATE_SYSTEM_NAME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, REFERENCE_COORDINATE_SYSTEM_NAME)
@@ -463,6 +479,39 @@ struct EVLNodeCrossingConfigurationBuilder:
         return this
     def add_REPORT_DESCENDING(REPORT_DESCENDING:bool):
         b_.PrependBoolSlot(2, REPORT_DESCENDING, 1)
+        return this
+    def add_PLANE_NORMAL(PLANE_NORMAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(3, PLANE_NORMAL)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// Configuration for LATITUDE_EXTREMUM.
+class EVLLatitudeExtremumConfiguration : flatbuffers.handle
+    /// Ephemeris body code the latitude is measured about; the pole is that of
+    /// the request context's axes.
+    def CENTRAL_BODY_ID() -> int:
+        return flatbuffers.field_int32(buf_, pos_, 4, 0)
+    def REPORT_MAXIMUM() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 6, 1))
+    def REPORT_MINIMUM() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 8, 1))
+
+def GetRootAsEVLLatitudeExtremumConfiguration(buf:string): return EVLLatitudeExtremumConfiguration { buf, flatbuffers.indirect(buf, 0) }
+
+struct EVLLatitudeExtremumConfigurationBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_CENTRAL_BODY_ID(CENTRAL_BODY_ID:int):
+        b_.PrependInt32Slot(0, CENTRAL_BODY_ID, 0)
+        return this
+    def add_REPORT_MAXIMUM(REPORT_MAXIMUM:bool):
+        b_.PrependBoolSlot(1, REPORT_MAXIMUM, 1)
+        return this
+    def add_REPORT_MINIMUM(REPORT_MINIMUM:bool):
+        b_.PrependBoolSlot(2, REPORT_MINIMUM, 1)
         return this
     def end():
         return b_.EndObject()
@@ -703,13 +752,16 @@ class EVLEventLocationRequest : flatbuffers.handle
         return if o: EVLParameterConditionConfiguration { buf_, o } else: nil
     def TRACE_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 36)
+    def LATITUDE_EXTREMUM_CONFIGURATION() -> EVLLatitudeExtremumConfiguration?:
+        let o = flatbuffers.field_table(buf_, pos_, 38)
+        return if o: EVLLatitudeExtremumConfiguration { buf_, o } else: nil
 
 def GetRootAsEVLEventLocationRequest(buf:string): return EVLEventLocationRequest { buf, flatbuffers.indirect(buf, 0) }
 
 struct EVLEventLocationRequestBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(17)
+        b_.StartObject(18)
         return this
     def add_LOCATOR_CLASS(LOCATOR_CLASS:evlLocatorClass):
         b_.PrependUint8Slot(0, LOCATOR_CLASS, 0)
@@ -761,6 +813,9 @@ struct EVLEventLocationRequestBuilder:
         return this
     def add_TRACE_ID(TRACE_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(16, TRACE_ID)
+        return this
+    def add_LATITUDE_EXTREMUM_CONFIGURATION(LATITUDE_EXTREMUM_CONFIGURATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(17, LATITUDE_EXTREMUM_CONFIGURATION)
         return this
     def end():
         return b_.EndObject()

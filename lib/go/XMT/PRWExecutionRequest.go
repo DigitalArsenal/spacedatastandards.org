@@ -396,8 +396,47 @@ func (rcv *PRWExecutionRequest) MutateDynamicParameters(j int, n prwDynamicParam
 	return rcv.MutateDYNAMIC_PARAMETERS(j, n)
 }
 
+/// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+/// They apply to a plain state propagation (no STM, covariance, samples, impulses
+/// or burns) by an integrator with a continuous extension; any other request that
+/// names events is refused. Default empty.
+func (rcv *PRWExecutionRequest) EVENTS(obj *PCFEventDefinition, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PCFEventDefinition)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PRWExecutionRequest) Events(obj *PCFEventDefinition, j int) bool {
+	return rcv.EVENTS(obj, j)
+}
+
+func (rcv *PRWExecutionRequest) EVENTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionRequest) EventsLength() int {
+	return rcv.EVENTSLength()
+}
+
+/// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+/// They apply to a plain state propagation (no STM, covariance, samples, impulses
+/// or burns) by an integrator with a continuous extension; any other request that
+/// names events is refused. Default empty.
 func PRWExecutionRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(15)
+	builder.StartObject(16)
 }
 func PRWExecutionRequestAddINITIAL(builder *flatbuffers.Builder, INITIAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(INITIAL), 0)
@@ -512,6 +551,18 @@ func PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder *flatbuffers.Build
 }
 func PRWExecutionRequestStartDynamicParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PRWExecutionRequestStartDYNAMIC_PARAMETERSVector(builder, numElems)
+}
+func PRWExecutionRequestAddEVENTS(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EVENTS), 0)
+}
+func PRWExecutionRequestAddEvents(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
+	PRWExecutionRequestAddEVENTS(builder, EVENTS)
+}
+func PRWExecutionRequestStartEVENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PRWExecutionRequestStartEventsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRWExecutionRequestStartEVENTSVector(builder, numElems)
 }
 func PRWExecutionRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -127,22 +127,72 @@ class PRWExecutionResult extends Table
         return $this->__vector_as_bytes(16);
     }
 
+    /// The located events with ACTION RECORD or STOP, in time order of propagation.
+    /**
+     * @returnVectorOffset
+     */
+    public function getEVENTS($j)
+    {
+        $o = $this->__offset(18);
+        $obj = new PRWEventRecord();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEVENTSLength()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+    /**
+     * @param int offset
+     * @return uint
+     */
+    public function getEVENT_OCCURRENCES($j)
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getUint($this->__vector($o) + $j * 4) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEVENT_OCCURRENCESLength()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+    /**
+     * @return int
+     */
+    public function getSTOPPED_BY_EVENT()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : -1;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPRWExecutionResult(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(7);
+        $builder->StartObject(10);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PRWExecutionResult
      */
-    public static function createPRWExecutionResult(FlatBufferBuilder $builder, $FINAL_SAMPLE, $SAMPLES, $ELAPSED_SECONDS, $EPHEMERIS_SOURCE, $STM_TECHNIQUE, $DENSITY_TREATMENT, $DYNAMIC_PARAMETERS)
+    public static function createPRWExecutionResult(FlatBufferBuilder $builder, $FINAL_SAMPLE, $SAMPLES, $ELAPSED_SECONDS, $EPHEMERIS_SOURCE, $STM_TECHNIQUE, $DENSITY_TREATMENT, $DYNAMIC_PARAMETERS, $EVENTS, $EVENT_OCCURRENCES, $STOPPED_BY_EVENT)
     {
-        $builder->startObject(7);
+        $builder->startObject(10);
         self::addFINAL_SAMPLE($builder, $FINAL_SAMPLE);
         self::addSAMPLES($builder, $SAMPLES);
         self::addELAPSED_SECONDS($builder, $ELAPSED_SECONDS);
@@ -150,6 +200,9 @@ class PRWExecutionResult extends Table
         self::addSTM_TECHNIQUE($builder, $STM_TECHNIQUE);
         self::addDENSITY_TREATMENT($builder, $DENSITY_TREATMENT);
         self::addDYNAMIC_PARAMETERS($builder, $DYNAMIC_PARAMETERS);
+        self::addEVENTS($builder, $EVENTS);
+        self::addEVENT_OCCURRENCES($builder, $EVENT_OCCURRENCES);
+        self::addSTOPPED_BY_EVENT($builder, $STOPPED_BY_EVENT);
         $o = $builder->endObject();
         $builder->required($o, 4);  // FINAL_SAMPLE
         $builder->required($o, 10);  // EPHEMERIS_SOURCE
@@ -272,6 +325,84 @@ class PRWExecutionResult extends Table
     public static function startDYNAMIC_PARAMETERSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(1, $numElems, 1);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEVENTS(FlatBufferBuilder $builder, $EVENTS)
+    {
+        $builder->addOffsetX(7, $EVENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEVENTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEVENTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEVENT_OCCURRENCES(FlatBufferBuilder $builder, $EVENT_OCCURRENCES)
+    {
+        $builder->addOffsetX(8, $EVENT_OCCURRENCES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createEVENT_OCCURRENCESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putUint($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startEVENT_OCCURRENCESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int
+     * @return void
+     */
+    public static function addSTOPPED_BY_EVENT(FlatBufferBuilder $builder, $STOPPED_BY_EVENT)
+    {
+        $builder->addIntX(9, $STOPPED_BY_EVENT, -1);
     }
 
     /**

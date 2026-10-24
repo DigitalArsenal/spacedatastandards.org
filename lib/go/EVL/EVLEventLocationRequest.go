@@ -364,8 +364,25 @@ func (rcv *EVLEventLocationRequest) TraceId() []byte {
 	return rcv.TRACE_ID()
 }
 
+func (rcv *EVLEventLocationRequest) LATITUDE_EXTREMUM_CONFIGURATION(obj *EVLLatitudeExtremumConfiguration) *EVLLatitudeExtremumConfiguration {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(EVLLatitudeExtremumConfiguration)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *EVLEventLocationRequest) LatitudeExtremumConfiguration(obj *EVLLatitudeExtremumConfiguration) *EVLLatitudeExtremumConfiguration {
+	return rcv.LATITUDE_EXTREMUM_CONFIGURATION(obj)
+}
+
 func EVLEventLocationRequestStart(builder *flatbuffers.Builder) {
-	builder.StartObject(17)
+	builder.StartObject(18)
 }
 func EVLEventLocationRequestAddLOCATOR_CLASS(builder *flatbuffers.Builder, LOCATOR_CLASS evlLocatorClass) {
 	builder.PrependByteSlot(0, byte(LOCATOR_CLASS), 0)
@@ -474,6 +491,12 @@ func EVLEventLocationRequestAddTRACE_ID(builder *flatbuffers.Builder, TRACE_ID f
 }
 func EVLEventLocationRequestAddTraceId(builder *flatbuffers.Builder, TRACE_ID flatbuffers.UOffsetT) {
 	EVLEventLocationRequestAddTRACE_ID(builder, TRACE_ID)
+}
+func EVLEventLocationRequestAddLATITUDE_EXTREMUM_CONFIGURATION(builder *flatbuffers.Builder, LATITUDE_EXTREMUM_CONFIGURATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LATITUDE_EXTREMUM_CONFIGURATION), 0)
+}
+func EVLEventLocationRequestAddLatitudeExtremumConfiguration(builder *flatbuffers.Builder, LATITUDE_EXTREMUM_CONFIGURATION flatbuffers.UOffsetT) {
+	EVLEventLocationRequestAddLATITUDE_EXTREMUM_CONFIGURATION(builder, LATITUDE_EXTREMUM_CONFIGURATION)
 }
 func EVLEventLocationRequestEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -8,6 +8,7 @@ import { EVLApsidesConfiguration, EVLApsidesConfigurationT } from './EVLApsidesC
 import { EVLContactConfiguration, EVLContactConfigurationT } from './EVLContactConfiguration.js';
 import { EVLEclipseConfiguration, EVLEclipseConfigurationT } from './EVLEclipseConfiguration.js';
 import { EVLIntrusionConfiguration, EVLIntrusionConfigurationT } from './EVLIntrusionConfiguration.js';
+import { EVLLatitudeExtremumConfiguration, EVLLatitudeExtremumConfigurationT } from './EVLLatitudeExtremumConfiguration.js';
 import { EVLNodeCrossingConfiguration, EVLNodeCrossingConfigurationT } from './EVLNodeCrossingConfiguration.js';
 import { EVLParameterConditionConfiguration, EVLParameterConditionConfigurationT } from './EVLParameterConditionConfiguration.js';
 import { PCEEvaluationContext, PCEEvaluationContextT } from './PCEEvaluationContext.js';
@@ -170,8 +171,13 @@ TRACE_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+LATITUDE_EXTREMUM_CONFIGURATION(obj?:EVLLatitudeExtremumConfiguration):EVLLatitudeExtremumConfiguration|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new EVLLatitudeExtremumConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startEVLEventLocationRequest(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(18);
 }
 
 static addLocatorClass(builder:flatbuffers.Builder, LOCATOR_CLASS:evlLocatorClass) {
@@ -254,6 +260,10 @@ static addTraceId(builder:flatbuffers.Builder, TRACE_IDOffset:flatbuffers.Offset
   builder.addFieldOffset(16, TRACE_IDOffset, 0);
 }
 
+static addLatitudeExtremumConfiguration(builder:flatbuffers.Builder, LATITUDE_EXTREMUM_CONFIGURATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, LATITUDE_EXTREMUM_CONFIGURATIONOffset, 0);
+}
+
 static endEVLEventLocationRequest(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -278,7 +288,8 @@ unpack(): EVLEventLocationRequestT {
     (this.APSIDES_CONFIGURATION() !== null ? this.APSIDES_CONFIGURATION()!.unpack() : null),
     (this.NODE_CROSSING_CONFIGURATION() !== null ? this.NODE_CROSSING_CONFIGURATION()!.unpack() : null),
     (this.PARAMETER_CONDITION_CONFIGURATION() !== null ? this.PARAMETER_CONDITION_CONFIGURATION()!.unpack() : null),
-    this.TRACE_ID()
+    this.TRACE_ID(),
+    (this.LATITUDE_EXTREMUM_CONFIGURATION() !== null ? this.LATITUDE_EXTREMUM_CONFIGURATION()!.unpack() : null)
   );
 }
 
@@ -301,6 +312,7 @@ unpackTo(_o: EVLEventLocationRequestT): void {
   _o.NODE_CROSSING_CONFIGURATION = (this.NODE_CROSSING_CONFIGURATION() !== null ? this.NODE_CROSSING_CONFIGURATION()!.unpack() : null);
   _o.PARAMETER_CONDITION_CONFIGURATION = (this.PARAMETER_CONDITION_CONFIGURATION() !== null ? this.PARAMETER_CONDITION_CONFIGURATION()!.unpack() : null);
   _o.TRACE_ID = this.TRACE_ID();
+  _o.LATITUDE_EXTREMUM_CONFIGURATION = (this.LATITUDE_EXTREMUM_CONFIGURATION() !== null ? this.LATITUDE_EXTREMUM_CONFIGURATION()!.unpack() : null);
 }
 }
 
@@ -322,7 +334,8 @@ constructor(
   public APSIDES_CONFIGURATION: EVLApsidesConfigurationT|null = null,
   public NODE_CROSSING_CONFIGURATION: EVLNodeCrossingConfigurationT|null = null,
   public PARAMETER_CONDITION_CONFIGURATION: EVLParameterConditionConfigurationT|null = null,
-  public TRACE_ID: string|Uint8Array|null = null
+  public TRACE_ID: string|Uint8Array|null = null,
+  public LATITUDE_EXTREMUM_CONFIGURATION: EVLLatitudeExtremumConfigurationT|null = null
 ){}
 
 
@@ -340,6 +353,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NODE_CROSSING_CONFIGURATION = (this.NODE_CROSSING_CONFIGURATION !== null ? this.NODE_CROSSING_CONFIGURATION!.pack(builder) : 0);
   const PARAMETER_CONDITION_CONFIGURATION = (this.PARAMETER_CONDITION_CONFIGURATION !== null ? this.PARAMETER_CONDITION_CONFIGURATION!.pack(builder) : 0);
   const TRACE_ID = (this.TRACE_ID !== null ? builder.createString(this.TRACE_ID!) : 0);
+  const LATITUDE_EXTREMUM_CONFIGURATION = (this.LATITUDE_EXTREMUM_CONFIGURATION !== null ? this.LATITUDE_EXTREMUM_CONFIGURATION!.pack(builder) : 0);
 
   EVLEventLocationRequest.startEVLEventLocationRequest(builder);
   EVLEventLocationRequest.addLocatorClass(builder, this.LOCATOR_CLASS);
@@ -359,6 +373,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   EVLEventLocationRequest.addNodeCrossingConfiguration(builder, NODE_CROSSING_CONFIGURATION);
   EVLEventLocationRequest.addParameterConditionConfiguration(builder, PARAMETER_CONDITION_CONFIGURATION);
   EVLEventLocationRequest.addTraceId(builder, TRACE_ID);
+  EVLEventLocationRequest.addLatitudeExtremumConfiguration(builder, LATITUDE_EXTREMUM_CONFIGURATION);
 
   return EVLEventLocationRequest.endEVLEventLocationRequest(builder);
 }

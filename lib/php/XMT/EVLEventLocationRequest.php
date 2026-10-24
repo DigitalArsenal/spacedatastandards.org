@@ -191,22 +191,29 @@ class EVLEventLocationRequest extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    public function getLATITUDE_EXTREMUM_CONFIGURATION()
+    {
+        $obj = new EVLLatitudeExtremumConfiguration();
+        $o = $this->__offset(38);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEVLEventLocationRequest(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EVLEventLocationRequest
      */
-    public static function createEVLEventLocationRequest(FlatBufferBuilder $builder, $LOCATOR_CLASS, $TARGET_OBJECT_ID, $CONTEXT, $SCAN_START_EPOCH, $SCAN_STOP_EPOCH, $EPOCH_TIME_SYSTEM, $SCAN_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $MAXIMUM_EVENTS, $REPORT_PARAMETERS, $ECLIPSE_CONFIGURATION, $CONTACT_CONFIGURATION, $INTRUSION_CONFIGURATION, $APSIDES_CONFIGURATION, $NODE_CROSSING_CONFIGURATION, $PARAMETER_CONDITION_CONFIGURATION, $TRACE_ID)
+    public static function createEVLEventLocationRequest(FlatBufferBuilder $builder, $LOCATOR_CLASS, $TARGET_OBJECT_ID, $CONTEXT, $SCAN_START_EPOCH, $SCAN_STOP_EPOCH, $EPOCH_TIME_SYSTEM, $SCAN_STEP_SECONDS, $REFINEMENT_TOLERANCE_SECONDS, $MAXIMUM_EVENTS, $REPORT_PARAMETERS, $ECLIPSE_CONFIGURATION, $CONTACT_CONFIGURATION, $INTRUSION_CONFIGURATION, $APSIDES_CONFIGURATION, $NODE_CROSSING_CONFIGURATION, $PARAMETER_CONDITION_CONFIGURATION, $TRACE_ID, $LATITUDE_EXTREMUM_CONFIGURATION)
     {
-        $builder->startObject(17);
+        $builder->startObject(18);
         self::addLOCATOR_CLASS($builder, $LOCATOR_CLASS);
         self::addTARGET_OBJECT_ID($builder, $TARGET_OBJECT_ID);
         self::addCONTEXT($builder, $CONTEXT);
@@ -224,6 +231,7 @@ class EVLEventLocationRequest extends Table
         self::addNODE_CROSSING_CONFIGURATION($builder, $NODE_CROSSING_CONFIGURATION);
         self::addPARAMETER_CONDITION_CONFIGURATION($builder, $PARAMETER_CONDITION_CONFIGURATION);
         self::addTRACE_ID($builder, $TRACE_ID);
+        self::addLATITUDE_EXTREMUM_CONFIGURATION($builder, $LATITUDE_EXTREMUM_CONFIGURATION);
         $o = $builder->endObject();
         return $o;
     }
@@ -420,6 +428,16 @@ class EVLEventLocationRequest extends Table
     public static function addTRACE_ID(FlatBufferBuilder $builder, $TRACE_ID)
     {
         $builder->addOffsetX(16, $TRACE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addLATITUDE_EXTREMUM_CONFIGURATION(FlatBufferBuilder $builder, $LATITUDE_EXTREMUM_CONFIGURATION)
+    {
+        $builder->addOffsetX(17, $LATITUDE_EXTREMUM_CONFIGURATION, 0);
     }
 
     /**

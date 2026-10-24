@@ -36,22 +36,33 @@ public final class EVLNodeCrossingConfiguration extends com.google.flatbuffers.T
   public ByteBuffer REFERENCE_COORDINATE_SYSTEM_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
   public boolean REPORT_ASCENDING() { int o = __offset(6); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
   public boolean REPORT_DESCENDING() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
+  /**
+   * Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+   * it need not be a unit vector. Absent or zero: the pole of those axes, which
+   * makes the crossings the nodes of its equator. Any other normal is an
+   * arbitrary plane through the center of the system.
+   */
+  public FRMVector3 PLANE_NORMAL() { return PLANE_NORMAL(new FRMVector3()); }
+  public FRMVector3 PLANE_NORMAL(FRMVector3 obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createEVLNodeCrossingConfiguration(FlatBufferBuilder builder,
       int REFERENCE_COORDINATE_SYSTEM_NAMEOffset,
       boolean REPORT_ASCENDING,
-      boolean REPORT_DESCENDING) {
-    builder.startTable(3);
+      boolean REPORT_DESCENDING,
+      int PLANE_NORMALOffset) {
+    builder.startTable(4);
+    EVLNodeCrossingConfiguration.addPlaneNormal(builder, PLANE_NORMALOffset);
     EVLNodeCrossingConfiguration.addReferenceCoordinateSystemName(builder, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
     EVLNodeCrossingConfiguration.addReportDescending(builder, REPORT_DESCENDING);
     EVLNodeCrossingConfiguration.addReportAscending(builder, REPORT_ASCENDING);
     return EVLNodeCrossingConfiguration.endEVLNodeCrossingConfiguration(builder);
   }
 
-  public static void startEVLNodeCrossingConfiguration(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startEVLNodeCrossingConfiguration(FlatBufferBuilder builder) { builder.startTable(4); }
   public static void addReferenceCoordinateSystemName(FlatBufferBuilder builder, int REFERENCE_COORDINATE_SYSTEM_NAMEOffset) { builder.addOffset(0, REFERENCE_COORDINATE_SYSTEM_NAMEOffset, 0); }
   public static void addReportAscending(FlatBufferBuilder builder, boolean REPORT_ASCENDING) { builder.addBoolean(1, REPORT_ASCENDING, true); }
   public static void addReportDescending(FlatBufferBuilder builder, boolean REPORT_DESCENDING) { builder.addBoolean(2, REPORT_DESCENDING, true); }
+  public static void addPlaneNormal(FlatBufferBuilder builder, int PLANE_NORMALOffset) { builder.addOffset(3, PLANE_NORMALOffset, 0); }
   public static int endEVLNodeCrossingConfiguration(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -55,5 +55,13 @@ class evlEventType private constructor() {
          * A $PCE parameter condition was attained.
          */
         const val CONDITION_SATISFIED: UByte = 12u
+        /**
+         * Geocentric latitude at a maximum.
+         */
+        const val MAXIMUM_LATITUDE: UByte = 13u
+        /**
+         * Geocentric latitude at a minimum.
+         */
+        const val MINIMUM_LATITUDE: UByte = 14u
     }
 }

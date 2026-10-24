@@ -28,6 +28,9 @@ const (
 	/// crossings, latitude crossings and beta-angle limits are this class, not
 	/// classes of their own.
 	evlLocatorClassPARAMETER_CONDITION evlLocatorClass = 6
+	/// Passage of the target through a maximum or a minimum of its geocentric
+	/// latitude: the zero of the latitude rate, which no catalog parameter is.
+	evlLocatorClassLATITUDE_EXTREMUM   evlLocatorClass = 7
 )
 
 var EnumNamesevlLocatorClass = map[evlLocatorClass]string{
@@ -38,6 +41,7 @@ var EnumNamesevlLocatorClass = map[evlLocatorClass]string{
 	evlLocatorClassAPSIDES:             "APSIDES",
 	evlLocatorClassNODE_CROSSING:       "NODE_CROSSING",
 	evlLocatorClassPARAMETER_CONDITION: "PARAMETER_CONDITION",
+	evlLocatorClassLATITUDE_EXTREMUM:   "LATITUDE_EXTREMUM",
 }
 
 var EnumValuesevlLocatorClass = map[string]evlLocatorClass{
@@ -48,6 +52,7 @@ var EnumValuesevlLocatorClass = map[string]evlLocatorClass{
 	"APSIDES":             evlLocatorClassAPSIDES,
 	"NODE_CROSSING":       evlLocatorClassNODE_CROSSING,
 	"PARAMETER_CONDITION": evlLocatorClassPARAMETER_CONDITION,
+	"LATITUDE_EXTREMUM":   evlLocatorClassLATITUDE_EXTREMUM,
 }
 
 func (v evlLocatorClass) String() string {

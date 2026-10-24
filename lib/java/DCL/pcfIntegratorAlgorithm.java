@@ -5,7 +5,7 @@
  * 10 are the numbers $PRW has always carried; new values are appended only,
  * never reordered or reused. A scheme value names the stepping method; a
  * formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
- * STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+ * STIEFEL) names the variables the equations are written in, and the
  * scheme that steps them is the provider's, reported in its result.
  */
 @SuppressWarnings("unused")
@@ -66,18 +66,18 @@ public final class pcfIntegratorAlgorithm {
    * Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
    * (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
    */
-  public static final int RK65_8M = 12;
+  public static final int RK65 = 12;
   /**
    * Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
    */
-  public static final int VERNER_98 = 13;
+  public static final int RKV98 = 13;
   /**
    * Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
    * (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
    * acceleration must not depend on velocity, so a provider refuses it with
    * drag.
    */
-  public static final int RKN12_10 = 14;
+  public static final int RKN1210 = 14;
   /**
    * Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
    * started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
@@ -97,14 +97,14 @@ public final class pcfIntegratorAlgorithm {
    * Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
    * and Scheifele 1971, Linear and Regular Celestial Mechanics).
    */
-  public static final int STIEFEL_SCHEIFELE = 18;
+  public static final int STIEFEL = 18;
   /**
    * Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
    * Solving Ordinary Differential Equations I).
    */
   public static final int DOPRI853 = 19;
 
-  public static final String[] names = { "UNSPECIFIED", "RK4", "RKF45", "RKF78", "RK78", "RKDP87", "ABM", "BS", "COWELL", "ENCKE", "EQUINOCTIAL_VOP", "DOPRI5", "RK65_8M", "VERNER_98", "RKN12_10", "GAUSS_JACKSON_8", "GAUSS_VOP", "DROMO", "STIEFEL_SCHEIFELE", "DOPRI853", };
+  public static final String[] names = { "UNSPECIFIED", "RK4", "RKF45", "RKF78", "RK78", "RKDP87", "ABM", "BS", "COWELL", "ENCKE", "EQUINOCTIAL_VOP", "DOPRI5", "RK65", "RKV98", "RKN1210", "GAUSS_JACKSON_8", "GAUSS_VOP", "DROMO", "STIEFEL", "DOPRI853", };
 
   public static String name(int e) { return names[e]; }
 }

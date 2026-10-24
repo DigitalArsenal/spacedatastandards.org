@@ -24,6 +24,9 @@ class evlLocatorClass
     /// crossings, latitude crossings and beta-angle limits are this class, not
     /// classes of their own.
     const PARAMETER_CONDITION = 6;
+    /// Passage of the target through a maximum or a minimum of its geocentric
+    /// latitude: the zero of the latitude rate, which no catalog parameter is.
+    const LATITUDE_EXTREMUM = 7;
 
     private static $names = array(
         evlLocatorClass::UNSPECIFIED=>"UNSPECIFIED",
@@ -33,6 +36,7 @@ class evlLocatorClass
         evlLocatorClass::APSIDES=>"APSIDES",
         evlLocatorClass::NODE_CROSSING=>"NODE_CROSSING",
         evlLocatorClass::PARAMETER_CONDITION=>"PARAMETER_CONDITION",
+        evlLocatorClass::LATITUDE_EXTREMUM=>"LATITUDE_EXTREMUM",
     );
 
     public static function Name($e)

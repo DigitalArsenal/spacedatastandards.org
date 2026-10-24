@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js';
 import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
 import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
 import { PRWFiniteBurn, PRWFiniteBurnT } from './PRWFiniteBurn.js';
@@ -51,6 +52,14 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
     DYNAMIC_PARAMETERS(index: number): prwDynamicParameter | null;
     dynamicParametersLength(): number;
     dynamicParametersArray(): Uint8Array | null;
+    /**
+     * Events located inside the integration (PCFEventDefinition, shared with $PCF).
+     * They apply to a plain state propagation (no STM, covariance, samples, impulses
+     * or burns) by an integrator with a continuous extension; any other request that
+     * names events is refused. Default empty.
+     */
+    EVENTS(index: number, obj?: PCFEventDefinition): PCFEventDefinition | null;
+    eventsLength(): number;
     static startPRWExecutionRequest(builder: flatbuffers.Builder): void;
     static addInitial(builder: flatbuffers.Builder, INITIALOffset: flatbuffers.Offset): void;
     static addTargetEpoch(builder: flatbuffers.Builder, TARGET_EPOCHOffset: flatbuffers.Offset): void;
@@ -75,6 +84,9 @@ export declare class PRWExecutionRequest implements flatbuffers.IUnpackableObjec
     static addDynamicParameters(builder: flatbuffers.Builder, DYNAMIC_PARAMETERSOffset: flatbuffers.Offset): void;
     static createDynamicParametersVector(builder: flatbuffers.Builder, data: prwDynamicParameter[]): flatbuffers.Offset;
     static startDynamicParametersVector(builder: flatbuffers.Builder, numElems: number): void;
+    static addEvents(builder: flatbuffers.Builder, EVENTSOffset: flatbuffers.Offset): void;
+    static createEventsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
+    static startEventsVector(builder: flatbuffers.Builder, numElems: number): void;
     static endPRWExecutionRequest(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PRWExecutionRequestT;
     unpackTo(_o: PRWExecutionRequestT): void;
@@ -95,7 +107,8 @@ export declare class PRWExecutionRequestT implements flatbuffers.IGeneratedObjec
     FINITE_BURNS: (PRWFiniteBurnT)[];
     PROCESS_NOISE: PRWProcessNoiseT | null;
     DYNAMIC_PARAMETERS: (prwDynamicParameter)[];
-    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null, DYNAMIC_PARAMETERS?: (prwDynamicParameter)[]);
+    EVENTS: (PCFEventDefinitionT)[];
+    constructor(INITIAL?: PRWResidentStateT | null, TARGET_EPOCH?: TIMInstantT | null, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, INCLUDE_STM?: boolean, STM_TECHNIQUE?: prwDerivativeTechnique, DENSITY_TREATMENT?: prwDensityTreatment, INITIAL_COVARIANCE?: PRWStateMatrixT | null, INITIAL_MASS_COVARIANCE?: PRWStateMatrixT | null, SAMPLE_EPOCHS?: (TIMInstantT)[], IMPULSES?: (PRWImpulseT)[], INCLUDE_MASS_DYNAMICS?: boolean, FINITE_BURNS?: (PRWFiniteBurnT)[], PROCESS_NOISE?: PRWProcessNoiseT | null, DYNAMIC_PARAMETERS?: (prwDynamicParameter)[], EVENTS?: (PCFEventDefinitionT)[]);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PRWExecutionRequest.d.ts.map

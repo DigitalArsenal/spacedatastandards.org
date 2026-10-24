@@ -38,6 +38,20 @@ public struct PRWExecutionResult : IFlatbufferObject
   public ArraySegment<byte>? GetDYNAMIC_PARAMETERSBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public prwDynamicParameter[] GetDYNAMIC_PARAMETERSArray() { int o = __p.__offset(16); if (o == 0) return null; int p = __p.__vector(o); int l = __p.__vector_len(o); prwDynamicParameter[] a = new prwDynamicParameter[l]; for (int i = 0; i < l; i++) { a[i] = (prwDynamicParameter)__p.bb.Get(p + i * 1); } return a; }
+  /// The located events with ACTION RECORD or STOP, in time order of propagation.
+  public PRWEventRecord? EVENTS(int j) { int o = __p.__offset(18); return o != 0 ? (PRWEventRecord?)(new PRWEventRecord()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EVENTSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+  public uint EVENT_OCCURRENCES(int j) { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int EVENT_OCCURRENCESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<uint> GetEVENT_OCCURRENCESBytes() { return __p.__vector_as_span<uint>(20, 4); }
+#else
+  public ArraySegment<byte>? GetEVENT_OCCURRENCESBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public uint[] GetEVENT_OCCURRENCESArray() { return __p.__vector_as_array<uint>(20); }
+  /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+  public int STOPPED_BY_EVENT { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)-1; } }
 
   public static Offset<PRWExecutionResult> CreatePRWExecutionResult(FlatBufferBuilder builder,
       Offset<PRWPropagationSample> FINAL_SAMPLEOffset = default(Offset<PRWPropagationSample>),
@@ -46,9 +60,15 @@ public struct PRWExecutionResult : IFlatbufferObject
       StringOffset EPHEMERIS_SOURCEOffset = default(StringOffset),
       prwDerivativeTechnique STM_TECHNIQUE = prwDerivativeTechnique.UNSPECIFIED,
       prwDensityTreatment DENSITY_TREATMENT = prwDensityTreatment.UNSPECIFIED,
-      VectorOffset DYNAMIC_PARAMETERSOffset = default(VectorOffset)) {
-    builder.StartTable(7);
+      VectorOffset DYNAMIC_PARAMETERSOffset = default(VectorOffset),
+      VectorOffset EVENTSOffset = default(VectorOffset),
+      VectorOffset EVENT_OCCURRENCESOffset = default(VectorOffset),
+      int STOPPED_BY_EVENT = -1) {
+    builder.StartTable(10);
     PRWExecutionResult.AddELAPSED_SECONDS(builder, ELAPSED_SECONDS);
+    PRWExecutionResult.AddSTOPPED_BY_EVENT(builder, STOPPED_BY_EVENT);
+    PRWExecutionResult.AddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCESOffset);
+    PRWExecutionResult.AddEVENTS(builder, EVENTSOffset);
     PRWExecutionResult.AddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERSOffset);
     PRWExecutionResult.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
     PRWExecutionResult.AddSAMPLES(builder, SAMPLESOffset);
@@ -58,7 +78,7 @@ public struct PRWExecutionResult : IFlatbufferObject
     return PRWExecutionResult.EndPRWExecutionResult(builder);
   }
 
-  public static void StartPRWExecutionResult(FlatBufferBuilder builder) { builder.StartTable(7); }
+  public static void StartPRWExecutionResult(FlatBufferBuilder builder) { builder.StartTable(10); }
   public static void AddFINAL_SAMPLE(FlatBufferBuilder builder, Offset<PRWPropagationSample> FINAL_SAMPLEOffset) { builder.AddOffset(0, FINAL_SAMPLEOffset.Value, 0); }
   public static void AddSAMPLES(FlatBufferBuilder builder, VectorOffset SAMPLESOffset) { builder.AddOffset(1, SAMPLESOffset.Value, 0); }
   public static VectorOffset CreateSAMPLESVector(FlatBufferBuilder builder, Offset<PRWPropagationSample>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
@@ -76,6 +96,19 @@ public struct PRWExecutionResult : IFlatbufferObject
   public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, ArraySegment<prwDynamicParameter> data) { builder.StartVector(1, data.Count, 1); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDYNAMIC_PARAMETERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<prwDynamicParameter>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDYNAMIC_PARAMETERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(1, numElems, 1); }
+  public static void AddEVENTS(FlatBufferBuilder builder, VectorOffset EVENTSOffset) { builder.AddOffset(7, EVENTSOffset.Value, 0); }
+  public static VectorOffset CreateEVENTSVector(FlatBufferBuilder builder, Offset<PRWEventRecord>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, Offset<PRWEventRecord>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PRWEventRecord>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PRWEventRecord>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEVENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddEVENT_OCCURRENCES(FlatBufferBuilder builder, VectorOffset EVENT_OCCURRENCESOffset) { builder.AddOffset(8, EVENT_OCCURRENCESOffset.Value, 0); }
+  public static VectorOffset CreateEVENT_OCCURRENCESVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateEVENT_OCCURRENCESVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEVENT_OCCURRENCESVectorBlock(FlatBufferBuilder builder, ArraySegment<uint> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateEVENT_OCCURRENCESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<uint>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartEVENT_OCCURRENCESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSTOPPED_BY_EVENT(FlatBufferBuilder builder, int STOPPED_BY_EVENT) { builder.AddInt(9, STOPPED_BY_EVENT, -1); }
   public static Offset<PRWExecutionResult> EndPRWExecutionResult(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 4);  // FINAL_SAMPLE
@@ -97,6 +130,11 @@ public struct PRWExecutionResult : IFlatbufferObject
     _o.DENSITY_TREATMENT = this.DENSITY_TREATMENT;
     _o.DYNAMIC_PARAMETERS = new List<prwDynamicParameter>();
     for (var _j = 0; _j < this.DYNAMIC_PARAMETERSLength; ++_j) {_o.DYNAMIC_PARAMETERS.Add(this.DYNAMIC_PARAMETERS(_j));}
+    _o.EVENTS = new List<PRWEventRecordT>();
+    for (var _j = 0; _j < this.EVENTSLength; ++_j) {_o.EVENTS.Add(this.EVENTS(_j).HasValue ? this.EVENTS(_j).Value.UnPack() : null);}
+    _o.EVENT_OCCURRENCES = new List<uint>();
+    for (var _j = 0; _j < this.EVENT_OCCURRENCESLength; ++_j) {_o.EVENT_OCCURRENCES.Add(this.EVENT_OCCURRENCES(_j));}
+    _o.STOPPED_BY_EVENT = this.STOPPED_BY_EVENT;
   }
   public static Offset<PRWExecutionResult> Pack(FlatBufferBuilder builder, PRWExecutionResultT _o) {
     if (_o == null) return default(Offset<PRWExecutionResult>);
@@ -113,6 +151,17 @@ public struct PRWExecutionResult : IFlatbufferObject
       var __DYNAMIC_PARAMETERS = _o.DYNAMIC_PARAMETERS.ToArray();
       _DYNAMIC_PARAMETERS = CreateDYNAMIC_PARAMETERSVector(builder, __DYNAMIC_PARAMETERS);
     }
+    var _EVENTS = default(VectorOffset);
+    if (_o.EVENTS != null) {
+      var __EVENTS = new Offset<PRWEventRecord>[_o.EVENTS.Count];
+      for (var _j = 0; _j < __EVENTS.Length; ++_j) { __EVENTS[_j] = PRWEventRecord.Pack(builder, _o.EVENTS[_j]); }
+      _EVENTS = CreateEVENTSVector(builder, __EVENTS);
+    }
+    var _EVENT_OCCURRENCES = default(VectorOffset);
+    if (_o.EVENT_OCCURRENCES != null) {
+      var __EVENT_OCCURRENCES = _o.EVENT_OCCURRENCES.ToArray();
+      _EVENT_OCCURRENCES = CreateEVENT_OCCURRENCESVector(builder, __EVENT_OCCURRENCES);
+    }
     return CreatePRWExecutionResult(
       builder,
       _FINAL_SAMPLE,
@@ -121,7 +170,10 @@ public struct PRWExecutionResult : IFlatbufferObject
       _EPHEMERIS_SOURCE,
       _o.STM_TECHNIQUE,
       _o.DENSITY_TREATMENT,
-      _DYNAMIC_PARAMETERS);
+      _DYNAMIC_PARAMETERS,
+      _EVENTS,
+      _EVENT_OCCURRENCES,
+      _o.STOPPED_BY_EVENT);
   }
 }
 
@@ -134,6 +186,9 @@ public class PRWExecutionResultT
   public prwDerivativeTechnique STM_TECHNIQUE { get; set; }
   public prwDensityTreatment DENSITY_TREATMENT { get; set; }
   public List<prwDynamicParameter> DYNAMIC_PARAMETERS { get; set; }
+  public List<PRWEventRecordT> EVENTS { get; set; }
+  public List<uint> EVENT_OCCURRENCES { get; set; }
+  public int STOPPED_BY_EVENT { get; set; }
 
   public PRWExecutionResultT() {
     this.FINAL_SAMPLE = null;
@@ -143,6 +198,9 @@ public class PRWExecutionResultT
     this.STM_TECHNIQUE = prwDerivativeTechnique.UNSPECIFIED;
     this.DENSITY_TREATMENT = prwDensityTreatment.UNSPECIFIED;
     this.DYNAMIC_PARAMETERS = null;
+    this.EVENTS = null;
+    this.EVENT_OCCURRENCES = null;
+    this.STOPPED_BY_EVENT = -1;
   }
 }
 
@@ -159,6 +217,9 @@ static public class PRWExecutionResultVerify
       && verifier.VerifyField(tablePos, 12 /*STM_TECHNIQUE*/, 1 /*prwDerivativeTechnique*/, 1, false)
       && verifier.VerifyField(tablePos, 14 /*DENSITY_TREATMENT*/, 1 /*prwDensityTreatment*/, 1, false)
       && verifier.VerifyVectorOfData(tablePos, 16 /*DYNAMIC_PARAMETERS*/, 1 /*prwDynamicParameter*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 18 /*EVENTS*/, PRWEventRecordVerify.Verify, false)
+      && verifier.VerifyVectorOfData(tablePos, 20 /*EVENT_OCCURRENCES*/, 4 /*uint*/, false)
+      && verifier.VerifyField(tablePos, 22 /*STOPPED_BY_EVENT*/, 4 /*int*/, 4, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

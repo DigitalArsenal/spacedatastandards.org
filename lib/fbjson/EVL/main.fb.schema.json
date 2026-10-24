@@ -2286,7 +2286,8 @@
         "INTRUSION",
         "APSIDES",
         "NODE_CROSSING",
-        "PARAMETER_CONDITION"
+        "PARAMETER_CONDITION",
+        "LATITUDE_EXTREMUM"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -2317,6 +2318,10 @@
         "PARAMETER_CONDITION": {
           "value": 6,
           "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+        },
+        "LATITUDE_EXTREMUM": {
+          "value": 7,
+          "description": "Passage of the target through a maximum or a minimum of its geocentric latitude: the zero of the latitude rate, which no catalog parameter is."
         }
       }
     },
@@ -2335,7 +2340,9 @@
         "PERIAPSIS",
         "ASCENDING_NODE",
         "DESCENDING_NODE",
-        "CONDITION_SATISFIED"
+        "CONDITION_SATISFIED",
+        "MAXIMUM_LATITUDE",
+        "MINIMUM_LATITUDE"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "ubyte",
@@ -2390,6 +2397,14 @@
         "CONDITION_SATISFIED": {
           "value": 12,
           "description": "A $PCE parameter condition was attained."
+        },
+        "MAXIMUM_LATITUDE": {
+          "value": 13,
+          "description": "Geocentric latitude at a maximum."
+        },
+        "MINIMUM_LATITUDE": {
+          "value": 14,
+          "description": "Geocentric latitude at a minimum."
         }
       }
     },
@@ -8576,6 +8591,35 @@
           "type": "boolean",
           "x-flatbuffer-type": "bool",
           "x-flatbuffer-default": "true"
+        },
+        "PLANE_NORMAL": {
+          "$ref": "#/definitions/FRMVector3",
+          "description": "Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;\nit need not be a unit vector. Absent or zero: the pole of those axes, which\nmakes the crossings the nodes of its equator. Any other normal is an\narbitrary plane through the center of the system.",
+          "x-flatbuffer-type": "FRMVector3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "EVLLatitudeExtremumConfiguration": {
+      "type": "object",
+      "description": "Configuration for LATITUDE_EXTREMUM.",
+      "properties": {
+        "CENTRAL_BODY_ID": {
+          "type": "integer",
+          "minimum": -2147483648,
+          "maximum": 2147483647,
+          "description": "Ephemeris body code the latitude is measured about; the pole is that of\nthe request context's axes.",
+          "x-flatbuffer-type": "int"
+        },
+        "REPORT_MAXIMUM": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
+        },
+        "REPORT_MINIMUM": {
+          "type": "boolean",
+          "x-flatbuffer-type": "bool",
+          "x-flatbuffer-default": "true"
         }
       },
       "additionalProperties": false
@@ -8700,6 +8744,14 @@
             "CONDITION_SATISFIED": {
               "value": 12,
               "description": "A $PCE parameter condition was attained."
+            },
+            "MAXIMUM_LATITUDE": {
+              "value": 13,
+              "description": "Geocentric latitude at a maximum."
+            },
+            "MINIMUM_LATITUDE": {
+              "value": 14,
+              "description": "Geocentric latitude at a minimum."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -9546,6 +9598,10 @@
             "PARAMETER_CONDITION": {
               "value": 6,
               "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+            },
+            "LATITUDE_EXTREMUM": {
+              "value": 7,
+              "description": "Passage of the target through a maximum or a minimum of its geocentric latitude: the zero of the latitude rate, which no catalog parameter is."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"
@@ -9627,6 +9683,10 @@
         "TRACE_ID": {
           "type": "string",
           "x-flatbuffer-type": "string"
+        },
+        "LATITUDE_EXTREMUM_CONFIGURATION": {
+          "$ref": "#/definitions/EVLLatitudeExtremumConfiguration",
+          "x-flatbuffer-type": "EVLLatitudeExtremumConfiguration"
         }
       },
       "additionalProperties": false
@@ -9715,6 +9775,10 @@
             "PARAMETER_CONDITION": {
               "value": 6,
               "description": "The generic locator: a condition on any $PCE catalog parameter. Altitude crossings, latitude crossings and beta-angle limits are this class, not classes of their own."
+            },
+            "LATITUDE_EXTREMUM": {
+              "value": 7,
+              "description": "Passage of the target through a maximum or a minimum of its geocentric latitude: the zero of the latitude rate, which no catalog parameter is."
             }
           },
           "x-flatbuffer-default": "UNSPECIFIED"

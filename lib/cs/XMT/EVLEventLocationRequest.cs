@@ -81,6 +81,7 @@ public struct EVLEventLocationRequest : IFlatbufferObject
   public ArraySegment<byte>? GetTRACE_IDBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetTRACE_IDArray() { return __p.__vector_as_array<byte>(36); }
+  public EVLLatitudeExtremumConfiguration? LATITUDE_EXTREMUM_CONFIGURATION { get { int o = __p.__offset(38); return o != 0 ? (EVLLatitudeExtremumConfiguration?)(new EVLLatitudeExtremumConfiguration()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<EVLEventLocationRequest> CreateEVLEventLocationRequest(FlatBufferBuilder builder,
       evlLocatorClass LOCATOR_CLASS = evlLocatorClass.UNSPECIFIED,
@@ -99,10 +100,12 @@ public struct EVLEventLocationRequest : IFlatbufferObject
       Offset<EVLApsidesConfiguration> APSIDES_CONFIGURATIONOffset = default(Offset<EVLApsidesConfiguration>),
       Offset<EVLNodeCrossingConfiguration> NODE_CROSSING_CONFIGURATIONOffset = default(Offset<EVLNodeCrossingConfiguration>),
       Offset<EVLParameterConditionConfiguration> PARAMETER_CONDITION_CONFIGURATIONOffset = default(Offset<EVLParameterConditionConfiguration>),
-      StringOffset TRACE_IDOffset = default(StringOffset)) {
-    builder.StartTable(17);
+      StringOffset TRACE_IDOffset = default(StringOffset),
+      Offset<EVLLatitudeExtremumConfiguration> LATITUDE_EXTREMUM_CONFIGURATIONOffset = default(Offset<EVLLatitudeExtremumConfiguration>)) {
+    builder.StartTable(18);
     EVLEventLocationRequest.AddREFINEMENT_TOLERANCE_SECONDS(builder, REFINEMENT_TOLERANCE_SECONDS);
     EVLEventLocationRequest.AddSCAN_STEP_SECONDS(builder, SCAN_STEP_SECONDS);
+    EVLEventLocationRequest.AddLATITUDE_EXTREMUM_CONFIGURATION(builder, LATITUDE_EXTREMUM_CONFIGURATIONOffset);
     EVLEventLocationRequest.AddTRACE_ID(builder, TRACE_IDOffset);
     EVLEventLocationRequest.AddPARAMETER_CONDITION_CONFIGURATION(builder, PARAMETER_CONDITION_CONFIGURATIONOffset);
     EVLEventLocationRequest.AddNODE_CROSSING_CONFIGURATION(builder, NODE_CROSSING_CONFIGURATIONOffset);
@@ -121,7 +124,7 @@ public struct EVLEventLocationRequest : IFlatbufferObject
     return EVLEventLocationRequest.EndEVLEventLocationRequest(builder);
   }
 
-  public static void StartEVLEventLocationRequest(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartEVLEventLocationRequest(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddLOCATOR_CLASS(FlatBufferBuilder builder, evlLocatorClass LOCATOR_CLASS) { builder.AddByte(0, (byte)LOCATOR_CLASS, 0); }
   public static void AddTARGET_OBJECT_ID(FlatBufferBuilder builder, StringOffset TARGET_OBJECT_IDOffset) { builder.AddOffset(1, TARGET_OBJECT_IDOffset.Value, 0); }
   public static void AddCONTEXT(FlatBufferBuilder builder, Offset<PCEEvaluationContext> CONTEXTOffset) { builder.AddOffset(2, CONTEXTOffset.Value, 0); }
@@ -144,6 +147,7 @@ public struct EVLEventLocationRequest : IFlatbufferObject
   public static void AddNODE_CROSSING_CONFIGURATION(FlatBufferBuilder builder, Offset<EVLNodeCrossingConfiguration> NODE_CROSSING_CONFIGURATIONOffset) { builder.AddOffset(14, NODE_CROSSING_CONFIGURATIONOffset.Value, 0); }
   public static void AddPARAMETER_CONDITION_CONFIGURATION(FlatBufferBuilder builder, Offset<EVLParameterConditionConfiguration> PARAMETER_CONDITION_CONFIGURATIONOffset) { builder.AddOffset(15, PARAMETER_CONDITION_CONFIGURATIONOffset.Value, 0); }
   public static void AddTRACE_ID(FlatBufferBuilder builder, StringOffset TRACE_IDOffset) { builder.AddOffset(16, TRACE_IDOffset.Value, 0); }
+  public static void AddLATITUDE_EXTREMUM_CONFIGURATION(FlatBufferBuilder builder, Offset<EVLLatitudeExtremumConfiguration> LATITUDE_EXTREMUM_CONFIGURATIONOffset) { builder.AddOffset(17, LATITUDE_EXTREMUM_CONFIGURATIONOffset.Value, 0); }
   public static Offset<EVLEventLocationRequest> EndEVLEventLocationRequest(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EVLEventLocationRequest>(o);
@@ -172,6 +176,7 @@ public struct EVLEventLocationRequest : IFlatbufferObject
     _o.NODE_CROSSING_CONFIGURATION = this.NODE_CROSSING_CONFIGURATION.HasValue ? this.NODE_CROSSING_CONFIGURATION.Value.UnPack() : null;
     _o.PARAMETER_CONDITION_CONFIGURATION = this.PARAMETER_CONDITION_CONFIGURATION.HasValue ? this.PARAMETER_CONDITION_CONFIGURATION.Value.UnPack() : null;
     _o.TRACE_ID = this.TRACE_ID;
+    _o.LATITUDE_EXTREMUM_CONFIGURATION = this.LATITUDE_EXTREMUM_CONFIGURATION.HasValue ? this.LATITUDE_EXTREMUM_CONFIGURATION.Value.UnPack() : null;
   }
   public static Offset<EVLEventLocationRequest> Pack(FlatBufferBuilder builder, EVLEventLocationRequestT _o) {
     if (_o == null) return default(Offset<EVLEventLocationRequest>);
@@ -193,6 +198,7 @@ public struct EVLEventLocationRequest : IFlatbufferObject
     var _NODE_CROSSING_CONFIGURATION = _o.NODE_CROSSING_CONFIGURATION == null ? default(Offset<EVLNodeCrossingConfiguration>) : EVLNodeCrossingConfiguration.Pack(builder, _o.NODE_CROSSING_CONFIGURATION);
     var _PARAMETER_CONDITION_CONFIGURATION = _o.PARAMETER_CONDITION_CONFIGURATION == null ? default(Offset<EVLParameterConditionConfiguration>) : EVLParameterConditionConfiguration.Pack(builder, _o.PARAMETER_CONDITION_CONFIGURATION);
     var _TRACE_ID = _o.TRACE_ID == null ? default(StringOffset) : builder.CreateString(_o.TRACE_ID);
+    var _LATITUDE_EXTREMUM_CONFIGURATION = _o.LATITUDE_EXTREMUM_CONFIGURATION == null ? default(Offset<EVLLatitudeExtremumConfiguration>) : EVLLatitudeExtremumConfiguration.Pack(builder, _o.LATITUDE_EXTREMUM_CONFIGURATION);
     return CreateEVLEventLocationRequest(
       builder,
       _o.LOCATOR_CLASS,
@@ -211,7 +217,8 @@ public struct EVLEventLocationRequest : IFlatbufferObject
       _APSIDES_CONFIGURATION,
       _NODE_CROSSING_CONFIGURATION,
       _PARAMETER_CONDITION_CONFIGURATION,
-      _TRACE_ID);
+      _TRACE_ID,
+      _LATITUDE_EXTREMUM_CONFIGURATION);
   }
 }
 
@@ -234,6 +241,7 @@ public class EVLEventLocationRequestT
   public EVLNodeCrossingConfigurationT NODE_CROSSING_CONFIGURATION { get; set; }
   public EVLParameterConditionConfigurationT PARAMETER_CONDITION_CONFIGURATION { get; set; }
   public string TRACE_ID { get; set; }
+  public EVLLatitudeExtremumConfigurationT LATITUDE_EXTREMUM_CONFIGURATION { get; set; }
 
   public EVLEventLocationRequestT() {
     this.LOCATOR_CLASS = evlLocatorClass.UNSPECIFIED;
@@ -253,6 +261,7 @@ public class EVLEventLocationRequestT
     this.NODE_CROSSING_CONFIGURATION = null;
     this.PARAMETER_CONDITION_CONFIGURATION = null;
     this.TRACE_ID = null;
+    this.LATITUDE_EXTREMUM_CONFIGURATION = null;
   }
 }
 
@@ -279,6 +288,7 @@ static public class EVLEventLocationRequestVerify
       && verifier.VerifyTable(tablePos, 32 /*NODE_CROSSING_CONFIGURATION*/, EVLNodeCrossingConfigurationVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 34 /*PARAMETER_CONDITION_CONFIGURATION*/, EVLParameterConditionConfigurationVerify.Verify, false)
       && verifier.VerifyString(tablePos, 36 /*TRACE_ID*/, false)
+      && verifier.VerifyTable(tablePos, 38 /*LATITUDE_EXTREMUM_CONFIGURATION*/, EVLLatitudeExtremumConfigurationVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

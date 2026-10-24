@@ -38,5 +38,10 @@ class evlLocatorClass private constructor() {
          * classes of their own.
          */
         const val PARAMETER_CONDITION: UByte = 6u
+        /**
+         * Passage of the target through a maximum or a minimum of its geocentric
+         * latitude: the zero of the latitude rate, which no catalog parameter is.
+         */
+        const val LATITUDE_EXTREMUM: UByte = 7u
     }
 }

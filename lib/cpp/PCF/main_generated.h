@@ -14,6 +14,7 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
              "Non-compatible flatbuffers version included");
 
 #include "../EVL/main_generated.h"
+#include "../FRM/main_generated.h"
 #include "../PCE/main_generated.h"
 #include "../TIM/main_generated.h"
 
@@ -31,6 +32,12 @@ struct PCFSegmentOptionsBuilder;
 
 struct PCFFitPolicy;
 struct PCFFitPolicyBuilder;
+
+struct PCFExpressionTerm;
+struct PCFExpressionTermBuilder;
+
+struct PCFExpression;
+struct PCFExpressionBuilder;
 
 struct PCFEventDefinition;
 struct PCFEventDefinitionBuilder;
@@ -309,46 +316,231 @@ inline const char *EnumNamepcfEphemerisKind(pcfEphemerisKind e) {
   return EnumNamespcfEphemerisKind()[index];
 }
 
-/// What a propagator does when a located event occurs. Append new values
-/// only.
-enum pcfEventAction : uint8_t {
-  pcfEventAction_UNSPECIFIED = 0,
-  /// End the propagation at the event; the result carries its epoch and state.
-  pcfEventAction_STOP = 1,
-  /// Make the event a step boundary only (the dynamics may change there) and
-  /// report nothing about it.
-  pcfEventAction_CONTINUE = 2,
-  /// Report the event in the result and keep propagating.
-  pcfEventAction_RECORD = 3,
-  pcfEventAction_MIN = pcfEventAction_UNSPECIFIED,
-  pcfEventAction_MAX = pcfEventAction_RECORD
+/// The event function of a located event. Each is a continuous function g of the
+/// integrated state, evaluated by the integrator; an event is a zero crossing of g.
+/// The crossing is bracketed on each accepted step, refined to TOLERANCE_SECONDS on
+/// the integrator's continuous extension, and confirmed by re-stepping the
+/// integrator itself, so the epoch does not depend on the step size. Append new
+/// values only.
+enum pcfEventKind : uint8_t {
+  pcfEventKind_UNSPECIFIED = 0,
+  /// g = r . v, the radial rate. INCREASING crossings are periapsis, DECREASING apoapsis.
+  pcfEventKind_APSIS = 1,
+  /// g = n . r for the plane through the central body's center with normal PLANE_NORMAL
+  /// (absent: the pole of the request's axes, which makes the crossings the nodes).
+  /// INCREASING crossings are ascending, DECREASING descending.
+  pcfEventKind_PLANE_CROSSING = 2,
+  /// g = the true anomaly minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+  pcfEventKind_TRUE_ANOMALY = 3,
+  /// g = the argument of latitude minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+  pcfEventKind_ARGUMENT_OF_LATITUDE = 4,
+  /// g = r^2 d(z)/dt - z (r . v) with z the component along the pole of the request's
+  /// axes: the zero of the rate of the geocentric latitude. DECREASING crossings are
+  /// maxima, INCREASING minima.
+  pcfEventKind_LATITUDE_EXTREMUM = 5,
+  /// g = the angular separation of the Sun and the central body's centers minus the
+  /// difference of their apparent radii, positive in light (the umbra of the conical
+  /// model). DECREASING is entry, INCREASING exit.
+  pcfEventKind_UMBRA = 6,
+  /// g = the same separation minus the sum of the apparent radii (the penumbra
+  /// boundary).
+  pcfEventKind_PENUMBRA = 7,
+  /// g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
+  /// the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
+  /// the range.
+  pcfEventKind_CLOSEST_APPROACH = 8,
+  /// g = the value of EXPRESSION.
+  pcfEventKind_EXPRESSION = 9,
+  pcfEventKind_MIN = pcfEventKind_UNSPECIFIED,
+  pcfEventKind_MAX = pcfEventKind_EXPRESSION
 };
 
-inline const pcfEventAction (&EnumValuespcfEventAction())[4] {
+inline const pcfEventKind (&EnumValuespcfEventKind())[10] {
+  static const pcfEventKind values[] = {
+    pcfEventKind_UNSPECIFIED,
+    pcfEventKind_APSIS,
+    pcfEventKind_PLANE_CROSSING,
+    pcfEventKind_TRUE_ANOMALY,
+    pcfEventKind_ARGUMENT_OF_LATITUDE,
+    pcfEventKind_LATITUDE_EXTREMUM,
+    pcfEventKind_UMBRA,
+    pcfEventKind_PENUMBRA,
+    pcfEventKind_CLOSEST_APPROACH,
+    pcfEventKind_EXPRESSION
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfEventKind() {
+  static const char * const names[11] = {
+    "UNSPECIFIED",
+    "APSIS",
+    "PLANE_CROSSING",
+    "TRUE_ANOMALY",
+    "ARGUMENT_OF_LATITUDE",
+    "LATITUDE_EXTREMUM",
+    "UMBRA",
+    "PENUMBRA",
+    "CLOSEST_APPROACH",
+    "EXPRESSION",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfEventKind(pcfEventKind e) {
+  if (::flatbuffers::IsOutRange(e, pcfEventKind_UNSPECIFIED, pcfEventKind_EXPRESSION)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfEventKind()[index];
+}
+
+/// Which zero crossings of the event function count. Append new values only.
+enum pcfEventDirection : uint8_t {
+  pcfEventDirection_ANY = 0,
+  /// g goes from negative to positive.
+  pcfEventDirection_INCREASING = 1,
+  /// g goes from positive to negative.
+  pcfEventDirection_DECREASING = 2,
+  pcfEventDirection_MIN = pcfEventDirection_ANY,
+  pcfEventDirection_MAX = pcfEventDirection_DECREASING
+};
+
+inline const pcfEventDirection (&EnumValuespcfEventDirection())[3] {
+  static const pcfEventDirection values[] = {
+    pcfEventDirection_ANY,
+    pcfEventDirection_INCREASING,
+    pcfEventDirection_DECREASING
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfEventDirection() {
+  static const char * const names[4] = {
+    "ANY",
+    "INCREASING",
+    "DECREASING",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfEventDirection(pcfEventDirection e) {
+  if (::flatbuffers::IsOutRange(e, pcfEventDirection_ANY, pcfEventDirection_DECREASING)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfEventDirection()[index];
+}
+
+/// What the integrator does at a located event. Append new values only.
+enum pcfEventAction : uint8_t {
+  /// The event is located and counted; it is not reported.
+  pcfEventAction_CONTINUE = 0,
+  /// The event is located, counted and reported; propagation continues.
+  pcfEventAction_RECORD = 1,
+  /// The event is reported and the propagation ends there: the final sample is the
+  /// state at the OCCURRENCE-th qualifying crossing.
+  pcfEventAction_STOP = 2,
+  pcfEventAction_MIN = pcfEventAction_CONTINUE,
+  pcfEventAction_MAX = pcfEventAction_STOP
+};
+
+inline const pcfEventAction (&EnumValuespcfEventAction())[3] {
   static const pcfEventAction values[] = {
-    pcfEventAction_UNSPECIFIED,
-    pcfEventAction_STOP,
     pcfEventAction_CONTINUE,
-    pcfEventAction_RECORD
+    pcfEventAction_RECORD,
+    pcfEventAction_STOP
   };
   return values;
 }
 
 inline const char * const *EnumNamespcfEventAction() {
-  static const char * const names[5] = {
-    "UNSPECIFIED",
-    "STOP",
+  static const char * const names[4] = {
     "CONTINUE",
     "RECORD",
+    "STOP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamepcfEventAction(pcfEventAction e) {
-  if (::flatbuffers::IsOutRange(e, pcfEventAction_UNSPECIFIED, pcfEventAction_RECORD)) return "";
+  if (::flatbuffers::IsOutRange(e, pcfEventAction_CONTINUE, pcfEventAction_STOP)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespcfEventAction()[index];
+}
+
+/// Operations of a bounded expression. The expression is data, evaluated by the
+/// provider; no code runs. Append new values only.
+enum pcfExpressionOperation : uint8_t {
+  pcfExpressionOperation_UNSPECIFIED = 0,
+  /// Push VALUE.
+  pcfExpressionOperation_CONSTANT = 1,
+  /// Push the value of PARAMETER at the integrated state, in the units of the $PCE
+  /// catalog.
+  pcfExpressionOperation_PARAMETER = 2,
+  /// Pop two, push their sum, difference (second minus first popped), product or
+  /// quotient.
+  pcfExpressionOperation_ADD = 3,
+  pcfExpressionOperation_SUBTRACT = 4,
+  pcfExpressionOperation_MULTIPLY = 5,
+  pcfExpressionOperation_DIVIDE = 6,
+  /// Pop one, push the result.
+  pcfExpressionOperation_NEGATE = 7,
+  pcfExpressionOperation_ABSOLUTE = 8,
+  pcfExpressionOperation_SQUARE_ROOT = 9,
+  pcfExpressionOperation_SINE = 10,
+  pcfExpressionOperation_COSINE = 11,
+  /// Pop two, push the lesser or the greater.
+  pcfExpressionOperation_MINIMUM = 12,
+  pcfExpressionOperation_MAXIMUM = 13,
+  pcfExpressionOperation_MIN = pcfExpressionOperation_UNSPECIFIED,
+  pcfExpressionOperation_MAX = pcfExpressionOperation_MAXIMUM
+};
+
+inline const pcfExpressionOperation (&EnumValuespcfExpressionOperation())[14] {
+  static const pcfExpressionOperation values[] = {
+    pcfExpressionOperation_UNSPECIFIED,
+    pcfExpressionOperation_CONSTANT,
+    pcfExpressionOperation_PARAMETER,
+    pcfExpressionOperation_ADD,
+    pcfExpressionOperation_SUBTRACT,
+    pcfExpressionOperation_MULTIPLY,
+    pcfExpressionOperation_DIVIDE,
+    pcfExpressionOperation_NEGATE,
+    pcfExpressionOperation_ABSOLUTE,
+    pcfExpressionOperation_SQUARE_ROOT,
+    pcfExpressionOperation_SINE,
+    pcfExpressionOperation_COSINE,
+    pcfExpressionOperation_MINIMUM,
+    pcfExpressionOperation_MAXIMUM
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfExpressionOperation() {
+  static const char * const names[15] = {
+    "UNSPECIFIED",
+    "CONSTANT",
+    "PARAMETER",
+    "ADD",
+    "SUBTRACT",
+    "MULTIPLY",
+    "DIVIDE",
+    "NEGATE",
+    "ABSOLUTE",
+    "SQUARE_ROOT",
+    "SINE",
+    "COSINE",
+    "MINIMUM",
+    "MAXIMUM",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfExpressionOperation(pcfExpressionOperation e) {
+  if (::flatbuffers::IsOutRange(e, pcfExpressionOperation_UNSPECIFIED, pcfExpressionOperation_MAXIMUM)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfExpressionOperation()[index];
 }
 
 /// How the correlation of maneuver-detection innovations is weighted. Append
@@ -480,7 +672,7 @@ inline const char *EnumNamepcfOutputFrame(pcfOutputFrame e) {
 /// 10 are the numbers $PRW has always carried; new values are appended only,
 /// never reordered or reused. A scheme value names the stepping method; a
 /// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// STIEFEL) names the variables the equations are written in, and the
 /// scheme that steps them is the provider's, reported in its result.
 enum pcfIntegratorAlgorithm : uint8_t {
   /// The provider's own algorithm.
@@ -512,14 +704,14 @@ enum pcfIntegratorAlgorithm : uint8_t {
   pcfIntegratorAlgorithm_DOPRI5 = 11,
   /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
   /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-  pcfIntegratorAlgorithm_RK65_8M = 12,
+  pcfIntegratorAlgorithm_RK65 = 12,
   /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-  pcfIntegratorAlgorithm_VERNER_98 = 13,
+  pcfIntegratorAlgorithm_RKV98 = 13,
   /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
   /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
   /// acceleration must not depend on velocity, so a provider refuses it with
   /// drag.
-  pcfIntegratorAlgorithm_RKN12_10 = 14,
+  pcfIntegratorAlgorithm_RKN1210 = 14,
   /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
   /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
   /// 52).
@@ -531,7 +723,7 @@ enum pcfIntegratorAlgorithm : uint8_t {
   pcfIntegratorAlgorithm_DROMO = 17,
   /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
   /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
-  pcfIntegratorAlgorithm_STIEFEL_SCHEIFELE = 18,
+  pcfIntegratorAlgorithm_STIEFEL = 18,
   /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
   /// Solving Ordinary Differential Equations I).
   pcfIntegratorAlgorithm_DOPRI853 = 19,
@@ -553,13 +745,13 @@ inline const pcfIntegratorAlgorithm (&EnumValuespcfIntegratorAlgorithm())[20] {
     pcfIntegratorAlgorithm_ENCKE,
     pcfIntegratorAlgorithm_EQUINOCTIAL_VOP,
     pcfIntegratorAlgorithm_DOPRI5,
-    pcfIntegratorAlgorithm_RK65_8M,
-    pcfIntegratorAlgorithm_VERNER_98,
-    pcfIntegratorAlgorithm_RKN12_10,
+    pcfIntegratorAlgorithm_RK65,
+    pcfIntegratorAlgorithm_RKV98,
+    pcfIntegratorAlgorithm_RKN1210,
     pcfIntegratorAlgorithm_GAUSS_JACKSON_8,
     pcfIntegratorAlgorithm_GAUSS_VOP,
     pcfIntegratorAlgorithm_DROMO,
-    pcfIntegratorAlgorithm_STIEFEL_SCHEIFELE,
+    pcfIntegratorAlgorithm_STIEFEL,
     pcfIntegratorAlgorithm_DOPRI853
   };
   return values;
@@ -579,13 +771,13 @@ inline const char * const *EnumNamespcfIntegratorAlgorithm() {
     "ENCKE",
     "EQUINOCTIAL_VOP",
     "DOPRI5",
-    "RK65_8M",
-    "VERNER_98",
-    "RKN12_10",
+    "RK65",
+    "RKV98",
+    "RKN1210",
     "GAUSS_JACKSON_8",
     "GAUSS_VOP",
     "DROMO",
-    "STIEFEL_SCHEIFELE",
+    "STIEFEL",
     "DOPRI853",
     nullptr
   };
@@ -1634,96 +1826,197 @@ inline ::flatbuffers::Offset<PCFFitPolicy> CreatePCFFitPolicyDirect(
       SRP_PRIOR);
 }
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
-struct PCFEventDefinition FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFEventDefinitionBuilder Builder;
+/// One term of an expression program.
+struct PCFExpressionTerm FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PCFExpressionTermBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_NAME = 4,
-    VT_LOCATOR_CLASS = 6,
-    VT_CONDITION = 8,
-    VT_ECLIPSE = 10,
-    VT_CONTACT = 12,
-    VT_INTRUSION = 14,
-    VT_APSIDES = 16,
-    VT_NODE_CROSSING = 18,
-    VT_ACTION = 20,
-    VT_EPOCH_TOLERANCE_SECONDS = 22,
-    VT_SCAN_STEP_SECONDS = 24,
-    VT_MAXIMUM_EVENTS = 26
+    VT_OPERATION = 4,
+    VT_VALUE = 6,
+    VT_PARAMETER = 8
   };
-  /// The caller's name for the event, echoed in the result. Default empty.
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  /// What the term does. Default UNSPECIFIED (refused).
+  pcfExpressionOperation OPERATION() const {
+    return static_cast<pcfExpressionOperation>(GetField<uint8_t>(VT_OPERATION, 0));
   }
-  /// Which locator. Default PARAMETER_CONDITION.
-  evlLocatorClass LOCATOR_CLASS() const {
-    return static_cast<evlLocatorClass>(GetField<uint8_t>(VT_LOCATOR_CLASS, 6));
+  /// The constant pushed by CONSTANT. Default 0.
+  double VALUE() const {
+    return GetField<double>(VT_VALUE, 0.0);
   }
-  /// Exactly the one of the next five that matches LOCATOR_CLASS is present
-  /// (any other combination is refused as MISSING_CONFIGURATION, as in
-  /// $EVL). The condition carries its own direction, goal value, goal
-  /// tolerance and occurrence.
-  const PCEParameterCondition *CONDITION() const {
-    return GetPointer<const PCEParameterCondition *>(VT_CONDITION);
-  }
-  const EVLEclipseConfiguration *ECLIPSE() const {
-    return GetPointer<const EVLEclipseConfiguration *>(VT_ECLIPSE);
-  }
-  const EVLContactConfiguration *CONTACT() const {
-    return GetPointer<const EVLContactConfiguration *>(VT_CONTACT);
-  }
-  const EVLIntrusionConfiguration *INTRUSION() const {
-    return GetPointer<const EVLIntrusionConfiguration *>(VT_INTRUSION);
-  }
-  const EVLApsidesConfiguration *APSIDES() const {
-    return GetPointer<const EVLApsidesConfiguration *>(VT_APSIDES);
-  }
-  const EVLNodeCrossingConfiguration *NODE_CROSSING() const {
-    return GetPointer<const EVLNodeCrossingConfiguration *>(VT_NODE_CROSSING);
-  }
-  /// What the propagator does at the event. Default RECORD.
-  pcfEventAction ACTION() const {
-    return static_cast<pcfEventAction>(GetField<uint8_t>(VT_ACTION, 3));
-  }
-  /// Convergence bar on the located epoch, seconds. Default 1e-9.
-  double EPOCH_TOLERANCE_SECONDS() const {
-    return GetField<double>(VT_EPOCH_TOLERANCE_SECONDS, 1e-9);
-  }
-  /// Step at which the event function is sampled before refinement, seconds;
-  /// 0 samples at the integrator's accepted steps. A root is found only when
-  /// the function changes sign within one sample interval. Default 0.
-  double SCAN_STEP_SECONDS() const {
-    return GetField<double>(VT_SCAN_STEP_SECONDS, 0.0);
-  }
-  /// Largest number of occurrences reported; 0 is no bound. Default 0.
-  uint32_t MAXIMUM_EVENTS() const {
-    return GetField<uint32_t>(VT_MAXIMUM_EVENTS, 0);
+  /// The catalog parameter pushed by PARAMETER. Default UNSPECIFIED.
+  pceParameter PARAMETER() const {
+    return static_cast<pceParameter>(GetField<uint16_t>(VT_PARAMETER, 0));
   }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_NAME) &&
-           verifier.VerifyString(NAME()) &&
-           VerifyField<uint8_t>(verifier, VT_LOCATOR_CLASS, 1) &&
-           VerifyOffset(verifier, VT_CONDITION) &&
-           verifier.VerifyTable(CONDITION()) &&
-           VerifyOffset(verifier, VT_ECLIPSE) &&
-           verifier.VerifyTable(ECLIPSE()) &&
-           VerifyOffset(verifier, VT_CONTACT) &&
-           verifier.VerifyTable(CONTACT()) &&
-           VerifyOffset(verifier, VT_INTRUSION) &&
-           verifier.VerifyTable(INTRUSION()) &&
-           VerifyOffset(verifier, VT_APSIDES) &&
-           verifier.VerifyTable(APSIDES()) &&
-           VerifyOffset(verifier, VT_NODE_CROSSING) &&
-           verifier.VerifyTable(NODE_CROSSING()) &&
+           VerifyField<uint8_t>(verifier, VT_OPERATION, 1) &&
+           VerifyField<double>(verifier, VT_VALUE, 8) &&
+           VerifyField<uint16_t>(verifier, VT_PARAMETER, 2) &&
+           verifier.EndTable();
+  }
+};
+
+struct PCFExpressionTermBuilder {
+  typedef PCFExpressionTerm Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_OPERATION(pcfExpressionOperation OPERATION) {
+    fbb_.AddElement<uint8_t>(PCFExpressionTerm::VT_OPERATION, static_cast<uint8_t>(OPERATION), 0);
+  }
+  void add_VALUE(double VALUE) {
+    fbb_.AddElement<double>(PCFExpressionTerm::VT_VALUE, VALUE, 0.0);
+  }
+  void add_PARAMETER(pceParameter PARAMETER) {
+    fbb_.AddElement<uint16_t>(PCFExpressionTerm::VT_PARAMETER, static_cast<uint16_t>(PARAMETER), 0);
+  }
+  explicit PCFExpressionTermBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PCFExpressionTerm> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PCFExpressionTerm>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PCFExpressionTerm> CreatePCFExpressionTerm(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    pcfExpressionOperation OPERATION = pcfExpressionOperation_UNSPECIFIED,
+    double VALUE = 0.0,
+    pceParameter PARAMETER = pceParameter_UNSPECIFIED) {
+  PCFExpressionTermBuilder builder_(_fbb);
+  builder_.add_VALUE(VALUE);
+  builder_.add_PARAMETER(PARAMETER);
+  builder_.add_OPERATION(OPERATION);
+  return builder_.Finish();
+}
+
+/// A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
+/// number.
+struct PCFExpression FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PCFExpressionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TERMS = 4
+  };
+  /// The terms, in evaluation order. Default empty.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PCFExpressionTerm>> *TERMS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PCFExpressionTerm>> *>(VT_TERMS);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_TERMS) &&
+           verifier.VerifyVector(TERMS()) &&
+           verifier.VerifyVectorOfTables(TERMS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PCFExpressionBuilder {
+  typedef PCFExpression Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TERMS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PCFExpressionTerm>>> TERMS) {
+    fbb_.AddOffset(PCFExpression::VT_TERMS, TERMS);
+  }
+  explicit PCFExpressionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PCFExpression> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PCFExpression>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PCFExpression> CreatePCFExpression(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PCFExpressionTerm>>> TERMS = 0) {
+  PCFExpressionBuilder builder_(_fbb);
+  builder_.add_TERMS(TERMS);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PCFExpression> CreatePCFExpressionDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<::flatbuffers::Offset<PCFExpressionTerm>> *TERMS = nullptr) {
+  auto TERMS__ = TERMS ? _fbb.CreateVector<::flatbuffers::Offset<PCFExpressionTerm>>(*TERMS) : 0;
+  return CreatePCFExpression(
+      _fbb,
+      TERMS__);
+}
+
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
+struct PCFEventDefinition FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PCFEventDefinitionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_KIND = 4,
+    VT_DIRECTION = 6,
+    VT_ACTION = 8,
+    VT_TOLERANCE_SECONDS = 10,
+    VT_OCCURRENCE = 12,
+    VT_ANGLE_RAD = 14,
+    VT_PLANE_NORMAL = 16,
+    VT_SECOND_TRAJECTORY_PORT = 18,
+    VT_EXPRESSION = 20
+  };
+  /// The event function. Default UNSPECIFIED (refused).
+  pcfEventKind KIND() const {
+    return static_cast<pcfEventKind>(GetField<uint8_t>(VT_KIND, 0));
+  }
+  /// Which zero crossings of the event function count. Default ANY.
+  pcfEventDirection DIRECTION() const {
+    return static_cast<pcfEventDirection>(GetField<uint8_t>(VT_DIRECTION, 0));
+  }
+  /// What the integrator does at the event. Default RECORD.
+  pcfEventAction ACTION() const {
+    return static_cast<pcfEventAction>(GetField<uint8_t>(VT_ACTION, 1));
+  }
+  /// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+  double TOLERANCE_SECONDS() const {
+    return GetField<double>(VT_TOLERANCE_SECONDS, 1e-9);
+  }
+  /// STOP acts at this qualifying crossing (1 is the first). Default 1.
+  uint32_t OCCURRENCE() const {
+    return GetField<uint32_t>(VT_OCCURRENCE, 1);
+  }
+  /// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+  double ANGLE_RAD() const {
+    return GetField<double>(VT_ANGLE_RAD, 0.0);
+  }
+  /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+  /// vector. Default absent (the pole of the axes).
+  const FRMVector3 *PLANE_NORMAL() const {
+    return GetPointer<const FRMVector3 *>(VT_PLANE_NORMAL);
+  }
+  /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+  /// as $OEM. Default empty.
+  const ::flatbuffers::String *SECOND_TRAJECTORY_PORT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SECOND_TRAJECTORY_PORT);
+  }
+  /// EXPRESSION: the program. Default absent.
+  const PCFExpression *EXPRESSION() const {
+    return GetPointer<const PCFExpression *>(VT_EXPRESSION);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_DIRECTION, 1) &&
            VerifyField<uint8_t>(verifier, VT_ACTION, 1) &&
-           VerifyField<double>(verifier, VT_EPOCH_TOLERANCE_SECONDS, 8) &&
-           VerifyField<double>(verifier, VT_SCAN_STEP_SECONDS, 8) &&
-           VerifyField<uint32_t>(verifier, VT_MAXIMUM_EVENTS, 4) &&
+           VerifyField<double>(verifier, VT_TOLERANCE_SECONDS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_OCCURRENCE, 4) &&
+           VerifyField<double>(verifier, VT_ANGLE_RAD, 8) &&
+           VerifyOffset(verifier, VT_PLANE_NORMAL) &&
+           verifier.VerifyTable(PLANE_NORMAL()) &&
+           VerifyOffset(verifier, VT_SECOND_TRAJECTORY_PORT) &&
+           verifier.VerifyString(SECOND_TRAJECTORY_PORT()) &&
+           VerifyOffset(verifier, VT_EXPRESSION) &&
+           verifier.VerifyTable(EXPRESSION()) &&
            verifier.EndTable();
   }
 };
@@ -1732,41 +2025,32 @@ struct PCFEventDefinitionBuilder {
   typedef PCFEventDefinition Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
-    fbb_.AddOffset(PCFEventDefinition::VT_NAME, NAME);
+  void add_KIND(pcfEventKind KIND) {
+    fbb_.AddElement<uint8_t>(PCFEventDefinition::VT_KIND, static_cast<uint8_t>(KIND), 0);
   }
-  void add_LOCATOR_CLASS(evlLocatorClass LOCATOR_CLASS) {
-    fbb_.AddElement<uint8_t>(PCFEventDefinition::VT_LOCATOR_CLASS, static_cast<uint8_t>(LOCATOR_CLASS), 6);
-  }
-  void add_CONDITION(::flatbuffers::Offset<PCEParameterCondition> CONDITION) {
-    fbb_.AddOffset(PCFEventDefinition::VT_CONDITION, CONDITION);
-  }
-  void add_ECLIPSE(::flatbuffers::Offset<EVLEclipseConfiguration> ECLIPSE) {
-    fbb_.AddOffset(PCFEventDefinition::VT_ECLIPSE, ECLIPSE);
-  }
-  void add_CONTACT(::flatbuffers::Offset<EVLContactConfiguration> CONTACT) {
-    fbb_.AddOffset(PCFEventDefinition::VT_CONTACT, CONTACT);
-  }
-  void add_INTRUSION(::flatbuffers::Offset<EVLIntrusionConfiguration> INTRUSION) {
-    fbb_.AddOffset(PCFEventDefinition::VT_INTRUSION, INTRUSION);
-  }
-  void add_APSIDES(::flatbuffers::Offset<EVLApsidesConfiguration> APSIDES) {
-    fbb_.AddOffset(PCFEventDefinition::VT_APSIDES, APSIDES);
-  }
-  void add_NODE_CROSSING(::flatbuffers::Offset<EVLNodeCrossingConfiguration> NODE_CROSSING) {
-    fbb_.AddOffset(PCFEventDefinition::VT_NODE_CROSSING, NODE_CROSSING);
+  void add_DIRECTION(pcfEventDirection DIRECTION) {
+    fbb_.AddElement<uint8_t>(PCFEventDefinition::VT_DIRECTION, static_cast<uint8_t>(DIRECTION), 0);
   }
   void add_ACTION(pcfEventAction ACTION) {
-    fbb_.AddElement<uint8_t>(PCFEventDefinition::VT_ACTION, static_cast<uint8_t>(ACTION), 3);
+    fbb_.AddElement<uint8_t>(PCFEventDefinition::VT_ACTION, static_cast<uint8_t>(ACTION), 1);
   }
-  void add_EPOCH_TOLERANCE_SECONDS(double EPOCH_TOLERANCE_SECONDS) {
-    fbb_.AddElement<double>(PCFEventDefinition::VT_EPOCH_TOLERANCE_SECONDS, EPOCH_TOLERANCE_SECONDS, 1e-9);
+  void add_TOLERANCE_SECONDS(double TOLERANCE_SECONDS) {
+    fbb_.AddElement<double>(PCFEventDefinition::VT_TOLERANCE_SECONDS, TOLERANCE_SECONDS, 1e-9);
   }
-  void add_SCAN_STEP_SECONDS(double SCAN_STEP_SECONDS) {
-    fbb_.AddElement<double>(PCFEventDefinition::VT_SCAN_STEP_SECONDS, SCAN_STEP_SECONDS, 0.0);
+  void add_OCCURRENCE(uint32_t OCCURRENCE) {
+    fbb_.AddElement<uint32_t>(PCFEventDefinition::VT_OCCURRENCE, OCCURRENCE, 1);
   }
-  void add_MAXIMUM_EVENTS(uint32_t MAXIMUM_EVENTS) {
-    fbb_.AddElement<uint32_t>(PCFEventDefinition::VT_MAXIMUM_EVENTS, MAXIMUM_EVENTS, 0);
+  void add_ANGLE_RAD(double ANGLE_RAD) {
+    fbb_.AddElement<double>(PCFEventDefinition::VT_ANGLE_RAD, ANGLE_RAD, 0.0);
+  }
+  void add_PLANE_NORMAL(::flatbuffers::Offset<FRMVector3> PLANE_NORMAL) {
+    fbb_.AddOffset(PCFEventDefinition::VT_PLANE_NORMAL, PLANE_NORMAL);
+  }
+  void add_SECOND_TRAJECTORY_PORT(::flatbuffers::Offset<::flatbuffers::String> SECOND_TRAJECTORY_PORT) {
+    fbb_.AddOffset(PCFEventDefinition::VT_SECOND_TRAJECTORY_PORT, SECOND_TRAJECTORY_PORT);
+  }
+  void add_EXPRESSION(::flatbuffers::Offset<PCFExpression> EXPRESSION) {
+    fbb_.AddOffset(PCFEventDefinition::VT_EXPRESSION, EXPRESSION);
   }
   explicit PCFEventDefinitionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -1781,63 +2065,51 @@ struct PCFEventDefinitionBuilder {
 
 inline ::flatbuffers::Offset<PCFEventDefinition> CreatePCFEventDefinition(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    evlLocatorClass LOCATOR_CLASS = evlLocatorClass_PARAMETER_CONDITION,
-    ::flatbuffers::Offset<PCEParameterCondition> CONDITION = 0,
-    ::flatbuffers::Offset<EVLEclipseConfiguration> ECLIPSE = 0,
-    ::flatbuffers::Offset<EVLContactConfiguration> CONTACT = 0,
-    ::flatbuffers::Offset<EVLIntrusionConfiguration> INTRUSION = 0,
-    ::flatbuffers::Offset<EVLApsidesConfiguration> APSIDES = 0,
-    ::flatbuffers::Offset<EVLNodeCrossingConfiguration> NODE_CROSSING = 0,
+    pcfEventKind KIND = pcfEventKind_UNSPECIFIED,
+    pcfEventDirection DIRECTION = pcfEventDirection_ANY,
     pcfEventAction ACTION = pcfEventAction_RECORD,
-    double EPOCH_TOLERANCE_SECONDS = 1e-9,
-    double SCAN_STEP_SECONDS = 0.0,
-    uint32_t MAXIMUM_EVENTS = 0) {
+    double TOLERANCE_SECONDS = 1e-9,
+    uint32_t OCCURRENCE = 1,
+    double ANGLE_RAD = 0.0,
+    ::flatbuffers::Offset<FRMVector3> PLANE_NORMAL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SECOND_TRAJECTORY_PORT = 0,
+    ::flatbuffers::Offset<PCFExpression> EXPRESSION = 0) {
   PCFEventDefinitionBuilder builder_(_fbb);
-  builder_.add_SCAN_STEP_SECONDS(SCAN_STEP_SECONDS);
-  builder_.add_EPOCH_TOLERANCE_SECONDS(EPOCH_TOLERANCE_SECONDS);
-  builder_.add_MAXIMUM_EVENTS(MAXIMUM_EVENTS);
-  builder_.add_NODE_CROSSING(NODE_CROSSING);
-  builder_.add_APSIDES(APSIDES);
-  builder_.add_INTRUSION(INTRUSION);
-  builder_.add_CONTACT(CONTACT);
-  builder_.add_ECLIPSE(ECLIPSE);
-  builder_.add_CONDITION(CONDITION);
-  builder_.add_NAME(NAME);
+  builder_.add_ANGLE_RAD(ANGLE_RAD);
+  builder_.add_TOLERANCE_SECONDS(TOLERANCE_SECONDS);
+  builder_.add_EXPRESSION(EXPRESSION);
+  builder_.add_SECOND_TRAJECTORY_PORT(SECOND_TRAJECTORY_PORT);
+  builder_.add_PLANE_NORMAL(PLANE_NORMAL);
+  builder_.add_OCCURRENCE(OCCURRENCE);
   builder_.add_ACTION(ACTION);
-  builder_.add_LOCATOR_CLASS(LOCATOR_CLASS);
+  builder_.add_DIRECTION(DIRECTION);
+  builder_.add_KIND(KIND);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<PCFEventDefinition> CreatePCFEventDefinitionDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *NAME = nullptr,
-    evlLocatorClass LOCATOR_CLASS = evlLocatorClass_PARAMETER_CONDITION,
-    ::flatbuffers::Offset<PCEParameterCondition> CONDITION = 0,
-    ::flatbuffers::Offset<EVLEclipseConfiguration> ECLIPSE = 0,
-    ::flatbuffers::Offset<EVLContactConfiguration> CONTACT = 0,
-    ::flatbuffers::Offset<EVLIntrusionConfiguration> INTRUSION = 0,
-    ::flatbuffers::Offset<EVLApsidesConfiguration> APSIDES = 0,
-    ::flatbuffers::Offset<EVLNodeCrossingConfiguration> NODE_CROSSING = 0,
+    pcfEventKind KIND = pcfEventKind_UNSPECIFIED,
+    pcfEventDirection DIRECTION = pcfEventDirection_ANY,
     pcfEventAction ACTION = pcfEventAction_RECORD,
-    double EPOCH_TOLERANCE_SECONDS = 1e-9,
-    double SCAN_STEP_SECONDS = 0.0,
-    uint32_t MAXIMUM_EVENTS = 0) {
-  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+    double TOLERANCE_SECONDS = 1e-9,
+    uint32_t OCCURRENCE = 1,
+    double ANGLE_RAD = 0.0,
+    ::flatbuffers::Offset<FRMVector3> PLANE_NORMAL = 0,
+    const char *SECOND_TRAJECTORY_PORT = nullptr,
+    ::flatbuffers::Offset<PCFExpression> EXPRESSION = 0) {
+  auto SECOND_TRAJECTORY_PORT__ = SECOND_TRAJECTORY_PORT ? _fbb.CreateString(SECOND_TRAJECTORY_PORT) : 0;
   return CreatePCFEventDefinition(
       _fbb,
-      NAME__,
-      LOCATOR_CLASS,
-      CONDITION,
-      ECLIPSE,
-      CONTACT,
-      INTRUSION,
-      APSIDES,
-      NODE_CROSSING,
+      KIND,
+      DIRECTION,
       ACTION,
-      EPOCH_TOLERANCE_SECONDS,
-      SCAN_STEP_SECONDS,
-      MAXIMUM_EVENTS);
+      TOLERANCE_SECONDS,
+      OCCURRENCE,
+      ANGLE_RAD,
+      PLANE_NORMAL,
+      SECOND_TRAJECTORY_PORT__,
+      EXPRESSION);
 }
 
 /// Maneuver detection from fit innovations: a generalized-likelihood-ratio

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PRWEventRecord, PRWEventRecordT } from './PRWEventRecord.js';
 import { PRWPropagationSample, PRWPropagationSampleT } from './PRWPropagationSample.js';
 import { prwDensityTreatment } from './prwDensityTreatment.js';
 import { prwDerivativeTechnique } from './prwDerivativeTechnique.js';
@@ -83,8 +84,47 @@ dynamicParametersArray():Uint8Array|null {
   return offset ? new Uint8Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * The located events with ACTION RECORD or STOP, in time order of propagation.
+ */
+EVENTS(index: number, obj?:PRWEventRecord):PRWEventRecord|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new PRWEventRecord()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+eventsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Per request EVENTS entry, the qualifying crossings the propagation passed.
+ */
+EVENT_OCCURRENCES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readUint32(this.bb!.__vector(this.bb_pos + offset) + index * 4) : 0;
+}
+
+eventOccurrencesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+eventOccurrencesArray():Uint32Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? new Uint32Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+ */
+STOPPED_BY_EVENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : -1;
+}
+
 static startPRWExecutionResult(builder:flatbuffers.Builder) {
-  builder.startObject(7);
+  builder.startObject(10);
 }
 
 static addFinalSample(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:flatbuffers.Offset) {
@@ -139,6 +179,47 @@ static startDynamicParametersVector(builder:flatbuffers.Builder, numElems:number
   builder.startVector(1, numElems, 1);
 }
 
+static addEvents(builder:flatbuffers.Builder, EVENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, EVENTSOffset, 0);
+}
+
+static createEventsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEventsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addEventOccurrences(builder:flatbuffers.Builder, EVENT_OCCURRENCESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, EVENT_OCCURRENCESOffset, 0);
+}
+
+static createEventOccurrencesVector(builder:flatbuffers.Builder, data:number[]|Uint32Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createEventOccurrencesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createEventOccurrencesVector(builder:flatbuffers.Builder, data:number[]|Uint32Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addInt32(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startEventOccurrencesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addStoppedByEvent(builder:flatbuffers.Builder, STOPPED_BY_EVENT:number) {
+  builder.addFieldInt32(9, STOPPED_BY_EVENT, -1);
+}
+
 static endPRWExecutionResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   builder.requiredField(offset, 4) // FINAL_SAMPLE
@@ -146,7 +227,7 @@ static endPRWExecutionResult(builder:flatbuffers.Builder):flatbuffers.Offset {
   return offset;
 }
 
-static createPRWExecutionResult(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:flatbuffers.Offset, SAMPLESOffset:flatbuffers.Offset, ELAPSED_SECONDS:number, EPHEMERIS_SOURCEOffset:flatbuffers.Offset, STM_TECHNIQUE:prwDerivativeTechnique, DENSITY_TREATMENT:prwDensityTreatment, DYNAMIC_PARAMETERSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createPRWExecutionResult(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:flatbuffers.Offset, SAMPLESOffset:flatbuffers.Offset, ELAPSED_SECONDS:number, EPHEMERIS_SOURCEOffset:flatbuffers.Offset, STM_TECHNIQUE:prwDerivativeTechnique, DENSITY_TREATMENT:prwDensityTreatment, DYNAMIC_PARAMETERSOffset:flatbuffers.Offset, EVENTSOffset:flatbuffers.Offset, EVENT_OCCURRENCESOffset:flatbuffers.Offset, STOPPED_BY_EVENT:number):flatbuffers.Offset {
   PRWExecutionResult.startPRWExecutionResult(builder);
   PRWExecutionResult.addFinalSample(builder, FINAL_SAMPLEOffset);
   PRWExecutionResult.addSamples(builder, SAMPLESOffset);
@@ -155,6 +236,9 @@ static createPRWExecutionResult(builder:flatbuffers.Builder, FINAL_SAMPLEOffset:
   PRWExecutionResult.addStmTechnique(builder, STM_TECHNIQUE);
   PRWExecutionResult.addDensityTreatment(builder, DENSITY_TREATMENT);
   PRWExecutionResult.addDynamicParameters(builder, DYNAMIC_PARAMETERSOffset);
+  PRWExecutionResult.addEvents(builder, EVENTSOffset);
+  PRWExecutionResult.addEventOccurrences(builder, EVENT_OCCURRENCESOffset);
+  PRWExecutionResult.addStoppedByEvent(builder, STOPPED_BY_EVENT);
   return PRWExecutionResult.endPRWExecutionResult(builder);
 }
 
@@ -166,7 +250,10 @@ unpack(): PRWExecutionResultT {
     this.EPHEMERIS_SOURCE(),
     this.STM_TECHNIQUE(),
     this.DENSITY_TREATMENT(),
-    this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength())
+    this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength()),
+    this.bb!.createObjList<PRWEventRecord, PRWEventRecordT>(this.EVENTS.bind(this), this.eventsLength()),
+    this.bb!.createScalarList<number>(this.EVENT_OCCURRENCES.bind(this), this.eventOccurrencesLength()),
+    this.STOPPED_BY_EVENT()
   );
 }
 
@@ -179,6 +266,9 @@ unpackTo(_o: PRWExecutionResultT): void {
   _o.STM_TECHNIQUE = this.STM_TECHNIQUE();
   _o.DENSITY_TREATMENT = this.DENSITY_TREATMENT();
   _o.DYNAMIC_PARAMETERS = this.bb!.createScalarList<prwDynamicParameter>(this.DYNAMIC_PARAMETERS.bind(this), this.dynamicParametersLength());
+  _o.EVENTS = this.bb!.createObjList<PRWEventRecord, PRWEventRecordT>(this.EVENTS.bind(this), this.eventsLength());
+  _o.EVENT_OCCURRENCES = this.bb!.createScalarList<number>(this.EVENT_OCCURRENCES.bind(this), this.eventOccurrencesLength());
+  _o.STOPPED_BY_EVENT = this.STOPPED_BY_EVENT();
 }
 }
 
@@ -190,7 +280,10 @@ constructor(
   public EPHEMERIS_SOURCE: string|Uint8Array|null = null,
   public STM_TECHNIQUE: prwDerivativeTechnique = prwDerivativeTechnique.UNSPECIFIED,
   public DENSITY_TREATMENT: prwDensityTreatment = prwDensityTreatment.UNSPECIFIED,
-  public DYNAMIC_PARAMETERS: (prwDynamicParameter)[] = []
+  public DYNAMIC_PARAMETERS: (prwDynamicParameter)[] = [],
+  public EVENTS: (PRWEventRecordT)[] = [],
+  public EVENT_OCCURRENCES: (number)[] = [],
+  public STOPPED_BY_EVENT: number = -1
 ){}
 
 
@@ -199,6 +292,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const SAMPLES = PRWExecutionResult.createSamplesVector(builder, builder.createObjectOffsetList(this.SAMPLES));
   const EPHEMERIS_SOURCE = (this.EPHEMERIS_SOURCE !== null ? builder.createString(this.EPHEMERIS_SOURCE!) : 0);
   const DYNAMIC_PARAMETERS = PRWExecutionResult.createDynamicParametersVector(builder, this.DYNAMIC_PARAMETERS);
+  const EVENTS = PRWExecutionResult.createEventsVector(builder, builder.createObjectOffsetList(this.EVENTS));
+  const EVENT_OCCURRENCES = PRWExecutionResult.createEventOccurrencesVector(builder, this.EVENT_OCCURRENCES);
 
   return PRWExecutionResult.createPRWExecutionResult(builder,
     FINAL_SAMPLE,
@@ -207,7 +302,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     EPHEMERIS_SOURCE,
     this.STM_TECHNIQUE,
     this.DENSITY_TREATMENT,
-    DYNAMIC_PARAMETERS
+    DYNAMIC_PARAMETERS,
+    EVENTS,
+    EVENT_OCCURRENCES,
+    this.STOPPED_BY_EVENT
   );
 }
 }

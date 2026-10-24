@@ -1,21 +1,19 @@
 /**
- * What a propagator does when a located event occurs. Append new values
- * only.
+ * What the integrator does at a located event. Append new values only.
  */
 export declare enum pcfEventAction {
-    UNSPECIFIED = 0,
     /**
-     * End the propagation at the event; the result carries its epoch and state.
+     * The event is located and counted; it is not reported.
      */
-    STOP = 1,
+    CONTINUE = 0,
     /**
-     * Make the event a step boundary only (the dynamics may change there) and
-     * report nothing about it.
+     * The event is located, counted and reported; propagation continues.
      */
-    CONTINUE = 2,
+    RECORD = 1,
     /**
-     * Report the event in the result and keep propagating.
+     * The event is reported and the propagation ends there: the final sample is the
+     * state at the OCCURRENCE-th qualifying crossing.
      */
-    RECORD = 3
+    STOP = 2
 }
 //# sourceMappingURL=pcfEventAction.d.ts.map

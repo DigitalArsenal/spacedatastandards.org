@@ -33,8 +33,11 @@ public enum evlLocatorClass: UInt8, FlatbuffersVectorInitializable, Enum, Verifi
   ///  crossings, latitude crossings and beta-angle limits are this class, not
   ///  classes of their own.
   case parameterCondition = 6
+  ///  Passage of the target through a maximum or a minimum of its geocentric
+  ///  latitude: the zero of the latitude rate, which no catalog parameter is.
+  case latitudeExtremum = 7
 
-  public static var max: evlLocatorClass { return .parameterCondition }
+  public static var max: evlLocatorClass { return .latitudeExtremum }
   public static var min: evlLocatorClass { return .unspecified }
 }
 
@@ -69,8 +72,12 @@ public enum evlEventType: UInt8, FlatbuffersVectorInitializable, Enum, Verifiabl
   case descendingNode = 11
   ///  A $PCE parameter condition was attained.
   case conditionSatisfied = 12
+  ///  Geocentric latitude at a maximum.
+  case maximumLatitude = 13
+  ///  Geocentric latitude at a minimum.
+  case minimumLatitude = 14
 
-  public static var max: evlEventType { return .conditionSatisfied }
+  public static var max: evlEventType { return .minimumLatitude }
   public static var min: evlEventType { return .unspecified }
 }
 
@@ -550,6 +557,7 @@ public struct EVLNodeCrossingConfiguration: FlatBufferVerifiableTable, Flatbuffe
     static let REFERENCE_COORDINATE_SYSTEM_NAME: VOffset = 4
     static let REPORT_ASCENDING: VOffset = 6
     static let REPORT_DESCENDING: VOffset = 8
+    static let PLANE_NORMAL: VOffset = 10
   }
 
   ///  Coordinate system whose reference plane defines the node line; resolves
@@ -558,23 +566,31 @@ public struct EVLNodeCrossingConfiguration: FlatBufferVerifiableTable, Flatbuffe
   public var REFERENCE_COORDINATE_SYSTEM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.REFERENCE_COORDINATE_SYSTEM_NAME) }
   public var REPORT_ASCENDING: Bool { let o = _accessor.offset(VT.REPORT_ASCENDING); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   public var REPORT_DESCENDING: Bool { let o = _accessor.offset(VT.REPORT_DESCENDING); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
-  public static func startEVLNodeCrossingConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  ///  Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+  ///  it need not be a unit vector. Absent or zero: the pole of those axes, which
+  ///  makes the crossings the nodes of its equator. Any other normal is an
+  ///  arbitrary plane through the center of the system.
+  public var PLANE_NORMAL: FRMVector3? { let o = _accessor.offset(VT.PLANE_NORMAL); return o == 0 ? nil : FRMVector3(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startEVLNodeCrossingConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
   public static func add(REFERENCE_COORDINATE_SYSTEM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_COORDINATE_SYSTEM_NAME, at: VT.REFERENCE_COORDINATE_SYSTEM_NAME) }
   public static func add(REPORT_ASCENDING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_ASCENDING, def: true,
    at: VT.REPORT_ASCENDING) }
   public static func add(REPORT_DESCENDING: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_DESCENDING, def: true,
    at: VT.REPORT_DESCENDING) }
+  public static func add(PLANE_NORMAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PLANE_NORMAL, at: VT.PLANE_NORMAL) }
   public static func endEVLNodeCrossingConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEVLNodeCrossingConfiguration(
     _ fbb: inout FlatBufferBuilder,
     REFERENCE_COORDINATE_SYSTEM_NAMEOffset REFERENCE_COORDINATE_SYSTEM_NAME: Offset = Offset(),
     REPORT_ASCENDING: Bool = true,
-    REPORT_DESCENDING: Bool = true
+    REPORT_DESCENDING: Bool = true,
+    PLANE_NORMALOffset PLANE_NORMAL: Offset = Offset()
   ) -> Offset {
     let __start = EVLNodeCrossingConfiguration.startEVLNodeCrossingConfiguration(&fbb)
     EVLNodeCrossingConfiguration.add(REFERENCE_COORDINATE_SYSTEM_NAME: REFERENCE_COORDINATE_SYSTEM_NAME, &fbb)
     EVLNodeCrossingConfiguration.add(REPORT_ASCENDING: REPORT_ASCENDING, &fbb)
     EVLNodeCrossingConfiguration.add(REPORT_DESCENDING: REPORT_DESCENDING, &fbb)
+    EVLNodeCrossingConfiguration.add(PLANE_NORMAL: PLANE_NORMAL, &fbb)
     return EVLNodeCrossingConfiguration.endEVLNodeCrossingConfiguration(&fbb, start: __start)
   }
 
@@ -583,6 +599,59 @@ public struct EVLNodeCrossingConfiguration: FlatBufferVerifiableTable, Flatbuffe
     try _v.visit(field: VT.REFERENCE_COORDINATE_SYSTEM_NAME, fieldName: "REFERENCE_COORDINATE_SYSTEM_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VT.REPORT_ASCENDING, fieldName: "REPORT_ASCENDING", required: false, type: Bool.self)
     try _v.visit(field: VT.REPORT_DESCENDING, fieldName: "REPORT_DESCENDING", required: false, type: Bool.self)
+    try _v.visit(field: VT.PLANE_NORMAL, fieldName: "PLANE_NORMAL", required: false, type: ForwardOffset<FRMVector3>.self)
+    _v.finish()
+  }
+}
+
+///  Configuration for LATITUDE_EXTREMUM.
+public struct EVLLatitudeExtremumConfiguration: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$EVL" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: EVLLatitudeExtremumConfiguration.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CENTRAL_BODY_ID: VOffset = 4
+    static let REPORT_MAXIMUM: VOffset = 6
+    static let REPORT_MINIMUM: VOffset = 8
+  }
+
+  ///  Ephemeris body code the latitude is measured about; the pole is that of
+  ///  the request context's axes.
+  public var CENTRAL_BODY_ID: Int32 { let o = _accessor.offset(VT.CENTRAL_BODY_ID); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  public var REPORT_MAXIMUM: Bool { let o = _accessor.offset(VT.REPORT_MAXIMUM); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public var REPORT_MINIMUM: Bool { let o = _accessor.offset(VT.REPORT_MINIMUM); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
+  public static func startEVLLatitudeExtremumConfiguration(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(CENTRAL_BODY_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTRAL_BODY_ID, def: 0, at: VT.CENTRAL_BODY_ID) }
+  public static func add(REPORT_MAXIMUM: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_MAXIMUM, def: true,
+   at: VT.REPORT_MAXIMUM) }
+  public static func add(REPORT_MINIMUM: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPORT_MINIMUM, def: true,
+   at: VT.REPORT_MINIMUM) }
+  public static func endEVLLatitudeExtremumConfiguration(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createEVLLatitudeExtremumConfiguration(
+    _ fbb: inout FlatBufferBuilder,
+    CENTRAL_BODY_ID: Int32 = 0,
+    REPORT_MAXIMUM: Bool = true,
+    REPORT_MINIMUM: Bool = true
+  ) -> Offset {
+    let __start = EVLLatitudeExtremumConfiguration.startEVLLatitudeExtremumConfiguration(&fbb)
+    EVLLatitudeExtremumConfiguration.add(CENTRAL_BODY_ID: CENTRAL_BODY_ID, &fbb)
+    EVLLatitudeExtremumConfiguration.add(REPORT_MAXIMUM: REPORT_MAXIMUM, &fbb)
+    EVLLatitudeExtremumConfiguration.add(REPORT_MINIMUM: REPORT_MINIMUM, &fbb)
+    return EVLLatitudeExtremumConfiguration.endEVLLatitudeExtremumConfiguration(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CENTRAL_BODY_ID, fieldName: "CENTRAL_BODY_ID", required: false, type: Int32.self)
+    try _v.visit(field: VT.REPORT_MAXIMUM, fieldName: "REPORT_MAXIMUM", required: false, type: Bool.self)
+    try _v.visit(field: VT.REPORT_MINIMUM, fieldName: "REPORT_MINIMUM", required: false, type: Bool.self)
     _v.finish()
   }
 }
@@ -851,6 +920,7 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
     static let NODE_CROSSING_CONFIGURATION: VOffset = 32
     static let PARAMETER_CONDITION_CONFIGURATION: VOffset = 34
     static let TRACE_ID: VOffset = 36
+    static let LATITUDE_EXTREMUM_CONFIGURATION: VOffset = 38
   }
 
   public var LOCATOR_CLASS: evlLocatorClass { let o = _accessor.offset(VT.LOCATOR_CLASS); return o == 0 ? .unspecified : evlLocatorClass(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .unspecified }
@@ -891,7 +961,8 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
   public var PARAMETER_CONDITION_CONFIGURATION: EVLParameterConditionConfiguration? { let o = _accessor.offset(VT.PARAMETER_CONDITION_CONFIGURATION); return o == 0 ? nil : EVLParameterConditionConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   public var TRACE_ID: String? { let o = _accessor.offset(VT.TRACE_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.TRACE_ID) }
-  public static func startEVLEventLocationRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
+  public var LATITUDE_EXTREMUM_CONFIGURATION: EVLLatitudeExtremumConfiguration? { let o = _accessor.offset(VT.LATITUDE_EXTREMUM_CONFIGURATION); return o == 0 ? nil : EVLLatitudeExtremumConfiguration(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startEVLEventLocationRequest(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
   public static func add(LOCATOR_CLASS: evlLocatorClass, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOCATOR_CLASS.rawValue, def: 0, at: VT.LOCATOR_CLASS) }
   public static func add(TARGET_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TARGET_OBJECT_ID, at: VT.TARGET_OBJECT_ID) }
   public static func add(CONTEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTEXT, at: VT.CONTEXT) }
@@ -909,6 +980,7 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
   public static func add(NODE_CROSSING_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NODE_CROSSING_CONFIGURATION, at: VT.NODE_CROSSING_CONFIGURATION) }
   public static func add(PARAMETER_CONDITION_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARAMETER_CONDITION_CONFIGURATION, at: VT.PARAMETER_CONDITION_CONFIGURATION) }
   public static func add(TRACE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACE_ID, at: VT.TRACE_ID) }
+  public static func add(LATITUDE_EXTREMUM_CONFIGURATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LATITUDE_EXTREMUM_CONFIGURATION, at: VT.LATITUDE_EXTREMUM_CONFIGURATION) }
   public static func endEVLEventLocationRequest(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createEVLEventLocationRequest(
     _ fbb: inout FlatBufferBuilder,
@@ -928,7 +1000,8 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
     APSIDES_CONFIGURATIONOffset APSIDES_CONFIGURATION: Offset = Offset(),
     NODE_CROSSING_CONFIGURATIONOffset NODE_CROSSING_CONFIGURATION: Offset = Offset(),
     PARAMETER_CONDITION_CONFIGURATIONOffset PARAMETER_CONDITION_CONFIGURATION: Offset = Offset(),
-    TRACE_IDOffset TRACE_ID: Offset = Offset()
+    TRACE_IDOffset TRACE_ID: Offset = Offset(),
+    LATITUDE_EXTREMUM_CONFIGURATIONOffset LATITUDE_EXTREMUM_CONFIGURATION: Offset = Offset()
   ) -> Offset {
     let __start = EVLEventLocationRequest.startEVLEventLocationRequest(&fbb)
     EVLEventLocationRequest.add(LOCATOR_CLASS: LOCATOR_CLASS, &fbb)
@@ -948,6 +1021,7 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
     EVLEventLocationRequest.add(NODE_CROSSING_CONFIGURATION: NODE_CROSSING_CONFIGURATION, &fbb)
     EVLEventLocationRequest.add(PARAMETER_CONDITION_CONFIGURATION: PARAMETER_CONDITION_CONFIGURATION, &fbb)
     EVLEventLocationRequest.add(TRACE_ID: TRACE_ID, &fbb)
+    EVLEventLocationRequest.add(LATITUDE_EXTREMUM_CONFIGURATION: LATITUDE_EXTREMUM_CONFIGURATION, &fbb)
     return EVLEventLocationRequest.endEVLEventLocationRequest(&fbb, start: __start)
   }
 
@@ -970,6 +1044,7 @@ public struct EVLEventLocationRequest: FlatBufferVerifiableTable, FlatbuffersVec
     try _v.visit(field: VT.NODE_CROSSING_CONFIGURATION, fieldName: "NODE_CROSSING_CONFIGURATION", required: false, type: ForwardOffset<EVLNodeCrossingConfiguration>.self)
     try _v.visit(field: VT.PARAMETER_CONDITION_CONFIGURATION, fieldName: "PARAMETER_CONDITION_CONFIGURATION", required: false, type: ForwardOffset<EVLParameterConditionConfiguration>.self)
     try _v.visit(field: VT.TRACE_ID, fieldName: "TRACE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VT.LATITUDE_EXTREMUM_CONFIGURATION, fieldName: "LATITUDE_EXTREMUM_CONFIGURATION", required: false, type: ForwardOffset<EVLLatitudeExtremumConfiguration>.self)
     _v.finish()
   }
 }

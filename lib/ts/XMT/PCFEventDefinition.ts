@@ -4,21 +4,17 @@
 
 import * as flatbuffers from 'flatbuffers';
 
-import { EVLApsidesConfiguration, EVLApsidesConfigurationT } from './EVLApsidesConfiguration.js';
-import { EVLContactConfiguration, EVLContactConfigurationT } from './EVLContactConfiguration.js';
-import { EVLEclipseConfiguration, EVLEclipseConfigurationT } from './EVLEclipseConfiguration.js';
-import { EVLIntrusionConfiguration, EVLIntrusionConfigurationT } from './EVLIntrusionConfiguration.js';
-import { EVLNodeCrossingConfiguration, EVLNodeCrossingConfigurationT } from './EVLNodeCrossingConfiguration.js';
-import { PCEParameterCondition, PCEParameterConditionT } from './PCEParameterCondition.js';
-import { evlLocatorClass } from './evlLocatorClass.js';
+import { FRMVector3, FRMVector3T } from './FRMVector3.js';
+import { PCFExpression, PCFExpressionT } from './PCFExpression.js';
 import { pcfEventAction } from './pcfEventAction.js';
+import { pcfEventDirection } from './pcfEventDirection.js';
+import { pcfEventKind } from './pcfEventKind.js';
 
 
 /**
- * One event a propagator locates while it integrates. The vocabulary is
- * $EVL's: a locator class with its configuration, and $PCE's parameter
- * condition for the generic case (an altitude, radius, speed, radial
- * velocity or mass crossing is a $PCE parameter, not a class of its own).
+ * One event to locate inside the integration. A $PCF carries the list; a $PRW
+ * execution request carries the same definitions beside the integrator settings,
+ * and a located event comes back as a PRWEventRecord.
  */
 export class PCFEventDefinition implements flatbuffers.IUnpackableObject<PCFEventDefinitionT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -39,143 +35,119 @@ static getSizePrefixedRootAsPCFEventDefinition(bb:flatbuffers.ByteBuffer, obj?:P
 }
 
 /**
- * The caller's name for the event, echoed in the result. Default empty.
+ * The event function. Default UNSPECIFIED (refused).
  */
-NAME():string|null
-NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NAME(optionalEncoding?:any):string|Uint8Array|null {
+KIND():pcfEventKind {
   const offset = this.bb!.__offset(this.bb_pos, 4);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfEventKind.UNSPECIFIED;
 }
 
 /**
- * Which locator. Default PARAMETER_CONDITION.
+ * Which zero crossings of the event function count. Default ANY.
  */
-LOCATOR_CLASS():evlLocatorClass {
+DIRECTION():pcfEventDirection {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readUint8(this.bb_pos + offset) : evlLocatorClass.PARAMETER_CONDITION;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfEventDirection.ANY;
 }
 
 /**
- * Exactly the one of the next five that matches LOCATOR_CLASS is present
- * (any other combination is refused as MISSING_CONFIGURATION, as in
- * $EVL). The condition carries its own direction, goal value, goal
- * tolerance and occurrence.
- */
-CONDITION(obj?:PCEParameterCondition):PCEParameterCondition|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? (obj || new PCEParameterCondition()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-ECLIPSE(obj?:EVLEclipseConfiguration):EVLEclipseConfiguration|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? (obj || new EVLEclipseConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-CONTACT(obj?:EVLContactConfiguration):EVLContactConfiguration|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? (obj || new EVLContactConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-INTRUSION(obj?:EVLIntrusionConfiguration):EVLIntrusionConfiguration|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? (obj || new EVLIntrusionConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-APSIDES(obj?:EVLApsidesConfiguration):EVLApsidesConfiguration|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? (obj || new EVLApsidesConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-NODE_CROSSING(obj?:EVLNodeCrossingConfiguration):EVLNodeCrossingConfiguration|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? (obj || new EVLNodeCrossingConfiguration()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
- * What the propagator does at the event. Default RECORD.
+ * What the integrator does at the event. Default RECORD.
  */
 ACTION():pcfEventAction {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.readUint8(this.bb_pos + offset) : pcfEventAction.RECORD;
 }
 
 /**
- * Convergence bar on the located epoch, seconds. Default 1e-9.
+ * Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
  */
-EPOCH_TOLERANCE_SECONDS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+TOLERANCE_SECONDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 1e-9;
 }
 
 /**
- * Step at which the event function is sampled before refinement, seconds;
- * 0 samples at the integrator's accepted steps. A root is found only when
- * the function changes sign within one sample interval. Default 0.
+ * STOP acts at this qualifying crossing (1 is the first). Default 1.
  */
-SCAN_STEP_SECONDS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+OCCURRENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 1;
+}
+
+/**
+ * TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+ */
+ANGLE_RAD():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
 /**
- * Largest number of occurrences reported; 0 is no bound. Default 0.
+ * PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+ * vector. Default absent (the pole of the axes).
  */
-MAXIMUM_EVENTS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+PLANE_NORMAL(obj?:FRMVector3):FRMVector3|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? (obj || new FRMVector3()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+ * as $OEM. Default empty.
+ */
+SECOND_TRAJECTORY_PORT():string|null
+SECOND_TRAJECTORY_PORT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SECOND_TRAJECTORY_PORT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * EXPRESSION: the program. Default absent.
+ */
+EXPRESSION(obj?:PCFExpression):PCFExpression|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new PCFExpression()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 static startPCFEventDefinition(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(9);
 }
 
-static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, NAMEOffset, 0);
+static addKind(builder:flatbuffers.Builder, KIND:pcfEventKind) {
+  builder.addFieldInt8(0, KIND, pcfEventKind.UNSPECIFIED);
 }
 
-static addLocatorClass(builder:flatbuffers.Builder, LOCATOR_CLASS:evlLocatorClass) {
-  builder.addFieldInt8(1, LOCATOR_CLASS, evlLocatorClass.PARAMETER_CONDITION);
-}
-
-static addCondition(builder:flatbuffers.Builder, CONDITIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, CONDITIONOffset, 0);
-}
-
-static addEclipse(builder:flatbuffers.Builder, ECLIPSEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ECLIPSEOffset, 0);
-}
-
-static addContact(builder:flatbuffers.Builder, CONTACTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, CONTACTOffset, 0);
-}
-
-static addIntrusion(builder:flatbuffers.Builder, INTRUSIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, INTRUSIONOffset, 0);
-}
-
-static addApsides(builder:flatbuffers.Builder, APSIDESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, APSIDESOffset, 0);
-}
-
-static addNodeCrossing(builder:flatbuffers.Builder, NODE_CROSSINGOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, NODE_CROSSINGOffset, 0);
+static addDirection(builder:flatbuffers.Builder, DIRECTION:pcfEventDirection) {
+  builder.addFieldInt8(1, DIRECTION, pcfEventDirection.ANY);
 }
 
 static addAction(builder:flatbuffers.Builder, ACTION:pcfEventAction) {
-  builder.addFieldInt8(8, ACTION, pcfEventAction.RECORD);
+  builder.addFieldInt8(2, ACTION, pcfEventAction.RECORD);
 }
 
-static addEpochToleranceSeconds(builder:flatbuffers.Builder, EPOCH_TOLERANCE_SECONDS:number) {
-  builder.addFieldFloat64(9, EPOCH_TOLERANCE_SECONDS, 1e-9);
+static addToleranceSeconds(builder:flatbuffers.Builder, TOLERANCE_SECONDS:number) {
+  builder.addFieldFloat64(3, TOLERANCE_SECONDS, 1e-9);
 }
 
-static addScanStepSeconds(builder:flatbuffers.Builder, SCAN_STEP_SECONDS:number) {
-  builder.addFieldFloat64(10, SCAN_STEP_SECONDS, 0.0);
+static addOccurrence(builder:flatbuffers.Builder, OCCURRENCE:number) {
+  builder.addFieldInt32(4, OCCURRENCE, 1);
 }
 
-static addMaximumEvents(builder:flatbuffers.Builder, MAXIMUM_EVENTS:number) {
-  builder.addFieldInt32(11, MAXIMUM_EVENTS, 0);
+static addAngleRad(builder:flatbuffers.Builder, ANGLE_RAD:number) {
+  builder.addFieldFloat64(5, ANGLE_RAD, 0.0);
+}
+
+static addPlaneNormal(builder:flatbuffers.Builder, PLANE_NORMALOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, PLANE_NORMALOffset, 0);
+}
+
+static addSecondTrajectoryPort(builder:flatbuffers.Builder, SECOND_TRAJECTORY_PORTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, SECOND_TRAJECTORY_PORTOffset, 0);
+}
+
+static addExpression(builder:flatbuffers.Builder, EXPRESSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, EXPRESSIONOffset, 0);
 }
 
 static endPCFEventDefinition(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -186,77 +158,61 @@ static endPCFEventDefinition(builder:flatbuffers.Builder):flatbuffers.Offset {
 
 unpack(): PCFEventDefinitionT {
   return new PCFEventDefinitionT(
-    this.NAME(),
-    this.LOCATOR_CLASS(),
-    (this.CONDITION() !== null ? this.CONDITION()!.unpack() : null),
-    (this.ECLIPSE() !== null ? this.ECLIPSE()!.unpack() : null),
-    (this.CONTACT() !== null ? this.CONTACT()!.unpack() : null),
-    (this.INTRUSION() !== null ? this.INTRUSION()!.unpack() : null),
-    (this.APSIDES() !== null ? this.APSIDES()!.unpack() : null),
-    (this.NODE_CROSSING() !== null ? this.NODE_CROSSING()!.unpack() : null),
+    this.KIND(),
+    this.DIRECTION(),
     this.ACTION(),
-    this.EPOCH_TOLERANCE_SECONDS(),
-    this.SCAN_STEP_SECONDS(),
-    this.MAXIMUM_EVENTS()
+    this.TOLERANCE_SECONDS(),
+    this.OCCURRENCE(),
+    this.ANGLE_RAD(),
+    (this.PLANE_NORMAL() !== null ? this.PLANE_NORMAL()!.unpack() : null),
+    this.SECOND_TRAJECTORY_PORT(),
+    (this.EXPRESSION() !== null ? this.EXPRESSION()!.unpack() : null)
   );
 }
 
 
 unpackTo(_o: PCFEventDefinitionT): void {
-  _o.NAME = this.NAME();
-  _o.LOCATOR_CLASS = this.LOCATOR_CLASS();
-  _o.CONDITION = (this.CONDITION() !== null ? this.CONDITION()!.unpack() : null);
-  _o.ECLIPSE = (this.ECLIPSE() !== null ? this.ECLIPSE()!.unpack() : null);
-  _o.CONTACT = (this.CONTACT() !== null ? this.CONTACT()!.unpack() : null);
-  _o.INTRUSION = (this.INTRUSION() !== null ? this.INTRUSION()!.unpack() : null);
-  _o.APSIDES = (this.APSIDES() !== null ? this.APSIDES()!.unpack() : null);
-  _o.NODE_CROSSING = (this.NODE_CROSSING() !== null ? this.NODE_CROSSING()!.unpack() : null);
+  _o.KIND = this.KIND();
+  _o.DIRECTION = this.DIRECTION();
   _o.ACTION = this.ACTION();
-  _o.EPOCH_TOLERANCE_SECONDS = this.EPOCH_TOLERANCE_SECONDS();
-  _o.SCAN_STEP_SECONDS = this.SCAN_STEP_SECONDS();
-  _o.MAXIMUM_EVENTS = this.MAXIMUM_EVENTS();
+  _o.TOLERANCE_SECONDS = this.TOLERANCE_SECONDS();
+  _o.OCCURRENCE = this.OCCURRENCE();
+  _o.ANGLE_RAD = this.ANGLE_RAD();
+  _o.PLANE_NORMAL = (this.PLANE_NORMAL() !== null ? this.PLANE_NORMAL()!.unpack() : null);
+  _o.SECOND_TRAJECTORY_PORT = this.SECOND_TRAJECTORY_PORT();
+  _o.EXPRESSION = (this.EXPRESSION() !== null ? this.EXPRESSION()!.unpack() : null);
 }
 }
 
 export class PCFEventDefinitionT implements flatbuffers.IGeneratedObject {
 constructor(
-  public NAME: string|Uint8Array|null = null,
-  public LOCATOR_CLASS: evlLocatorClass = evlLocatorClass.PARAMETER_CONDITION,
-  public CONDITION: PCEParameterConditionT|null = null,
-  public ECLIPSE: EVLEclipseConfigurationT|null = null,
-  public CONTACT: EVLContactConfigurationT|null = null,
-  public INTRUSION: EVLIntrusionConfigurationT|null = null,
-  public APSIDES: EVLApsidesConfigurationT|null = null,
-  public NODE_CROSSING: EVLNodeCrossingConfigurationT|null = null,
+  public KIND: pcfEventKind = pcfEventKind.UNSPECIFIED,
+  public DIRECTION: pcfEventDirection = pcfEventDirection.ANY,
   public ACTION: pcfEventAction = pcfEventAction.RECORD,
-  public EPOCH_TOLERANCE_SECONDS: number = 1e-9,
-  public SCAN_STEP_SECONDS: number = 0.0,
-  public MAXIMUM_EVENTS: number = 0
+  public TOLERANCE_SECONDS: number = 1e-9,
+  public OCCURRENCE: number = 1,
+  public ANGLE_RAD: number = 0.0,
+  public PLANE_NORMAL: FRMVector3T|null = null,
+  public SECOND_TRAJECTORY_PORT: string|Uint8Array|null = null,
+  public EXPRESSION: PCFExpressionT|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
-  const CONDITION = (this.CONDITION !== null ? this.CONDITION!.pack(builder) : 0);
-  const ECLIPSE = (this.ECLIPSE !== null ? this.ECLIPSE!.pack(builder) : 0);
-  const CONTACT = (this.CONTACT !== null ? this.CONTACT!.pack(builder) : 0);
-  const INTRUSION = (this.INTRUSION !== null ? this.INTRUSION!.pack(builder) : 0);
-  const APSIDES = (this.APSIDES !== null ? this.APSIDES!.pack(builder) : 0);
-  const NODE_CROSSING = (this.NODE_CROSSING !== null ? this.NODE_CROSSING!.pack(builder) : 0);
+  const PLANE_NORMAL = (this.PLANE_NORMAL !== null ? this.PLANE_NORMAL!.pack(builder) : 0);
+  const SECOND_TRAJECTORY_PORT = (this.SECOND_TRAJECTORY_PORT !== null ? builder.createString(this.SECOND_TRAJECTORY_PORT!) : 0);
+  const EXPRESSION = (this.EXPRESSION !== null ? this.EXPRESSION!.pack(builder) : 0);
 
   PCFEventDefinition.startPCFEventDefinition(builder);
-  PCFEventDefinition.addName(builder, NAME);
-  PCFEventDefinition.addLocatorClass(builder, this.LOCATOR_CLASS);
-  PCFEventDefinition.addCondition(builder, CONDITION);
-  PCFEventDefinition.addEclipse(builder, ECLIPSE);
-  PCFEventDefinition.addContact(builder, CONTACT);
-  PCFEventDefinition.addIntrusion(builder, INTRUSION);
-  PCFEventDefinition.addApsides(builder, APSIDES);
-  PCFEventDefinition.addNodeCrossing(builder, NODE_CROSSING);
+  PCFEventDefinition.addKind(builder, this.KIND);
+  PCFEventDefinition.addDirection(builder, this.DIRECTION);
   PCFEventDefinition.addAction(builder, this.ACTION);
-  PCFEventDefinition.addEpochToleranceSeconds(builder, this.EPOCH_TOLERANCE_SECONDS);
-  PCFEventDefinition.addScanStepSeconds(builder, this.SCAN_STEP_SECONDS);
-  PCFEventDefinition.addMaximumEvents(builder, this.MAXIMUM_EVENTS);
+  PCFEventDefinition.addToleranceSeconds(builder, this.TOLERANCE_SECONDS);
+  PCFEventDefinition.addOccurrence(builder, this.OCCURRENCE);
+  PCFEventDefinition.addAngleRad(builder, this.ANGLE_RAD);
+  PCFEventDefinition.addPlaneNormal(builder, PLANE_NORMAL);
+  PCFEventDefinition.addSecondTrajectoryPort(builder, SECOND_TRAJECTORY_PORT);
+  PCFEventDefinition.addExpression(builder, EXPRESSION);
 
   return PCFEventDefinition.endPCFEventDefinition(builder);
 }

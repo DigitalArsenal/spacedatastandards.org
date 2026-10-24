@@ -64,6 +64,9 @@ struct PRWBurnBoundaryBuilder;
 struct PRWFiniteBurn;
 struct PRWFiniteBurnBuilder;
 
+struct PRWEventRecord;
+struct PRWEventRecordBuilder;
+
 struct PRWExecutionRequest;
 struct PRWExecutionRequestBuilder;
 
@@ -2252,6 +2255,131 @@ inline ::flatbuffers::Offset<PRWFiniteBurn> CreatePRWFiniteBurnDirect(
       THROTTLE__);
 }
 
+/// A located event.
+struct PRWEventRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PRWEventRecordBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EVENT_INDEX = 4,
+    VT_KIND = 6,
+    VT_DIRECTION = 8,
+    VT_EPOCH = 10,
+    VT_ELAPSED_SECONDS = 12,
+    VT_STATE = 14,
+    VT_RESIDUAL = 16,
+    VT_ITERATIONS = 18
+  };
+  /// Index into the request's EVENTS.
+  uint32_t EVENT_INDEX() const {
+    return GetField<uint32_t>(VT_EVENT_INDEX, 0);
+  }
+  /// The event function that crossed zero.
+  pcfEventKind KIND() const {
+    return static_cast<pcfEventKind>(GetField<uint8_t>(VT_KIND, 0));
+  }
+  /// The way g crossed zero: INCREASING or DECREASING.
+  pcfEventDirection DIRECTION() const {
+    return static_cast<pcfEventDirection>(GetField<uint8_t>(VT_DIRECTION, 0));
+  }
+  /// Epoch of the crossing.
+  const TIMInstant *EPOCH() const {
+    return GetPointer<const TIMInstant *>(VT_EPOCH);
+  }
+  /// Seconds from the request's initial epoch, negative for a backward propagation.
+  double ELAPSED_SECONDS() const {
+    return GetField<double>(VT_ELAPSED_SECONDS, 0.0);
+  }
+  /// The state at EPOCH in the request's axes.
+  const PRWResidentState *STATE() const {
+    return GetPointer<const PRWResidentState *>(VT_STATE);
+  }
+  /// g at EPOCH.
+  double RESIDUAL() const {
+    return GetField<double>(VT_RESIDUAL, 0.0);
+  }
+  /// Refinement steps taken.
+  uint32_t ITERATIONS() const {
+    return GetField<uint32_t>(VT_ITERATIONS, 0);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint32_t>(verifier, VT_EVENT_INDEX, 4) &&
+           VerifyField<uint8_t>(verifier, VT_KIND, 1) &&
+           VerifyField<uint8_t>(verifier, VT_DIRECTION, 1) &&
+           VerifyOffsetRequired(verifier, VT_EPOCH) &&
+           verifier.VerifyTable(EPOCH()) &&
+           VerifyField<double>(verifier, VT_ELAPSED_SECONDS, 8) &&
+           VerifyOffsetRequired(verifier, VT_STATE) &&
+           verifier.VerifyTable(STATE()) &&
+           VerifyField<double>(verifier, VT_RESIDUAL, 8) &&
+           VerifyField<uint32_t>(verifier, VT_ITERATIONS, 4) &&
+           verifier.EndTable();
+  }
+};
+
+struct PRWEventRecordBuilder {
+  typedef PRWEventRecord Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EVENT_INDEX(uint32_t EVENT_INDEX) {
+    fbb_.AddElement<uint32_t>(PRWEventRecord::VT_EVENT_INDEX, EVENT_INDEX, 0);
+  }
+  void add_KIND(pcfEventKind KIND) {
+    fbb_.AddElement<uint8_t>(PRWEventRecord::VT_KIND, static_cast<uint8_t>(KIND), 0);
+  }
+  void add_DIRECTION(pcfEventDirection DIRECTION) {
+    fbb_.AddElement<uint8_t>(PRWEventRecord::VT_DIRECTION, static_cast<uint8_t>(DIRECTION), 0);
+  }
+  void add_EPOCH(::flatbuffers::Offset<TIMInstant> EPOCH) {
+    fbb_.AddOffset(PRWEventRecord::VT_EPOCH, EPOCH);
+  }
+  void add_ELAPSED_SECONDS(double ELAPSED_SECONDS) {
+    fbb_.AddElement<double>(PRWEventRecord::VT_ELAPSED_SECONDS, ELAPSED_SECONDS, 0.0);
+  }
+  void add_STATE(::flatbuffers::Offset<PRWResidentState> STATE) {
+    fbb_.AddOffset(PRWEventRecord::VT_STATE, STATE);
+  }
+  void add_RESIDUAL(double RESIDUAL) {
+    fbb_.AddElement<double>(PRWEventRecord::VT_RESIDUAL, RESIDUAL, 0.0);
+  }
+  void add_ITERATIONS(uint32_t ITERATIONS) {
+    fbb_.AddElement<uint32_t>(PRWEventRecord::VT_ITERATIONS, ITERATIONS, 0);
+  }
+  explicit PRWEventRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PRWEventRecord> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PRWEventRecord>(end);
+    fbb_.Required(o, PRWEventRecord::VT_EPOCH);
+    fbb_.Required(o, PRWEventRecord::VT_STATE);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PRWEventRecord> CreatePRWEventRecord(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    uint32_t EVENT_INDEX = 0,
+    pcfEventKind KIND = pcfEventKind_UNSPECIFIED,
+    pcfEventDirection DIRECTION = pcfEventDirection_ANY,
+    ::flatbuffers::Offset<TIMInstant> EPOCH = 0,
+    double ELAPSED_SECONDS = 0.0,
+    ::flatbuffers::Offset<PRWResidentState> STATE = 0,
+    double RESIDUAL = 0.0,
+    uint32_t ITERATIONS = 0) {
+  PRWEventRecordBuilder builder_(_fbb);
+  builder_.add_RESIDUAL(RESIDUAL);
+  builder_.add_ELAPSED_SECONDS(ELAPSED_SECONDS);
+  builder_.add_ITERATIONS(ITERATIONS);
+  builder_.add_STATE(STATE);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_EVENT_INDEX(EVENT_INDEX);
+  builder_.add_DIRECTION(DIRECTION);
+  builder_.add_KIND(KIND);
+  return builder_.Finish();
+}
+
 /// Fixed endpoint propagation. Provider selected by the host's connected port.
 struct PRWExecutionRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef PRWExecutionRequestBuilder Builder;
@@ -2270,7 +2398,8 @@ struct PRWExecutionRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
     VT_INCLUDE_MASS_DYNAMICS = 26,
     VT_FINITE_BURNS = 28,
     VT_PROCESS_NOISE = 30,
-    VT_DYNAMIC_PARAMETERS = 32
+    VT_DYNAMIC_PARAMETERS = 32,
+    VT_EVENTS = 34
   };
   const PRWResidentState *INITIAL() const {
     return GetPointer<const PRWResidentState *>(VT_INITIAL);
@@ -2323,6 +2452,13 @@ struct PRWExecutionRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
   const ::flatbuffers::Vector<uint8_t> *DYNAMIC_PARAMETERS() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_DYNAMIC_PARAMETERS);
   }
+  /// Events located inside the integration (PCFEventDefinition, shared with $PCF).
+  /// They apply to a plain state propagation (no STM, covariance, samples, impulses
+  /// or burns) by an integrator with a continuous extension; any other request that
+  /// names events is refused. Default empty.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>> *EVENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>> *>(VT_EVENTS);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2355,6 +2491,9 @@ struct PRWExecutionRequest FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Tabl
            verifier.VerifyTable(PROCESS_NOISE()) &&
            VerifyOffset(verifier, VT_DYNAMIC_PARAMETERS) &&
            verifier.VerifyVector(DYNAMIC_PARAMETERS()) &&
+           VerifyOffset(verifier, VT_EVENTS) &&
+           verifier.VerifyVector(EVENTS()) &&
+           verifier.VerifyVectorOfTables(EVENTS()) &&
            verifier.EndTable();
   }
 };
@@ -2408,6 +2547,9 @@ struct PRWExecutionRequestBuilder {
   void add_DYNAMIC_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> DYNAMIC_PARAMETERS) {
     fbb_.AddOffset(PRWExecutionRequest::VT_DYNAMIC_PARAMETERS, DYNAMIC_PARAMETERS);
   }
+  void add_EVENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>>> EVENTS) {
+    fbb_.AddOffset(PRWExecutionRequest::VT_EVENTS, EVENTS);
+  }
   explicit PRWExecutionRequestBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2439,8 +2581,10 @@ inline ::flatbuffers::Offset<PRWExecutionRequest> CreatePRWExecutionRequest(
     bool INCLUDE_MASS_DYNAMICS = false,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PRWFiniteBurn>>> FINITE_BURNS = 0,
     ::flatbuffers::Offset<PRWProcessNoise> PROCESS_NOISE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> DYNAMIC_PARAMETERS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> DYNAMIC_PARAMETERS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>>> EVENTS = 0) {
   PRWExecutionRequestBuilder builder_(_fbb);
+  builder_.add_EVENTS(EVENTS);
   builder_.add_DYNAMIC_PARAMETERS(DYNAMIC_PARAMETERS);
   builder_.add_PROCESS_NOISE(PROCESS_NOISE);
   builder_.add_FINITE_BURNS(FINITE_BURNS);
@@ -2475,11 +2619,13 @@ inline ::flatbuffers::Offset<PRWExecutionRequest> CreatePRWExecutionRequestDirec
     bool INCLUDE_MASS_DYNAMICS = false,
     const std::vector<::flatbuffers::Offset<PRWFiniteBurn>> *FINITE_BURNS = nullptr,
     ::flatbuffers::Offset<PRWProcessNoise> PROCESS_NOISE = 0,
-    const std::vector<uint8_t> *DYNAMIC_PARAMETERS = nullptr) {
+    const std::vector<uint8_t> *DYNAMIC_PARAMETERS = nullptr,
+    const std::vector<::flatbuffers::Offset<PCFEventDefinition>> *EVENTS = nullptr) {
   auto SAMPLE_EPOCHS__ = SAMPLE_EPOCHS ? _fbb.CreateVector<::flatbuffers::Offset<TIMInstant>>(*SAMPLE_EPOCHS) : 0;
   auto IMPULSES__ = IMPULSES ? _fbb.CreateVector<::flatbuffers::Offset<PRWImpulse>>(*IMPULSES) : 0;
   auto FINITE_BURNS__ = FINITE_BURNS ? _fbb.CreateVector<::flatbuffers::Offset<PRWFiniteBurn>>(*FINITE_BURNS) : 0;
   auto DYNAMIC_PARAMETERS__ = DYNAMIC_PARAMETERS ? _fbb.CreateVector<uint8_t>(*DYNAMIC_PARAMETERS) : 0;
+  auto EVENTS__ = EVENTS ? _fbb.CreateVector<::flatbuffers::Offset<PCFEventDefinition>>(*EVENTS) : 0;
   return CreatePRWExecutionRequest(
       _fbb,
       INITIAL,
@@ -2496,7 +2642,8 @@ inline ::flatbuffers::Offset<PRWExecutionRequest> CreatePRWExecutionRequestDirec
       INCLUDE_MASS_DYNAMICS,
       FINITE_BURNS__,
       PROCESS_NOISE,
-      DYNAMIC_PARAMETERS__);
+      DYNAMIC_PARAMETERS__,
+      EVENTS__);
 }
 
 /// Burn times absent until reached; zero means an actual edge at initial epoch.
@@ -2834,7 +2981,10 @@ struct PRWExecutionResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
     VT_EPHEMERIS_SOURCE = 10,
     VT_STM_TECHNIQUE = 12,
     VT_DENSITY_TREATMENT = 14,
-    VT_DYNAMIC_PARAMETERS = 16
+    VT_DYNAMIC_PARAMETERS = 16,
+    VT_EVENTS = 18,
+    VT_EVENT_OCCURRENCES = 20,
+    VT_STOPPED_BY_EVENT = 22
   };
   const PRWPropagationSample *FINAL_SAMPLE() const {
     return GetPointer<const PRWPropagationSample *>(VT_FINAL_SAMPLE);
@@ -2858,6 +3008,18 @@ struct PRWExecutionResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
   const ::flatbuffers::Vector<uint8_t> *DYNAMIC_PARAMETERS() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_DYNAMIC_PARAMETERS);
   }
+  /// The located events with ACTION RECORD or STOP, in time order of propagation.
+  const ::flatbuffers::Vector<::flatbuffers::Offset<PRWEventRecord>> *EVENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PRWEventRecord>> *>(VT_EVENTS);
+  }
+  /// Per request EVENTS entry, the qualifying crossings the propagation passed.
+  const ::flatbuffers::Vector<uint32_t> *EVENT_OCCURRENCES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint32_t> *>(VT_EVENT_OCCURRENCES);
+  }
+  /// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+  int32_t STOPPED_BY_EVENT() const {
+    return GetField<int32_t>(VT_STOPPED_BY_EVENT, -1);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2873,6 +3035,12 @@ struct PRWExecutionResult FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table
            VerifyField<uint8_t>(verifier, VT_DENSITY_TREATMENT, 1) &&
            VerifyOffset(verifier, VT_DYNAMIC_PARAMETERS) &&
            verifier.VerifyVector(DYNAMIC_PARAMETERS()) &&
+           VerifyOffset(verifier, VT_EVENTS) &&
+           verifier.VerifyVector(EVENTS()) &&
+           verifier.VerifyVectorOfTables(EVENTS()) &&
+           VerifyOffset(verifier, VT_EVENT_OCCURRENCES) &&
+           verifier.VerifyVector(EVENT_OCCURRENCES()) &&
+           VerifyField<int32_t>(verifier, VT_STOPPED_BY_EVENT, 4) &&
            verifier.EndTable();
   }
 };
@@ -2902,6 +3070,15 @@ struct PRWExecutionResultBuilder {
   void add_DYNAMIC_PARAMETERS(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> DYNAMIC_PARAMETERS) {
     fbb_.AddOffset(PRWExecutionResult::VT_DYNAMIC_PARAMETERS, DYNAMIC_PARAMETERS);
   }
+  void add_EVENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PRWEventRecord>>> EVENTS) {
+    fbb_.AddOffset(PRWExecutionResult::VT_EVENTS, EVENTS);
+  }
+  void add_EVENT_OCCURRENCES(::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> EVENT_OCCURRENCES) {
+    fbb_.AddOffset(PRWExecutionResult::VT_EVENT_OCCURRENCES, EVENT_OCCURRENCES);
+  }
+  void add_STOPPED_BY_EVENT(int32_t STOPPED_BY_EVENT) {
+    fbb_.AddElement<int32_t>(PRWExecutionResult::VT_STOPPED_BY_EVENT, STOPPED_BY_EVENT, -1);
+  }
   explicit PRWExecutionResultBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2923,9 +3100,15 @@ inline ::flatbuffers::Offset<PRWExecutionResult> CreatePRWExecutionResult(
     ::flatbuffers::Offset<::flatbuffers::String> EPHEMERIS_SOURCE = 0,
     prwDerivativeTechnique STM_TECHNIQUE = prwDerivativeTechnique_UNSPECIFIED,
     prwDensityTreatment DENSITY_TREATMENT = prwDensityTreatment_UNSPECIFIED,
-    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> DYNAMIC_PARAMETERS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> DYNAMIC_PARAMETERS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PRWEventRecord>>> EVENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint32_t>> EVENT_OCCURRENCES = 0,
+    int32_t STOPPED_BY_EVENT = -1) {
   PRWExecutionResultBuilder builder_(_fbb);
   builder_.add_ELAPSED_SECONDS(ELAPSED_SECONDS);
+  builder_.add_STOPPED_BY_EVENT(STOPPED_BY_EVENT);
+  builder_.add_EVENT_OCCURRENCES(EVENT_OCCURRENCES);
+  builder_.add_EVENTS(EVENTS);
   builder_.add_DYNAMIC_PARAMETERS(DYNAMIC_PARAMETERS);
   builder_.add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE);
   builder_.add_SAMPLES(SAMPLES);
@@ -2943,10 +3126,15 @@ inline ::flatbuffers::Offset<PRWExecutionResult> CreatePRWExecutionResultDirect(
     const char *EPHEMERIS_SOURCE = nullptr,
     prwDerivativeTechnique STM_TECHNIQUE = prwDerivativeTechnique_UNSPECIFIED,
     prwDensityTreatment DENSITY_TREATMENT = prwDensityTreatment_UNSPECIFIED,
-    const std::vector<uint8_t> *DYNAMIC_PARAMETERS = nullptr) {
+    const std::vector<uint8_t> *DYNAMIC_PARAMETERS = nullptr,
+    const std::vector<::flatbuffers::Offset<PRWEventRecord>> *EVENTS = nullptr,
+    const std::vector<uint32_t> *EVENT_OCCURRENCES = nullptr,
+    int32_t STOPPED_BY_EVENT = -1) {
   auto SAMPLES__ = SAMPLES ? _fbb.CreateVector<::flatbuffers::Offset<PRWPropagationSample>>(*SAMPLES) : 0;
   auto EPHEMERIS_SOURCE__ = EPHEMERIS_SOURCE ? _fbb.CreateString(EPHEMERIS_SOURCE) : 0;
   auto DYNAMIC_PARAMETERS__ = DYNAMIC_PARAMETERS ? _fbb.CreateVector<uint8_t>(*DYNAMIC_PARAMETERS) : 0;
+  auto EVENTS__ = EVENTS ? _fbb.CreateVector<::flatbuffers::Offset<PRWEventRecord>>(*EVENTS) : 0;
+  auto EVENT_OCCURRENCES__ = EVENT_OCCURRENCES ? _fbb.CreateVector<uint32_t>(*EVENT_OCCURRENCES) : 0;
   return CreatePRWExecutionResult(
       _fbb,
       FINAL_SAMPLE,
@@ -2955,7 +3143,10 @@ inline ::flatbuffers::Offset<PRWExecutionResult> CreatePRWExecutionResultDirect(
       EPHEMERIS_SOURCE__,
       STM_TECHNIQUE,
       DENSITY_TREATMENT,
-      DYNAMIC_PARAMETERS__);
+      DYNAMIC_PARAMETERS__,
+      EVENTS__,
+      EVENT_OCCURRENCES__,
+      STOPPED_BY_EVENT);
 }
 
 /// Portable batch request: no output pointer; state records returned via TAB.

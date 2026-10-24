@@ -120,8 +120,70 @@ class PRWExecutionResult(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         return o == 0
 
+    # The located events with ACTION RECORD or STOP, in time order of propagation.
+    # PRWExecutionResult
+    def EVENTS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from PRWEventRecord import PRWEventRecord
+            obj = PRWEventRecord()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # PRWExecutionResult
+    def EVENTSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PRWExecutionResult
+    def EVENTSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        return o == 0
+
+    # Per request EVENTS entry, the qualifying crossings the propagation passed.
+    # PRWExecutionResult
+    def EVENT_OCCURRENCES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return 0
+
+    # PRWExecutionResult
+    def EVENT_OCCURRENCESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Uint32Flags, o)
+        return 0
+
+    # PRWExecutionResult
+    def EVENT_OCCURRENCESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # PRWExecutionResult
+    def EVENT_OCCURRENCESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
+
+    # Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+    # PRWExecutionResult
+    def STOPPED_BY_EVENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return -1
+
 def PRWExecutionResultStart(builder):
-    builder.StartObject(7)
+    builder.StartObject(10)
 
 def Start(builder):
     PRWExecutionResultStart(builder)
@@ -196,12 +258,59 @@ def PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data):
 def CreateDYNAMIC_PARAMETERSVector(builder, data):
     return PRWExecutionResultCreateDYNAMIC_PARAMETERSVector(builder, data)
 
+def PRWExecutionResultAddEVENTS(builder, EVENTS):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(EVENTS), 0)
+
+def AddEVENTS(builder, EVENTS):
+    PRWExecutionResultAddEVENTS(builder, EVENTS)
+
+def PRWExecutionResultStartEVENTSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEVENTSVector(builder, numElems):
+    return PRWExecutionResultStartEVENTSVector(builder, numElems)
+
+def PRWExecutionResultCreateEVENTSVector(builder, data):
+    return builder.CreateVectorOfTables(data)
+
+def CreateEVENTSVector(builder, data):
+    return PRWExecutionResultCreateEVENTSVector(builder, data)
+
+def PRWExecutionResultAddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCES):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_OCCURRENCES), 0)
+
+def AddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCES):
+    PRWExecutionResultAddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCES)
+
+def PRWExecutionResultStartEVENT_OCCURRENCESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartEVENT_OCCURRENCESVector(builder, numElems):
+    return PRWExecutionResultStartEVENT_OCCURRENCESVector(builder, numElems)
+
+def PRWExecutionResultCreateEVENT_OCCURRENCESVector(builder, data):
+    data = list(data)
+    builder.StartVector(4, len(data), 4)
+    for item in reversed(data):
+        builder.PrependUint32(item)
+    return builder.EndVector()
+
+def CreateEVENT_OCCURRENCESVector(builder, data):
+    return PRWExecutionResultCreateEVENT_OCCURRENCESVector(builder, data)
+
+def PRWExecutionResultAddSTOPPED_BY_EVENT(builder, STOPPED_BY_EVENT):
+    builder.PrependInt32Slot(9, STOPPED_BY_EVENT, -1)
+
+def AddSTOPPED_BY_EVENT(builder, STOPPED_BY_EVENT):
+    PRWExecutionResultAddSTOPPED_BY_EVENT(builder, STOPPED_BY_EVENT)
+
 def PRWExecutionResultEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PRWExecutionResultEnd(builder)
 
+import PRWEventRecord
 import PRWPropagationSample
 try:
     from typing import List, Optional
@@ -220,6 +329,9 @@ class PRWExecutionResultT(object):
         STM_TECHNIQUE = 0,
         DENSITY_TREATMENT = 0,
         DYNAMIC_PARAMETERS = None,
+        EVENTS = None,
+        EVENT_OCCURRENCES = None,
+        STOPPED_BY_EVENT = -1,
     ):
         self.FINAL_SAMPLE = FINAL_SAMPLE  # type: Optional[PRWPropagationSample.PRWPropagationSampleT]
         self.SAMPLES = SAMPLES  # type: Optional[List[PRWPropagationSample.PRWPropagationSampleT]]
@@ -228,6 +340,9 @@ class PRWExecutionResultT(object):
         self.STM_TECHNIQUE = STM_TECHNIQUE  # type: int
         self.DENSITY_TREATMENT = DENSITY_TREATMENT  # type: int
         self.DYNAMIC_PARAMETERS = DYNAMIC_PARAMETERS  # type: Optional[List[int]]
+        self.EVENTS = EVENTS  # type: Optional[List[PRWEventRecord.PRWEventRecordT]]
+        self.EVENT_OCCURRENCES = EVENT_OCCURRENCES  # type: Optional[List[int]]
+        self.STOPPED_BY_EVENT = STOPPED_BY_EVENT  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -271,6 +386,22 @@ class PRWExecutionResultT(object):
                     self.DYNAMIC_PARAMETERS.append(PRWExecutionResult.DYNAMIC_PARAMETERS(i))
             else:
                 self.DYNAMIC_PARAMETERS = PRWExecutionResult.DYNAMIC_PARAMETERSAsNumpy()
+        if not PRWExecutionResult.EVENTSIsNone():
+            self.EVENTS = []
+            for i in range(PRWExecutionResult.EVENTSLength()):
+                if PRWExecutionResult.EVENTS(i) is None:
+                    self.EVENTS.append(None)
+                else:
+                    pRWEventRecord_ = PRWEventRecord.PRWEventRecordT.InitFromObj(PRWExecutionResult.EVENTS(i))
+                    self.EVENTS.append(pRWEventRecord_)
+        if not PRWExecutionResult.EVENT_OCCURRENCESIsNone():
+            if np is None:
+                self.EVENT_OCCURRENCES = []
+                for i in range(PRWExecutionResult.EVENT_OCCURRENCESLength()):
+                    self.EVENT_OCCURRENCES.append(PRWExecutionResult.EVENT_OCCURRENCES(i))
+            else:
+                self.EVENT_OCCURRENCES = PRWExecutionResult.EVENT_OCCURRENCESAsNumpy()
+        self.STOPPED_BY_EVENT = PRWExecutionResult.STOPPED_BY_EVENT()
 
     # PRWExecutionResultT
     def Pack(self, builder):
@@ -294,6 +425,22 @@ class PRWExecutionResultT(object):
                 for i in reversed(range(len(self.DYNAMIC_PARAMETERS))):
                     builder.PrependUint8(self.DYNAMIC_PARAMETERS[i])
                 DYNAMIC_PARAMETERS = builder.EndVector()
+        if self.EVENTS is not None:
+            EVENTSlist = []
+            for i in range(len(self.EVENTS)):
+                EVENTSlist.append(self.EVENTS[i].Pack(builder))
+            PRWExecutionResultStartEVENTSVector(builder, len(self.EVENTS))
+            for i in reversed(range(len(self.EVENTS))):
+                builder.PrependUOffsetTRelative(EVENTSlist[i])
+            EVENTS = builder.EndVector()
+        if self.EVENT_OCCURRENCES is not None:
+            if np is not None and type(self.EVENT_OCCURRENCES) is np.ndarray:
+                EVENT_OCCURRENCES = builder.CreateNumpyVector(self.EVENT_OCCURRENCES)
+            else:
+                PRWExecutionResultStartEVENT_OCCURRENCESVector(builder, len(self.EVENT_OCCURRENCES))
+                for i in reversed(range(len(self.EVENT_OCCURRENCES))):
+                    builder.PrependUint32(self.EVENT_OCCURRENCES[i])
+                EVENT_OCCURRENCES = builder.EndVector()
         PRWExecutionResultStart(builder)
         if self.FINAL_SAMPLE is not None:
             PRWExecutionResultAddFINAL_SAMPLE(builder, FINAL_SAMPLE)
@@ -306,5 +453,10 @@ class PRWExecutionResultT(object):
         PRWExecutionResultAddDENSITY_TREATMENT(builder, self.DENSITY_TREATMENT)
         if self.DYNAMIC_PARAMETERS is not None:
             PRWExecutionResultAddDYNAMIC_PARAMETERS(builder, DYNAMIC_PARAMETERS)
+        if self.EVENTS is not None:
+            PRWExecutionResultAddEVENTS(builder, EVENTS)
+        if self.EVENT_OCCURRENCES is not None:
+            PRWExecutionResultAddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCES)
+        PRWExecutionResultAddSTOPPED_BY_EVENT(builder, self.STOPPED_BY_EVENT)
         PRWExecutionResult = PRWExecutionResultEnd(builder)
         return PRWExecutionResult

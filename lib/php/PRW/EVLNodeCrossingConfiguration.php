@@ -67,25 +67,37 @@ class EVLNodeCrossingConfiguration extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : true;
     }
 
+    /// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+    /// it need not be a unit vector. Absent or zero: the pole of those axes, which
+    /// makes the crossings the nodes of its equator. Any other normal is an
+    /// arbitrary plane through the center of the system.
+    public function getPLANE_NORMAL()
+    {
+        $obj = new FRMVector3();
+        $o = $this->__offset(10);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startEVLNodeCrossingConfiguration(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(4);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return EVLNodeCrossingConfiguration
      */
-    public static function createEVLNodeCrossingConfiguration(FlatBufferBuilder $builder, $REFERENCE_COORDINATE_SYSTEM_NAME, $REPORT_ASCENDING, $REPORT_DESCENDING)
+    public static function createEVLNodeCrossingConfiguration(FlatBufferBuilder $builder, $REFERENCE_COORDINATE_SYSTEM_NAME, $REPORT_ASCENDING, $REPORT_DESCENDING, $PLANE_NORMAL)
     {
-        $builder->startObject(3);
+        $builder->startObject(4);
         self::addREFERENCE_COORDINATE_SYSTEM_NAME($builder, $REFERENCE_COORDINATE_SYSTEM_NAME);
         self::addREPORT_ASCENDING($builder, $REPORT_ASCENDING);
         self::addREPORT_DESCENDING($builder, $REPORT_DESCENDING);
+        self::addPLANE_NORMAL($builder, $PLANE_NORMAL);
         $o = $builder->endObject();
         return $o;
     }
@@ -118,6 +130,16 @@ class EVLNodeCrossingConfiguration extends Table
     public static function addREPORT_DESCENDING(FlatBufferBuilder $builder, $REPORT_DESCENDING)
     {
         $builder->addBoolX(2, $REPORT_DESCENDING, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPLANE_NORMAL(FlatBufferBuilder $builder, $PLANE_NORMAL)
+    {
+        $builder->addOffsetX(3, $PLANE_NORMAL, 0);
     }
 
     /**

@@ -3,6 +3,7 @@ import { EVLApsidesConfiguration, EVLApsidesConfigurationT } from './EVLApsidesC
 import { EVLContactConfiguration, EVLContactConfigurationT } from './EVLContactConfiguration.js';
 import { EVLEclipseConfiguration, EVLEclipseConfigurationT } from './EVLEclipseConfiguration.js';
 import { EVLIntrusionConfiguration, EVLIntrusionConfigurationT } from './EVLIntrusionConfiguration.js';
+import { EVLLatitudeExtremumConfiguration, EVLLatitudeExtremumConfigurationT } from './EVLLatitudeExtremumConfiguration.js';
 import { EVLNodeCrossingConfiguration, EVLNodeCrossingConfigurationT } from './EVLNodeCrossingConfiguration.js';
 import { EVLParameterConditionConfiguration, EVLParameterConditionConfigurationT } from './EVLParameterConditionConfiguration.js';
 import { PCEEvaluationContext, PCEEvaluationContextT } from './PCEEvaluationContext.js';
@@ -74,6 +75,7 @@ export declare class EVLEventLocationRequest implements flatbuffers.IUnpackableO
     PARAMETER_CONDITION_CONFIGURATION(obj?: EVLParameterConditionConfiguration): EVLParameterConditionConfiguration | null;
     TRACE_ID(): string | null;
     TRACE_ID(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    LATITUDE_EXTREMUM_CONFIGURATION(obj?: EVLLatitudeExtremumConfiguration): EVLLatitudeExtremumConfiguration | null;
     static startEVLEventLocationRequest(builder: flatbuffers.Builder): void;
     static addLocatorClass(builder: flatbuffers.Builder, LOCATOR_CLASS: evlLocatorClass): void;
     static addTargetObjectId(builder: flatbuffers.Builder, TARGET_OBJECT_IDOffset: flatbuffers.Offset): void;
@@ -94,6 +96,7 @@ export declare class EVLEventLocationRequest implements flatbuffers.IUnpackableO
     static addNodeCrossingConfiguration(builder: flatbuffers.Builder, NODE_CROSSING_CONFIGURATIONOffset: flatbuffers.Offset): void;
     static addParameterConditionConfiguration(builder: flatbuffers.Builder, PARAMETER_CONDITION_CONFIGURATIONOffset: flatbuffers.Offset): void;
     static addTraceId(builder: flatbuffers.Builder, TRACE_IDOffset: flatbuffers.Offset): void;
+    static addLatitudeExtremumConfiguration(builder: flatbuffers.Builder, LATITUDE_EXTREMUM_CONFIGURATIONOffset: flatbuffers.Offset): void;
     static endEVLEventLocationRequest(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): EVLEventLocationRequestT;
     unpackTo(_o: EVLEventLocationRequestT): void;
@@ -116,7 +119,8 @@ export declare class EVLEventLocationRequestT implements flatbuffers.IGeneratedO
     NODE_CROSSING_CONFIGURATION: EVLNodeCrossingConfigurationT | null;
     PARAMETER_CONDITION_CONFIGURATION: EVLParameterConditionConfigurationT | null;
     TRACE_ID: string | Uint8Array | null;
-    constructor(LOCATOR_CLASS?: evlLocatorClass, TARGET_OBJECT_ID?: string | Uint8Array | null, CONTEXT?: PCEEvaluationContextT | null, SCAN_START_EPOCH?: string | Uint8Array | null, SCAN_STOP_EPOCH?: string | Uint8Array | null, EPOCH_TIME_SYSTEM?: string | Uint8Array | null, SCAN_STEP_SECONDS?: number, REFINEMENT_TOLERANCE_SECONDS?: number, MAXIMUM_EVENTS?: number, REPORT_PARAMETERS?: (PCEParameterRefT)[], ECLIPSE_CONFIGURATION?: EVLEclipseConfigurationT | null, CONTACT_CONFIGURATION?: EVLContactConfigurationT | null, INTRUSION_CONFIGURATION?: EVLIntrusionConfigurationT | null, APSIDES_CONFIGURATION?: EVLApsidesConfigurationT | null, NODE_CROSSING_CONFIGURATION?: EVLNodeCrossingConfigurationT | null, PARAMETER_CONDITION_CONFIGURATION?: EVLParameterConditionConfigurationT | null, TRACE_ID?: string | Uint8Array | null);
+    LATITUDE_EXTREMUM_CONFIGURATION: EVLLatitudeExtremumConfigurationT | null;
+    constructor(LOCATOR_CLASS?: evlLocatorClass, TARGET_OBJECT_ID?: string | Uint8Array | null, CONTEXT?: PCEEvaluationContextT | null, SCAN_START_EPOCH?: string | Uint8Array | null, SCAN_STOP_EPOCH?: string | Uint8Array | null, EPOCH_TIME_SYSTEM?: string | Uint8Array | null, SCAN_STEP_SECONDS?: number, REFINEMENT_TOLERANCE_SECONDS?: number, MAXIMUM_EVENTS?: number, REPORT_PARAMETERS?: (PCEParameterRefT)[], ECLIPSE_CONFIGURATION?: EVLEclipseConfigurationT | null, CONTACT_CONFIGURATION?: EVLContactConfigurationT | null, INTRUSION_CONFIGURATION?: EVLIntrusionConfigurationT | null, APSIDES_CONFIGURATION?: EVLApsidesConfigurationT | null, NODE_CROSSING_CONFIGURATION?: EVLNodeCrossingConfigurationT | null, PARAMETER_CONDITION_CONFIGURATION?: EVLParameterConditionConfigurationT | null, TRACE_ID?: string | Uint8Array | null, LATITUDE_EXTREMUM_CONFIGURATION?: EVLLatitudeExtremumConfigurationT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=EVLEventLocationRequest.d.ts.map

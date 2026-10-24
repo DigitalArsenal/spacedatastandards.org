@@ -30,4 +30,8 @@ public enum evlEventType : byte
   DESCENDING_NODE = 11,
   /// A $PCE parameter condition was attained.
   CONDITION_SATISFIED = 12,
+  /// Geocentric latitude at a maximum.
+  MAXIMUM_LATITUDE = 13,
+  /// Geocentric latitude at a minimum.
+  MINIMUM_LATITUDE = 14,
 };

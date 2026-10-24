@@ -54,6 +54,21 @@ class EVLNodeCrossingConfiguration : Table() {
             val o = __offset(8)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
         }
+    /**
+     * Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+     * it need not be a unit vector. Absent or zero: the pole of those axes, which
+     * makes the crossings the nodes of its equator. Any other normal is an
+     * arbitrary plane through the center of the system.
+     */
+    val planeNormal : FRMVector3? get() = planeNormal(FRMVector3())
+    fun planeNormal(obj: FRMVector3) : FRMVector3? {
+        val o = __offset(10)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsEVLNodeCrossingConfiguration(_bb: ByteBuffer): EVLNodeCrossingConfiguration = getRootAsEVLNodeCrossingConfiguration(_bb, EVLNodeCrossingConfiguration())
@@ -61,17 +76,19 @@ class EVLNodeCrossingConfiguration : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createEVLNodeCrossingConfiguration(builder: FlatBufferBuilder, referenceCoordinateSystemNameOffset: Int, reportAscending: Boolean, reportDescending: Boolean) : Int {
-            builder.startTable(3)
+        fun createEVLNodeCrossingConfiguration(builder: FlatBufferBuilder, referenceCoordinateSystemNameOffset: Int, reportAscending: Boolean, reportDescending: Boolean, planeNormalOffset: Int) : Int {
+            builder.startTable(4)
+            addPLANENORMAL(builder, planeNormalOffset)
             addREFERENCECOORDINATESYSTEMNAME(builder, referenceCoordinateSystemNameOffset)
             addREPORTDESCENDING(builder, reportDescending)
             addREPORTASCENDING(builder, reportAscending)
             return endEVLNodeCrossingConfiguration(builder)
         }
-        fun startEVLNodeCrossingConfiguration(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startEVLNodeCrossingConfiguration(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addREFERENCECOORDINATESYSTEMNAME(builder: FlatBufferBuilder, referenceCoordinateSystemName: Int) = builder.addOffset(0, referenceCoordinateSystemName, 0)
         fun addREPORTASCENDING(builder: FlatBufferBuilder, reportAscending: Boolean) = builder.addBoolean(1, reportAscending, true)
         fun addREPORTDESCENDING(builder: FlatBufferBuilder, reportDescending: Boolean) = builder.addBoolean(2, reportDescending, true)
+        fun addPLANENORMAL(builder: FlatBufferBuilder, planeNormal: Int) = builder.addOffset(3, planeNormal, 0)
         fun endEVLNodeCrossingConfiguration(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

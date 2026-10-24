@@ -91,6 +91,47 @@ class PRWExecutionResult : Table() {
         }
     val dynamicParametersAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(16, 1)
     fun dynamicParametersInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * The located events with ACTION RECORD or STOP, in time order of propagation.
+     */
+    fun events(j: Int) : PRWEventRecord? = events(PRWEventRecord(), j)
+    fun events(obj: PRWEventRecord, j: Int) : PRWEventRecord? {
+        val o = __offset(18)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val eventsLength : Int
+        get() {
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Per request EVENTS entry, the qualifying crossings the propagation passed.
+     */
+    fun eventOccurrences(j: Int) : UInt {
+        val o = __offset(20)
+        return if (o != 0) {
+            bb.getInt(__vector(o) + j * 4).toUInt()
+        } else {
+            0u
+        }
+    }
+    val eventOccurrencesLength : Int
+        get() {
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+        }
+    val eventOccurrencesAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(20, 4)
+    fun eventOccurrencesInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 20, 4)
+    /**
+     * Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+     */
+    val stoppedByEvent : Int
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getInt(o + bb_pos) else -1
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPRWExecutionResult(_bb: ByteBuffer): PRWExecutionResult = getRootAsPRWExecutionResult(_bb, PRWExecutionResult())
@@ -98,9 +139,12 @@ class PRWExecutionResult : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPRWExecutionResult(builder: FlatBufferBuilder, finalSampleOffset: Int, samplesOffset: Int, elapsedSeconds: Double, ephemerisSourceOffset: Int, stmTechnique: UByte, densityTreatment: UByte, dynamicParametersOffset: Int) : Int {
-            builder.startTable(7)
+        fun createPRWExecutionResult(builder: FlatBufferBuilder, finalSampleOffset: Int, samplesOffset: Int, elapsedSeconds: Double, ephemerisSourceOffset: Int, stmTechnique: UByte, densityTreatment: UByte, dynamicParametersOffset: Int, eventsOffset: Int, eventOccurrencesOffset: Int, stoppedByEvent: Int) : Int {
+            builder.startTable(10)
             addELAPSEDSECONDS(builder, elapsedSeconds)
+            addSTOPPEDBYEVENT(builder, stoppedByEvent)
+            addEVENTOCCURRENCES(builder, eventOccurrencesOffset)
+            addEVENTS(builder, eventsOffset)
             addDYNAMICPARAMETERS(builder, dynamicParametersOffset)
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
             addSAMPLES(builder, samplesOffset)
@@ -109,7 +153,7 @@ class PRWExecutionResult : Table() {
             addSTMTECHNIQUE(builder, stmTechnique)
             return endPRWExecutionResult(builder)
         }
-        fun startPRWExecutionResult(builder: FlatBufferBuilder) = builder.startTable(7)
+        fun startPRWExecutionResult(builder: FlatBufferBuilder) = builder.startTable(10)
         fun addFINALSAMPLE(builder: FlatBufferBuilder, finalSample: Int) = builder.addOffset(0, finalSample, 0)
         fun addSAMPLES(builder: FlatBufferBuilder, samples: Int) = builder.addOffset(1, samples, 0)
         fun createSamplesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
@@ -134,6 +178,26 @@ class PRWExecutionResult : Table() {
             return builder.endVector()
         }
         fun startDynamicParametersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(1, numElems, 1)
+        fun addEVENTS(builder: FlatBufferBuilder, events: Int) = builder.addOffset(7, events, 0)
+        fun createEventsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startEventsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addEVENTOCCURRENCES(builder: FlatBufferBuilder, eventOccurrences: Int) = builder.addOffset(8, eventOccurrences, 0)
+        @kotlin.ExperimentalUnsignedTypes
+        fun createEventOccurrencesVector(builder: FlatBufferBuilder, data: UIntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addInt(data[i].toInt())
+            }
+            return builder.endVector()
+        }
+        fun startEventOccurrencesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSTOPPEDBYEVENT(builder: FlatBufferBuilder, stoppedByEvent: Int) = builder.addInt(9, stoppedByEvent, -1)
         fun endPRWExecutionResult(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 4)

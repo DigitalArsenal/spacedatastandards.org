@@ -213,8 +213,103 @@ func (rcv *PRWExecutionResult) MutateDynamicParameters(j int, n prwDynamicParame
 	return rcv.MutateDYNAMIC_PARAMETERS(j, n)
 }
 
+/// The located events with ACTION RECORD or STOP, in time order of propagation.
+func (rcv *PRWExecutionResult) EVENTS(obj *PRWEventRecord, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		if obj == nil {
+			obj = new(PRWEventRecord)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *PRWExecutionResult) Events(obj *PRWEventRecord, j int) bool {
+	return rcv.EVENTS(obj, j)
+}
+
+func (rcv *PRWExecutionResult) EVENTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionResult) EventsLength() int {
+	return rcv.EVENTSLength()
+}
+
+/// The located events with ACTION RECORD or STOP, in time order of propagation.
+/// Per request EVENTS entry, the qualifying crossings the propagation passed.
+func (rcv *PRWExecutionResult) EVENT_OCCURRENCES(j int) uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetUint32(a + flatbuffers.UOffsetT(j*4))
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionResult) EventOccurrences(j int) uint32 {
+	return rcv.EVENT_OCCURRENCES(j)
+}
+
+func (rcv *PRWExecutionResult) EVENT_OCCURRENCESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+func (rcv *PRWExecutionResult) EventOccurrencesLength() int {
+	return rcv.EVENT_OCCURRENCESLength()
+}
+
+/// Per request EVENTS entry, the qualifying crossings the propagation passed.
+func (rcv *PRWExecutionResult) MutateEVENT_OCCURRENCES(j int, n uint32) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateUint32(a+flatbuffers.UOffsetT(j*4), n)
+	}
+	return false
+}
+
+func (rcv *PRWExecutionResult) MutateEventOccurrences(j int, n uint32) bool {
+	return rcv.MutateEVENT_OCCURRENCES(j, n)
+}
+
+/// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+func (rcv *PRWExecutionResult) STOPPED_BY_EVENT() int32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+	}
+	return -1
+}
+
+func (rcv *PRWExecutionResult) StoppedByEvent() int32 {
+	return rcv.STOPPED_BY_EVENT()
+}
+
+/// Index of the request EVENTS entry that ended the propagation, or -1. Default -1.
+func (rcv *PRWExecutionResult) MutateSTOPPED_BY_EVENT(n int32) bool {
+	return rcv._tab.MutateInt32Slot(22, n)
+}
+
+func (rcv *PRWExecutionResult) MutateStoppedByEvent(n int32) bool {
+	return rcv.MutateSTOPPED_BY_EVENT(n)
+}
+
 func PRWExecutionResultStart(builder *flatbuffers.Builder) {
-	builder.StartObject(7)
+	builder.StartObject(10)
 }
 func PRWExecutionResultAddFINAL_SAMPLE(builder *flatbuffers.Builder, FINAL_SAMPLE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(FINAL_SAMPLE), 0)
@@ -269,6 +364,36 @@ func PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder *flatbuffers.Builde
 }
 func PRWExecutionResultStartDynamicParametersVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PRWExecutionResultStartDYNAMIC_PARAMETERSVector(builder, numElems)
+}
+func PRWExecutionResultAddEVENTS(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(EVENTS), 0)
+}
+func PRWExecutionResultAddEvents(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
+	PRWExecutionResultAddEVENTS(builder, EVENTS)
+}
+func PRWExecutionResultStartEVENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PRWExecutionResultStartEventsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRWExecutionResultStartEVENTSVector(builder, numElems)
+}
+func PRWExecutionResultAddEVENT_OCCURRENCES(builder *flatbuffers.Builder, EVENT_OCCURRENCES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EVENT_OCCURRENCES), 0)
+}
+func PRWExecutionResultAddEventOccurrences(builder *flatbuffers.Builder, EVENT_OCCURRENCES flatbuffers.UOffsetT) {
+	PRWExecutionResultAddEVENT_OCCURRENCES(builder, EVENT_OCCURRENCES)
+}
+func PRWExecutionResultStartEVENT_OCCURRENCESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func PRWExecutionResultStartEventOccurrencesVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return PRWExecutionResultStartEVENT_OCCURRENCESVector(builder, numElems)
+}
+func PRWExecutionResultAddSTOPPED_BY_EVENT(builder *flatbuffers.Builder, STOPPED_BY_EVENT int32) {
+	builder.PrependInt32Slot(9, STOPPED_BY_EVENT, -1)
+}
+func PRWExecutionResultAddStoppedByEvent(builder *flatbuffers.Builder, STOPPED_BY_EVENT int32) {
+	PRWExecutionResultAddSTOPPED_BY_EVENT(builder, STOPPED_BY_EVENT)
 }
 func PRWExecutionResultEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

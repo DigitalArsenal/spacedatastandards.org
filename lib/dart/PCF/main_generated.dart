@@ -237,23 +237,113 @@ class _pcfEphemerisKindReader extends fb.Reader<pcfEphemerisKind> {
       pcfEphemerisKind.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
-///  What a propagator does when a located event occurs. Append new values
-///  only.
-enum pcfEventAction {
+///  The event function of a located event. Each is a continuous function g of the
+///  integrated state, evaluated by the integrator; an event is a zero crossing of g.
+///  The crossing is bracketed on each accepted step, refined to TOLERANCE_SECONDS on
+///  the integrator's continuous extension, and confirmed by re-stepping the
+///  integrator itself, so the epoch does not depend on the step size. Append new
+///  values only.
+enum pcfEventKind {
   UNSPECIFIED(0),
-  STOP(1),
-  CONTINUE(2),
-  RECORD(3);
+  APSIS(1),
+  PLANE_CROSSING(2),
+  TRUE_ANOMALY(3),
+  ARGUMENT_OF_LATITUDE(4),
+  LATITUDE_EXTREMUM(5),
+  UMBRA(6),
+  PENUMBRA(7),
+  CLOSEST_APPROACH(8),
+  EXPRESSION(9);
+
+  final int value;
+  const pcfEventKind(this.value);
+
+  factory pcfEventKind.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfEventKind.UNSPECIFIED;
+      case 1: return pcfEventKind.APSIS;
+      case 2: return pcfEventKind.PLANE_CROSSING;
+      case 3: return pcfEventKind.TRUE_ANOMALY;
+      case 4: return pcfEventKind.ARGUMENT_OF_LATITUDE;
+      case 5: return pcfEventKind.LATITUDE_EXTREMUM;
+      case 6: return pcfEventKind.UMBRA;
+      case 7: return pcfEventKind.PENUMBRA;
+      case 8: return pcfEventKind.CLOSEST_APPROACH;
+      case 9: return pcfEventKind.EXPRESSION;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfEventKind? _createOrNull(int? value) =>
+      value == null ? null : pcfEventKind.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 9;
+  static const fb.Reader<pcfEventKind> reader = _pcfEventKindReader();
+}
+
+class _pcfEventKindReader extends fb.Reader<pcfEventKind> {
+  const _pcfEventKindReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfEventKind read(fb.BufferContext bc, int offset) =>
+      pcfEventKind.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Which zero crossings of the event function count. Append new values only.
+enum pcfEventDirection {
+  ANY(0),
+  INCREASING(1),
+  DECREASING(2);
+
+  final int value;
+  const pcfEventDirection(this.value);
+
+  factory pcfEventDirection.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfEventDirection.ANY;
+      case 1: return pcfEventDirection.INCREASING;
+      case 2: return pcfEventDirection.DECREASING;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfEventDirection? _createOrNull(int? value) =>
+      value == null ? null : pcfEventDirection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static const fb.Reader<pcfEventDirection> reader = _pcfEventDirectionReader();
+}
+
+class _pcfEventDirectionReader extends fb.Reader<pcfEventDirection> {
+  const _pcfEventDirectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfEventDirection read(fb.BufferContext bc, int offset) =>
+      pcfEventDirection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  What the integrator does at a located event. Append new values only.
+enum pcfEventAction {
+  CONTINUE(0),
+  RECORD(1),
+  STOP(2);
 
   final int value;
   const pcfEventAction(this.value);
 
   factory pcfEventAction.fromValue(int value) {
     switch (value) {
-      case 0: return pcfEventAction.UNSPECIFIED;
-      case 1: return pcfEventAction.STOP;
-      case 2: return pcfEventAction.CONTINUE;
-      case 3: return pcfEventAction.RECORD;
+      case 0: return pcfEventAction.CONTINUE;
+      case 1: return pcfEventAction.RECORD;
+      case 2: return pcfEventAction.STOP;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -262,7 +352,7 @@ enum pcfEventAction {
       value == null ? null : pcfEventAction.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 3;
+  static const int maxValue = 2;
   static const fb.Reader<pcfEventAction> reader = _pcfEventActionReader();
 }
 
@@ -275,6 +365,66 @@ class _pcfEventActionReader extends fb.Reader<pcfEventAction> {
   @override
   pcfEventAction read(fb.BufferContext bc, int offset) =>
       pcfEventAction.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  Operations of a bounded expression. The expression is data, evaluated by the
+///  provider; no code runs. Append new values only.
+enum pcfExpressionOperation {
+  UNSPECIFIED(0),
+  CONSTANT(1),
+  PARAMETER(2),
+  ADD(3),
+  SUBTRACT(4),
+  MULTIPLY(5),
+  DIVIDE(6),
+  NEGATE(7),
+  ABSOLUTE(8),
+  SQUARE_ROOT(9),
+  SINE(10),
+  COSINE(11),
+  MINIMUM(12),
+  MAXIMUM(13);
+
+  final int value;
+  const pcfExpressionOperation(this.value);
+
+  factory pcfExpressionOperation.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfExpressionOperation.UNSPECIFIED;
+      case 1: return pcfExpressionOperation.CONSTANT;
+      case 2: return pcfExpressionOperation.PARAMETER;
+      case 3: return pcfExpressionOperation.ADD;
+      case 4: return pcfExpressionOperation.SUBTRACT;
+      case 5: return pcfExpressionOperation.MULTIPLY;
+      case 6: return pcfExpressionOperation.DIVIDE;
+      case 7: return pcfExpressionOperation.NEGATE;
+      case 8: return pcfExpressionOperation.ABSOLUTE;
+      case 9: return pcfExpressionOperation.SQUARE_ROOT;
+      case 10: return pcfExpressionOperation.SINE;
+      case 11: return pcfExpressionOperation.COSINE;
+      case 12: return pcfExpressionOperation.MINIMUM;
+      case 13: return pcfExpressionOperation.MAXIMUM;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfExpressionOperation? _createOrNull(int? value) =>
+      value == null ? null : pcfExpressionOperation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 13;
+  static const fb.Reader<pcfExpressionOperation> reader = _pcfExpressionOperationReader();
+}
+
+class _pcfExpressionOperationReader extends fb.Reader<pcfExpressionOperation> {
+  const _pcfExpressionOperationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfExpressionOperation read(fb.BufferContext bc, int offset) =>
+      pcfExpressionOperation.fromValue(const fb.Uint8Reader().read(bc, offset));
 }
 
 ///  How the correlation of maneuver-detection innovations is weighted. Append
@@ -399,7 +549,7 @@ class _pcfOutputFrameReader extends fb.Reader<pcfOutputFrame> {
 ///  10 are the numbers $PRW has always carried; new values are appended only,
 ///  never reordered or reused. A scheme value names the stepping method; a
 ///  formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-///  STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+///  STIEFEL) names the variables the equations are written in, and the
 ///  scheme that steps them is the provider's, reported in its result.
 enum pcfIntegratorAlgorithm {
   UNSPECIFIED(0),
@@ -414,13 +564,13 @@ enum pcfIntegratorAlgorithm {
   ENCKE(9),
   EQUINOCTIAL_VOP(10),
   DOPRI5(11),
-  RK65_8M(12),
-  VERNER_98(13),
-  RKN12_10(14),
+  RK65(12),
+  RKV98(13),
+  RKN1210(14),
   GAUSS_JACKSON_8(15),
   GAUSS_VOP(16),
   DROMO(17),
-  STIEFEL_SCHEIFELE(18),
+  STIEFEL(18),
   DOPRI853(19);
 
   final int value;
@@ -440,13 +590,13 @@ enum pcfIntegratorAlgorithm {
       case 9: return pcfIntegratorAlgorithm.ENCKE;
       case 10: return pcfIntegratorAlgorithm.EQUINOCTIAL_VOP;
       case 11: return pcfIntegratorAlgorithm.DOPRI5;
-      case 12: return pcfIntegratorAlgorithm.RK65_8M;
-      case 13: return pcfIntegratorAlgorithm.VERNER_98;
-      case 14: return pcfIntegratorAlgorithm.RKN12_10;
+      case 12: return pcfIntegratorAlgorithm.RK65;
+      case 13: return pcfIntegratorAlgorithm.RKV98;
+      case 14: return pcfIntegratorAlgorithm.RKN1210;
       case 15: return pcfIntegratorAlgorithm.GAUSS_JACKSON_8;
       case 16: return pcfIntegratorAlgorithm.GAUSS_VOP;
       case 17: return pcfIntegratorAlgorithm.DROMO;
-      case 18: return pcfIntegratorAlgorithm.STIEFEL_SCHEIFELE;
+      case 18: return pcfIntegratorAlgorithm.STIEFEL;
       case 19: return pcfIntegratorAlgorithm.DOPRI853;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
@@ -1665,10 +1815,178 @@ class PCFFitPolicyObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
-///  One event a propagator locates while it integrates. The vocabulary is
-///  $EVL's: a locator class with its configuration, and $PCE's parameter
-///  condition for the generic case (an altitude, radius, speed, radial
-///  velocity or mass crossing is a $PCE parameter, not a class of its own).
+///  One term of an expression program.
+class PCFExpressionTerm {
+  PCFExpressionTerm._(this._bc, this._bcOffset);
+  factory PCFExpressionTerm(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFExpressionTerm> reader = _PCFExpressionTermReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  What the term does. Default UNSPECIFIED (refused).
+  pcfExpressionOperation get OPERATION => pcfExpressionOperation.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  The constant pushed by CONSTANT. Default 0.
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  The catalog parameter pushed by PARAMETER. Default UNSPECIFIED.
+  pceParameter get PARAMETER => pceParameter.fromValue(const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 8, 0));
+
+  @override
+  String toString() {
+    return 'PCFExpressionTerm{OPERATION: ${OPERATION}, VALUE: ${VALUE}, PARAMETER: ${PARAMETER}}';
+  }
+}
+
+class _PCFExpressionTermReader extends fb.TableReader<PCFExpressionTerm> {
+  const _PCFExpressionTermReader();
+
+  @override
+  PCFExpressionTerm createObject(fb.BufferContext bc, int offset) =>
+    PCFExpressionTerm._(bc, offset);
+}
+
+class PCFExpressionTermBuilder {
+  PCFExpressionTermBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addOperation(pcfExpressionOperation? OPERATION) {
+    fbBuilder.addUint8(0, OPERATION?.value);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(1, VALUE);
+    return fbBuilder.offset;
+  }
+  int addParameter(pceParameter? PARAMETER) {
+    fbBuilder.addUint16(2, PARAMETER?.value);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFExpressionTermObjectBuilder extends fb.ObjectBuilder {
+  final pcfExpressionOperation? _OPERATION;
+  final double? _VALUE;
+  final pceParameter? _PARAMETER;
+
+  PCFExpressionTermObjectBuilder({
+    pcfExpressionOperation? OPERATION,
+    double? VALUE,
+    pceParameter? PARAMETER,
+  })
+      : _OPERATION = OPERATION,
+        _VALUE = VALUE,
+        _PARAMETER = PARAMETER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addUint8(0, _OPERATION?.value);
+    fbBuilder.addFloat64(1, _VALUE);
+    fbBuilder.addUint16(2, _PARAMETER?.value);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
+///  number.
+class PCFExpression {
+  PCFExpression._(this._bc, this._bcOffset);
+  factory PCFExpression(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFExpression> reader = _PCFExpressionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  The terms, in evaluation order. Default empty.
+  List<PCFExpressionTerm>? get TERMS => const fb.ListReader<PCFExpressionTerm>(PCFExpressionTerm.reader).vTableGetNullable(_bc, _bcOffset, 4);
+
+  @override
+  String toString() {
+    return 'PCFExpression{TERMS: ${TERMS}}';
+  }
+}
+
+class _PCFExpressionReader extends fb.TableReader<PCFExpression> {
+  const _PCFExpressionReader();
+
+  @override
+  PCFExpression createObject(fb.BufferContext bc, int offset) =>
+    PCFExpression._(bc, offset);
+}
+
+class PCFExpressionBuilder {
+  PCFExpressionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(1);
+  }
+
+  int addTermsOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFExpressionObjectBuilder extends fb.ObjectBuilder {
+  final List<PCFExpressionTermObjectBuilder>? _TERMS;
+
+  PCFExpressionObjectBuilder({
+    List<PCFExpressionTermObjectBuilder>? TERMS,
+  })
+      : _TERMS = TERMS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TERMSOffset = _TERMS == null ? null
+        : fbBuilder.writeList(_TERMS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(1);
+    fbBuilder.addOffset(0, TERMSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  One event to locate inside the integration. A $PCF carries the list; a $PRW
+///  execution request carries the same definitions beside the integrator settings,
+///  and a located event comes back as a PRWEventRecord.
 class PCFEventDefinition {
   PCFEventDefinition._(this._bc, this._bcOffset);
   factory PCFEventDefinition(List<int> bytes) {
@@ -1681,39 +1999,34 @@ class PCFEventDefinition {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  ///  The caller's name for the event, echoed in the result. Default empty.
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  ///  Which locator. Default PARAMETER_CONDITION.
-  evlLocatorClass get LOCATOR_CLASS => evlLocatorClass.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 6));
-  evlLocatorClass get locatorClass => LOCATOR_CLASS;
-  ///  Exactly the one of the next five that matches LOCATOR_CLASS is present
-  ///  (any other combination is refused as MISSING_CONFIGURATION, as in
-  ///  $EVL). The condition carries its own direction, goal value, goal
-  ///  tolerance and occurrence.
-  PCEParameterCondition? get CONDITION => PCEParameterCondition.reader.vTableGetNullable(_bc, _bcOffset, 8);
-  EVLEclipseConfiguration? get ECLIPSE => EVLEclipseConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 10);
-  EVLContactConfiguration? get CONTACT => EVLContactConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 12);
-  EVLIntrusionConfiguration? get INTRUSION => EVLIntrusionConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 14);
-  EVLApsidesConfiguration? get APSIDES => EVLApsidesConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 16);
-  EVLNodeCrossingConfiguration? get NODE_CROSSING => EVLNodeCrossingConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 18);
-  EVLNodeCrossingConfiguration? get nodeCrossing => NODE_CROSSING;
-  ///  What the propagator does at the event. Default RECORD.
-  pcfEventAction get ACTION => pcfEventAction.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 20, 3));
-  ///  Convergence bar on the located epoch, seconds. Default 1e-9.
-  double get EPOCH_TOLERANCE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 1e-9);
-  double get epochToleranceSeconds => EPOCH_TOLERANCE_SECONDS;
-  ///  Step at which the event function is sampled before refinement, seconds;
-  ///  0 samples at the integrator's accepted steps. A root is found only when
-  ///  the function changes sign within one sample interval. Default 0.
-  double get SCAN_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get scanStepSeconds => SCAN_STEP_SECONDS;
-  ///  Largest number of occurrences reported; 0 is no bound. Default 0.
-  int get MAXIMUM_EVENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
-  int get maximumEvents => MAXIMUM_EVENTS;
+  ///  The event function. Default UNSPECIFIED (refused).
+  pcfEventKind get KIND => pcfEventKind.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Which zero crossings of the event function count. Default ANY.
+  pcfEventDirection get DIRECTION => pcfEventDirection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  What the integrator does at the event. Default RECORD.
+  pcfEventAction get ACTION => pcfEventAction.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 1));
+  ///  Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+  double get TOLERANCE_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 1e-9);
+  double get toleranceSeconds => TOLERANCE_SECONDS;
+  ///  STOP acts at this qualifying crossing (1 is the first). Default 1.
+  int get OCCURRENCE => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 1);
+  ///  TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+  double get ANGLE_RAD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  double get angleRad => ANGLE_RAD;
+  ///  PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+  ///  vector. Default absent (the pole of the axes).
+  FRMVector3? get PLANE_NORMAL => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 16);
+  FRMVector3? get planeNormal => PLANE_NORMAL;
+  ///  CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+  ///  as $OEM. Default empty.
+  String? get SECOND_TRAJECTORY_PORT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  String? get secondTrajectoryPort => SECOND_TRAJECTORY_PORT;
+  ///  EXPRESSION: the program. Default absent.
+  PCFExpression? get EXPRESSION => PCFExpression.reader.vTableGetNullable(_bc, _bcOffset, 20);
 
   @override
   String toString() {
-    return 'PCFEventDefinition{NAME: ${NAME}, locatorClass: ${locatorClass}, CONDITION: ${CONDITION}, ECLIPSE: ${ECLIPSE}, CONTACT: ${CONTACT}, INTRUSION: ${INTRUSION}, APSIDES: ${APSIDES}, nodeCrossing: ${nodeCrossing}, ACTION: ${ACTION}, epochToleranceSeconds: ${epochToleranceSeconds}, scanStepSeconds: ${scanStepSeconds}, maximumEvents: ${maximumEvents}}';
+    return 'PCFEventDefinition{KIND: ${KIND}, DIRECTION: ${DIRECTION}, ACTION: ${ACTION}, toleranceSeconds: ${toleranceSeconds}, OCCURRENCE: ${OCCURRENCE}, angleRad: ${angleRad}, planeNormal: ${planeNormal}, secondTrajectoryPort: ${secondTrajectoryPort}, EXPRESSION: ${EXPRESSION}}';
   }
 }
 
@@ -1731,55 +2044,43 @@ class PCFEventDefinitionBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(9);
   }
 
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(0, offset);
+  int addKind(pcfEventKind? KIND) {
+    fbBuilder.addUint8(0, KIND?.value);
     return fbBuilder.offset;
   }
-  int addLocatorClass(evlLocatorClass? LOCATOR_CLASS) {
-    fbBuilder.addUint8(1, LOCATOR_CLASS?.value);
-    return fbBuilder.offset;
-  }
-  int addConditionOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addEclipseOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addContactOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addIntrusionOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addApsidesOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addNodeCrossingOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addDirection(pcfEventDirection? DIRECTION) {
+    fbBuilder.addUint8(1, DIRECTION?.value);
     return fbBuilder.offset;
   }
   int addAction(pcfEventAction? ACTION) {
-    fbBuilder.addUint8(8, ACTION?.value);
+    fbBuilder.addUint8(2, ACTION?.value);
     return fbBuilder.offset;
   }
-  int addEpochToleranceSeconds(double? EPOCH_TOLERANCE_SECONDS) {
-    fbBuilder.addFloat64(9, EPOCH_TOLERANCE_SECONDS);
+  int addToleranceSeconds(double? TOLERANCE_SECONDS) {
+    fbBuilder.addFloat64(3, TOLERANCE_SECONDS);
     return fbBuilder.offset;
   }
-  int addScanStepSeconds(double? SCAN_STEP_SECONDS) {
-    fbBuilder.addFloat64(10, SCAN_STEP_SECONDS);
+  int addOccurrence(int? OCCURRENCE) {
+    fbBuilder.addUint32(4, OCCURRENCE);
     return fbBuilder.offset;
   }
-  int addMaximumEvents(int? MAXIMUM_EVENTS) {
-    fbBuilder.addUint32(11, MAXIMUM_EVENTS);
+  int addAngleRad(double? ANGLE_RAD) {
+    fbBuilder.addFloat64(5, ANGLE_RAD);
+    return fbBuilder.offset;
+  }
+  int addPlaneNormalOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addSecondTrajectoryPortOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addExpressionOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
 
@@ -1789,75 +2090,58 @@ class PCFEventDefinitionBuilder {
 }
 
 class PCFEventDefinitionObjectBuilder extends fb.ObjectBuilder {
-  final String? _NAME;
-  final evlLocatorClass? _LOCATOR_CLASS;
-  final PCEParameterConditionObjectBuilder? _CONDITION;
-  final EVLEclipseConfigurationObjectBuilder? _ECLIPSE;
-  final EVLContactConfigurationObjectBuilder? _CONTACT;
-  final EVLIntrusionConfigurationObjectBuilder? _INTRUSION;
-  final EVLApsidesConfigurationObjectBuilder? _APSIDES;
-  final EVLNodeCrossingConfigurationObjectBuilder? _NODE_CROSSING;
+  final pcfEventKind? _KIND;
+  final pcfEventDirection? _DIRECTION;
   final pcfEventAction? _ACTION;
-  final double? _EPOCH_TOLERANCE_SECONDS;
-  final double? _SCAN_STEP_SECONDS;
-  final int? _MAXIMUM_EVENTS;
+  final double? _TOLERANCE_SECONDS;
+  final int? _OCCURRENCE;
+  final double? _ANGLE_RAD;
+  final FRMVector3ObjectBuilder? _PLANE_NORMAL;
+  final String? _SECOND_TRAJECTORY_PORT;
+  final PCFExpressionObjectBuilder? _EXPRESSION;
 
   PCFEventDefinitionObjectBuilder({
-    String? NAME,
-    evlLocatorClass? LOCATOR_CLASS,
-    evlLocatorClass? locatorClass,
-    PCEParameterConditionObjectBuilder? CONDITION,
-    EVLEclipseConfigurationObjectBuilder? ECLIPSE,
-    EVLContactConfigurationObjectBuilder? CONTACT,
-    EVLIntrusionConfigurationObjectBuilder? INTRUSION,
-    EVLApsidesConfigurationObjectBuilder? APSIDES,
-    EVLNodeCrossingConfigurationObjectBuilder? NODE_CROSSING,
-    EVLNodeCrossingConfigurationObjectBuilder? nodeCrossing,
+    pcfEventKind? KIND,
+    pcfEventDirection? DIRECTION,
     pcfEventAction? ACTION,
-    double? EPOCH_TOLERANCE_SECONDS,
-    double? epochToleranceSeconds,
-    double? SCAN_STEP_SECONDS,
-    double? scanStepSeconds,
-    int? MAXIMUM_EVENTS,
-    int? maximumEvents,
+    double? TOLERANCE_SECONDS,
+    double? toleranceSeconds,
+    int? OCCURRENCE,
+    double? ANGLE_RAD,
+    double? angleRad,
+    FRMVector3ObjectBuilder? PLANE_NORMAL,
+    FRMVector3ObjectBuilder? planeNormal,
+    String? SECOND_TRAJECTORY_PORT,
+    String? secondTrajectoryPort,
+    PCFExpressionObjectBuilder? EXPRESSION,
   })
-      : _NAME = NAME,
-        _LOCATOR_CLASS = locatorClass ?? LOCATOR_CLASS,
-        _CONDITION = CONDITION,
-        _ECLIPSE = ECLIPSE,
-        _CONTACT = CONTACT,
-        _INTRUSION = INTRUSION,
-        _APSIDES = APSIDES,
-        _NODE_CROSSING = nodeCrossing ?? NODE_CROSSING,
+      : _KIND = KIND,
+        _DIRECTION = DIRECTION,
         _ACTION = ACTION,
-        _EPOCH_TOLERANCE_SECONDS = epochToleranceSeconds ?? EPOCH_TOLERANCE_SECONDS,
-        _SCAN_STEP_SECONDS = scanStepSeconds ?? SCAN_STEP_SECONDS,
-        _MAXIMUM_EVENTS = maximumEvents ?? MAXIMUM_EVENTS;
+        _TOLERANCE_SECONDS = toleranceSeconds ?? TOLERANCE_SECONDS,
+        _OCCURRENCE = OCCURRENCE,
+        _ANGLE_RAD = angleRad ?? ANGLE_RAD,
+        _PLANE_NORMAL = planeNormal ?? PLANE_NORMAL,
+        _SECOND_TRAJECTORY_PORT = secondTrajectoryPort ?? SECOND_TRAJECTORY_PORT,
+        _EXPRESSION = EXPRESSION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? NAMEOffset = _NAME == null ? null
-        : fbBuilder.writeString(_NAME!);
-    final int? CONDITIONOffset = _CONDITION?.getOrCreateOffset(fbBuilder);
-    final int? ECLIPSEOffset = _ECLIPSE?.getOrCreateOffset(fbBuilder);
-    final int? CONTACTOffset = _CONTACT?.getOrCreateOffset(fbBuilder);
-    final int? INTRUSIONOffset = _INTRUSION?.getOrCreateOffset(fbBuilder);
-    final int? APSIDESOffset = _APSIDES?.getOrCreateOffset(fbBuilder);
-    final int? NODE_CROSSINGOffset = _NODE_CROSSING?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(12);
-    fbBuilder.addOffset(0, NAMEOffset);
-    fbBuilder.addUint8(1, _LOCATOR_CLASS?.value);
-    fbBuilder.addOffset(2, CONDITIONOffset);
-    fbBuilder.addOffset(3, ECLIPSEOffset);
-    fbBuilder.addOffset(4, CONTACTOffset);
-    fbBuilder.addOffset(5, INTRUSIONOffset);
-    fbBuilder.addOffset(6, APSIDESOffset);
-    fbBuilder.addOffset(7, NODE_CROSSINGOffset);
-    fbBuilder.addUint8(8, _ACTION?.value);
-    fbBuilder.addFloat64(9, _EPOCH_TOLERANCE_SECONDS);
-    fbBuilder.addFloat64(10, _SCAN_STEP_SECONDS);
-    fbBuilder.addUint32(11, _MAXIMUM_EVENTS);
+    final int? PLANE_NORMALOffset = _PLANE_NORMAL?.getOrCreateOffset(fbBuilder);
+    final int? SECOND_TRAJECTORY_PORTOffset = _SECOND_TRAJECTORY_PORT == null ? null
+        : fbBuilder.writeString(_SECOND_TRAJECTORY_PORT!);
+    final int? EXPRESSIONOffset = _EXPRESSION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(9);
+    fbBuilder.addUint8(0, _KIND?.value);
+    fbBuilder.addUint8(1, _DIRECTION?.value);
+    fbBuilder.addUint8(2, _ACTION?.value);
+    fbBuilder.addFloat64(3, _TOLERANCE_SECONDS);
+    fbBuilder.addUint32(4, _OCCURRENCE);
+    fbBuilder.addFloat64(5, _ANGLE_RAD);
+    fbBuilder.addOffset(6, PLANE_NORMALOffset);
+    fbBuilder.addOffset(7, SECOND_TRAJECTORY_PORTOffset);
+    fbBuilder.addOffset(8, EXPRESSIONOffset);
     return fbBuilder.endTable();
   }
 

@@ -76,17 +76,84 @@ enum pcfEphemerisKind:
     /// A planetary ephemeris kernel (SPK), named in EPHEMERIS_SOURCE.
     pcfEphemerisKind_PLANETARY_KERNEL = 2
 
-/// What a propagator does when a located event occurs. Append new values
-/// only.
+/// The event function of a located event. Each is a continuous function g of the
+/// integrated state, evaluated by the integrator; an event is a zero crossing of g.
+/// The crossing is bracketed on each accepted step, refined to TOLERANCE_SECONDS on
+/// the integrator's continuous extension, and confirmed by re-stepping the
+/// integrator itself, so the epoch does not depend on the step size. Append new
+/// values only.
+enum pcfEventKind:
+    pcfEventKind_UNSPECIFIED = 0
+    /// g = r . v, the radial rate. INCREASING crossings are periapsis, DECREASING apoapsis.
+    pcfEventKind_APSIS = 1
+    /// g = n . r for the plane through the central body's center with normal PLANE_NORMAL
+    /// (absent: the pole of the request's axes, which makes the crossings the nodes).
+    /// INCREASING crossings are ascending, DECREASING descending.
+    pcfEventKind_PLANE_CROSSING = 2
+    /// g = the true anomaly minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+    pcfEventKind_TRUE_ANOMALY = 3
+    /// g = the argument of latitude minus ANGLE_RAD, wrapped to (-pi, pi]. INCREASING.
+    pcfEventKind_ARGUMENT_OF_LATITUDE = 4
+    /// g = r^2 d(z)/dt - z (r . v) with z the component along the pole of the request's
+    /// axes: the zero of the rate of the geocentric latitude. DECREASING crossings are
+    /// maxima, INCREASING minima.
+    pcfEventKind_LATITUDE_EXTREMUM = 5
+    /// g = the angular separation of the Sun and the central body's centers minus the
+    /// difference of their apparent radii, positive in light (the umbra of the conical
+    /// model). DECREASING is entry, INCREASING exit.
+    pcfEventKind_UMBRA = 6
+    /// g = the same separation minus the sum of the apparent radii (the penumbra
+    /// boundary).
+    pcfEventKind_PENUMBRA = 7
+    /// g = (r - r2) . (v - v2), r2 and v2 the position and velocity of the trajectory on
+    /// the input port named by SECOND_TRAJECTORY_PORT. INCREASING crossings are minima of
+    /// the range.
+    pcfEventKind_CLOSEST_APPROACH = 8
+    /// g = the value of EXPRESSION.
+    pcfEventKind_EXPRESSION = 9
+
+/// Which zero crossings of the event function count. Append new values only.
+enum pcfEventDirection:
+    pcfEventDirection_ANY = 0
+    /// g goes from negative to positive.
+    pcfEventDirection_INCREASING = 1
+    /// g goes from positive to negative.
+    pcfEventDirection_DECREASING = 2
+
+/// What the integrator does at a located event. Append new values only.
 enum pcfEventAction:
-    pcfEventAction_UNSPECIFIED = 0
-    /// End the propagation at the event; the result carries its epoch and state.
-    pcfEventAction_STOP = 1
-    /// Make the event a step boundary only (the dynamics may change there) and
-    /// report nothing about it.
-    pcfEventAction_CONTINUE = 2
-    /// Report the event in the result and keep propagating.
-    pcfEventAction_RECORD = 3
+    /// The event is located and counted; it is not reported.
+    pcfEventAction_CONTINUE = 0
+    /// The event is located, counted and reported; propagation continues.
+    pcfEventAction_RECORD = 1
+    /// The event is reported and the propagation ends there: the final sample is the
+    /// state at the OCCURRENCE-th qualifying crossing.
+    pcfEventAction_STOP = 2
+
+/// Operations of a bounded expression. The expression is data, evaluated by the
+/// provider; no code runs. Append new values only.
+enum pcfExpressionOperation:
+    pcfExpressionOperation_UNSPECIFIED = 0
+    /// Push VALUE.
+    pcfExpressionOperation_CONSTANT = 1
+    /// Push the value of PARAMETER at the integrated state, in the units of the $PCE
+    /// catalog.
+    pcfExpressionOperation_PARAMETER = 2
+    /// Pop two, push their sum, difference (second minus first popped), product or
+    /// quotient.
+    pcfExpressionOperation_ADD = 3
+    pcfExpressionOperation_SUBTRACT = 4
+    pcfExpressionOperation_MULTIPLY = 5
+    pcfExpressionOperation_DIVIDE = 6
+    /// Pop one, push the result.
+    pcfExpressionOperation_NEGATE = 7
+    pcfExpressionOperation_ABSOLUTE = 8
+    pcfExpressionOperation_SQUARE_ROOT = 9
+    pcfExpressionOperation_SINE = 10
+    pcfExpressionOperation_COSINE = 11
+    /// Pop two, push the lesser or the greater.
+    pcfExpressionOperation_MINIMUM = 12
+    pcfExpressionOperation_MAXIMUM = 13
 
 /// How the correlation of maneuver-detection innovations is weighted. Append
 /// new values only.
@@ -127,7 +194,7 @@ enum pcfOutputFrame:
 /// 10 are the numbers $PRW has always carried; new values are appended only,
 /// never reordered or reused. A scheme value names the stepping method; a
 /// formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
-/// STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+/// STIEFEL) names the variables the equations are written in, and the
 /// scheme that steps them is the provider's, reported in its result.
 enum pcfIntegratorAlgorithm:
     /// The provider's own algorithm.
@@ -159,14 +226,14 @@ enum pcfIntegratorAlgorithm:
     pcfIntegratorAlgorithm_DOPRI5 = 11
     /// Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
     /// (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
-    pcfIntegratorAlgorithm_RK65_8M = 12
+    pcfIntegratorAlgorithm_RK65 = 12
     /// Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
-    pcfIntegratorAlgorithm_VERNER_98 = 13
+    pcfIntegratorAlgorithm_RKV98 = 13
     /// Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
     /// (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
     /// acceleration must not depend on velocity, so a provider refuses it with
     /// drag.
-    pcfIntegratorAlgorithm_RKN12_10 = 14
+    pcfIntegratorAlgorithm_RKN1210 = 14
     /// Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
     /// started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
     /// 52).
@@ -178,7 +245,7 @@ enum pcfIntegratorAlgorithm:
     pcfIntegratorAlgorithm_DROMO = 17
     /// Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
     /// and Scheifele 1971, Linear and Regular Celestial Mechanics).
-    pcfIntegratorAlgorithm_STIEFEL_SCHEIFELE = 18
+    pcfIntegratorAlgorithm_STIEFEL = 18
     /// Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
     /// Solving Ordinary Differential Equations I).
     pcfIntegratorAlgorithm_DOPRI853 = 19
@@ -280,6 +347,10 @@ class PCFMeanElementOptions
 class PCFSegmentOptions
 
 class PCFFitPolicy
+
+class PCFExpressionTerm
+
+class PCFExpression
 
 class PCFEventDefinition
 
@@ -667,96 +738,135 @@ def PCFFitPolicyCreateCANDIDATESPANSHOURSVector(b_:flatbuffers.builder, v_:[floa
     reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+/// One term of an expression program.
+class PCFExpressionTerm : flatbuffers.handle
+    /// What the term does. Default UNSPECIFIED (refused).
+    def OPERATION() -> pcfExpressionOperation:
+        return pcfExpressionOperation(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    /// The constant pushed by CONSTANT. Default 0.
+    def VALUE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 6, 0.0)
+    /// The catalog parameter pushed by PARAMETER. Default UNSPECIFIED.
+    def PARAMETER() -> pceParameter:
+        return pceParameter(flatbuffers.field_uint16(buf_, pos_, 8, 0))
+
+def GetRootAsPCFExpressionTerm(buf:string): return PCFExpressionTerm { buf, flatbuffers.indirect(buf, 0) }
+
+struct PCFExpressionTermBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(3)
+        return this
+    def add_OPERATION(OPERATION:pcfExpressionOperation):
+        b_.PrependUint8Slot(0, OPERATION, 0)
+        return this
+    def add_VALUE(VALUE:float):
+        b_.PrependFloat64Slot(1, VALUE, 0.0)
+        return this
+    def add_PARAMETER(PARAMETER:pceParameter):
+        b_.PrependUint16Slot(2, PARAMETER, 0)
+        return this
+    def end():
+        return b_.EndObject()
+
+/// A reverse Polish program of at most 64 terms and stack depth 16 that leaves one
+/// number.
+class PCFExpression : flatbuffers.handle
+    /// The terms, in evaluation order. Default empty.
+    def TERMS(i:int) -> PCFExpressionTerm:
+        return PCFExpressionTerm { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 4) + i * 4) }
+    def TERMS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 4)
+
+def GetRootAsPCFExpression(buf:string): return PCFExpression { buf, flatbuffers.indirect(buf, 0) }
+
+struct PCFExpressionBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(1)
+        return this
+    def add_TERMS(TERMS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(0, TERMS)
+        return this
+    def end():
+        return b_.EndObject()
+
+def PCFExpressionStartTERMSVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(4, n_, 4)
+def PCFExpressionCreateTERMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
+    b_.StartVector(4, v_.length, 4)
+    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    return b_.EndVector(v_.length)
+
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
 class PCFEventDefinition : flatbuffers.handle
-    /// The caller's name for the event, echoed in the result. Default empty.
-    def NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 4)
-    /// Which locator. Default PARAMETER_CONDITION.
-    def LOCATOR_CLASS() -> evlLocatorClass:
-        return evlLocatorClass(flatbuffers.field_uint8(buf_, pos_, 6, 6))
-    /// Exactly the one of the next five that matches LOCATOR_CLASS is present
-    /// (any other combination is refused as MISSING_CONFIGURATION, as in
-    /// $EVL). The condition carries its own direction, goal value, goal
-    /// tolerance and occurrence.
-    def CONDITION() -> PCEParameterCondition?:
-        let o = flatbuffers.field_table(buf_, pos_, 8)
-        return if o: PCEParameterCondition { buf_, o } else: nil
-    def ECLIPSE() -> EVLEclipseConfiguration?:
-        let o = flatbuffers.field_table(buf_, pos_, 10)
-        return if o: EVLEclipseConfiguration { buf_, o } else: nil
-    def CONTACT() -> EVLContactConfiguration?:
-        let o = flatbuffers.field_table(buf_, pos_, 12)
-        return if o: EVLContactConfiguration { buf_, o } else: nil
-    def INTRUSION() -> EVLIntrusionConfiguration?:
-        let o = flatbuffers.field_table(buf_, pos_, 14)
-        return if o: EVLIntrusionConfiguration { buf_, o } else: nil
-    def APSIDES() -> EVLApsidesConfiguration?:
-        let o = flatbuffers.field_table(buf_, pos_, 16)
-        return if o: EVLApsidesConfiguration { buf_, o } else: nil
-    def NODE_CROSSING() -> EVLNodeCrossingConfiguration?:
-        let o = flatbuffers.field_table(buf_, pos_, 18)
-        return if o: EVLNodeCrossingConfiguration { buf_, o } else: nil
-    /// What the propagator does at the event. Default RECORD.
+    /// The event function. Default UNSPECIFIED (refused).
+    def KIND() -> pcfEventKind:
+        return pcfEventKind(flatbuffers.field_uint8(buf_, pos_, 4, 0))
+    /// Which zero crossings of the event function count. Default ANY.
+    def DIRECTION() -> pcfEventDirection:
+        return pcfEventDirection(flatbuffers.field_uint8(buf_, pos_, 6, 0))
+    /// What the integrator does at the event. Default RECORD.
     def ACTION() -> pcfEventAction:
-        return pcfEventAction(flatbuffers.field_uint8(buf_, pos_, 20, 3))
-    /// Convergence bar on the located epoch, seconds. Default 1e-9.
-    def EPOCH_TOLERANCE_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 1e-9)
-    /// Step at which the event function is sampled before refinement, seconds;
-    /// 0 samples at the integrator's accepted steps. A root is found only when
-    /// the function changes sign within one sample interval. Default 0.
-    def SCAN_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
-    /// Largest number of occurrences reported; 0 is no bound. Default 0.
-    def MAXIMUM_EVENTS() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 26, 0)
+        return pcfEventAction(flatbuffers.field_uint8(buf_, pos_, 8, 1))
+    /// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+    def TOLERANCE_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 1e-9)
+    /// STOP acts at this qualifying crossing (1 is the first). Default 1.
+    def OCCURRENCE() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 12, 1)
+    /// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+    def ANGLE_RAD() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+    /// vector. Default absent (the pole of the axes).
+    def PLANE_NORMAL() -> FRMVector3?:
+        let o = flatbuffers.field_table(buf_, pos_, 16)
+        return if o: FRMVector3 { buf_, o } else: nil
+    /// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+    /// as $OEM. Default empty.
+    def SECOND_TRAJECTORY_PORT() -> string:
+        return flatbuffers.field_string(buf_, pos_, 18)
+    /// EXPRESSION: the program. Default absent.
+    def EXPRESSION() -> PCFExpression?:
+        let o = flatbuffers.field_table(buf_, pos_, 20)
+        return if o: PCFExpression { buf_, o } else: nil
 
 def GetRootAsPCFEventDefinition(buf:string): return PCFEventDefinition { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFEventDefinitionBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(12)
+        b_.StartObject(9)
         return this
-    def add_NAME(NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(0, NAME)
+    def add_KIND(KIND:pcfEventKind):
+        b_.PrependUint8Slot(0, KIND, 0)
         return this
-    def add_LOCATOR_CLASS(LOCATOR_CLASS:evlLocatorClass):
-        b_.PrependUint8Slot(1, LOCATOR_CLASS, 6)
-        return this
-    def add_CONDITION(CONDITION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, CONDITION)
-        return this
-    def add_ECLIPSE(ECLIPSE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(3, ECLIPSE)
-        return this
-    def add_CONTACT(CONTACT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(4, CONTACT)
-        return this
-    def add_INTRUSION(INTRUSION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, INTRUSION)
-        return this
-    def add_APSIDES(APSIDES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, APSIDES)
-        return this
-    def add_NODE_CROSSING(NODE_CROSSING:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, NODE_CROSSING)
+    def add_DIRECTION(DIRECTION:pcfEventDirection):
+        b_.PrependUint8Slot(1, DIRECTION, 0)
         return this
     def add_ACTION(ACTION:pcfEventAction):
-        b_.PrependUint8Slot(8, ACTION, 3)
+        b_.PrependUint8Slot(2, ACTION, 1)
         return this
-    def add_EPOCH_TOLERANCE_SECONDS(EPOCH_TOLERANCE_SECONDS:float):
-        b_.PrependFloat64Slot(9, EPOCH_TOLERANCE_SECONDS, 1e-9)
+    def add_TOLERANCE_SECONDS(TOLERANCE_SECONDS:float):
+        b_.PrependFloat64Slot(3, TOLERANCE_SECONDS, 1e-9)
         return this
-    def add_SCAN_STEP_SECONDS(SCAN_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(10, SCAN_STEP_SECONDS, 0.0)
+    def add_OCCURRENCE(OCCURRENCE:int):
+        b_.PrependUint32Slot(4, OCCURRENCE, 1)
         return this
-    def add_MAXIMUM_EVENTS(MAXIMUM_EVENTS:int):
-        b_.PrependUint32Slot(11, MAXIMUM_EVENTS, 0)
+    def add_ANGLE_RAD(ANGLE_RAD:float):
+        b_.PrependFloat64Slot(5, ANGLE_RAD, 0.0)
+        return this
+    def add_PLANE_NORMAL(PLANE_NORMAL:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(6, PLANE_NORMAL)
+        return this
+    def add_SECOND_TRAJECTORY_PORT(SECOND_TRAJECTORY_PORT:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(7, SECOND_TRAJECTORY_PORT)
+        return this
+    def add_EXPRESSION(EXPRESSION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, EXPRESSION)
         return this
     def end():
         return b_.EndObject()

@@ -14,6 +14,7 @@ export * from './EVLEventSample.js';
 export * from './evlEventType.js';
 export * from './evlFieldOfViewShape.js';
 export * from './EVLIntrusionConfiguration.js';
+export * from './EVLLatitudeExtremumConfiguration.js';
 export * from './evlLocatorClass.js';
 export * from './EVLNodeCrossingConfiguration.js';
 export * from './EVLParameterConditionConfiguration.js';

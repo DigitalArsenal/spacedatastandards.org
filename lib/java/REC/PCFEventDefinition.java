@@ -17,10 +17,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * One event a propagator locates while it integrates. The vocabulary is
- * $EVL's: a locator class with its configuration, and $PCE's parameter
- * condition for the generic case (an altitude, radius, speed, radial
- * velocity or mass crossing is a $PCE parameter, not a class of its own).
+ * One event to locate inside the integration. A $PCF carries the list; a $PRW
+ * execution request carries the same definitions beside the integrator settings,
+ * and a located event comes back as a PRWEventRecord.
  */
 @SuppressWarnings("unused")
 public final class PCFEventDefinition extends com.google.flatbuffers.Table {
@@ -31,94 +30,81 @@ public final class PCFEventDefinition extends com.google.flatbuffers.Table {
   public PCFEventDefinition __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   /**
-   * The caller's name for the event, echoed in the result. Default empty.
+   * The event function. Default UNSPECIFIED (refused).
    */
-  public String NAME() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  public int KIND() { int o = __offset(4); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * Which locator. Default PARAMETER_CONDITION.
+   * Which zero crossings of the event function count. Default ANY.
    */
-  public int LOCATOR_CLASS() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 6; }
+  public int DIRECTION() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * Exactly the one of the next five that matches LOCATOR_CLASS is present
-   * (any other combination is refused as MISSING_CONFIGURATION, as in
-   * $EVL). The condition carries its own direction, goal value, goal
-   * tolerance and occurrence.
+   * What the integrator does at the event. Default RECORD.
    */
-  public PCEParameterCondition CONDITION() { return CONDITION(new PCEParameterCondition()); }
-  public PCEParameterCondition CONDITION(PCEParameterCondition obj) { int o = __offset(8); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public EVLEclipseConfiguration ECLIPSE() { return ECLIPSE(new EVLEclipseConfiguration()); }
-  public EVLEclipseConfiguration ECLIPSE(EVLEclipseConfiguration obj) { int o = __offset(10); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public EVLContactConfiguration CONTACT() { return CONTACT(new EVLContactConfiguration()); }
-  public EVLContactConfiguration CONTACT(EVLContactConfiguration obj) { int o = __offset(12); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public EVLIntrusionConfiguration INTRUSION() { return INTRUSION(new EVLIntrusionConfiguration()); }
-  public EVLIntrusionConfiguration INTRUSION(EVLIntrusionConfiguration obj) { int o = __offset(14); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public EVLApsidesConfiguration APSIDES() { return APSIDES(new EVLApsidesConfiguration()); }
-  public EVLApsidesConfiguration APSIDES(EVLApsidesConfiguration obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
-  public EVLNodeCrossingConfiguration NODE_CROSSING() { return NODE_CROSSING(new EVLNodeCrossingConfiguration()); }
-  public EVLNodeCrossingConfiguration NODE_CROSSING(EVLNodeCrossingConfiguration obj) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  public int ACTION() { int o = __offset(8); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1; }
   /**
-   * What the propagator does at the event. Default RECORD.
+   * Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
    */
-  public int ACTION() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 3; }
+  public double TOLERANCE_SECONDS() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 1e-9; }
   /**
-   * Convergence bar on the located epoch, seconds. Default 1e-9.
+   * STOP acts at this qualifying crossing (1 is the first). Default 1.
    */
-  public double EPOCH_TOLERANCE_SECONDS() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 1e-9; }
+  public long OCCURRENCE() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 1L; }
   /**
-   * Step at which the event function is sampled before refinement, seconds;
-   * 0 samples at the integrator's accepted steps. A root is found only when
-   * the function changes sign within one sample interval. Default 0.
+   * TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
    */
-  public double SCAN_STEP_SECONDS() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  public double ANGLE_RAD() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Largest number of occurrences reported; 0 is no bound. Default 0.
+   * PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+   * vector. Default absent (the pole of the axes).
    */
-  public long MAXIMUM_EVENTS() { int o = __offset(26); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  public FRMVector3 PLANE_NORMAL() { return PLANE_NORMAL(new FRMVector3()); }
+  public FRMVector3 PLANE_NORMAL(FRMVector3 obj) { int o = __offset(16); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+   * as $OEM. Default empty.
+   */
+  public String SECOND_TRAJECTORY_PORT() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SECOND_TRAJECTORY_PORTAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer SECOND_TRAJECTORY_PORTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * EXPRESSION: the program. Default absent.
+   */
+  public PCFExpression EXPRESSION() { return EXPRESSION(new PCFExpression()); }
+  public PCFExpression EXPRESSION(PCFExpression obj) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPCFEventDefinition(FlatBufferBuilder builder,
-      int NAMEOffset,
-      int LOCATOR_CLASS,
-      int CONDITIONOffset,
-      int ECLIPSEOffset,
-      int CONTACTOffset,
-      int INTRUSIONOffset,
-      int APSIDESOffset,
-      int NODE_CROSSINGOffset,
+      int KIND,
+      int DIRECTION,
       int ACTION,
-      double EPOCH_TOLERANCE_SECONDS,
-      double SCAN_STEP_SECONDS,
-      long MAXIMUM_EVENTS) {
-    builder.startTable(12);
-    PCFEventDefinition.addScanStepSeconds(builder, SCAN_STEP_SECONDS);
-    PCFEventDefinition.addEpochToleranceSeconds(builder, EPOCH_TOLERANCE_SECONDS);
-    PCFEventDefinition.addMaximumEvents(builder, MAXIMUM_EVENTS);
-    PCFEventDefinition.addNodeCrossing(builder, NODE_CROSSINGOffset);
-    PCFEventDefinition.addApsides(builder, APSIDESOffset);
-    PCFEventDefinition.addIntrusion(builder, INTRUSIONOffset);
-    PCFEventDefinition.addContact(builder, CONTACTOffset);
-    PCFEventDefinition.addEclipse(builder, ECLIPSEOffset);
-    PCFEventDefinition.addCondition(builder, CONDITIONOffset);
-    PCFEventDefinition.addName(builder, NAMEOffset);
+      double TOLERANCE_SECONDS,
+      long OCCURRENCE,
+      double ANGLE_RAD,
+      int PLANE_NORMALOffset,
+      int SECOND_TRAJECTORY_PORTOffset,
+      int EXPRESSIONOffset) {
+    builder.startTable(9);
+    PCFEventDefinition.addAngleRad(builder, ANGLE_RAD);
+    PCFEventDefinition.addToleranceSeconds(builder, TOLERANCE_SECONDS);
+    PCFEventDefinition.addExpression(builder, EXPRESSIONOffset);
+    PCFEventDefinition.addSecondTrajectoryPort(builder, SECOND_TRAJECTORY_PORTOffset);
+    PCFEventDefinition.addPlaneNormal(builder, PLANE_NORMALOffset);
+    PCFEventDefinition.addOccurrence(builder, OCCURRENCE);
     PCFEventDefinition.addAction(builder, ACTION);
-    PCFEventDefinition.addLocatorClass(builder, LOCATOR_CLASS);
+    PCFEventDefinition.addDirection(builder, DIRECTION);
+    PCFEventDefinition.addKind(builder, KIND);
     return PCFEventDefinition.endPCFEventDefinition(builder);
   }
 
-  public static void startPCFEventDefinition(FlatBufferBuilder builder) { builder.startTable(12); }
-  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(0, NAMEOffset, 0); }
-  public static void addLocatorClass(FlatBufferBuilder builder, int LOCATOR_CLASS) { builder.addByte(1, (byte) LOCATOR_CLASS, (byte) 6); }
-  public static void addCondition(FlatBufferBuilder builder, int CONDITIONOffset) { builder.addOffset(2, CONDITIONOffset, 0); }
-  public static void addEclipse(FlatBufferBuilder builder, int ECLIPSEOffset) { builder.addOffset(3, ECLIPSEOffset, 0); }
-  public static void addContact(FlatBufferBuilder builder, int CONTACTOffset) { builder.addOffset(4, CONTACTOffset, 0); }
-  public static void addIntrusion(FlatBufferBuilder builder, int INTRUSIONOffset) { builder.addOffset(5, INTRUSIONOffset, 0); }
-  public static void addApsides(FlatBufferBuilder builder, int APSIDESOffset) { builder.addOffset(6, APSIDESOffset, 0); }
-  public static void addNodeCrossing(FlatBufferBuilder builder, int NODE_CROSSINGOffset) { builder.addOffset(7, NODE_CROSSINGOffset, 0); }
-  public static void addAction(FlatBufferBuilder builder, int ACTION) { builder.addByte(8, (byte) ACTION, (byte) 3); }
-  public static void addEpochToleranceSeconds(FlatBufferBuilder builder, double EPOCH_TOLERANCE_SECONDS) { builder.addDouble(9, EPOCH_TOLERANCE_SECONDS, 1e-9); }
-  public static void addScanStepSeconds(FlatBufferBuilder builder, double SCAN_STEP_SECONDS) { builder.addDouble(10, SCAN_STEP_SECONDS, 0.0); }
-  public static void addMaximumEvents(FlatBufferBuilder builder, long MAXIMUM_EVENTS) { builder.addInt(11, (int) MAXIMUM_EVENTS, (int) 0L); }
+  public static void startPCFEventDefinition(FlatBufferBuilder builder) { builder.startTable(9); }
+  public static void addKind(FlatBufferBuilder builder, int KIND) { builder.addByte(0, (byte) KIND, (byte) 0); }
+  public static void addDirection(FlatBufferBuilder builder, int DIRECTION) { builder.addByte(1, (byte) DIRECTION, (byte) 0); }
+  public static void addAction(FlatBufferBuilder builder, int ACTION) { builder.addByte(2, (byte) ACTION, (byte) 1); }
+  public static void addToleranceSeconds(FlatBufferBuilder builder, double TOLERANCE_SECONDS) { builder.addDouble(3, TOLERANCE_SECONDS, 1e-9); }
+  public static void addOccurrence(FlatBufferBuilder builder, long OCCURRENCE) { builder.addInt(4, (int) OCCURRENCE, (int) 1L); }
+  public static void addAngleRad(FlatBufferBuilder builder, double ANGLE_RAD) { builder.addDouble(5, ANGLE_RAD, 0.0); }
+  public static void addPlaneNormal(FlatBufferBuilder builder, int PLANE_NORMALOffset) { builder.addOffset(6, PLANE_NORMALOffset, 0); }
+  public static void addSecondTrajectoryPort(FlatBufferBuilder builder, int SECOND_TRAJECTORY_PORTOffset) { builder.addOffset(7, SECOND_TRAJECTORY_PORTOffset, 0); }
+  public static void addExpression(FlatBufferBuilder builder, int EXPRESSIONOffset) { builder.addOffset(8, EXPRESSIONOffset, 0); }
   public static int endPCFEventDefinition(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

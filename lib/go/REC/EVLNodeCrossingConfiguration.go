@@ -98,8 +98,33 @@ func (rcv *EVLNodeCrossingConfiguration) MutateReportDescending(n bool) bool {
 	return rcv.MutateREPORT_DESCENDING(n)
 }
 
+/// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+/// it need not be a unit vector. Absent or zero: the pole of those axes, which
+/// makes the crossings the nodes of its equator. Any other normal is an
+/// arbitrary plane through the center of the system.
+func (rcv *EVLNodeCrossingConfiguration) PLANE_NORMAL(obj *FRMVector3) *FRMVector3 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMVector3)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *EVLNodeCrossingConfiguration) PlaneNormal(obj *FRMVector3) *FRMVector3 {
+	return rcv.PLANE_NORMAL(obj)
+}
+
+/// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+/// it need not be a unit vector. Absent or zero: the pole of those axes, which
+/// makes the crossings the nodes of its equator. Any other normal is an
+/// arbitrary plane through the center of the system.
 func EVLNodeCrossingConfigurationStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(4)
 }
 func EVLNodeCrossingConfigurationAddREFERENCE_COORDINATE_SYSTEM_NAME(builder *flatbuffers.Builder, REFERENCE_COORDINATE_SYSTEM_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(REFERENCE_COORDINATE_SYSTEM_NAME), 0)
@@ -118,6 +143,12 @@ func EVLNodeCrossingConfigurationAddREPORT_DESCENDING(builder *flatbuffers.Build
 }
 func EVLNodeCrossingConfigurationAddReportDescending(builder *flatbuffers.Builder, REPORT_DESCENDING bool) {
 	EVLNodeCrossingConfigurationAddREPORT_DESCENDING(builder, REPORT_DESCENDING)
+}
+func EVLNodeCrossingConfigurationAddPLANE_NORMAL(builder *flatbuffers.Builder, PLANE_NORMAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(PLANE_NORMAL), 0)
+}
+func EVLNodeCrossingConfigurationAddPlaneNormal(builder *flatbuffers.Builder, PLANE_NORMAL flatbuffers.UOffsetT) {
+	EVLNodeCrossingConfigurationAddPLANE_NORMAL(builder, PLANE_NORMAL)
 }
 func EVLNodeCrossingConfigurationEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -1,17 +1,13 @@
 import * as flatbuffers from 'flatbuffers';
-import { EVLApsidesConfiguration, EVLApsidesConfigurationT } from './EVLApsidesConfiguration.js';
-import { EVLContactConfiguration, EVLContactConfigurationT } from './EVLContactConfiguration.js';
-import { EVLEclipseConfiguration, EVLEclipseConfigurationT } from './EVLEclipseConfiguration.js';
-import { EVLIntrusionConfiguration, EVLIntrusionConfigurationT } from './EVLIntrusionConfiguration.js';
-import { EVLNodeCrossingConfiguration, EVLNodeCrossingConfigurationT } from './EVLNodeCrossingConfiguration.js';
-import { PCEParameterCondition, PCEParameterConditionT } from './PCEParameterCondition.js';
-import { evlLocatorClass } from './evlLocatorClass.js';
+import { FRMVector3, FRMVector3T } from './FRMVector3.js';
+import { PCFExpression, PCFExpressionT } from './PCFExpression.js';
 import { pcfEventAction } from './pcfEventAction.js';
+import { pcfEventDirection } from './pcfEventDirection.js';
+import { pcfEventKind } from './pcfEventKind.js';
 /**
- * One event a propagator locates while it integrates. The vocabulary is
- * $EVL's: a locator class with its configuration, and $PCE's parameter
- * condition for the generic case (an altitude, radius, speed, radial
- * velocity or mass crossing is a $PCE parameter, not a class of its own).
+ * One event to locate inside the integration. A $PCF carries the list; a $PRW
+ * execution request carries the same definitions beside the integrator settings,
+ * and a located event comes back as a PRWEventRecord.
  */
 export declare class PCFEventDefinition implements flatbuffers.IUnpackableObject<PCFEventDefinitionT> {
     bb: flatbuffers.ByteBuffer | null;
@@ -20,75 +16,69 @@ export declare class PCFEventDefinition implements flatbuffers.IUnpackableObject
     static getRootAsPCFEventDefinition(bb: flatbuffers.ByteBuffer, obj?: PCFEventDefinition): PCFEventDefinition;
     static getSizePrefixedRootAsPCFEventDefinition(bb: flatbuffers.ByteBuffer, obj?: PCFEventDefinition): PCFEventDefinition;
     /**
-     * The caller's name for the event, echoed in the result. Default empty.
+     * The event function. Default UNSPECIFIED (refused).
      */
-    NAME(): string | null;
-    NAME(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    KIND(): pcfEventKind;
     /**
-     * Which locator. Default PARAMETER_CONDITION.
+     * Which zero crossings of the event function count. Default ANY.
      */
-    LOCATOR_CLASS(): evlLocatorClass;
+    DIRECTION(): pcfEventDirection;
     /**
-     * Exactly the one of the next five that matches LOCATOR_CLASS is present
-     * (any other combination is refused as MISSING_CONFIGURATION, as in
-     * $EVL). The condition carries its own direction, goal value, goal
-     * tolerance and occurrence.
-     */
-    CONDITION(obj?: PCEParameterCondition): PCEParameterCondition | null;
-    ECLIPSE(obj?: EVLEclipseConfiguration): EVLEclipseConfiguration | null;
-    CONTACT(obj?: EVLContactConfiguration): EVLContactConfiguration | null;
-    INTRUSION(obj?: EVLIntrusionConfiguration): EVLIntrusionConfiguration | null;
-    APSIDES(obj?: EVLApsidesConfiguration): EVLApsidesConfiguration | null;
-    NODE_CROSSING(obj?: EVLNodeCrossingConfiguration): EVLNodeCrossingConfiguration | null;
-    /**
-     * What the propagator does at the event. Default RECORD.
+     * What the integrator does at the event. Default RECORD.
      */
     ACTION(): pcfEventAction;
     /**
-     * Convergence bar on the located epoch, seconds. Default 1e-9.
+     * Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
      */
-    EPOCH_TOLERANCE_SECONDS(): number;
+    TOLERANCE_SECONDS(): number;
     /**
-     * Step at which the event function is sampled before refinement, seconds;
-     * 0 samples at the integrator's accepted steps. A root is found only when
-     * the function changes sign within one sample interval. Default 0.
+     * STOP acts at this qualifying crossing (1 is the first). Default 1.
      */
-    SCAN_STEP_SECONDS(): number;
+    OCCURRENCE(): number;
     /**
-     * Largest number of occurrences reported; 0 is no bound. Default 0.
+     * TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
      */
-    MAXIMUM_EVENTS(): number;
+    ANGLE_RAD(): number;
+    /**
+     * PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+     * vector. Default absent (the pole of the axes).
+     */
+    PLANE_NORMAL(obj?: FRMVector3): FRMVector3 | null;
+    /**
+     * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+     * as $OEM. Default empty.
+     */
+    SECOND_TRAJECTORY_PORT(): string | null;
+    SECOND_TRAJECTORY_PORT(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null;
+    /**
+     * EXPRESSION: the program. Default absent.
+     */
+    EXPRESSION(obj?: PCFExpression): PCFExpression | null;
     static startPCFEventDefinition(builder: flatbuffers.Builder): void;
-    static addName(builder: flatbuffers.Builder, NAMEOffset: flatbuffers.Offset): void;
-    static addLocatorClass(builder: flatbuffers.Builder, LOCATOR_CLASS: evlLocatorClass): void;
-    static addCondition(builder: flatbuffers.Builder, CONDITIONOffset: flatbuffers.Offset): void;
-    static addEclipse(builder: flatbuffers.Builder, ECLIPSEOffset: flatbuffers.Offset): void;
-    static addContact(builder: flatbuffers.Builder, CONTACTOffset: flatbuffers.Offset): void;
-    static addIntrusion(builder: flatbuffers.Builder, INTRUSIONOffset: flatbuffers.Offset): void;
-    static addApsides(builder: flatbuffers.Builder, APSIDESOffset: flatbuffers.Offset): void;
-    static addNodeCrossing(builder: flatbuffers.Builder, NODE_CROSSINGOffset: flatbuffers.Offset): void;
+    static addKind(builder: flatbuffers.Builder, KIND: pcfEventKind): void;
+    static addDirection(builder: flatbuffers.Builder, DIRECTION: pcfEventDirection): void;
     static addAction(builder: flatbuffers.Builder, ACTION: pcfEventAction): void;
-    static addEpochToleranceSeconds(builder: flatbuffers.Builder, EPOCH_TOLERANCE_SECONDS: number): void;
-    static addScanStepSeconds(builder: flatbuffers.Builder, SCAN_STEP_SECONDS: number): void;
-    static addMaximumEvents(builder: flatbuffers.Builder, MAXIMUM_EVENTS: number): void;
+    static addToleranceSeconds(builder: flatbuffers.Builder, TOLERANCE_SECONDS: number): void;
+    static addOccurrence(builder: flatbuffers.Builder, OCCURRENCE: number): void;
+    static addAngleRad(builder: flatbuffers.Builder, ANGLE_RAD: number): void;
+    static addPlaneNormal(builder: flatbuffers.Builder, PLANE_NORMALOffset: flatbuffers.Offset): void;
+    static addSecondTrajectoryPort(builder: flatbuffers.Builder, SECOND_TRAJECTORY_PORTOffset: flatbuffers.Offset): void;
+    static addExpression(builder: flatbuffers.Builder, EXPRESSIONOffset: flatbuffers.Offset): void;
     static endPCFEventDefinition(builder: flatbuffers.Builder): flatbuffers.Offset;
     unpack(): PCFEventDefinitionT;
     unpackTo(_o: PCFEventDefinitionT): void;
 }
 export declare class PCFEventDefinitionT implements flatbuffers.IGeneratedObject {
-    NAME: string | Uint8Array | null;
-    LOCATOR_CLASS: evlLocatorClass;
-    CONDITION: PCEParameterConditionT | null;
-    ECLIPSE: EVLEclipseConfigurationT | null;
-    CONTACT: EVLContactConfigurationT | null;
-    INTRUSION: EVLIntrusionConfigurationT | null;
-    APSIDES: EVLApsidesConfigurationT | null;
-    NODE_CROSSING: EVLNodeCrossingConfigurationT | null;
+    KIND: pcfEventKind;
+    DIRECTION: pcfEventDirection;
     ACTION: pcfEventAction;
-    EPOCH_TOLERANCE_SECONDS: number;
-    SCAN_STEP_SECONDS: number;
-    MAXIMUM_EVENTS: number;
-    constructor(NAME?: string | Uint8Array | null, LOCATOR_CLASS?: evlLocatorClass, CONDITION?: PCEParameterConditionT | null, ECLIPSE?: EVLEclipseConfigurationT | null, CONTACT?: EVLContactConfigurationT | null, INTRUSION?: EVLIntrusionConfigurationT | null, APSIDES?: EVLApsidesConfigurationT | null, NODE_CROSSING?: EVLNodeCrossingConfigurationT | null, ACTION?: pcfEventAction, EPOCH_TOLERANCE_SECONDS?: number, SCAN_STEP_SECONDS?: number, MAXIMUM_EVENTS?: number);
+    TOLERANCE_SECONDS: number;
+    OCCURRENCE: number;
+    ANGLE_RAD: number;
+    PLANE_NORMAL: FRMVector3T | null;
+    SECOND_TRAJECTORY_PORT: string | Uint8Array | null;
+    EXPRESSION: PCFExpressionT | null;
+    constructor(KIND?: pcfEventKind, DIRECTION?: pcfEventDirection, ACTION?: pcfEventAction, TOLERANCE_SECONDS?: number, OCCURRENCE?: number, ANGLE_RAD?: number, PLANE_NORMAL?: FRMVector3T | null, SECOND_TRAJECTORY_PORT?: string | Uint8Array | null, EXPRESSION?: PCFExpressionT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PCFEventDefinition.d.ts.map

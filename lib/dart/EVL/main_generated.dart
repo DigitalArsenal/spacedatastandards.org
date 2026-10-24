@@ -17,7 +17,8 @@ enum evlLocatorClass {
   INTRUSION(3),
   APSIDES(4),
   NODE_CROSSING(5),
-  PARAMETER_CONDITION(6);
+  PARAMETER_CONDITION(6),
+  LATITUDE_EXTREMUM(7);
 
   final int value;
   const evlLocatorClass(this.value);
@@ -31,6 +32,7 @@ enum evlLocatorClass {
       case 4: return evlLocatorClass.APSIDES;
       case 5: return evlLocatorClass.NODE_CROSSING;
       case 6: return evlLocatorClass.PARAMETER_CONDITION;
+      case 7: return evlLocatorClass.LATITUDE_EXTREMUM;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -39,7 +41,7 @@ enum evlLocatorClass {
       value == null ? null : evlLocatorClass.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 6;
+  static const int maxValue = 7;
   static const fb.Reader<evlLocatorClass> reader = _evlLocatorClassReader();
 }
 
@@ -68,7 +70,9 @@ enum evlEventType {
   PERIAPSIS(9),
   ASCENDING_NODE(10),
   DESCENDING_NODE(11),
-  CONDITION_SATISFIED(12);
+  CONDITION_SATISFIED(12),
+  MAXIMUM_LATITUDE(13),
+  MINIMUM_LATITUDE(14);
 
   final int value;
   const evlEventType(this.value);
@@ -88,6 +92,8 @@ enum evlEventType {
       case 10: return evlEventType.ASCENDING_NODE;
       case 11: return evlEventType.DESCENDING_NODE;
       case 12: return evlEventType.CONDITION_SATISFIED;
+      case 13: return evlEventType.MAXIMUM_LATITUDE;
+      case 14: return evlEventType.MINIMUM_LATITUDE;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -96,7 +102,7 @@ enum evlEventType {
       value == null ? null : evlEventType.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 12;
+  static const int maxValue = 14;
   static const fb.Reader<evlEventType> reader = _evlEventTypeReader();
 }
 
@@ -977,10 +983,16 @@ class EVLNodeCrossingConfiguration {
   bool get reportAscending => REPORT_ASCENDING;
   bool get REPORT_DESCENDING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, true);
   bool get reportDescending => REPORT_DESCENDING;
+  ///  Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+  ///  it need not be a unit vector. Absent or zero: the pole of those axes, which
+  ///  makes the crossings the nodes of its equator. Any other normal is an
+  ///  arbitrary plane through the center of the system.
+  FRMVector3? get PLANE_NORMAL => FRMVector3.reader.vTableGetNullable(_bc, _bcOffset, 10);
+  FRMVector3? get planeNormal => PLANE_NORMAL;
 
   @override
   String toString() {
-    return 'EVLNodeCrossingConfiguration{referenceCoordinateSystemName: ${referenceCoordinateSystemName}, reportAscending: ${reportAscending}, reportDescending: ${reportDescending}}';
+    return 'EVLNodeCrossingConfiguration{referenceCoordinateSystemName: ${referenceCoordinateSystemName}, reportAscending: ${reportAscending}, reportDescending: ${reportDescending}, planeNormal: ${planeNormal}}';
   }
 }
 
@@ -998,7 +1010,7 @@ class EVLNodeCrossingConfigurationBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(4);
   }
 
   int addReferenceCoordinateSystemNameOffset(int? offset) {
@@ -1013,6 +1025,10 @@ class EVLNodeCrossingConfigurationBuilder {
     fbBuilder.addBool(2, REPORT_DESCENDING);
     return fbBuilder.offset;
   }
+  int addPlaneNormalOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1023,6 +1039,7 @@ class EVLNodeCrossingConfigurationObjectBuilder extends fb.ObjectBuilder {
   final String? _REFERENCE_COORDINATE_SYSTEM_NAME;
   final bool? _REPORT_ASCENDING;
   final bool? _REPORT_DESCENDING;
+  final FRMVector3ObjectBuilder? _PLANE_NORMAL;
 
   EVLNodeCrossingConfigurationObjectBuilder({
     String? REFERENCE_COORDINATE_SYSTEM_NAME,
@@ -1031,20 +1048,123 @@ class EVLNodeCrossingConfigurationObjectBuilder extends fb.ObjectBuilder {
     bool? reportAscending,
     bool? REPORT_DESCENDING,
     bool? reportDescending,
+    FRMVector3ObjectBuilder? PLANE_NORMAL,
+    FRMVector3ObjectBuilder? planeNormal,
   })
       : _REFERENCE_COORDINATE_SYSTEM_NAME = referenceCoordinateSystemName ?? REFERENCE_COORDINATE_SYSTEM_NAME,
         _REPORT_ASCENDING = reportAscending ?? REPORT_ASCENDING,
-        _REPORT_DESCENDING = reportDescending ?? REPORT_DESCENDING;
+        _REPORT_DESCENDING = reportDescending ?? REPORT_DESCENDING,
+        _PLANE_NORMAL = planeNormal ?? PLANE_NORMAL;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? REFERENCE_COORDINATE_SYSTEM_NAMEOffset = _REFERENCE_COORDINATE_SYSTEM_NAME == null ? null
         : fbBuilder.writeString(_REFERENCE_COORDINATE_SYSTEM_NAME!);
-    fbBuilder.startTable(3);
+    final int? PLANE_NORMALOffset = _PLANE_NORMAL?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(4);
     fbBuilder.addOffset(0, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
     fbBuilder.addBool(1, _REPORT_ASCENDING);
     fbBuilder.addBool(2, _REPORT_DESCENDING);
+    fbBuilder.addOffset(3, PLANE_NORMALOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Configuration for LATITUDE_EXTREMUM.
+class EVLLatitudeExtremumConfiguration {
+  EVLLatitudeExtremumConfiguration._(this._bc, this._bcOffset);
+  factory EVLLatitudeExtremumConfiguration(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<EVLLatitudeExtremumConfiguration> reader = _EVLLatitudeExtremumConfigurationReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Ephemeris body code the latitude is measured about; the pole is that of
+  ///  the request context's axes.
+  int get CENTRAL_BODY_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 4, 0);
+  int get centralBodyId => CENTRAL_BODY_ID;
+  bool get REPORT_MAXIMUM => const fb.BoolReader().vTableGet(_bc, _bcOffset, 6, true);
+  bool get reportMaximum => REPORT_MAXIMUM;
+  bool get REPORT_MINIMUM => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, true);
+  bool get reportMinimum => REPORT_MINIMUM;
+
+  @override
+  String toString() {
+    return 'EVLLatitudeExtremumConfiguration{centralBodyId: ${centralBodyId}, reportMaximum: ${reportMaximum}, reportMinimum: ${reportMinimum}}';
+  }
+}
+
+class _EVLLatitudeExtremumConfigurationReader extends fb.TableReader<EVLLatitudeExtremumConfiguration> {
+  const _EVLLatitudeExtremumConfigurationReader();
+
+  @override
+  EVLLatitudeExtremumConfiguration createObject(fb.BufferContext bc, int offset) =>
+    EVLLatitudeExtremumConfiguration._(bc, offset);
+}
+
+class EVLLatitudeExtremumConfigurationBuilder {
+  EVLLatitudeExtremumConfigurationBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addCentralBodyId(int? CENTRAL_BODY_ID) {
+    fbBuilder.addInt32(0, CENTRAL_BODY_ID);
+    return fbBuilder.offset;
+  }
+  int addReportMaximum(bool? REPORT_MAXIMUM) {
+    fbBuilder.addBool(1, REPORT_MAXIMUM);
+    return fbBuilder.offset;
+  }
+  int addReportMinimum(bool? REPORT_MINIMUM) {
+    fbBuilder.addBool(2, REPORT_MINIMUM);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class EVLLatitudeExtremumConfigurationObjectBuilder extends fb.ObjectBuilder {
+  final int? _CENTRAL_BODY_ID;
+  final bool? _REPORT_MAXIMUM;
+  final bool? _REPORT_MINIMUM;
+
+  EVLLatitudeExtremumConfigurationObjectBuilder({
+    int? CENTRAL_BODY_ID,
+    int? centralBodyId,
+    bool? REPORT_MAXIMUM,
+    bool? reportMaximum,
+    bool? REPORT_MINIMUM,
+    bool? reportMinimum,
+  })
+      : _CENTRAL_BODY_ID = centralBodyId ?? CENTRAL_BODY_ID,
+        _REPORT_MAXIMUM = reportMaximum ?? REPORT_MAXIMUM,
+        _REPORT_MINIMUM = reportMinimum ?? REPORT_MINIMUM;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addInt32(0, _CENTRAL_BODY_ID);
+    fbBuilder.addBool(1, _REPORT_MAXIMUM);
+    fbBuilder.addBool(2, _REPORT_MINIMUM);
     return fbBuilder.endTable();
   }
 
@@ -1549,10 +1669,12 @@ class EVLEventLocationRequest {
   EVLParameterConditionConfiguration? get parameterConditionConfiguration => PARAMETER_CONDITION_CONFIGURATION;
   String? get TRACE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
   String? get traceId => TRACE_ID;
+  EVLLatitudeExtremumConfiguration? get LATITUDE_EXTREMUM_CONFIGURATION => EVLLatitudeExtremumConfiguration.reader.vTableGetNullable(_bc, _bcOffset, 38);
+  EVLLatitudeExtremumConfiguration? get latitudeExtremumConfiguration => LATITUDE_EXTREMUM_CONFIGURATION;
 
   @override
   String toString() {
-    return 'EVLEventLocationRequest{locatorClass: ${locatorClass}, targetObjectId: ${targetObjectId}, CONTEXT: ${CONTEXT}, scanStartEpoch: ${scanStartEpoch}, scanStopEpoch: ${scanStopEpoch}, epochTimeSystem: ${epochTimeSystem}, scanStepSeconds: ${scanStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, maximumEvents: ${maximumEvents}, reportParameters: ${reportParameters}, eclipseConfiguration: ${eclipseConfiguration}, contactConfiguration: ${contactConfiguration}, intrusionConfiguration: ${intrusionConfiguration}, apsidesConfiguration: ${apsidesConfiguration}, nodeCrossingConfiguration: ${nodeCrossingConfiguration}, parameterConditionConfiguration: ${parameterConditionConfiguration}, traceId: ${traceId}}';
+    return 'EVLEventLocationRequest{locatorClass: ${locatorClass}, targetObjectId: ${targetObjectId}, CONTEXT: ${CONTEXT}, scanStartEpoch: ${scanStartEpoch}, scanStopEpoch: ${scanStopEpoch}, epochTimeSystem: ${epochTimeSystem}, scanStepSeconds: ${scanStepSeconds}, refinementToleranceSeconds: ${refinementToleranceSeconds}, maximumEvents: ${maximumEvents}, reportParameters: ${reportParameters}, eclipseConfiguration: ${eclipseConfiguration}, contactConfiguration: ${contactConfiguration}, intrusionConfiguration: ${intrusionConfiguration}, apsidesConfiguration: ${apsidesConfiguration}, nodeCrossingConfiguration: ${nodeCrossingConfiguration}, parameterConditionConfiguration: ${parameterConditionConfiguration}, traceId: ${traceId}, latitudeExtremumConfiguration: ${latitudeExtremumConfiguration}}';
   }
 }
 
@@ -1570,7 +1692,7 @@ class EVLEventLocationRequestBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(18);
   }
 
   int addLocatorClass(evlLocatorClass? LOCATOR_CLASS) {
@@ -1641,6 +1763,10 @@ class EVLEventLocationRequestBuilder {
     fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
+  int addLatitudeExtremumConfigurationOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -1665,6 +1791,7 @@ class EVLEventLocationRequestObjectBuilder extends fb.ObjectBuilder {
   final EVLNodeCrossingConfigurationObjectBuilder? _NODE_CROSSING_CONFIGURATION;
   final EVLParameterConditionConfigurationObjectBuilder? _PARAMETER_CONDITION_CONFIGURATION;
   final String? _TRACE_ID;
+  final EVLLatitudeExtremumConfigurationObjectBuilder? _LATITUDE_EXTREMUM_CONFIGURATION;
 
   EVLEventLocationRequestObjectBuilder({
     evlLocatorClass? LOCATOR_CLASS,
@@ -1700,6 +1827,8 @@ class EVLEventLocationRequestObjectBuilder extends fb.ObjectBuilder {
     EVLParameterConditionConfigurationObjectBuilder? parameterConditionConfiguration,
     String? TRACE_ID,
     String? traceId,
+    EVLLatitudeExtremumConfigurationObjectBuilder? LATITUDE_EXTREMUM_CONFIGURATION,
+    EVLLatitudeExtremumConfigurationObjectBuilder? latitudeExtremumConfiguration,
   })
       : _LOCATOR_CLASS = locatorClass ?? LOCATOR_CLASS,
         _TARGET_OBJECT_ID = targetObjectId ?? TARGET_OBJECT_ID,
@@ -1717,7 +1846,8 @@ class EVLEventLocationRequestObjectBuilder extends fb.ObjectBuilder {
         _APSIDES_CONFIGURATION = apsidesConfiguration ?? APSIDES_CONFIGURATION,
         _NODE_CROSSING_CONFIGURATION = nodeCrossingConfiguration ?? NODE_CROSSING_CONFIGURATION,
         _PARAMETER_CONDITION_CONFIGURATION = parameterConditionConfiguration ?? PARAMETER_CONDITION_CONFIGURATION,
-        _TRACE_ID = traceId ?? TRACE_ID;
+        _TRACE_ID = traceId ?? TRACE_ID,
+        _LATITUDE_EXTREMUM_CONFIGURATION = latitudeExtremumConfiguration ?? LATITUDE_EXTREMUM_CONFIGURATION;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1741,7 +1871,8 @@ class EVLEventLocationRequestObjectBuilder extends fb.ObjectBuilder {
     final int? PARAMETER_CONDITION_CONFIGURATIONOffset = _PARAMETER_CONDITION_CONFIGURATION?.getOrCreateOffset(fbBuilder);
     final int? TRACE_IDOffset = _TRACE_ID == null ? null
         : fbBuilder.writeString(_TRACE_ID!);
-    fbBuilder.startTable(17);
+    final int? LATITUDE_EXTREMUM_CONFIGURATIONOffset = _LATITUDE_EXTREMUM_CONFIGURATION?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(18);
     fbBuilder.addUint8(0, _LOCATOR_CLASS?.value);
     fbBuilder.addOffset(1, TARGET_OBJECT_IDOffset);
     fbBuilder.addOffset(2, CONTEXTOffset);
@@ -1759,6 +1890,7 @@ class EVLEventLocationRequestObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(14, NODE_CROSSING_CONFIGURATIONOffset);
     fbBuilder.addOffset(15, PARAMETER_CONDITION_CONFIGURATIONOffset);
     fbBuilder.addOffset(16, TRACE_IDOffset);
+    fbBuilder.addOffset(17, LATITUDE_EXTREMUM_CONFIGURATIONOffset);
     return fbBuilder.endTable();
   }
 

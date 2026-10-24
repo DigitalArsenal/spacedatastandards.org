@@ -5,7 +5,7 @@
  * 10 are the numbers $PRW has always carried; new values are appended only,
  * never reordered or reused. A scheme value names the stepping method; a
  * formulation value (COWELL, ENCKE, EQUINOCTIAL_VOP, GAUSS_VOP, DROMO,
- * STIEFEL_SCHEIFELE) names the variables the equations are written in, and the
+ * STIEFEL) names the variables the equations are written in, and the
  * scheme that steps them is the provider's, reported in its result.
  */
 @Suppress("unused")
@@ -66,18 +66,18 @@ class pcfIntegratorAlgorithm private constructor() {
          * Prince-Dormand 6(5), eight stages, minimized error coefficients, "RK6(5)8M"
          * (Prince and Dormand 1981, J. Comput. Appl. Math. 7).
          */
-        const val RK65_8M: UByte = 12u
+        const val RK65: UByte = 12u
         /**
          * Verner's 9(8) pair, sixteen stages (Verner 2010, Numer. Algorithms 53).
          */
-        const val VERNER_98: UByte = 13u
+        const val RKV98: UByte = 13u
         /**
          * Runge-Kutta-Nystrom 12(10), seventeen stages, for y'' = f(t, y) alone
          * (Dormand, El-Mikkawy and Prince 1987, IMA J. Numer. Anal. 7). The
          * acceleration must not depend on velocity, so a provider refuses it with
          * drag.
          */
-        const val RKN12_10: UByte = 14u
+        const val RKN1210: UByte = 14u
         /**
          * Gauss-Jackson eighth-order summed multistep, predict-evaluate-correct,
          * started by a Runge-Kutta run (Berry and Healy 2004, J. Astronaut. Sci.
@@ -97,7 +97,7 @@ class pcfIntegratorAlgorithm private constructor() {
          * Stiefel-Scheifele regularized formulation in the fictitious time (Stiefel
          * and Scheifele 1971, Linear and Regular Celestial Mechanics).
          */
-        const val STIEFEL_SCHEIFELE: UByte = 18u
+        const val STIEFEL: UByte = 18u
         /**
          * Dormand-Prince 8(5,3), twelve stages (Hairer, Norsett and Wanner 1993,
          * Solving Ordinary Differential Equations I).

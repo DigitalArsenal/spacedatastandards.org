@@ -28,22 +28,30 @@ public struct EVLNodeCrossingConfiguration : IFlatbufferObject
   public byte[] GetREFERENCE_COORDINATE_SYSTEM_NAMEArray() { return __p.__vector_as_array<byte>(4); }
   public bool REPORT_ASCENDING { get { int o = __p.__offset(6); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
   public bool REPORT_DESCENDING { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
+  /// Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;
+  /// it need not be a unit vector. Absent or zero: the pole of those axes, which
+  /// makes the crossings the nodes of its equator. Any other normal is an
+  /// arbitrary plane through the center of the system.
+  public FRMVector3? PLANE_NORMAL { get { int o = __p.__offset(10); return o != 0 ? (FRMVector3?)(new FRMVector3()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<EVLNodeCrossingConfiguration> CreateEVLNodeCrossingConfiguration(FlatBufferBuilder builder,
       StringOffset REFERENCE_COORDINATE_SYSTEM_NAMEOffset = default(StringOffset),
       bool REPORT_ASCENDING = true,
-      bool REPORT_DESCENDING = true) {
-    builder.StartTable(3);
+      bool REPORT_DESCENDING = true,
+      Offset<FRMVector3> PLANE_NORMALOffset = default(Offset<FRMVector3>)) {
+    builder.StartTable(4);
+    EVLNodeCrossingConfiguration.AddPLANE_NORMAL(builder, PLANE_NORMALOffset);
     EVLNodeCrossingConfiguration.AddREFERENCE_COORDINATE_SYSTEM_NAME(builder, REFERENCE_COORDINATE_SYSTEM_NAMEOffset);
     EVLNodeCrossingConfiguration.AddREPORT_DESCENDING(builder, REPORT_DESCENDING);
     EVLNodeCrossingConfiguration.AddREPORT_ASCENDING(builder, REPORT_ASCENDING);
     return EVLNodeCrossingConfiguration.EndEVLNodeCrossingConfiguration(builder);
   }
 
-  public static void StartEVLNodeCrossingConfiguration(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartEVLNodeCrossingConfiguration(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddREFERENCE_COORDINATE_SYSTEM_NAME(FlatBufferBuilder builder, StringOffset REFERENCE_COORDINATE_SYSTEM_NAMEOffset) { builder.AddOffset(0, REFERENCE_COORDINATE_SYSTEM_NAMEOffset.Value, 0); }
   public static void AddREPORT_ASCENDING(FlatBufferBuilder builder, bool REPORT_ASCENDING) { builder.AddBool(1, REPORT_ASCENDING, true); }
   public static void AddREPORT_DESCENDING(FlatBufferBuilder builder, bool REPORT_DESCENDING) { builder.AddBool(2, REPORT_DESCENDING, true); }
+  public static void AddPLANE_NORMAL(FlatBufferBuilder builder, Offset<FRMVector3> PLANE_NORMALOffset) { builder.AddOffset(3, PLANE_NORMALOffset.Value, 0); }
   public static Offset<EVLNodeCrossingConfiguration> EndEVLNodeCrossingConfiguration(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<EVLNodeCrossingConfiguration>(o);
@@ -57,15 +65,18 @@ public struct EVLNodeCrossingConfiguration : IFlatbufferObject
     _o.REFERENCE_COORDINATE_SYSTEM_NAME = this.REFERENCE_COORDINATE_SYSTEM_NAME;
     _o.REPORT_ASCENDING = this.REPORT_ASCENDING;
     _o.REPORT_DESCENDING = this.REPORT_DESCENDING;
+    _o.PLANE_NORMAL = this.PLANE_NORMAL.HasValue ? this.PLANE_NORMAL.Value.UnPack() : null;
   }
   public static Offset<EVLNodeCrossingConfiguration> Pack(FlatBufferBuilder builder, EVLNodeCrossingConfigurationT _o) {
     if (_o == null) return default(Offset<EVLNodeCrossingConfiguration>);
     var _REFERENCE_COORDINATE_SYSTEM_NAME = _o.REFERENCE_COORDINATE_SYSTEM_NAME == null ? default(StringOffset) : builder.CreateString(_o.REFERENCE_COORDINATE_SYSTEM_NAME);
+    var _PLANE_NORMAL = _o.PLANE_NORMAL == null ? default(Offset<FRMVector3>) : FRMVector3.Pack(builder, _o.PLANE_NORMAL);
     return CreateEVLNodeCrossingConfiguration(
       builder,
       _REFERENCE_COORDINATE_SYSTEM_NAME,
       _o.REPORT_ASCENDING,
-      _o.REPORT_DESCENDING);
+      _o.REPORT_DESCENDING,
+      _PLANE_NORMAL);
   }
 }
 
@@ -74,11 +85,13 @@ public class EVLNodeCrossingConfigurationT
   public string REFERENCE_COORDINATE_SYSTEM_NAME { get; set; }
   public bool REPORT_ASCENDING { get; set; }
   public bool REPORT_DESCENDING { get; set; }
+  public FRMVector3T PLANE_NORMAL { get; set; }
 
   public EVLNodeCrossingConfigurationT() {
     this.REFERENCE_COORDINATE_SYSTEM_NAME = null;
     this.REPORT_ASCENDING = true;
     this.REPORT_DESCENDING = true;
+    this.PLANE_NORMAL = null;
   }
 }
 
@@ -91,6 +104,7 @@ static public class EVLNodeCrossingConfigurationVerify
       && verifier.VerifyString(tablePos, 4 /*REFERENCE_COORDINATE_SYSTEM_NAME*/, false)
       && verifier.VerifyField(tablePos, 6 /*REPORT_ASCENDING*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 8 /*REPORT_DESCENDING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyTable(tablePos, 10 /*PLANE_NORMAL*/, FRMVector3Verify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

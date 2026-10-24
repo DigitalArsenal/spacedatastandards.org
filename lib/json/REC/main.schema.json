@@ -731,11 +731,11 @@
     },
     "evlLocatorClass" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "ECLIPSE", "CONTACT", "INTRUSION", "APSIDES", "NODE_CROSSING", "PARAMETER_CONDITION"]
+      "enum": ["UNSPECIFIED", "ECLIPSE", "CONTACT", "INTRUSION", "APSIDES", "NODE_CROSSING", "PARAMETER_CONDITION", "LATITUDE_EXTREMUM"]
     },
     "evlEventType" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "UMBRA", "PENUMBRA", "ANTUMBRA", "RISE", "SET", "ENTRY", "EXIT", "APOAPSIS", "PERIAPSIS", "ASCENDING_NODE", "DESCENDING_NODE", "CONDITION_SATISFIED"]
+      "enum": ["UNSPECIFIED", "UMBRA", "PENUMBRA", "ANTUMBRA", "RISE", "SET", "ENTRY", "EXIT", "APOAPSIS", "PERIAPSIS", "ASCENDING_NODE", "DESCENDING_NODE", "CONDITION_SATISFIED", "MAXIMUM_LATITUDE", "MINIMUM_LATITUDE"]
     },
     "evlShadowModel" : {
       "type" : "string",
@@ -781,9 +781,21 @@
       "type" : "string",
       "enum": ["UNSPECIFIED", "ANALYTIC_SERIES", "PLANETARY_KERNEL"]
     },
+    "pcfEventKind" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "APSIS", "PLANE_CROSSING", "TRUE_ANOMALY", "ARGUMENT_OF_LATITUDE", "LATITUDE_EXTREMUM", "UMBRA", "PENUMBRA", "CLOSEST_APPROACH", "EXPRESSION"]
+    },
+    "pcfEventDirection" : {
+      "type" : "string",
+      "enum": ["ANY", "INCREASING", "DECREASING"]
+    },
     "pcfEventAction" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "STOP", "CONTINUE", "RECORD"]
+      "enum": ["CONTINUE", "RECORD", "STOP"]
+    },
+    "pcfExpressionOperation" : {
+      "type" : "string",
+      "enum": ["UNSPECIFIED", "CONSTANT", "PARAMETER", "ADD", "SUBTRACT", "MULTIPLY", "DIVIDE", "NEGATE", "ABSOLUTE", "SQUARE_ROOT", "SINE", "COSINE", "MINIMUM", "MAXIMUM"]
     },
     "pcfInnovationCorrelation" : {
       "type" : "string",
@@ -799,7 +811,7 @@
     },
     "pcfIntegratorAlgorithm" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "RK4", "RKF45", "RKF78", "RK78", "RKDP87", "ABM", "BS", "COWELL", "ENCKE", "EQUINOCTIAL_VOP", "DOPRI5", "RK65_8M", "VERNER_98", "RKN12_10", "GAUSS_JACKSON_8", "GAUSS_VOP", "DROMO", "STIEFEL_SCHEIFELE", "DOPRI853"]
+      "enum": ["UNSPECIFIED", "RK4", "RKF45", "RKF78", "RK78", "RKDP87", "ABM", "BS", "COWELL", "ENCKE", "EQUINOCTIAL_VOP", "DOPRI5", "RK65", "RKV98", "RKN1210", "GAUSS_JACKSON_8", "GAUSS_VOP", "DROMO", "STIEFEL", "DOPRI853"]
     },
     "pcfGravitySelection" : {
       "type" : "string",
@@ -14704,6 +14716,27 @@
               },
         "REPORT_DESCENDING" : {
                 "type" : "boolean"
+              },
+        "PLANE_NORMAL" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;\nit need not be a unit vector. Absent or zero: the pole of those axes, which\nmakes the crossings the nodes of its equator. Any other normal is an\narbitrary plane through the center of the system."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EVLLatitudeExtremumConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for LATITUDE_EXTREMUM.",
+      "properties" : {
+        "CENTRAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code the latitude is measured about; the pole is that of\nthe request context's axes."
+              },
+        "REPORT_MAXIMUM" : {
+                "type" : "boolean"
+              },
+        "REPORT_MINIMUM" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -14864,6 +14897,9 @@
               },
         "TRACE_ID" : {
                 "type" : "string"
+              },
+        "LATITUDE_EXTREMUM_CONFIGURATION" : {
+                "$ref" : "#/definitions/EVLLatitudeExtremumConfiguration"
               }
       },
       "additionalProperties" : false
@@ -15133,52 +15169,75 @@
       },
       "additionalProperties" : false
     },
+    "PCFExpressionTerm" : {
+      "type" : "object",
+      "description" : "One term of an expression program.",
+      "properties" : {
+        "OPERATION" : {
+                "$ref" : "#/definitions/pcfExpressionOperation",
+                "description" : "What the term does. Default UNSPECIFIED (refused)."
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "The constant pushed by CONSTANT. Default 0."
+              },
+        "PARAMETER" : {
+                "$ref" : "#/definitions/pceParameter",
+                "description" : "The catalog parameter pushed by PARAMETER. Default UNSPECIFIED."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "PCFExpression" : {
+      "type" : "object",
+      "description" : "A reverse Polish program of at most 64 terms and stack depth 16 that leaves one\nnumber.",
+      "properties" : {
+        "TERMS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCFExpressionTerm"},
+                "description" : "The terms, in evaluation order. Default empty."
+              }
+      },
+      "additionalProperties" : false
+    },
     "PCFEventDefinition" : {
       "type" : "object",
-      "description" : "One event a propagator locates while it integrates. The vocabulary is\n$EVL's: a locator class with its configuration, and $PCE's parameter\ncondition for the generic case (an altitude, radius, speed, radial\nvelocity or mass crossing is a $PCE parameter, not a class of its own).",
+      "description" : "One event to locate inside the integration. A $PCF carries the list; a $PRW\nexecution request carries the same definitions beside the integrator settings,\nand a located event comes back as a PRWEventRecord.",
       "properties" : {
-        "NAME" : {
-                "type" : "string",
-                "description" : "The caller's name for the event, echoed in the result. Default empty."
+        "KIND" : {
+                "$ref" : "#/definitions/pcfEventKind",
+                "description" : "The event function. Default UNSPECIFIED (refused)."
               },
-        "LOCATOR_CLASS" : {
-                "$ref" : "#/definitions/evlLocatorClass",
-                "description" : "Which locator. Default PARAMETER_CONDITION."
-              },
-        "CONDITION" : {
-                "$ref" : "#/definitions/PCEParameterCondition",
-                "description" : "Exactly the one of the next five that matches LOCATOR_CLASS is present\n(any other combination is refused as MISSING_CONFIGURATION, as in\n$EVL). The condition carries its own direction, goal value, goal\ntolerance and occurrence."
-              },
-        "ECLIPSE" : {
-                "$ref" : "#/definitions/EVLEclipseConfiguration"
-              },
-        "CONTACT" : {
-                "$ref" : "#/definitions/EVLContactConfiguration"
-              },
-        "INTRUSION" : {
-                "$ref" : "#/definitions/EVLIntrusionConfiguration"
-              },
-        "APSIDES" : {
-                "$ref" : "#/definitions/EVLApsidesConfiguration"
-              },
-        "NODE_CROSSING" : {
-                "$ref" : "#/definitions/EVLNodeCrossingConfiguration"
+        "DIRECTION" : {
+                "$ref" : "#/definitions/pcfEventDirection",
+                "description" : "Which zero crossings of the event function count. Default ANY."
               },
         "ACTION" : {
                 "$ref" : "#/definitions/pcfEventAction",
-                "description" : "What the propagator does at the event. Default RECORD."
+                "description" : "What the integrator does at the event. Default RECORD."
               },
-        "EPOCH_TOLERANCE_SECONDS" : {
+        "TOLERANCE_SECONDS" : {
                 "type" : "number",
-                "description" : "Convergence bar on the located epoch, seconds. Default 1e-9."
+                "description" : "Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9."
               },
-        "SCAN_STEP_SECONDS" : {
-                "type" : "number",
-                "description" : "Step at which the event function is sampled before refinement, seconds;\n0 samples at the integrator's accepted steps. A root is found only when\nthe function changes sign within one sample interval. Default 0."
-              },
-        "MAXIMUM_EVENTS" : {
+        "OCCURRENCE" : {
                 "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
-                "description" : "Largest number of occurrences reported; 0 is no bound. Default 0."
+                "description" : "STOP acts at this qualifying crossing (1 is the first). Default 1."
+              },
+        "ANGLE_RAD" : {
+                "type" : "number",
+                "description" : "TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0."
+              },
+        "PLANE_NORMAL" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "PLANE_CROSSING: the normal, in the request's axes; it need not be a unit\nvector. Default absent (the pole of the axes)."
+              },
+        "SECOND_TRAJECTORY_PORT" : {
+                "type" : "string",
+                "description" : "CLOSEST_APPROACH: the id of the input port that carries the second trajectory\nas $OEM. Default empty."
+              },
+        "EXPRESSION" : {
+                "$ref" : "#/definitions/PCFExpression",
+                "description" : "EXPRESSION: the program. Default absent."
               }
       },
       "additionalProperties" : false
@@ -16077,6 +16136,46 @@
       "required" : ["START", "STOP"],
       "additionalProperties" : false
     },
+    "PRWEventRecord" : {
+      "type" : "object",
+      "description" : "A located event.",
+      "properties" : {
+        "EVENT_INDEX" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Index into the request's EVENTS."
+              },
+        "KIND" : {
+                "$ref" : "#/definitions/pcfEventKind",
+                "description" : "The event function that crossed zero."
+              },
+        "DIRECTION" : {
+                "$ref" : "#/definitions/pcfEventDirection",
+                "description" : "The way g crossed zero: INCREASING or DECREASING."
+              },
+        "EPOCH" : {
+                "$ref" : "#/definitions/TIMInstant",
+                "description" : "Epoch of the crossing."
+              },
+        "ELAPSED_SECONDS" : {
+                "type" : "number",
+                "description" : "Seconds from the request's initial epoch, negative for a backward propagation."
+              },
+        "STATE" : {
+                "$ref" : "#/definitions/PRWResidentState",
+                "description" : "The state at EPOCH in the request's axes."
+              },
+        "RESIDUAL" : {
+                "type" : "number",
+                "description" : "g at EPOCH."
+              },
+        "ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Refinement steps taken."
+              }
+      },
+      "required" : ["EPOCH", "STATE"],
+      "additionalProperties" : false
+    },
     "PRWExecutionRequest" : {
       "type" : "object",
       "description" : "Fixed endpoint propagation. Provider selected by the host's connected port.",
@@ -16128,6 +16227,10 @@
         "DYNAMIC_PARAMETERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/prwDynamicParameter"},
                 "description" : "Model parameters appended, in this order and without repeats, to\nINITIAL_COVARIANCE and to every sample's STM and COVARIANCE, so a\ncovariance carries their uncertainty and correlation (a VCM's 7x7 to\n10x10). Each must be active in FORCES. Empty means the state alone."
+              },
+        "EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PCFEventDefinition"},
+                "description" : "Events located inside the integration (PCFEventDefinition, shared with $PCF).\nThey apply to a plain state propagation (no STM, covariance, samples, impulses\nor burns) by an integrator with a continuous extension; any other request that\nnames events is refused. Default empty."
               }
       },
       "required" : ["INITIAL", "TARGET_EPOCH", "INTEGRATOR", "FORCES"],
@@ -16242,6 +16345,18 @@
         "DYNAMIC_PARAMETERS" : {
                 "type" : "array", "items" : {"$ref" : "#/definitions/prwDynamicParameter"},
                 "description" : "The parameters the samples' STM and COVARIANCE carry after the state."
+              },
+        "EVENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/PRWEventRecord"},
+                "description" : "The located events with ACTION RECORD or STOP, in time order of propagation."
+              },
+        "EVENT_OCCURRENCES" : {
+                "type" : "array", "items" : {"type" : "integer", "minimum" : 0, "maximum" : 4294967295},
+                "description" : "Per request EVENTS entry, the qualifying crossings the propagation passed."
+              },
+        "STOPPED_BY_EVENT" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Index of the request EVENTS entry that ended the propagation, or -1. Default -1."
               }
       },
       "required" : ["FINAL_SAMPLE", "EPHEMERIS_SOURCE"],

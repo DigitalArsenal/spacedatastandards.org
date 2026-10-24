@@ -99,6 +99,8 @@ public final class EVLEventLocationRequest extends com.google.flatbuffers.Table 
   public String TRACE_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACE_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer TRACE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  public EVLLatitudeExtremumConfiguration LATITUDE_EXTREMUM_CONFIGURATION() { return LATITUDE_EXTREMUM_CONFIGURATION(new EVLLatitudeExtremumConfiguration()); }
+  public EVLLatitudeExtremumConfiguration LATITUDE_EXTREMUM_CONFIGURATION(EVLLatitudeExtremumConfiguration obj) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createEVLEventLocationRequest(FlatBufferBuilder builder,
       int LOCATOR_CLASS,
@@ -117,10 +119,12 @@ public final class EVLEventLocationRequest extends com.google.flatbuffers.Table 
       int APSIDES_CONFIGURATIONOffset,
       int NODE_CROSSING_CONFIGURATIONOffset,
       int PARAMETER_CONDITION_CONFIGURATIONOffset,
-      int TRACE_IDOffset) {
-    builder.startTable(17);
+      int TRACE_IDOffset,
+      int LATITUDE_EXTREMUM_CONFIGURATIONOffset) {
+    builder.startTable(18);
     EVLEventLocationRequest.addRefinementToleranceSeconds(builder, REFINEMENT_TOLERANCE_SECONDS);
     EVLEventLocationRequest.addScanStepSeconds(builder, SCAN_STEP_SECONDS);
+    EVLEventLocationRequest.addLatitudeExtremumConfiguration(builder, LATITUDE_EXTREMUM_CONFIGURATIONOffset);
     EVLEventLocationRequest.addTraceId(builder, TRACE_IDOffset);
     EVLEventLocationRequest.addParameterConditionConfiguration(builder, PARAMETER_CONDITION_CONFIGURATIONOffset);
     EVLEventLocationRequest.addNodeCrossingConfiguration(builder, NODE_CROSSING_CONFIGURATIONOffset);
@@ -139,7 +143,7 @@ public final class EVLEventLocationRequest extends com.google.flatbuffers.Table 
     return EVLEventLocationRequest.endEVLEventLocationRequest(builder);
   }
 
-  public static void startEVLEventLocationRequest(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startEVLEventLocationRequest(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addLocatorClass(FlatBufferBuilder builder, int LOCATOR_CLASS) { builder.addByte(0, (byte) LOCATOR_CLASS, (byte) 0); }
   public static void addTargetObjectId(FlatBufferBuilder builder, int TARGET_OBJECT_IDOffset) { builder.addOffset(1, TARGET_OBJECT_IDOffset, 0); }
   public static void addContext(FlatBufferBuilder builder, int CONTEXTOffset) { builder.addOffset(2, CONTEXTOffset, 0); }
@@ -159,6 +163,7 @@ public final class EVLEventLocationRequest extends com.google.flatbuffers.Table 
   public static void addNodeCrossingConfiguration(FlatBufferBuilder builder, int NODE_CROSSING_CONFIGURATIONOffset) { builder.addOffset(14, NODE_CROSSING_CONFIGURATIONOffset, 0); }
   public static void addParameterConditionConfiguration(FlatBufferBuilder builder, int PARAMETER_CONDITION_CONFIGURATIONOffset) { builder.addOffset(15, PARAMETER_CONDITION_CONFIGURATIONOffset, 0); }
   public static void addTraceId(FlatBufferBuilder builder, int TRACE_IDOffset) { builder.addOffset(16, TRACE_IDOffset, 0); }
+  public static void addLatitudeExtremumConfiguration(FlatBufferBuilder builder, int LATITUDE_EXTREMUM_CONFIGURATIONOffset) { builder.addOffset(17, LATITUDE_EXTREMUM_CONFIGURATIONOffset, 0); }
   public static int endEVLEventLocationRequest(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

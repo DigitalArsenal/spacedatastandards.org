@@ -87,11 +87,11 @@
     },
     "evlLocatorClass" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "ECLIPSE", "CONTACT", "INTRUSION", "APSIDES", "NODE_CROSSING", "PARAMETER_CONDITION"]
+      "enum": ["UNSPECIFIED", "ECLIPSE", "CONTACT", "INTRUSION", "APSIDES", "NODE_CROSSING", "PARAMETER_CONDITION", "LATITUDE_EXTREMUM"]
     },
     "evlEventType" : {
       "type" : "string",
-      "enum": ["UNSPECIFIED", "UMBRA", "PENUMBRA", "ANTUMBRA", "RISE", "SET", "ENTRY", "EXIT", "APOAPSIS", "PERIAPSIS", "ASCENDING_NODE", "DESCENDING_NODE", "CONDITION_SATISFIED"]
+      "enum": ["UNSPECIFIED", "UMBRA", "PENUMBRA", "ANTUMBRA", "RISE", "SET", "ENTRY", "EXIT", "APOAPSIS", "PERIAPSIS", "ASCENDING_NODE", "DESCENDING_NODE", "CONDITION_SATISFIED", "MAXIMUM_LATITUDE", "MINIMUM_LATITUDE"]
     },
     "evlShadowModel" : {
       "type" : "string",
@@ -1170,6 +1170,27 @@
               },
         "REPORT_DESCENDING" : {
                 "type" : "boolean"
+              },
+        "PLANE_NORMAL" : {
+                "$ref" : "#/definitions/FRMVector3",
+                "description" : "Normal of the plane crossed, in the axes of REFERENCE_COORDINATE_SYSTEM_NAME;\nit need not be a unit vector. Absent or zero: the pole of those axes, which\nmakes the crossings the nodes of its equator. Any other normal is an\narbitrary plane through the center of the system."
+              }
+      },
+      "additionalProperties" : false
+    },
+    "EVLLatitudeExtremumConfiguration" : {
+      "type" : "object",
+      "description" : "Configuration for LATITUDE_EXTREMUM.",
+      "properties" : {
+        "CENTRAL_BODY_ID" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Ephemeris body code the latitude is measured about; the pole is that of\nthe request context's axes."
+              },
+        "REPORT_MAXIMUM" : {
+                "type" : "boolean"
+              },
+        "REPORT_MINIMUM" : {
+                "type" : "boolean"
               }
       },
       "additionalProperties" : false
@@ -1330,6 +1351,9 @@
               },
         "TRACE_ID" : {
                 "type" : "string"
+              },
+        "LATITUDE_EXTREMUM_CONFIGURATION" : {
+                "$ref" : "#/definitions/EVLLatitudeExtremumConfiguration"
               }
       },
       "additionalProperties" : false

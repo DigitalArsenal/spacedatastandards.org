@@ -17,10 +17,9 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * One event a propagator locates while it integrates. The vocabulary is
- * $EVL's: a locator class with its configuration, and $PCE's parameter
- * condition for the generic case (an altitude, radius, speed, radial
- * velocity or mass crossing is a $PCE parameter, not a class of its own).
+ * One event to locate inside the integration. A $PCF carries the list; a $PRW
+ * execution request carries the same definitions beside the integrator settings,
+ * and a located event comes back as a PRWEventRecord.
  */
 @Suppress("unused")
 class PCFEventDefinition : Table() {
@@ -33,71 +32,59 @@ class PCFEventDefinition : Table() {
         return this
     }
     /**
-     * The caller's name for the event, echoed in the result. Default empty.
+     * The event function. Default UNSPECIFIED (refused).
      */
-    val name : String?
+    val kind : UByte
         get() {
             val o = __offset(4)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
-    fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
     /**
-     * Which locator. Default PARAMETER_CONDITION.
+     * Which zero crossings of the event function count. Default ANY.
      */
-    val locatorClass : UByte
+    val direction : UByte
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 6u
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
-     * Exactly the one of the next five that matches LOCATOR_CLASS is present
-     * (any other combination is refused as MISSING_CONFIGURATION, as in
-     * $EVL). The condition carries its own direction, goal value, goal
-     * tolerance and occurrence.
+     * What the integrator does at the event. Default RECORD.
      */
-    val condition : PCEParameterCondition? get() = condition(PCEParameterCondition())
-    fun condition(obj: PCEParameterCondition) : PCEParameterCondition? {
-        val o = __offset(8)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
+    val action : UByte
+        get() {
+            val o = __offset(8)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 1u
         }
-    }
-    val eclipse : EVLEclipseConfiguration? get() = eclipse(EVLEclipseConfiguration())
-    fun eclipse(obj: EVLEclipseConfiguration) : EVLEclipseConfiguration? {
-        val o = __offset(10)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
+    /**
+     * Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+     */
+    val toleranceSeconds : Double
+        get() {
+            val o = __offset(10)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 1e-9
         }
-    }
-    val contact : EVLContactConfiguration? get() = contact(EVLContactConfiguration())
-    fun contact(obj: EVLContactConfiguration) : EVLContactConfiguration? {
-        val o = __offset(12)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
+    /**
+     * STOP acts at this qualifying crossing (1 is the first). Default 1.
+     */
+    val occurrence : UInt
+        get() {
+            val o = __offset(12)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 1u
         }
-    }
-    val intrusion : EVLIntrusionConfiguration? get() = intrusion(EVLIntrusionConfiguration())
-    fun intrusion(obj: EVLIntrusionConfiguration) : EVLIntrusionConfiguration? {
-        val o = __offset(14)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
+    /**
+     * TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+     */
+    val angleRad : Double
+        get() {
+            val o = __offset(14)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    }
-    val apsides : EVLApsidesConfiguration? get() = apsides(EVLApsidesConfiguration())
-    fun apsides(obj: EVLApsidesConfiguration) : EVLApsidesConfiguration? {
+    /**
+     * PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+     * vector. Default absent (the pole of the axes).
+     */
+    val planeNormal : FRMVector3? get() = planeNormal(FRMVector3())
+    fun planeNormal(obj: FRMVector3) : FRMVector3? {
         val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -105,49 +92,33 @@ class PCFEventDefinition : Table() {
             null
         }
     }
-    val nodeCrossing : EVLNodeCrossingConfiguration? get() = nodeCrossing(EVLNodeCrossingConfiguration())
-    fun nodeCrossing(obj: EVLNodeCrossingConfiguration) : EVLNodeCrossingConfiguration? {
-        val o = __offset(18)
+    /**
+     * CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+     * as $OEM. Default empty.
+     */
+    val secondTrajectoryPort : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val secondTrajectoryPortAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
+    fun secondTrajectoryPortInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * EXPRESSION: the program. Default absent.
+     */
+    val expression : PCFExpression? get() = expression(PCFExpression())
+    fun expression(obj: PCFExpression) : PCFExpression? {
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
             null
         }
     }
-    /**
-     * What the propagator does at the event. Default RECORD.
-     */
-    val action : UByte
-        get() {
-            val o = __offset(20)
-            return if(o != 0) bb.get(o + bb_pos).toUByte() else 3u
-        }
-    /**
-     * Convergence bar on the located epoch, seconds. Default 1e-9.
-     */
-    val epochToleranceSeconds : Double
-        get() {
-            val o = __offset(22)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 1e-9
-        }
-    /**
-     * Step at which the event function is sampled before refinement, seconds;
-     * 0 samples at the integrator's accepted steps. A root is found only when
-     * the function changes sign within one sample interval. Default 0.
-     */
-    val scanStepSeconds : Double
-        get() {
-            val o = __offset(24)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    /**
-     * Largest number of occurrences reported; 0 is no bound. Default 0.
-     */
-    val maximumEvents : UInt
-        get() {
-            val o = __offset(26)
-            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
-        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCFEventDefinition(_bb: ByteBuffer): PCFEventDefinition = getRootAsPCFEventDefinition(_bb, PCFEventDefinition())
@@ -155,35 +126,29 @@ class PCFEventDefinition : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFEventDefinition(builder: FlatBufferBuilder, nameOffset: Int, locatorClass: UByte, conditionOffset: Int, eclipseOffset: Int, contactOffset: Int, intrusionOffset: Int, apsidesOffset: Int, nodeCrossingOffset: Int, action: UByte, epochToleranceSeconds: Double, scanStepSeconds: Double, maximumEvents: UInt) : Int {
-            builder.startTable(12)
-            addSCANSTEPSECONDS(builder, scanStepSeconds)
-            addEPOCHTOLERANCESECONDS(builder, epochToleranceSeconds)
-            addMAXIMUMEVENTS(builder, maximumEvents)
-            addNODECROSSING(builder, nodeCrossingOffset)
-            addAPSIDES(builder, apsidesOffset)
-            addINTRUSION(builder, intrusionOffset)
-            addCONTACT(builder, contactOffset)
-            addECLIPSE(builder, eclipseOffset)
-            addCONDITION(builder, conditionOffset)
-            addNAME(builder, nameOffset)
+        fun createPCFEventDefinition(builder: FlatBufferBuilder, kind: UByte, direction: UByte, action: UByte, toleranceSeconds: Double, occurrence: UInt, angleRad: Double, planeNormalOffset: Int, secondTrajectoryPortOffset: Int, expressionOffset: Int) : Int {
+            builder.startTable(9)
+            addANGLERAD(builder, angleRad)
+            addTOLERANCESECONDS(builder, toleranceSeconds)
+            addEXPRESSION(builder, expressionOffset)
+            addSECONDTRAJECTORYPORT(builder, secondTrajectoryPortOffset)
+            addPLANENORMAL(builder, planeNormalOffset)
+            addOCCURRENCE(builder, occurrence)
             addACTION(builder, action)
-            addLOCATORCLASS(builder, locatorClass)
+            addDIRECTION(builder, direction)
+            addKIND(builder, kind)
             return endPCFEventDefinition(builder)
         }
-        fun startPCFEventDefinition(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(0, name, 0)
-        fun addLOCATORCLASS(builder: FlatBufferBuilder, locatorClass: UByte) = builder.addByte(1, locatorClass.toByte(), 6)
-        fun addCONDITION(builder: FlatBufferBuilder, condition: Int) = builder.addOffset(2, condition, 0)
-        fun addECLIPSE(builder: FlatBufferBuilder, eclipse: Int) = builder.addOffset(3, eclipse, 0)
-        fun addCONTACT(builder: FlatBufferBuilder, contact: Int) = builder.addOffset(4, contact, 0)
-        fun addINTRUSION(builder: FlatBufferBuilder, intrusion: Int) = builder.addOffset(5, intrusion, 0)
-        fun addAPSIDES(builder: FlatBufferBuilder, apsides: Int) = builder.addOffset(6, apsides, 0)
-        fun addNODECROSSING(builder: FlatBufferBuilder, nodeCrossing: Int) = builder.addOffset(7, nodeCrossing, 0)
-        fun addACTION(builder: FlatBufferBuilder, action: UByte) = builder.addByte(8, action.toByte(), 3)
-        fun addEPOCHTOLERANCESECONDS(builder: FlatBufferBuilder, epochToleranceSeconds: Double) = builder.addDouble(9, epochToleranceSeconds, 1e-9)
-        fun addSCANSTEPSECONDS(builder: FlatBufferBuilder, scanStepSeconds: Double) = builder.addDouble(10, scanStepSeconds, 0.0)
-        fun addMAXIMUMEVENTS(builder: FlatBufferBuilder, maximumEvents: UInt) = builder.addInt(11, maximumEvents.toInt(), 0)
+        fun startPCFEventDefinition(builder: FlatBufferBuilder) = builder.startTable(9)
+        fun addKIND(builder: FlatBufferBuilder, kind: UByte) = builder.addByte(0, kind.toByte(), 0)
+        fun addDIRECTION(builder: FlatBufferBuilder, direction: UByte) = builder.addByte(1, direction.toByte(), 0)
+        fun addACTION(builder: FlatBufferBuilder, action: UByte) = builder.addByte(2, action.toByte(), 1)
+        fun addTOLERANCESECONDS(builder: FlatBufferBuilder, toleranceSeconds: Double) = builder.addDouble(3, toleranceSeconds, 1e-9)
+        fun addOCCURRENCE(builder: FlatBufferBuilder, occurrence: UInt) = builder.addInt(4, occurrence.toInt(), 1)
+        fun addANGLERAD(builder: FlatBufferBuilder, angleRad: Double) = builder.addDouble(5, angleRad, 0.0)
+        fun addPLANENORMAL(builder: FlatBufferBuilder, planeNormal: Int) = builder.addOffset(6, planeNormal, 0)
+        fun addSECONDTRAJECTORYPORT(builder: FlatBufferBuilder, secondTrajectoryPort: Int) = builder.addOffset(7, secondTrajectoryPort, 0)
+        fun addEXPRESSION(builder: FlatBufferBuilder, expression: Int) = builder.addOffset(8, expression, 0)
         fun endPCFEventDefinition(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

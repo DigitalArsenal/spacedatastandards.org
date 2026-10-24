@@ -55,8 +55,16 @@ public final class evlEventType {
    * A $PCE parameter condition was attained.
    */
   public static final int CONDITION_SATISFIED = 12;
+  /**
+   * Geocentric latitude at a maximum.
+   */
+  public static final int MAXIMUM_LATITUDE = 13;
+  /**
+   * Geocentric latitude at a minimum.
+   */
+  public static final int MINIMUM_LATITUDE = 14;
 
-  public static final String[] names = { "UNSPECIFIED", "UMBRA", "PENUMBRA", "ANTUMBRA", "RISE", "SET", "ENTRY", "EXIT", "APOAPSIS", "PERIAPSIS", "ASCENDING_NODE", "DESCENDING_NODE", "CONDITION_SATISFIED", };
+  public static final String[] names = { "UNSPECIFIED", "UMBRA", "PENUMBRA", "ANTUMBRA", "RISE", "SET", "ENTRY", "EXIT", "APOAPSIS", "PERIAPSIS", "ASCENDING_NODE", "DESCENDING_NODE", "CONDITION_SATISFIED", "MAXIMUM_LATITUDE", "MINIMUM_LATITUDE", };
 
   public static String name(int e) { return names[e]; }
 }

@@ -6,10 +6,9 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// One event a propagator locates while it integrates. The vocabulary is
-/// $EVL's: a locator class with its configuration, and $PCE's parameter
-/// condition for the generic case (an altitude, radius, speed, radial
-/// velocity or mass crossing is a $PCE parameter, not a class of its own).
+/// One event to locate inside the integration. A $PCF carries the list; a $PRW
+/// execution request carries the same definitions beside the integrator settings,
+/// and a located event comes back as a PRWEventRecord.
 type PCFEventDefinition struct {
 	_tab flatbuffers.Table
 }
@@ -45,318 +44,250 @@ func (rcv *PCFEventDefinition) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
-/// The caller's name for the event, echoed in the result. Default empty.
-func (rcv *PCFEventDefinition) NAME() []byte {
+/// The event function. Default UNSPECIFIED (refused).
+func (rcv *PCFEventDefinition) KIND() pcfEventKind {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return pcfEventKind(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-func (rcv *PCFEventDefinition) Name() []byte {
-	return rcv.NAME()
+func (rcv *PCFEventDefinition) Kind() pcfEventKind {
+	return rcv.KIND()
 }
 
-/// The caller's name for the event, echoed in the result. Default empty.
-/// Which locator. Default PARAMETER_CONDITION.
-func (rcv *PCFEventDefinition) LOCATOR_CLASS() evlLocatorClass {
+/// The event function. Default UNSPECIFIED (refused).
+func (rcv *PCFEventDefinition) MutateKIND(n pcfEventKind) bool {
+	return rcv._tab.MutateByteSlot(4, byte(n))
+}
+
+func (rcv *PCFEventDefinition) MutateKind(n pcfEventKind) bool {
+	return rcv.MutateKIND(n)
+}
+
+/// Which zero crossings of the event function count. Default ANY.
+func (rcv *PCFEventDefinition) DIRECTION() pcfEventDirection {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return evlLocatorClass(rcv._tab.GetByte(o + rcv._tab.Pos))
+		return pcfEventDirection(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return 6
+	return 0
 }
 
-func (rcv *PCFEventDefinition) LocatorClass() evlLocatorClass {
-	return rcv.LOCATOR_CLASS()
+func (rcv *PCFEventDefinition) Direction() pcfEventDirection {
+	return rcv.DIRECTION()
 }
 
-/// Which locator. Default PARAMETER_CONDITION.
-func (rcv *PCFEventDefinition) MutateLOCATOR_CLASS(n evlLocatorClass) bool {
+/// Which zero crossings of the event function count. Default ANY.
+func (rcv *PCFEventDefinition) MutateDIRECTION(n pcfEventDirection) bool {
 	return rcv._tab.MutateByteSlot(6, byte(n))
 }
 
-func (rcv *PCFEventDefinition) MutateLocatorClass(n evlLocatorClass) bool {
-	return rcv.MutateLOCATOR_CLASS(n)
+func (rcv *PCFEventDefinition) MutateDirection(n pcfEventDirection) bool {
+	return rcv.MutateDIRECTION(n)
 }
 
-/// Exactly the one of the next five that matches LOCATOR_CLASS is present
-/// (any other combination is refused as MISSING_CONFIGURATION, as in
-/// $EVL). The condition carries its own direction, goal value, goal
-/// tolerance and occurrence.
-func (rcv *PCFEventDefinition) CONDITION(obj *PCEParameterCondition) *PCEParameterCondition {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(PCEParameterCondition)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCFEventDefinition) Condition(obj *PCEParameterCondition) *PCEParameterCondition {
-	return rcv.CONDITION(obj)
-}
-
-/// Exactly the one of the next five that matches LOCATOR_CLASS is present
-/// (any other combination is refused as MISSING_CONFIGURATION, as in
-/// $EVL). The condition carries its own direction, goal value, goal
-/// tolerance and occurrence.
-func (rcv *PCFEventDefinition) ECLIPSE(obj *EVLEclipseConfiguration) *EVLEclipseConfiguration {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(EVLEclipseConfiguration)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCFEventDefinition) Eclipse(obj *EVLEclipseConfiguration) *EVLEclipseConfiguration {
-	return rcv.ECLIPSE(obj)
-}
-
-func (rcv *PCFEventDefinition) CONTACT(obj *EVLContactConfiguration) *EVLContactConfiguration {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(EVLContactConfiguration)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCFEventDefinition) Contact(obj *EVLContactConfiguration) *EVLContactConfiguration {
-	return rcv.CONTACT(obj)
-}
-
-func (rcv *PCFEventDefinition) INTRUSION(obj *EVLIntrusionConfiguration) *EVLIntrusionConfiguration {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(EVLIntrusionConfiguration)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCFEventDefinition) Intrusion(obj *EVLIntrusionConfiguration) *EVLIntrusionConfiguration {
-	return rcv.INTRUSION(obj)
-}
-
-func (rcv *PCFEventDefinition) APSIDES(obj *EVLApsidesConfiguration) *EVLApsidesConfiguration {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(EVLApsidesConfiguration)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCFEventDefinition) Apsides(obj *EVLApsidesConfiguration) *EVLApsidesConfiguration {
-	return rcv.APSIDES(obj)
-}
-
-func (rcv *PCFEventDefinition) NODE_CROSSING(obj *EVLNodeCrossingConfiguration) *EVLNodeCrossingConfiguration {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(EVLNodeCrossingConfiguration)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCFEventDefinition) NodeCrossing(obj *EVLNodeCrossingConfiguration) *EVLNodeCrossingConfiguration {
-	return rcv.NODE_CROSSING(obj)
-}
-
-/// What the propagator does at the event. Default RECORD.
+/// What the integrator does at the event. Default RECORD.
 func (rcv *PCFEventDefinition) ACTION() pcfEventAction {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return pcfEventAction(rcv._tab.GetByte(o + rcv._tab.Pos))
 	}
-	return 3
+	return 1
 }
 
 func (rcv *PCFEventDefinition) Action() pcfEventAction {
 	return rcv.ACTION()
 }
 
-/// What the propagator does at the event. Default RECORD.
+/// What the integrator does at the event. Default RECORD.
 func (rcv *PCFEventDefinition) MutateACTION(n pcfEventAction) bool {
-	return rcv._tab.MutateByteSlot(20, byte(n))
+	return rcv._tab.MutateByteSlot(8, byte(n))
 }
 
 func (rcv *PCFEventDefinition) MutateAction(n pcfEventAction) bool {
 	return rcv.MutateACTION(n)
 }
 
-/// Convergence bar on the located epoch, seconds. Default 1e-9.
-func (rcv *PCFEventDefinition) EPOCH_TOLERANCE_SECONDS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+/// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+func (rcv *PCFEventDefinition) TOLERANCE_SECONDS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 1e-9
 }
 
-func (rcv *PCFEventDefinition) EpochToleranceSeconds() float64 {
-	return rcv.EPOCH_TOLERANCE_SECONDS()
+func (rcv *PCFEventDefinition) ToleranceSeconds() float64 {
+	return rcv.TOLERANCE_SECONDS()
 }
 
-/// Convergence bar on the located epoch, seconds. Default 1e-9.
-func (rcv *PCFEventDefinition) MutateEPOCH_TOLERANCE_SECONDS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(22, n)
+/// Tolerance on the located epoch, seconds; 0 also selects 1e-9. Default 1e-9.
+func (rcv *PCFEventDefinition) MutateTOLERANCE_SECONDS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(10, n)
 }
 
-func (rcv *PCFEventDefinition) MutateEpochToleranceSeconds(n float64) bool {
-	return rcv.MutateEPOCH_TOLERANCE_SECONDS(n)
+func (rcv *PCFEventDefinition) MutateToleranceSeconds(n float64) bool {
+	return rcv.MutateTOLERANCE_SECONDS(n)
 }
 
-/// Step at which the event function is sampled before refinement, seconds;
-/// 0 samples at the integrator's accepted steps. A root is found only when
-/// the function changes sign within one sample interval. Default 0.
-func (rcv *PCFEventDefinition) SCAN_STEP_SECONDS() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+/// STOP acts at this qualifying crossing (1 is the first). Default 1.
+func (rcv *PCFEventDefinition) OCCURRENCE() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 1
+}
+
+func (rcv *PCFEventDefinition) Occurrence() uint32 {
+	return rcv.OCCURRENCE()
+}
+
+/// STOP acts at this qualifying crossing (1 is the first). Default 1.
+func (rcv *PCFEventDefinition) MutateOCCURRENCE(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+func (rcv *PCFEventDefinition) MutateOccurrence(n uint32) bool {
+	return rcv.MutateOCCURRENCE(n)
+}
+
+/// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+func (rcv *PCFEventDefinition) ANGLE_RAD() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *PCFEventDefinition) ScanStepSeconds() float64 {
-	return rcv.SCAN_STEP_SECONDS()
+func (rcv *PCFEventDefinition) AngleRad() float64 {
+	return rcv.ANGLE_RAD()
 }
 
-/// Step at which the event function is sampled before refinement, seconds;
-/// 0 samples at the integrator's accepted steps. A root is found only when
-/// the function changes sign within one sample interval. Default 0.
-func (rcv *PCFEventDefinition) MutateSCAN_STEP_SECONDS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
+/// TRUE_ANOMALY and ARGUMENT_OF_LATITUDE: the angle, radians. Default 0.
+func (rcv *PCFEventDefinition) MutateANGLE_RAD(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
-func (rcv *PCFEventDefinition) MutateScanStepSeconds(n float64) bool {
-	return rcv.MutateSCAN_STEP_SECONDS(n)
+func (rcv *PCFEventDefinition) MutateAngleRad(n float64) bool {
+	return rcv.MutateANGLE_RAD(n)
 }
 
-/// Largest number of occurrences reported; 0 is no bound. Default 0.
-func (rcv *PCFEventDefinition) MAXIMUM_EVENTS() uint32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+/// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+/// vector. Default absent (the pole of the axes).
+func (rcv *PCFEventDefinition) PLANE_NORMAL(obj *FRMVector3) *FRMVector3 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(FRMVector3)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
 	}
-	return 0
+	return nil
 }
 
-func (rcv *PCFEventDefinition) MaximumEvents() uint32 {
-	return rcv.MAXIMUM_EVENTS()
+func (rcv *PCFEventDefinition) PlaneNormal(obj *FRMVector3) *FRMVector3 {
+	return rcv.PLANE_NORMAL(obj)
 }
 
-/// Largest number of occurrences reported; 0 is no bound. Default 0.
-func (rcv *PCFEventDefinition) MutateMAXIMUM_EVENTS(n uint32) bool {
-	return rcv._tab.MutateUint32Slot(26, n)
+/// PLANE_CROSSING: the normal, in the request's axes; it need not be a unit
+/// vector. Default absent (the pole of the axes).
+/// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+/// as $OEM. Default empty.
+func (rcv *PCFEventDefinition) SECOND_TRAJECTORY_PORT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
 }
 
-func (rcv *PCFEventDefinition) MutateMaximumEvents(n uint32) bool {
-	return rcv.MutateMAXIMUM_EVENTS(n)
+func (rcv *PCFEventDefinition) SecondTrajectoryPort() []byte {
+	return rcv.SECOND_TRAJECTORY_PORT()
 }
 
+/// CLOSEST_APPROACH: the id of the input port that carries the second trajectory
+/// as $OEM. Default empty.
+/// EXPRESSION: the program. Default absent.
+func (rcv *PCFEventDefinition) EXPRESSION(obj *PCFExpression) *PCFExpression {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFExpression)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCFEventDefinition) Expression(obj *PCFExpression) *PCFExpression {
+	return rcv.EXPRESSION(obj)
+}
+
+/// EXPRESSION: the program. Default absent.
 func PCFEventDefinitionStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(9)
 }
-func PCFEventDefinitionAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(NAME), 0)
+func PCFEventDefinitionAddKIND(builder *flatbuffers.Builder, KIND pcfEventKind) {
+	builder.PrependByteSlot(0, byte(KIND), 0)
 }
-func PCFEventDefinitionAddName(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddNAME(builder, NAME)
+func PCFEventDefinitionAddKind(builder *flatbuffers.Builder, KIND pcfEventKind) {
+	PCFEventDefinitionAddKIND(builder, KIND)
 }
-func PCFEventDefinitionAddLOCATOR_CLASS(builder *flatbuffers.Builder, LOCATOR_CLASS evlLocatorClass) {
-	builder.PrependByteSlot(1, byte(LOCATOR_CLASS), 6)
+func PCFEventDefinitionAddDIRECTION(builder *flatbuffers.Builder, DIRECTION pcfEventDirection) {
+	builder.PrependByteSlot(1, byte(DIRECTION), 0)
 }
-func PCFEventDefinitionAddLocatorClass(builder *flatbuffers.Builder, LOCATOR_CLASS evlLocatorClass) {
-	PCFEventDefinitionAddLOCATOR_CLASS(builder, LOCATOR_CLASS)
-}
-func PCFEventDefinitionAddCONDITION(builder *flatbuffers.Builder, CONDITION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(CONDITION), 0)
-}
-func PCFEventDefinitionAddCondition(builder *flatbuffers.Builder, CONDITION flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddCONDITION(builder, CONDITION)
-}
-func PCFEventDefinitionAddECLIPSE(builder *flatbuffers.Builder, ECLIPSE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ECLIPSE), 0)
-}
-func PCFEventDefinitionAddEclipse(builder *flatbuffers.Builder, ECLIPSE flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddECLIPSE(builder, ECLIPSE)
-}
-func PCFEventDefinitionAddCONTACT(builder *flatbuffers.Builder, CONTACT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(CONTACT), 0)
-}
-func PCFEventDefinitionAddContact(builder *flatbuffers.Builder, CONTACT flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddCONTACT(builder, CONTACT)
-}
-func PCFEventDefinitionAddINTRUSION(builder *flatbuffers.Builder, INTRUSION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(INTRUSION), 0)
-}
-func PCFEventDefinitionAddIntrusion(builder *flatbuffers.Builder, INTRUSION flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddINTRUSION(builder, INTRUSION)
-}
-func PCFEventDefinitionAddAPSIDES(builder *flatbuffers.Builder, APSIDES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(APSIDES), 0)
-}
-func PCFEventDefinitionAddApsides(builder *flatbuffers.Builder, APSIDES flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddAPSIDES(builder, APSIDES)
-}
-func PCFEventDefinitionAddNODE_CROSSING(builder *flatbuffers.Builder, NODE_CROSSING flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(NODE_CROSSING), 0)
-}
-func PCFEventDefinitionAddNodeCrossing(builder *flatbuffers.Builder, NODE_CROSSING flatbuffers.UOffsetT) {
-	PCFEventDefinitionAddNODE_CROSSING(builder, NODE_CROSSING)
+func PCFEventDefinitionAddDirection(builder *flatbuffers.Builder, DIRECTION pcfEventDirection) {
+	PCFEventDefinitionAddDIRECTION(builder, DIRECTION)
 }
 func PCFEventDefinitionAddACTION(builder *flatbuffers.Builder, ACTION pcfEventAction) {
-	builder.PrependByteSlot(8, byte(ACTION), 3)
+	builder.PrependByteSlot(2, byte(ACTION), 1)
 }
 func PCFEventDefinitionAddAction(builder *flatbuffers.Builder, ACTION pcfEventAction) {
 	PCFEventDefinitionAddACTION(builder, ACTION)
 }
-func PCFEventDefinitionAddEPOCH_TOLERANCE_SECONDS(builder *flatbuffers.Builder, EPOCH_TOLERANCE_SECONDS float64) {
-	builder.PrependFloat64Slot(9, EPOCH_TOLERANCE_SECONDS, 1e-9)
+func PCFEventDefinitionAddTOLERANCE_SECONDS(builder *flatbuffers.Builder, TOLERANCE_SECONDS float64) {
+	builder.PrependFloat64Slot(3, TOLERANCE_SECONDS, 1e-9)
 }
-func PCFEventDefinitionAddEpochToleranceSeconds(builder *flatbuffers.Builder, EPOCH_TOLERANCE_SECONDS float64) {
-	PCFEventDefinitionAddEPOCH_TOLERANCE_SECONDS(builder, EPOCH_TOLERANCE_SECONDS)
+func PCFEventDefinitionAddToleranceSeconds(builder *flatbuffers.Builder, TOLERANCE_SECONDS float64) {
+	PCFEventDefinitionAddTOLERANCE_SECONDS(builder, TOLERANCE_SECONDS)
 }
-func PCFEventDefinitionAddSCAN_STEP_SECONDS(builder *flatbuffers.Builder, SCAN_STEP_SECONDS float64) {
-	builder.PrependFloat64Slot(10, SCAN_STEP_SECONDS, 0.0)
+func PCFEventDefinitionAddOCCURRENCE(builder *flatbuffers.Builder, OCCURRENCE uint32) {
+	builder.PrependUint32Slot(4, OCCURRENCE, 1)
 }
-func PCFEventDefinitionAddScanStepSeconds(builder *flatbuffers.Builder, SCAN_STEP_SECONDS float64) {
-	PCFEventDefinitionAddSCAN_STEP_SECONDS(builder, SCAN_STEP_SECONDS)
+func PCFEventDefinitionAddOccurrence(builder *flatbuffers.Builder, OCCURRENCE uint32) {
+	PCFEventDefinitionAddOCCURRENCE(builder, OCCURRENCE)
 }
-func PCFEventDefinitionAddMAXIMUM_EVENTS(builder *flatbuffers.Builder, MAXIMUM_EVENTS uint32) {
-	builder.PrependUint32Slot(11, MAXIMUM_EVENTS, 0)
+func PCFEventDefinitionAddANGLE_RAD(builder *flatbuffers.Builder, ANGLE_RAD float64) {
+	builder.PrependFloat64Slot(5, ANGLE_RAD, 0.0)
 }
-func PCFEventDefinitionAddMaximumEvents(builder *flatbuffers.Builder, MAXIMUM_EVENTS uint32) {
-	PCFEventDefinitionAddMAXIMUM_EVENTS(builder, MAXIMUM_EVENTS)
+func PCFEventDefinitionAddAngleRad(builder *flatbuffers.Builder, ANGLE_RAD float64) {
+	PCFEventDefinitionAddANGLE_RAD(builder, ANGLE_RAD)
+}
+func PCFEventDefinitionAddPLANE_NORMAL(builder *flatbuffers.Builder, PLANE_NORMAL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(PLANE_NORMAL), 0)
+}
+func PCFEventDefinitionAddPlaneNormal(builder *flatbuffers.Builder, PLANE_NORMAL flatbuffers.UOffsetT) {
+	PCFEventDefinitionAddPLANE_NORMAL(builder, PLANE_NORMAL)
+}
+func PCFEventDefinitionAddSECOND_TRAJECTORY_PORT(builder *flatbuffers.Builder, SECOND_TRAJECTORY_PORT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SECOND_TRAJECTORY_PORT), 0)
+}
+func PCFEventDefinitionAddSecondTrajectoryPort(builder *flatbuffers.Builder, SECOND_TRAJECTORY_PORT flatbuffers.UOffsetT) {
+	PCFEventDefinitionAddSECOND_TRAJECTORY_PORT(builder, SECOND_TRAJECTORY_PORT)
+}
+func PCFEventDefinitionAddEXPRESSION(builder *flatbuffers.Builder, EXPRESSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EXPRESSION), 0)
+}
+func PCFEventDefinitionAddExpression(builder *flatbuffers.Builder, EXPRESSION flatbuffers.UOffsetT) {
+	PCFEventDefinitionAddEXPRESSION(builder, EXPRESSION)
 }
 func PCFEventDefinitionEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()
