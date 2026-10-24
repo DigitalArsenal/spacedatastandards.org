@@ -7,7 +7,10 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const DEFAULT_BASE = 'f95c2cf8b1b1357e7e4a1fc4617682bcecc992af';
+// The commit that landed the shared $PCF tables (v1.263.0): the PRW integrator
+// settings, force model, space weather and ECOM2 moved to $PCF there, so PRW's
+// append-only history starts at this commit.
+const DEFAULT_BASE = 'de6bb83c19cff967c3efac7d4d4c11776e1528bb';
 const SCHEMA_PATH = 'schema/PRW/main.fbs';
 const DECLARATION_KINDS = new Set(['table', 'struct', 'enum', 'union']);
 
