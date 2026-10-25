@@ -18,7 +18,6 @@ const expectedLinks = [
   ["sdn", "SDN", "https://spacedatanetwork.org/"],
   ["module-sdk", "Module SDK", "https://digitalarsenal.github.io/space-data-module-sdk/"],
   ["hd-wallet", "HD Wallet", "https://digitalarsenal.github.io/hd-wallet-wasm/"],
-  ["sdn-ap", "SDN-AP", "https://digitalarsenal.github.io/sdn-ap/"],
 ];
 
 const headerTokens = [

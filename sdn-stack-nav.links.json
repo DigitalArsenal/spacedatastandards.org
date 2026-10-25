@@ -35,11 +35,6 @@
       "key": "hd-wallet",
       "label": "HD Wallet",
       "href": "https://digitalarsenal.github.io/hd-wallet-wasm/"
-    },
-    {
-      "key": "sdn-ap",
-      "label": "SDN-AP",
-      "href": "https://digitalarsenal.github.io/sdn-ap/"
     }
   ]
 }

@@ -39,11 +39,6 @@
       label: "HD Wallet",
       href: "https://digitalarsenal.github.io/hd-wallet-wasm/",
     }),
-    Object.freeze({
-      key: "sdn-ap",
-      label: "SDN-AP",
-      href: "https://digitalarsenal.github.io/sdn-ap/",
-    }),
   ]);
   const loader = document.currentScript;
   const sha256 = /^[0-9a-f]{64}$/u;

@@ -22,9 +22,8 @@
   } catch (e) {}
 
   // The stack, in the order every site lists it. LOCKED by the owner
-  // (2026-10-05): these seven and no others. Asset Models and Tudat WASM were
-  // taken out; SDN-AP was added on the owner's word (2026-10-24); nothing
-  // else is added without it.
+  // (2026-10-05): these six and no others — Asset Models and Tudat WASM were
+  // taken out, and nothing is added without the owner's word.
   var SITES = [
     ['sdn', 'Space Data Network', 'https://spacedatanetwork.org/', 'spacedatanetwork.org', 'MIT',
       'The network itself: nodes that publish, find and deliver digitally signed space data, with a dashboard, a desktop app and an SDK.',
@@ -43,10 +42,7 @@
       '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 9l1.5 6 1.5-4 1.5 4L13 9M15 15l1.5-6 1.5 6M15.5 13h2"/>'],
     ['hd-wallet', 'HD Wallet', 'https://digitalarsenal.github.io/hd-wallet-wasm/', 'HD Wallet docs', 'Apache-2.0',
       'One set of keys, kept in your browser, for signing in, digitally signing data and paying on many networks.',
-      '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>'],
-    ['sdn-ap', 'SDN-AP', 'https://digitalarsenal.github.io/sdn-ap/', 'SDN-AP docs', 'Apache-2.0',
-      'Free, open-source software that predicts where satellites and other tracked objects in orbit will be, for a whole catalog at once, in a browser or on a server.',
-      '<path d="M3.34 17A10 4.2 -30 0 0 20.66 7"/><path d="M20.66 7A10 4.2 -30 0 0 3.34 17" stroke-dasharray="1.6 2.7"/><circle cx="20.66" cy="7" r="1.7" fill="currentColor"/>']
+      '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/>']
   ];
 
   var ICONS = {

@@ -1,19 +1,19 @@
 {
   "schemaVersion": 1,
-  "navVersion": "1.1.0",
+  "navVersion": "1.2.0",
   "assets": {
     "navScript": {
-      "bytes": 10285,
-      "sha256": "2e5d4efc654388c85b79e53b1b148268e4083d9252f2a367ea257ccb50d270cd",
-      "sha384": "sha384-XohIVyQyKflz7lf3TTrmIrihUTLtUhJaj/tTBlloTUjOItTmdQGLLFOmXWQwuwFg",
-      "url": "/assets/vendor/sdn-stack-nav/1.1.0/sdn-stack-nav.2e5d4efc654388c85b79e53b1b148268e4083d9252f2a367ea257ccb50d270cd.js"
+      "bytes": 10157,
+      "sha256": "ba268c55a1551bcacc390ac01347c319335a1660787b55b4b239df00fc3c1a4c",
+      "sha384": "sha384-4BDI84CnpZ83otmTHK/KzA5+4pw8q5l+3LInURbEVJY96/iLGzCZUZsCyxjZ1Kpb",
+      "url": "/assets/vendor/sdn-stack-nav/1.2.0/sdn-stack-nav.ba268c55a1551bcacc390ac01347c319335a1660787b55b4b239df00fc3c1a4c.js"
     },
     "navStyle": {
       "bytes": 2217,
       "sha256": "36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7",
       "sha384": "sha384-c4M8Fg+kYaeOYYtJVr7jJsde24IhSWkWaRyAOHEZU9jozhRck089aw+mnHwxymds",
-      "url": "/assets/vendor/sdn-stack-nav/1.1.0/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css"
+      "url": "/assets/vendor/sdn-stack-nav/1.2.0/sdn-stack-nav.36a36359ce18322185e9ff179f88175bab67d5ad84a14d9c08a54f2ff27267e7.css"
     }
   },
-  "linksSha256": "e5d33442cbba0916d03acc19a679fd7f6f4f6b7cef3d11c8c5a8ba493f3bcc87"
+  "linksSha256": "f37accf19d083b92adf7a927ab36be5990f9cbfb8162edc3899e8444771cbb6d"
 }
