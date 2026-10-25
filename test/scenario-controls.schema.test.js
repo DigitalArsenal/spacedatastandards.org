@@ -165,9 +165,7 @@ describe("scenario controls schema consolidation", () => {
 
   it("keeps upstream input schemas in the top-level input_schemas tree", async () => {
     const expectedInputs = [
-      "input_schemas/udl/udl_openapi.json",
       "input_schemas/scenario_controls/message-bus.schema.json",
-      "input_schemas/satobs/positional-observation-reporting-formats.mhtml",
       "input_schemas/README.md",
     ];
 

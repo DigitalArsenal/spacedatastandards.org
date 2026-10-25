@@ -98,4 +98,6 @@ yyyy-nnnaaa  nnnnn M*O aaaaaaaaaaaaaaaaaaaaaaaa  aaaaa  yyyy-mm-dd  aaaaa  yyyy-
 	</tbody>
 </table>
 
-### [Example File](./sample/satcat.txt)
+### Example File
+
+The sample is not redistributed here: it carries no license grant, so it is kept in a private repository.

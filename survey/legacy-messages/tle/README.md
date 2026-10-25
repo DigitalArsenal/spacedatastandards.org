@@ -130,4 +130,6 @@ Lines 1 and 2 are the standard Two-Line Orbital Element Set Format identical to 
   </tr>
 </tbody></table>
 
-### [Example File](./sample/tle.txt)
+### Example File
+
+The sample is not redistributed here: it carries no license grant, so it is kept in a private repository.

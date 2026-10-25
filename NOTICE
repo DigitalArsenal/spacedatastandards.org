@@ -6,9 +6,7 @@ and at https://www.apache.org/licenses/LICENSE-2.0.
 
 Every file in this repository is covered by the License except the third-party
 components below, which keep their own licenses or terms; the License does not
-relicense them. Material marked LicenseRef-Unstated carries no grant of its own:
-it is kept here as a sample or reference, is not part of what the License
-licenses, and stays with its owner.
+relicense them.
 
 The schemas model data formats defined by standards bodies, among them CCSDS.
 The standards belong to their publishers; their documents are not included
@@ -33,23 +31,12 @@ terms; NOTICE means the notices reproduced at the end of this file.
 | assets/vendor/sdn-stack-nav/ | sdn-stack-nav 1.0.0, the Space Data Network stack navigation; a vendored copy from the Space Data Network family kit, Edgesource Corporation | Apache-2.0 | LICENSE |
 | wasm/fixtures/xtce-bogussat1.xml, wasm/fixtures/xtce-bogussat2.xml, data/XTC-example.json | XTCE BogusSAT examples, Copyright 2015 David Overeem; data/XTC-example.json is a JSON conversion of BogusSAT-1 | Apache-2.0 | LICENSE, wasm/fixtures/xtce-bogussat1.xml, wasm/fixtures/xtce-bogussat2.xml |
 | media/playground/ | earth-day.webp and earth-night.webp, NASA Blue Marble and Black Marble imagery | LicenseRef-NASA-Media | none in tree |
-| survey/legacy-messages/documentation/automatic-digital-network-autodin-operating-procedures-janap-1281.pdf | JANAP 128(1), Automatic Digital Network (AUTODIN) Operating Procedures, Joint Chiefs of Staff, March 1983 | LicenseRef-US-Government-Work | none in tree |
-| survey/legacy-messages/tle/sample/tle.txt, survey/legacy-messages/satcat/sample/satcat.txt | element-set and satellite-catalog samples taken from CelesTrak | LicenseRef-Unstated | none in tree |
-| survey/legacy-messages/vcm/sample/vcm.txt | Vector Covariance Message sample taken from Aleksander A. Lidtke's thesis (University of Southampton ePrints) | LicenseRef-Unstated | none in tree |
-| data/freqs.json | satellite downlink frequency table compiled from the source named in each record (uhf-satcom.com, pe0sat.nl, space.oscar.wmo.int, satellitenwelt.de and others) | LicenseRef-Unstated | none in tree |
-| input_schemas/udl/udl_openapi.json | Unified Data Library Services API OpenAPI document, version 1.28.0-MocktailMadness; the terms of service in its info block apply | LicenseRef-Unstated | none in tree |
-| input_schemas/satobs/positional-observation-reporting-formats.mhtml | capture of "Positional Observation Reporting Formats", www.satobs.org/position/posn_formats.html, saved 2023-12-01 | LicenseRef-Unstated | none in tree |
 
 LicenseRef identifiers
 
 - LicenseRef-NASA-Media: NASA imagery. NASA's media usage guidelines
   (https://www.nasa.gov/nasa-brand-center/images-and-media/) treat NASA content
   as generally not subject to copyright; the Playground credits NASA.
-- LicenseRef-US-Government-Work: public domain. A work of U.S. Government
-  employees within their duties, not subject to copyright in the United States
-  (17 U.S.C. § 105). The cover of JANAP 128(1) carries a release marking that
-  this notice does not alter.
-- LicenseRef-Unstated: no license text or grant accompanies the material.
 
 NOTICES REPRODUCED HERE
 

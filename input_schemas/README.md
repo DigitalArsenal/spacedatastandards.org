@@ -8,6 +8,6 @@ data belong in `data/`.
 
 | Path | Source | Purpose |
 | --- | --- | --- |
-| `udl/udl_openapi.json` | UDL OpenAPI | Upstream service schema reference for SDS coverage reviews. |
 | `scenario_controls/message-bus.schema.json` | Scenario controls message bus | Reference input for the `SCC`, `SCN`, and `VST` schemas. |
-| `satobs/positional-observation-reporting-formats.mhtml` | satobs positional observation formats | Reference capture for optical positional observation format reviews. |
+
+The UDL OpenAPI document and the satobs positional observation format capture are kept in a private repository, because their terms do not allow redistribution.

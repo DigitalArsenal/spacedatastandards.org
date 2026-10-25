@@ -4,7 +4,7 @@
 The Orbital Safety Workstation Vector/Covariance Message is a fixed-format ASCII
 formatted message which contains state vector and covariance matrix information about a
 satellite being maintained on the SP Catalog Maintenance System. The message format
-complies with [JANAP-128](../documentation/automatic-digital-network-autodin-operating-procedures-janap-1281.pdf) and DD-173 standards.
+complies with JANAP-128 and DD-173 standards.
 
 ## COORDINATE SYSTEMS
 The position and velocity of the satellite are provided in three different coordinate
@@ -245,4 +245,6 @@ If the covariance
 matrix is unavailable, the size will be set to 0x0, and no data will
 follow. 
 
-### [Example File](./sample/vcm.txt)
+### Example File
+
+The sample is not redistributed here: it carries no license grant, so it is kept in a private repository.
