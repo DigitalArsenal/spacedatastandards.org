@@ -81,6 +81,19 @@ public final class PCFReentry extends com.google.flatbuffers.Table {
    * 10.
    */
   public double OSCULATING_STEP_SECONDS() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 10.0; }
+  /**
+   * Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+   * km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+   * steps once per revolution while the averaged theory ramps, and the
+   * along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+   * Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+   * Default 0.5.
+   */
+  public double HANDOFF_SAWTOOTH_KM() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.5; }
+  /**
+   * Eccentricity above which the sawtooth test applies. Default 0.02.
+   */
+  public double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.02; }
 
   public static int createPCFReentry(FlatBufferBuilder builder,
       double ALTITUDE_KM,
@@ -94,8 +107,12 @@ public final class PCFReentry extends com.google.flatbuffers.Table {
       double WINDOW_DENSITY_SIGMA,
       double WINDOW_CORRELATION_DAYS,
       double WINDOW_BALLISTIC_SIGMA,
-      double OSCULATING_STEP_SECONDS) {
-    builder.startTable(12);
+      double OSCULATING_STEP_SECONDS,
+      double HANDOFF_SAWTOOTH_KM,
+      double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) {
+    builder.startTable(14);
+    PCFReentry.addHandoffSawtoothMinimumEccentricity(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
+    PCFReentry.addHandoffSawtoothKm(builder, HANDOFF_SAWTOOTH_KM);
     PCFReentry.addOsculatingStepSeconds(builder, OSCULATING_STEP_SECONDS);
     PCFReentry.addWindowBallisticSigma(builder, WINDOW_BALLISTIC_SIGMA);
     PCFReentry.addWindowCorrelationDays(builder, WINDOW_CORRELATION_DAYS);
@@ -111,7 +128,7 @@ public final class PCFReentry extends com.google.flatbuffers.Table {
     return PCFReentry.endPCFReentry(builder);
   }
 
-  public static void startPCFReentry(FlatBufferBuilder builder) { builder.startTable(12); }
+  public static void startPCFReentry(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addAltitudeKm(FlatBufferBuilder builder, double ALTITUDE_KM) { builder.addDouble(0, ALTITUDE_KM, 80.0); }
   public static void addHandoffPerigeeAltitudeKm(FlatBufferBuilder builder, double HANDOFF_PERIGEE_ALTITUDE_KM) { builder.addDouble(1, HANDOFF_PERIGEE_ALTITUDE_KM, 180.0); }
   public static void addHandoffDecayRatio(FlatBufferBuilder builder, double HANDOFF_DECAY_RATIO) { builder.addDouble(2, HANDOFF_DECAY_RATIO, 0.05); }
@@ -124,6 +141,8 @@ public final class PCFReentry extends com.google.flatbuffers.Table {
   public static void addWindowCorrelationDays(FlatBufferBuilder builder, double WINDOW_CORRELATION_DAYS) { builder.addDouble(9, WINDOW_CORRELATION_DAYS, 2.0); }
   public static void addWindowBallisticSigma(FlatBufferBuilder builder, double WINDOW_BALLISTIC_SIGMA) { builder.addDouble(10, WINDOW_BALLISTIC_SIGMA, 0.05); }
   public static void addOsculatingStepSeconds(FlatBufferBuilder builder, double OSCULATING_STEP_SECONDS) { builder.addDouble(11, OSCULATING_STEP_SECONDS, 10.0); }
+  public static void addHandoffSawtoothKm(FlatBufferBuilder builder, double HANDOFF_SAWTOOTH_KM) { builder.addDouble(12, HANDOFF_SAWTOOTH_KM, 0.5); }
+  public static void addHandoffSawtoothMinimumEccentricity(FlatBufferBuilder builder, double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) { builder.addDouble(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02); }
   public static int endPCFReentry(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

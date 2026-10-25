@@ -620,8 +620,11 @@ public struct PCFEmpiricalTerms: FlatBufferVerifiableTable, FlatbuffersVectorIni
   ///  default) leaves TAU0 off.
   public var HAS_TAU0_RULE_LIMIT_M2_KG: Bool { let o = _accessor.offset(VT.HAS_TAU0_RULE_LIMIT_M2_KG); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  True holds TAUC and TAUS after the arc end above the drag regime
-  ///  instead of decaying them. Default false.
-  public var HELD_ABOVE_DRAG_REGIME: Bool { let o = _accessor.offset(VT.HELD_ABOVE_DRAG_REGIME); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+  ///  once-per-revolution part of radiation pressure; false decays them over
+  ///  PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+  ///  written before 1.268.0 omits a false value, so it reads true.
+  public var HELD_ABOVE_DRAG_REGIME: Bool { let o = _accessor.offset(VT.HELD_ABOVE_DRAG_REGIME); return o == 0 ? true : _accessor.readBuffer(of: Bool.self, at: o) }
   ///  Persistence time of the empirical force after the arc end, hours.
   ///  Default 24.
   public var PERSISTENCE_HOURS: Double { let o = _accessor.offset(VT.PERSISTENCE_HOURS); return o == 0 ? 24.0 : _accessor.readBuffer(of: Double.self, at: o) }
@@ -631,7 +634,7 @@ public struct PCFEmpiricalTerms: FlatBufferVerifiableTable, FlatbuffersVectorIni
   public static func add(TAU0_RULE_LIMIT_M2_KG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TAU0_RULE_LIMIT_M2_KG, def: 0.5, at: VT.TAU0_RULE_LIMIT_M2_KG) }
   public static func add(HAS_TAU0_RULE_LIMIT_M2_KG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HAS_TAU0_RULE_LIMIT_M2_KG, def: false,
    at: VT.HAS_TAU0_RULE_LIMIT_M2_KG) }
-  public static func add(HELD_ABOVE_DRAG_REGIME: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HELD_ABOVE_DRAG_REGIME, def: false,
+  public static func add(HELD_ABOVE_DRAG_REGIME: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HELD_ABOVE_DRAG_REGIME, def: true,
    at: VT.HELD_ABOVE_DRAG_REGIME) }
   public static func add(PERSISTENCE_HOURS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERSISTENCE_HOURS, def: 24.0, at: VT.PERSISTENCE_HOURS) }
   public static func endPCFEmpiricalTerms(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -640,7 +643,7 @@ public struct PCFEmpiricalTerms: FlatBufferVerifiableTable, FlatbuffersVectorIni
     ONCE_PER_REVOLUTION: Bool = true,
     TAU0_RULE_LIMIT_M2_KG: Double = 0.5,
     HAS_TAU0_RULE_LIMIT_M2_KG: Bool = false,
-    HELD_ABOVE_DRAG_REGIME: Bool = false,
+    HELD_ABOVE_DRAG_REGIME: Bool = true,
     PERSISTENCE_HOURS: Double = 24.0
   ) -> Offset {
     let __start = PCFEmpiricalTerms.startPCFEmpiricalTerms(&fbb)
@@ -1314,6 +1317,8 @@ public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     static let WINDOW_CORRELATION_DAYS: VOffset = 22
     static let WINDOW_BALLISTIC_SIGMA: VOffset = 24
     static let OSCULATING_STEP_SECONDS: VOffset = 26
+    static let HANDOFF_SAWTOOTH_KM: VOffset = 28
+    static let HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: VOffset = 30
   }
 
   ///  Altitude at which the trajectory ends as reentered, km. Default 80.
@@ -1345,7 +1350,16 @@ public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   ///  Step of the osculating integration after the hand-off, seconds. Default
   ///  10.
   public var OSCULATING_STEP_SECONDS: Double { let o = _accessor.offset(VT.OSCULATING_STEP_SECONDS); return o == 0 ? 10.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startPCFReentry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 12) }
+  ///  Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+  ///  km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+  ///  steps once per revolution while the averaged theory ramps, and the
+  ///  along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+  ///  Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+  ///  Default 0.5.
+  public var HANDOFF_SAWTOOTH_KM: Double { let o = _accessor.offset(VT.HANDOFF_SAWTOOTH_KM); return o == 0 ? 0.5 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity above which the sawtooth test applies. Default 0.02.
+  public var HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: Double { let o = _accessor.offset(VT.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY); return o == 0 ? 0.02 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startPCFReentry(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALTITUDE_KM, def: 80.0, at: VT.ALTITUDE_KM) }
   public static func add(HANDOFF_PERIGEE_ALTITUDE_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_PERIGEE_ALTITUDE_KM, def: 180.0, at: VT.HANDOFF_PERIGEE_ALTITUDE_KM) }
   public static func add(HANDOFF_DECAY_RATIO: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_DECAY_RATIO, def: 0.05, at: VT.HANDOFF_DECAY_RATIO) }
@@ -1358,6 +1372,8 @@ public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
   public static func add(WINDOW_CORRELATION_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_CORRELATION_DAYS, def: 2.0, at: VT.WINDOW_CORRELATION_DAYS) }
   public static func add(WINDOW_BALLISTIC_SIGMA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WINDOW_BALLISTIC_SIGMA, def: 0.05, at: VT.WINDOW_BALLISTIC_SIGMA) }
   public static func add(OSCULATING_STEP_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OSCULATING_STEP_SECONDS, def: 10.0, at: VT.OSCULATING_STEP_SECONDS) }
+  public static func add(HANDOFF_SAWTOOTH_KM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_SAWTOOTH_KM, def: 0.5, at: VT.HANDOFF_SAWTOOTH_KM) }
+  public static func add(HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, def: 0.02, at: VT.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) }
   public static func endPCFReentry(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCFReentry(
     _ fbb: inout FlatBufferBuilder,
@@ -1372,7 +1388,9 @@ public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     WINDOW_DENSITY_SIGMA: Double = 0.15,
     WINDOW_CORRELATION_DAYS: Double = 2.0,
     WINDOW_BALLISTIC_SIGMA: Double = 0.05,
-    OSCULATING_STEP_SECONDS: Double = 10.0
+    OSCULATING_STEP_SECONDS: Double = 10.0,
+    HANDOFF_SAWTOOTH_KM: Double = 0.5,
+    HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: Double = 0.02
   ) -> Offset {
     let __start = PCFReentry.startPCFReentry(&fbb)
     PCFReentry.add(ALTITUDE_KM: ALTITUDE_KM, &fbb)
@@ -1387,6 +1405,8 @@ public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     PCFReentry.add(WINDOW_CORRELATION_DAYS: WINDOW_CORRELATION_DAYS, &fbb)
     PCFReentry.add(WINDOW_BALLISTIC_SIGMA: WINDOW_BALLISTIC_SIGMA, &fbb)
     PCFReentry.add(OSCULATING_STEP_SECONDS: OSCULATING_STEP_SECONDS, &fbb)
+    PCFReentry.add(HANDOFF_SAWTOOTH_KM: HANDOFF_SAWTOOTH_KM, &fbb)
+    PCFReentry.add(HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, &fbb)
     return PCFReentry.endPCFReentry(&fbb, start: __start)
   }
 
@@ -1404,6 +1424,8 @@ public struct PCFReentry: FlatBufferVerifiableTable, FlatbuffersVectorInitializa
     try _v.visit(field: VT.WINDOW_CORRELATION_DAYS, fieldName: "WINDOW_CORRELATION_DAYS", required: false, type: Double.self)
     try _v.visit(field: VT.WINDOW_BALLISTIC_SIGMA, fieldName: "WINDOW_BALLISTIC_SIGMA", required: false, type: Double.self)
     try _v.visit(field: VT.OSCULATING_STEP_SECONDS, fieldName: "OSCULATING_STEP_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.HANDOFF_SAWTOOTH_KM, fieldName: "HANDOFF_SAWTOOTH_KM", required: false, type: Double.self)
+    try _v.visit(field: VT.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, fieldName: "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY", required: false, type: Double.self)
     _v.finish()
   }
 }

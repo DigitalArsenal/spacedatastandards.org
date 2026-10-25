@@ -317,8 +317,62 @@ func (rcv *PCFReentry) MutateOsculatingStepSeconds(n float64) bool {
 	return rcv.MutateOSCULATING_STEP_SECONDS(n)
 }
 
+/// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+/// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+/// steps once per revolution while the averaged theory ramps, and the
+/// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+/// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+/// Default 0.5.
+func (rcv *PCFReentry) HANDOFF_SAWTOOTH_KM() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.5
+}
+
+func (rcv *PCFReentry) HandoffSawtoothKm() float64 {
+	return rcv.HANDOFF_SAWTOOTH_KM()
+}
+
+/// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+/// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+/// steps once per revolution while the averaged theory ramps, and the
+/// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+/// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+/// Default 0.5.
+func (rcv *PCFReentry) MutateHANDOFF_SAWTOOTH_KM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+func (rcv *PCFReentry) MutateHandoffSawtoothKm(n float64) bool {
+	return rcv.MutateHANDOFF_SAWTOOTH_KM(n)
+}
+
+/// Eccentricity above which the sawtooth test applies. Default 0.02.
+func (rcv *PCFReentry) HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.02
+}
+
+func (rcv *PCFReentry) HandoffSawtoothMinimumEccentricity() float64 {
+	return rcv.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY()
+}
+
+/// Eccentricity above which the sawtooth test applies. Default 0.02.
+func (rcv *PCFReentry) MutateHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+func (rcv *PCFReentry) MutateHandoffSawtoothMinimumEccentricity(n float64) bool {
+	return rcv.MutateHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(n)
+}
+
 func PCFReentryStart(builder *flatbuffers.Builder) {
-	builder.StartObject(12)
+	builder.StartObject(14)
 }
 func PCFReentryAddALTITUDE_KM(builder *flatbuffers.Builder, ALTITUDE_KM float64) {
 	builder.PrependFloat64Slot(0, ALTITUDE_KM, 80.0)
@@ -391,6 +445,18 @@ func PCFReentryAddOSCULATING_STEP_SECONDS(builder *flatbuffers.Builder, OSCULATI
 }
 func PCFReentryAddOsculatingStepSeconds(builder *flatbuffers.Builder, OSCULATING_STEP_SECONDS float64) {
 	PCFReentryAddOSCULATING_STEP_SECONDS(builder, OSCULATING_STEP_SECONDS)
+}
+func PCFReentryAddHANDOFF_SAWTOOTH_KM(builder *flatbuffers.Builder, HANDOFF_SAWTOOTH_KM float64) {
+	builder.PrependFloat64Slot(12, HANDOFF_SAWTOOTH_KM, 0.5)
+}
+func PCFReentryAddHandoffSawtoothKm(builder *flatbuffers.Builder, HANDOFF_SAWTOOTH_KM float64) {
+	PCFReentryAddHANDOFF_SAWTOOTH_KM(builder, HANDOFF_SAWTOOTH_KM)
+}
+func PCFReentryAddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder *flatbuffers.Builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY float64) {
+	builder.PrependFloat64Slot(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02)
+}
+func PCFReentryAddHandoffSawtoothMinimumEccentricity(builder *flatbuffers.Builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY float64) {
+	PCFReentryAddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY)
 }
 func PCFReentryEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

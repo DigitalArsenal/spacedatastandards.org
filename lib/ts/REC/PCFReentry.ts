@@ -130,8 +130,29 @@ OSCULATING_STEP_SECONDS():number {
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 10.0;
 }
 
+/**
+ * Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+ * km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+ * steps once per revolution while the averaged theory ramps, and the
+ * along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+ * Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+ * Default 0.5.
+ */
+HANDOFF_SAWTOOTH_KM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.5;
+}
+
+/**
+ * Eccentricity above which the sawtooth test applies. Default 0.02.
+ */
+HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.02;
+}
+
 static startPCFReentry(builder:flatbuffers.Builder) {
-  builder.startObject(12);
+  builder.startObject(14);
 }
 
 static addAltitudeKm(builder:flatbuffers.Builder, ALTITUDE_KM:number) {
@@ -182,12 +203,20 @@ static addOsculatingStepSeconds(builder:flatbuffers.Builder, OSCULATING_STEP_SEC
   builder.addFieldFloat64(11, OSCULATING_STEP_SECONDS, 10.0);
 }
 
+static addHandoffSawtoothKm(builder:flatbuffers.Builder, HANDOFF_SAWTOOTH_KM:number) {
+  builder.addFieldFloat64(12, HANDOFF_SAWTOOTH_KM, 0.5);
+}
+
+static addHandoffSawtoothMinimumEccentricity(builder:flatbuffers.Builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY:number) {
+  builder.addFieldFloat64(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
+}
+
 static endPCFReentry(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
 }
 
-static createPCFReentry(builder:flatbuffers.Builder, ALTITUDE_KM:number, HANDOFF_PERIGEE_ALTITUDE_KM:number, HANDOFF_DECAY_RATIO:number, HANDOFF_ECCENTRICITY_COLLAPSE:number, HANDOFF_MINIMUM_ECCENTRICITY:number, NODE_STEP_MINUTES:number, HORIZON_DAYS:number, WINDOW_METHOD:pcfReentryWindowMethod, WINDOW_DENSITY_SIGMA:number, WINDOW_CORRELATION_DAYS:number, WINDOW_BALLISTIC_SIGMA:number, OSCULATING_STEP_SECONDS:number):flatbuffers.Offset {
+static createPCFReentry(builder:flatbuffers.Builder, ALTITUDE_KM:number, HANDOFF_PERIGEE_ALTITUDE_KM:number, HANDOFF_DECAY_RATIO:number, HANDOFF_ECCENTRICITY_COLLAPSE:number, HANDOFF_MINIMUM_ECCENTRICITY:number, NODE_STEP_MINUTES:number, HORIZON_DAYS:number, WINDOW_METHOD:pcfReentryWindowMethod, WINDOW_DENSITY_SIGMA:number, WINDOW_CORRELATION_DAYS:number, WINDOW_BALLISTIC_SIGMA:number, OSCULATING_STEP_SECONDS:number, HANDOFF_SAWTOOTH_KM:number, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY:number):flatbuffers.Offset {
   PCFReentry.startPCFReentry(builder);
   PCFReentry.addAltitudeKm(builder, ALTITUDE_KM);
   PCFReentry.addHandoffPerigeeAltitudeKm(builder, HANDOFF_PERIGEE_ALTITUDE_KM);
@@ -201,6 +230,8 @@ static createPCFReentry(builder:flatbuffers.Builder, ALTITUDE_KM:number, HANDOFF
   PCFReentry.addWindowCorrelationDays(builder, WINDOW_CORRELATION_DAYS);
   PCFReentry.addWindowBallisticSigma(builder, WINDOW_BALLISTIC_SIGMA);
   PCFReentry.addOsculatingStepSeconds(builder, OSCULATING_STEP_SECONDS);
+  PCFReentry.addHandoffSawtoothKm(builder, HANDOFF_SAWTOOTH_KM);
+  PCFReentry.addHandoffSawtoothMinimumEccentricity(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
   return PCFReentry.endPCFReentry(builder);
 }
 
@@ -217,7 +248,9 @@ unpack(): PCFReentryT {
     this.WINDOW_DENSITY_SIGMA(),
     this.WINDOW_CORRELATION_DAYS(),
     this.WINDOW_BALLISTIC_SIGMA(),
-    this.OSCULATING_STEP_SECONDS()
+    this.OSCULATING_STEP_SECONDS(),
+    this.HANDOFF_SAWTOOTH_KM(),
+    this.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY()
   );
 }
 
@@ -235,6 +268,8 @@ unpackTo(_o: PCFReentryT): void {
   _o.WINDOW_CORRELATION_DAYS = this.WINDOW_CORRELATION_DAYS();
   _o.WINDOW_BALLISTIC_SIGMA = this.WINDOW_BALLISTIC_SIGMA();
   _o.OSCULATING_STEP_SECONDS = this.OSCULATING_STEP_SECONDS();
+  _o.HANDOFF_SAWTOOTH_KM = this.HANDOFF_SAWTOOTH_KM();
+  _o.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = this.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY();
 }
 }
 
@@ -251,7 +286,9 @@ constructor(
   public WINDOW_DENSITY_SIGMA: number = 0.15,
   public WINDOW_CORRELATION_DAYS: number = 2.0,
   public WINDOW_BALLISTIC_SIGMA: number = 0.05,
-  public OSCULATING_STEP_SECONDS: number = 10.0
+  public OSCULATING_STEP_SECONDS: number = 10.0,
+  public HANDOFF_SAWTOOTH_KM: number = 0.5,
+  public HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: number = 0.02
 ){}
 
 
@@ -268,7 +305,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.WINDOW_DENSITY_SIGMA,
     this.WINDOW_CORRELATION_DAYS,
     this.WINDOW_BALLISTIC_SIGMA,
-    this.OSCULATING_STEP_SECONDS
+    this.OSCULATING_STEP_SECONDS,
+    this.HANDOFF_SAWTOOTH_KM,
+    this.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY
   );
 }
 }

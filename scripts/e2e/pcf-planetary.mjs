@@ -15,7 +15,9 @@
 //      and JS re-encoding reproduces the first buffer byte for byte;
 //   3. a buffer SDS 1.266.0 wrote (fixtures/pcf-1266.fb, the generated JS of
 //      that release) decodes in JS, C++ and Go with the new fields at their
-//      defaults and everything else intact, and re-encodes to the same bytes.
+//      defaults (and any field a later release appended at its default) and
+//      everything else intact. Later releases may change how an omitted field
+//      reads, so its bytes are not asserted to survive a re-encode.
 // Default: candidate (lib/ and dist/ of this tree). --published VERSION: the
 // immutable npm archive and Go module of that release.
 import assert from 'node:assert/strict';
@@ -25,7 +27,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { closure, cppCopySource, goCopySource, parseIdl, populate } from './lib/idl-wire.mjs';
+import { closure, completeWithDefaults, cppCopySource, goCopySource, parseIdl, populate } from './lib/idl-wire.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const published = process.argv[2] === '--published' ? process.argv[3] : null;
@@ -68,13 +70,18 @@ try {
   const pcf = parseIdl(schemaRoot, 'PCF');
   const ncd = parseIdl(schemaRoot, 'NCD');
   const members = (model, name) => model.enums.get(name).members.map((m) => `${m.name}=${m.value}`);
-  assert.deepEqual(members(pcf, 'pcfGravitySelection'), ['INFER_FLAGS=0', 'POINT_MASS=1', 'J2_ONLY=2', 'J2_TO_J4=3', 'SPHERICAL_HARMONICS=4', 'EGM2008=5', 'EGM96=6', 'GRGM660PRIM=7', 'MRO120F=8']);
-  assert.deepEqual(members(pcf, 'pcfAtmosphereFamily'), ['UNSPECIFIED=0', 'NRLMSISE00=1', 'EXPONENTIAL=2', 'USSA1976=3', 'HARRIS_PRIESTER=4', 'JACCHIA_ROBERTS=5', 'JB2008=6', 'MARS_EXPONENTIAL=7']);
-  assert.deepEqual(members(ncd, 'ncdContainerFormat').slice(-4), ['RINEX_OBS=30', 'RINEX_NAV=31', 'PCK_DAF=32', 'PROVIDER_DEFINED=255'], 'PCK_DAF takes the next free ordinal, ahead of the sentinel');
-  assert.equal(new Set(members(ncd, 'ncdContainerFormat').map((m) => m.split('=')[1])).size, members(ncd, 'ncdContainerFormat').length, 'no ordinal is used twice');
+  // Prefixes and neighbors, so a later append does not break this run.
+  assert.deepEqual(members(pcf, 'pcfGravitySelection').slice(0, 9), ['INFER_FLAGS=0', 'POINT_MASS=1', 'J2_ONLY=2', 'J2_TO_J4=3', 'SPHERICAL_HARMONICS=4', 'EGM2008=5', 'EGM96=6', 'GRGM660PRIM=7', 'MRO120F=8']);
+  assert.deepEqual(members(pcf, 'pcfAtmosphereFamily').slice(0, 8), ['UNSPECIFIED=0', 'NRLMSISE00=1', 'EXPONENTIAL=2', 'USSA1976=3', 'HARRIS_PRIESTER=4', 'JACCHIA_ROBERTS=5', 'JB2008=6', 'MARS_EXPONENTIAL=7']);
+  const formats = members(ncd, 'ncdContainerFormat');
+  const rinexNav = formats.indexOf('RINEX_NAV=31');
+  assert.ok(rinexNav > 0 && formats[rinexNav + 1] === 'PCK_DAF=32', 'PCK_DAF takes the next free ordinal after RINEX_NAV');
+  assert.equal(formats.at(-1), 'PROVIDER_DEFINED=255', 'the sentinel stays last');
+  assert.equal(new Set(formats.map((m) => m.split('=')[1])).size, formats.length, 'no ordinal is used twice');
   const forceFields = pcf.tables.get('PCFForceModel').fields;
-  assert.deepEqual(forceFields.slice(-3).map((f) => f.name), ['EMPIRICAL_TERMS', 'THIRD_BODY_MAXIMUM_DEGREE', 'THIRD_BODY_MAXIMUM_ORDER'], 'the new fields are appended after EMPIRICAL_TERMS');
-  for (const f of forceFields.slice(-2)) assert.deepEqual([f.elem, f.vector, f.def, f.required], ['ushort', false, '0', false], `${f.name} is a ushort defaulting to 0`);
+  const empirical = forceFields.findIndex((f) => f.name === 'EMPIRICAL_TERMS');
+  assert.deepEqual(forceFields.slice(empirical, empirical + 3).map((f) => f.name), ['EMPIRICAL_TERMS', 'THIRD_BODY_MAXIMUM_DEGREE', 'THIRD_BODY_MAXIMUM_ORDER'], 'the new fields are appended after EMPIRICAL_TERMS');
+  for (const f of forceFields.slice(empirical + 1, empirical + 3)) assert.deepEqual([f.elem, f.vector, f.def, f.required], ['ushort', false, '0', false], `${f.name} is a ushort defaulting to 0`);
   const P = await import(pathToFileURL(path.join(artifact, 'lib/js/PCF/main.js')));
   const N = await import(pathToFileURL(path.join(artifact, 'lib/js/NCD/main.js')));
   assert.equal(P.pcfGravitySelection.MRO120F, 8);
@@ -110,8 +117,9 @@ try {
   assert.equal(crypto.createHash('sha256').update(goldenBytes).digest('hex'), GOLDEN.sha256, `the ${GOLDEN.release} golden buffer is pinned`);
   const goldenBefore = JSON.parse(fs.readFileSync(path.join(root, `scripts/e2e/fixtures/${GOLDEN.file}.json`), 'utf8'), (_k, v) => (v && typeof v === 'object' && typeof v.$int64 === 'string' ? BigInt(v.$int64) : v));
   assert.ok(!('THIRD_BODY_MAXIMUM_DEGREE' in goldenBefore.FORCES), `${GOLDEN.release} had no third-body field`);
-  const goldenExpected = structuredClone(goldenBefore);
-  Object.assign(goldenExpected.FORCES, { THIRD_BODY_MAXIMUM_DEGREE: 0, THIRD_BODY_MAXIMUM_ORDER: 0 });
+  // What the current schema reads from it: the new fields (and any a later release appended) at their defaults.
+  const goldenExpected = completeWithDefaults(pcf, P, 'PCF', goldenBefore);
+  assert.deepEqual([goldenExpected.FORCES.THIRD_BODY_MAXIMUM_DEGREE, goldenExpected.FORCES.THIRD_BODY_MAXIMUM_ORDER], [0, 0]);
 
   const cases = [
     {
@@ -185,8 +193,8 @@ try {
           assert.deepStrictEqual(back, expected, `${c.name} ${label ?? 'full'}: ${rt} changed a field`);
           if (name === c.name) c.check(back);
         }
-        if (rt === 'go') {
-          // byte for byte: re-encoding what Go wrote reproduces the first buffer exactly (for the golden buffer too: the new fields at 0 add no bytes)
+        if (rt === 'go' && name !== 'golden') {
+          // byte for byte: re-encoding what Go wrote reproduces the first buffer exactly
           const again = new fb.Builder(1024);
           Type[`finish${c.code}Buffer`](again, back.pack(again));
           assert.equal(Buffer.compare(Buffer.from(again.asUint8Array()), original), 0, `${c.name} ${label ?? 'full'}: JS re-encoding differs from the original bytes`);

@@ -77,14 +77,17 @@ class PCFEmpiricalTerms extends Table
     }
 
     /// True holds TAUC and TAUS after the arc end above the drag regime
-    /// instead of decaying them. Default false.
+    /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+    /// once-per-revolution part of radiation pressure; false decays them over
+    /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+    /// written before 1.268.0 omits a false value, so it reads true.
     /**
      * @return bool
      */
     public function getHELD_ABOVE_DRAG_REGIME()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : true;
     }
 
     /// Persistence time of the empirical force after the arc end, hours.

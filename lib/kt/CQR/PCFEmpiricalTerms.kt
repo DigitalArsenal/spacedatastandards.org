@@ -60,12 +60,15 @@ class PCFEmpiricalTerms : Table() {
         }
     /**
      * True holds TAUC and TAUS after the arc end above the drag regime
-     * instead of decaying them. Default false.
+     * (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+     * once-per-revolution part of radiation pressure; false decays them over
+     * PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+     * written before 1.268.0 omits a false value, so it reads true.
      */
     val heldAboveDragRegime : Boolean
         get() {
             val o = __offset(10)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else true
         }
     /**
      * Persistence time of the empirical force after the arc end, hours.
@@ -96,7 +99,7 @@ class PCFEmpiricalTerms : Table() {
         fun addONCEPERREVOLUTION(builder: FlatBufferBuilder, oncePerRevolution: Boolean) = builder.addBoolean(0, oncePerRevolution, true)
         fun addTAU0RULELIMITM2KG(builder: FlatBufferBuilder, tau0RuleLimitM2Kg: Double) = builder.addDouble(1, tau0RuleLimitM2Kg, 0.5)
         fun addHASTAU0RULELIMITM2KG(builder: FlatBufferBuilder, hasTau0RuleLimitM2Kg: Boolean) = builder.addBoolean(2, hasTau0RuleLimitM2Kg, false)
-        fun addHELDABOVEDRAGREGIME(builder: FlatBufferBuilder, heldAboveDragRegime: Boolean) = builder.addBoolean(3, heldAboveDragRegime, false)
+        fun addHELDABOVEDRAGREGIME(builder: FlatBufferBuilder, heldAboveDragRegime: Boolean) = builder.addBoolean(3, heldAboveDragRegime, true)
         fun addPERSISTENCEHOURS(builder: FlatBufferBuilder, persistenceHours: Double) = builder.addDouble(4, persistenceHours, 24.0)
         fun endPCFEmpiricalTerms(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()

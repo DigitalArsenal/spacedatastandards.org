@@ -58,11 +58,14 @@ HAS_TAU0_RULE_LIMIT_M2_KG():boolean {
 
 /**
  * True holds TAUC and TAUS after the arc end above the drag regime
- * instead of decaying them. Default false.
+ * (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+ * once-per-revolution part of radiation pressure; false decays them over
+ * PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+ * written before 1.268.0 omits a false value, so it reads true.
  */
 HELD_ABOVE_DRAG_REGIME():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : true;
 }
 
 /**
@@ -91,7 +94,7 @@ static addHasTau0RuleLimitM2Kg(builder:flatbuffers.Builder, HAS_TAU0_RULE_LIMIT_
 }
 
 static addHeldAboveDragRegime(builder:flatbuffers.Builder, HELD_ABOVE_DRAG_REGIME:boolean) {
-  builder.addFieldInt8(3, +HELD_ABOVE_DRAG_REGIME, +false);
+  builder.addFieldInt8(3, +HELD_ABOVE_DRAG_REGIME, +true);
 }
 
 static addPersistenceHours(builder:flatbuffers.Builder, PERSISTENCE_HOURS:number) {
@@ -138,7 +141,7 @@ constructor(
   public ONCE_PER_REVOLUTION: boolean = true,
   public TAU0_RULE_LIMIT_M2_KG: number = 0.5,
   public HAS_TAU0_RULE_LIMIT_M2_KG: boolean = false,
-  public HELD_ABOVE_DRAG_REGIME: boolean = false,
+  public HELD_ABOVE_DRAG_REGIME: boolean = true,
   public PERSISTENCE_HOURS: number = 24.0
 ){}
 

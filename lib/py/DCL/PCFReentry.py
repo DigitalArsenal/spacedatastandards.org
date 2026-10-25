@@ -131,8 +131,29 @@ class PCFReentry(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 10.0
 
+    # Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+    # km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+    # steps once per revolution while the averaged theory ramps, and the
+    # along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+    # Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+    # Default 0.5.
+    # PCFReentry
+    def HANDOFF_SAWTOOTH_KM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.5
+
+    # Eccentricity above which the sawtooth test applies. Default 0.02.
+    # PCFReentry
+    def HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.02
+
 def PCFReentryStart(builder):
-    builder.StartObject(12)
+    builder.StartObject(14)
 
 def Start(builder):
     PCFReentryStart(builder)
@@ -209,6 +230,18 @@ def PCFReentryAddOSCULATING_STEP_SECONDS(builder, OSCULATING_STEP_SECONDS):
 def AddOSCULATING_STEP_SECONDS(builder, OSCULATING_STEP_SECONDS):
     PCFReentryAddOSCULATING_STEP_SECONDS(builder, OSCULATING_STEP_SECONDS)
 
+def PCFReentryAddHANDOFF_SAWTOOTH_KM(builder, HANDOFF_SAWTOOTH_KM):
+    builder.PrependFloat64Slot(12, HANDOFF_SAWTOOTH_KM, 0.5)
+
+def AddHANDOFF_SAWTOOTH_KM(builder, HANDOFF_SAWTOOTH_KM):
+    PCFReentryAddHANDOFF_SAWTOOTH_KM(builder, HANDOFF_SAWTOOTH_KM)
+
+def PCFReentryAddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY):
+    builder.PrependFloat64Slot(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02)
+
+def AddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY):
+    PCFReentryAddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY)
+
 def PCFReentryEnd(builder):
     return builder.EndObject()
 
@@ -233,6 +266,8 @@ class PCFReentryT(object):
         WINDOW_CORRELATION_DAYS = 2.0,
         WINDOW_BALLISTIC_SIGMA = 0.05,
         OSCULATING_STEP_SECONDS = 10.0,
+        HANDOFF_SAWTOOTH_KM = 0.5,
+        HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 0.02,
     ):
         self.ALTITUDE_KM = ALTITUDE_KM  # type: float
         self.HANDOFF_PERIGEE_ALTITUDE_KM = HANDOFF_PERIGEE_ALTITUDE_KM  # type: float
@@ -246,6 +281,8 @@ class PCFReentryT(object):
         self.WINDOW_CORRELATION_DAYS = WINDOW_CORRELATION_DAYS  # type: float
         self.WINDOW_BALLISTIC_SIGMA = WINDOW_BALLISTIC_SIGMA  # type: float
         self.OSCULATING_STEP_SECONDS = OSCULATING_STEP_SECONDS  # type: float
+        self.HANDOFF_SAWTOOTH_KM = HANDOFF_SAWTOOTH_KM  # type: float
+        self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY  # type: float
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -280,6 +317,8 @@ class PCFReentryT(object):
         self.WINDOW_CORRELATION_DAYS = PCFReentry.WINDOW_CORRELATION_DAYS()
         self.WINDOW_BALLISTIC_SIGMA = PCFReentry.WINDOW_BALLISTIC_SIGMA()
         self.OSCULATING_STEP_SECONDS = PCFReentry.OSCULATING_STEP_SECONDS()
+        self.HANDOFF_SAWTOOTH_KM = PCFReentry.HANDOFF_SAWTOOTH_KM()
+        self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = PCFReentry.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY()
 
     # PCFReentryT
     def Pack(self, builder):
@@ -296,5 +335,7 @@ class PCFReentryT(object):
         PCFReentryAddWINDOW_CORRELATION_DAYS(builder, self.WINDOW_CORRELATION_DAYS)
         PCFReentryAddWINDOW_BALLISTIC_SIGMA(builder, self.WINDOW_BALLISTIC_SIGMA)
         PCFReentryAddOSCULATING_STEP_SECONDS(builder, self.OSCULATING_STEP_SECONDS)
+        PCFReentryAddHANDOFF_SAWTOOTH_KM(builder, self.HANDOFF_SAWTOOTH_KM)
+        PCFReentryAddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder, self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY)
         PCFReentry = PCFReentryEnd(builder)
         return PCFReentry

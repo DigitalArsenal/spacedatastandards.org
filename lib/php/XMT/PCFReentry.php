@@ -167,22 +167,47 @@ class PCFReentry extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 10.0;
     }
 
+    /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+    /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+    /// steps once per revolution while the averaged theory ramps, and the
+    /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+    /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+    /// Default 0.5.
+    /**
+     * @return double
+     */
+    public function getHANDOFF_SAWTOOTH_KM()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.5;
+    }
+
+    /// Eccentricity above which the sawtooth test applies. Default 0.02.
+    /**
+     * @return double
+     */
+    public function getHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.02;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPCFReentry(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(12);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFReentry
      */
-    public static function createPCFReentry(FlatBufferBuilder $builder, $ALTITUDE_KM, $HANDOFF_PERIGEE_ALTITUDE_KM, $HANDOFF_DECAY_RATIO, $HANDOFF_ECCENTRICITY_COLLAPSE, $HANDOFF_MINIMUM_ECCENTRICITY, $NODE_STEP_MINUTES, $HORIZON_DAYS, $WINDOW_METHOD, $WINDOW_DENSITY_SIGMA, $WINDOW_CORRELATION_DAYS, $WINDOW_BALLISTIC_SIGMA, $OSCULATING_STEP_SECONDS)
+    public static function createPCFReentry(FlatBufferBuilder $builder, $ALTITUDE_KM, $HANDOFF_PERIGEE_ALTITUDE_KM, $HANDOFF_DECAY_RATIO, $HANDOFF_ECCENTRICITY_COLLAPSE, $HANDOFF_MINIMUM_ECCENTRICITY, $NODE_STEP_MINUTES, $HORIZON_DAYS, $WINDOW_METHOD, $WINDOW_DENSITY_SIGMA, $WINDOW_CORRELATION_DAYS, $WINDOW_BALLISTIC_SIGMA, $OSCULATING_STEP_SECONDS, $HANDOFF_SAWTOOTH_KM, $HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY)
     {
-        $builder->startObject(12);
+        $builder->startObject(14);
         self::addALTITUDE_KM($builder, $ALTITUDE_KM);
         self::addHANDOFF_PERIGEE_ALTITUDE_KM($builder, $HANDOFF_PERIGEE_ALTITUDE_KM);
         self::addHANDOFF_DECAY_RATIO($builder, $HANDOFF_DECAY_RATIO);
@@ -195,6 +220,8 @@ class PCFReentry extends Table
         self::addWINDOW_CORRELATION_DAYS($builder, $WINDOW_CORRELATION_DAYS);
         self::addWINDOW_BALLISTIC_SIGMA($builder, $WINDOW_BALLISTIC_SIGMA);
         self::addOSCULATING_STEP_SECONDS($builder, $OSCULATING_STEP_SECONDS);
+        self::addHANDOFF_SAWTOOTH_KM($builder, $HANDOFF_SAWTOOTH_KM);
+        self::addHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY($builder, $HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
         $o = $builder->endObject();
         return $o;
     }
@@ -317,6 +344,26 @@ class PCFReentry extends Table
     public static function addOSCULATING_STEP_SECONDS(FlatBufferBuilder $builder, $OSCULATING_STEP_SECONDS)
     {
         $builder->addDoubleX(11, $OSCULATING_STEP_SECONDS, 10.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHANDOFF_SAWTOOTH_KM(FlatBufferBuilder $builder, $HANDOFF_SAWTOOTH_KM)
+    {
+        $builder->addDoubleX(12, $HANDOFF_SAWTOOTH_KM, 0.5);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(FlatBufferBuilder $builder, $HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY)
+    {
+        $builder->addDoubleX(13, $HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
     }
 
     /**

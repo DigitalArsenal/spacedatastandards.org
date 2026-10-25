@@ -435,9 +435,12 @@ class PCFEmpiricalTerms : flatbuffers.handle
     def HAS_TAU0_RULE_LIMIT_M2_KG() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
     /// True holds TAUC and TAUS after the arc end above the drag regime
-    /// instead of decaying them. Default false.
+    /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+    /// once-per-revolution part of radiation pressure; false decays them over
+    /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+    /// written before 1.268.0 omits a false value, so it reads true.
     def HELD_ABOVE_DRAG_REGIME() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 10, 0))
+        return bool(flatbuffers.field_int8(buf_, pos_, 10, 1))
     /// Persistence time of the empirical force after the arc end, hours.
     /// Default 24.
     def PERSISTENCE_HOURS() -> float:
@@ -460,7 +463,7 @@ struct PCFEmpiricalTermsBuilder:
         b_.PrependBoolSlot(2, HAS_TAU0_RULE_LIMIT_M2_KG, 0)
         return this
     def add_HELD_ABOVE_DRAG_REGIME(HELD_ABOVE_DRAG_REGIME:bool):
-        b_.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, 0)
+        b_.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, 1)
         return this
     def add_PERSISTENCE_HOURS(PERSISTENCE_HOURS:float):
         b_.PrependFloat64Slot(4, PERSISTENCE_HOURS, 24.0)
@@ -981,13 +984,24 @@ class PCFReentry : flatbuffers.handle
     /// 10.
     def OSCULATING_STEP_SECONDS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 26, 10.0)
+    /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+    /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+    /// steps once per revolution while the averaged theory ramps, and the
+    /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+    /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+    /// Default 0.5.
+    def HANDOFF_SAWTOOTH_KM() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 28, 0.5)
+    /// Eccentricity above which the sawtooth test applies. Default 0.02.
+    def HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.02)
 
 def GetRootAsPCFReentry(buf:string): return PCFReentry { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFReentryBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(12)
+        b_.StartObject(14)
         return this
     def add_ALTITUDE_KM(ALTITUDE_KM:float):
         b_.PrependFloat64Slot(0, ALTITUDE_KM, 80.0)
@@ -1024,6 +1038,12 @@ struct PCFReentryBuilder:
         return this
     def add_OSCULATING_STEP_SECONDS(OSCULATING_STEP_SECONDS:float):
         b_.PrependFloat64Slot(11, OSCULATING_STEP_SECONDS, 10.0)
+        return this
+    def add_HANDOFF_SAWTOOTH_KM(HANDOFF_SAWTOOTH_KM:float):
+        b_.PrependFloat64Slot(12, HANDOFF_SAWTOOTH_KM, 0.5)
+        return this
+    def add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY:float):
+        b_.PrependFloat64Slot(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02)
         return this
     def end():
         return b_.EndObject()

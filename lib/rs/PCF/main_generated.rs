@@ -2855,13 +2855,16 @@ impl<'a> PCFEmpiricalTerms<'a> {
     }
 
     /// True holds TAUC and TAUS after the arc end above the drag regime
-    /// instead of decaying them. Default false.
+    /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+    /// once-per-revolution part of radiation pressure; false decays them over
+    /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+    /// written before 1.268.0 omits a false value, so it reads true.
     #[inline]
     pub fn HELD_ABOVE_DRAG_REGIME(&self) -> bool {
         // Safety:
         // Created from valid Table for this object
         // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, Some(false)).unwrap()}
+        unsafe { self._tab.get::<bool>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, Some(true)).unwrap()}
     }
 
     /// Persistence time of the empirical force after the arc end, hours.
@@ -2906,7 +2909,7 @@ impl<'a> Default for PCFEmpiricalTermsArgs {
             ONCE_PER_REVOLUTION: true,
             TAU0_RULE_LIMIT_M2_KG: 0.5,
             HAS_TAU0_RULE_LIMIT_M2_KG: false,
-            HELD_ABOVE_DRAG_REGIME: false,
+            HELD_ABOVE_DRAG_REGIME: true,
             PERSISTENCE_HOURS: 24.0,
         }
     }
@@ -2935,7 +2938,7 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEmpiricalTermsBuilder<'a, 
 
     #[inline]
     pub fn add_HELD_ABOVE_DRAG_REGIME(&mut self, HELD_ABOVE_DRAG_REGIME: bool) {
-        self.fbb_.push_slot::<bool>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, HELD_ABOVE_DRAG_REGIME, false);
+        self.fbb_.push_slot::<bool>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, HELD_ABOVE_DRAG_REGIME, true);
     }
 
     #[inline]
@@ -2987,7 +2990,7 @@ impl Default for PCFEmpiricalTermsT {
             ONCE_PER_REVOLUTION: true,
             TAU0_RULE_LIMIT_M2_KG: 0.5,
             HAS_TAU0_RULE_LIMIT_M2_KG: false,
-            HELD_ABOVE_DRAG_REGIME: false,
+            HELD_ABOVE_DRAG_REGIME: true,
             PERSISTENCE_HOURS: 24.0,
         }
     }
@@ -5292,6 +5295,8 @@ impl<'a> PCFReentry<'a> {
     pub const VT_WINDOW_CORRELATION_DAYS: ::flatbuffers::VOffsetT = 22;
     pub const VT_WINDOW_BALLISTIC_SIGMA: ::flatbuffers::VOffsetT = 24;
     pub const VT_OSCULATING_STEP_SECONDS: ::flatbuffers::VOffsetT = 26;
+    pub const VT_HANDOFF_SAWTOOTH_KM: ::flatbuffers::VOffsetT = 28;
+    pub const VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -5304,6 +5309,8 @@ impl<'a> PCFReentry<'a> {
         args: &'args PCFReentryArgs
     ) -> ::flatbuffers::WIPOffset<PCFReentry<'bldr>> {
         let mut builder = PCFReentryBuilder::new(_fbb);
+        builder.add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(args.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
+        builder.add_HANDOFF_SAWTOOTH_KM(args.HANDOFF_SAWTOOTH_KM);
         builder.add_OSCULATING_STEP_SECONDS(args.OSCULATING_STEP_SECONDS);
         builder.add_WINDOW_BALLISTIC_SIGMA(args.WINDOW_BALLISTIC_SIGMA);
         builder.add_WINDOW_CORRELATION_DAYS(args.WINDOW_CORRELATION_DAYS);
@@ -5332,6 +5339,8 @@ impl<'a> PCFReentry<'a> {
         let WINDOW_CORRELATION_DAYS = self.WINDOW_CORRELATION_DAYS();
         let WINDOW_BALLISTIC_SIGMA = self.WINDOW_BALLISTIC_SIGMA();
         let OSCULATING_STEP_SECONDS = self.OSCULATING_STEP_SECONDS();
+        let HANDOFF_SAWTOOTH_KM = self.HANDOFF_SAWTOOTH_KM();
+        let HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY();
         PCFReentryT {
             ALTITUDE_KM,
             HANDOFF_PERIGEE_ALTITUDE_KM,
@@ -5345,6 +5354,8 @@ impl<'a> PCFReentry<'a> {
             WINDOW_CORRELATION_DAYS,
             WINDOW_BALLISTIC_SIGMA,
             OSCULATING_STEP_SECONDS,
+            HANDOFF_SAWTOOTH_KM,
+            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY,
         }
     }
 
@@ -5460,6 +5471,29 @@ impl<'a> PCFReentry<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<f64>(PCFReentry::VT_OSCULATING_STEP_SECONDS, Some(10.0)).unwrap()}
     }
+
+    /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+    /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+    /// steps once per revolution while the averaged theory ramps, and the
+    /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+    /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+    /// Default 0.5.
+    #[inline]
+    pub fn HANDOFF_SAWTOOTH_KM(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_KM, Some(0.5)).unwrap()}
+    }
+
+    /// Eccentricity above which the sawtooth test applies. Default 0.02.
+    #[inline]
+    pub fn HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, Some(0.02)).unwrap()}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCFReentry<'_> {
@@ -5480,6 +5514,8 @@ impl ::flatbuffers::Verifiable for PCFReentry<'_> {
             .visit_field::<f64>("WINDOW_CORRELATION_DAYS", Self::VT_WINDOW_CORRELATION_DAYS, false)?
             .visit_field::<f64>("WINDOW_BALLISTIC_SIGMA", Self::VT_WINDOW_BALLISTIC_SIGMA, false)?
             .visit_field::<f64>("OSCULATING_STEP_SECONDS", Self::VT_OSCULATING_STEP_SECONDS, false)?
+            .visit_field::<f64>("HANDOFF_SAWTOOTH_KM", Self::VT_HANDOFF_SAWTOOTH_KM, false)?
+            .visit_field::<f64>("HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY", Self::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, false)?
             .finish();
         Ok(())
     }
@@ -5498,6 +5534,8 @@ pub struct PCFReentryArgs {
     pub WINDOW_CORRELATION_DAYS: f64,
     pub WINDOW_BALLISTIC_SIGMA: f64,
     pub OSCULATING_STEP_SECONDS: f64,
+    pub HANDOFF_SAWTOOTH_KM: f64,
+    pub HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: f64,
 }
 
 impl<'a> Default for PCFReentryArgs {
@@ -5516,6 +5554,8 @@ impl<'a> Default for PCFReentryArgs {
             WINDOW_CORRELATION_DAYS: 2.0,
             WINDOW_BALLISTIC_SIGMA: 0.05,
             OSCULATING_STEP_SECONDS: 10.0,
+            HANDOFF_SAWTOOTH_KM: 0.5,
+            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: 0.02,
         }
     }
 }
@@ -5587,6 +5627,16 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFReentryBuilder<'a, 'b, A> 
     }
 
     #[inline]
+    pub fn add_HANDOFF_SAWTOOTH_KM(&mut self, HANDOFF_SAWTOOTH_KM: f64) {
+        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_KM, HANDOFF_SAWTOOTH_KM, 0.5);
+    }
+
+    #[inline]
+    pub fn add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(&mut self, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: f64) {
+        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFReentryBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFReentryBuilder {
@@ -5617,6 +5667,8 @@ impl ::core::fmt::Debug for PCFReentry<'_> {
         ds.field("WINDOW_CORRELATION_DAYS", &self.WINDOW_CORRELATION_DAYS());
         ds.field("WINDOW_BALLISTIC_SIGMA", &self.WINDOW_BALLISTIC_SIGMA());
         ds.field("OSCULATING_STEP_SECONDS", &self.OSCULATING_STEP_SECONDS());
+        ds.field("HANDOFF_SAWTOOTH_KM", &self.HANDOFF_SAWTOOTH_KM());
+        ds.field("HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY", &self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY());
         ds.finish()
     }
 }
@@ -5636,6 +5688,8 @@ pub struct PCFReentryT {
     pub WINDOW_CORRELATION_DAYS: f64,
     pub WINDOW_BALLISTIC_SIGMA: f64,
     pub OSCULATING_STEP_SECONDS: f64,
+    pub HANDOFF_SAWTOOTH_KM: f64,
+    pub HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: f64,
 }
 
 impl Default for PCFReentryT {
@@ -5653,6 +5707,8 @@ impl Default for PCFReentryT {
             WINDOW_CORRELATION_DAYS: 2.0,
             WINDOW_BALLISTIC_SIGMA: 0.05,
             OSCULATING_STEP_SECONDS: 10.0,
+            HANDOFF_SAWTOOTH_KM: 0.5,
+            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: 0.02,
         }
     }
 }
@@ -5674,6 +5730,8 @@ impl PCFReentryT {
         let WINDOW_CORRELATION_DAYS = self.WINDOW_CORRELATION_DAYS;
         let WINDOW_BALLISTIC_SIGMA = self.WINDOW_BALLISTIC_SIGMA;
         let OSCULATING_STEP_SECONDS = self.OSCULATING_STEP_SECONDS;
+        let HANDOFF_SAWTOOTH_KM = self.HANDOFF_SAWTOOTH_KM;
+        let HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY;
         PCFReentry::create(_fbb, &PCFReentryArgs{
             ALTITUDE_KM,
             HANDOFF_PERIGEE_ALTITUDE_KM,
@@ -5687,6 +5745,8 @@ impl PCFReentryT {
             WINDOW_CORRELATION_DAYS,
             WINDOW_BALLISTIC_SIGMA,
             OSCULATING_STEP_SECONDS,
+            HANDOFF_SAWTOOTH_KM,
+            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY,
         })
     }
 }
