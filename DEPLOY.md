@@ -245,7 +245,7 @@ description = "Space data standards framework based on CCSDS standards and Googl
 readme = "README.md"
 license = {text = "Apache-2.0"}
 authors = [
-    {name = "Digital Arsenal", email = "sds@digitalarsenal.io"}
+    {name = "Edgesource Corporation", email = "tj@edgesource.com"}
 ]
 keywords = ["space", "flatbuffers", "ccsds", "satellite", "orbital-mechanics"]
 classifiers = [

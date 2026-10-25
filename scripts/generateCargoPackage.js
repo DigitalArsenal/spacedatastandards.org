@@ -45,7 +45,7 @@ version = "0.1.0"
 edition = "2021"
 description = "Space data standards framework based on CCSDS standards and Google FlatBuffers."
 license = "Apache-2.0"
-authors = ["sds@digitalarsenal.io", "shanebenlolo@gmail.com"]
+authors = ["Edgesource Corporation <tj@edgesource.com>", "shanebenlolo@gmail.com"]
 repository = "https://github.com/DigitalArsenal/spacedatastandards.org"
 homepage = "https://spacedatastandards.org"
 exclude = [
@@ -118,3 +118,7 @@ fs.readdirSync(directoryPath, { withFileTypes: true })
 
 // Generate Cargo.toml
 generateCargoToml();
+
+// The crate ships the canonical license and the notice
+fs.copyFileSync("LICENSE", path.join(directoryPath, "LICENSE"));
+fs.copyFileSync("NOTICE", path.join(directoryPath, "NOTICE"));

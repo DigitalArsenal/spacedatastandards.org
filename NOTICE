@@ -1,0 +1,141 @@
+Space Data Standards. Copyright 2026 Edgesource Corporation. Licensed under the Apache License 2.0.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+this software except in compliance with the License. The License is in LICENSE
+and at https://www.apache.org/licenses/LICENSE-2.0.
+
+Every file in this repository is covered by the License except the third-party
+components below, which keep their own licenses or terms; the License does not
+relicense them. Material marked LicenseRef-Unstated carries no grant of its own:
+it is kept here as a sample or reference, is not part of what the License
+licenses, and stays with its owner.
+
+The schemas model data formats defined by standards bodies, among them CCSDS.
+The standards belong to their publishers; their documents are not included
+except where listed below.
+
+THIRD-PARTY COMPONENTS
+
+Path is a directory (trailing slash) or a file in this repository. License is an
+SPDX identifier or expression, or a LicenseRef-* identifier; the LicenseRef-*
+identifiers are defined below. License text lists the files that carry the
+terms; NOTICE means the notices reproduced at the end of this file.
+
+| Path | Component | License | License text |
+| --- | --- | --- | --- |
+| packages/svelte-jsonschema-form/ | svelte-jsonschema-form 0.7.2, Copyright (c) 2023 Sean Wilson; its patches/ directory holds patches to third-party packages, which keep those packages' licenses | MIT | packages/svelte-jsonschema-form/LICENSE |
+| bin/flatc, bin/flatc_osx | FlatBuffers compiler (flatc), Copyright 2014 Google Inc. | Apache-2.0 | LICENSE |
+| packages/standards-explorer/dist/ | esbuild bundles of packages/standards-explorer/src; they carry flatc-wasm 26.1.38, the FlatBuffers compiler (Copyright 2014 Google Inc.) built to WebAssembly with Emscripten, which adds the Emscripten runtime, musl libc and LLVM libc++ and libc++abi | Apache-2.0 AND MIT AND Apache-2.0 WITH LLVM-exception | LICENSE, NOTICE |
+| wasm/node/sds_parsers.js, wasm/node/sds_parsers.wasm | SDS parsers built from src/cpp with Emscripten; the files carry the Emscripten runtime, musl libc and LLVM libc++ and libc++abi | MIT AND Apache-2.0 WITH LLVM-exception | NOTICE |
+| index.html | built website bundle; it carries Svelte 4.2.8, svelte-spa-router 4.0.1, regexparam 2.0.2, JSZip 3.10.1 (used under its MIT option), pako 1.0.11, lie 3.3.0, immediate 3.0.6 and setimmediate 1.0.5 | MIT AND Zlib | NOTICE |
+| website/src/lib/style/smui.css | compiled stylesheet of SMUI (Svelte Material UI) components on Material Components Web, Copyright (c) 2014-2020 Google, Inc. | MIT AND Apache-2.0 | NOTICE, LICENSE |
+| assets/vendor/hd-wallet-ui/ | hd-wallet-ui 2.2.1, the browser wallet client | Apache-2.0 | LICENSE |
+| assets/vendor/sdn-stack-nav/ | sdn-stack-nav 1.0.0, the Space Data Network stack navigation; a vendored copy from the Space Data Network family kit, Edgesource Corporation | Apache-2.0 | LICENSE |
+| wasm/fixtures/xtce-bogussat1.xml, wasm/fixtures/xtce-bogussat2.xml, data/XTC-example.json | XTCE BogusSAT examples, Copyright 2015 David Overeem; data/XTC-example.json is a JSON conversion of BogusSAT-1 | Apache-2.0 | LICENSE, wasm/fixtures/xtce-bogussat1.xml, wasm/fixtures/xtce-bogussat2.xml |
+| media/playground/ | earth-day.webp and earth-night.webp, NASA Blue Marble and Black Marble imagery | LicenseRef-NASA-Media | none in tree |
+| survey/legacy-messages/documentation/automatic-digital-network-autodin-operating-procedures-janap-1281.pdf | JANAP 128(1), Automatic Digital Network (AUTODIN) Operating Procedures, Joint Chiefs of Staff, March 1983 | LicenseRef-US-Government-Work | none in tree |
+| survey/legacy-messages/tle/sample/tle.txt, survey/legacy-messages/satcat/sample/satcat.txt | element-set and satellite-catalog samples taken from CelesTrak | LicenseRef-Unstated | none in tree |
+| survey/legacy-messages/vcm/sample/vcm.txt | Vector Covariance Message sample taken from Aleksander A. Lidtke's thesis (University of Southampton ePrints) | LicenseRef-Unstated | none in tree |
+| data/freqs.json | satellite downlink frequency table compiled from the source named in each record (uhf-satcom.com, pe0sat.nl, space.oscar.wmo.int, satellitenwelt.de and others) | LicenseRef-Unstated | none in tree |
+| input_schemas/udl/udl_openapi.json | Unified Data Library Services API OpenAPI document, version 1.28.0-MocktailMadness; the terms of service in its info block apply | LicenseRef-Unstated | none in tree |
+| input_schemas/satobs/positional-observation-reporting-formats.mhtml | capture of "Positional Observation Reporting Formats", www.satobs.org/position/posn_formats.html, saved 2023-12-01 | LicenseRef-Unstated | none in tree |
+
+LicenseRef identifiers
+
+- LicenseRef-NASA-Media: NASA imagery. NASA's media usage guidelines
+  (https://www.nasa.gov/nasa-brand-center/images-and-media/) treat NASA content
+  as generally not subject to copyright; the Playground credits NASA.
+- LicenseRef-US-Government-Work: public domain. A work of U.S. Government
+  employees within their duties, not subject to copyright in the United States
+  (17 U.S.C. § 105). The cover of JANAP 128(1) carries a release marking that
+  this notice does not alter.
+- LicenseRef-Unstated: no license text or grant accompanies the material.
+
+NOTICES REPRODUCED HERE
+
+Reproduced because the components ship inside files of this repository that
+carry no license text of their own.
+
+MIT License components
+
+  Svelte 4.2.8
+  Copyright (c) 2016-23 [these people](https://github.com/sveltejs/svelte/graphs/contributors)
+
+  svelte-spa-router 4.0.1
+  Copyright (c) 2019, Alessandro Segala
+
+  regexparam 2.0.2
+  Copyright (c) Luke Edwards <luke.edwards05@gmail.com> (lukeed.com)
+
+  JSZip 3.10.1, dual licensed under the MIT license or the GPLv3; used here
+  under the MIT license
+  Copyright (c) 2009-2016 Stuart Knightley, David Duponchel, Franz Buchinger, António Afonso
+
+  pako 1.0.11
+  Copyright (C) 2014-2017 by Vitaly Puzrin and Andrei Tuputcyn
+
+  lie 3.3.0
+  Copyright (c) 2014-2018 Calvin Metcalf, Jordan Harband
+
+  immediate 3.0.6
+  Copyright (c) 2012 Barnesandnoble.com, llc, Donavon West, Domenic Denicola, Brian Cavalier
+
+  setimmediate 1.0.5
+  Copyright (c) 2012 Barnesandnoble.com, llc, Donavon West, and Domenic Denicola
+
+  Material Components Web (compiled into smui.css)
+  Copyright (c) 2014-2020 Google, Inc.
+
+  Emscripten, available under the MIT license or the University of
+  Illinois/NCSA Open Source License; used here under the MIT license
+  Copyright (c) 2010-2014 Emscripten authors, see AUTHORS file.
+
+  musl libc, Emscripten's C library
+  Copyright © 2005-2020 Rich Felker, et al.
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+
+zlib License component
+
+pako 1.0.11 ports zlib; the notice its sources carry follows.
+
+  (C) 1995-2013 Jean-loup Gailly and Mark Adler
+  (C) 2014-2017 Vitaly Puzrin and Andrey Tupitsin
+
+  This software is provided 'as-is', without any express or implied
+  warranty. In no event will the authors be held liable for any damages
+  arising from the use of this software.
+
+  Permission is granted to anyone to use this software for any purpose,
+  including commercial applications, and to alter it and redistribute it
+  freely, subject to the following restrictions:
+
+  1. The origin of this software must not be misrepresented; you must not
+    claim that you wrote the original software. If you use this software
+    in a product, an acknowledgment in the product documentation would be
+    appreciated but is not required.
+  2. Altered source versions must be plainly marked as such, and must not be
+    misrepresented as being the original software.
+  3. This notice may not be removed or altered from any source distribution.
+
+Apache License v2.0 with LLVM Exceptions component
+
+LLVM libc++ and libc++abi, Copyright LLVM Project contributors. The license text
+is at https://llvm.org/LICENSE.txt; its LLVM Exception lets object-form
+redistribution omit the notices of sections 4(a), 4(b) and 4(d) of the License.

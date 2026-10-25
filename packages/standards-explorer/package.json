@@ -28,7 +28,7 @@
     "code-generator",
     "ccsds"
   ],
-  "author": "sds@digitalarsenal.io",
+  "author": "Edgesource Corporation <tj@edgesource.com>",
   "license": "Apache-2.0",
   "dependencies": {
     "flatc-wasm": "^26.1.15",

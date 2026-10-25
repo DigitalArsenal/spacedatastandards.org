@@ -256,4 +256,4 @@ For more detailed discussions or to request new features, reach out via email at
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0. You may obtain a copy of the License at <http://www.apache.org/licenses/LICENSE-2.0>.
+Copyright 2026 Edgesource Corporation. This project is licensed under the Apache License, Version 2.0. The License is in [LICENSE](./LICENSE) and at <http://www.apache.org/licenses/LICENSE-2.0>. [NOTICE](./NOTICE) lists the third-party components and samples that keep their own terms.

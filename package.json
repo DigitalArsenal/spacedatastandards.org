@@ -19,6 +19,8 @@
         "!dist/*/*.php.tar.gz",
         "wasm/",
         "README",
+        "LICENSE",
+        "NOTICE",
         "docs/ABA.md"
     ],
     "keywords": [
@@ -132,7 +134,7 @@
         "type": "corporate",
         "url": "https://github.com/DigitalArsenal/spacedatastandards.org/FUNDING.md"
     },
-    "author": "sds@digitalarsenal.io",
+    "author": "Edgesource Corporation <tj@edgesource.com>",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/DigitalArsenal/spacedatastandards.org.git"
