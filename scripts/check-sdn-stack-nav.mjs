@@ -7,6 +7,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 
+import { NAV_VERSION, buildSdnStackNavRelease } from "./build-sdn-stack-nav-release.mjs";
 import { migrationCases } from "./fixtures/sdn-stack-nav-migration-cases.mjs";
 
 const expectedLinks = [
@@ -16,6 +17,8 @@ const expectedLinks = [
   ["flatsql", "FlatSQL", "https://digitalarsenal.github.io/flatsql/"],
   ["sdn", "SDN", "https://spacedatanetwork.org/"],
   ["module-sdk", "Module SDK", "https://digitalarsenal.github.io/space-data-module-sdk/"],
+  ["hd-wallet", "HD Wallet", "https://digitalarsenal.github.io/hd-wallet-wasm/"],
+  ["sdn-ap", "SDN-AP", "https://digitalarsenal.github.io/sdn-ap/"],
 ];
 
 const headerTokens = [
@@ -145,11 +148,11 @@ if (assetPath) {
 }
 
 const completeAttributes = Object.freeze({
-  "data-nav-style-url": `https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/sdn-stack-nav.${"1".repeat(64)}.css`,
+  "data-nav-style-url": `/assets/vendor/sdn-stack-nav/${NAV_VERSION}/sdn-stack-nav.${"1".repeat(64)}.css`,
   "data-nav-style-integrity": `sha384-${"A".repeat(64)}`,
-  "data-wallet-client-url": `https://static.spacedatanetwork.org/assets/hd-wallet-ui/2.2.1/sdn-wallet-public-client.${"2".repeat(64)}.js`,
+  "data-wallet-client-url": `/assets/vendor/hd-wallet-ui/2.2.1/sdn-wallet-public-client.${"2".repeat(64)}.js`,
   "data-wallet-client-integrity": `sha384-${"B".repeat(64)}`,
-  "data-wallet-style-url": `https://static.spacedatanetwork.org/assets/hd-wallet-ui/2.2.1/sdn-wallet-public-client.${"3".repeat(64)}.css`,
+  "data-wallet-style-url": `/assets/vendor/hd-wallet-ui/2.2.1/sdn-wallet-public-client.${"3".repeat(64)}.css`,
   "data-wallet-style-integrity": `sha384-${"C".repeat(64)}`,
   "data-wallet-client-id": "sdn-standards-web-v1",
   "data-wallet-callback-uri": "https://spacedatastandards.org/wallet-callback.html",
@@ -386,18 +389,17 @@ if (assetPath) {
 }
 
 async function checkReleaseBuilder() {
-  const { buildSdnStackNavRelease } = await import("./build-sdn-stack-nav-release.mjs");
   const outputRoot = await mkdtemp(join(tmpdir(), "sdn-stack-nav-release-"));
   try {
     await buildSdnStackNavRelease({ sourceRoot: repositoryRoot, outputRoot });
-    const versionRoot = join(outputRoot, "assets/sdn-stack-nav/1.0.0");
+    const versionRoot = join(outputRoot, `assets/sdn-stack-nav/${NAV_VERSION}`);
     const files = (await readdir(versionRoot)).sort();
     assert.equal(files.length, 2);
     const fragmentPath = join(outputRoot, "sdn-stack-nav.release-fragment.v1.json");
     const fragment = JSON.parse(await readFile(fragmentPath, "utf8"));
     assert.deepEqual(Object.keys(fragment).sort(), ["assets", "linksSha256", "navVersion", "schemaVersion"]);
     assert.equal(fragment.schemaVersion, 1);
-    assert.equal(fragment.navVersion, "1.0.0");
+    assert.equal(fragment.navVersion, NAV_VERSION);
     assert.equal(
       fragment.linksSha256,
       createHash("sha256").update(await readFile(resolve(repositoryRoot, "sdn-stack-nav.links.json"))).digest("hex"),
@@ -415,7 +417,7 @@ async function checkReleaseBuilder() {
       assert.equal(record.sha384, `sha384-${createHash("sha384").update(bytes).digest("base64")}`);
       assert.equal(
         record.url,
-        `https://static.spacedatanetwork.org/assets/sdn-stack-nav/1.0.0/${filename}`,
+        `/assets/vendor/sdn-stack-nav/${NAV_VERSION}/${filename}`,
       );
     }
     const emittedScript = await readFile(
@@ -427,15 +429,31 @@ async function checkReleaseBuilder() {
       "assets",
       "sdn-stack-nav.release-fragment.v1.json",
     ]);
+
+    // The release of record is what the builder emits from the sources, and it is the only one kept.
+    const committedRoot = resolve(repositoryRoot, "dist/static-assets");
+    assert.deepEqual(
+      await readFile(join(committedRoot, "sdn-stack-nav.release-fragment.v1.json")),
+      await readFile(fragmentPath),
+      "dist/static-assets release fragment differs from the builder's output (run npm run build:nav-release)",
+    );
+    assert.deepEqual(await readdir(join(committedRoot, "assets/sdn-stack-nav")), [NAV_VERSION], "a retired nav release is still in dist/static-assets");
+    assert.deepEqual((await readdir(join(committedRoot, "assets/sdn-stack-nav", NAV_VERSION))).sort(), files);
+    for (const filename of files) {
+      assert.deepEqual(
+        await readFile(join(committedRoot, "assets/sdn-stack-nav", NAV_VERSION, filename)),
+        await readFile(join(versionRoot, filename)),
+        `${filename} differs from the builder's output`,
+      );
+    }
   } finally {
     await rm(outputRoot, { recursive: true, force: true });
   }
 }
 
 async function checkReleaseRetention() {
-  const { buildSdnStackNavRelease } = await import("./build-sdn-stack-nav-release.mjs");
   const outputRoot = await mkdtemp(join(tmpdir(), "sdn-stack-nav-retention-"));
-  const versionRoot = join(outputRoot, "assets/sdn-stack-nav/1.0.0");
+  const versionRoot = join(outputRoot, `assets/sdn-stack-nav/${NAV_VERSION}`);
   const priorScript = Buffer.from("prior immutable script\n");
   const priorStyle = Buffer.from("prior immutable style\n");
   const priorAssets = new Map([

@@ -5,7 +5,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-const NAV_VERSION = "1.0.1";
+export const NAV_VERSION = "1.1.0";
 // Same-origin vendor path at a domain root; a project site served under
 // /<repo>/ prefixes its one site segment.
 const VENDOR_BASE = `/assets/vendor/sdn-stack-nav/${NAV_VERSION}`;

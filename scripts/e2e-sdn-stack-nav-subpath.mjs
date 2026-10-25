@@ -16,6 +16,8 @@ const { withHeadlessShell, loadPage } = await import(pathToFileURL(join(stackRoo
 
 const fragment = JSON.parse(readFileSync(join(repositoryRoot, "dist/static-assets/sdn-stack-nav.release-fragment.v1.json"), "utf8"));
 const navVersion = fragment.navVersion;
+// The strip lists every link of the release: one anchor each, whatever the page's prefix.
+const linkCount = JSON.parse(readFileSync(join(repositoryRoot, "sdn-stack-nav.links.json"), "utf8")).links.length;
 const sources = {
   [`sdn-stack-nav/${navVersion}`]: join(repositoryRoot, `dist/static-assets/assets/sdn-stack-nav/${navVersion}`),
   "hd-wallet-ui/2.2.1": join(repositoryRoot, "assets/vendor/hd-wallet-ui/2.2.1"),
@@ -123,8 +125,8 @@ try {
       pages.set(search, page(scriptPrefix, prefix));
       const result = await loadPage(browser, `http://127.0.0.1:${port}${path}${search}`, { evaluate: inspect });
       const seen = result.evaluated || {};
-      const accepted = seen.links === 6 && seen.style !== null && seen.button === "Login";
-      const refused = seen.links === 6 && seen.style === null && seen.button === null;
+      const accepted = seen.links === linkCount && seen.style !== null && seen.button === "Login";
+      const refused = seen.links === linkCount && seen.style === null && seen.button === null;
       const clean = expected === "refused" || (result.bad.length === 0 && result.failed.length === 0 && result.errors.length === 0);
       const pass = result.status === 200 && clean && (expected === "accepted" ? accepted : refused);
       process.stdout.write(`${pass ? "PASS" : "FAIL"} ${path} assets ${prefix || "(root)"}/assets/vendor -> ${accepted ? "accepted" : refused ? "refused" : JSON.stringify(seen)} (expected ${expected})\n`);
