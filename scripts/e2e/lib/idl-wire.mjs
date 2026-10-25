@@ -176,6 +176,27 @@ export function populate(model, M, tableName, visited, seed = { n: 1 }, stack = 
   return out;
 }
 
+/**
+ * What a newer schema reads from an older buffer: `golden` (the plain value the
+ * older release decoded) with every field it lacked set to the newer default,
+ * nested tables completed the same way.
+ */
+export function completeWithDefaults(model, M, tableName, golden) {
+  const T = M[`${tableName}T`];
+  if (!T) throw new Error(`generated JS has no ${tableName}T`);
+  const blank = new T();
+  const out = {};
+  for (const f of model.tables.get(tableName).fields) {
+    const kind = kindOf(model, f.elem);
+    if (kind === 'union') throw new Error(`${tableName}.${f.name}: unions are not supported by completeWithDefaults`);
+    if (!(f.name in golden)) { out[f.name] = blank[f.name]; continue; }
+    const v = golden[f.name];
+    if (kind === 'table' && v !== null) out[f.name] = f.vector ? v.map((e) => completeWithDefaults(model, M, f.elem, e)) : completeWithDefaults(model, M, f.elem, v);
+    else out[f.name] = v;
+  }
+  return out;
+}
+
 function scalarValue(type, k, dflt) {
   if (type === 'bool') return dflt === true ? false : true;
   if (FLOATS.has(type)) {
