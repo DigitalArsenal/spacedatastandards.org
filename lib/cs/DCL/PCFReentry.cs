@@ -47,6 +47,15 @@ public struct PCFReentry : IFlatbufferObject
   /// Step of the osculating integration after the hand-off, seconds. Default
   /// 10.
   public double OSCULATING_STEP_SECONDS { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)10.0; } }
+  /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+  /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+  /// steps once per revolution while the averaged theory ramps, and the
+  /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+  /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+  /// Default 0.5.
+  public double HANDOFF_SAWTOOTH_KM { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.5; } }
+  /// Eccentricity above which the sawtooth test applies. Default 0.02.
+  public double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.02; } }
 
   public static Offset<PCFReentry> CreatePCFReentry(FlatBufferBuilder builder,
       double ALTITUDE_KM = 80.0,
@@ -60,8 +69,12 @@ public struct PCFReentry : IFlatbufferObject
       double WINDOW_DENSITY_SIGMA = 0.15,
       double WINDOW_CORRELATION_DAYS = 2.0,
       double WINDOW_BALLISTIC_SIGMA = 0.05,
-      double OSCULATING_STEP_SECONDS = 10.0) {
-    builder.StartTable(12);
+      double OSCULATING_STEP_SECONDS = 10.0,
+      double HANDOFF_SAWTOOTH_KM = 0.5,
+      double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 0.02) {
+    builder.StartTable(14);
+    PCFReentry.AddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(builder, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
+    PCFReentry.AddHANDOFF_SAWTOOTH_KM(builder, HANDOFF_SAWTOOTH_KM);
     PCFReentry.AddOSCULATING_STEP_SECONDS(builder, OSCULATING_STEP_SECONDS);
     PCFReentry.AddWINDOW_BALLISTIC_SIGMA(builder, WINDOW_BALLISTIC_SIGMA);
     PCFReentry.AddWINDOW_CORRELATION_DAYS(builder, WINDOW_CORRELATION_DAYS);
@@ -77,7 +90,7 @@ public struct PCFReentry : IFlatbufferObject
     return PCFReentry.EndPCFReentry(builder);
   }
 
-  public static void StartPCFReentry(FlatBufferBuilder builder) { builder.StartTable(12); }
+  public static void StartPCFReentry(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddALTITUDE_KM(FlatBufferBuilder builder, double ALTITUDE_KM) { builder.AddDouble(0, ALTITUDE_KM, 80.0); }
   public static void AddHANDOFF_PERIGEE_ALTITUDE_KM(FlatBufferBuilder builder, double HANDOFF_PERIGEE_ALTITUDE_KM) { builder.AddDouble(1, HANDOFF_PERIGEE_ALTITUDE_KM, 180.0); }
   public static void AddHANDOFF_DECAY_RATIO(FlatBufferBuilder builder, double HANDOFF_DECAY_RATIO) { builder.AddDouble(2, HANDOFF_DECAY_RATIO, 0.05); }
@@ -90,6 +103,8 @@ public struct PCFReentry : IFlatbufferObject
   public static void AddWINDOW_CORRELATION_DAYS(FlatBufferBuilder builder, double WINDOW_CORRELATION_DAYS) { builder.AddDouble(9, WINDOW_CORRELATION_DAYS, 2.0); }
   public static void AddWINDOW_BALLISTIC_SIGMA(FlatBufferBuilder builder, double WINDOW_BALLISTIC_SIGMA) { builder.AddDouble(10, WINDOW_BALLISTIC_SIGMA, 0.05); }
   public static void AddOSCULATING_STEP_SECONDS(FlatBufferBuilder builder, double OSCULATING_STEP_SECONDS) { builder.AddDouble(11, OSCULATING_STEP_SECONDS, 10.0); }
+  public static void AddHANDOFF_SAWTOOTH_KM(FlatBufferBuilder builder, double HANDOFF_SAWTOOTH_KM) { builder.AddDouble(12, HANDOFF_SAWTOOTH_KM, 0.5); }
+  public static void AddHANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(FlatBufferBuilder builder, double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) { builder.AddDouble(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02); }
   public static Offset<PCFReentry> EndPCFReentry(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCFReentry>(o);
@@ -112,6 +127,8 @@ public struct PCFReentry : IFlatbufferObject
     _o.WINDOW_CORRELATION_DAYS = this.WINDOW_CORRELATION_DAYS;
     _o.WINDOW_BALLISTIC_SIGMA = this.WINDOW_BALLISTIC_SIGMA;
     _o.OSCULATING_STEP_SECONDS = this.OSCULATING_STEP_SECONDS;
+    _o.HANDOFF_SAWTOOTH_KM = this.HANDOFF_SAWTOOTH_KM;
+    _o.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = this.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY;
   }
   public static Offset<PCFReentry> Pack(FlatBufferBuilder builder, PCFReentryT _o) {
     if (_o == null) return default(Offset<PCFReentry>);
@@ -128,7 +145,9 @@ public struct PCFReentry : IFlatbufferObject
       _o.WINDOW_DENSITY_SIGMA,
       _o.WINDOW_CORRELATION_DAYS,
       _o.WINDOW_BALLISTIC_SIGMA,
-      _o.OSCULATING_STEP_SECONDS);
+      _o.OSCULATING_STEP_SECONDS,
+      _o.HANDOFF_SAWTOOTH_KM,
+      _o.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
   }
 }
 
@@ -146,6 +165,8 @@ public class PCFReentryT
   public double WINDOW_CORRELATION_DAYS { get; set; }
   public double WINDOW_BALLISTIC_SIGMA { get; set; }
   public double OSCULATING_STEP_SECONDS { get; set; }
+  public double HANDOFF_SAWTOOTH_KM { get; set; }
+  public double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY { get; set; }
 
   public PCFReentryT() {
     this.ALTITUDE_KM = 80.0;
@@ -160,6 +181,8 @@ public class PCFReentryT
     this.WINDOW_CORRELATION_DAYS = 2.0;
     this.WINDOW_BALLISTIC_SIGMA = 0.05;
     this.OSCULATING_STEP_SECONDS = 10.0;
+    this.HANDOFF_SAWTOOTH_KM = 0.5;
+    this.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 0.02;
   }
 }
 
@@ -181,6 +204,8 @@ static public class PCFReentryVerify
       && verifier.VerifyField(tablePos, 22 /*WINDOW_CORRELATION_DAYS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 24 /*WINDOW_BALLISTIC_SIGMA*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 26 /*OSCULATING_STEP_SECONDS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*HANDOFF_SAWTOOTH_KM*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

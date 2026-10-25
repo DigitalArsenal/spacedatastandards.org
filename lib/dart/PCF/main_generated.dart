@@ -1080,8 +1080,11 @@ class PCFEmpiricalTerms {
   bool get HAS_TAU0_RULE_LIMIT_M2_KG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 8, false);
   bool get hasTau0RuleLimitM2Kg => HAS_TAU0_RULE_LIMIT_M2_KG;
   ///  True holds TAUC and TAUS after the arc end above the drag regime
-  ///  instead of decaying them. Default false.
-  bool get HELD_ABOVE_DRAG_REGIME => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, false);
+  ///  (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+  ///  once-per-revolution part of radiation pressure; false decays them over
+  ///  PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+  ///  written before 1.268.0 omits a false value, so it reads true.
+  bool get HELD_ABOVE_DRAG_REGIME => const fb.BoolReader().vTableGet(_bc, _bcOffset, 10, true);
   bool get heldAboveDragRegime => HELD_ABOVE_DRAG_REGIME;
   ///  Persistence time of the empirical force after the arc end, hours.
   ///  Default 24.
@@ -2348,10 +2351,21 @@ class PCFReentry {
   ///  10.
   double get OSCULATING_STEP_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 10.0);
   double get osculatingStepSeconds => OSCULATING_STEP_SECONDS;
+  ///  Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+  ///  km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+  ///  steps once per revolution while the averaged theory ramps, and the
+  ///  along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+  ///  Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+  ///  Default 0.5.
+  double get HANDOFF_SAWTOOTH_KM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.5);
+  double get handoffSawtoothKm => HANDOFF_SAWTOOTH_KM;
+  ///  Eccentricity above which the sawtooth test applies. Default 0.02.
+  double get HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.02);
+  double get handoffSawtoothMinimumEccentricity => HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY;
 
   @override
   String toString() {
-    return 'PCFReentry{altitudeKm: ${altitudeKm}, handoffPerigeeAltitudeKm: ${handoffPerigeeAltitudeKm}, handoffDecayRatio: ${handoffDecayRatio}, handoffEccentricityCollapse: ${handoffEccentricityCollapse}, handoffMinimumEccentricity: ${handoffMinimumEccentricity}, nodeStepMinutes: ${nodeStepMinutes}, horizonDays: ${horizonDays}, windowMethod: ${windowMethod}, windowDensitySigma: ${windowDensitySigma}, windowCorrelationDays: ${windowCorrelationDays}, windowBallisticSigma: ${windowBallisticSigma}, osculatingStepSeconds: ${osculatingStepSeconds}}';
+    return 'PCFReentry{altitudeKm: ${altitudeKm}, handoffPerigeeAltitudeKm: ${handoffPerigeeAltitudeKm}, handoffDecayRatio: ${handoffDecayRatio}, handoffEccentricityCollapse: ${handoffEccentricityCollapse}, handoffMinimumEccentricity: ${handoffMinimumEccentricity}, nodeStepMinutes: ${nodeStepMinutes}, horizonDays: ${horizonDays}, windowMethod: ${windowMethod}, windowDensitySigma: ${windowDensitySigma}, windowCorrelationDays: ${windowCorrelationDays}, windowBallisticSigma: ${windowBallisticSigma}, osculatingStepSeconds: ${osculatingStepSeconds}, handoffSawtoothKm: ${handoffSawtoothKm}, handoffSawtoothMinimumEccentricity: ${handoffSawtoothMinimumEccentricity}}';
   }
 }
 
@@ -2369,7 +2383,7 @@ class PCFReentryBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(14);
   }
 
   int addAltitudeKm(double? ALTITUDE_KM) {
@@ -2420,6 +2434,14 @@ class PCFReentryBuilder {
     fbBuilder.addFloat64(11, OSCULATING_STEP_SECONDS);
     return fbBuilder.offset;
   }
+  int addHandoffSawtoothKm(double? HANDOFF_SAWTOOTH_KM) {
+    fbBuilder.addFloat64(12, HANDOFF_SAWTOOTH_KM);
+    return fbBuilder.offset;
+  }
+  int addHandoffSawtoothMinimumEccentricity(double? HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) {
+    fbBuilder.addFloat64(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -2439,6 +2461,8 @@ class PCFReentryObjectBuilder extends fb.ObjectBuilder {
   final double? _WINDOW_CORRELATION_DAYS;
   final double? _WINDOW_BALLISTIC_SIGMA;
   final double? _OSCULATING_STEP_SECONDS;
+  final double? _HANDOFF_SAWTOOTH_KM;
+  final double? _HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY;
 
   PCFReentryObjectBuilder({
     double? ALTITUDE_KM,
@@ -2465,6 +2489,10 @@ class PCFReentryObjectBuilder extends fb.ObjectBuilder {
     double? windowBallisticSigma,
     double? OSCULATING_STEP_SECONDS,
     double? osculatingStepSeconds,
+    double? HANDOFF_SAWTOOTH_KM,
+    double? handoffSawtoothKm,
+    double? HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY,
+    double? handoffSawtoothMinimumEccentricity,
   })
       : _ALTITUDE_KM = altitudeKm ?? ALTITUDE_KM,
         _HANDOFF_PERIGEE_ALTITUDE_KM = handoffPerigeeAltitudeKm ?? HANDOFF_PERIGEE_ALTITUDE_KM,
@@ -2477,12 +2505,14 @@ class PCFReentryObjectBuilder extends fb.ObjectBuilder {
         _WINDOW_DENSITY_SIGMA = windowDensitySigma ?? WINDOW_DENSITY_SIGMA,
         _WINDOW_CORRELATION_DAYS = windowCorrelationDays ?? WINDOW_CORRELATION_DAYS,
         _WINDOW_BALLISTIC_SIGMA = windowBallisticSigma ?? WINDOW_BALLISTIC_SIGMA,
-        _OSCULATING_STEP_SECONDS = osculatingStepSeconds ?? OSCULATING_STEP_SECONDS;
+        _OSCULATING_STEP_SECONDS = osculatingStepSeconds ?? OSCULATING_STEP_SECONDS,
+        _HANDOFF_SAWTOOTH_KM = handoffSawtoothKm ?? HANDOFF_SAWTOOTH_KM,
+        _HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = handoffSawtoothMinimumEccentricity ?? HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    fbBuilder.startTable(12);
+    fbBuilder.startTable(14);
     fbBuilder.addFloat64(0, _ALTITUDE_KM);
     fbBuilder.addFloat64(1, _HANDOFF_PERIGEE_ALTITUDE_KM);
     fbBuilder.addFloat64(2, _HANDOFF_DECAY_RATIO);
@@ -2495,6 +2525,8 @@ class PCFReentryObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(9, _WINDOW_CORRELATION_DAYS);
     fbBuilder.addFloat64(10, _WINDOW_BALLISTIC_SIGMA);
     fbBuilder.addFloat64(11, _OSCULATING_STEP_SECONDS);
+    fbBuilder.addFloat64(12, _HANDOFF_SAWTOOTH_KM);
+    fbBuilder.addFloat64(13, _HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
     return fbBuilder.endTable();
   }
 

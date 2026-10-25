@@ -11373,9 +11373,9 @@
                         },
                         "HELD_ABOVE_DRAG_REGIME": {
                             "type": "boolean",
-                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
                             "x-flatbuffer-type": "bool",
-                            "x-flatbuffer-default": "false"
+                            "x-flatbuffer-default": "true"
                         },
                         "PERSISTENCE_HOURS": {
                             "type": "number",
@@ -12738,6 +12738,18 @@
                             "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "10"
+                        },
+                        "HANDOFF_SAWTOOTH_KM": {
+                            "type": "number",
+                            "description": "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.5"
+                        },
+                        "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity above which the sawtooth test applies. Default 0.02.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.02"
                         }
                     },
                     "additionalProperties": false
@@ -113885,9 +113897,9 @@
                         },
                         "HELD_ABOVE_DRAG_REGIME": {
                             "type": "boolean",
-                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
                             "x-flatbuffer-type": "bool",
-                            "x-flatbuffer-default": "false"
+                            "x-flatbuffer-default": "true"
                         },
                         "PERSISTENCE_HOURS": {
                             "type": "number",
@@ -115250,6 +115262,18 @@
                             "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "10"
+                        },
+                        "HANDOFF_SAWTOOTH_KM": {
+                            "type": "number",
+                            "description": "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.5"
+                        },
+                        "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity above which the sawtooth test applies. Default 0.02.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.02"
                         }
                     },
                     "additionalProperties": false
@@ -300417,9 +300441,9 @@
                         },
                         "HELD_ABOVE_DRAG_REGIME": {
                             "type": "boolean",
-                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
                             "x-flatbuffer-type": "bool",
-                            "x-flatbuffer-default": "false"
+                            "x-flatbuffer-default": "true"
                         },
                         "PERSISTENCE_HOURS": {
                             "type": "number",
@@ -301782,6 +301806,18 @@
                             "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "10"
+                        },
+                        "HANDOFF_SAWTOOTH_KM": {
+                            "type": "number",
+                            "description": "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.5"
+                        },
+                        "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity above which the sawtooth test applies. Default 0.02.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.02"
                         }
                     },
                     "additionalProperties": false
@@ -450650,9 +450686,9 @@
                         },
                         "HELD_ABOVE_DRAG_REGIME": {
                             "type": "boolean",
-                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
                             "x-flatbuffer-type": "bool",
-                            "x-flatbuffer-default": "false"
+                            "x-flatbuffer-default": "true"
                         },
                         "PERSISTENCE_HOURS": {
                             "type": "number",
@@ -452015,6 +452051,18 @@
                             "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "10"
+                        },
+                        "HANDOFF_SAWTOOTH_KM": {
+                            "type": "number",
+                            "description": "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.5"
+                        },
+                        "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity above which the sawtooth test applies. Default 0.02.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.02"
                         }
                     },
                     "additionalProperties": false
@@ -540806,9 +540854,9 @@
                         },
                         "HELD_ABOVE_DRAG_REGIME": {
                             "type": "boolean",
-                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
                             "x-flatbuffer-type": "bool",
-                            "x-flatbuffer-default": "false"
+                            "x-flatbuffer-default": "true"
                         },
                         "PERSISTENCE_HOURS": {
                             "type": "number",
@@ -542171,6 +542219,18 @@
                             "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "10"
+                        },
+                        "HANDOFF_SAWTOOTH_KM": {
+                            "type": "number",
+                            "description": "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.5"
+                        },
+                        "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity above which the sawtooth test applies. Default 0.02.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.02"
                         }
                     },
                     "additionalProperties": false
@@ -633257,9 +633317,9 @@
                         },
                         "HELD_ABOVE_DRAG_REGIME": {
                             "type": "boolean",
-                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\ninstead of decaying them. Default false.",
+                            "description": "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
                             "x-flatbuffer-type": "bool",
-                            "x-flatbuffer-default": "false"
+                            "x-flatbuffer-default": "true"
                         },
                         "PERSISTENCE_HOURS": {
                             "type": "number",
@@ -634622,6 +634682,18 @@
                             "description": "Step of the osculating integration after the hand-off, seconds. Default\n10.",
                             "x-flatbuffer-type": "double",
                             "x-flatbuffer-default": "10"
+                        },
+                        "HANDOFF_SAWTOOTH_KM": {
+                            "type": "number",
+                            "description": "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.5"
+                        },
+                        "HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY": {
+                            "type": "number",
+                            "description": "Eccentricity above which the sawtooth test applies. Default 0.02.",
+                            "x-flatbuffer-type": "double",
+                            "x-flatbuffer-default": "0.02"
                         }
                     },
                     "additionalProperties": false

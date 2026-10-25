@@ -117,13 +117,16 @@ func (rcv *PCFEmpiricalTerms) MutateHasTau0RuleLimitM2Kg(n bool) bool {
 }
 
 /// True holds TAUC and TAUS after the arc end above the drag regime
-/// instead of decaying them. Default false.
+/// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+/// once-per-revolution part of radiation pressure; false decays them over
+/// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+/// written before 1.268.0 omits a false value, so it reads true.
 func (rcv *PCFEmpiricalTerms) HELD_ABOVE_DRAG_REGIME() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
-	return false
+	return true
 }
 
 func (rcv *PCFEmpiricalTerms) HeldAboveDragRegime() bool {
@@ -131,7 +134,10 @@ func (rcv *PCFEmpiricalTerms) HeldAboveDragRegime() bool {
 }
 
 /// True holds TAUC and TAUS after the arc end above the drag regime
-/// instead of decaying them. Default false.
+/// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+/// once-per-revolution part of radiation pressure; false decays them over
+/// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+/// written before 1.268.0 omits a false value, so it reads true.
 func (rcv *PCFEmpiricalTerms) MutateHELD_ABOVE_DRAG_REGIME(n bool) bool {
 	return rcv._tab.MutateBoolSlot(10, n)
 }
@@ -186,7 +192,7 @@ func PCFEmpiricalTermsAddHasTau0RuleLimitM2Kg(builder *flatbuffers.Builder, HAS_
 	PCFEmpiricalTermsAddHAS_TAU0_RULE_LIMIT_M2_KG(builder, HAS_TAU0_RULE_LIMIT_M2_KG)
 }
 func PCFEmpiricalTermsAddHELD_ABOVE_DRAG_REGIME(builder *flatbuffers.Builder, HELD_ABOVE_DRAG_REGIME bool) {
-	builder.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, false)
+	builder.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, true)
 }
 func PCFEmpiricalTermsAddHeldAboveDragRegime(builder *flatbuffers.Builder, HELD_ABOVE_DRAG_REGIME bool) {
 	PCFEmpiricalTermsAddHELD_ABOVE_DRAG_REGIME(builder, HELD_ABOVE_DRAG_REGIME)

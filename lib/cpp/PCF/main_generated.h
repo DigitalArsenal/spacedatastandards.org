@@ -1229,9 +1229,12 @@ struct PCFEmpiricalTerms FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table 
     return GetField<uint8_t>(VT_HAS_TAU0_RULE_LIMIT_M2_KG, 0) != 0;
   }
   /// True holds TAUC and TAUS after the arc end above the drag regime
-  /// instead of decaying them. Default false.
+  /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+  /// once-per-revolution part of radiation pressure; false decays them over
+  /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+  /// written before 1.268.0 omits a false value, so it reads true.
   bool HELD_ABOVE_DRAG_REGIME() const {
-    return GetField<uint8_t>(VT_HELD_ABOVE_DRAG_REGIME, 0) != 0;
+    return GetField<uint8_t>(VT_HELD_ABOVE_DRAG_REGIME, 1) != 0;
   }
   /// Persistence time of the empirical force after the arc end, hours.
   /// Default 24.
@@ -1264,7 +1267,7 @@ struct PCFEmpiricalTermsBuilder {
     fbb_.AddElement<uint8_t>(PCFEmpiricalTerms::VT_HAS_TAU0_RULE_LIMIT_M2_KG, static_cast<uint8_t>(HAS_TAU0_RULE_LIMIT_M2_KG), 0);
   }
   void add_HELD_ABOVE_DRAG_REGIME(bool HELD_ABOVE_DRAG_REGIME) {
-    fbb_.AddElement<uint8_t>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, static_cast<uint8_t>(HELD_ABOVE_DRAG_REGIME), 0);
+    fbb_.AddElement<uint8_t>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, static_cast<uint8_t>(HELD_ABOVE_DRAG_REGIME), 1);
   }
   void add_PERSISTENCE_HOURS(double PERSISTENCE_HOURS) {
     fbb_.AddElement<double>(PCFEmpiricalTerms::VT_PERSISTENCE_HOURS, PERSISTENCE_HOURS, 24.0);
@@ -1285,7 +1288,7 @@ inline ::flatbuffers::Offset<PCFEmpiricalTerms> CreatePCFEmpiricalTerms(
     bool ONCE_PER_REVOLUTION = true,
     double TAU0_RULE_LIMIT_M2_KG = 0.5,
     bool HAS_TAU0_RULE_LIMIT_M2_KG = false,
-    bool HELD_ABOVE_DRAG_REGIME = false,
+    bool HELD_ABOVE_DRAG_REGIME = true,
     double PERSISTENCE_HOURS = 24.0) {
   PCFEmpiricalTermsBuilder builder_(_fbb);
   builder_.add_PERSISTENCE_HOURS(PERSISTENCE_HOURS);
@@ -2248,7 +2251,9 @@ struct PCFReentry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_WINDOW_DENSITY_SIGMA = 20,
     VT_WINDOW_CORRELATION_DAYS = 22,
     VT_WINDOW_BALLISTIC_SIGMA = 24,
-    VT_OSCULATING_STEP_SECONDS = 26
+    VT_OSCULATING_STEP_SECONDS = 26,
+    VT_HANDOFF_SAWTOOTH_KM = 28,
+    VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 30
   };
   /// Altitude at which the trajectory ends as reentered, km. Default 80.
   double ALTITUDE_KM() const {
@@ -2303,6 +2308,19 @@ struct PCFReentry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   double OSCULATING_STEP_SECONDS() const {
     return GetField<double>(VT_OSCULATING_STEP_SECONDS, 10.0);
   }
+  /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+  /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+  /// steps once per revolution while the averaged theory ramps, and the
+  /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+  /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+  /// Default 0.5.
+  double HANDOFF_SAWTOOTH_KM() const {
+    return GetField<double>(VT_HANDOFF_SAWTOOTH_KM, 0.5);
+  }
+  /// Eccentricity above which the sawtooth test applies. Default 0.02.
+  double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY() const {
+    return GetField<double>(VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -2318,6 +2336,8 @@ struct PCFReentry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_WINDOW_CORRELATION_DAYS, 8) &&
            VerifyField<double>(verifier, VT_WINDOW_BALLISTIC_SIGMA, 8) &&
            VerifyField<double>(verifier, VT_OSCULATING_STEP_SECONDS, 8) &&
+           VerifyField<double>(verifier, VT_HANDOFF_SAWTOOTH_KM, 8) &&
+           VerifyField<double>(verifier, VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 8) &&
            verifier.EndTable();
   }
 };
@@ -2362,6 +2382,12 @@ struct PCFReentryBuilder {
   void add_OSCULATING_STEP_SECONDS(double OSCULATING_STEP_SECONDS) {
     fbb_.AddElement<double>(PCFReentry::VT_OSCULATING_STEP_SECONDS, OSCULATING_STEP_SECONDS, 10.0);
   }
+  void add_HANDOFF_SAWTOOTH_KM(double HANDOFF_SAWTOOTH_KM) {
+    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_SAWTOOTH_KM, HANDOFF_SAWTOOTH_KM, 0.5);
+  }
+  void add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) {
+    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
+  }
   explicit PCFReentryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -2386,8 +2412,12 @@ inline ::flatbuffers::Offset<PCFReentry> CreatePCFReentry(
     double WINDOW_DENSITY_SIGMA = 0.15,
     double WINDOW_CORRELATION_DAYS = 2.0,
     double WINDOW_BALLISTIC_SIGMA = 0.05,
-    double OSCULATING_STEP_SECONDS = 10.0) {
+    double OSCULATING_STEP_SECONDS = 10.0,
+    double HANDOFF_SAWTOOTH_KM = 0.5,
+    double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 0.02) {
   PCFReentryBuilder builder_(_fbb);
+  builder_.add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
+  builder_.add_HANDOFF_SAWTOOTH_KM(HANDOFF_SAWTOOTH_KM);
   builder_.add_OSCULATING_STEP_SECONDS(OSCULATING_STEP_SECONDS);
   builder_.add_WINDOW_BALLISTIC_SIGMA(WINDOW_BALLISTIC_SIGMA);
   builder_.add_WINDOW_CORRELATION_DAYS(WINDOW_CORRELATION_DAYS);

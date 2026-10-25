@@ -46,9 +46,12 @@ public final class PCFEmpiricalTerms extends com.google.flatbuffers.Table {
   public boolean HAS_TAU0_RULE_LIMIT_M2_KG() { int o = __offset(8); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
   /**
    * True holds TAUC and TAUS after the arc end above the drag regime
-   * instead of decaying them. Default false.
+   * (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+   * once-per-revolution part of radiation pressure; false decays them over
+   * PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+   * written before 1.268.0 omits a false value, so it reads true.
    */
-  public boolean HELD_ABOVE_DRAG_REGIME() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  public boolean HELD_ABOVE_DRAG_REGIME() { int o = __offset(10); return o != 0 ? 0!=bb.get(o + bb_pos) : true; }
   /**
    * Persistence time of the empirical force after the arc end, hours.
    * Default 24.
@@ -74,7 +77,7 @@ public final class PCFEmpiricalTerms extends com.google.flatbuffers.Table {
   public static void addOncePerRevolution(FlatBufferBuilder builder, boolean ONCE_PER_REVOLUTION) { builder.addBoolean(0, ONCE_PER_REVOLUTION, true); }
   public static void addTau0RuleLimitM2Kg(FlatBufferBuilder builder, double TAU0_RULE_LIMIT_M2_KG) { builder.addDouble(1, TAU0_RULE_LIMIT_M2_KG, 0.5); }
   public static void addHasTau0RuleLimitM2Kg(FlatBufferBuilder builder, boolean HAS_TAU0_RULE_LIMIT_M2_KG) { builder.addBoolean(2, HAS_TAU0_RULE_LIMIT_M2_KG, false); }
-  public static void addHeldAboveDragRegime(FlatBufferBuilder builder, boolean HELD_ABOVE_DRAG_REGIME) { builder.addBoolean(3, HELD_ABOVE_DRAG_REGIME, false); }
+  public static void addHeldAboveDragRegime(FlatBufferBuilder builder, boolean HELD_ABOVE_DRAG_REGIME) { builder.addBoolean(3, HELD_ABOVE_DRAG_REGIME, true); }
   public static void addPersistenceHours(FlatBufferBuilder builder, double PERSISTENCE_HOURS) { builder.addDouble(4, PERSISTENCE_HOURS, 24.0); }
   public static int endPCFEmpiricalTerms(FlatBufferBuilder builder) {
     int o = builder.endTable();

@@ -131,6 +131,27 @@ class PCFReentry : Table() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 10.0
         }
+    /**
+     * Hand-off when the along-track sawtooth of an eccentric orbit passes this,
+     * km: drag acts mostly in the perigee pass, so the osculating semi-major axis
+     * steps once per revolution while the averaged theory ramps, and the
+     * along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
+     * Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
+     * Default 0.5.
+     */
+    val handoffSawtoothKm : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.5
+        }
+    /**
+     * Eccentricity above which the sawtooth test applies. Default 0.02.
+     */
+    val handoffSawtoothMinimumEccentricity : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.02
+        }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCFReentry(_bb: ByteBuffer): PCFReentry = getRootAsPCFReentry(_bb, PCFReentry())
@@ -138,8 +159,10 @@ class PCFReentry : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFReentry(builder: FlatBufferBuilder, altitudeKm: Double, handoffPerigeeAltitudeKm: Double, handoffDecayRatio: Double, handoffEccentricityCollapse: Double, handoffMinimumEccentricity: Double, nodeStepMinutes: Double, horizonDays: Double, windowMethod: UByte, windowDensitySigma: Double, windowCorrelationDays: Double, windowBallisticSigma: Double, osculatingStepSeconds: Double) : Int {
-            builder.startTable(12)
+        fun createPCFReentry(builder: FlatBufferBuilder, altitudeKm: Double, handoffPerigeeAltitudeKm: Double, handoffDecayRatio: Double, handoffEccentricityCollapse: Double, handoffMinimumEccentricity: Double, nodeStepMinutes: Double, horizonDays: Double, windowMethod: UByte, windowDensitySigma: Double, windowCorrelationDays: Double, windowBallisticSigma: Double, osculatingStepSeconds: Double, handoffSawtoothKm: Double, handoffSawtoothMinimumEccentricity: Double) : Int {
+            builder.startTable(14)
+            addHANDOFFSAWTOOTHMINIMUMECCENTRICITY(builder, handoffSawtoothMinimumEccentricity)
+            addHANDOFFSAWTOOTHKM(builder, handoffSawtoothKm)
             addOSCULATINGSTEPSECONDS(builder, osculatingStepSeconds)
             addWINDOWBALLISTICSIGMA(builder, windowBallisticSigma)
             addWINDOWCORRELATIONDAYS(builder, windowCorrelationDays)
@@ -154,7 +177,7 @@ class PCFReentry : Table() {
             addWINDOWMETHOD(builder, windowMethod)
             return endPCFReentry(builder)
         }
-        fun startPCFReentry(builder: FlatBufferBuilder) = builder.startTable(12)
+        fun startPCFReentry(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addALTITUDEKM(builder: FlatBufferBuilder, altitudeKm: Double) = builder.addDouble(0, altitudeKm, 80.0)
         fun addHANDOFFPERIGEEALTITUDEKM(builder: FlatBufferBuilder, handoffPerigeeAltitudeKm: Double) = builder.addDouble(1, handoffPerigeeAltitudeKm, 180.0)
         fun addHANDOFFDECAYRATIO(builder: FlatBufferBuilder, handoffDecayRatio: Double) = builder.addDouble(2, handoffDecayRatio, 0.05)
@@ -167,6 +190,8 @@ class PCFReentry : Table() {
         fun addWINDOWCORRELATIONDAYS(builder: FlatBufferBuilder, windowCorrelationDays: Double) = builder.addDouble(9, windowCorrelationDays, 2.0)
         fun addWINDOWBALLISTICSIGMA(builder: FlatBufferBuilder, windowBallisticSigma: Double) = builder.addDouble(10, windowBallisticSigma, 0.05)
         fun addOSCULATINGSTEPSECONDS(builder: FlatBufferBuilder, osculatingStepSeconds: Double) = builder.addDouble(11, osculatingStepSeconds, 10.0)
+        fun addHANDOFFSAWTOOTHKM(builder: FlatBufferBuilder, handoffSawtoothKm: Double) = builder.addDouble(12, handoffSawtoothKm, 0.5)
+        fun addHANDOFFSAWTOOTHMINIMUMECCENTRICITY(builder: FlatBufferBuilder, handoffSawtoothMinimumEccentricity: Double) = builder.addDouble(13, handoffSawtoothMinimumEccentricity, 0.02)
         fun endPCFReentry(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -27,7 +27,10 @@ export declare class PCFEmpiricalTerms implements flatbuffers.IUnpackableObject<
     HAS_TAU0_RULE_LIMIT_M2_KG(): boolean;
     /**
      * True holds TAUC and TAUS after the arc end above the drag regime
-     * instead of decaying them. Default false.
+     * (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+     * once-per-revolution part of radiation pressure; false decays them over
+     * PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+     * written before 1.268.0 omits a false value, so it reads true.
      */
     HELD_ABOVE_DRAG_REGIME(): boolean;
     /**

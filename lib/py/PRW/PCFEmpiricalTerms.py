@@ -59,13 +59,16 @@ class PCFEmpiricalTerms(object):
         return False
 
     # True holds TAUC and TAUS after the arc end above the drag regime
-    # instead of decaying them. Default false.
+    # (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
+    # once-per-revolution part of radiation pressure; false decays them over
+    # PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
+    # written before 1.268.0 omits a false value, so it reads true.
     # PCFEmpiricalTerms
     def HELD_ABOVE_DRAG_REGIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+        return True
 
     # Persistence time of the empirical force after the arc end, hours.
     # Default 24.
@@ -101,7 +104,7 @@ def AddHAS_TAU0_RULE_LIMIT_M2_KG(builder, HAS_TAU0_RULE_LIMIT_M2_KG):
     PCFEmpiricalTermsAddHAS_TAU0_RULE_LIMIT_M2_KG(builder, HAS_TAU0_RULE_LIMIT_M2_KG)
 
 def PCFEmpiricalTermsAddHELD_ABOVE_DRAG_REGIME(builder, HELD_ABOVE_DRAG_REGIME):
-    builder.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, 0)
+    builder.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, 1)
 
 def AddHELD_ABOVE_DRAG_REGIME(builder, HELD_ABOVE_DRAG_REGIME):
     PCFEmpiricalTermsAddHELD_ABOVE_DRAG_REGIME(builder, HELD_ABOVE_DRAG_REGIME)
@@ -127,7 +130,7 @@ class PCFEmpiricalTermsT(object):
         ONCE_PER_REVOLUTION = True,
         TAU0_RULE_LIMIT_M2_KG = 0.5,
         HAS_TAU0_RULE_LIMIT_M2_KG = False,
-        HELD_ABOVE_DRAG_REGIME = False,
+        HELD_ABOVE_DRAG_REGIME = True,
         PERSISTENCE_HOURS = 24.0,
     ):
         self.ONCE_PER_REVOLUTION = ONCE_PER_REVOLUTION  # type: bool
