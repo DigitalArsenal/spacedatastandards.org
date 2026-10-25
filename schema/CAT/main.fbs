@@ -111,8 +111,12 @@ table CAT {
   OBJECT_TYPE: spaceObjectClass = UNKNOWN;
   /// Operational Status Code
   OPS_STATUS_CODE: operationalState = UNKNOWN;
-  /// Ownership, typically country or company
-  OWNER: legacyCountryCode;
+  /// Ownership, typically country or company. Defaults to UNK (Unknown), so a
+  /// record that omits the owner never reads as AB, the code at ordinal 0.
+  /// The default is not stored on the wire: a buffer written before this
+  /// default existed, whose writer set AB, elided it and reads UNK until it
+  /// is re-encoded; writers now store AB explicitly.
+  OWNER: legacyCountryCode = UNK;
   /// Launch Date [year-month-day] (ISO 8601)
   LAUNCH_DATE: string;
   /// Launch Site

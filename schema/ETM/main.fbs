@@ -72,6 +72,11 @@ table ETM {
   HAS_GP:bool;
   /// Reserved for forward-compatible growth.
   RESERVED:[uint8];
+  /// CAT object type: the `spaceObjectClass` member name of `CAT.OBJECT_TYPE`
+  /// (PAYLOAD, ROCKET_BODY, DEBRIS or UNKNOWN), a string like OWNER and
+  /// STATUS_CODE so shared SQL can facet on it. Absent when no CAT is attached.
+  /// Appended after RESERVED so every earlier field keeps its slot.
+  OBJECT_TYPE:string;
 }
 
 root_type ETM;
