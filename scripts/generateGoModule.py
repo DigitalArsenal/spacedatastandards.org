@@ -1,4 +1,5 @@
 import os
+import shutil
 
 def update_go_package_names(parent_dir):
     # Loop through the subdirectories in ./lib/go
@@ -49,3 +50,6 @@ if __name__ == "__main__":
     lib_go_path = "./lib/go"
     update_go_package_names(lib_go_path)
     create_go_mod(lib_go_path)
+    # The module is served from lib/go: pkg.go.dev shows a license only if the
+    # module root carries one.
+    shutil.copyfile("LICENSE", os.path.join(lib_go_path, "LICENSE"))

@@ -286,6 +286,205 @@ function fixPhpDeprecatedFirstField(source) {
     .replace(/^(\s*public static function create\w+\(FlatBufferBuilder \$builder), \)/gm, "$1)");
 }
 
+// flatc's PHP generator writes the file identifier in double quotes ("$OMM"),
+// and PHP reads $OMM as a variable, so every identifier accessor returned ''
+// and every finish*Buffer wrote an empty identifier. Single quotes keep it.
+function fixPhpFileIdentifiers(source) {
+  return source.replace(/"(\$[A-Za-z0-9_]{3})"/g, "'$1'");
+}
+
+// flatc's Java generator declares a ubyte union enum member above 127 as
+// `byte X = 227;`, which javac rejects as a lossy conversion.
+function fixJavaByteConstants(source) {
+  return source.replace(
+    /^(\s*public static final byte \w+ = )(1[2-9]\d|2[0-4]\d|25[0-5]);/gm,
+    "$1(byte) $2;",
+  );
+}
+
+// flatc's C# object API reads a union's type through `this.<NAME>Type` while
+// the accessor under --preserve-case is `<NAME>_type`.
+function fixCsharpUnionTypeAccessor(source) {
+  const names = [...source.matchAll(/public \w+ (\w+)_type \{ get/g)].map((m) => m[1]);
+  let fixed = source;
+  for (const name of new Set(names)) {
+    fixed = fixed.replace(new RegExp(`this\\.${name}Type\\b`, "g"), `this.${name}_type`);
+  }
+  return fixed;
+}
+
+// flatc's Swift verifier names the union key `VT.<NAME>Type` while the private
+// VT declares `<NAME>_type`.
+function fixSwiftUnionTypeKey(source) {
+  const names = [...source.matchAll(/static let (\w+)_type: VOffset/g)].map((m) => m[1]);
+  let fixed = source;
+  for (const name of new Set(names)) {
+    fixed = fixed.replace(new RegExp(`VT\\.${name}Type\\b`, "g"), `VT.${name}_type`);
+  }
+  return fixed;
+}
+
+// flatc's Python generator imports FlatbuffersEncryption relatively
+// (`from .FlatbuffersEncryption import`), but the generated modules sit in a
+// plain directory that users put on sys.path, with no package around them.
+function fixPythonSiblingImport(source) {
+  return source.replace(/^from \.FlatbuffersEncryption import/gm, "from FlatbuffersEncryption import");
+}
+
+// flatc's Kotlin generator: the file identifier "$OMM" is a string template
+// (it throws at run time), and it lowers an all-caps field named after a hard
+// keyword (OBJECT, CLASS, WHEN) to the bare keyword. Escape the template with
+// \$ and the keyword with backticks. A small lexer keeps strings and comments
+// out of the rewrite; the keyword statements flatc really emits (`when (kind)`,
+// `class Name`, `companion object`) stay as they are.
+const KOTLIN_HARD_KEYWORDS = new Set([
+  "as", "break", "class", "continue", "do", "else", "false", "for", "fun", "if", "in", "interface", "is",
+  "null", "object", "package", "return", "super", "this", "throw", "true", "try", "typealias", "typeof",
+  "val", "var", "when", "while",
+]);
+
+function* lexKotlin(source) {
+  let i = 0;
+  const n = source.length;
+  while (i < n) {
+    const c = source[i];
+    const start = i;
+    let type = "other";
+    if (/\s/.test(c)) {
+      while (i < n && /\s/.test(source[i])) i += 1;
+      type = "ws";
+    } else if (c === "/" && source[i + 1] === "/") {
+      while (i < n && source[i] !== "\n") i += 1;
+      type = "comment";
+    } else if (c === "/" && source[i + 1] === "*") {
+      i += 2;
+      let depth = 1;
+      while (i < n && depth > 0) {
+        if (source[i] === "/" && source[i + 1] === "*") { depth += 1; i += 2; }
+        else if (source[i] === "*" && source[i + 1] === "/") { depth -= 1; i += 2; }
+        else i += 1;
+      }
+      type = "comment";
+    } else if (c === '"') {
+      if (source.startsWith('"""', i)) {
+        i += 3;
+        while (i < n && !source.startsWith('"""', i)) i += 1;
+        i += 3;
+      } else {
+        i += 1;
+        while (i < n && source[i] !== '"') { if (source[i] === "\\") i += 1; i += 1; }
+        i += 1;
+      }
+      type = "string";
+    } else if (c === "'") {
+      i += 1;
+      while (i < n && source[i] !== "'") { if (source[i] === "\\") i += 1; i += 1; }
+      i += 1;
+      type = "char";
+    } else if (c === "`") {
+      i += 1;
+      while (i < n && source[i] !== "`") i += 1;
+      i += 1;
+      type = "ident";
+    } else if (/[A-Za-z_]/.test(c)) {
+      while (i < n && /[A-Za-z0-9_]/.test(source[i])) i += 1;
+      type = "ident";
+    } else {
+      i += 1;
+    }
+    yield { type, text: source.slice(start, i), start, end: i, escaped: c === "`" };
+  }
+}
+
+function fixKotlin(source) {
+  let fixed = source.replace(/"\$([A-Za-z0-9_]{3})"/g, '"\\$$$1"').replaceAll("-9223372036854775808L", "Long.MIN_VALUE");
+  // An unsigned 32-bit default above Int.MAX_VALUE passed to addInt.
+  fixed = fixed.replace(/(builder\.addInt\(\d+, [^,]+, )(\d{10,})\)/g, (all, lead, value) =>
+    Number(value) > 2147483647 ? `${lead}${value}L.toInt())` : all);
+  // A scalar field and the vector-length accessor of a vector can lower to the
+  // same property name (IV_LENGTH and the length of IV): keep the exact-case field.
+  const declared = (name) => new RegExp(`^    val ${name} : (?!Int\\n)`, "m").test(fixed);
+  fixed = fixed.replace(
+    /^    val (\w+) : Int\n        get\(\) \{\n            val o = __offset\(\d+\); return if \(o != 0\) __vector_len\(o\) else 0\n        \}\n/gm,
+    (block, name) => (declared(name) ? "" : block),
+  );
+
+  const tokens = [...lexKotlin(fixed)];
+  const sig = tokens.map((token, index) => ({ ...token, index })).filter((token) => token.type !== "ws" && token.type !== "comment");
+  const used = new Set();
+  sig.forEach((token, k) => {
+    if (token.type !== "ident" || token.escaped || !KOTLIN_HARD_KEYWORDS.has(token.text)) return;
+    const prev = sig[k - 1];
+    const next = sig[k + 1];
+    if (prev && prev.type === "ident" && ["val", "var", "fun"].includes(prev.text)) used.add(token.text);
+    else if (prev && prev.type === "other" && (prev.text === "(" || prev.text === ",") && next && next.type === "other" && next.text === ":") used.add(token.text);
+  });
+  if (used.size === 0) return fixed;
+  const atLineStart = (token) => {
+    let p = token.start - 1;
+    while (p >= 0 && (fixed[p] === " " || fixed[p] === "\t")) p -= 1;
+    return p < 0 || fixed[p] === "\n";
+  };
+  const escapes = [];
+  sig.forEach((token, k) => {
+    if (token.type !== "ident" || token.escaped || !used.has(token.text)) return;
+    const prev = sig[k - 1];
+    const next = sig[k + 1];
+    if (token.text === "object" && prev && prev.text === "companion") return;
+    if (token.text === "class" && atLineStart(token) && next && next.type === "ident") return;
+    if (token.text === "when" && next && next.type === "other" && (next.text === "{" || (next.text === "(" && atLineStart(token)))) return;
+    escapes.push(token);
+  });
+  let out = "";
+  let cursor = 0;
+  for (const token of escapes) {
+    out += `${fixed.slice(cursor, token.start)}\`${token.text}\``;
+    cursor = token.end;
+  }
+  return out + fixed.slice(cursor);
+}
+
+// flatc names every included file main_generated.dart, so a Dart file imports
+// its own './main_generated.dart' where it needs the standards it includes. It
+// also emits an alias getter named like its element type (OEM's
+// `ephemerisDataBlock`), which hides the type inside the class, two classes
+// whose builders share a name (table CDM and table CDMObject both make
+// CDMObjectBuilder), and a required struct member twice, once without
+// `required` (a null-safety error).
+function fixDart(source, includes) {
+  const imports = includes.map((name) => `import '../${name}/main_generated.dart';`).join("\n");
+  let fixed = source
+    .replace(/^import '\.\/main_generated\.dart';\n/m, imports ? `${imports}\n` : "")
+    .replace(/^[ \t]*List<(\w+)>\?? get \1 => [^\n]*\n/gm, "")
+    .replace(/^[ \t]*(\w+)\?? get \1 => [^\n]*\n/gm, "");
+  const aliasPairs = [];
+  fixed = fixed.replace(/^(\s+)(\w+) ([A-Z][A-Z0-9_]*),\n\s+\2\? (\w+),\n/gm, (all, indent, type, upper, alias) => {
+    aliasPairs.push([alias, upper]);
+    return `${indent}required ${type} ${upper},\n`;
+  });
+  for (const [alias, upper] of aliasPairs) fixed = fixed.replaceAll(`${alias} ?? ${upper}`, upper);
+  // Table CDM's ObjectBuilder and table CDMObject's plain builder are both
+  // CDMObjectBuilder: keep the ObjectBuilder (other standards use it as a field
+  // type) and rename the plain builder.
+  const objectBuilders = new Set([...fixed.matchAll(/^class (\w+) extends fb\.ObjectBuilder \{$/gm)].map((m) => m[1]));
+  return fixed.replace(/^class (\w+) \{\n[\s\S]*?\n\}\n/gm, (block, name) =>
+    objectBuilders.has(name) ? block.replace(new RegExp(`\\b${name}\\b`, "g"), `${name}_`) : block);
+}
+
+// flatc's Lobster generator names the types of the standards a file includes
+// without importing them; it spells a float default `1e-9`, which Lobster only
+// reads after a decimal point; and it writes the 64-bit minimum as a literal
+// Lobster reports as overflow.
+function fixLobster(source, includes) {
+  const imports = includes.map((name) => `import ${name}.main_generated`).join("\n");
+  return source
+    .replace(/^import flatbuffers\n/m, `import flatbuffers\n${imports ? `${imports}\n` : ""}`)
+    .replaceAll("-9223372036854775808", "(-9223372036854775807 - 1)")
+    .split("\n")
+    .map((line) => (/^\s*\/\//.test(line) ? line : line.replace(/(?<![\w.])(\d+)e([-+]?\d+)\b/g, "$1.0e$2")))
+    .join("\n");
+}
+
 // flatc names a C++ include guard after the file, and every standard's file
 // is main.fbs, so every header shared FLATBUFFERS_GENERATED_MAIN_H_: a header
 // that includes another (SKT -> PHB) skipped the included definitions, and no
@@ -300,7 +499,7 @@ function scopeCppIncludeGuard(source, schemaName) {
   );
 }
 
-async function writeOutputs(baseDir, outputs, datatype, schemaName) {
+async function writeOutputs(baseDir, outputs, datatype, schemaName, includes = []) {
   for (const [relativePath, source] of outputs.entries()) {
     const outputPath = path.join(baseDir, relativePath);
     let normalizedSource = source
@@ -323,6 +522,30 @@ async function writeOutputs(baseDir, outputs, datatype, schemaName) {
         fixPhpFloatConstants(normalizedSource),
       );
     }
+    if (datatype?.ext === "php" && relativePath.endsWith(".php")) {
+      normalizedSource = fixPhpFileIdentifiers(normalizedSource);
+    }
+    if (datatype?.ext === "java" && relativePath.endsWith(".java")) {
+      normalizedSource = fixJavaByteConstants(normalizedSource);
+    }
+    if (datatype?.ext === "kt" && relativePath.endsWith(".kt")) {
+      normalizedSource = fixKotlin(normalizedSource);
+    }
+    if (datatype?.ext === "cs" && relativePath.endsWith(".cs")) {
+      normalizedSource = fixCsharpUnionTypeAccessor(normalizedSource);
+    }
+    if (datatype?.ext === "sw" && relativePath.endsWith(".swift")) {
+      normalizedSource = fixSwiftUnionTypeKey(normalizedSource);
+    }
+    if (datatype?.ext === "py" && relativePath.endsWith(".py")) {
+      normalizedSource = fixPythonSiblingImport(normalizedSource);
+    }
+    if (datatype?.ext === "dart" && relativePath.endsWith(".dart")) {
+      normalizedSource = fixDart(normalizedSource, includes);
+    }
+    if (datatype?.ext === "lob" && relativePath.endsWith(".lobster")) {
+      normalizedSource = fixLobster(normalizedSource, includes);
+    }
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, normalizedSource, "utf8");
   }
@@ -340,7 +563,11 @@ async function main() {
     for (const datatype of datatypes) {
       const outputs = runCodeGeneration(flatc, schemaInput, datatype);
       const outputDir = path.join(LIB_DIR, datatype.ext, schemaName);
-      await writeOutputs(outputDir, outputs, datatype, schemaName);
+      const includes = (schemaInput.compilationUnits ?? [])
+        .map((unit) => unit.split("/")[2])
+        .filter((name) => name !== schemaName)
+        .sort();
+      await writeOutputs(outputDir, outputs, datatype, schemaName, includes);
     }
   }
 

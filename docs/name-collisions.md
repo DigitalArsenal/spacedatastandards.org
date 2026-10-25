@@ -166,18 +166,14 @@ Enum members follow the same rule: `None` in a `dssAction` enum is
 
 Two places where UPPER_SNAKE names still break:
 
-- **Kotlin lowers the case after the keyword check.** `CLASS` becomes
-  `val class`, `OBJECT` becomes `val object` and `WHEN` becomes `val when`,
-  unescaped, so the file does not parse (`lib/kt/PIN/PINRule.kt:32`,
-  `lib/kt/CDM/CDMObject.kt:43`). 21 standards are affected, through the fields
-  `CLASS` (`PIN`, `RFE`), `OBJECT` (`ASG`, `CDM`, `ERM`, `OEM`, `PPE`) and `WHEN`
-  (`KML`) and the standards that include them. Kotlin also reads the file
-  identifier `"$EPM"` as a string template, so `EPMBufferHasIdentifier` throws
-  `AssertionError: file identifier must be length 4`. Every standard's
-  `*BufferHasIdentifier` and `finish*Buffer` pass such a template
-  (`lib/kt/EPM/EPM.kt:354,448,449`). Fix: call the Java binding from Kotlin. It
-  keeps the IDL names and compiles (`lib/java/CDM`); `OBJECT()` and
-  `EPMBufferHasIdentifier` work.
+- **Kotlin lowers the case after the keyword check (the build repairs it).**
+  `CLASS` becomes `val class`, `OBJECT` becomes `val object` and `WHEN` becomes
+  `val when`, unescaped, so raw flatc output does not parse. Raw flatc output
+  also reads the file identifier `"$EPM"` as a string template, so
+  `EPMBufferHasIdentifier` throws `AssertionError: file identifier must be
+  length 4`. The build writes `"\$EPM"` and backticks the keyword names, so
+  `lib/kt` compiles and keeps the IDL names (`` `object` ``, `` `class` ``); in
+  your own code write `` oem.`object` ``.
 - **Go aliases (raw flatc output; the build repairs it).** flatc adds a
   PascalCase alias per accessor (`Class()`). An alias can duplicate another
   method: `PRW.INIT` against the binding's `Init(buf, i)`, or `SDL.IV_LENGTH`
@@ -194,12 +190,37 @@ same names (`lib/fbjson/EPM/main.fb.schema.json`). No keyword or macro applies.
 
 These are flatc bugs that hit every consumer, repaired in
 `scripts/generateSource.mjs` before the files are written. Do not patch them by
-hand and do not rename a field for them:
+hand and do not rename a field for them. `scripts/e2e/bindings-compile.mjs`
+compiles every language's binding and round-trips an `$OMM` and a `$PCF`.
 
 - Go: a duplicate PascalCase alias (`dedupeGoAccessors`).
 - C++ and Swift: a real enum member named like flatc's `MIN`/`MAX` sentinel
   (`dedupeCppEnumConstants`, `dedupeSwiftEnumStatics`).
 - C++: the include guard, scoped per standard (`scopeCppIncludeGuard`).
-- PHP: `nan` and `inf` defaults (`fixPhpFloatConstants`), and the empty
-  parameter in `createX($builder, , $A)` when the first field is deprecated
-  (`fixPhpDeprecatedFirstField`).
+- PHP: `nan` and `inf` defaults (`fixPhpFloatConstants`), the empty parameter in
+  `createX($builder, , $A)` when the first field is deprecated
+  (`fixPhpDeprecatedFirstField`), and the file identifier written in double
+  quotes (`"$OMM"` reads as a variable, so every buffer got an empty identifier;
+  `fixPhpFileIdentifiers`).
+- Kotlin: the identifier string template, hard-keyword member names, the 64-bit
+  minimum and the unsigned 32-bit default literals, and a scalar field whose
+  name equals a vector's length accessor (`fixKotlin`).
+- Java: ubyte union constants above 127 (`fixJavaByteConstants`).
+- C# and Swift: the union type accessor `<NAME>_type` that the object API and
+  the verifier call `<NAME>Type` (`fixCsharpUnionTypeAccessor`,
+  `fixSwiftUnionTypeKey`).
+- Python: the relative import of `FlatbuffersEncryption` in a directory that is
+  not a package (`fixPythonSiblingImport`).
+- Dart: each file imports the standards it includes instead of itself; alias
+  getters named like their element type are dropped; a struct member declared
+  without `required`; table `CDMObject`'s plain builder, which shares a name with
+  table `CDM`'s ObjectBuilder, becomes `CDMObjectBuilder_` (`fixDart`).
+- Lobster: each file imports the standards it includes, `1e-9` is written
+  `1.0e-9`, and the 64-bit minimum no longer overflows (`fixLobster`).
+
+Open: the Lobster compiler does not finish the field-encryption walk that
+`KMF` and `REC` carry (a recursive method that exits through `return from`),
+so those two files are not importable; every other standard is. Swift's
+`getCheckedRoot` crashes in the fork's runtime when it verifies a vector of
+doubles; read with `getRoot`. The runtimes each binding needs are in
+[runtimes.md](runtimes.md).

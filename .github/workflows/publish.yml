@@ -458,6 +458,12 @@ jobs:
           name: lib-artifacts
           path: lib/
 
+      - name: Lay out the package under lib/ (pub.dev imports from lib/)
+        run: |
+          cd lib/dart
+          mkdir lib
+          for d in */; do [ "$d" = "lib/" ] || mv "$d" lib/; done
+
       - name: Create pubspec.yaml
         run: |
           cat > lib/dart/pubspec.yaml << 'EOF'
@@ -604,7 +610,7 @@ jobs:
                   <dependency>
                       <groupId>com.google.flatbuffers</groupId>
                       <artifactId>flatbuffers-java</artifactId>
-                      <version>25.2.10</version>
+                      <version>25.12.19</version>
                   </dependency>
               </dependencies>
 

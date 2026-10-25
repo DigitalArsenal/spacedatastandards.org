@@ -421,7 +421,7 @@ function rsProgram() {
 
 // ---------------------------------------------------------------- registries
 async function http(url) {
-  const res = await fetch(url, { headers: { 'User-Agent': 'spacedatastandards.org verify-release (sds@digitalarsenal.io)' } });
+  const res = await fetch(url, { headers: { 'User-Agent': 'spacedatanetwork-stack-ci (+https://github.com/DigitalArsenal)' } });
   return { status: res.status, body: res.ok ? await res.text() : '' };
 }
 
