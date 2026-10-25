@@ -21,7 +21,7 @@ class CZMEllipse extends Table
 
     public static function CZMEllipseIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMEllipseBufferHasIdentifier(ByteBuffer $buf)

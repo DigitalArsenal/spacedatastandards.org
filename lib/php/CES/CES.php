@@ -33,7 +33,7 @@ class CES extends Table
 
     public static function CESIdentifier()
     {
-        return "$CES";
+        return '$CES';
     }
 
     public static function CESBufferHasIdentifier(ByteBuffer $buf)
@@ -356,6 +356,6 @@ class CES extends Table
 
     public static function finishCESBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CES");
+        $builder->finish($offset, '$CES');
     }
 }

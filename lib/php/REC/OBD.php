@@ -21,7 +21,7 @@ class OBD extends Table
 
     public static function OBDIdentifier()
     {
-        return "$OBD";
+        return '$OBD';
     }
 
     public static function OBDBufferHasIdentifier(ByteBuffer $buf)
@@ -993,6 +993,6 @@ class OBD extends Table
 
     public static function finishOBDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OBD");
+        $builder->finish($offset, '$OBD');
     }
 }

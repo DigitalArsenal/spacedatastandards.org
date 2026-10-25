@@ -21,7 +21,7 @@ class GVH extends Table
 
     public static function GVHIdentifier()
     {
-        return "$GVH";
+        return '$GVH';
     }
 
     public static function GVHBufferHasIdentifier(ByteBuffer $buf)
@@ -615,6 +615,6 @@ class GVH extends Table
 
     public static function finishGVHBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GVH");
+        $builder->finish($offset, '$GVH');
     }
 }

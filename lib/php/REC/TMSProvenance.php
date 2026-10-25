@@ -25,7 +25,7 @@ class TMSProvenance extends Table
 
     public static function TMSProvenanceIdentifier()
     {
-        return "$TMS";
+        return '$TMS';
     }
 
     public static function TMSProvenanceBufferHasIdentifier(ByteBuffer $buf)

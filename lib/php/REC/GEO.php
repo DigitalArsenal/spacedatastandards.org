@@ -21,7 +21,7 @@ class GEO extends Table
 
     public static function GEOIdentifier()
     {
-        return "$GEO";
+        return '$GEO';
     }
 
     public static function GEOBufferHasIdentifier(ByteBuffer $buf)
@@ -493,6 +493,6 @@ class GEO extends Table
 
     public static function finishGEOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GEO");
+        $builder->finish($offset, '$GEO');
     }
 }

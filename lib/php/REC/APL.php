@@ -21,7 +21,7 @@ class APL extends Table
 
     public static function APLIdentifier()
     {
-        return "$APL";
+        return '$APL';
     }
 
     public static function APLBufferHasIdentifier(ByteBuffer $buf)
@@ -931,6 +931,6 @@ class APL extends Table
 
     public static function finishAPLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$APL");
+        $builder->finish($offset, '$APL');
     }
 }

@@ -635,7 +635,7 @@ class CVP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CVPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CVP")
+        fun CVPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CVP")
         fun createCVP(builder: FlatBufferBuilder, coverageIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, geometryKind: Byte, metric: Byte, metricUnitsOffset: Int, thresholdValue: Double, thresholdUnitsOffset: Int, thresholdComparison: Byte, epoch: Double, intervalStart: Double, intervalStop: Double, timeSystem: Byte, generation: ULong, supersedesCoverageIdOffset: Int, vertexLongitudeDegOffset: Int, vertexLatitudeDegOffset: Int, vertexAltitudeMOffset: Int, altitudeReference: Byte, fixedAltitudeM: Double, ringOffsetsOffset: Int, ringPolygonIndexesOffset: Int, ringRolesOffset: Int, polygonCount: UInt, polygonLevelValuesOffset: Int, polygonLevelUncertaintiesOffset: Int, polygonAreaKm2Offset: Int, vertexPositionUncertaintyMOffset: Int, gridSchemeOffset: Int, gridResolution: UByte, gridSpacingDeg: Double, gridCellCount: ULong, cvgCoverageIdOffset: Int, rflIdOffset: Int, aciIdOffset: Int, contributingEmittersOffset: Int, receiverSetIdOffset: Int, receiversOffset: Int, contributingObstaclesOffset: Int, obstacleSetIdOffset: Int, limitingConstraint: Byte, limitingConstraintNoteOffset: Int, uncertaintyOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(47)
             addCOMPUTEDAT(builder, computedAt)
@@ -862,7 +862,7 @@ class CVP : Table() {
                 builder.required(o, 90)
             return o
         }
-        fun finishCVPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CVP")
-        fun finishSizePrefixedCVPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CVP")
+        fun finishCVPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CVP")
+        fun finishSizePrefixedCVPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CVP")
     }
 }

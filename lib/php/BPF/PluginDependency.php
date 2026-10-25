@@ -21,7 +21,7 @@ class PluginDependency extends Table
 
     public static function PluginDependencyIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PluginDependencyBufferHasIdentifier(ByteBuffer $buf)

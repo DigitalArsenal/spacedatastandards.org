@@ -176,7 +176,7 @@ class SCN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SCNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCN")
+        fun SCNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCN")
         fun createSCN(builder: FlatBufferBuilder, scenarioIdOffset: Int, referencesOffset: Int, eventOffset: Int, focusedReferenceIndex: Int, focusedReferenceIdOffset: Int, epochOffset: Int, simSpeed: Double, useBodyFixedFrame: Boolean, referenceFrameOffset: Int, action: Byte, viewStateOffset: Int, assetsChangedOffset: Int) : Int {
             builder.startTable(12)
             addSIMSPEED(builder, simSpeed)
@@ -218,7 +218,7 @@ class SCN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSCNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SCN")
-        fun finishSizePrefixedSCNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SCN")
+        fun finishSCNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SCN")
+        fun finishSizePrefixedSCNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SCN")
     }
 }

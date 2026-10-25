@@ -223,7 +223,7 @@ class WHA : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun WHABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WHA")
+        fun WHABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$WHA")
         fun createWHA(builder: FlatBufferBuilder, attestationIdOffset: Int, subjectIdOffset: Int, purposeOffset: Int, accountsOffset: Int, holdingsOffset: Int, chainsOffset: Int, currencyOffset: Int, attested: Boolean, totalValue: Double, errorsOffset: Int, asOfMs: Long, attesterIdOffset: Int, signatureOffset: Int, signatureTypeOffset: Int) : Int {
             builder.startTable(14)
             addASOFMS(builder, asOfMs)
@@ -302,7 +302,7 @@ class WHA : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishWHABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$WHA")
-        fun finishSizePrefixedWHABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$WHA")
+        fun finishWHABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$WHA")
+        fun finishSizePrefixedWHABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$WHA")
     }
 }

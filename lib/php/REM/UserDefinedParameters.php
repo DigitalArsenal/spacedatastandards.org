@@ -20,7 +20,7 @@ class UserDefinedParameters extends Table
 
     public static function UserDefinedParametersIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function UserDefinedParametersBufferHasIdentifier(ByteBuffer $buf)

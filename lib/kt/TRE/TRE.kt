@@ -138,7 +138,7 @@ class TRE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TREBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRE")
+        fun TREBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TRE")
         fun createTRE(builder: FlatBufferBuilder, edgeIdOffset: Int, trusterIdOffset: Int, trusteeIdOffset: Int, weight: Double, updatedAt: ULong, deleted: Boolean, providerPeerIdOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(8)
             addUPDATEDAT(builder, updatedAt)
@@ -175,7 +175,7 @@ class TRE : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishTREBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TRE")
-        fun finishSizePrefixedTREBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TRE")
+        fun finishTREBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TRE")
+        fun finishSizePrefixedTREBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TRE")
     }
 }

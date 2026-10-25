@@ -21,7 +21,7 @@ class SCNViewCone extends Table
 
     public static function SCNViewConeIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNViewConeBufferHasIdentifier(ByteBuffer $buf)

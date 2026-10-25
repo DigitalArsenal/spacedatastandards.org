@@ -55,7 +55,7 @@ class SNW : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SNWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SNW")
+        fun SNWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SNW")
         fun createSNW(builder: FlatBufferBuilder, batchRequestOffset: Int, batchResponseOffset: Int) : Int {
             builder.startTable(2)
             addBATCHRESPONSE(builder, batchResponseOffset)
@@ -69,7 +69,7 @@ class SNW : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSNWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SNW")
-        fun finishSizePrefixedSNWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SNW")
+        fun finishSNWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SNW")
+        fun finishSizePrefixedSNWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SNW")
     }
 }

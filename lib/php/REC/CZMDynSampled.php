@@ -21,7 +21,7 @@ class CZMDynSampled extends Table
 
     public static function CZMDynSampledIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMDynSampledBufferHasIdentifier(ByteBuffer $buf)

@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../TRK/main_generated.dart';
 
 ///  Codec that produced PAYLOAD. Member names are the codec's own 4-byte
 ///  bitstream magic: PAYLOAD[0..3] MUST equal the ASCII of the member name,

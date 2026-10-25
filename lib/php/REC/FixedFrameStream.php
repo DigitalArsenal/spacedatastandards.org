@@ -21,7 +21,7 @@ class FixedFrameStream extends Table
 
     public static function FixedFrameStreamIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function FixedFrameStreamBufferHasIdentifier(ByteBuffer $buf)

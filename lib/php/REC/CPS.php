@@ -25,7 +25,7 @@ class CPS extends Table
 
     public static function CPSIdentifier()
     {
-        return "$CPS";
+        return '$CPS';
     }
 
     public static function CPSBufferHasIdentifier(ByteBuffer $buf)
@@ -494,6 +494,6 @@ class CPS extends Table
 
     public static function finishCPSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CPS");
+        $builder->finish($offset, '$CPS');
     }
 }

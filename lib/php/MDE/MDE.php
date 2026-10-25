@@ -21,7 +21,7 @@ class MDE extends Table
 
     public static function MDEIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEBufferHasIdentifier(ByteBuffer $buf)
@@ -181,6 +181,6 @@ class MDE extends Table
 
     public static function finishMDEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MDE");
+        $builder->finish($offset, '$MDE');
     }
 }

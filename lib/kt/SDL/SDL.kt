@@ -56,10 +56,6 @@ class SDL : Table() {
             0u
         }
     }
-    val ivLength : Int
-        get() {
-            val o = __offset(8); return if (o != 0) __vector_len(o) else 0
-        }
     val ivAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(8, 1)
     fun ivInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
@@ -81,10 +77,6 @@ class SDL : Table() {
             0u
         }
     }
-    val macLength : Int
-        get() {
-            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
-        }
     val macAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun macInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
@@ -119,7 +111,7 @@ class SDL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SDLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SDL")
+        fun SDLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SDL")
         fun createSDL(builder: FlatBufferBuilder, spi: UShort, ivLength: UByte, ivOffset: Int, macLength: UByte, macOffset: Int, padLength: UByte, payloadOffset: Int) : Int {
             builder.startTable(7)
             addPAYLOAD(builder, payloadOffset)
@@ -170,7 +162,7 @@ class SDL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSDLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SDL")
-        fun finishSizePrefixedSDLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SDL")
+        fun finishSDLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SDL")
+        fun finishSizePrefixedSDLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SDL")
     }
 }

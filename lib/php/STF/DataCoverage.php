@@ -21,7 +21,7 @@ class DataCoverage extends Table
 
     public static function DataCoverageIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function DataCoverageBufferHasIdentifier(ByteBuffer $buf)

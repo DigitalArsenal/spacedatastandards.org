@@ -21,7 +21,7 @@ class CZMTileset extends Table
 
     public static function CZMTilesetIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMTilesetBufferHasIdentifier(ByteBuffer $buf)

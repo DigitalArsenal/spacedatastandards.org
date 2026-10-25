@@ -21,7 +21,7 @@ class ERMFitCovariance extends Table
 
     public static function ERMFitCovarianceIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMFitCovarianceBufferHasIdentifier(ByteBuffer $buf)

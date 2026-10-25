@@ -21,7 +21,7 @@ class ERMStratumScale extends Table
 
     public static function ERMStratumScaleIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMStratumScaleBufferHasIdentifier(ByteBuffer $buf)

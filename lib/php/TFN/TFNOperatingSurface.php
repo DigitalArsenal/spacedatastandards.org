@@ -23,7 +23,7 @@ class TFNOperatingSurface extends Table
 
     public static function TFNOperatingSurfaceIdentifier()
     {
-        return "$TFN";
+        return '$TFN';
     }
 
     public static function TFNOperatingSurfaceBufferHasIdentifier(ByteBuffer $buf)

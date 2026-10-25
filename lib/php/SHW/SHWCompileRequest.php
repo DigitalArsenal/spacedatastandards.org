@@ -22,7 +22,7 @@ class SHWCompileRequest extends Table
 
     public static function SHWCompileRequestIdentifier()
     {
-        return "$SHW";
+        return '$SHW';
     }
 
     public static function SHWCompileRequestBufferHasIdentifier(ByteBuffer $buf)

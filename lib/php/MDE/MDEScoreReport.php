@@ -21,7 +21,7 @@ class MDEScoreReport extends Table
 
     public static function MDEScoreReportIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEScoreReportBufferHasIdentifier(ByteBuffer $buf)

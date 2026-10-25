@@ -22,7 +22,7 @@ class RFSFrequencySample extends Table
 
     public static function RFSFrequencySampleIdentifier()
     {
-        return "$RFS";
+        return '$RFS';
     }
 
     public static function RFSFrequencySampleBufferHasIdentifier(ByteBuffer $buf)

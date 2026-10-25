@@ -20,7 +20,7 @@ class PRWSpeciesDensity extends Table
 
     public static function PRWSpeciesDensityIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWSpeciesDensityBufferHasIdentifier(ByteBuffer $buf)

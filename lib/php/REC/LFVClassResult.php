@@ -21,7 +21,7 @@ class LFVClassResult extends Table
 
     public static function LFVClassResultIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVClassResultBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class CZMBillboard extends Table
 
     public static function CZMBillboardIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMBillboardBufferHasIdentifier(ByteBuffer $buf)

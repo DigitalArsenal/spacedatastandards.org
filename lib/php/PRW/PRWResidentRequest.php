@@ -21,7 +21,7 @@ class PRWResidentRequest extends Table
 
     public static function PRWResidentRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWResidentRequestBufferHasIdentifier(ByteBuffer $buf)

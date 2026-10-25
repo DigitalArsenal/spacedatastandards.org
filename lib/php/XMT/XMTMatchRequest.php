@@ -21,7 +21,7 @@ class XMTMatchRequest extends Table
 
     public static function XMTMatchRequestIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTMatchRequestBufferHasIdentifier(ByteBuffer $buf)

@@ -24,7 +24,7 @@ class CQR extends Table
 
     public static function CQRIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRBufferHasIdentifier(ByteBuffer $buf)
@@ -403,6 +403,6 @@ class CQR extends Table
 
     public static function finishCQRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CQR");
+        $builder->finish($offset, '$CQR');
     }
 }

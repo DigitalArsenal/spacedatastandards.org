@@ -21,7 +21,7 @@ class EnumerationAlarm extends Table
 
     public static function EnumerationAlarmIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function EnumerationAlarmBufferHasIdentifier(ByteBuffer $buf)

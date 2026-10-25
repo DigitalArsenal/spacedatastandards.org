@@ -21,7 +21,7 @@ class SCCReady extends Table
 
     public static function SCCReadyIdentifier()
     {
-        return "$SCC";
+        return '$SCC';
     }
 
     public static function SCCReadyBufferHasIdentifier(ByteBuffer $buf)

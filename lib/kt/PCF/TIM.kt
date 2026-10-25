@@ -80,7 +80,7 @@ class TIM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TIMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TIM")
+        fun TIMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TIM")
         fun createTIM(builder: FlatBufferBuilder, timeSystem: Byte, instantOffset: Int, conversionRequestOffset: Int, conversionResultOffset: Int) : Int {
             builder.startTable(4)
             addCONVERSIONRESULT(builder, conversionResultOffset)
@@ -98,7 +98,7 @@ class TIM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTIMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TIM")
-        fun finishSizePrefixedTIMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TIM")
+        fun finishTIMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TIM")
+        fun finishSizePrefixedTIMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TIM")
     }
 }

@@ -21,7 +21,7 @@ class MDEDistribution extends Table
 
     public static function MDEDistributionIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEDistributionBufferHasIdentifier(ByteBuffer $buf)

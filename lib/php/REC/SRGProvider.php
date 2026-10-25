@@ -21,7 +21,7 @@ class SRGProvider extends Table
 
     public static function SRGProviderIdentifier()
     {
-        return "$SRG";
+        return '$SRG';
     }
 
     public static function SRGProviderBufferHasIdentifier(ByteBuffer $buf)

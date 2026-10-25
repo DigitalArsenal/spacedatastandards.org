@@ -192,7 +192,7 @@ class PKB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PKBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PKB")
+        fun PKBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PKB")
         fun createPKB(builder: FlatBufferBuilder, brokerIdOffset: Int, publisherEpmCidOffset: Int, providerPeerIdOffset: Int, protocolIdOffset: Int, multiformatAddressesOffset: Int, brokerPublicKeyOffset: Int, brokerKind: Byte, liveness: Byte, lastHeartbeatAt: ULong, heartbeatIntervalMs: ULong, firstSeenAt: ULong, updatedAt: ULong, signatureOffset: Int) : Int {
             builder.startTable(13)
             addUPDATEDAT(builder, updatedAt)
@@ -255,7 +255,7 @@ class PKB : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishPKBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PKB")
-        fun finishSizePrefixedPKBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PKB")
+        fun finishPKBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PKB")
+        fun finishSizePrefixedPKBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PKB")
     }
 }

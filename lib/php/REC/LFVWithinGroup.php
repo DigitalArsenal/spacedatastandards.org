@@ -22,7 +22,7 @@ class LFVWithinGroup extends Table
 
     public static function LFVWithinGroupIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVWithinGroupBufferHasIdentifier(ByteBuffer $buf)

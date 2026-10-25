@@ -21,7 +21,7 @@ class SBC extends Table
 
     public static function SBCIdentifier()
     {
-        return "$SBC";
+        return '$SBC';
     }
 
     public static function SBCBufferHasIdentifier(ByteBuffer $buf)
@@ -109,6 +109,6 @@ class SBC extends Table
 
     public static function finishSBCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SBC");
+        $builder->finish($offset, '$SBC');
     }
 }

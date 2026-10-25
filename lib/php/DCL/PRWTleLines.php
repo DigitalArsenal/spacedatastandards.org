@@ -20,7 +20,7 @@ class PRWTleLines extends Table
 
     public static function PRWTleLinesIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWTleLinesBufferHasIdentifier(ByteBuffer $buf)

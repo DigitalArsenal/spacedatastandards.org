@@ -21,7 +21,7 @@ class sensorPlan extends Table
 
     public static function sensorPlanIdentifier()
     {
-        return "$SEN";
+        return '$SEN';
     }
 
     public static function sensorPlanBufferHasIdentifier(ByteBuffer $buf)

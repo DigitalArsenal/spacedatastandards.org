@@ -189,7 +189,7 @@ class ACR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ACRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACR")
+        fun ACRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACR")
         fun createACR(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, attitudeX: Double, attitudeY: Double, attitudeZ: Double, attitudeW: Double, omegaX: Double, omegaY: Double, omegaZ: Double, mass: Double, cgX: Float, cgZ: Float, aeroOffset: Int, controlsOffset: Int, engineOffset: Int, gearState: UByte, gearPosition: UByte, flapPosition: UByte, speedbrakePos: UByte, flightPhase: UByte, autopilotMode: UByte, weightOnWheels: UByte, reserved: UByte) : Int {
             builder.startTable(27)
             addMASS(builder, mass)
@@ -253,7 +253,7 @@ class ACR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishACRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ACR")
-        fun finishSizePrefixedACRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ACR")
+        fun finishACRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ACR")
+        fun finishSizePrefixedACRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ACR")
     }
 }

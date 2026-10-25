@@ -23,7 +23,7 @@ class CQRCatalogResult extends Table
 
     public static function CQRCatalogResultIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRCatalogResultBufferHasIdentifier(ByteBuffer $buf)

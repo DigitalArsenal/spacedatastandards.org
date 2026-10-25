@@ -20,7 +20,7 @@ class SLPSolverSettings extends Table
 
     public static function SLPSolverSettingsIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPSolverSettingsBufferHasIdentifier(ByteBuffer $buf)

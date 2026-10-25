@@ -602,7 +602,7 @@ class WXF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun WXFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WXF")
+        fun WXFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$WXF")
         fun createWXF(builder: FlatBufferBuilder, fieldIdOffset: Int, modelClass: Byte, modelIdOffset: Int, modelVersionOffset: Int, initTimeMs: ULong, leadHours: Float, validTimeMs: ULong, horizonHours: UShort, memberKind: Byte, memberIndex: UShort, ensembleSize: UShort, percentile: Float, thresholdValue: Float, variable: Byte, variableNameOffset: Int, unitsOffset: Int, levelKind: Byte, levelValue: Float, temporalKind: Byte, accumulationHours: Float, gridOffset: Int, tileIndex: UInt, tileCount: UInt, valuesEncoding: Byte, valuesOffset: Int, chunkCidOffset: Int, chunkDtypeOffset: Int, chunkCodecsOffset: Int, chunkByteLength: ULong, valueMin: Float, valueMax: Float, missingCount: UInt, originIdOffset: Int, datasetIdOffset: Int, sourceUrlOffset: Int, retrievedAt: ULong, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int, producerPeerIdOffset: Int, timeBasis: Byte, quantizedU16Offset: Int, quantizedU8Offset: Int, scaleFactor: Double, addOffset: Double, sensorIdOffset: Int, channelWavelengthUm: Float, platformLongitudeDeg: Double, platformLatitudeDeg: Double, platformHeightM: Double, scanEndTimeMs: ULong) : Int {
             builder.startTable(51)
             addSCANENDTIMEMS(builder, scanEndTimeMs)
@@ -750,7 +750,7 @@ class WXF : Table() {
                 builder.required(o, 44)
             return o
         }
-        fun finishWXFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$WXF")
-        fun finishSizePrefixedWXFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$WXF")
+        fun finishWXFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$WXF")
+        fun finishSizePrefixedWXFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$WXF")
     }
 }

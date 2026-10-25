@@ -49,7 +49,7 @@ class REC extends Table
 
     public static function RECIdentifier()
     {
-        return "$REC";
+        return '$REC';
     }
 
     public static function RECBufferHasIdentifier(ByteBuffer $buf)
@@ -174,6 +174,6 @@ class REC extends Table
 
     public static function finishRECBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$REC");
+        $builder->finish($offset, '$REC');
     }
 }

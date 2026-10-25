@@ -296,7 +296,7 @@ class MPL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MPLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MPL")
+        fun MPLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MPL")
         fun createMPL(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, plannerOffset: Int, problem: UByte, planEpochMs: Long, objectIdOffset: Int, targetObjectIdOffset: Int, referenceFrameOffset: Int, requestOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, burnsOffset: Int, arcsOffset: Int, totalDeltaVKmS: Double, totalTimeS: Double, totalDeltaMassKg: Double, solverOffset: Int, optionsOffset: Int, trajectoryOffset: Int, phasingOffset: Int, relativeOffset: Int, rendezvousOffset: Int, geometryOffset: Int) : Int {
             builder.startTable(24)
             addTOTALDELTAMASSKG(builder, totalDeltaMassKg)
@@ -378,7 +378,7 @@ class MPL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MPL")
-        fun finishSizePrefixedMPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MPL")
+        fun finishMPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MPL")
+        fun finishSizePrefixedMPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MPL")
     }
 }

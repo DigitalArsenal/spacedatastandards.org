@@ -21,7 +21,7 @@ class MDEVersionChange extends Table
 
     public static function MDEVersionChangeIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEVersionChangeBufferHasIdentifier(ByteBuffer $buf)

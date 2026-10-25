@@ -21,7 +21,7 @@ class AggregateParameterType extends Table
 
     public static function AggregateParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AggregateParameterTypeBufferHasIdentifier(ByteBuffer $buf)

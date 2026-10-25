@@ -21,7 +21,7 @@ class BSPVector3Series extends Table
 
     public static function BSPVector3SeriesIdentifier()
     {
-        return "$BSP";
+        return '$BSP';
     }
 
     public static function BSPVector3SeriesBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SEN extends Table
 
     public static function SENIdentifier()
     {
-        return "$SEN";
+        return '$SEN';
     }
 
     public static function SENBufferHasIdentifier(ByteBuffer $buf)
@@ -430,6 +430,6 @@ class SEN extends Table
 
     public static function finishSENBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SEN");
+        $builder->finish($offset, '$SEN');
     }
 }

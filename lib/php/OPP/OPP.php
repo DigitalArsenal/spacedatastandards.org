@@ -45,7 +45,7 @@ class OPP extends Table
 
     public static function OPPIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPBufferHasIdentifier(ByteBuffer $buf)
@@ -641,6 +641,6 @@ class OPP extends Table
 
     public static function finishOPPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OPP");
+        $builder->finish($offset, '$OPP');
     }
 }

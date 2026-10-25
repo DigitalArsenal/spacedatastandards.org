@@ -193,7 +193,7 @@ class HYP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun HYPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$HYP")
+        fun HYPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$HYP")
         fun createHYP(builder: FlatBufferBuilder, catIdsOffset: Int, sitIdsOffset: Int, nameOffset: Int, categoryOffset: Int, rowIndicatorsOffset: Int, colIndicatorsOffset: Int, matrixOffset: Int, scoreOffset: Int, analysisMethodOffset: Int, eventStartTimeOffset: Int, eventEndTimeOffset: Int) : Int {
             builder.startTable(11)
             addEVENTENDTIME(builder, eventEndTimeOffset)
@@ -273,7 +273,7 @@ class HYP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishHYPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$HYP")
-        fun finishSizePrefixedHYPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$HYP")
+        fun finishHYPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$HYP")
+        fun finishSizePrefixedHYPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$HYP")
     }
 }

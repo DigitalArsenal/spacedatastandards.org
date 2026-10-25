@@ -21,7 +21,7 @@ class uvwSigmas extends Table
 
     public static function uvwSigmasIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function uvwSigmasBufferHasIdentifier(ByteBuffer $buf)

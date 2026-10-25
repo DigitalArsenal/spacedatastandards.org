@@ -21,7 +21,7 @@ class beamContourPoint extends Table
 
     public static function beamContourPointIdentifier()
     {
-        return "$BEM";
+        return '$BEM';
     }
 
     public static function beamContourPointBufferHasIdentifier(ByteBuffer $buf)

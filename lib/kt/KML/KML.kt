@@ -252,7 +252,7 @@ class KML : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun KMLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$KML")
+        fun KMLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$KML")
         fun createKML(builder: FlatBufferBuilder, nameOffset: Int, descriptionOffset: Int, visibility: Boolean, open: Boolean, stylesOffset: Int, styleMapsOffset: Int, placemarksOffset: Int, foldersOffset: Int, networkLinksOffset: Int, groundOverlaysOffset: Int, schemasOffset: Int, screenOverlaysOffset: Int, photoOverlaysOffset: Int, toursOffset: Int, networkLinkControlOffset: Int) : Int {
             builder.startTable(15)
             addNETWORKLINKCONTROL(builder, networkLinkControlOffset)
@@ -372,7 +372,7 @@ class KML : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishKMLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$KML")
-        fun finishSizePrefixedKMLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$KML")
+        fun finishKMLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$KML")
+        fun finishSizePrefixedKMLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$KML")
     }
 }

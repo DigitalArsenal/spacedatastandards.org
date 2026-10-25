@@ -23,7 +23,7 @@ class MDPFlightTimeBound extends Table
 
     public static function MDPFlightTimeBoundIdentifier()
     {
-        return "$MDP";
+        return '$MDP';
     }
 
     public static function MDPFlightTimeBoundBufferHasIdentifier(ByteBuffer $buf)

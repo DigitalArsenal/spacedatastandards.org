@@ -101,7 +101,7 @@ class SCHEMA_STANDARD : Table() {
     val descriptionAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(12, 1)
     fun descriptionInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 12, 1)
     /**
-     * Four-character file identifier, e.g. "$OMM".
+     * Four-character file identifier, e.g. "\$OMM".
      */
     val fileIdentifier : String?
         get() {

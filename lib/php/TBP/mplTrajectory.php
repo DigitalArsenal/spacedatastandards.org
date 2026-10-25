@@ -23,7 +23,7 @@ class mplTrajectory extends Table
 
     public static function mplTrajectoryIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplTrajectoryBufferHasIdentifier(ByteBuffer $buf)

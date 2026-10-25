@@ -81,7 +81,7 @@ class OOL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOL")
+        fun OOLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOL")
         fun createOOL(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, descriptionOffset: Int, onorbitsOffset: Int) : Int {
             builder.startTable(4)
             addONORBITS(builder, onorbitsOffset)
@@ -107,7 +107,7 @@ class OOL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOL")
-        fun finishSizePrefixedOOLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOL")
+        fun finishOOLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOL")
+        fun finishSizePrefixedOOLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOL")
     }
 }

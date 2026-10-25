@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../PHB/main_generated.dart';
 
 ///  How a layer divides into tiles.
 ///  Append new values only; never reorder or reuse existing values.
@@ -460,10 +460,8 @@ class SKTPointObjectBuilder extends fb.ObjectBuilder {
   final int _ROW;
 
   SKTPointObjectBuilder({
-    int RA_FIXED,
-    int? raFixed,
-    int DEC_FIXED,
-    int? decFixed,
+    required int RA_FIXED,
+    required int DEC_FIXED,
     required int PMRA,
     required int PMDEC,
     required int PARALLAX,
@@ -472,8 +470,8 @@ class SKTPointObjectBuilder extends fb.ObjectBuilder {
     required int FLAGS,
     required int ROW,
   })
-      : _RA_FIXED = raFixed ?? RA_FIXED,
-        _DEC_FIXED = decFixed ?? DEC_FIXED,
+      : _RA_FIXED = RA_FIXED,
+        _DEC_FIXED = DEC_FIXED,
         _PMRA = PMRA,
         _PMDEC = PMDEC,
         _PARALLAX = PARALLAX,
@@ -592,26 +590,21 @@ class SKTPoint3DObjectBuilder extends fb.ObjectBuilder {
   final int _ROW;
 
   SKTPoint3DObjectBuilder({
-    double X_PC,
-    double? xPc,
-    double Y_PC,
-    double? yPc,
-    double Z_PC,
-    double? zPc,
-    int ABS_MAG,
-    int? absMag,
+    required double X_PC,
+    required double Y_PC,
+    required double Z_PC,
+    required int ABS_MAG,
     required int COLOR,
-    int DIST_FRAC_UNC,
-    int? distFracUnc,
+    required int DIST_FRAC_UNC,
     required int FLAGS,
     required int ROW,
   })
-      : _X_PC = xPc ?? X_PC,
-        _Y_PC = yPc ?? Y_PC,
-        _Z_PC = zPc ?? Z_PC,
-        _ABS_MAG = absMag ?? ABS_MAG,
+      : _X_PC = X_PC,
+        _Y_PC = Y_PC,
+        _Z_PC = Z_PC,
+        _ABS_MAG = ABS_MAG,
         _COLOR = COLOR,
-        _DIST_FRAC_UNC = distFracUnc ?? DIST_FRAC_UNC,
+        _DIST_FRAC_UNC = DIST_FRAC_UNC,
         _FLAGS = FLAGS,
         _ROW = ROW;
 

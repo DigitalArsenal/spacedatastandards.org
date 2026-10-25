@@ -21,7 +21,7 @@ class ERMFitOptions extends Table
 
     public static function ERMFitOptionsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMFitOptionsBufferHasIdentifier(ByteBuffer $buf)

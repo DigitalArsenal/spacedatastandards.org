@@ -124,7 +124,7 @@ class FSB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FSBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FSB")
+        fun FSBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FSB")
         fun createFSB(builder: FlatBufferBuilder, requestId: ULong, kind: UByte, chunkSequence: UInt, final: Boolean, totalBytes: ULong, recordCount: ULong, columnCount: UInt, schemaNameOffset: Int, fileIdentifierOffset: Int, dataOffset: Int, sha256Offset: Int) : Int {
             builder.startTable(11)
             addRECORDCOUNT(builder, recordCount)
@@ -174,7 +174,7 @@ class FSB : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFSBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FSB")
-        fun finishSizePrefixedFSBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FSB")
+        fun finishFSBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FSB")
+        fun finishSizePrefixedFSBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FSB")
     }
 }

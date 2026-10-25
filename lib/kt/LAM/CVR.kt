@@ -246,7 +246,7 @@ class CVR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CVRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CVR")
+        fun CVRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CVR")
         fun createCVR(builder: FlatBufferBuilder, rule: Byte, modelIdOffset: Int, regimeOffset: Int, ageDays: Double, horizonDays: Double, measuredLineageOffset: Int, testWindowOffset: Int, meanD2Over3: Double, coverage95: Double, samples: UInt, objects: UInt, scaleFactor: Double, calibration: Byte, evidenceOffset: Int, historySamples: UInt, historySets: UInt, historyWindowOffset: Int, shrinkageWeight: Double) : Int {
             builder.startTable(18)
             addSHRINKAGEWEIGHT(builder, shrinkageWeight)
@@ -292,7 +292,7 @@ class CVR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCVRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CVR")
-        fun finishSizePrefixedCVRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CVR")
+        fun finishCVRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CVR")
+        fun finishSizePrefixedCVRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CVR")
     }
 }

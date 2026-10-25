@@ -330,7 +330,7 @@ class TMS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TMS")
+        fun TMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TMS")
         fun createTMS(builder: FlatBufferBuilder, idOffset: Int, trackIdOffset: Int, environment: Byte, epochOffset: Int, latitude: Double, longitude: Double, altitudeM: Double, groundSpeedMps: Double, velocityNorthMps: Double, velocityEastMps: Double, velocityUpMps: Double, headingDeg: Double, courseDeg: Double, turnRateDps: Double, verticalRateMps: Double, modelIdOffset: Int, modelParametersOffset: Int, propagationValidUntilOffset: Int, positionUncertaintyM: Double, innovationGateSigma: Double, innovationGateDistanceM: Double, toleranceM: Double, trackStatus: Byte, staleAfterS: Double, dropAfterS: Double, lastUpdateEpochOffset: Int, identifiersOffset: Int, sourceOffset: Int) : Int {
             builder.startTable(28)
             addDROPAFTERS(builder, dropAfterS)
@@ -416,7 +416,7 @@ class TMS : Table() {
                 builder.required(o, 58)
             return o
         }
-        fun finishTMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TMS")
-        fun finishSizePrefixedTMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TMS")
+        fun finishTMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TMS")
+        fun finishSizePrefixedTMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TMS")
     }
 }

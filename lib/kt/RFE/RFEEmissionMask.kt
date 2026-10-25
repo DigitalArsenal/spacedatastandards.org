@@ -52,7 +52,7 @@ class RFEEmissionMask : Table() {
         }
     val nameAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(6, 1)
     fun nameInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 6, 1)
-    val class : Byte
+    val `class` : Byte
         get() {
             val o = __offset(8)
             return if(o != 0) bb.get(o + bb_pos) else 0
@@ -116,7 +116,7 @@ class RFEEmissionMask : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createRFEEmissionMask(builder: FlatBufferBuilder, maskIdOffset: Int, nameOffset: Int, class: Byte, path: Byte, unitsOffset: Int, referenceFrequencyHz: Double, referenceBandwidthHz: Double, pointsOffset: Int, provenanceOffset: Int) : Int {
+        fun createRFEEmissionMask(builder: FlatBufferBuilder, maskIdOffset: Int, nameOffset: Int, `class`: Byte, path: Byte, unitsOffset: Int, referenceFrequencyHz: Double, referenceBandwidthHz: Double, pointsOffset: Int, provenanceOffset: Int) : Int {
             builder.startTable(9)
             addREFERENCEBANDWIDTHHZ(builder, referenceBandwidthHz)
             addREFERENCEFREQUENCYHZ(builder, referenceFrequencyHz)
@@ -126,13 +126,13 @@ class RFEEmissionMask : Table() {
             addNAME(builder, nameOffset)
             addMASKID(builder, maskIdOffset)
             addPATH(builder, path)
-            addCLASS(builder, class)
+            addCLASS(builder, `class`)
             return endRFEEmissionMask(builder)
         }
         fun startRFEEmissionMask(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addMASKID(builder: FlatBufferBuilder, maskId: Int) = builder.addOffset(0, maskId, 0)
         fun addNAME(builder: FlatBufferBuilder, name: Int) = builder.addOffset(1, name, 0)
-        fun addCLASS(builder: FlatBufferBuilder, class: Byte) = builder.addByte(2, class, 0)
+        fun addCLASS(builder: FlatBufferBuilder, `class`: Byte) = builder.addByte(2, `class`, 0)
         fun addPATH(builder: FlatBufferBuilder, path: Byte) = builder.addByte(3, path, 0)
         fun addUNITS(builder: FlatBufferBuilder, units: Int) = builder.addOffset(4, units, 0)
         fun addREFERENCEFREQUENCYHZ(builder: FlatBufferBuilder, referenceFrequencyHz: Double) = builder.addDouble(5, referenceFrequencyHz, 0.0)

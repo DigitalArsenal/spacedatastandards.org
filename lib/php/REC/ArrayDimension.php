@@ -21,7 +21,7 @@ class ArrayDimension extends Table
 
     public static function ArrayDimensionIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArrayDimensionBufferHasIdentifier(ByteBuffer $buf)

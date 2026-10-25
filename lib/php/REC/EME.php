@@ -21,7 +21,7 @@ class EME extends Table
 
     public static function EMEIdentifier()
     {
-        return "$EME";
+        return '$EME';
     }
 
     public static function EMEBufferHasIdentifier(ByteBuffer $buf)
@@ -361,6 +361,6 @@ class EME extends Table
 
     public static function finishEMEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EME");
+        $builder->finish($offset, '$EME');
     }
 }

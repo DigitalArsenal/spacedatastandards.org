@@ -21,7 +21,7 @@ class CNPProvenance extends Table
 
     public static function CNPProvenanceIdentifier()
     {
-        return "$CNP";
+        return '$CNP';
     }
 
     public static function CNPProvenanceBufferHasIdentifier(ByteBuffer $buf)

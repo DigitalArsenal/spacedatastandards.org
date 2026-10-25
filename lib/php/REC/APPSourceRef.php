@@ -21,7 +21,7 @@ class APPSourceRef extends Table
 
     public static function APPSourceRefIdentifier()
     {
-        return "$APP";
+        return '$APP';
     }
 
     public static function APPSourceRefBufferHasIdentifier(ByteBuffer $buf)

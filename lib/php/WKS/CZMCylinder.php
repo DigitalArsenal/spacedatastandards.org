@@ -21,7 +21,7 @@ class CZMCylinder extends Table
 
     public static function CZMCylinderIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMCylinderBufferHasIdentifier(ByteBuffer $buf)

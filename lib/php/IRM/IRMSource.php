@@ -22,7 +22,7 @@ class IRMSource extends Table
 
     public static function IRMSourceIdentifier()
     {
-        return "$IRM";
+        return '$IRM';
     }
 
     public static function IRMSourceBufferHasIdentifier(ByteBuffer $buf)

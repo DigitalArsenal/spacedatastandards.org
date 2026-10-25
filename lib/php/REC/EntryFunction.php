@@ -21,7 +21,7 @@ class EntryFunction extends Table
 
     public static function EntryFunctionIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function EntryFunctionBufferHasIdentifier(ByteBuffer $buf)

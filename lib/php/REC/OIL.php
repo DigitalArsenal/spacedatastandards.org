@@ -21,7 +21,7 @@ class OIL extends Table
 
     public static function OILIdentifier()
     {
-        return "$OIL";
+        return '$OIL';
     }
 
     public static function OILBufferHasIdentifier(ByteBuffer $buf)
@@ -521,6 +521,6 @@ class OIL extends Table
 
     public static function finishOILBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OIL");
+        $builder->finish($offset, '$OIL');
     }
 }

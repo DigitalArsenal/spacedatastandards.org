@@ -21,7 +21,7 @@ class CRD extends Table
 
     public static function CRDIdentifier()
     {
-        return "$CRD";
+        return '$CRD';
     }
 
     public static function CRDBufferHasIdentifier(ByteBuffer $buf)
@@ -295,6 +295,6 @@ class CRD extends Table
 
     public static function finishCRDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CRD");
+        $builder->finish($offset, '$CRD');
     }
 }

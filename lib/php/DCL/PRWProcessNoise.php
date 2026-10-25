@@ -21,7 +21,7 @@ class PRWProcessNoise extends Table
 
     public static function PRWProcessNoiseIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWProcessNoiseBufferHasIdentifier(ByteBuffer $buf)

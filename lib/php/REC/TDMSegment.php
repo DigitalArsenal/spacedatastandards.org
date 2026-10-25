@@ -26,7 +26,7 @@ class TDMSegment extends Table
 
     public static function TDMSegmentIdentifier()
     {
-        return "$TDM";
+        return '$TDM';
     }
 
     public static function TDMSegmentBufferHasIdentifier(ByteBuffer $buf)

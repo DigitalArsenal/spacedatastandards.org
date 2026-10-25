@@ -26,7 +26,7 @@ class OPPAssetRef extends Table
 
     public static function OPPAssetRefIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPAssetRefBufferHasIdentifier(ByteBuffer $buf)

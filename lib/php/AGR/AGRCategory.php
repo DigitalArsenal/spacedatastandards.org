@@ -21,7 +21,7 @@ class AGRCategory extends Table
 
     public static function AGRCategoryIdentifier()
     {
-        return "$AGR";
+        return '$AGR';
     }
 
     public static function AGRCategoryBufferHasIdentifier(ByteBuffer $buf)

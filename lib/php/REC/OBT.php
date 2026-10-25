@@ -21,7 +21,7 @@ class OBT extends Table
 
     public static function OBTIdentifier()
     {
-        return "$OBT";
+        return '$OBT';
     }
 
     public static function OBTBufferHasIdentifier(ByteBuffer $buf)
@@ -867,6 +867,6 @@ class OBT extends Table
 
     public static function finishOBTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OBT");
+        $builder->finish($offset, '$OBT');
     }
 }

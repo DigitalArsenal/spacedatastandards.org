@@ -21,7 +21,7 @@ class PRWEphemerisRequest extends Table
 
     public static function PRWEphemerisRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWEphemerisRequestBufferHasIdentifier(ByteBuffer $buf)

@@ -117,7 +117,7 @@ class ENV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ENVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ENV")
+        fun ENVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ENV")
         fun createENV(builder: FlatBufferBuilder, atmosphereOffset: Int, weatherOffset: Int, timeUtc: Double, latitude: Double, longitude: Double, sunAzimuth: Float, sunElevation: Float, moonPhase: Float, illumination: Float, magneticDeclination: Float, magneticInclination: Float, reservedOffset: Int) : Int {
             builder.startTable(12)
             addLONGITUDE(builder, longitude)
@@ -160,7 +160,7 @@ class ENV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishENVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ENV")
-        fun finishSizePrefixedENVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ENV")
+        fun finishENVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ENV")
+        fun finishSizePrefixedENVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ENV")
     }
 }

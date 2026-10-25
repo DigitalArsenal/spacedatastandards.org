@@ -21,7 +21,7 @@ class NUM extends Table
 
     public static function NUMIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMBufferHasIdentifier(ByteBuffer $buf)
@@ -253,6 +253,6 @@ class NUM extends Table
 
     public static function finishNUMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NUM");
+        $builder->finish($offset, '$NUM');
     }
 }

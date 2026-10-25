@@ -27,7 +27,7 @@ class TXSProvenance extends Table
 
     public static function TXSProvenanceIdentifier()
     {
-        return "$TXS";
+        return '$TXS';
     }
 
     public static function TXSProvenanceBufferHasIdentifier(ByteBuffer $buf)

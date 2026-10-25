@@ -21,7 +21,7 @@ class manifoldElset extends Table
 
     public static function manifoldElsetIdentifier()
     {
-        return "$MNF";
+        return '$MNF';
     }
 
     public static function manifoldElsetBufferHasIdentifier(ByteBuffer $buf)

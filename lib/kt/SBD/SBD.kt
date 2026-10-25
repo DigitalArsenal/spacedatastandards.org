@@ -340,7 +340,7 @@ class SBD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SBDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SBD")
+        fun SBDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SBD")
         fun createSBD(builder: FlatBufferBuilder, number: UInt, designationOffset: Int, nameOffset: Int, orbitClass: UByte, neo: Boolean, pha: Boolean, earthMoid: Double, centerNameOffset: Int, refFrameOffset: Int, timeSystemOffset: Int, epochOffset: Int, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, pericenterDistance: Double, pericenterEpochOffset: Int, absoluteMagnitude: Double, slopeParameter: Double, diameter: Double, albedo: Double, rotationPeriod: Double, ceu: Double, ceuRate: Double, ceuEpochOffset: Int, orbitArc: Double, observationCount: UInt, provenanceOffset: Int) : Int {
             builder.startTable(31)
             addORBITARC(builder, orbitArc)
@@ -412,7 +412,7 @@ class SBD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SBD")
-        fun finishSizePrefixedSBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SBD")
+        fun finishSBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SBD")
+        fun finishSizePrefixedSBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SBD")
     }
 }

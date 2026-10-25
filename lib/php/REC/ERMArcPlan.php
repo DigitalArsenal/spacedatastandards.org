@@ -21,7 +21,7 @@ class ERMArcPlan extends Table
 
     public static function ERMArcPlanIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMArcPlanBufferHasIdentifier(ByteBuffer $buf)

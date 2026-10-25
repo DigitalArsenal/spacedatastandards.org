@@ -22,7 +22,7 @@ class SITCitation extends Table
 
     public static function SITCitationIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function SITCitationBufferHasIdentifier(ByteBuffer $buf)

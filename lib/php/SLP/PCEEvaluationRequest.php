@@ -22,7 +22,7 @@ class PCEEvaluationRequest extends Table
 
     public static function PCEEvaluationRequestIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEEvaluationRequestBufferHasIdentifier(ByteBuffer $buf)

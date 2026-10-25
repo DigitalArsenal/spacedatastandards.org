@@ -154,7 +154,7 @@ class LFV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LFVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LFV")
+        fun LFVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LFV")
         fun createLFV(builder: FlatBufferBuilder, viewOffset: Int, featureNamesOffset: Int, featureUnitsOffset: Int, windowStartMs: Long, windowEndMs: Long, minPoints: UInt, rowsOffset: Int, sourceCount: UInt, referenceCount: UInt, skippedCount: UInt, generatedAtMs: Long, reportOffset: Int) : Int {
             builder.startTable(12)
             addGENERATEDATMS(builder, generatedAtMs)
@@ -212,7 +212,7 @@ class LFV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLFVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LFV")
-        fun finishSizePrefixedLFVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LFV")
+        fun finishLFVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LFV")
+        fun finishSizePrefixedLFVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LFV")
     }
 }

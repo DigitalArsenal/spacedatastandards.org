@@ -21,7 +21,7 @@ class CZMCartesian extends Table
 
     public static function CZMCartesianIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMCartesianBufferHasIdentifier(ByteBuffer $buf)

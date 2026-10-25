@@ -21,7 +21,7 @@ class SCCAssetPicker extends Table
 
     public static function SCCAssetPickerIdentifier()
     {
-        return "$SCC";
+        return '$SCC';
     }
 
     public static function SCCAssetPickerBufferHasIdentifier(ByteBuffer $buf)

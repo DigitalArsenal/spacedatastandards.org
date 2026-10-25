@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../MET/main_generated.dart';
 
 ///  One constraint in a maneuver-targeting problem and how well the converged
 ///  solution satisfies it.

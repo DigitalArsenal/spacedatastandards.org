@@ -21,7 +21,7 @@ class CVG extends Table
 
     public static function CVGIdentifier()
     {
-        return "$CVG";
+        return '$CVG';
     }
 
     public static function CVGBufferHasIdentifier(ByteBuffer $buf)
@@ -904,6 +904,6 @@ class CVG extends Table
 
     public static function finishCVGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CVG");
+        $builder->finish($offset, '$CVG');
     }
 }

@@ -21,7 +21,7 @@ class SplinePoint extends Table
 
     public static function SplinePointIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function SplinePointBufferHasIdentifier(ByteBuffer $buf)

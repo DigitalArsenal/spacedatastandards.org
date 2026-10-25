@@ -22,7 +22,7 @@ class BPFPart extends Table
 
     public static function BPFPartIdentifier()
     {
-        return "$BPF";
+        return '$BPF';
     }
 
     public static function BPFPartBufferHasIdentifier(ByteBuffer $buf)

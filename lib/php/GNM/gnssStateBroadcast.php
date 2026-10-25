@@ -22,7 +22,7 @@ class gnssStateBroadcast extends Table
 
     public static function gnssStateBroadcastIdentifier()
     {
-        return "$GNM";
+        return '$GNM';
     }
 
     public static function gnssStateBroadcastBufferHasIdentifier(ByteBuffer $buf)

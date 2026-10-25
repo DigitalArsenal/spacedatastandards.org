@@ -46,8 +46,8 @@ class ephemerisDataBlock : Table() {
     /**
      * Satellite name for the first object
      */
-    val object : CAT? get() = object(CAT())
-    fun object(obj: CAT) : CAT? {
+    val `object` : CAT? get() = `object`(CAT())
+    fun `object`(obj: CAT) : CAT? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -344,7 +344,7 @@ class ephemerisDataBlock : Table() {
         }
         fun startephemerisDataBlock(builder: FlatBufferBuilder) = builder.startTable(21)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
-        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, `object`: Int) = builder.addOffset(1, `object`, 0)
         fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(2, centerName, 0)
         fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(3, referenceFrame, 0)
         fun addREFERENCEFRAMEEPOCH(builder: FlatBufferBuilder, referenceFrameEpoch: Int) = builder.addOffset(4, referenceFrameEpoch, 0)

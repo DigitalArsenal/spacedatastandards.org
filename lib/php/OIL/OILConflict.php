@@ -22,7 +22,7 @@ class OILConflict extends Table
 
     public static function OILConflictIdentifier()
     {
-        return "$OIL";
+        return '$OIL';
     }
 
     public static function OILConflictBufferHasIdentifier(ByteBuffer $buf)

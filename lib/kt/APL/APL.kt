@@ -315,7 +315,7 @@ class APL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun APLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APL")
+        fun APLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$APL")
         fun createAPL(builder: FlatBufferBuilder, aplIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rflIdOffset: Int, linkIdOffset: Int, windowStart: Double, windowStop: Double, timeSystem: Byte, exceedancePercentOffset: Int, rainLossDbOffset: Int, gaseousAbsorptionLossDbOffset: Int, cloudFogLossDbOffset: Int, scintillationLossDbOffset: Int, totalLossDbOffset: Int, xpdDbOffset: Int, worstMonthExceedancePercent: Double, worstMonthTotalLossDb: Double, worstMonthXpdDb: Double, availabilityPercent: Double, outageMinutesPerYear: Double, worstMonthOutageMinutes: Double, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(26)
             addCOMPUTEDAT(builder, computedAt)
@@ -463,7 +463,7 @@ class APL : Table() {
                 builder.required(o, 54)
             return o
         }
-        fun finishAPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$APL")
-        fun finishSizePrefixedAPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$APL")
+        fun finishAPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$APL")
+        fun finishSizePrefixedAPLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$APL")
     }
 }

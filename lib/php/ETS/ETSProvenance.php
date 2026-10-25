@@ -29,7 +29,7 @@ class ETSProvenance extends Table
 
     public static function ETSProvenanceIdentifier()
     {
-        return "$ETS";
+        return '$ETS';
     }
 
     public static function ETSProvenanceBufferHasIdentifier(ByteBuffer $buf)

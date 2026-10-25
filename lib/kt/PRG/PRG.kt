@@ -95,7 +95,7 @@ class PRG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PRGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PRG")
+        fun PRGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PRG")
         fun createPRG(builder: FlatBufferBuilder, nameOffset: Int, hdKeyPathOffset: Int, messageTypesOffset: Int, usersOffset: Int) : Int {
             builder.startTable(4)
             addUSERS(builder, usersOffset)
@@ -129,7 +129,7 @@ class PRG : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PRG")
-        fun finishSizePrefixedPRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PRG")
+        fun finishPRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PRG")
+        fun finishSizePrefixedPRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PRG")
     }
 }

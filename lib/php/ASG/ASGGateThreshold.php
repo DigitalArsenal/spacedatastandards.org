@@ -21,7 +21,7 @@ class ASGGateThreshold extends Table
 
     public static function ASGGateThresholdIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGGateThresholdBufferHasIdentifier(ByteBuffer $buf)

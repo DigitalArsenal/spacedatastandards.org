@@ -21,7 +21,7 @@ class RPT extends Table
 
     public static function RPTIdentifier()
     {
-        return "$RPT";
+        return '$RPT';
     }
 
     public static function RPTBufferHasIdentifier(ByteBuffer $buf)
@@ -467,6 +467,6 @@ class RPT extends Table
 
     public static function finishRPTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RPT");
+        $builder->finish($offset, '$RPT');
     }
 }

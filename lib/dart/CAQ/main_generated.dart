@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../ETM/main_generated.dart';
 
 ///  Catalog query discriminator. Callers and host plugins use this enum to
 ///  select a query shape for in-memory catalog queries answered by a host

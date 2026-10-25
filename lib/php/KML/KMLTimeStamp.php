@@ -21,7 +21,7 @@ class KMLTimeStamp extends Table
 
     public static function KMLTimeStampIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLTimeStampBufferHasIdentifier(ByteBuffer $buf)

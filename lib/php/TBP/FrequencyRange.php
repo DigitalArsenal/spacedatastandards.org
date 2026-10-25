@@ -21,7 +21,7 @@ class FrequencyRange extends Table
 
     public static function FrequencyRangeIdentifier()
     {
-        return "$IDM";
+        return '$IDM';
     }
 
     public static function FrequencyRangeBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class KMLGroundOverlay extends Table
 
     public static function KMLGroundOverlayIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLGroundOverlayBufferHasIdentifier(ByteBuffer $buf)

@@ -159,7 +159,7 @@ class SRG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SRGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SRG")
+        fun SRGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SRG")
         fun createSRG(builder: FlatBufferBuilder, registryIdOffset: Int, upstreamRepositoryOffset: Int, upstreamRevisionOffset: Int, registryPathOffset: Int, generatedAtMs: Long, providersOffset: Int, resourcesOffset: Int, receiptsOffset: Int, statusOffset: Int, settingsOffset: Int) : Int {
             builder.startTable(10)
             addGENERATEDATMS(builder, generatedAtMs)
@@ -213,7 +213,7 @@ class SRG : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SRG")
-        fun finishSizePrefixedSRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SRG")
+        fun finishSRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SRG")
+        fun finishSizePrefixedSRGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SRG")
     }
 }

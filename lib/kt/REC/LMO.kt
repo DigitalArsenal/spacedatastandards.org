@@ -130,7 +130,7 @@ class LMO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LMOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LMO")
+        fun LMOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LMO")
         fun createLMO(builder: FlatBufferBuilder, requestIdOffset: Int, status: Byte, errorCodeOffset: Int, errorMessageOffset: Int, singleOffset: Int, multiOffset: Int, maxFeasibleRevs: UShort, flags: UShort) : Int {
             builder.startTable(8)
             addMULTI(builder, multiOffset)
@@ -164,7 +164,7 @@ class LMO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLMOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LMO")
-        fun finishSizePrefixedLMOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LMO")
+        fun finishLMOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LMO")
+        fun finishSizePrefixedLMOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LMO")
     }
 }

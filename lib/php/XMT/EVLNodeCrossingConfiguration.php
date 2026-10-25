@@ -21,7 +21,7 @@ class EVLNodeCrossingConfiguration extends Table
 
     public static function EVLNodeCrossingConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLNodeCrossingConfigurationBufferHasIdentifier(ByteBuffer $buf)

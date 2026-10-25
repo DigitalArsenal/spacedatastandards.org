@@ -21,7 +21,7 @@ class TemporalCoverage extends Table
 
     public static function TemporalCoverageIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function TemporalCoverageBufferHasIdentifier(ByteBuffer $buf)

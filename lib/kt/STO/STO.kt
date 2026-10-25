@@ -228,7 +228,7 @@ class STO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun STOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STO")
+        fun STOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$STO")
         fun createSTO(builder: FlatBufferBuilder, storeIdOffset: Int, nameOffset: Int, descriptionOffset: Int, operatorEpmCidOffset: Int, storeModuleOffset: Int, appIdOffset: Int, isOfficial: Boolean, commissionTermsOffset: Int, commissionTermsIdOffset: Int, acceptedChainsOffset: Int, catalogRootCidOffset: Int, discoveryKeyOffset: Int, protocolIdOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(14)
             addSIGNATURE(builder, signatureOffset)
@@ -284,7 +284,7 @@ class STO : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishSTOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$STO")
-        fun finishSizePrefixedSTOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$STO")
+        fun finishSTOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$STO")
+        fun finishSizePrefixedSTOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$STO")
     }
 }

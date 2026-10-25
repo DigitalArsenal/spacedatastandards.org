@@ -21,7 +21,7 @@ class ACL extends Table
 
     public static function ACLIdentifier()
     {
-        return "$ACL";
+        return '$ACL';
     }
 
     public static function ACLBufferHasIdentifier(ByteBuffer $buf)
@@ -776,6 +776,6 @@ class ACL extends Table
 
     public static function finishACLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ACL");
+        $builder->finish($offset, '$ACL');
     }
 }

@@ -21,7 +21,7 @@ class NUMRootSolveRequest extends Table
 
     public static function NUMRootSolveRequestIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMRootSolveRequestBufferHasIdentifier(ByteBuffer $buf)

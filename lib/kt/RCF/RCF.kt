@@ -129,7 +129,7 @@ class RCF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RCF")
+        fun RCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RCF")
         fun createRCF(builder: FlatBufferBuilder, pduType: Byte, initiatorIdOffset: Int, responderPortIdOffset: Int, serviceType: UByte, version: UShort, invokeId: UInt, spacecraftId: UShort, virtualChannelId: UByte, dataOffset: Int) : Int {
             builder.startTable(9)
             addDATA(builder, dataOffset)
@@ -166,7 +166,7 @@ class RCF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RCF")
-        fun finishSizePrefixedRCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RCF")
+        fun finishRCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RCF")
+        fun finishSizePrefixedRCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RCF")
     }
 }

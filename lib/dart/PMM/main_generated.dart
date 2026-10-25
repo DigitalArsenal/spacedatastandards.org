@@ -5,7 +5,10 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CCT/main_generated.dart';
+import '../EPM/main_generated.dart';
+import '../PLG/main_generated.dart';
+import '../TAB/main_generated.dart';
 
 ///  Provider-declared standing of a module in its own offering. Append new
 ///  values only; never reorder or reuse existing values.

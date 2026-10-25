@@ -21,7 +21,7 @@ class ChainProof extends Table
 
     public static function ChainProofIdentifier()
     {
-        return "$EPM";
+        return '$EPM';
     }
 
     public static function ChainProofBufferHasIdentifier(ByteBuffer $buf)

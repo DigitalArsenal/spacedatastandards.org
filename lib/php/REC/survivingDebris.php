@@ -21,7 +21,7 @@ class survivingDebris extends Table
 
     public static function survivingDebrisIdentifier()
     {
-        return "$RDM";
+        return '$RDM';
     }
 
     public static function survivingDebrisBufferHasIdentifier(ByteBuffer $buf)

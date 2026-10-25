@@ -22,7 +22,7 @@ class DCL extends Table
 
     public static function DCLIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function DCLBufferHasIdentifier(ByteBuffer $buf)
@@ -741,6 +741,6 @@ class DCL extends Table
 
     public static function finishDCLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DCL");
+        $builder->finish($offset, '$DCL');
     }
 }

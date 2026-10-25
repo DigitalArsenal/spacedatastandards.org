@@ -21,7 +21,7 @@ class ERMClippedStatistics extends Table
 
     public static function ERMClippedStatisticsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMClippedStatisticsBufferHasIdentifier(ByteBuffer $buf)

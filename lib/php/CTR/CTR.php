@@ -21,7 +21,7 @@ class CTR extends Table
 
     public static function CTRIdentifier()
     {
-        return "$CTR";
+        return '$CTR';
     }
 
     public static function CTRBufferHasIdentifier(ByteBuffer $buf)
@@ -217,6 +217,6 @@ class CTR extends Table
 
     public static function finishCTRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CTR");
+        $builder->finish($offset, '$CTR');
     }
 }

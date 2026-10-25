@@ -21,7 +21,7 @@ class STR extends Table
 
     public static function STRIdentifier()
     {
-        return "$STR";
+        return '$STR';
     }
 
     public static function STRBufferHasIdentifier(ByteBuffer $buf)
@@ -1465,6 +1465,6 @@ class STR extends Table
 
     public static function finishSTRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$STR");
+        $builder->finish($offset, '$STR');
     }
 }

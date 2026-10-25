@@ -21,7 +21,7 @@ class SBCBiasTerm extends Table
 
     public static function SBCBiasTermIdentifier()
     {
-        return "$SBC";
+        return '$SBC';
     }
 
     public static function SBCBiasTermBufferHasIdentifier(ByteBuffer $buf)

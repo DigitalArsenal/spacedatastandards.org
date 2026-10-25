@@ -29,7 +29,7 @@ class CDM extends Table
 
     public static function CDMIdentifier()
     {
-        return "$CDM";
+        return '$CDM';
     }
 
     public static function CDMBufferHasIdentifier(ByteBuffer $buf)
@@ -669,6 +669,6 @@ class CDM extends Table
 
     public static function finishCDMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CDM");
+        $builder->finish($offset, '$CDM');
     }
 }

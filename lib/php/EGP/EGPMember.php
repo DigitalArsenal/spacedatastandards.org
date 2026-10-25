@@ -21,7 +21,7 @@ class EGPMember extends Table
 
     public static function EGPMemberIdentifier()
     {
-        return "$EGP";
+        return '$EGP';
     }
 
     public static function EGPMemberBufferHasIdentifier(ByteBuffer $buf)

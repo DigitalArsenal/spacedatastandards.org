@@ -140,7 +140,7 @@ class TPN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TPNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TPN")
+        fun TPNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TPN")
         fun createTPN(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, nidOffset: Int, tidOffset: Int, ttf: Double, symbolRate: Double, fec: Int, modulationOffset: Int, formatOffset: Int, systemOffset: Int, channelsOffset: Int) : Int {
             builder.startTable(11)
             addSYMBOLRATE(builder, symbolRate)
@@ -180,7 +180,7 @@ class TPN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TPN")
-        fun finishSizePrefixedTPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TPN")
+        fun finishTPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TPN")
+        fun finishSizePrefixedTPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TPN")
     }
 }

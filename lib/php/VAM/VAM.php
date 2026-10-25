@@ -21,7 +21,7 @@ class VAM extends Table
 
     public static function VAMIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMBufferHasIdentifier(ByteBuffer $buf)
@@ -402,6 +402,6 @@ class VAM extends Table
 
     public static function finishVAMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$VAM");
+        $builder->finish($offset, '$VAM');
     }
 }

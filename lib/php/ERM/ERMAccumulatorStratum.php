@@ -21,7 +21,7 @@ class ERMAccumulatorStratum extends Table
 
     public static function ERMAccumulatorStratumIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMAccumulatorStratumBufferHasIdentifier(ByteBuffer $buf)

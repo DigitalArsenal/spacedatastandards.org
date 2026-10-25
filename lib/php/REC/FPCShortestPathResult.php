@@ -21,7 +21,7 @@ class FPCShortestPathResult extends Table
 
     public static function FPCShortestPathResultIdentifier()
     {
-        return "$FPC";
+        return '$FPC';
     }
 
     public static function FPCShortestPathResultBufferHasIdentifier(ByteBuffer $buf)

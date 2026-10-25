@@ -21,7 +21,7 @@ class WHAChain extends Table
 
     public static function WHAChainIdentifier()
     {
-        return "$WHA";
+        return '$WHA';
     }
 
     public static function WHAChainBufferHasIdentifier(ByteBuffer $buf)

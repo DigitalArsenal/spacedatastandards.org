@@ -21,7 +21,7 @@ class KMLPlaylist extends Table
 
     public static function KMLPlaylistIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLPlaylistBufferHasIdentifier(ByteBuffer $buf)

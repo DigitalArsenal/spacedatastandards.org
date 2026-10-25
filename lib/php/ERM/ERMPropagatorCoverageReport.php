@@ -21,7 +21,7 @@ class ERMPropagatorCoverageReport extends Table
 
     public static function ERMPropagatorCoverageReportIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMPropagatorCoverageReportBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class dclFitStatistics extends Table
 
     public static function dclFitStatisticsIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclFitStatisticsBufferHasIdentifier(ByteBuffer $buf)

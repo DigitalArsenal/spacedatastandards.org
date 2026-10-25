@@ -25,7 +25,7 @@ class FRMStateVector extends Table
 
     public static function FRMStateVectorIdentifier()
     {
-        return "$FRM";
+        return '$FRM';
     }
 
     public static function FRMStateVectorBufferHasIdentifier(ByteBuffer $buf)

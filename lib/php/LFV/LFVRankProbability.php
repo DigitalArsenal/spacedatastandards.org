@@ -22,7 +22,7 @@ class LFVRankProbability extends Table
 
     public static function LFVRankProbabilityIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVRankProbabilityBufferHasIdentifier(ByteBuffer $buf)

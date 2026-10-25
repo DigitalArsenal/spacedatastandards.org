@@ -21,7 +21,7 @@ class CZMCorridor extends Table
 
     public static function CZMCorridorIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMCorridorBufferHasIdentifier(ByteBuffer $buf)

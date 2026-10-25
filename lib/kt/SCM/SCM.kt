@@ -88,7 +88,7 @@ class SCM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCM")
+        fun SCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCM")
         fun createSCM(builder: FlatBufferBuilder, versionOffset: Int, recordsOffset: Int, standardsVersionOffset: Int, generatedAtMs: Long) : Int {
             builder.startTable(4)
             addGENERATEDATMS(builder, generatedAtMs)
@@ -114,7 +114,7 @@ class SCM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SCM")
-        fun finishSizePrefixedSCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SCM")
+        fun finishSCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SCM")
+        fun finishSizePrefixedSCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SCM")
     }
 }

@@ -113,7 +113,7 @@ class CLT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CLTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CLT")
+        fun CLTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CLT")
         fun createCLT(builder: FlatBufferBuilder, pduType: Byte, initiatorIdOffset: Int, responderPortIdOffset: Int, serviceType: UByte, version: UShort, invokeId: UInt, dataOffset: Int) : Int {
             builder.startTable(7)
             addDATA(builder, dataOffset)
@@ -146,7 +146,7 @@ class CLT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCLTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CLT")
-        fun finishSizePrefixedCLTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CLT")
+        fun finishCLTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CLT")
+        fun finishSizePrefixedCLTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CLT")
     }
 }

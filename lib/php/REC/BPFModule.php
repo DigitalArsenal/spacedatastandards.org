@@ -22,7 +22,7 @@ class BPFModule extends Table
 
     public static function BPFModuleIdentifier()
     {
-        return "$BPF";
+        return '$BPF';
     }
 
     public static function BPFModuleBufferHasIdentifier(ByteBuffer $buf)

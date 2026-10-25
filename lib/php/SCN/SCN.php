@@ -23,7 +23,7 @@ class SCN extends Table
 
     public static function SCNIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNBufferHasIdentifier(ByteBuffer $buf)
@@ -344,6 +344,6 @@ class SCN extends Table
 
     public static function finishSCNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SCN");
+        $builder->finish($offset, '$SCN');
     }
 }

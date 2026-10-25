@@ -21,7 +21,7 @@ class ACIInterval extends Table
 
     public static function ACIIntervalIdentifier()
     {
-        return "$ACI";
+        return '$ACI';
     }
 
     public static function ACIIntervalBufferHasIdentifier(ByteBuffer $buf)

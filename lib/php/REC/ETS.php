@@ -21,7 +21,7 @@ class ETS extends Table
 
     public static function ETSIdentifier()
     {
-        return "$ETS";
+        return '$ETS';
     }
 
     public static function ETSBufferHasIdentifier(ByteBuffer $buf)
@@ -678,6 +678,6 @@ class ETS extends Table
 
     public static function finishETSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ETS");
+        $builder->finish($offset, '$ETS');
     }
 }

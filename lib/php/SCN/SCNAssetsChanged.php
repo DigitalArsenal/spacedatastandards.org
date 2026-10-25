@@ -21,7 +21,7 @@ class SCNAssetsChanged extends Table
 
     public static function SCNAssetsChangedIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNAssetsChangedBufferHasIdentifier(ByteBuffer $buf)

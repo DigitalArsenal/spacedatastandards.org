@@ -21,7 +21,7 @@ class APMInertia extends Table
 
     public static function APMInertiaIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMInertiaBufferHasIdentifier(ByteBuffer $buf)

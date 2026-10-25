@@ -21,7 +21,7 @@ class MET extends Table
 
     public static function METIdentifier()
     {
-        return "$MET";
+        return '$MET';
     }
 
     public static function METBufferHasIdentifier(ByteBuffer $buf)
@@ -93,6 +93,6 @@ class MET extends Table
 
     public static function finishMETBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MET");
+        $builder->finish($offset, '$MET');
     }
 }

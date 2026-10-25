@@ -21,7 +21,7 @@ class XMTManeuverEvent extends Table
 
     public static function XMTManeuverEventIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTManeuverEventBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class LWK extends Table
 
     public static function LWKIdentifier()
     {
-        return "$LWK";
+        return '$LWK';
     }
 
     public static function LWKBufferHasIdentifier(ByteBuffer $buf)
@@ -587,6 +587,6 @@ class LWK extends Table
 
     public static function finishLWKBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LWK");
+        $builder->finish($offset, '$LWK');
     }
 }

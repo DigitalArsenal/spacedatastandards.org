@@ -21,7 +21,7 @@ class GPXWaypoint extends Table
 
     public static function GPXWaypointIdentifier()
     {
-        return "$GPX";
+        return '$GPX';
     }
 
     public static function GPXWaypointBufferHasIdentifier(ByteBuffer $buf)

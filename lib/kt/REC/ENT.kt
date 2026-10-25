@@ -202,7 +202,7 @@ class ENT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ENTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ENT")
+        fun ENTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ENT")
         fun createENT(builder: FlatBufferBuilder, entitlementIdOffset: Int, xpubOffset: Int, peerIdOffset: Int, planOffset: Int, status: Byte, statusTextOffset: Int, stripeCustomerIdOffset: Int, stripeSubscriptionIdOffset: Int, expiresAt: ULong, createdAt: ULong, updatedAt: ULong, providerPeerIdOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(13)
             addUPDATEDAT(builder, updatedAt)
@@ -248,7 +248,7 @@ class ENT : Table() {
                 builder.required(o, 6)
             return o
         }
-        fun finishENTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ENT")
-        fun finishSizePrefixedENTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ENT")
+        fun finishENTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ENT")
+        fun finishSizePrefixedENTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ENT")
     }
 }

@@ -90,7 +90,7 @@ class CRD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CRDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CRD")
+        fun CRDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CRD")
         fun createCRD(builder: FlatBufferBuilder, x: Double, y: Double, z: Double, vx: Double, vy: Double, vz: Double, frame: UByte, ellipsoid: UByte, reservedOffset: Int) : Int {
             builder.startTable(9)
             addVZ(builder, vz)
@@ -127,7 +127,7 @@ class CRD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCRDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CRD")
-        fun finishSizePrefixedCRDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CRD")
+        fun finishCRDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CRD")
+        fun finishSizePrefixedCRDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CRD")
     }
 }

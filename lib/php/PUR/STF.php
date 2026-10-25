@@ -20,7 +20,7 @@ class STF extends Table
 
     public static function STFIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function STFBufferHasIdentifier(ByteBuffer $buf)
@@ -946,6 +946,6 @@ class STF extends Table
 
     public static function finishSTFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$STF");
+        $builder->finish($offset, '$STF');
     }
 }

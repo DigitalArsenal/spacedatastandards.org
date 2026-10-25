@@ -21,7 +21,7 @@ class ParameterTypeSet extends Table
 
     public static function ParameterTypeSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ParameterTypeSetBufferHasIdentifier(ByteBuffer $buf)

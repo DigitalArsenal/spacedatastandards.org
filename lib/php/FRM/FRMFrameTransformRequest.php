@@ -20,7 +20,7 @@ class FRMFrameTransformRequest extends Table
 
     public static function FRMFrameTransformRequestIdentifier()
     {
-        return "$FRM";
+        return '$FRM';
     }
 
     public static function FRMFrameTransformRequestBufferHasIdentifier(ByteBuffer $buf)

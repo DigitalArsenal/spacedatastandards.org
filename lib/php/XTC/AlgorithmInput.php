@@ -21,7 +21,7 @@ class AlgorithmInput extends Table
 
     public static function AlgorithmInputIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AlgorithmInputBufferHasIdentifier(ByteBuffer $buf)

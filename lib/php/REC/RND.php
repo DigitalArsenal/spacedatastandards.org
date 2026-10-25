@@ -21,7 +21,7 @@ class RND extends Table
 
     public static function RNDIdentifier()
     {
-        return "$RND";
+        return '$RND';
     }
 
     public static function RNDBufferHasIdentifier(ByteBuffer $buf)
@@ -301,6 +301,6 @@ class RND extends Table
 
     public static function finishRNDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RND");
+        $builder->finish($offset, '$RND');
     }
 }

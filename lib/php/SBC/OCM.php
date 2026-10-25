@@ -21,7 +21,7 @@ class OCM extends Table
 
     public static function OCMIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function OCMBufferHasIdentifier(ByteBuffer $buf)
@@ -1179,6 +1179,6 @@ class OCM extends Table
 
     public static function finishOCMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OCM");
+        $builder->finish($offset, '$OCM');
     }
 }

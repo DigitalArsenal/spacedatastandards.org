@@ -196,7 +196,7 @@ class EME : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EME")
+        fun EMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EME")
         fun createEME(builder: FlatBufferBuilder, encryptedBlobOffset: Int, ephemeralPublicKeyOffset: Int, macOffset: Int, nonceStartOffset: Int, tagOffset: Int, ivOffset: Int, saltOffset: Int, publicKeyIdentifierOffset: Int, cipherSuiteOffset: Int, kdfParametersOffset: Int, encryptionAlgorithmParametersOffset: Int) : Int {
             builder.startTable(11)
             addENCRYPTIONALGORITHMPARAMETERS(builder, encryptionAlgorithmParametersOffset)
@@ -246,7 +246,7 @@ class EME : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EME")
-        fun finishSizePrefixedEMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EME")
+        fun finishEMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EME")
+        fun finishSizePrefixedEMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EME")
     }
 }

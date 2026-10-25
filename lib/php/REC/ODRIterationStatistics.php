@@ -20,7 +20,7 @@ class ODRIterationStatistics extends Table
 
     public static function ODRIterationStatisticsIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODRIterationStatisticsBufferHasIdentifier(ByteBuffer $buf)

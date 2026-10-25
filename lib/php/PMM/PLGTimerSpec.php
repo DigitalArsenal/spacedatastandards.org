@@ -21,7 +21,7 @@ class PLGTimerSpec extends Table
 
     public static function PLGTimerSpecIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGTimerSpecBufferHasIdentifier(ByteBuffer $buf)

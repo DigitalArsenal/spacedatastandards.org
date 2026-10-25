@@ -24,7 +24,7 @@ class BOV extends Table
 
     public static function BOVIdentifier()
     {
-        return "$BOV";
+        return '$BOV';
     }
 
     public static function BOVBufferHasIdentifier(ByteBuffer $buf)
@@ -241,6 +241,6 @@ class BOV extends Table
 
     public static function finishBOVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BOV");
+        $builder->finish($offset, '$BOV');
     }
 }

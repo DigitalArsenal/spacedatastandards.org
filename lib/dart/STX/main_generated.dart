@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../TXS/main_generated.dart';
 
 ///  Days of the week on which a transmission runs. Bit flags so an
 ///  irregular weekly pattern needs no per-day rows. ALL DAYS is every bit set;

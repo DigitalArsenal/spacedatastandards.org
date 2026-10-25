@@ -21,7 +21,7 @@ class KMLTimeSpan extends Table
 
     public static function KMLTimeSpanIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLTimeSpanBufferHasIdentifier(ByteBuffer $buf)

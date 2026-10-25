@@ -191,7 +191,7 @@ class CES : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CESBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CES")
+        fun CESBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CES")
         fun createCES(builder: FlatBufferBuilder, datasetIdOffset: Int, updateIdOffset: Int, dimensions: UInt, encoding: Byte, normalization: Byte, similarity: Byte, modelIdOffset: Int, modelVersionOffset: Int, modelWeightsSha256Offset: Int, poolingMethod: Byte, templateVersionOffset: Int, rowsOffset: Int) : Int {
             builder.startTable(12)
             addROWS(builder, rowsOffset)
@@ -233,7 +233,7 @@ class CES : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCESBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CES")
-        fun finishSizePrefixedCESBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CES")
+        fun finishCESBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CES")
+        fun finishSizePrefixedCESBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CES")
     }
 }

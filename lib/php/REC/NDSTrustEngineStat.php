@@ -21,7 +21,7 @@ class NDSTrustEngineStat extends Table
 
     public static function NDSTrustEngineStatIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSTrustEngineStatBufferHasIdentifier(ByteBuffer $buf)

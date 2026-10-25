@@ -22,7 +22,7 @@ class SHW extends Table
 
     public static function SHWIdentifier()
     {
-        return "$SHW";
+        return '$SHW';
     }
 
     public static function SHWBufferHasIdentifier(ByteBuffer $buf)
@@ -110,6 +110,6 @@ class SHW extends Table
 
     public static function finishSHWBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SHW");
+        $builder->finish($offset, '$SHW');
     }
 }

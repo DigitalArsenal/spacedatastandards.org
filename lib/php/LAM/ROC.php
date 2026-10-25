@@ -21,7 +21,7 @@ class ROC extends Table
 
     public static function ROCIdentifier()
     {
-        return "$ROC";
+        return '$ROC';
     }
 
     public static function ROCBufferHasIdentifier(ByteBuffer $buf)
@@ -237,6 +237,6 @@ class ROC extends Table
 
     public static function finishROCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ROC");
+        $builder->finish($offset, '$ROC');
     }
 }

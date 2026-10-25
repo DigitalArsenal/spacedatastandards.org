@@ -21,7 +21,7 @@ class driftRecord extends Table
 
     public static function driftRecordIdentifier()
     {
-        return "$DFH";
+        return '$DFH';
     }
 
     public static function driftRecordBufferHasIdentifier(ByteBuffer $buf)

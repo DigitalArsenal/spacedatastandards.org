@@ -320,7 +320,7 @@ class CVG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CVGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CVG")
+        fun CVGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CVG")
         fun createCVG(builder: FlatBufferBuilder, coverageIdOffset: Int, nameOffset: Int, gridSchemeOffset: Int, gridResolution: UByte, cellIndexesOffset: Int, windowStart: Double, windowStop: Double, stepSize: Double, sensorIdsOffset: Int, assetIdsOffset: Int, accessCountsOffset: Int, accessTotalSOffset: Int, revisitMeanSOffset: Int, revisitMaxSOffset: Int, responseMeanSOffset: Int, responseMaxSOffset: Int, gapMaxSOffset: Int, coverageFractionOffset: Int, computedAt: ULong, signatureOffset: Int) : Int {
             builder.startTable(20)
             addCOMPUTEDAT(builder, computedAt)
@@ -470,7 +470,7 @@ class CVG : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishCVGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CVG")
-        fun finishSizePrefixedCVGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CVG")
+        fun finishCVGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CVG")
+        fun finishSizePrefixedCVGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CVG")
     }
 }

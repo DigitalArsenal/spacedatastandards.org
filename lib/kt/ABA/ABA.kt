@@ -207,7 +207,7 @@ class ABA : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ABABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ABA")
+        fun ABABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ABA")
         fun createABA(builder: FlatBufferBuilder, entryIdOffset: Int, nodePeerIdOffset: Int, publicKeyOffset: Int, signatureAlgorithmOffset: Int, profileBytesOffset: Int, profileSha256Offset: Int, visibility: Byte, createdAt: ULong, updatedAt: ULong, deleted: Boolean, noteOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(12)
             addUPDATEDAT(builder, updatedAt)
@@ -283,7 +283,7 @@ class ABA : Table() {
                 builder.required(o, 14)
             return o
         }
-        fun finishABABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ABA")
-        fun finishSizePrefixedABABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ABA")
+        fun finishABABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ABA")
+        fun finishSizePrefixedABABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ABA")
     }
 }

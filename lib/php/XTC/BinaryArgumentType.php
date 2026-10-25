@@ -21,7 +21,7 @@ class BinaryArgumentType extends Table
 
     public static function BinaryArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function BinaryArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class NEV extends Table
 
     public static function NEVIdentifier()
     {
-        return "$NEV";
+        return '$NEV';
     }
 
     public static function NEVBufferHasIdentifier(ByteBuffer $buf)
@@ -209,6 +209,6 @@ class NEV extends Table
 
     public static function finishNEVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NEV");
+        $builder->finish($offset, '$NEV');
     }
 }

@@ -21,7 +21,7 @@ class STV extends Table
 
     public static function STVIdentifier()
     {
-        return "$STV";
+        return '$STV';
     }
 
     public static function STVBufferHasIdentifier(ByteBuffer $buf)
@@ -315,6 +315,6 @@ class STV extends Table
 
     public static function finishSTVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$STV");
+        $builder->finish($offset, '$STV');
     }
 }

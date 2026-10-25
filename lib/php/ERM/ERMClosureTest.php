@@ -21,7 +21,7 @@ class ERMClosureTest extends Table
 
     public static function ERMClosureTestIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMClosureTestBufferHasIdentifier(ByteBuffer $buf)

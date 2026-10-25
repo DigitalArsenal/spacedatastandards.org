@@ -21,7 +21,7 @@ class XMTObjectOverride extends Table
 
     public static function XMTObjectOverrideIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTObjectOverrideBufferHasIdentifier(ByteBuffer $buf)

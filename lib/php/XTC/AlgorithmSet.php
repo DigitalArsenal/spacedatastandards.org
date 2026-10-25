@@ -21,7 +21,7 @@ class AlgorithmSet extends Table
 
     public static function AlgorithmSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AlgorithmSetBufferHasIdentifier(ByteBuffer $buf)

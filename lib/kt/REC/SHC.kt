@@ -285,7 +285,7 @@ class SHC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SHCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SHC")
+        fun SHCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SHC")
         fun createSHC(builder: FlatBufferBuilder, modelNameOffset: Int, centralBodyNaifId: Int, bodyNameOffset: Int, gm: Double, referenceRadius: Double, maxDegree: UShort, maxOrder: UShort, normalization: UByte, permanentTideSystem: UByte, referenceEpochOffset: Int, degreesOffset: Int, ordersOffset: Int, cOffset: Int, sOffset: Int, cSigmaOffset: Int, sSigmaOffset: Int, variableTermsOffset: Int, sourceOffset: Int, citationOffset: Int) : Int {
             builder.startTable(19)
             addREFERENCERADIUS(builder, referenceRadius)
@@ -392,7 +392,7 @@ class SHC : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishSHCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SHC")
-        fun finishSizePrefixedSHCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SHC")
+        fun finishSHCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SHC")
+        fun finishSizePrefixedSHCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SHC")
     }
 }

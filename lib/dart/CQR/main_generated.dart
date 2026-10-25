@@ -5,7 +5,32 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../ATM/main_generated.dart';
+import '../CAT/main_generated.dart';
+import '../CDM/main_generated.dart';
+import '../CSM/main_generated.dart';
+import '../CVR/main_generated.dart';
+import '../EOP/main_generated.dart';
+import '../EPM/main_generated.dart';
+import '../EVL/main_generated.dart';
+import '../FRM/main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../LCC/main_generated.dart';
+import '../MET/main_generated.dart';
+import '../NCD/main_generated.dart';
+import '../OCM/main_generated.dart';
+import '../OEM/main_generated.dart';
+import '../OMM/main_generated.dart';
+import '../PCE/main_generated.dart';
+import '../PCF/main_generated.dart';
+import '../PLD/main_generated.dart';
+import '../PNM/main_generated.dart';
+import '../PPE/main_generated.dart';
+import '../PRW/main_generated.dart';
+import '../PVN/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../SPW/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  Conjunction request/result semantics (normative): use exactly one payload
 ///  arm consistent with PIV.METHOD_ID. Errors belong in PIV status/error fields;

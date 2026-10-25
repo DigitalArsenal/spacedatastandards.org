@@ -43,7 +43,7 @@ class ERMCalibrationSample : Table() {
     /**
      * Object identifier; empty = unknown.
      */
-    val object : String?
+    val `object` : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -105,7 +105,7 @@ class ERMCalibrationSample : Table() {
         }
         fun startERMCalibrationSample(builder: FlatBufferBuilder) = builder.startTable(4)
         fun addSTRATUM(builder: FlatBufferBuilder, stratum: Int) = builder.addOffset(0, stratum, 0)
-        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, `object`: Int) = builder.addOffset(1, `object`, 0)
         fun addERROR(builder: FlatBufferBuilder, error: Int) = builder.addOffset(2, error, 0)
         fun createErrorVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
             builder.startVector(8, data.size, 8)

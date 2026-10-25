@@ -21,7 +21,7 @@ class PLGBuildArtifact extends Table
 
     public static function PLGBuildArtifactIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGBuildArtifactBufferHasIdentifier(ByteBuffer $buf)

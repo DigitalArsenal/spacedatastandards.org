@@ -21,7 +21,7 @@ class lamConstraintViolation extends Table
 
     public static function lamConstraintViolationIdentifier()
     {
-        return "$LAM";
+        return '$LAM';
     }
 
     public static function lamConstraintViolationBufferHasIdentifier(ByteBuffer $buf)

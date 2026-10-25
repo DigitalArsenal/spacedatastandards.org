@@ -21,7 +21,7 @@ class lamInsertionOrbit extends Table
 
     public static function lamInsertionOrbitIdentifier()
     {
-        return "$LAM";
+        return '$LAM';
     }
 
     public static function lamInsertionOrbitBufferHasIdentifier(ByteBuffer $buf)

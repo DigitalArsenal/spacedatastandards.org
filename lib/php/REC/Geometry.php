@@ -21,7 +21,7 @@ class Geometry extends Table
 
     public static function GeometryIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function GeometryBufferHasIdentifier(ByteBuffer $buf)

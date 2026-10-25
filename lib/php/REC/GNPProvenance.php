@@ -26,7 +26,7 @@ class GNPProvenance extends Table
 
     public static function GNPProvenanceIdentifier()
     {
-        return "$GNP";
+        return '$GNP';
     }
 
     public static function GNPProvenanceBufferHasIdentifier(ByteBuffer $buf)

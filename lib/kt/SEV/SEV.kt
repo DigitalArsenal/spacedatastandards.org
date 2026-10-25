@@ -113,7 +113,7 @@ class SEV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SEVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SEV")
+        fun SEVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SEV")
         fun createSEV(builder: FlatBufferBuilder, obTypeOffset: Int, obUoMOffset: Int, obValue: Double, obStringOffset: Int, obArrayOffset: Int, obBool: Boolean, obQualityOffset: Int, obDescriptionOffset: Int) : Int {
             builder.startTable(8)
             addOBVALUE(builder, obValue)
@@ -147,7 +147,7 @@ class SEV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SEV")
-        fun finishSizePrefixedSEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SEV")
+        fun finishSEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SEV")
+        fun finishSizePrefixedSEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SEV")
     }
 }

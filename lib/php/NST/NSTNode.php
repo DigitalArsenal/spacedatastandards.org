@@ -31,7 +31,7 @@ class NSTNode extends Table
 
     public static function NSTNodeIdentifier()
     {
-        return "$NST";
+        return '$NST';
     }
 
     public static function NSTNodeBufferHasIdentifier(ByteBuffer $buf)

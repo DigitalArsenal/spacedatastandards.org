@@ -21,7 +21,7 @@ class ERMFitStage extends Table
 
     public static function ERMFitStageIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMFitStageBufferHasIdentifier(ByteBuffer $buf)

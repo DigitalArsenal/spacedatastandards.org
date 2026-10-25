@@ -24,7 +24,7 @@ class ODR extends Table
 
     public static function ODRIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODRBufferHasIdentifier(ByteBuffer $buf)
@@ -549,6 +549,6 @@ class ODR extends Table
 
     public static function finishODRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ODR");
+        $builder->finish($offset, '$ODR');
     }
 }

@@ -27,7 +27,7 @@ class CCTCategoryRollup extends Table
 
     public static function CCTCategoryRollupIdentifier()
     {
-        return "$CCT";
+        return '$CCT';
     }
 
     public static function CCTCategoryRollupBufferHasIdentifier(ByteBuffer $buf)

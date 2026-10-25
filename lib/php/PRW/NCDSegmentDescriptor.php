@@ -26,7 +26,7 @@ class NCDSegmentDescriptor extends Table
 
     public static function NCDSegmentDescriptorIdentifier()
     {
-        return "$NCD";
+        return '$NCD';
     }
 
     public static function NCDSegmentDescriptorBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PNVEntry extends Table
 
     public static function PNVEntryIdentifier()
     {
-        return "$PNV";
+        return '$PNV';
     }
 
     public static function PNVEntryBufferHasIdentifier(ByteBuffer $buf)

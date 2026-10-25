@@ -27,7 +27,7 @@ class SNWBatchRequest extends Table
 
     public static function SNWBatchRequestIdentifier()
     {
-        return "$SNW";
+        return '$SNW';
     }
 
     public static function SNWBatchRequestBufferHasIdentifier(ByteBuffer $buf)

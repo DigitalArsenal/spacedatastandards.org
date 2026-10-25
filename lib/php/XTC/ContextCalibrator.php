@@ -21,7 +21,7 @@ class ContextCalibrator extends Table
 
     public static function ContextCalibratorIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ContextCalibratorBufferHasIdentifier(ByteBuffer $buf)

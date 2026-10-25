@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../TAB/main_generated.dart';
 
 ///  Coarse envelope status for an invoke response. Per-method numeric
 ///  return codes travel in STATUS_CODE; STATUS categorizes the outcome

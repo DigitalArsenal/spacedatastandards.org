@@ -20,7 +20,7 @@ class SCVCoverageGrid extends Table
 
     public static function SCVCoverageGridIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVCoverageGridBufferHasIdentifier(ByteBuffer $buf)

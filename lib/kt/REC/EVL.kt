@@ -67,7 +67,7 @@ class EVL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EVLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EVL")
+        fun EVLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EVL")
         fun createEVL(builder: FlatBufferBuilder, locationRequestOffset: Int, eventReportOffset: Int) : Int {
             builder.startTable(2)
             addEVENTREPORT(builder, eventReportOffset)
@@ -81,7 +81,7 @@ class EVL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EVL")
-        fun finishSizePrefixedEVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EVL")
+        fun finishEVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EVL")
+        fun finishSizePrefixedEVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EVL")
     }
 }

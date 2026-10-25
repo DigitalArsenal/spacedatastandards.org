@@ -23,7 +23,7 @@ class RFLModCod extends Table
 
     public static function RFLModCodIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLModCodBufferHasIdentifier(ByteBuffer $buf)

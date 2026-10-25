@@ -20,7 +20,7 @@ class CQRLaunchResult extends Table
 
     public static function CQRLaunchResultIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRLaunchResultBufferHasIdentifier(ByteBuffer $buf)

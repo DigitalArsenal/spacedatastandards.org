@@ -20,7 +20,7 @@ class SCVTargetResult extends Table
 
     public static function SCVTargetResultIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVTargetResultBufferHasIdentifier(ByteBuffer $buf)

@@ -378,7 +378,7 @@ class ACL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ACLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACL")
+        fun ACLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACL")
         fun createACL(builder: FlatBufferBuilder, grantIdOffset: Int, listingIdOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, accessType: Byte, tierNameOffset: Int, grantedAt: ULong, expiresAt: ULong, paymentTxHashOffset: Int, paymentMethod: Byte, providerSignatureOffset: Int, keyAlgorithmOffset: Int, rateLimit: UInt, maxRecordsPerRequest: UInt, status: Byte, paymentAmount: ULong, paymentCurrencyOffset: Int, paymentChainOffset: Int, nextRenewal: ULong, autoRenew: Boolean, renewalCount: UInt, totalRequests: ULong, totalRecords: ULong, lastAccess: ULong, deliveryTopicOffset: Int, createdAt: ULong, updatedAt: ULong, notesOffset: Int, providerPeerIdOffset: Int, grantResponseBase64Offset: Int, fieldStreamPolicyOffset: Int) : Int {
             builder.startTable(31)
             addUPDATEDAT(builder, updatedAt)
@@ -471,7 +471,7 @@ class ACL : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishACLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ACL")
-        fun finishSizePrefixedACLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ACL")
+        fun finishACLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ACL")
+        fun finishSizePrefixedACLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ACL")
     }
 }

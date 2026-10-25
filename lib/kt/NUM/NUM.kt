@@ -126,7 +126,7 @@ class NUM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NUMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NUM")
+        fun NUMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NUM")
         fun createNUM(builder: FlatBufferBuilder, rootSolveRequestOffset: Int, rootSolveResultOffset: Int, vectorSaturateRequestOffset: Int, vectorSaturateResultOffset: Int, vectorDiscretizeRequestOffset: Int, vectorDiscretizeResultOffset: Int, scalarInterpolationRequestOffset: Int, scalarInterpolationResultOffset: Int, gaussMarkovRequestOffset: Int, gaussMarkovResultOffset: Int) : Int {
             builder.startTable(10)
             addGAUSSMARKOVRESULT(builder, gaussMarkovResultOffset)
@@ -156,7 +156,7 @@ class NUM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNUMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NUM")
-        fun finishSizePrefixedNUMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NUM")
+        fun finishNUMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NUM")
+        fun finishSizePrefixedNUMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NUM")
     }
 }

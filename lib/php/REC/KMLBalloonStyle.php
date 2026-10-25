@@ -21,7 +21,7 @@ class KMLBalloonStyle extends Table
 
     public static function KMLBalloonStyleIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLBalloonStyleBufferHasIdentifier(ByteBuffer $buf)

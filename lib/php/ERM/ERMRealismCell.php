@@ -21,7 +21,7 @@ class ERMRealismCell extends Table
 
     public static function ERMRealismCellIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMRealismCellBufferHasIdentifier(ByteBuffer $buf)

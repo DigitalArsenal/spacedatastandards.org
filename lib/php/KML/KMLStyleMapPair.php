@@ -21,7 +21,7 @@ class KMLStyleMapPair extends Table
 
     public static function KMLStyleMapPairIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLStyleMapPairBufferHasIdentifier(ByteBuffer $buf)

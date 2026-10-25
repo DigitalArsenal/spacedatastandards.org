@@ -294,7 +294,7 @@ class APM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun APMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APM")
+        fun APMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$APM")
         fun createAPM(builder: FlatBufferBuilder, ccsdsApmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, epochOffset: Int, q1: Double, q2: Double, q3: Double, qc: Double, commentOffset: Int, classificationOffset: Int, messageIdOffset: Int, centerNameOffset: Int, timeSystemOffset: Int, quaternionStatesOffset: Int, eulerAngleStatesOffset: Int, angularVelocitiesOffset: Int, spinStatesOffset: Int, inertiasOffset: Int, maneuversOffset: Int) : Int {
             builder.startTable(21)
             addQC(builder, qc)
@@ -394,7 +394,7 @@ class APM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishAPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$APM")
-        fun finishSizePrefixedAPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$APM")
+        fun finishAPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$APM")
+        fun finishSizePrefixedAPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$APM")
     }
 }

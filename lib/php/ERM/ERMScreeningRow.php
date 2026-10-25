@@ -21,7 +21,7 @@ class ERMScreeningRow extends Table
 
     public static function ERMScreeningRowIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMScreeningRowBufferHasIdentifier(ByteBuffer $buf)

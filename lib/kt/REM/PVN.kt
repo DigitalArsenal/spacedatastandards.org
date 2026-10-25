@@ -145,7 +145,7 @@ class PVN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PVNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PVN")
+        fun PVNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PVN")
         fun createPVN(builder: FlatBufferBuilder, sourceIdOffset: Int, sourceKind: Byte, originatorOffset: Int, providerIdOffset: Int, producerOffset: Int, licenseClass: Byte, licenseIdOffset: Int, lineageOffset: Int) : Int {
             builder.startTable(8)
             addLINEAGE(builder, lineageOffset)
@@ -171,7 +171,7 @@ class PVN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPVNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PVN")
-        fun finishSizePrefixedPVNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PVN")
+        fun finishPVNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PVN")
+        fun finishSizePrefixedPVNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PVN")
     }
 }

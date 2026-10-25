@@ -21,7 +21,7 @@ class IQCExtension extends Table
 
     public static function IQCExtensionIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCExtensionBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class ASGProblem extends Table
 
     public static function ASGProblemIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGProblemBufferHasIdentifier(ByteBuffer $buf)

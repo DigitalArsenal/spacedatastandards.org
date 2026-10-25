@@ -21,7 +21,7 @@ class RBK extends Table
 
     public static function RBKIdentifier()
     {
-        return "$RBK";
+        return '$RBK';
     }
 
     public static function RBKBufferHasIdentifier(ByteBuffer $buf)
@@ -109,6 +109,6 @@ class RBK extends Table
 
     public static function finishRBKBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RBK");
+        $builder->finish($offset, '$RBK');
     }
 }

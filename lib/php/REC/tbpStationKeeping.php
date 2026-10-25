@@ -21,7 +21,7 @@ class tbpStationKeeping extends Table
 
     public static function tbpStationKeepingIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpStationKeepingBufferHasIdentifier(ByteBuffer $buf)

@@ -22,7 +22,7 @@ class ETSIdentifier extends Table
 
     public static function ETSIdentifierIdentifier()
     {
-        return "$ETS";
+        return '$ETS';
     }
 
     public static function ETSIdentifierBufferHasIdentifier(ByteBuffer $buf)

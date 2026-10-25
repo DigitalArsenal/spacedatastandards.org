@@ -41,7 +41,7 @@ class CryptoKey extends Table
 
     public static function CryptoKeyIdentifier()
     {
-        return "$EPM";
+        return '$EPM';
     }
 
     public static function CryptoKeyBufferHasIdentifier(ByteBuffer $buf)

@@ -166,7 +166,7 @@ class TMF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TMF")
+        fun TMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TMF")
         fun createTMF(builder: FlatBufferBuilder, version: UByte, spacecraftId: UShort, virtualChannelId: UByte, ocfFlag: Boolean, masterFrameCount: UByte, virtualFrameCount: UByte, secHdrFlag: Boolean, synchFlag: Boolean, packetOrderFlag: Boolean, segmentLengthId: UByte, firstHdrPointer: UShort, dataOffset: Int, ocfOffset: Int, fecf: UShort) : Int {
             builder.startTable(14)
             addOCF(builder, ocfOffset)
@@ -222,7 +222,7 @@ class TMF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TMF")
-        fun finishSizePrefixedTMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TMF")
+        fun finishTMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TMF")
+        fun finishSizePrefixedTMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TMF")
     }
 }

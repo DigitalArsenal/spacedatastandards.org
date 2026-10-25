@@ -277,7 +277,7 @@ class APR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun APRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APR")
+        fun APRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$APR")
         fun createAPR(builder: FlatBufferBuilder, requestIdOffset: Int, receivedAtMs: Long, method: UByte, pathOffset: Int, routeOffset: Int, schemaNameOffset: Int, parametersOffset: Int, selectionOffset: Int, ifNoneMatchOffset: Int, ifModifiedSinceMs: Long, accept: UByte, contentTypeOffset: Int, bodyOffset: Int, status: UShort, errorCodeOffset: Int, errorMessageOffset: Int, callerIdOffset: Int, responseHeadersOffset: Int) : Int {
             builder.startTable(18)
             addIFMODIFIEDSINCEMS(builder, ifModifiedSinceMs)
@@ -348,7 +348,7 @@ class APR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishAPRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$APR")
-        fun finishSizePrefixedAPRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$APR")
+        fun finishAPRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$APR")
+        fun finishSizePrefixedAPRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$APR")
     }
 }

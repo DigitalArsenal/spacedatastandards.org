@@ -21,7 +21,7 @@ class CZMPath extends Table
 
     public static function CZMPathIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPathBufferHasIdentifier(ByteBuffer $buf)

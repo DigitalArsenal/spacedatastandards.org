@@ -22,7 +22,7 @@ class SNW extends Table
 
     public static function SNWIdentifier()
     {
-        return "$SNW";
+        return '$SNW';
     }
 
     public static function SNWBufferHasIdentifier(ByteBuffer $buf)
@@ -110,6 +110,6 @@ class SNW extends Table
 
     public static function finishSNWBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SNW");
+        $builder->finish($offset, '$SNW');
     }
 }

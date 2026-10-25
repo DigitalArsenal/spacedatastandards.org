@@ -21,7 +21,7 @@ class SDRSingleResult extends Table
 
     public static function SDRSingleResultIdentifier()
     {
-        return "$SDR";
+        return '$SDR';
     }
 
     public static function SDRSingleResultBufferHasIdentifier(ByteBuffer $buf)

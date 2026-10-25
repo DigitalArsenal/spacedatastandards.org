@@ -21,7 +21,7 @@ class CVPProvenance extends Table
 
     public static function CVPProvenanceIdentifier()
     {
-        return "$CVP";
+        return '$CVP';
     }
 
     public static function CVPProvenanceBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class EPF extends Table
 
     public static function EPFIdentifier()
     {
-        return "$EPF";
+        return '$EPF';
     }
 
     public static function EPFBufferHasIdentifier(ByteBuffer $buf)
@@ -914,6 +914,6 @@ class EPF extends Table
 
     public static function finishEPFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EPF");
+        $builder->finish($offset, '$EPF');
     }
 }

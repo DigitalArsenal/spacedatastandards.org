@@ -21,7 +21,7 @@ class DMG extends Table
 
     public static function DMGIdentifier()
     {
-        return "$DMG";
+        return '$DMG';
     }
 
     public static function DMGBufferHasIdentifier(ByteBuffer $buf)
@@ -435,6 +435,6 @@ class DMG extends Table
 
     public static function finishDMGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DMG");
+        $builder->finish($offset, '$DMG');
     }
 }

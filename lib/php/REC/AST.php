@@ -21,7 +21,7 @@ class AST extends Table
 
     public static function ASTIdentifier()
     {
-        return "$AST";
+        return '$AST';
     }
 
     public static function ASTBufferHasIdentifier(ByteBuffer $buf)
@@ -351,6 +351,6 @@ class AST extends Table
 
     public static function finishASTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$AST");
+        $builder->finish($offset, '$AST');
     }
 }

@@ -21,7 +21,7 @@ class MDEDetectOptions extends Table
 
     public static function MDEDetectOptionsIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEDetectOptionsBufferHasIdentifier(ByteBuffer $buf)

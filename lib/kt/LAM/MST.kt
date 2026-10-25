@@ -640,7 +640,7 @@ class MST : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MST")
+        fun MSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MST")
         fun createMST(builder: FlatBufferBuilder, idOffset: Int, msgTypeOffset: Int, msgSubTypeOffset: Int, msgCreateDateOffset: Int, environment: Byte, objTypeOffset: Int, objTypeConf: UByte, objPlatOffset: Int, objIdentOffset: Int, spaceAmpOffset: Int, spaceAmpConf: UByte, objActOffset: Int, spaceSpecTypeOffset: Int, acftSubTypeOffset: Int, nameOffset: Int, callSignOffset: Int, lostTrkInd: Boolean, trackIdOffset: Int, parentTrackIdOffset: Int, muidSrcTrkOffset: Int, muidSrcOffset: Int, alertOffset: Int, mslStatus: Byte, tsOffset: Int, aouRptType: Byte, containment: Double, trkConf: Double, trkQual: UByte, angElev: Double, senModeOffset: Int, infoSourceOffset: Int, boosting: Boolean, polarSingLocLat: Double, polarSingLocLon: Double, emgInd: Boolean, dropPtInd: Boolean, launchTimeOffset: Int, launchLat: Double, launchLon: Double, azCorr: Double, burnoutAlt: Double, launchAouType: Byte, impactTimeOffset: Int, impactLat: Double, impactLon: Double, impactAouType: Byte, vectorStartTimeOffset: Int, vectorStepSize: Double, vectorComponents: UByte, vectorsOffset: Int, aouRptOffset: Int, launchAouOffset: Int, impactAouOffset: Int) : Int {
             builder.startTable(53)
             addVECTORSTEPSIZE(builder, vectorStepSize)
@@ -788,7 +788,7 @@ class MST : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MST")
-        fun finishSizePrefixedMSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MST")
+        fun finishMSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MST")
+        fun finishSizePrefixedMSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MST")
     }
 }

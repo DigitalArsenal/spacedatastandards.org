@@ -22,7 +22,7 @@ class PCFManeuverDetection extends Table
 
     public static function PCFManeuverDetectionIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFManeuverDetectionBufferHasIdentifier(ByteBuffer $buf)

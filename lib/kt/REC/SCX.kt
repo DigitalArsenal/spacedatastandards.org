@@ -187,7 +187,7 @@ class SCX : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SCXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCX")
+        fun SCXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCX")
         fun createSCX(builder: FlatBufferBuilder, chainOffset: Int, chainId: ULong, settlementKind: Byte, splitterStandardOffset: Int, splitterAddressOffset: Int, splitConfigIdOffset: Int, tokenAddressOffset: Int, tokenSymbolOffset: Int, tokenDecimals: UByte, splitRecipientsOffset: Int, minConfirmations: UInt, memoScheme: Byte) : Int {
             builder.startTable(12)
             addCHAINID(builder, chainId)
@@ -230,7 +230,7 @@ class SCX : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishSCXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SCX")
-        fun finishSizePrefixedSCXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SCX")
+        fun finishSCXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SCX")
+        fun finishSizePrefixedSCXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SCX")
     }
 }

@@ -21,7 +21,7 @@ class TBP extends Table
 
     public static function TBPIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function TBPBufferHasIdentifier(ByteBuffer $buf)
@@ -466,6 +466,6 @@ class TBP extends Table
 
     public static function finishTBPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TBP");
+        $builder->finish($offset, '$TBP');
     }
 }

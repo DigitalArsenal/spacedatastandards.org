@@ -21,7 +21,7 @@ class mplGeometrySolution extends Table
 
     public static function mplGeometrySolutionIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplGeometrySolutionBufferHasIdentifier(ByteBuffer $buf)

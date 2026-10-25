@@ -20,7 +20,7 @@ class CQRVersionResult extends Table
 
     public static function CQRVersionResultIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRVersionResultBufferHasIdentifier(ByteBuffer $buf)

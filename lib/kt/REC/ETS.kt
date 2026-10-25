@@ -287,7 +287,7 @@ class ETS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ETSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ETS")
+        fun ETSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ETS")
         fun createETS(builder: FlatBufferBuilder, trackIdOffset: Int, segmentSeq: UInt, trackClosed: Boolean, identifiersOffset: Int, environment: Byte, epochOffset: Int, endEpochOffset: Int, observationCount: UInt, knotCount: UInt, southDeg: Double, northDeg: Double, westDeg: Double, eastDeg: Double, altitudeReference: UByte, altitudeMinM: Double, altitudeMaxM: Double, toleranceHM: Float, toleranceVM: Float, achievedMaxErrorHM: Float, achievedMaxErrorVM: Float, codec: UByte, codecVersion: UShort, payloadOffset: Int, sourceOffset: Int) : Int {
             builder.startTable(24)
             addALTITUDEMAXM(builder, altitudeMaxM)
@@ -366,7 +366,7 @@ class ETS : Table() {
                 builder.required(o, 48)
             return o
         }
-        fun finishETSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ETS")
-        fun finishSizePrefixedETSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ETS")
+        fun finishETSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ETS")
+        fun finishSizePrefixedETSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ETS")
     }
 }

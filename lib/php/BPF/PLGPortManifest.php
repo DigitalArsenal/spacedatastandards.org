@@ -21,7 +21,7 @@ class PLGPortManifest extends Table
 
     public static function PLGPortManifestIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGPortManifestBufferHasIdentifier(ByteBuffer $buf)

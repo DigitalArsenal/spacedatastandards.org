@@ -90,7 +90,7 @@ class SDF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SDFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SDF")
+        fun SDFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SDF")
         fun createSDF(builder: FlatBufferBuilder, configOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int, resultsOffset: Int, timeRangeResultsOffset: Int) : Int {
             builder.startTable(5)
             addTIMERANGERESULTS(builder, timeRangeResultsOffset)
@@ -112,7 +112,7 @@ class SDF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSDFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SDF")
-        fun finishSizePrefixedSDFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SDF")
+        fun finishSDFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SDF")
+        fun finishSizePrefixedSDFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SDF")
     }
 }

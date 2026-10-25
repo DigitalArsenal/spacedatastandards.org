@@ -20,7 +20,7 @@ class PRWFitQuality extends Table
 
     public static function PRWFitQualityIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWFitQualityBufferHasIdentifier(ByteBuffer $buf)

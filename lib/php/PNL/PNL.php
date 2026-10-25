@@ -29,7 +29,7 @@ class PNL extends Table
 
     public static function PNLIdentifier()
     {
-        return "$PNL";
+        return '$PNL';
     }
 
     public static function PNLBufferHasIdentifier(ByteBuffer $buf)
@@ -293,6 +293,6 @@ class PNL extends Table
 
     public static function finishPNLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PNL");
+        $builder->finish($offset, '$PNL');
     }
 }

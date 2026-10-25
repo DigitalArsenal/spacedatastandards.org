@@ -20,7 +20,7 @@ class PIN extends Table
 
     public static function PINIdentifier()
     {
-        return "$PIN";
+        return '$PIN';
     }
 
     public static function PINBufferHasIdentifier(ByteBuffer $buf)
@@ -147,6 +147,6 @@ class PIN extends Table
 
     public static function finishPINBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PIN");
+        $builder->finish($offset, '$PIN');
     }
 }

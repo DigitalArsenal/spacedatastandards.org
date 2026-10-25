@@ -103,7 +103,7 @@ class PLD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PLDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLD")
+        fun PLDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PLD")
         fun createPLD(builder: FlatBufferBuilder, payloadDurationOffset: Int, massAtLaunch: Float, dimensionsOffset: Int, solarArrayArea: Float, solarArrayDimensionsOffset: Int, nominalOperationalLifetimeOffset: Int, instrumentsOffset: Int) : Int {
             builder.startTable(7)
             addINSTRUMENTS(builder, instrumentsOffset)
@@ -135,7 +135,7 @@ class PLD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPLDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PLD")
-        fun finishSizePrefixedPLDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PLD")
+        fun finishPLDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PLD")
+        fun finishSizePrefixedPLDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PLD")
     }
 }

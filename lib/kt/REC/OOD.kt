@@ -288,7 +288,7 @@ class OOD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OODBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOD")
+        fun OODBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOD")
         fun createOOD(builder: FlatBufferBuilder, idOffset: Int, lastObTimeOffset: Int, vismag: Double, vismagMin: Double, vismagMax: Double, vismagMean: Double, rcs: Double, rcsMin: Double, rcsMax: Double, rcsMean: Double, bolDeltaV: Double, maxDeltaV: Double, deltaVunc: Double, estDeltaVduration: Double, numMission: Int, missionTypesOffset: Int, busTypeOffset: Int, geoSlot: Double, driftRate: Double, dryMass: Double, additionalMass: Double, launchMassMin: Double, launchMass: Double, launchMassMax: Double, bolFuelMass: Double, currentMass: Double, totalMassUnc: Double, solarArrayArea: Double, maneuverable: Boolean, fuelRemaining: Double, crossSection: Double, busCrossSection: Double, maxRadius: Double, colaRadius: Double, adeptRadius: Double, numDeployable: Int, depNamesOffset: Int, depEstMassesOffset: Int, depMassUncsOffset: Int, lastObSourceOffset: Int) : Int {
             builder.startTable(40)
             addADEPTRADIUS(builder, adeptRadius)
@@ -410,7 +410,7 @@ class OOD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOODBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOD")
-        fun finishSizePrefixedOODBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOD")
+        fun finishOODBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOD")
+        fun finishSizePrefixedOODBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOD")
     }
 }

@@ -21,7 +21,7 @@ class VAMVector3 extends Table
 
     public static function VAMVector3Identifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMVector3BufferHasIdentifier(ByteBuffer $buf)

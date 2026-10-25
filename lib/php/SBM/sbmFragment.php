@@ -25,7 +25,7 @@ class sbmFragment extends Table
 
     public static function sbmFragmentIdentifier()
     {
-        return "$SBM";
+        return '$SBM';
     }
 
     public static function sbmFragmentBufferHasIdentifier(ByteBuffer $buf)

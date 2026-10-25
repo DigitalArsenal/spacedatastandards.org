@@ -21,7 +21,7 @@ class ionoDensityProfile extends Table
 
     public static function ionoDensityProfileIdentifier()
     {
-        return "$ION";
+        return '$ION';
     }
 
     public static function ionoDensityProfileBufferHasIdentifier(ByteBuffer $buf)

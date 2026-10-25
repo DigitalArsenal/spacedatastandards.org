@@ -21,7 +21,7 @@ class PLGMethodManifest extends Table
 
     public static function PLGMethodManifestIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGMethodManifestBufferHasIdentifier(ByteBuffer $buf)

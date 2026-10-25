@@ -21,7 +21,7 @@ class NEVEvent extends Table
 
     public static function NEVEventIdentifier()
     {
-        return "$NEV";
+        return '$NEV';
     }
 
     public static function NEVEventBufferHasIdentifier(ByteBuffer $buf)

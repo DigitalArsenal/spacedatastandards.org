@@ -21,7 +21,7 @@ class ERMPropagatorCoverageStratum extends Table
 
     public static function ERMPropagatorCoverageStratumIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMPropagatorCoverageStratumBufferHasIdentifier(ByteBuffer $buf)

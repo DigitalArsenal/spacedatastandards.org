@@ -21,7 +21,7 @@ class REV extends Table
 
     public static function REVIdentifier()
     {
-        return "$REV";
+        return '$REV';
     }
 
     public static function REVBufferHasIdentifier(ByteBuffer $buf)
@@ -494,6 +494,6 @@ class REV extends Table
 
     public static function finishREVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$REV");
+        $builder->finish($offset, '$REV');
     }
 }

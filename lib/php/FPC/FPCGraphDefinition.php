@@ -21,7 +21,7 @@ class FPCGraphDefinition extends Table
 
     public static function FPCGraphDefinitionIdentifier()
     {
-        return "$FPC";
+        return '$FPC';
     }
 
     public static function FPCGraphDefinitionBufferHasIdentifier(ByteBuffer $buf)

@@ -29,7 +29,7 @@ class DPM extends Table
 
     public static function DPMIdentifier()
     {
-        return "$DPM";
+        return '$DPM';
     }
 
     public static function DPMBufferHasIdentifier(ByteBuffer $buf)
@@ -511,6 +511,6 @@ class DPM extends Table
 
     public static function finishDPMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DPM");
+        $builder->finish($offset, '$DPM');
     }
 }

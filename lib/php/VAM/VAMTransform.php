@@ -21,7 +21,7 @@ class VAMTransform extends Table
 
     public static function VAMTransformIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMTransformBufferHasIdentifier(ByteBuffer $buf)

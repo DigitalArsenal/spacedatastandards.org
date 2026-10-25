@@ -21,7 +21,7 @@ class VEP extends Table
 
     public static function VEPIdentifier()
     {
-        return "$VEP";
+        return '$VEP';
     }
 
     public static function VEPBufferHasIdentifier(ByteBuffer $buf)
@@ -496,6 +496,6 @@ class VEP extends Table
 
     public static function finishVEPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$VEP");
+        $builder->finish($offset, '$VEP');
     }
 }

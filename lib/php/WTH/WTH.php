@@ -21,7 +21,7 @@ class WTH extends Table
 
     public static function WTHIdentifier()
     {
-        return "$WTH";
+        return '$WTH';
     }
 
     public static function WTHBufferHasIdentifier(ByteBuffer $buf)
@@ -1206,6 +1206,6 @@ class WTH extends Table
 
     public static function finishWTHBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$WTH");
+        $builder->finish($offset, '$WTH');
     }
 }

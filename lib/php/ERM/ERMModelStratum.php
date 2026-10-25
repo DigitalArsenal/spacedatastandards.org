@@ -21,7 +21,7 @@ class ERMModelStratum extends Table
 
     public static function ERMModelStratumIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMModelStratumBufferHasIdentifier(ByteBuffer $buf)

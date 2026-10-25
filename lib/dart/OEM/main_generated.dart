@@ -5,7 +5,14 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CAT/main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../LCC/main_generated.dart';
+import '../PLD/main_generated.dart';
+import '../PPE/main_generated.dart';
+import '../PVN/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  A single ephemeris data line (for non-uniform time steps only)
 ///  Use this format when time intervals between states are irregular.
@@ -1046,7 +1053,6 @@ class OEM {
   String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
   ///  Array of ephemeris data blocks
   List<ephemerisDataBlock>? get EPHEMERIS_DATA_BLOCK => const fb.ListReader<ephemerisDataBlock>(ephemerisDataBlock.reader).vTableGetNullable(_bc, _bcOffset, 12);
-  List<ephemerisDataBlock>? get ephemerisDataBlock => EPHEMERIS_DATA_BLOCK;
   ///  COMMENT lines of the OEM header (CCSDS 502.0-B-3), joined by a line feed.
   String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
   ///  MESSAGE_ID of the OEM header (CCSDS 502.0-B-3): an identifier the originator

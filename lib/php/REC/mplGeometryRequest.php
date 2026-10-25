@@ -22,7 +22,7 @@ class mplGeometryRequest extends Table
 
     public static function mplGeometryRequestIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplGeometryRequestBufferHasIdentifier(ByteBuffer $buf)

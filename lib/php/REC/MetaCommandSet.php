@@ -21,7 +21,7 @@ class MetaCommandSet extends Table
 
     public static function MetaCommandSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function MetaCommandSetBufferHasIdentifier(ByteBuffer $buf)

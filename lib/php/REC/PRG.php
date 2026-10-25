@@ -21,7 +21,7 @@ class PRG extends Table
 
     public static function PRGIdentifier()
     {
-        return "$PRG";
+        return '$PRG';
     }
 
     public static function PRGBufferHasIdentifier(ByteBuffer $buf)
@@ -219,6 +219,6 @@ class PRG extends Table
 
     public static function finishPRGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PRG");
+        $builder->finish($offset, '$PRG');
     }
 }

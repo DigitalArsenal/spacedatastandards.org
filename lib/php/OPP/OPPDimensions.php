@@ -23,7 +23,7 @@ class OPPDimensions extends Table
 
     public static function OPPDimensionsIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPDimensionsBufferHasIdentifier(ByteBuffer $buf)

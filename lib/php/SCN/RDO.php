@@ -21,7 +21,7 @@ class RDO extends Table
 
     public static function RDOIdentifier()
     {
-        return "$RDO";
+        return '$RDO';
     }
 
     public static function RDOBufferHasIdentifier(ByteBuffer $buf)
@@ -1315,6 +1315,6 @@ class RDO extends Table
 
     public static function finishRDOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RDO");
+        $builder->finish($offset, '$RDO');
     }
 }

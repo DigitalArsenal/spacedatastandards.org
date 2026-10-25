@@ -258,7 +258,7 @@ class PLK : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PLKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLK")
+        fun PLKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PLK")
         fun createPLK(builder: FlatBufferBuilder, licenseIdOffset: Int, pluginIdOffset: Int, pluginVersionOffset: Int, licenseeOrgOffset: Int, licenseeEmailOffset: Int, licenseePeerIdOffset: Int, licenseePubkeyOffset: Int, issuerPubkeyOffset: Int, allowedDomainsOffset: Int, allowedTldsOffset: Int, licenseType: Byte, maxActivations: UInt, issuedAt: ULong, validFrom: ULong, expiresAt: ULong, issuerPeerIdOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(17)
             addEXPIRESAT(builder, expiresAt)
@@ -348,7 +348,7 @@ class PLK : Table() {
                 builder.required(o, 10)
             return o
         }
-        fun finishPLKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PLK")
-        fun finishSizePrefixedPLKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PLK")
+        fun finishPLKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PLK")
+        fun finishSizePrefixedPLKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PLK")
     }
 }

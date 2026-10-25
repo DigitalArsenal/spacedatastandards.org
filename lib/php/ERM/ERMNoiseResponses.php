@@ -21,7 +21,7 @@ class ERMNoiseResponses extends Table
 
     public static function ERMNoiseResponsesIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMNoiseResponsesBufferHasIdentifier(ByteBuffer $buf)

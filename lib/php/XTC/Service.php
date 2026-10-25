@@ -21,7 +21,7 @@ class Service extends Table
 
     public static function ServiceIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ServiceBufferHasIdentifier(ByteBuffer $buf)

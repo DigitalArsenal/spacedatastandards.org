@@ -22,7 +22,7 @@ class WHA extends Table
 
     public static function WHAIdentifier()
     {
-        return "$WHA";
+        return '$WHA';
     }
 
     public static function WHABufferHasIdentifier(ByteBuffer $buf)
@@ -532,6 +532,6 @@ class WHA extends Table
 
     public static function finishWHABuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$WHA");
+        $builder->finish($offset, '$WHA');
     }
 }

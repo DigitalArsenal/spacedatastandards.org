@@ -21,7 +21,7 @@ class ERMNoiseFit extends Table
 
     public static function ERMNoiseFitIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMNoiseFitBufferHasIdentifier(ByteBuffer $buf)

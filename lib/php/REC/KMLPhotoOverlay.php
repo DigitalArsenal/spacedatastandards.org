@@ -21,7 +21,7 @@ class KMLPhotoOverlay extends Table
 
     public static function KMLPhotoOverlayIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLPhotoOverlayBufferHasIdentifier(ByteBuffer $buf)

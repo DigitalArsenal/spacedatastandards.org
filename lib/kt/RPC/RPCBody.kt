@@ -76,7 +76,7 @@ class RPCBody : Table() {
     fun bodyInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 8, 1)
     /**
      * Four-character file identifier of BODY when BODY is a FlatBuffer,
-     * `$` included (for example "$EPM"). Empty when BODY is not a FlatBuffer.
+     * `$` included (for example "\$EPM"). Empty when BODY is not a FlatBuffer.
      */
     val bodyFileId : String?
         get() {

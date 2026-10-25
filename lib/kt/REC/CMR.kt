@@ -210,7 +210,7 @@ class CMR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CMRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CMR")
+        fun CMRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CMR")
         fun createCMR(builder: FlatBufferBuilder, membershipIdOffset: Int, noradCatId: UInt, objectIdOffset: Int, constellationIdOffset: Int, constellationNameOffset: Int, constellationAliasesOffset: Int, operatorIdOffset: Int, operatorNameOffset: Int, operatorAliasesOffset: Int, state: Byte, updatedAtOffset: Int, provenanceOffset: Int) : Int {
             builder.startTable(12)
             addPROVENANCE(builder, provenanceOffset)
@@ -273,7 +273,7 @@ class CMR : Table() {
                 builder.required(o, 26)
             return o
         }
-        fun finishCMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CMR")
-        fun finishSizePrefixedCMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CMR")
+        fun finishCMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CMR")
+        fun finishSizePrefixedCMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CMR")
     }
 }

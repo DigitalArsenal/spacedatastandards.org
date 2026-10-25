@@ -54,7 +54,7 @@ class CAQ : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CAQBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CAQ")
+        fun CAQBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CAQ")
         fun createCAQ(builder: FlatBufferBuilder, requestOffset: Int, resultOffset: Int) : Int {
             builder.startTable(2)
             addRESULT(builder, resultOffset)
@@ -68,7 +68,7 @@ class CAQ : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCAQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CAQ")
-        fun finishSizePrefixedCAQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CAQ")
+        fun finishCAQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CAQ")
+        fun finishSizePrefixedCAQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CAQ")
     }
 }

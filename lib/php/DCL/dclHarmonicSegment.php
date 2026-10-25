@@ -24,7 +24,7 @@ class dclHarmonicSegment extends Table
 
     public static function dclHarmonicSegmentIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclHarmonicSegmentBufferHasIdentifier(ByteBuffer $buf)

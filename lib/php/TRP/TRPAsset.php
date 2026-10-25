@@ -21,7 +21,7 @@ class TRPAsset extends Table
 
     public static function TRPAssetIdentifier()
     {
-        return "$TRP";
+        return '$TRP';
     }
 
     public static function TRPAssetBufferHasIdentifier(ByteBuffer $buf)

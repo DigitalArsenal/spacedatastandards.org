@@ -21,7 +21,7 @@ class SCRBlock extends Table
 
     public static function SCRBlockIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRBlockBufferHasIdentifier(ByteBuffer $buf)

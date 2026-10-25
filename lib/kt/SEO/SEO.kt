@@ -486,7 +486,7 @@ class SEO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SEOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SEO")
+        fun SEOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SEO")
         fun createSEO(builder: FlatBufferBuilder, idOffset: Int, msgTypeOffset: Int, genSystemOffset: Int, externalIdOffset: Int, dataType: Byte, genTimeOffset: Int, forecast: Boolean, derived: Boolean, satNo: UInt, origObjectIdOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, observatoryType: Byte, observatoryNameOffset: Int, observatoryNotesOffset: Int, instrumentTypeOffset: Int, lat: Double, lon: Double, alt: Double, senReferenceFrameOffset: Int, senPosOffset: Int, senVelOffset: Int, measTypeOffset: Int, particleType: Byte, senEnergyLevelOffset: Int, obSetIdOffset: Int, obTimeOffset: Int, valuesOffset: Int, uncertaintiesOffset: Int, unitsOffset: Int, qualityOffset: Int, descriptionOffset: Int, descriptorOffset: Int, srcTypsOffset: Int, srcIdsOffset: Int) : Int {
             builder.startTable(35)
             addALT(builder, alt)
@@ -614,7 +614,7 @@ class SEO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SEO")
-        fun finishSizePrefixedSEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SEO")
+        fun finishSEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SEO")
+        fun finishSizePrefixedSEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SEO")
     }
 }

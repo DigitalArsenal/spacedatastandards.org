@@ -20,7 +20,7 @@ class TRHAttestation extends Table
 
     public static function TRHAttestationIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHAttestationBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class dclLevel extends Table
 
     public static function dclLevelIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclLevelBufferHasIdentifier(ByteBuffer $buf)

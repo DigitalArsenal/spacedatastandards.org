@@ -21,7 +21,7 @@ class NCDCode500Header extends Table
 
     public static function NCDCode500HeaderIdentifier()
     {
-        return "$NCD";
+        return '$NCD';
     }
 
     public static function NCDCode500HeaderBufferHasIdentifier(ByteBuffer $buf)

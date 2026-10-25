@@ -22,7 +22,7 @@ class PMM extends Table
 
     public static function PMMIdentifier()
     {
-        return "$PMM";
+        return '$PMM';
     }
 
     public static function PMMBufferHasIdentifier(ByteBuffer $buf)
@@ -387,6 +387,6 @@ class PMM extends Table
 
     public static function finishPMMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PMM");
+        $builder->finish($offset, '$PMM');
     }
 }

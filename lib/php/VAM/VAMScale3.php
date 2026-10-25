@@ -21,7 +21,7 @@ class VAMScale3 extends Table
 
     public static function VAMScale3Identifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMScale3BufferHasIdentifier(ByteBuffer $buf)

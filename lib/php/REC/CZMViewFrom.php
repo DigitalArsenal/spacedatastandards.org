@@ -21,7 +21,7 @@ class CZMViewFrom extends Table
 
     public static function CZMViewFromIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMViewFromBufferHasIdentifier(ByteBuffer $buf)

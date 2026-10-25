@@ -21,7 +21,7 @@ class SITQuantity extends Table
 
     public static function SITQuantityIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function SITQuantityBufferHasIdentifier(ByteBuffer $buf)

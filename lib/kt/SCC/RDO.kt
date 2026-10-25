@@ -601,7 +601,7 @@ class RDO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RDOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RDO")
+        fun RDOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RDO")
         fun createRDO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, obsType: Byte, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, obPositionOffset: Int, senReferenceFrameOffset: Int, azimuth: Double, azimuthUnc: Double, azimuthBias: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationBias: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeBias: Double, rangeRate: Double, rangeRateUnc: Double, rangeAccel: Double, rangeAccelUnc: Double, doppler: Double, dopplerUnc: Double, ra: Double, declination: Double, x: Double, y: Double, z: Double, xvel: Double, yvel: Double, zvel: Double, senx: Double, seny: Double, senz: Double, rcs: Double, rcsUnc: Double, orthogonalRcs: Double, orthogonalRcsUnc: Double, snr: Double, beam: Double, timingBias: Double, rawFileUriOffset: Int, descriptorOffset: Int, tagsOffset: Int, corrMahalanobisSq: Double, corrDof: UByte, corrGate: Double, corrPValue: Double, corrAmbiguous: Boolean, corrQuality: Double, dopplerFrequency: Double) : Int {
             builder.startTable(59)
             addDOPPLERFREQUENCY(builder, dopplerFrequency)
@@ -737,7 +737,7 @@ class RDO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRDOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RDO")
-        fun finishSizePrefixedRDOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RDO")
+        fun finishRDOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RDO")
+        fun finishSizePrefixedRDOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RDO")
     }
 }

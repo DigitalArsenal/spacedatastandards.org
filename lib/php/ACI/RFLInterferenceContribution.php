@@ -23,7 +23,7 @@ class RFLInterferenceContribution extends Table
 
     public static function RFLInterferenceContributionIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLInterferenceContributionBufferHasIdentifier(ByteBuffer $buf)

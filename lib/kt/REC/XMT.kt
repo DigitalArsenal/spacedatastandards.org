@@ -108,7 +108,7 @@ class XMT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun XMTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$XMT")
+        fun XMTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$XMT")
         fun createXMT(builder: FlatBufferBuilder, matchRequestOffset: Int, matchReportOffset: Int, composeRecipeOffset: Int, composeReportOffset: Int, integrateRecipeOffset: Int, integrateReportOffset: Int, epochFitPolicyOffset: Int, epochFitReportOffset: Int) : Int {
             builder.startTable(8)
             addEPOCHFITREPORT(builder, epochFitReportOffset)
@@ -134,7 +134,7 @@ class XMT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishXMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$XMT")
-        fun finishSizePrefixedXMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$XMT")
+        fun finishXMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$XMT")
+        fun finishSizePrefixedXMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$XMT")
     }
 }

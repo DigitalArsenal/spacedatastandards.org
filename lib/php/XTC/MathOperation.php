@@ -21,7 +21,7 @@ class MathOperation extends Table
 
     public static function MathOperationIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function MathOperationBufferHasIdentifier(ByteBuffer $buf)

@@ -283,7 +283,7 @@ class ANI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ANIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ANI")
+        fun ANIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ANI")
         fun createANI(builder: FlatBufferBuilder, idOffset: Int, sourceIdOffset: Int, sourceTypeOffset: Int, analyticType: Byte, algorithmOffset: Int, algorithmVersionOffset: Int, processingTimeOffset: Int, obsTimeOffset: Int, satNo: UInt, objectDesignatorOffset: Int, ra: Double, dec: Double, fov: Double, visualMag: Double, magUncertainty: Double, objectCount: UInt, labelsOffset: Int, confidenceOffset: Int, featuresOffset: Int, quality: Double, notesOffset: Int) : Int {
             builder.startTable(21)
             addQUALITY(builder, quality)
@@ -359,7 +359,7 @@ class ANI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishANIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ANI")
-        fun finishSizePrefixedANIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ANI")
+        fun finishANIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ANI")
+        fun finishSizePrefixedANIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ANI")
     }
 }

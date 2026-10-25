@@ -21,7 +21,7 @@ class ERMCalibrationStratum extends Table
 
     public static function ERMCalibrationStratumIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCalibrationStratumBufferHasIdentifier(ByteBuffer $buf)

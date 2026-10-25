@@ -21,7 +21,7 @@ class ERMHistogram extends Table
 
     public static function ERMHistogramIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMHistogramBufferHasIdentifier(ByteBuffer $buf)

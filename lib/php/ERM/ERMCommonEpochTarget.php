@@ -21,7 +21,7 @@ class ERMCommonEpochTarget extends Table
 
     public static function ERMCommonEpochTargetIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCommonEpochTargetBufferHasIdentifier(ByteBuffer $buf)

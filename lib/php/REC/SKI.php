@@ -21,7 +21,7 @@ class SKI extends Table
 
     public static function SKIIdentifier()
     {
-        return "$SKI";
+        return '$SKI';
     }
 
     public static function SKIBufferHasIdentifier(ByteBuffer $buf)
@@ -1025,6 +1025,6 @@ class SKI extends Table
 
     public static function finishSKIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SKI");
+        $builder->finish($offset, '$SKI');
     }
 }

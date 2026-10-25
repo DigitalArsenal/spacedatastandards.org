@@ -22,7 +22,7 @@ class QRPValue extends Table
 
     public static function QRPValueIdentifier()
     {
-        return "$QRP";
+        return '$QRP';
     }
 
     public static function QRPValueBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class ASGAssociationOptions extends Table
 
     public static function ASGAssociationOptionsIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGAssociationOptionsBufferHasIdentifier(ByteBuffer $buf)

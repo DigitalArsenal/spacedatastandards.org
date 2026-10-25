@@ -21,7 +21,7 @@ class FloatParameterType extends Table
 
     public static function FloatParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function FloatParameterTypeBufferHasIdentifier(ByteBuffer $buf)

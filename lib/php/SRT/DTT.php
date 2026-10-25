@@ -39,7 +39,7 @@ class DTT extends Table
 
     public static function DTTIdentifier()
     {
-        return "$DTT";
+        return '$DTT';
     }
 
     public static function DTTBufferHasIdentifier(ByteBuffer $buf)
@@ -1115,6 +1115,6 @@ class DTT extends Table
 
     public static function finishDTTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DTT");
+        $builder->finish($offset, '$DTT');
     }
 }

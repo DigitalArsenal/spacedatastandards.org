@@ -21,7 +21,7 @@ class CZMLabel extends Table
 
     public static function CZMLabelIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMLabelBufferHasIdentifier(ByteBuffer $buf)

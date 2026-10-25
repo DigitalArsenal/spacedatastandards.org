@@ -20,7 +20,7 @@ class SLPSolverReport extends Table
 
     public static function SLPSolverReportIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPSolverReportBufferHasIdentifier(ByteBuffer $buf)

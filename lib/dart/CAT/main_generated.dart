@@ -5,7 +5,9 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../LCC/main_generated.dart';
+import '../PLD/main_generated.dart';
 
 enum spaceObjectClass {
   PAYLOAD(0),

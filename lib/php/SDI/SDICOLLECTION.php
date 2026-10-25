@@ -20,7 +20,7 @@ class SDICOLLECTION extends Table
 
     public static function SDICOLLECTIONIdentifier()
     {
-        return "$SDI";
+        return '$SDI';
     }
 
     public static function SDICOLLECTIONBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class STO extends Table
 
     public static function STOIdentifier()
     {
-        return "$STO";
+        return '$STO';
     }
 
     public static function STOBufferHasIdentifier(ByteBuffer $buf)
@@ -415,6 +415,6 @@ class STO extends Table
 
     public static function finishSTOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$STO");
+        $builder->finish($offset, '$STO');
     }
 }

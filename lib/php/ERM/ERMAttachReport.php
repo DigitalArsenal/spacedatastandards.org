@@ -21,7 +21,7 @@ class ERMAttachReport extends Table
 
     public static function ERMAttachReportIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMAttachReportBufferHasIdentifier(ByteBuffer $buf)

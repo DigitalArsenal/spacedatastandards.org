@@ -21,7 +21,7 @@ class GJNBoundingBox extends Table
 
     public static function GJNBoundingBoxIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNBoundingBoxBufferHasIdentifier(ByteBuffer $buf)

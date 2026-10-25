@@ -21,7 +21,7 @@ class XTCHeader extends Table
 
     public static function XTCHeaderIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function XTCHeaderBufferHasIdentifier(ByteBuffer $buf)

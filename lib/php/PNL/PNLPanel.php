@@ -27,7 +27,7 @@ class PNLPanel extends Table
 
     public static function PNLPanelIdentifier()
     {
-        return "$PNL";
+        return '$PNL';
     }
 
     public static function PNLPanelBufferHasIdentifier(ByteBuffer $buf)

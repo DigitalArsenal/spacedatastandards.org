@@ -21,7 +21,7 @@ class PLGHostCapability extends Table
 
     public static function PLGHostCapabilityIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGHostCapabilityBufferHasIdentifier(ByteBuffer $buf)

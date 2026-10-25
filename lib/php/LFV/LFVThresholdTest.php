@@ -22,7 +22,7 @@ class LFVThresholdTest extends Table
 
     public static function LFVThresholdTestIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVThresholdTestBufferHasIdentifier(ByteBuffer $buf)

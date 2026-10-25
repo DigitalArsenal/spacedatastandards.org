@@ -20,7 +20,7 @@ class CelestialFrameWrapper extends Table
 
     public static function CelestialFrameWrapperIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function CelestialFrameWrapperBufferHasIdentifier(ByteBuffer $buf)

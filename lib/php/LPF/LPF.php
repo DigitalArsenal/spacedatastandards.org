@@ -21,7 +21,7 @@ class LPF extends Table
 
     public static function LPFIdentifier()
     {
-        return "$LPF";
+        return '$LPF';
     }
 
     public static function LPFBufferHasIdentifier(ByteBuffer $buf)
@@ -575,6 +575,6 @@ class LPF extends Table
 
     public static function finishLPFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LPF");
+        $builder->finish($offset, '$LPF');
     }
 }

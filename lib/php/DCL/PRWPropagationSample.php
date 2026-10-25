@@ -20,7 +20,7 @@ class PRWPropagationSample extends Table
 
     public static function PRWPropagationSampleIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWPropagationSampleBufferHasIdentifier(ByteBuffer $buf)

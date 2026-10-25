@@ -34,7 +34,7 @@ class PCE extends Table
 
     public static function PCEIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEBufferHasIdentifier(ByteBuffer $buf)
@@ -176,6 +176,6 @@ class PCE extends Table
 
     public static function finishPCEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PCE");
+        $builder->finish($offset, '$PCE');
     }
 }

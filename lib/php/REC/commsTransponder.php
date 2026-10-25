@@ -21,7 +21,7 @@ class commsTransponder extends Table
 
     public static function commsTransponderIdentifier()
     {
-        return "$CMS";
+        return '$CMS';
     }
 
     public static function commsTransponderBufferHasIdentifier(ByteBuffer $buf)

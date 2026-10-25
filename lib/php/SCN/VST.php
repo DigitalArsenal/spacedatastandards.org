@@ -21,7 +21,7 @@ class VST extends Table
 
     public static function VSTIdentifier()
     {
-        return "$VST";
+        return '$VST';
     }
 
     public static function VSTBufferHasIdentifier(ByteBuffer $buf)
@@ -150,6 +150,6 @@ class VST extends Table
 
     public static function finishVSTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$VST");
+        $builder->finish($offset, '$VST');
     }
 }

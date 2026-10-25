@@ -21,7 +21,7 @@ class KMLViewVolume extends Table
 
     public static function KMLViewVolumeIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLViewVolumeBufferHasIdentifier(ByteBuffer $buf)

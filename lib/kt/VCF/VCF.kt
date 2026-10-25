@@ -270,7 +270,7 @@ class VCF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun VCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$VCF")
+        fun VCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$VCF")
         fun createVCF(builder: FlatBufferBuilder, cardIdOffset: Int, form: Byte, cardOffset: Int, mediaTypeOffset: Int, subjectOffset: Int, propertiesOffset: Int, aliasesOffset: Int, photoPolicy: Byte, photoUriOffset: Int, photoMediaTypeOffset: Int, conformanceOffset: Int, producerIdOffset: Int, producerVersionOffset: Int, generatedAtOffset: Int, expiresAtOffset: Int, tagsOffset: Int, notesOffset: Int) : Int {
             builder.startTable(17)
             addNOTES(builder, notesOffset)
@@ -339,7 +339,7 @@ class VCF : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishVCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$VCF")
-        fun finishSizePrefixedVCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$VCF")
+        fun finishVCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$VCF")
+        fun finishSizePrefixedVCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$VCF")
     }
 }

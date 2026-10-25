@@ -20,7 +20,7 @@ class SLPAttestation extends Table
 
     public static function SLPAttestationIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPAttestationBufferHasIdentifier(ByteBuffer $buf)

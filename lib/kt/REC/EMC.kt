@@ -284,7 +284,7 @@ class EMC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EMCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EMC")
+        fun EMCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EMC")
         fun createEMC(builder: FlatBufferBuilder, emcIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rflIdOffset: Int, victimEndpointOffset: Int, aggressorEndpointOffset: Int, couplingMechanism: Byte, mechanismClass: Byte, intermodulationOrder: UInt, intermodulationTermsOffset: Int, intermodulationProductFrequencyHz: Double, harmonicOrder: UInt, emissionMaskIdOffset: Int, rfsMaterialIdOffset: Int, rfsMaterialClass: Byte, isolationDb: Double, coupledPowerDbw: Double, victimLimitDbw: Double, marginDb: Double, exceedanceDb: Double, exceedsLimit: Boolean, resolution: Byte, resolutionNoteOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(28)
             addCOMPUTEDAT(builder, computedAt)
@@ -383,7 +383,7 @@ class EMC : Table() {
                 builder.required(o, 58)
             return o
         }
-        fun finishEMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EMC")
-        fun finishSizePrefixedEMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EMC")
+        fun finishEMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EMC")
+        fun finishSizePrefixedEMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EMC")
     }
 }

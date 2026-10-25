@@ -22,7 +22,7 @@ class TXSPriorPosition extends Table
 
     public static function TXSPriorPositionIdentifier()
     {
-        return "$TXS";
+        return '$TXS';
     }
 
     public static function TXSPriorPositionBufferHasIdentifier(ByteBuffer $buf)

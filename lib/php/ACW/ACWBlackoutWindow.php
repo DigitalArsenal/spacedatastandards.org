@@ -21,7 +21,7 @@ class ACWBlackoutWindow extends Table
 
     public static function ACWBlackoutWindowIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWBlackoutWindowBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class TPN extends Table
 
     public static function TPNIdentifier()
     {
-        return "$TPN";
+        return '$TPN';
     }
 
     public static function TPNBufferHasIdentifier(ByteBuffer $buf)
@@ -306,6 +306,6 @@ class TPN extends Table
 
     public static function finishTPNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TPN");
+        $builder->finish($offset, '$TPN');
     }
 }

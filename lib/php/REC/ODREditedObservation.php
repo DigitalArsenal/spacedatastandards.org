@@ -20,7 +20,7 @@ class ODREditedObservation extends Table
 
     public static function ODREditedObservationIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODREditedObservationBufferHasIdentifier(ByteBuffer $buf)

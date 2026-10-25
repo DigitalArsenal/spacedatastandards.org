@@ -109,7 +109,7 @@ class BOV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BOVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BOV")
+        fun BOVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BOV")
         fun createBOV(builder: FlatBufferBuilder, eCoordinate: Double, fCoordinate: Double, gCoordinate: Double, eDot: Double, fDot: Double, gDot: Double, epochOffset: Int, timeFromLaunch: Double) : Int {
             builder.startTable(8)
             addTIMEFROMLAUNCH(builder, timeFromLaunch)
@@ -135,7 +135,7 @@ class BOV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishBOVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BOV")
-        fun finishSizePrefixedBOVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BOV")
+        fun finishBOVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BOV")
+        fun finishSizePrefixedBOVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BOV")
     }
 }

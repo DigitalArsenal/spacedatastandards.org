@@ -21,7 +21,7 @@ class TCTPoint extends Table
 
     public static function TCTPointIdentifier()
     {
-        return "$TCT";
+        return '$TCT';
     }
 
     public static function TCTPointBufferHasIdentifier(ByteBuffer $buf)

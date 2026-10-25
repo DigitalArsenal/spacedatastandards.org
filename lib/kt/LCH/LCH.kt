@@ -272,7 +272,7 @@ class LCH : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LCHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCH")
+        fun LCHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LCH")
         fun createLCH(builder: FlatBufferBuilder, messageType: Byte, role: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requesterSigningPubkeyOffset: Int, requesterEphemeralPubkeyOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, requestedAt: ULong, challengeNonceOffset: Int, expiresAt: ULong, providerPeerIdOffset: Int, errorCodeOffset: Int, errorMessageOffset: Int, requesterEpmOffset: Int) : Int {
             builder.startTable(18)
             addEXPIRESAT(builder, expiresAt)
@@ -356,7 +356,7 @@ class LCH : Table() {
                 builder.required(o, 10)
             return o
         }
-        fun finishLCHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LCH")
-        fun finishSizePrefixedLCHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LCH")
+        fun finishLCHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LCH")
+        fun finishSizePrefixedLCHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LCH")
     }
 }

@@ -21,7 +21,7 @@ class RBKRigidBodyKinematicsRequest extends Table
 
     public static function RBKRigidBodyKinematicsRequestIdentifier()
     {
-        return "$RBK";
+        return '$RBK';
     }
 
     public static function RBKRigidBodyKinematicsRequestBufferHasIdentifier(ByteBuffer $buf)

@@ -624,7 +624,6 @@ class RDM {
   List<reentryImpact>? get impactPredictions => IMPACT_PREDICTIONS;
   ///  Predicted surviving debris
   List<survivingDebris>? get SURVIVING_DEBRIS => const fb.ListReader<survivingDebris>(survivingDebris.reader).vTableGetNullable(_bc, _bcOffset, 48);
-  List<survivingDebris>? get survivingDebris => SURVIVING_DEBRIS;
   ///  Casualty expectation
   double get CASUALTY_EXPECTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
   double get casualtyExpectation => CASUALTY_EXPECTATION;

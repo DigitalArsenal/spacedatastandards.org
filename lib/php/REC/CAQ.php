@@ -21,7 +21,7 @@ class CAQ extends Table
 
     public static function CAQIdentifier()
     {
-        return "$CAQ";
+        return '$CAQ';
     }
 
     public static function CAQBufferHasIdentifier(ByteBuffer $buf)
@@ -109,6 +109,6 @@ class CAQ extends Table
 
     public static function finishCAQBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CAQ");
+        $builder->finish($offset, '$CAQ');
     }
 }

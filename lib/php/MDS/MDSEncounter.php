@@ -28,7 +28,7 @@ class MDSEncounter extends Table
 
     public static function MDSEncounterIdentifier()
     {
-        return "$MDS";
+        return '$MDS';
     }
 
     public static function MDSEncounterBufferHasIdentifier(ByteBuffer $buf)

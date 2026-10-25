@@ -21,7 +21,7 @@ class RBKVector3 extends Table
 
     public static function RBKVector3Identifier()
     {
-        return "$RBK";
+        return '$RBK';
     }
 
     public static function RBKVector3BufferHasIdentifier(ByteBuffer $buf)

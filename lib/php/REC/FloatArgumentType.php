@@ -21,7 +21,7 @@ class FloatArgumentType extends Table
 
     public static function FloatArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function FloatArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

@@ -31,7 +31,7 @@ class PPEOrbitalElementRecord extends Table
 
     public static function PPEOrbitalElementRecordIdentifier()
     {
-        return "$PPE";
+        return '$PPE';
     }
 
     public static function PPEOrbitalElementRecordBufferHasIdentifier(ByteBuffer $buf)

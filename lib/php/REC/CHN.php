@@ -21,7 +21,7 @@ class CHN extends Table
 
     public static function CHNIdentifier()
     {
-        return "$CHN";
+        return '$CHN';
     }
 
     public static function CHNBufferHasIdentifier(ByteBuffer $buf)
@@ -294,6 +294,6 @@ class CHN extends Table
 
     public static function finishCHNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CHN");
+        $builder->finish($offset, '$CHN');
     }
 }

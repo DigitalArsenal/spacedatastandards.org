@@ -21,7 +21,7 @@ class IQCAnnotation extends Table
 
     public static function IQCAnnotationIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCAnnotationBufferHasIdentifier(ByteBuffer $buf)

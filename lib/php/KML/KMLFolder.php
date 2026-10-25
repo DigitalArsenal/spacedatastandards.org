@@ -21,7 +21,7 @@ class KMLFolder extends Table
 
     public static function KMLFolderIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLFolderBufferHasIdentifier(ByteBuffer $buf)

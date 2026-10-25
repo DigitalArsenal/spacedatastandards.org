@@ -22,7 +22,7 @@ class ACWObserverTrajectory extends Table
 
     public static function ACWObserverTrajectoryIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWObserverTrajectoryBufferHasIdentifier(ByteBuffer $buf)

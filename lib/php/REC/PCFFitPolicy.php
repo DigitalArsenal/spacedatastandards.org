@@ -22,7 +22,7 @@ class PCFFitPolicy extends Table
 
     public static function PCFFitPolicyIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFFitPolicyBufferHasIdentifier(ByteBuffer $buf)

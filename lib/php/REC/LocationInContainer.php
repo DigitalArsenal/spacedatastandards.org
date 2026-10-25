@@ -21,7 +21,7 @@ class LocationInContainer extends Table
 
     public static function LocationInContainerIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function LocationInContainerBufferHasIdentifier(ByteBuffer $buf)

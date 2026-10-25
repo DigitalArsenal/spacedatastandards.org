@@ -21,7 +21,7 @@ class GJNPolygonRings extends Table
 
     public static function GJNPolygonRingsIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNPolygonRingsBufferHasIdentifier(ByteBuffer $buf)

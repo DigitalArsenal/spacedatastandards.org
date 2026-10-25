@@ -21,7 +21,7 @@ class LAM extends Table
 
     public static function LAMIdentifier()
     {
-        return "$LAM";
+        return '$LAM';
     }
 
     public static function LAMBufferHasIdentifier(ByteBuffer $buf)
@@ -2228,6 +2228,6 @@ class LAM extends Table
 
     public static function finishLAMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LAM");
+        $builder->finish($offset, '$LAM');
     }
 }

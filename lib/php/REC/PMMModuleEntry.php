@@ -21,7 +21,7 @@ class PMMModuleEntry extends Table
 
     public static function PMMModuleEntryIdentifier()
     {
-        return "$PMM";
+        return '$PMM';
     }
 
     public static function PMMModuleEntryBufferHasIdentifier(ByteBuffer $buf)

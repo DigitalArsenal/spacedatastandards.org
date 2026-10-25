@@ -21,7 +21,7 @@ class IntegerParameterType extends Table
 
     public static function IntegerParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function IntegerParameterTypeBufferHasIdentifier(ByteBuffer $buf)

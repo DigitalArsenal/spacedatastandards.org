@@ -54,7 +54,7 @@ class PIN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PINBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PIN")
+        fun PINBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PIN")
         fun createPIN(builder: FlatBufferBuilder, rulesOffset: Int, updatedAt: ULong) : Int {
             builder.startTable(2)
             addUPDATEDAT(builder, updatedAt)
@@ -76,7 +76,7 @@ class PIN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPINBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PIN")
-        fun finishSizePrefixedPINBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PIN")
+        fun finishPINBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PIN")
+        fun finishSizePrefixedPINBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PIN")
     }
 }

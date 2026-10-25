@@ -568,7 +568,7 @@ class OOE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOE")
+        fun OOEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOE")
         fun createOOE(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, derivedFromOffset: Int, declassificationDateOffset: Int, declassificationStringOffset: Int, eventTimeOffset: Int, eventTimeNotesOffset: Int, category: Byte, result: Byte, eventTypeOffset: Int, operatorOrgIdOffset: Int, ownerOrgIdOffset: Int, lesseeOrgIdOffset: Int, operatedOnBehalfOfOrgIdOffset: Int, geoPosition: Double, planeSlotOffset: Int, planeNumberOffset: Int, positionStatusOffset: Int, untilTimeOffset: Int, officialLossDateOffset: Int, netAmount: Double, underlyingCauseOffset: Int, capabilityLoss: Double, capacityLoss: Double, insuranceLoss: Double, thirdPartyInsuranceLoss: Double, injured: UShort, killed: UShort, ageAtEvent: Double, lifeLost: Double, achievedFlightPhaseOffset: Int, occurrenceFlightPhaseOffset: Int, stageAtFaultOffset: Int, equipmentAtFaultOffset: Int, equipmentTypeAtFaultOffset: Int, equipmentPartAtFaultOffset: Int, consequentialEquipmentFailureOffset: Int, inclined: Boolean, descriptionOffset: Int, remarksOffset: Int, objectStatusOffset: Int, satellitePositionOffset: Int, onOrbitOffset: Int) : Int {
             builder.startTable(44)
             addLIFELOST(builder, lifeLost)
@@ -666,7 +666,7 @@ class OOE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOE")
-        fun finishSizePrefixedOOEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOE")
+        fun finishOOEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOE")
+        fun finishSizePrefixedOOEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOE")
     }
 }

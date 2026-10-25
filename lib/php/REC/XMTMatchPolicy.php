@@ -22,7 +22,7 @@ class XMTMatchPolicy extends Table
 
     public static function XMTMatchPolicyIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTMatchPolicyBufferHasIdentifier(ByteBuffer $buf)

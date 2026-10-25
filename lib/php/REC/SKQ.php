@@ -21,7 +21,7 @@ class SKQ extends Table
 
     public static function SKQIdentifier()
     {
-        return "$SKQ";
+        return '$SKQ';
     }
 
     public static function SKQBufferHasIdentifier(ByteBuffer $buf)
@@ -889,6 +889,6 @@ class SKQ extends Table
 
     public static function finishSKQBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SKQ");
+        $builder->finish($offset, '$SKQ');
     }
 }

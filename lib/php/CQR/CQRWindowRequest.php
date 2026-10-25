@@ -20,7 +20,7 @@ class CQRWindowRequest extends Table
 
     public static function CQRWindowRequestIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRWindowRequestBufferHasIdentifier(ByteBuffer $buf)

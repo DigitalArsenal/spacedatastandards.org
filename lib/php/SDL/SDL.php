@@ -21,7 +21,7 @@ class SDL extends Table
 
     public static function SDLIdentifier()
     {
-        return "$SDL";
+        return '$SDL';
     }
 
     public static function SDLBufferHasIdentifier(ByteBuffer $buf)
@@ -346,6 +346,6 @@ class SDL extends Table
 
     public static function finishSDLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SDL");
+        $builder->finish($offset, '$SDL');
     }
 }

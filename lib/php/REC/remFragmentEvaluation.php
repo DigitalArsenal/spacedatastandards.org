@@ -21,7 +21,7 @@ class remFragmentEvaluation extends Table
 
     public static function remFragmentEvaluationIdentifier()
     {
-        return "$REM";
+        return '$REM';
     }
 
     public static function remFragmentEvaluationBufferHasIdentifier(ByteBuffer $buf)

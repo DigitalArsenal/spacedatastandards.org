@@ -21,7 +21,7 @@ class PRWTrajectorySource extends Table
 
     public static function PRWTrajectorySourceIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWTrajectorySourceBufferHasIdentifier(ByteBuffer $buf)

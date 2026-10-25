@@ -21,7 +21,7 @@ class GJN extends Table
 
     public static function GJNIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNBufferHasIdentifier(ByteBuffer $buf)
@@ -147,6 +147,6 @@ class GJN extends Table
 
     public static function finishGJNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GJN");
+        $builder->finish($offset, '$GJN');
     }
 }

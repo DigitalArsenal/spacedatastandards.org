@@ -21,7 +21,7 @@ class ERMConsiderEpoch extends Table
 
     public static function ERMConsiderEpochIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMConsiderEpochBufferHasIdentifier(ByteBuffer $buf)

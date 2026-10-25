@@ -21,7 +21,7 @@ class KMLUpdate extends Table
 
     public static function KMLUpdateIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLUpdateBufferHasIdentifier(ByteBuffer $buf)

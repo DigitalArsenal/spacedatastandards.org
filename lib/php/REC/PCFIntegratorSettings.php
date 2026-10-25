@@ -22,7 +22,7 @@ class PCFIntegratorSettings extends Table
 
     public static function PCFIntegratorSettingsIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFIntegratorSettingsBufferHasIdentifier(ByteBuffer $buf)

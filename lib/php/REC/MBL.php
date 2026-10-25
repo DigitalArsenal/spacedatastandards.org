@@ -21,7 +21,7 @@ class MBL extends Table
 
     public static function MBLIdentifier()
     {
-        return "$MBL";
+        return '$MBL';
     }
 
     public static function MBLBufferHasIdentifier(ByteBuffer $buf)
@@ -348,6 +348,6 @@ class MBL extends Table
 
     public static function finishMBLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MBL");
+        $builder->finish($offset, '$MBL');
     }
 }

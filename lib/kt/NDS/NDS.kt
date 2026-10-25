@@ -167,7 +167,7 @@ class NDS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NDSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NDS")
+        fun NDSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NDS")
         fun createNDS(builder: FlatBufferBuilder, generatedAt: Long, schemasOffset: Int, sourcesOffset: Int, totalRecords: Long, totalBytes: Long, stale: Boolean, asOf: Long, eventsOffset: Int, topicsOffset: Int, modulesOffset: Int, trustEngineOffset: Int, storageFreeBytes: Long, storageCapacityBytes: Long) : Int {
             builder.startTable(13)
             addSTORAGECAPACITYBYTES(builder, storageCapacityBytes)
@@ -243,7 +243,7 @@ class NDS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NDS")
-        fun finishSizePrefixedNDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NDS")
+        fun finishNDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NDS")
+        fun finishSizePrefixedNDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NDS")
     }
 }

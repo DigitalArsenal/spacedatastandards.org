@@ -21,7 +21,7 @@ class VAMVariant extends Table
 
     public static function VAMVariantIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMVariantBufferHasIdentifier(ByteBuffer $buf)

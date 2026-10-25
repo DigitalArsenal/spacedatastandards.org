@@ -21,7 +21,7 @@ class CQRScreeningControls extends Table
 
     public static function CQRScreeningControlsIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRScreeningControlsBufferHasIdentifier(ByteBuffer $buf)

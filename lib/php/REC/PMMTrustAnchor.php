@@ -24,7 +24,7 @@ class PMMTrustAnchor extends Table
 
     public static function PMMTrustAnchorIdentifier()
     {
-        return "$PMM";
+        return '$PMM';
     }
 
     public static function PMMTrustAnchorBufferHasIdentifier(ByteBuffer $buf)

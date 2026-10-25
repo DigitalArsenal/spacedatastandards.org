@@ -21,7 +21,7 @@ class SCM extends Table
 
     public static function SCMIdentifier()
     {
-        return "$SCM";
+        return '$SCM';
     }
 
     public static function SCMBufferHasIdentifier(ByteBuffer $buf)
@@ -185,6 +185,6 @@ class SCM extends Table
 
     public static function finishSCMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SCM");
+        $builder->finish($offset, '$SCM');
     }
 }

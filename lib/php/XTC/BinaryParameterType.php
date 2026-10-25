@@ -21,7 +21,7 @@ class BinaryParameterType extends Table
 
     public static function BinaryParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function BinaryParameterTypeBufferHasIdentifier(ByteBuffer $buf)

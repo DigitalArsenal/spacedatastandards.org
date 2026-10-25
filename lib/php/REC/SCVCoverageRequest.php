@@ -20,7 +20,7 @@ class SCVCoverageRequest extends Table
 
     public static function SCVCoverageRequestIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVCoverageRequestBufferHasIdentifier(ByteBuffer $buf)

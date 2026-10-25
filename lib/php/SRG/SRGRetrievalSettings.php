@@ -22,7 +22,7 @@ class SRGRetrievalSettings extends Table
 
     public static function SRGRetrievalSettingsIdentifier()
     {
-        return "$SRG";
+        return '$SRG';
     }
 
     public static function SRGRetrievalSettingsBufferHasIdentifier(ByteBuffer $buf)

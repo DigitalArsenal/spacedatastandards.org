@@ -21,7 +21,7 @@ class IntegerArgumentType extends Table
 
     public static function IntegerArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function IntegerArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

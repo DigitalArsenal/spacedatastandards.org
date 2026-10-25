@@ -21,7 +21,7 @@ class ERMRefusedRecord extends Table
 
     public static function ERMRefusedRecordIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMRefusedRecordBufferHasIdentifier(ByteBuffer $buf)

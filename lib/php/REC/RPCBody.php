@@ -21,7 +21,7 @@ class RPCBody extends Table
 
     public static function RPCBodyIdentifier()
     {
-        return "$RPC";
+        return '$RPC';
     }
 
     public static function RPCBodyBufferHasIdentifier(ByteBuffer $buf)
@@ -84,7 +84,7 @@ class RPCBody extends Table
     }
 
     /// Four-character file identifier of BODY when BODY is a FlatBuffer,
-    /// `$` included (for example "$EPM"). Empty when BODY is not a FlatBuffer.
+    /// `$` included (for example '$EPM'). Empty when BODY is not a FlatBuffer.
     public function getBODY_FILE_ID()
     {
         $o = $this->__offset(10);

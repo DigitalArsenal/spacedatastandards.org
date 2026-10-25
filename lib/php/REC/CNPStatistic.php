@@ -21,7 +21,7 @@ class CNPStatistic extends Table
 
     public static function CNPStatisticIdentifier()
     {
-        return "$CNP";
+        return '$CNP';
     }
 
     public static function CNPStatisticBufferHasIdentifier(ByteBuffer $buf)

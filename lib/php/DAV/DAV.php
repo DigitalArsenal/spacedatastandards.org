@@ -21,7 +21,7 @@ class DAV extends Table
 
     public static function DAVIdentifier()
     {
-        return "$DAV";
+        return '$DAV';
     }
 
     public static function DAVBufferHasIdentifier(ByteBuffer $buf)
@@ -527,6 +527,6 @@ class DAV extends Table
 
     public static function finishDAVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DAV");
+        $builder->finish($offset, '$DAV');
     }
 }

@@ -22,7 +22,7 @@ class MPETargeterConstraint extends Table
 
     public static function MPETargeterConstraintIdentifier()
     {
-        return "$MPE";
+        return '$MPE';
     }
 
     public static function MPETargeterConstraintBufferHasIdentifier(ByteBuffer $buf)

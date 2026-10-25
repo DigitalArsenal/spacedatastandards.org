@@ -21,7 +21,7 @@ class CZMOrientation extends Table
 
     public static function CZMOrientationIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMOrientationBufferHasIdentifier(ByteBuffer $buf)

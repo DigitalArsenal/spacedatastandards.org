@@ -435,7 +435,7 @@ class LDM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LDM")
+        fun LDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LDM")
         fun createLDM(builder: FlatBufferBuilder, siteOffset: Int, azimuth: Float, referencesOffset: Int, agencyNameOffset: Int, pointsOfContactOffset: Int, operationsPointsOfContactOffset: Int, netOffset: Int, rocketConfigurationOffset: Int, missionNameOffset: Int, missionDescriptionOffset: Int, missionTypeOffset: Int, orbitTypeOffset: Int, weatherConditionsOffset: Int, launchStatusOffset: Int, webcastUrlOffset: Int, mediaLinksOffset: Int, earliestLaunchTimesOffset: Int, latestLaunchTimesOffset: Int, lcolaWindowClosuresOffset: Int, objectsOffset: Int, trackingRequirementsOffset: Int, colaScreenDurationOffset: Int, probabilityOfCollisionThresholdOffset: Int, colaRunsRequiredOffset: Int, colaPointsOfContactOffset: Int, orbitalParametersOffset: Int, burnOutVectorsOffset: Int, idOffset: Int) : Int {
             builder.startTable(28)
             addID(builder, idOffset)
@@ -589,7 +589,7 @@ class LDM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LDM")
-        fun finishSizePrefixedLDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LDM")
+        fun finishLDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LDM")
+        fun finishSizePrefixedLDMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LDM")
     }
 }

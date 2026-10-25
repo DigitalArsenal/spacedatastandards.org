@@ -21,7 +21,7 @@ class QRPRow extends Table
 
     public static function QRPRowIdentifier()
     {
-        return "$QRP";
+        return '$QRP';
     }
 
     public static function QRPRowBufferHasIdentifier(ByteBuffer $buf)

@@ -5,7 +5,12 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CVR/main_generated.dart';
+import '../MET/main_generated.dart';
+import '../OMM/main_generated.dart';
+import '../PVN/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  Labelled Feature Vectors (LFV)
 ///  Description

@@ -21,7 +21,7 @@ class mnvOrbitalState extends Table
 
     public static function mnvOrbitalStateIdentifier()
     {
-        return "$MNV";
+        return '$MNV';
     }
 
     public static function mnvOrbitalStateBufferHasIdentifier(ByteBuffer $buf)

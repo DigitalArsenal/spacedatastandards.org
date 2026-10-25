@@ -21,7 +21,7 @@ class FILEntry extends Table
 
     public static function FILEntryIdentifier()
     {
-        return "$FIL";
+        return '$FIL';
     }
 
     public static function FILEntryBufferHasIdentifier(ByteBuffer $buf)

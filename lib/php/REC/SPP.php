@@ -21,7 +21,7 @@ class SPP extends Table
 
     public static function SPPIdentifier()
     {
-        return "$SPP";
+        return '$SPP';
     }
 
     public static function SPPBufferHasIdentifier(ByteBuffer $buf)
@@ -283,6 +283,6 @@ class SPP extends Table
 
     public static function finishSPPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SPP");
+        $builder->finish($offset, '$SPP');
     }
 }

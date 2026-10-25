@@ -21,7 +21,7 @@ class SCNSunAdvantageTarget extends Table
 
     public static function SCNSunAdvantageTargetIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNSunAdvantageTargetBufferHasIdentifier(ByteBuffer $buf)

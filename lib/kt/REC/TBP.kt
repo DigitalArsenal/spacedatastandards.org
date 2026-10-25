@@ -216,7 +216,7 @@ class TBP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TBPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TBP")
+        fun TBPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TBP")
         fun createTBP(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, producerOffset: Int, problem: UByte, systemOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, propagationOffset: Int, trajectoryOffset: Int, librationPointsOffset: Int, stateOffset: Int, jacobi: Double, orbitsOffset: Int, transferOffset: Int, stationKeepingOffset: Int, frameConversionOffset: Int) : Int {
             builder.startTable(17)
             addJACOBI(builder, jacobi)
@@ -276,7 +276,7 @@ class TBP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTBPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TBP")
-        fun finishSizePrefixedTBPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TBP")
+        fun finishTBPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TBP")
+        fun finishSizePrefixedTBPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TBP")
     }
 }

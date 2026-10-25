@@ -21,7 +21,7 @@ class NUMGaussMarkovResult extends Table
 
     public static function NUMGaussMarkovResultIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMGaussMarkovResultBufferHasIdentifier(ByteBuffer $buf)

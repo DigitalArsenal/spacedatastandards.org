@@ -20,7 +20,7 @@ class SCV extends Table
 
     public static function SCVIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVBufferHasIdentifier(ByteBuffer $buf)
@@ -200,6 +200,6 @@ class SCV extends Table
 
     public static function finishSCVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SCV");
+        $builder->finish($offset, '$SCV');
     }
 }

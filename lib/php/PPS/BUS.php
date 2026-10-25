@@ -21,7 +21,7 @@ class BUS extends Table
 
     public static function BUSIdentifier()
     {
-        return "$BUS";
+        return '$BUS';
     }
 
     public static function BUSBufferHasIdentifier(ByteBuffer $buf)
@@ -586,6 +586,6 @@ class BUS extends Table
 
     public static function finishBUSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BUS");
+        $builder->finish($offset, '$BUS');
     }
 }

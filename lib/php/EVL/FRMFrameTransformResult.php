@@ -20,7 +20,7 @@ class FRMFrameTransformResult extends Table
 
     public static function FRMFrameTransformResultIdentifier()
     {
-        return "$FRM";
+        return '$FRM';
     }
 
     public static function FRMFrameTransformResultBufferHasIdentifier(ByteBuffer $buf)

@@ -235,7 +235,7 @@ class MTI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MTIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MTI")
+        fun MTIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MTI")
         fun createMTI(builder: FlatBufferBuilder, idOffset: Int, standard: Byte, p3Offset: Int, p6Offset: Int, p7Offset: Int, p8Offset: Int, p9: UInt, p10: UShort, missionsOffset: Int, dwellsOffset: Int, hrrsOffset: Int, jobDefsOffset: Int, freeTextsOffset: Int, platformLocsOffset: Int, jobRequestsOffset: Int) : Int {
             builder.startTable(15)
             addJOBREQUESTS(builder, jobRequestsOffset)
@@ -331,7 +331,7 @@ class MTI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMTIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MTI")
-        fun finishSizePrefixedMTIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MTI")
+        fun finishMTIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MTI")
+        fun finishSizePrefixedMTIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MTI")
     }
 }

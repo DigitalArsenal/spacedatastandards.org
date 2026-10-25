@@ -21,7 +21,7 @@ class GJNPosition extends Table
 
     public static function GJNPositionIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNPositionBufferHasIdentifier(ByteBuffer $buf)

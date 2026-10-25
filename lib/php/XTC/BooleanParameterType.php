@@ -21,7 +21,7 @@ class BooleanParameterType extends Table
 
     public static function BooleanParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function BooleanParameterTypeBufferHasIdentifier(ByteBuffer $buf)

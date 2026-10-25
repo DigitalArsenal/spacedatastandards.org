@@ -21,7 +21,7 @@ class PRWExecutionRequest extends Table
 
     public static function PRWExecutionRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWExecutionRequestBufferHasIdentifier(ByteBuffer $buf)

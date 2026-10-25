@@ -21,7 +21,7 @@ class WKSQuery extends Table
 
     public static function WKSQueryIdentifier()
     {
-        return "$WKS";
+        return '$WKS';
     }
 
     public static function WKSQueryBufferHasIdentifier(ByteBuffer $buf)

@@ -35,7 +35,7 @@ class GNP extends Table
 
     public static function GNPIdentifier()
     {
-        return "$GNP";
+        return '$GNP';
     }
 
     public static function GNPBufferHasIdentifier(ByteBuffer $buf)
@@ -753,6 +753,6 @@ class GNP extends Table
 
     public static function finishGNPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GNP");
+        $builder->finish($offset, '$GNP');
     }
 }

@@ -22,7 +22,7 @@ class RFMObjectReferencedAxes extends Table
 
     public static function RFMObjectReferencedAxesIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function RFMObjectReferencedAxesBufferHasIdentifier(ByteBuffer $buf)

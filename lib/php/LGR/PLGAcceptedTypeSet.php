@@ -27,7 +27,7 @@ class PLGAcceptedTypeSet extends Table
 
     public static function PLGAcceptedTypeSetIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGAcceptedTypeSetBufferHasIdentifier(ByteBuffer $buf)

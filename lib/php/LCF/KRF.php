@@ -21,7 +21,7 @@ class KRF extends Table
 
     public static function KRFIdentifier()
     {
-        return "$KRF";
+        return '$KRF';
     }
 
     public static function KRFBufferHasIdentifier(ByteBuffer $buf)
@@ -277,6 +277,6 @@ class KRF extends Table
 
     public static function finishKRFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$KRF");
+        $builder->finish($offset, '$KRF');
     }
 }

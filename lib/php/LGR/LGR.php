@@ -21,7 +21,7 @@ class LGR extends Table
 
     public static function LGRIdentifier()
     {
-        return "$LGR";
+        return '$LGR';
     }
 
     public static function LGRBufferHasIdentifier(ByteBuffer $buf)
@@ -633,6 +633,6 @@ class LGR extends Table
 
     public static function finishLGRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LGR");
+        $builder->finish($offset, '$LGR');
     }
 }

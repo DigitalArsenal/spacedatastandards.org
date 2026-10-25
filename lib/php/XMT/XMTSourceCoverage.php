@@ -21,7 +21,7 @@ class XMTSourceCoverage extends Table
 
     public static function XMTSourceCoverageIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTSourceCoverageBufferHasIdentifier(ByteBuffer $buf)

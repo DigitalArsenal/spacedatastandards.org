@@ -195,7 +195,7 @@ class COT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun COTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$COT")
+        fun COTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$COT")
         fun createCOT(builder: FlatBufferBuilder, versionOffset: Int, uidOffset: Int, typeOffset: Int, how: Byte, timeOffset: Int, startOffset: Int, staleOffset: Int, accessOffset: Int, qosOffset: Int, opexOffset: Int, pointOffset: Int, detailOffset: Int) : Int {
             builder.startTable(12)
             addDETAIL(builder, detailOffset)
@@ -229,7 +229,7 @@ class COT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$COT")
-        fun finishSizePrefixedCOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$COT")
+        fun finishCOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$COT")
+        fun finishSizePrefixedCOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$COT")
     }
 }

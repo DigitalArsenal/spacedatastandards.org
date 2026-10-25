@@ -567,7 +567,7 @@ class REM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun REMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REM")
+        fun REMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$REM")
         fun createREM(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, timeSystemOffset: Int, refFrameOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, reentryDataOffset: Int, trajectoryOemOffset: Int, trajectoryOcmOffset: Int, atmosphereOffset: Int, hypersonicConditionsOffset: Int, propagatorNameOffset: Int, propagatorVersionOffset: Int, aerothermalModelOffset: Int, breakupModelOffset: Int, outcome: Byte, breakupMode: Byte, entryInterfaceEpochOffset: Int, entryInterfaceAltitudeM: Double, peakHeatingEpochOffset: Int, peakHeatFluxWPerM2: Double, peakDynamicPressureEpochOffset: Int, peakDynamicPressurePa: Double, peakDecelerationEpochOffset: Int, peakDecelerationG: Double, breakupEpochOffset: Int, breakupAltitudeM: Double, impactEpochOffset: Int, impactLatitudeDeg: Double, impactLongitudeDeg: Double, alongTrackUncertaintyM: Double, crossTrackUncertaintyM: Double, survivingMassKg: Double, survivingFragmentCount: UInt, survivalProbability: Double, casualtyExpectation: Double, groundRiskProbability: Double, minThermalMargin: Double, minStructuralMargin: Double, fragmentsOffset: Int, assumptionsOffset: Int, commentOffset: Int) : Int {
             builder.startTable(47)
             addMINSTRUCTURALMARGIN(builder, minStructuralMargin)
@@ -687,7 +687,7 @@ class REM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishREMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$REM")
-        fun finishSizePrefixedREMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$REM")
+        fun finishREMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$REM")
+        fun finishSizePrefixedREMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$REM")
     }
 }

@@ -21,7 +21,7 @@ class CRM extends Table
 
     public static function CRMIdentifier()
     {
-        return "$CRM";
+        return '$CRM';
     }
 
     public static function CRMBufferHasIdentifier(ByteBuffer $buf)
@@ -1618,6 +1618,6 @@ class CRM extends Table
 
     public static function finishCRMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CRM");
+        $builder->finish($offset, '$CRM');
     }
 }

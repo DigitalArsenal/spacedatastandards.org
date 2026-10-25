@@ -20,7 +20,7 @@ class ODRAttestation extends Table
 
     public static function ODRAttestationIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODRAttestationBufferHasIdentifier(ByteBuffer $buf)

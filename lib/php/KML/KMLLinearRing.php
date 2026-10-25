@@ -21,7 +21,7 @@ class KMLLinearRing extends Table
 
     public static function KMLLinearRingIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLLinearRingBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class OOD extends Table
 
     public static function OODIdentifier()
     {
-        return "$OOD";
+        return '$OOD';
     }
 
     public static function OODBufferHasIdentifier(ByteBuffer $buf)
@@ -997,6 +997,6 @@ class OOD extends Table
 
     public static function finishOODBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OOD");
+        $builder->finish($offset, '$OOD');
     }
 }

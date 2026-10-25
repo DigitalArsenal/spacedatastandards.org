@@ -21,7 +21,7 @@ class ACWResult extends Table
 
     public static function ACWResultIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWResultBufferHasIdentifier(ByteBuffer $buf)

@@ -121,7 +121,7 @@ class TAB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TABBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TAB")
+        fun TABBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TAB")
         fun createTAB(builder: FlatBufferBuilder, offset: UInt, size: UInt, alignment: UInt, wireFormat: UByte, typeRefOffset: Int, mutability: UByte, ownership: UByte, frameId: ULong, portIdOffset: Int) : Int {
             builder.startTable(9)
             addFRAMEID(builder, frameId)
@@ -149,7 +149,7 @@ class TAB : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTABBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TAB")
-        fun finishSizePrefixedTABBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TAB")
+        fun finishTABBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TAB")
+        fun finishSizePrefixedTABBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TAB")
     }
 }

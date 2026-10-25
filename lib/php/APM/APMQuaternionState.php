@@ -22,7 +22,7 @@ class APMQuaternionState extends Table
 
     public static function APMQuaternionStateIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMQuaternionStateBufferHasIdentifier(ByteBuffer $buf)

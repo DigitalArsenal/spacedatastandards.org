@@ -54,7 +54,7 @@ class RBK : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RBKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RBK")
+        fun RBKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RBK")
         fun createRBK(builder: FlatBufferBuilder, rigidBodyRequestOffset: Int, rigidBodyResultOffset: Int) : Int {
             builder.startTable(2)
             addRIGIDBODYRESULT(builder, rigidBodyResultOffset)
@@ -68,7 +68,7 @@ class RBK : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRBKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RBK")
-        fun finishSizePrefixedRBKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RBK")
+        fun finishRBKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RBK")
+        fun finishSizePrefixedRBKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RBK")
     }
 }

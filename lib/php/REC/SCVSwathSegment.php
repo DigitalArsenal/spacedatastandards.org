@@ -20,7 +20,7 @@ class SCVSwathSegment extends Table
 
     public static function SCVSwathSegmentIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVSwathSegmentBufferHasIdentifier(ByteBuffer $buf)

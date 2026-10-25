@@ -22,7 +22,7 @@ class SDF extends Table
 
     public static function SDFIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFBufferHasIdentifier(ByteBuffer $buf)
@@ -236,6 +236,6 @@ class SDF extends Table
 
     public static function finishSDFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SDF");
+        $builder->finish($offset, '$SDF');
     }
 }

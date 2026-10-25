@@ -21,7 +21,7 @@ class MST extends Table
 
     public static function MSTIdentifier()
     {
-        return "$MST";
+        return '$MST';
     }
 
     public static function MSTBufferHasIdentifier(ByteBuffer $buf)
@@ -1250,6 +1250,6 @@ class MST extends Table
 
     public static function finishMSTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MST");
+        $builder->finish($offset, '$MST');
     }
 }

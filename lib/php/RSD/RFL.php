@@ -21,7 +21,7 @@ class RFL extends Table
 
     public static function RFLIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLBufferHasIdentifier(ByteBuffer $buf)
@@ -3043,6 +3043,6 @@ class RFL extends Table
 
     public static function finishRFLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RFL");
+        $builder->finish($offset, '$RFL');
     }
 }

@@ -21,7 +21,7 @@ class VCMAtmosphericModelData extends Table
 
     public static function VCMAtmosphericModelDataIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function VCMAtmosphericModelDataBufferHasIdentifier(ByteBuffer $buf)

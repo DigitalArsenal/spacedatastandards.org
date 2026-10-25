@@ -232,7 +232,7 @@ class NAV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NAVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NAV")
+        fun NAVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NAV")
         fun createNAV(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, attitudeX: Double, attitudeY: Double, attitudeZ: Double, attitudeW: Double, omegaX: Double, omegaY: Double, omegaZ: Double, speedKnots: Float, heading: Float, course: Float, rudderAngle: Float, hullOffset: Int, propulsionOffset: Int, dcState: UByte, firesActive: UByte, floodingActive: UByte, crewCasualties: UByte, hullIntegrity: Float, powerAvailable: Float, weaponsOnline: UByte, sensorsOnline: UByte, reserved1: UShort, fuelRemaining: Float, ammoMain: UShort, missilesRemaining: UByte, torpedoesRemaining: UByte, vesselType: UByte, propulsionType: UByte, reservedOffset: Int) : Int {
             builder.startTable(35)
             addOMEGAZ(builder, omegaZ)
@@ -321,7 +321,7 @@ class NAV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NAV")
-        fun finishSizePrefixedNAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NAV")
+        fun finishNAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NAV")
+        fun finishSizePrefixedNAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NAV")
     }
 }

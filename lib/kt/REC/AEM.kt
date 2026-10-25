@@ -125,7 +125,7 @@ class AEM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun AEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AEM")
+        fun AEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$AEM")
         fun createAEM(builder: FlatBufferBuilder, ccsdsAemVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, segmentsOffset: Int, messageIdOffset: Int, commentOffset: Int, classificationOffset: Int) : Int {
             builder.startTable(7)
             addCLASSIFICATION(builder, classificationOffset)
@@ -165,7 +165,7 @@ class AEM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishAEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$AEM")
-        fun finishSizePrefixedAEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$AEM")
+        fun finishAEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$AEM")
+        fun finishSizePrefixedAEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$AEM")
     }
 }

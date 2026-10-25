@@ -32,7 +32,7 @@ class KMLTimeStamp : Table() {
     /**
      * Time (ISO 8601)
      */
-    val when : String?
+    val `when` : String?
         get() {
             val o = __offset(4)
             return if (o != 0) {
@@ -56,7 +56,7 @@ class KMLTimeStamp : Table() {
             return endKMLTimeStamp(builder)
         }
         fun startKMLTimeStamp(builder: FlatBufferBuilder) = builder.startTable(1)
-        fun addWHEN(builder: FlatBufferBuilder, when: Int) = builder.addOffset(0, when, 0)
+        fun addWHEN(builder: FlatBufferBuilder, `when`: Int) = builder.addOffset(0, `when`, 0)
         fun endKMLTimeStamp(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

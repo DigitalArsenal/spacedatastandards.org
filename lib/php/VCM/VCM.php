@@ -21,7 +21,7 @@ class VCM extends Table
 
     public static function VCMIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function VCMBufferHasIdentifier(ByteBuffer $buf)
@@ -768,6 +768,6 @@ class VCM extends Table
 
     public static function finishVCMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$VCM");
+        $builder->finish($offset, '$VCM');
     }
 }

@@ -21,7 +21,7 @@ class ATM extends Table
 
     public static function ATMIdentifier()
     {
-        return "$ATM";
+        return '$ATM';
     }
 
     public static function ATMBufferHasIdentifier(ByteBuffer $buf)
@@ -115,6 +115,6 @@ class ATM extends Table
 
     public static function finishATMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ATM");
+        $builder->finish($offset, '$ATM');
     }
 }

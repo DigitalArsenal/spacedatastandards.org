@@ -353,7 +353,7 @@ class ETM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ETMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ETM")
+        fun ETMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ETM")
         fun createETM(builder: FlatBufferBuilder, entityIdOffset: Int, nameOffset: Int, kind: Byte, subtypeOffset: Int, parentEntityIdOffset: Int, wasmHandle: UInt, noradCatId: UInt, objectNameOffset: Int, objectIdOffset: Int, catObjectNameOffset: Int, catObjectIdOffset: Int, facilityTypeOffset: Int, searchTextOffset: Int, ownerOffset: Int, statusCodeOffset: Int, launchDateOffset: Int, launchYearOffset: Int, orbitRegimeOffset: Int, period: Double, inclination: Double, apogee: Double, perigee: Double, meanMotion: Double, eccentricity: Double, bstar: Double, hasGp: Boolean, reservedOffset: Int) : Int {
             builder.startTable(27)
             addBSTAR(builder, bstar)
@@ -426,7 +426,7 @@ class ETM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishETMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ETM")
-        fun finishSizePrefixedETMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ETM")
+        fun finishETMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ETM")
+        fun finishSizePrefixedETMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ETM")
     }
 }

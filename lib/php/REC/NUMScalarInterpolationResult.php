@@ -21,7 +21,7 @@ class NUMScalarInterpolationResult extends Table
 
     public static function NUMScalarInterpolationResultIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMScalarInterpolationResultBufferHasIdentifier(ByteBuffer $buf)

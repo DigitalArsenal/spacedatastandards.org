@@ -237,7 +237,7 @@ class RPT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RPTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RPT")
+        fun RPTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RPT")
         fun createRPT(builder: FlatBufferBuilder, reportIdOffset: Int, templateIdOffset: Int, templateVersionOffset: Int, titleOffset: Int, sourceQueryOffset: Int, sourceDataHashOffset: Int, contentHashOffset: Int, contentTypeOffset: Int, contentCidOffset: Int, generatedAt: ULong, generatorModuleIdOffset: Int, generatorModuleVersionOffset: Int, creatorEpmCidOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(14)
             addGENERATEDAT(builder, generatedAt)
@@ -303,7 +303,7 @@ class RPT : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishRPTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RPT")
-        fun finishSizePrefixedRPTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RPT")
+        fun finishRPTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RPT")
+        fun finishSizePrefixedRPTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RPT")
     }
 }

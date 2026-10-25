@@ -22,7 +22,7 @@ class CQRLaunchCriterion extends Table
 
     public static function CQRLaunchCriterionIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRLaunchCriterionBufferHasIdentifier(ByteBuffer $buf)

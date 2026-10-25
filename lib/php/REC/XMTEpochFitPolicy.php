@@ -22,7 +22,7 @@ class XMTEpochFitPolicy extends Table
 
     public static function XMTEpochFitPolicyIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTEpochFitPolicyBufferHasIdentifier(ByteBuffer $buf)

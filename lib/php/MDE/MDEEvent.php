@@ -21,7 +21,7 @@ class MDEEvent extends Table
 
     public static function MDEEventIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEEventBufferHasIdentifier(ByteBuffer $buf)

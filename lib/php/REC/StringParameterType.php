@@ -21,7 +21,7 @@ class StringParameterType extends Table
 
     public static function StringParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function StringParameterTypeBufferHasIdentifier(ByteBuffer $buf)

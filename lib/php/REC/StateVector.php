@@ -20,7 +20,7 @@ class StateVector extends Table
 
     public static function StateVectorIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function StateVectorBufferHasIdentifier(ByteBuffer $buf)

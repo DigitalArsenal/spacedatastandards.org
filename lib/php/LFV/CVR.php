@@ -21,7 +21,7 @@ class CVR extends Table
 
     public static function CVRIdentifier()
     {
-        return "$CVR";
+        return '$CVR';
     }
 
     public static function CVRBufferHasIdentifier(ByteBuffer $buf)
@@ -463,6 +463,6 @@ class CVR extends Table
 
     public static function finishCVRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CVR");
+        $builder->finish($offset, '$CVR');
     }
 }

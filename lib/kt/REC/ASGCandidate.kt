@@ -29,8 +29,8 @@ class ASGCandidate : Table() {
         __init(_i, _bb)
         return this
     }
-    val object : ASGObjectRef? get() = object(ASGObjectRef())
-    fun object(obj: ASGObjectRef) : ASGObjectRef? {
+    val `object` : ASGObjectRef? get() = `object`(ASGObjectRef())
+    fun `object`(obj: ASGObjectRef) : ASGObjectRef? {
         val o = __offset(4)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -201,7 +201,7 @@ class ASGCandidate : Table() {
             return endASGCandidate(builder)
         }
         fun startASGCandidate(builder: FlatBufferBuilder) = builder.startTable(12)
-        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(0, object, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, `object`: Int) = builder.addOffset(0, `object`, 0)
         fun addD2(builder: FlatBufferBuilder, d2: Double) = builder.addDouble(1, d2, 0.0)
         fun addPVALUE(builder: FlatBufferBuilder, pValue: Double) = builder.addDouble(2, pValue, 0.0)
         fun addPOSTERIOR(builder: FlatBufferBuilder, posterior: Double) = builder.addDouble(3, posterior, 0.0)

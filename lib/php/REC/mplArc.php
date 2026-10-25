@@ -22,7 +22,7 @@ class mplArc extends Table
 
     public static function mplArcIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplArcBufferHasIdentifier(ByteBuffer $buf)

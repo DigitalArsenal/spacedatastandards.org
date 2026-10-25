@@ -21,7 +21,7 @@ class ERMPairStatistics extends Table
 
     public static function ERMPairStatisticsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMPairStatisticsBufferHasIdentifier(ByteBuffer $buf)

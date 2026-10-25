@@ -21,7 +21,7 @@ class ContainerSet extends Table
 
     public static function ContainerSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ContainerSetBufferHasIdentifier(ByteBuffer $buf)

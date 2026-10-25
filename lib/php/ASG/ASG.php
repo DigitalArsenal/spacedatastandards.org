@@ -21,7 +21,7 @@ class ASG extends Table
 
     public static function ASGIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGBufferHasIdentifier(ByteBuffer $buf)
@@ -145,6 +145,6 @@ class ASG extends Table
 
     public static function finishASGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ASG");
+        $builder->finish($offset, '$ASG');
     }
 }

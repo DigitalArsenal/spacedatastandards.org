@@ -21,7 +21,7 @@ class ERMNamedCount extends Table
 
     public static function ERMNamedCountIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMNamedCountBufferHasIdentifier(ByteBuffer $buf)

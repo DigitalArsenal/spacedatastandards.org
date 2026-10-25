@@ -21,7 +21,7 @@ class ERMAttachRecipe extends Table
 
     public static function ERMAttachRecipeIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMAttachRecipeBufferHasIdentifier(ByteBuffer $buf)

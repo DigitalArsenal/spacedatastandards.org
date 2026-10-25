@@ -21,7 +21,7 @@ class PCEStopReport extends Table
 
     public static function PCEStopReportIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEStopReportBufferHasIdentifier(ByteBuffer $buf)

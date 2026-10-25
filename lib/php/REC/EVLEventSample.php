@@ -21,7 +21,7 @@ class EVLEventSample extends Table
 
     public static function EVLEventSampleIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLEventSampleBufferHasIdentifier(ByteBuffer $buf)

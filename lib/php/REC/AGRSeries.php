@@ -21,7 +21,7 @@ class AGRSeries extends Table
 
     public static function AGRSeriesIdentifier()
     {
-        return "$AGR";
+        return '$AGR';
     }
 
     public static function AGRSeriesBufferHasIdentifier(ByteBuffer $buf)

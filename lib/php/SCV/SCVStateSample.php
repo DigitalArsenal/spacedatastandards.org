@@ -20,7 +20,7 @@ class SCVStateSample extends Table
 
     public static function SCVStateSampleIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVStateSampleBufferHasIdentifier(ByteBuffer $buf)

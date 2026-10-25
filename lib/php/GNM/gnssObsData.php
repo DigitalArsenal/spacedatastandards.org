@@ -21,7 +21,7 @@ class gnssObsData extends Table
 
     public static function gnssObsDataIdentifier()
     {
-        return "$GNO";
+        return '$GNO';
     }
 
     public static function gnssObsDataBufferHasIdentifier(ByteBuffer $buf)

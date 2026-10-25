@@ -21,7 +21,7 @@ class ACWRequest extends Table
 
     public static function ACWRequestIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWRequestBufferHasIdentifier(ByteBuffer $buf)

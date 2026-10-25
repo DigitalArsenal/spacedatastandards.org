@@ -21,7 +21,7 @@ class commsChannel extends Table
 
     public static function commsChannelIdentifier()
     {
-        return "$CMS";
+        return '$CMS';
     }
 
     public static function commsChannelBufferHasIdentifier(ByteBuffer $buf)

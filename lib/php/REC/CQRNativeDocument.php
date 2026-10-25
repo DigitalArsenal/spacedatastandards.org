@@ -24,7 +24,7 @@ class CQRNativeDocument extends Table
 
     public static function CQRNativeDocumentIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRNativeDocumentBufferHasIdentifier(ByteBuffer $buf)

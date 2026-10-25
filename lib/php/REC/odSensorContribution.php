@@ -21,7 +21,7 @@ class odSensorContribution extends Table
 
     public static function odSensorContributionIdentifier()
     {
-        return "$OBD";
+        return '$OBD';
     }
 
     public static function odSensorContributionBufferHasIdentifier(ByteBuffer $buf)

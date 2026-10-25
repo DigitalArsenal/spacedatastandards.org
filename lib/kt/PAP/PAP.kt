@@ -338,7 +338,7 @@ class PAP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PAPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PAP")
+        fun PAPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PAP")
         fun createPAP(builder: FlatBufferBuilder, papIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rfeIdOffset: Int, bemIdOffset: Int, hopScheduleIdOffset: Int, geometry: Byte, elementsOffset: Int, taper: Byte, taperParametersOffset: Int, steeringAzimuthDeg: Double, steeringElevationDeg: Double, steeringConeDeg: Double, steeringClockDeg: Double, scanLossDb: Double, peakGainDbi: Double, gainCutsOffset: Int, azimuth3DbBeamwidthDeg: Double, elevation3DbBeamwidthDeg: Double, firstSidelobeLevelDb: Double, peakSidelobeLevelDb: Double, gratingLobePresent: Boolean, gratingLobeAzimuthDegOffset: Int, gratingLobeElevationDegOffset: Int, nullsOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, expectedPeakGainDbi: Double, coherentGainLossDb: Double) : Int {
             builder.startTable(32)
             addCOHERENTGAINLOSSDB(builder, coherentGainLossDb)
@@ -485,7 +485,7 @@ class PAP : Table() {
                 builder.required(o, 62)
             return o
         }
-        fun finishPAPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PAP")
-        fun finishSizePrefixedPAPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PAP")
+        fun finishPAPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PAP")
+        fun finishSizePrefixedPAPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PAP")
     }
 }

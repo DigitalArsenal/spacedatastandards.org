@@ -23,7 +23,7 @@ class PCFMeanElementOptions extends Table
 
     public static function PCFMeanElementOptionsIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFMeanElementOptionsBufferHasIdentifier(ByteBuffer $buf)

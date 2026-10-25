@@ -21,7 +21,7 @@ class PRWBurnBoundary extends Table
 
     public static function PRWBurnBoundaryIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWBurnBoundaryBufferHasIdentifier(ByteBuffer $buf)

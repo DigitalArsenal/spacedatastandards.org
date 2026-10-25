@@ -21,7 +21,7 @@ class ACWStateSample extends Table
 
     public static function ACWStateSampleIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWStateSampleBufferHasIdentifier(ByteBuffer $buf)

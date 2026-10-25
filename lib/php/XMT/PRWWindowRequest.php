@@ -23,7 +23,7 @@ class PRWWindowRequest extends Table
 
     public static function PRWWindowRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWWindowRequestBufferHasIdentifier(ByteBuffer $buf)

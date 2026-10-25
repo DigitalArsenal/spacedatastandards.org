@@ -21,7 +21,7 @@ class RFO extends Table
 
     public static function RFOIdentifier()
     {
-        return "$RFO";
+        return '$RFO';
     }
 
     public static function RFOBufferHasIdentifier(ByteBuffer $buf)
@@ -1734,6 +1734,6 @@ class RFO extends Table
 
     public static function finishRFOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RFO");
+        $builder->finish($offset, '$RFO');
     }
 }

@@ -21,7 +21,7 @@ class GJNGeometry extends Table
 
     public static function GJNGeometryIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNGeometryBufferHasIdentifier(ByteBuffer $buf)

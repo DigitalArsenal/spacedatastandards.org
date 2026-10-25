@@ -20,7 +20,7 @@ class PSSProvenance extends Table
 
     public static function PSSProvenanceIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSProvenanceBufferHasIdentifier(ByteBuffer $buf)

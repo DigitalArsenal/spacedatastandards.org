@@ -20,7 +20,7 @@ class SLP extends Table
 
     public static function SLPIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPBufferHasIdentifier(ByteBuffer $buf)
@@ -417,6 +417,6 @@ class SLP extends Table
 
     public static function finishSLPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SLP");
+        $builder->finish($offset, '$SLP');
     }
 }

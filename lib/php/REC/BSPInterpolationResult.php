@@ -21,7 +21,7 @@ class BSPInterpolationResult extends Table
 
     public static function BSPInterpolationResultIdentifier()
     {
-        return "$BSP";
+        return '$BSP';
     }
 
     public static function BSPInterpolationResultBufferHasIdentifier(ByteBuffer $buf)

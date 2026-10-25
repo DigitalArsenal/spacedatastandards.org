@@ -21,7 +21,7 @@ class TRK extends Table
 
     public static function TRKIdentifier()
     {
-        return "$TRK";
+        return '$TRK';
     }
 
     public static function TRKBufferHasIdentifier(ByteBuffer $buf)
@@ -1611,6 +1611,6 @@ class TRK extends Table
 
     public static function finishTRKBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRK");
+        $builder->finish($offset, '$TRK');
     }
 }

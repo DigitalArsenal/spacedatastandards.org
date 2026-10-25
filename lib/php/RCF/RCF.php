@@ -21,7 +21,7 @@ class RCF extends Table
 
     public static function RCFIdentifier()
     {
-        return "$RCF";
+        return '$RCF';
     }
 
     public static function RCFBufferHasIdentifier(ByteBuffer $buf)
@@ -298,6 +298,6 @@ class RCF extends Table
 
     public static function finishRCFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RCF");
+        $builder->finish($offset, '$RCF');
     }
 }

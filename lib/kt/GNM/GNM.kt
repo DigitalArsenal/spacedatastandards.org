@@ -238,7 +238,7 @@ class GNM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GNMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GNM")
+        fun GNMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GNM")
         fun createGNM(builder: FlatBufferBuilder, satelliteIdOffset: Int, constellation: Byte, messageType: Byte, timeSystemOffset: Int, tocOffset: Int, clockBias: Double, clockDrift: Double, clockDriftRate: Double, transmissionTime: Double, health: UInt, hasHealth: Boolean, accuracy: Double, accuracyIndex: Int, hasAccuracyIndex: Boolean, groupDelaysOffset: Int, groupDelayNamesOffset: Int, keplerianOffset: Int, stateOffset: Int, dataSources: UInt) : Int {
             builder.startTable(19)
             addACCURACY(builder, accuracy)
@@ -302,7 +302,7 @@ class GNM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GNM")
-        fun finishSizePrefixedGNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GNM")
+        fun finishGNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GNM")
+        fun finishSizePrefixedGNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GNM")
     }
 }

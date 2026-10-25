@@ -22,7 +22,7 @@ class ERMAgeBin extends Table
 
     public static function ERMAgeBinIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMAgeBinBufferHasIdentifier(ByteBuffer $buf)

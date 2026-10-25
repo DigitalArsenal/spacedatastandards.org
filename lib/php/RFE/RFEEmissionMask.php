@@ -22,7 +22,7 @@ class RFEEmissionMask extends Table
 
     public static function RFEEmissionMaskIdentifier()
     {
-        return "$RFE";
+        return '$RFE';
     }
 
     public static function RFEEmissionMaskBufferHasIdentifier(ByteBuffer $buf)

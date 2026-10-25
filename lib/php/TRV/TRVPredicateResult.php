@@ -21,7 +21,7 @@ class TRVPredicateResult extends Table
 
     public static function TRVPredicateResultIdentifier()
     {
-        return "$TRV";
+        return '$TRV';
     }
 
     public static function TRVPredicateResultBufferHasIdentifier(ByteBuffer $buf)

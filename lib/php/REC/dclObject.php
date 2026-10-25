@@ -21,7 +21,7 @@ class dclObject extends Table
 
     public static function dclObjectIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclObjectBufferHasIdentifier(ByteBuffer $buf)

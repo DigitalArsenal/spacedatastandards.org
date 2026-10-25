@@ -20,7 +20,7 @@ class RFMCoordinateSystemWrapper extends Table
 
     public static function RFMCoordinateSystemWrapperIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function RFMCoordinateSystemWrapperBufferHasIdentifier(ByteBuffer $buf)

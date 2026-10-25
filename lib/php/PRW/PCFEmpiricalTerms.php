@@ -23,7 +23,7 @@ class PCFEmpiricalTerms extends Table
 
     public static function PCFEmpiricalTermsIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFEmpiricalTermsBufferHasIdentifier(ByteBuffer $buf)

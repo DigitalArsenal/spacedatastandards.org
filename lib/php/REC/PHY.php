@@ -21,7 +21,7 @@ class PHY extends Table
 
     public static function PHYIdentifier()
     {
-        return "$PHY";
+        return '$PHY';
     }
 
     public static function PHYBufferHasIdentifier(ByteBuffer $buf)
@@ -311,6 +311,6 @@ class PHY extends Table
 
     public static function finishPHYBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PHY");
+        $builder->finish($offset, '$PHY');
     }
 }

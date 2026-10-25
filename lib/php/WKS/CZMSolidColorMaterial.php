@@ -21,7 +21,7 @@ class CZMSolidColorMaterial extends Table
 
     public static function CZMSolidColorMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMSolidColorMaterialBufferHasIdentifier(ByteBuffer $buf)

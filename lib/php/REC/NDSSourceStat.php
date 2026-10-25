@@ -22,7 +22,7 @@ class NDSSourceStat extends Table
 
     public static function NDSSourceStatIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSSourceStatBufferHasIdentifier(ByteBuffer $buf)

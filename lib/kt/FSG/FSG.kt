@@ -217,7 +217,7 @@ class FSG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FSGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FSG")
+        fun FSGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FSG")
         fun createFSG(builder: FlatBufferBuilder, selfOffset: ULong, previous: ULong, feedId: UInt, kind: UByte, level: UByte, minSeq: ULong, maxSeq: ULong, coversThrough: ULong, replacesOffset: Int, entriesOffset: Int, latestOffset: Int, instancesOffset: Int, tokensOffset: Int, pairsOffset: Int, columnOffset: Int, instanceUrlIdsOffset: Int) : Int {
             builder.startTable(16)
             addCOVERSTHROUGH(builder, coversThrough)
@@ -305,7 +305,7 @@ class FSG : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFSGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FSG")
-        fun finishSizePrefixedFSGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FSG")
+        fun finishFSGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FSG")
+        fun finishSizePrefixedFSGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FSG")
     }
 }

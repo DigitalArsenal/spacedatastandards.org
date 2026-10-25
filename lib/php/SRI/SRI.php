@@ -23,7 +23,7 @@ class SRI extends Table
 
     public static function SRIIdentifier()
     {
-        return "$SRI";
+        return '$SRI';
     }
 
     public static function SRIBufferHasIdentifier(ByteBuffer $buf)
@@ -399,6 +399,6 @@ class SRI extends Table
 
     public static function finishSRIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SRI");
+        $builder->finish($offset, '$SRI');
     }
 }

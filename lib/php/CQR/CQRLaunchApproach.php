@@ -22,7 +22,7 @@ class CQRLaunchApproach extends Table
 
     public static function CQRLaunchApproachIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRLaunchApproachBufferHasIdentifier(ByteBuffer $buf)

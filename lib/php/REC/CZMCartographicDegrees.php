@@ -21,7 +21,7 @@ class CZMCartographicDegrees extends Table
 
     public static function CZMCartographicDegreesIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMCartographicDegreesBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class EPFContributor extends Table
 
     public static function EPFContributorIdentifier()
     {
-        return "$EPF";
+        return '$EPF';
     }
 
     public static function EPFContributorBufferHasIdentifier(ByteBuffer $buf)

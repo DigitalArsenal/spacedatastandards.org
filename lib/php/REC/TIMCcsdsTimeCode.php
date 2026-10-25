@@ -21,7 +21,7 @@ class TIMCcsdsTimeCode extends Table
 
     public static function TIMCcsdsTimeCodeIdentifier()
     {
-        return "$TIM";
+        return '$TIM';
     }
 
     public static function TIMCcsdsTimeCodeBufferHasIdentifier(ByteBuffer $buf)

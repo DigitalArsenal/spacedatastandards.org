@@ -354,7 +354,7 @@ class GST : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GST")
+        fun GSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GST")
         fun createGST(builder: FlatBufferBuilder, stationIdOffset: Int, nameOffset: Int, network: UByte, domesNumberOffset: Int, cdpNumberOffset: Int, frameRealization: UByte, frameRealizationNameOffset: Int, referenceEpochOffset: Int, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, positionSigmaX: Double, positionSigmaY: Double, positionSigmaZ: Double, antennaAxisType: UByte, axisOffsetM: Double, eccentricityX: Double, eccentricityY: Double, eccentricityZ: Double, eccentricityFrameOffset: Int, transmitBandsOffset: Int, receiveBandsOffset: Int, clockOffsetS: Double, clockRateSPerS: Double, clockTimeScaleOffset: Int, validFromOffset: Int, validToOffset: Int, sourceOffset: Int) : Int {
             builder.startTable(31)
             addCLOCKRATESPERS(builder, clockRateSPerS)
@@ -443,7 +443,7 @@ class GST : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishGSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GST")
-        fun finishSizePrefixedGSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GST")
+        fun finishGSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GST")
+        fun finishSizePrefixedGSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GST")
     }
 }

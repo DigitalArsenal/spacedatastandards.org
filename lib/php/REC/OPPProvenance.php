@@ -28,7 +28,7 @@ class OPPProvenance extends Table
 
     public static function OPPProvenanceIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPProvenanceBufferHasIdentifier(ByteBuffer $buf)

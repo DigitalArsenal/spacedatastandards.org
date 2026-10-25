@@ -368,7 +368,7 @@ class GLX : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GLXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GLX")
+        fun GLXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GLX")
         fun createGLX(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, designationsOffset: Int, raDeg: Double, decDeg: Double, csoIdOffset: Int, distanceMpc: Double, distanceUncMpc: Double, distanceMethod: UByte, distanceRefOffset: Int, helioVelocityKms: Double, redshift: Double, isophotalMajorArcmin: Double, isophoteBandOffset: Int, isophoteLevel: Double, axisRatio: Double, paDeg: Double, inclinationDeg: Double, tType: Double, hubbleClassOffset: Int, barOffset: Int, bTotalMag: Double, kTotalMag: Double, groupIdOffset: Int, localGroupMember: UByte, sourceCatalogOffset: Int, citationOffset: Int, licenseOffset: Int, redshiftUnc: Double, redshiftKind: UByte, redshiftFrame: UByte, sourceClass: UByte, surveyOffset: Int, releaseOffset: Int, targetSampleOffset: Int, comovingDistanceMpc: Double, lightTravelDistanceMpc: Double, cosmologyIdOffset: Int) : Int {
             builder.startTable(38)
             addLIGHTTRAVELDISTANCEMPC(builder, lightTravelDistanceMpc)
@@ -463,7 +463,7 @@ class GLX : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishGLXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GLX")
-        fun finishSizePrefixedGLXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GLX")
+        fun finishGLXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GLX")
+        fun finishSizePrefixedGLXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GLX")
     }
 }

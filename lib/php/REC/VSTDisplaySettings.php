@@ -21,7 +21,7 @@ class VSTDisplaySettings extends Table
 
     public static function VSTDisplaySettingsIdentifier()
     {
-        return "$VST";
+        return '$VST';
     }
 
     public static function VSTDisplaySettingsBufferHasIdentifier(ByteBuffer $buf)

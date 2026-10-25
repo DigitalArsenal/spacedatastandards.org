@@ -21,7 +21,7 @@ class MTI extends Table
 
     public static function MTIIdentifier()
     {
-        return "$MTI";
+        return '$MTI';
     }
 
     public static function MTIBufferHasIdentifier(ByteBuffer $buf)
@@ -611,6 +611,6 @@ class MTI extends Table
 
     public static function finishMTIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MTI");
+        $builder->finish($offset, '$MTI');
     }
 }

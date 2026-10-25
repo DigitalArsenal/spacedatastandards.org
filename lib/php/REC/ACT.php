@@ -21,7 +21,7 @@ class ACT extends Table
 
     public static function ACTIdentifier()
     {
-        return "$ACT";
+        return '$ACT';
     }
 
     public static function ACTBufferHasIdentifier(ByteBuffer $buf)
@@ -526,6 +526,6 @@ class ACT extends Table
 
     public static function finishACTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ACT");
+        $builder->finish($offset, '$ACT');
     }
 }

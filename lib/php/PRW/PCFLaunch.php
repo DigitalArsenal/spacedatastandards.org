@@ -22,7 +22,7 @@ class PCFLaunch extends Table
 
     public static function PCFLaunchIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFLaunchBufferHasIdentifier(ByteBuffer $buf)

@@ -281,7 +281,7 @@ class LND : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LNDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LND")
+        fun LNDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LND")
         fun createLND(builder: FlatBufferBuilder, idOffset: Int, eventIdOffset: Int, detectionType: Byte, messageTypeOffset: Int, launchTimeOffset: Int, launchLatitude: Double, launchLongitude: Double, launchAzimuth: Double, raan: Double, inclination: Double, observationTimeOffset: Int, observationLatitude: Double, observationLongitude: Double, observationAltitude: Double, stereoFlag: Boolean, highZenithAzimuth: Boolean, sequenceNumber: UShort, launchSiteIdOffset: Int, launchVehicleOffset: Int, trajectoryTypeOffset: Int, confidence: Double, descriptorOffset: Int, tagsOffset: Int) : Int {
             builder.startTable(23)
             addCONFIDENCE(builder, confidence)
@@ -345,7 +345,7 @@ class LND : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LND")
-        fun finishSizePrefixedLNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LND")
+        fun finishLNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LND")
+        fun finishSizePrefixedLNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LND")
     }
 }

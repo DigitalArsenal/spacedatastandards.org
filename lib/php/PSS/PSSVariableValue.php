@@ -20,7 +20,7 @@ class PSSVariableValue extends Table
 
     public static function PSSVariableValueIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSVariableValueBufferHasIdentifier(ByteBuffer $buf)

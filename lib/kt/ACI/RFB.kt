@@ -307,7 +307,7 @@ class RFB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RFBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFB")
+        fun RFBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFB")
         fun createRFB(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, band: Byte, modeOffset: Int, purposeOffset: Int, freqMin: Double, freqMax: Double, centerFreq: Double, bandwidth: Double, peakGain: Double, edgeGain: Double, beamwidth: Double, polarization: Byte, erp: Double, eirp: Double, noradCatId: UInt, idTransmitterOffset: Int, linkDirection: Byte, baud: Double, serviceOffset: Int, xmtStatus: Byte, invert: Boolean, iaruCoordinationOffset: Int, citationOffset: Int) : Int {
             builder.startTable(25)
             addBAUD(builder, baud)
@@ -367,7 +367,7 @@ class RFB : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRFBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RFB")
-        fun finishSizePrefixedRFBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RFB")
+        fun finishRFBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RFB")
+        fun finishSizePrefixedRFBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RFB")
     }
 }

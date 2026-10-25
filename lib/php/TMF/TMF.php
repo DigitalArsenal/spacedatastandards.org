@@ -21,7 +21,7 @@ class TMF extends Table
 
     public static function TMFIdentifier()
     {
-        return "$TMF";
+        return '$TMF';
     }
 
     public static function TMFBufferHasIdentifier(ByteBuffer $buf)
@@ -451,6 +451,6 @@ class TMF extends Table
 
     public static function finishTMFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TMF");
+        $builder->finish($offset, '$TMF');
     }
 }

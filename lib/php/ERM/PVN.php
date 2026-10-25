@@ -21,7 +21,7 @@ class PVN extends Table
 
     public static function PVNIdentifier()
     {
-        return "$PVN";
+        return '$PVN';
     }
 
     public static function PVNBufferHasIdentifier(ByteBuffer $buf)
@@ -232,6 +232,6 @@ class PVN extends Table
 
     public static function finishPVNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PVN");
+        $builder->finish($offset, '$PVN');
     }
 }

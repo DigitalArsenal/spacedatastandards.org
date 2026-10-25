@@ -695,7 +695,7 @@ class SOI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SOIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SOI")
+        fun SOIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SOI")
         fun createSOI(builder: FlatBufferBuilder, idOffset: Int, msgCreateDateOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, sensorAsIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, satelliteNameOffset: Int, uct: Boolean, senlat: Double, senlon: Double, senalt: Double, senx: Double, seny: Double, senz: Double, senvelx: Double, senvely: Double, senvelz: Double, senReferenceFrameOffset: Int, obsType: Byte, collectionMode: Byte, startTimeOffset: Int, endTimeOffset: Int, numObs: UInt, referenceFrameOffset: Int, polarAngleStart: Double, polarAngleEnd: Double, losDeclinationStart: Double, losDeclinationEnd: Double, pointingAngleAzStart: Double, pointingAngleAzEnd: Double, pointingAngleElStart: Double, pointingAngleElEnd: Double, pixelArrayWidth: UShort, pixelArrayHeight: UShort, numSpectralFilters: UByte, spectralFiltersOffset: Int, gain: Double, binningHoriz: UByte, binningVert: UByte, solarMag: Double, pixelMin: Int, pixelMax: Int, softwareVersionOffset: Int, starCatNameOffset: Int, corrQuality: Double, calibrationType: Byte, validCalibrationsOffset: Int, percentSatThreshold: Double, changeDetected: Boolean, periodicityChangeDetected: Boolean, brightnessVarianceChangeDetected: Boolean, solarPhaseAngleBrightnessChangeDetected: Boolean, changeConfOffset: Int, collectionDensityConfOffset: Int, periodicitySamplingConfOffset: Int, periodicityDetectionConfOffset: Int, collectionIdOffset: Int, calibrationsOffset: Int, tagsOffset: Int, transactionIdOffset: Int, opticalSoiobservationListOffset: Int, radarSoiobservationListOffset: Int) : Int {
             builder.startTable(63)
             addPERCENTSATTHRESHOLD(builder, percentSatThreshold)
@@ -871,7 +871,7 @@ class SOI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SOI")
-        fun finishSizePrefixedSOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SOI")
+        fun finishSOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SOI")
+        fun finishSizePrefixedSOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SOI")
     }
 }

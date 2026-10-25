@@ -135,7 +135,7 @@ class SCC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCC")
+        fun SCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCC")
         fun createSCC(builder: FlatBufferBuilder, messageKind: Byte, traceIdOffset: Int, scenariosOffset: Int, scenarioOffset: Int, requestStateOffset: Int, stateResponseOffset: Int, assetPickerOffset: Int, readyOffset: Int) : Int {
             builder.startTable(8)
             addREADY(builder, readyOffset)
@@ -169,7 +169,7 @@ class SCC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SCC")
-        fun finishSizePrefixedSCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SCC")
+        fun finishSCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SCC")
+        fun finishSizePrefixedSCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SCC")
     }
 }

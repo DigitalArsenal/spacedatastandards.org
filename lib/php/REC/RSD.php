@@ -21,7 +21,7 @@ class RSD extends Table
 
     public static function RSDIdentifier()
     {
-        return "$RSD";
+        return '$RSD';
     }
 
     public static function RSDBufferHasIdentifier(ByteBuffer $buf)
@@ -992,6 +992,6 @@ class RSD extends Table
 
     public static function finishRSDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RSD");
+        $builder->finish($offset, '$RSD');
     }
 }

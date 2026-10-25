@@ -35,7 +35,7 @@ class BPFAttestation extends Table
 
     public static function BPFAttestationIdentifier()
     {
-        return "$BPF";
+        return '$BPF';
     }
 
     public static function BPFAttestationBufferHasIdentifier(ByteBuffer $buf)

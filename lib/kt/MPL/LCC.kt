@@ -105,7 +105,7 @@ class LCC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCC")
+        fun LCCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LCC")
         fun createLCC(builder: FlatBufferBuilder, owner: UByte, nameOffset: Int, descriptionOffset: Int, active: Boolean, sourceUrlOffset: Int, retrievedAtOffset: Int) : Int {
             builder.startTable(6)
             addRETRIEVEDAT(builder, retrievedAtOffset)
@@ -127,7 +127,7 @@ class LCC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LCC")
-        fun finishSizePrefixedLCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LCC")
+        fun finishLCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LCC")
+        fun finishSizePrefixedLCCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LCC")
     }
 }

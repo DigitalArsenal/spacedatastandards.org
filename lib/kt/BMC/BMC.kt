@@ -133,7 +133,7 @@ class BMC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BMCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BMC")
+        fun BMCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BMC")
         fun createBMC(builder: FlatBufferBuilder, idOffset: Int, typeOffset: Int, contourIdx: Int, gain: Double, regionNameOffset: Int, geographyOffset: Int, geographyTextOffset: Int, geographyJsonOffset: Int, geographyTypeOffset: Int, geographyNdims: Int, geographySrid: Int) : Int {
             builder.startTable(11)
             addGAIN(builder, gain)
@@ -165,7 +165,7 @@ class BMC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishBMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BMC")
-        fun finishSizePrefixedBMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BMC")
+        fun finishBMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BMC")
+        fun finishSizePrefixedBMCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BMC")
     }
 }

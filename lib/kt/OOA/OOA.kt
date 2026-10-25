@@ -226,7 +226,7 @@ class OOA : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOA")
+        fun OOABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOA")
         fun createOOA(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idAntennaOffset: Int, nameOffset: Int, antennaTypeOffset: Int, quantity: UInt, bandOffset: Int, freqMin: Double, freqMax: Double, gain: Double, aperture: Double, beamwidth: Double, polarizationOffset: Int, steerable: Boolean, slewRate: Double, purposeOffset: Int, notesOffset: Int) : Int {
             builder.startTable(17)
             addSLEWRATE(builder, slewRate)
@@ -270,7 +270,7 @@ class OOA : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOA")
-        fun finishSizePrefixedOOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOA")
+        fun finishOOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOA")
+        fun finishSizePrefixedOOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOA")
     }
 }

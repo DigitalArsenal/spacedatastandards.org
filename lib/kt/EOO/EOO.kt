@@ -1293,7 +1293,7 @@ class EOO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOO")
+        fun EOOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EOO")
         fun startEOO(builder: FlatBufferBuilder) = builder.startTable(139)
         fun addID(builder: FlatBufferBuilder, id: Int) = builder.addOffset(0, id, 0)
         fun addCLASSIFICATION(builder: FlatBufferBuilder, classification: Int) = builder.addOffset(1, classification, 0)
@@ -1438,7 +1438,7 @@ class EOO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEOOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EOO")
-        fun finishSizePrefixedEOOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EOO")
+        fun finishEOOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EOO")
+        fun finishSizePrefixedEOOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EOO")
     }
 }

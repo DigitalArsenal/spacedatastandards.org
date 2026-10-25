@@ -21,7 +21,7 @@ class AEM extends Table
 
     public static function AEMIdentifier()
     {
-        return "$AEM";
+        return '$AEM';
     }
 
     public static function AEMBufferHasIdentifier(ByteBuffer $buf)
@@ -269,6 +269,6 @@ class AEM extends Table
 
     public static function finishAEMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$AEM");
+        $builder->finish($offset, '$AEM');
     }
 }

@@ -51,7 +51,7 @@ class FRM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FRMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FRM")
+        fun FRMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FRM")
         fun createFRM(builder: FlatBufferBuilder, frameTransformRequestOffset: Int, frameTransformResultOffset: Int) : Int {
             builder.startTable(2)
             addFRAMETRANSFORMRESULT(builder, frameTransformResultOffset)
@@ -65,7 +65,7 @@ class FRM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FRM")
-        fun finishSizePrefixedFRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FRM")
+        fun finishFRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FRM")
+        fun finishSizePrefixedFRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FRM")
     }
 }

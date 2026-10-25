@@ -20,7 +20,7 @@ class TRHHardwareRef extends Table
 
     public static function TRHHardwareRefIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHHardwareRefBufferHasIdentifier(ByteBuffer $buf)

@@ -29,7 +29,7 @@ class PINRule : Table() {
         __init(_i, _bb)
         return this
     }
-    val class : UByte
+    val `class` : UByte
         get() {
             val o = __offset(4)
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
@@ -87,18 +87,18 @@ class PINRule : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPINRule(builder: FlatBufferBuilder, class: UByte, feedOffset: Int, enabled: Boolean, locked: Boolean, pinnedRoots: ULong, pinnedBytes: ULong) : Int {
+        fun createPINRule(builder: FlatBufferBuilder, `class`: UByte, feedOffset: Int, enabled: Boolean, locked: Boolean, pinnedRoots: ULong, pinnedBytes: ULong) : Int {
             builder.startTable(6)
             addPINNEDBYTES(builder, pinnedBytes)
             addPINNEDROOTS(builder, pinnedRoots)
             addFEED(builder, feedOffset)
             addLOCKED(builder, locked)
             addENABLED(builder, enabled)
-            addCLASS(builder, class)
+            addCLASS(builder, `class`)
             return endPINRule(builder)
         }
         fun startPINRule(builder: FlatBufferBuilder) = builder.startTable(6)
-        fun addCLASS(builder: FlatBufferBuilder, class: UByte) = builder.addByte(0, class.toByte(), 0)
+        fun addCLASS(builder: FlatBufferBuilder, `class`: UByte) = builder.addByte(0, `class`.toByte(), 0)
         fun addFEED(builder: FlatBufferBuilder, feed: Int) = builder.addOffset(1, feed, 0)
         fun addENABLED(builder: FlatBufferBuilder, enabled: Boolean) = builder.addBoolean(2, enabled, false)
         fun addLOCKED(builder: FlatBufferBuilder, locked: Boolean) = builder.addBoolean(3, locked, false)

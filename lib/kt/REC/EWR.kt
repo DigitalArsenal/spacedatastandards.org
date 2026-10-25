@@ -118,7 +118,7 @@ class EWR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EWRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EWR")
+        fun EWRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EWR")
         fun createEWR(builder: FlatBufferBuilder, systemId: UInt, entityId: UInt, esmActive: Boolean, ecmActive: Boolean, rwrActive: Boolean, esmContactsOffset: Int, activeJammingOffset: Int, countermeasuresOffset: Int, threatWarningsOffset: Int, emconLevel: UByte, lastUpdateMs: Long) : Int {
             builder.startTable(11)
             addLASTUPDATEMS(builder, lastUpdateMs)
@@ -174,7 +174,7 @@ class EWR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EWR")
-        fun finishSizePrefixedEWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EWR")
+        fun finishEWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EWR")
+        fun finishSizePrefixedEWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EWR")
     }
 }

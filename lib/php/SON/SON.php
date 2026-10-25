@@ -21,7 +21,7 @@ class SON extends Table
 
     public static function SONIdentifier()
     {
-        return "$SON";
+        return '$SON';
     }
 
     public static function SONBufferHasIdentifier(ByteBuffer $buf)
@@ -209,6 +209,6 @@ class SON extends Table
 
     public static function finishSONBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SON");
+        $builder->finish($offset, '$SON');
     }
 }

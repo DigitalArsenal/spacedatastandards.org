@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../FCK/main_generated.dart';
+import '../FMB/main_generated.dart';
 
 ///  FlatSQL Segment.
 ///
@@ -72,18 +73,15 @@ class FSGPairObjectBuilder extends fb.ObjectBuilder {
   final int _ROW_REF;
 
   FSGPairObjectBuilder({
-    int KEY_HI,
-    int? keyHi,
-    int KEY_LO,
-    int? keyLo,
+    required int KEY_HI,
+    required int KEY_LO,
     required int RID,
-    int ROW_REF,
-    int? rowRef,
+    required int ROW_REF,
   })
-      : _KEY_HI = keyHi ?? KEY_HI,
-        _KEY_LO = keyLo ?? KEY_LO,
+      : _KEY_HI = KEY_HI,
+        _KEY_LO = KEY_LO,
         _RID = RID,
-        _ROW_REF = rowRef ?? ROW_REF;
+        _ROW_REF = ROW_REF;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -161,19 +159,17 @@ class FSGLatestObjectBuilder extends fb.ObjectBuilder {
   final int _ROW_REF;
 
   FSGLatestObjectBuilder({
-    int OBJECT_KEY_ID,
-    int? objectKeyId,
+    required int OBJECT_KEY_ID,
     required int RESERVED,
     required int EPOCH,
     required int RID,
-    int ROW_REF,
-    int? rowRef,
+    required int ROW_REF,
   })
-      : _OBJECT_KEY_ID = objectKeyId ?? OBJECT_KEY_ID,
+      : _OBJECT_KEY_ID = OBJECT_KEY_ID,
         _RESERVED = RESERVED,
         _EPOCH = EPOCH,
         _RID = RID,
-        _ROW_REF = rowRef ?? ROW_REF;
+        _ROW_REF = ROW_REF;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -279,39 +275,31 @@ class FSGInstanceObjectBuilder extends fb.ObjectBuilder {
   final int _MAX_TS;
 
   FSGInstanceObjectBuilder({
-    int BATCH_ID,
-    int? batchId,
-    int CONTENT_KEY_ID,
-    int? contentKeyId,
+    required int BATCH_ID,
+    required int CONTENT_KEY_ID,
     required int RECORDS,
     required int BYTES,
-    int MIN_W,
-    int? minW,
-    int MAX_W,
-    int? maxW,
-    int MIN_SEQ,
-    int? minSeq,
-    int MAX_SEQ,
-    int? maxSeq,
+    required int MIN_W,
+    required int MAX_W,
+    required int MIN_SEQ,
+    required int MAX_SEQ,
     required int FIRST,
     required int UPDATED,
-    int MAX_AT,
-    int? maxAt,
-    int MAX_TS,
-    int? maxTs,
+    required int MAX_AT,
+    required int MAX_TS,
   })
-      : _BATCH_ID = batchId ?? BATCH_ID,
-        _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
+      : _BATCH_ID = BATCH_ID,
+        _CONTENT_KEY_ID = CONTENT_KEY_ID,
         _RECORDS = RECORDS,
         _BYTES = BYTES,
-        _MIN_W = minW ?? MIN_W,
-        _MAX_W = maxW ?? MAX_W,
-        _MIN_SEQ = minSeq ?? MIN_SEQ,
-        _MAX_SEQ = maxSeq ?? MAX_SEQ,
+        _MIN_W = MIN_W,
+        _MAX_W = MAX_W,
+        _MIN_SEQ = MIN_SEQ,
+        _MAX_SEQ = MAX_SEQ,
         _FIRST = FIRST,
         _UPDATED = UPDATED,
-        _MAX_AT = maxAt ?? MAX_AT,
-        _MAX_TS = maxTs ?? MAX_TS;
+        _MAX_AT = MAX_AT,
+        _MAX_TS = MAX_TS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -527,8 +515,8 @@ class FSGObjectBuilder extends fb.ObjectBuilder {
         _FEED_ID = feedId ?? FEED_ID,
         _KIND = KIND,
         _LEVEL = LEVEL,
-        _MIN_SEQ = minSeq ?? MIN_SEQ,
-        _MAX_SEQ = maxSeq ?? MAX_SEQ,
+        _MIN_SEQ = MIN_SEQ,
+        _MAX_SEQ = MAX_SEQ,
         _COVERS_THROUGH = coversThrough ?? COVERS_THROUGH,
         _REPLACES = REPLACES,
         _ENTRIES = ENTRIES,

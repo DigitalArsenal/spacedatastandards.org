@@ -21,7 +21,7 @@ class GPXRoute extends Table
 
     public static function GPXRouteIdentifier()
     {
-        return "$GPX";
+        return '$GPX';
     }
 
     public static function GPXRouteBufferHasIdentifier(ByteBuffer $buf)

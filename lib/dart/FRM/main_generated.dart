@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../RFM/main_generated.dart';
 
 ///  Operations this record can request. Values 1-4 are the original
 ///  position-only planet-centred-inertial / planet-centred-fixed / geodetic

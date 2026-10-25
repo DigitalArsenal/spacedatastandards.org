@@ -32,7 +32,7 @@ class QEM extends Table
 
     public static function QEMIdentifier()
     {
-        return "$QEM";
+        return '$QEM';
     }
 
     public static function QEMBufferHasIdentifier(ByteBuffer $buf)
@@ -319,6 +319,6 @@ class QEM extends Table
 
     public static function finishQEMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$QEM");
+        $builder->finish($offset, '$QEM');
     }
 }

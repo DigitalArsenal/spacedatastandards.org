@@ -21,7 +21,7 @@ class DFH extends Table
 
     public static function DFHIdentifier()
     {
-        return "$DFH";
+        return '$DFH';
     }
 
     public static function DFHBufferHasIdentifier(ByteBuffer $buf)
@@ -401,6 +401,6 @@ class DFH extends Table
 
     public static function finishDFHBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DFH");
+        $builder->finish($offset, '$DFH');
     }
 }

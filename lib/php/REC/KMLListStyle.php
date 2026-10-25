@@ -21,7 +21,7 @@ class KMLListStyle extends Table
 
     public static function KMLListStyleIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLListStyleBufferHasIdentifier(ByteBuffer $buf)

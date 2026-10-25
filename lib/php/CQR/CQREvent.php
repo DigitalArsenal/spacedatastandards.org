@@ -21,7 +21,7 @@ class CQREvent extends Table
 
     public static function CQREventIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQREventBufferHasIdentifier(ByteBuffer $buf)

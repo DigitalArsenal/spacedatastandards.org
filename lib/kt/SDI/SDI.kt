@@ -522,7 +522,7 @@ class SDI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SDIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SDI")
+        fun SDIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SDI")
         fun createSDI(builder: FlatBufferBuilder, observatoryOffset: Int, instrumentOffset: Int, measurementOffset: Int, wavelengthNm: Double, imageIdOffset: Int, requestedAtOffset: Int, observedAtOffset: Int, dateObsOffset: Int, timeScaleOffset: Int, cadenceS: Double, exposureS: Double, imageCidOffset: Int, imageMediaTypeOffset: Int, imageDigestOffset: Int, imageSizeBytes: ULong, headerCidOffset: Int, width: UInt, height: UInt, ctype1Offset: Int, ctype2Offset: Int, cunit1Offset: Int, cunit2Offset: Int, crpix1: Double, crpix2: Double, crval1: Double, crval2: Double, cdelt1: Double, cdelt2: Double, crota2: Double, pcOffset: Int, rsunObsArcsec: Double, rsunRefM: Double, dsunObsM: Double, crlnObsDeg: Double, crltObsDeg: Double, hglnObsDeg: Double, hgltObsDeg: Double, quality: Long, hasQuality: Boolean, processingOffset: Int, provenanceOffset: Int, sourceCidOffset: Int, sourceDigestOffset: Int, retrievedAtOffset: Int) : Int {
             builder.startTable(44)
             addQUALITY(builder, quality)
@@ -630,7 +630,7 @@ class SDI : Table() {
                 builder.required(o, 84)
             return o
         }
-        fun finishSDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SDI")
-        fun finishSizePrefixedSDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SDI")
+        fun finishSDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SDI")
+        fun finishSizePrefixedSDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SDI")
     }
 }

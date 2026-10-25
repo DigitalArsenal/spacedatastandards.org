@@ -21,7 +21,7 @@ class VCFAlias extends Table
 
     public static function VCFAliasIdentifier()
     {
-        return "$VCF";
+        return '$VCF';
     }
 
     public static function VCFAliasBufferHasIdentifier(ByteBuffer $buf)

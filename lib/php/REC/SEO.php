@@ -21,7 +21,7 @@ class SEO extends Table
 
     public static function SEOIdentifier()
     {
-        return "$SEO";
+        return '$SEO';
     }
 
     public static function SEOBufferHasIdentifier(ByteBuffer $buf)
@@ -952,6 +952,6 @@ class SEO extends Table
 
     public static function finishSEOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SEO");
+        $builder->finish($offset, '$SEO');
     }
 }

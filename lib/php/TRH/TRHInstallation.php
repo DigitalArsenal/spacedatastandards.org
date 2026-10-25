@@ -20,7 +20,7 @@ class TRHInstallation extends Table
 
     public static function TRHInstallationIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHInstallationBufferHasIdentifier(ByteBuffer $buf)

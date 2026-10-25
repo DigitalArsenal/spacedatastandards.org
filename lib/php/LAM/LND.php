@@ -21,7 +21,7 @@ class LND extends Table
 
     public static function LNDIdentifier()
     {
-        return "$LND";
+        return '$LND';
     }
 
     public static function LNDBufferHasIdentifier(ByteBuffer $buf)
@@ -563,6 +563,6 @@ class LND extends Table
 
     public static function finishLNDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LND");
+        $builder->finish($offset, '$LND');
     }
 }

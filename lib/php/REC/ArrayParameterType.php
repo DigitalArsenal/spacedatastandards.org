@@ -21,7 +21,7 @@ class ArrayParameterType extends Table
 
     public static function ArrayParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArrayParameterTypeBufferHasIdentifier(ByteBuffer $buf)

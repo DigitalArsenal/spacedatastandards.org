@@ -21,7 +21,7 @@ class AggregateArgumentType extends Table
 
     public static function AggregateArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AggregateArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

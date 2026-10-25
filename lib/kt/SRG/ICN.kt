@@ -635,7 +635,7 @@ class ICN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ICNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ICN")
+        fun ICNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ICN")
         fun createICN(builder: FlatBufferBuilder, connectorIdOffset: Int, kind: Byte, targetSchemaOffset: Int, status: Byte, statusMessageOffset: Int, endpointUrlOffset: Int, httpMethodOffset: Int, authKind: Byte, authHeaderNameOffset: Int, credentialReferenceOffset: Int, pollIntervalMs: UInt, directoryPathOffset: Int, filePatternOffset: Int, scanIntervalMs: UInt, settleDelayMs: UInt, postIngestAction: Byte, uploadSessionIdOffset: Int, uploadFileCount: UInt, uploadTotalBytes: ULong, uploadContentHashOffset: Int, detectedFormatOffset: Int, sampleRecordCount: UInt, lastIngestAt: ULong, lastErrorAt: ULong, lastErrorOffset: Int, createdAt: ULong, updatedAt: ULong, providerPeerIdOffset: Int, providerSignatureOffset: Int, originIdOffset: Int, originNameOffset: Int, datasetIdOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, licenseOffset: Int, licenseUrlOffset: Int, citationOffset: Int, minFetchIntervalMs: ULong, nextEligibleAt: ULong, lastHttpStatus: UShort, lastSourceEtagOffset: Int, lastSourceLastModifiedOffset: Int, lastBatchIdOffset: Int, lastRecordCount: ULong, lastInsertedCount: ULong, lastDurationMs: ULong, fetchCount: ULong, ingestCount: ULong, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, feedHeadOffset: Int, emitsSchemasOffset: Int) : Int {
             builder.startTable(52)
             addINGESTCOUNT(builder, ingestCount)
@@ -767,7 +767,7 @@ class ICN : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishICNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ICN")
-        fun finishSizePrefixedICNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ICN")
+        fun finishICNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ICN")
+        fun finishSizePrefixedICNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ICN")
     }
 }

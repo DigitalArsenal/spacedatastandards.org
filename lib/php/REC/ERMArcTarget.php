@@ -21,7 +21,7 @@ class ERMArcTarget extends Table
 
     public static function ERMArcTargetIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMArcTargetBufferHasIdentifier(ByteBuffer $buf)

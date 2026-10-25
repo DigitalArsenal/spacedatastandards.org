@@ -26,7 +26,7 @@ class PRWJB2008Indices extends Table
 
     public static function PRWJB2008IndicesIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWJB2008IndicesBufferHasIdentifier(ByteBuffer $buf)

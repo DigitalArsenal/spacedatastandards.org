@@ -21,7 +21,7 @@ class FloatDataEncoding extends Table
 
     public static function FloatDataEncodingIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function FloatDataEncodingBufferHasIdentifier(ByteBuffer $buf)

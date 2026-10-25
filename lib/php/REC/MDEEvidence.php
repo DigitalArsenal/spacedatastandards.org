@@ -22,7 +22,7 @@ class MDEEvidence extends Table
 
     public static function MDEEvidenceIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEEvidenceBufferHasIdentifier(ByteBuffer $buf)

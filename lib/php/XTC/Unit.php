@@ -21,7 +21,7 @@ class Unit extends Table
 
     public static function UnitIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function UnitBufferHasIdentifier(ByteBuffer $buf)

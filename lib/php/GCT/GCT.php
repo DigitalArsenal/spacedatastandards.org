@@ -21,7 +21,7 @@ class GCT extends Table
 
     public static function GCTIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTBufferHasIdentifier(ByteBuffer $buf)
@@ -1063,6 +1063,6 @@ class GCT extends Table
 
     public static function finishGCTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GCT");
+        $builder->finish($offset, '$GCT');
     }
 }

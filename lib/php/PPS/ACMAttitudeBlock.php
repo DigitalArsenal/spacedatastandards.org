@@ -24,7 +24,7 @@ class ACMAttitudeBlock extends Table
 
     public static function ACMAttitudeBlockIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMAttitudeBlockBufferHasIdentifier(ByteBuffer $buf)

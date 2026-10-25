@@ -21,7 +21,7 @@ class ERMWeightedCovariance extends Table
 
     public static function ERMWeightedCovarianceIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMWeightedCovarianceBufferHasIdentifier(ByteBuffer $buf)

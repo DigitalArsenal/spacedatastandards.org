@@ -290,7 +290,7 @@ class BEM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BEM")
+        fun BEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BEM")
         fun createBEM(builder: FlatBufferBuilder, idOffset: Int, beamNameOffset: Int, idEntityOffset: Int, idAntennaOffset: Int, type: Byte, polarization: Byte, peakGain: Double, eocGain: Double, centerLatitude: Double, centerLongitude: Double, beamwidth: Double, frequency: Double, eirp: Double, gOverT: Double, footprintArea: Double, beamContoursOffset: Int, notesOffset: Int, hopScheduleOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(23)
             addCOMPUTEDAT(builder, computedAt)
@@ -372,7 +372,7 @@ class BEM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishBEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BEM")
-        fun finishSizePrefixedBEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BEM")
+        fun finishBEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BEM")
+        fun finishSizePrefixedBEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BEM")
     }
 }

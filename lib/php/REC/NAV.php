@@ -21,7 +21,7 @@ class NAV extends Table
 
     public static function NAVIdentifier()
     {
-        return "$NAV";
+        return '$NAV';
     }
 
     public static function NAVBufferHasIdentifier(ByteBuffer $buf)
@@ -809,6 +809,6 @@ class NAV extends Table
 
     public static function finishNAVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NAV");
+        $builder->finish($offset, '$NAV');
     }
 }

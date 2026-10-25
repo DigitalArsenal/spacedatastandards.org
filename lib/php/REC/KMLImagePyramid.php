@@ -21,7 +21,7 @@ class KMLImagePyramid extends Table
 
     public static function KMLImagePyramidIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLImagePyramidBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class sensorMaintenanceEvent extends Table
 
     public static function sensorMaintenanceEventIdentifier()
     {
-        return "$SEN";
+        return '$SEN';
     }
 
     public static function sensorMaintenanceEventBufferHasIdentifier(ByteBuffer $buf)

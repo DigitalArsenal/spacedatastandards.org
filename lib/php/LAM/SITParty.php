@@ -21,7 +21,7 @@ class SITParty extends Table
 
     public static function SITPartyIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function SITPartyBufferHasIdentifier(ByteBuffer $buf)

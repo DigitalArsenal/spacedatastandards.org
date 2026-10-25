@@ -24,7 +24,7 @@ class PCEParameterCondition extends Table
 
     public static function PCEParameterConditionIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEParameterConditionBufferHasIdentifier(ByteBuffer $buf)

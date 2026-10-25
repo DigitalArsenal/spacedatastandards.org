@@ -21,7 +21,7 @@ class AbsoluteTimeParameterType extends Table
 
     public static function AbsoluteTimeParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AbsoluteTimeParameterTypeBufferHasIdentifier(ByteBuffer $buf)

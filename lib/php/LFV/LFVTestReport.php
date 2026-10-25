@@ -21,7 +21,7 @@ class LFVTestReport extends Table
 
     public static function LFVTestReportIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVTestReportBufferHasIdentifier(ByteBuffer $buf)

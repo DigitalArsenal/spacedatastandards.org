@@ -180,7 +180,7 @@ class FIL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FILBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FIL")
+        fun FILBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FIL")
         fun createFIL(builder: FlatBufferBuilder, pathOffset: Int, nameOffset: Int, kind: UByte, mediaTypeOffset: Int, size: ULong, createdAtMs: Long, modifiedAtMs: Long, digestAlgorithm: UByte, digestOffset: Int, contentOffset: Int, append: Boolean, writtenAtMs: Long, entriesOffset: Int) : Int {
             builder.startTable(13)
             addWRITTENATMS(builder, writtenAtMs)
@@ -242,7 +242,7 @@ class FIL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FIL")
-        fun finishSizePrefixedFILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FIL")
+        fun finishFILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FIL")
+        fun finishSizePrefixedFILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FIL")
     }
 }

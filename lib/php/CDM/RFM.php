@@ -21,7 +21,7 @@ class RFM extends Table
 
     public static function RFMIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function RFMBufferHasIdentifier(ByteBuffer $buf)
@@ -145,6 +145,6 @@ class RFM extends Table
 
     public static function finishRFMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RFM");
+        $builder->finish($offset, '$RFM');
     }
 }

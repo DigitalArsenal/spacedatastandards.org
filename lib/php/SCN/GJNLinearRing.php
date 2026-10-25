@@ -21,7 +21,7 @@ class GJNLinearRing extends Table
 
     public static function GJNLinearRingIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNLinearRingBufferHasIdentifier(ByteBuffer $buf)

@@ -570,7 +570,7 @@ class MNV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MNVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MNV")
+        fun MNVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MNV")
         fun createMNV(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, status: Byte, characterization: Byte, characterizationUnc: Double, reportTimeOffset: Int, eventStartTimeOffset: Int, eventEndTimeOffset: Int, totalBurnTime: Double, odFitEndTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, eventIdOffset: Int, uct: Boolean, maneuverUnc: Double, deltaVel: Double, deltaVelU: Double, deltaVelV: Double, deltaVelW: Double, deltaPos: Double, deltaPosU: Double, deltaPosV: Double, deltaPosW: Double, deltaMass: Double, preEventOffset: Int, postEventOffset: Int, postMass: Double, postArea: Double, covOffset: Int, numObs: UInt, stateModelOffset: Int, stateModelVersion: Double, numAccelPoints: UShort, mnvrAccelTimesOffset: Int, mnvrAccelsOffset: Int, mnvrAccelUncsOffset: Int, descriptionOffset: Int, descriptorOffset: Int, algorithmOffset: Int, tagsOffset: Int, sourcedDataOffset: Int, sourcedDataTypesOffset: Int, transactionIdOffset: Int, provenanceOffset: Int) : Int {
             builder.startTable(46)
             addSTATEMODELVERSION(builder, stateModelVersion)
@@ -720,7 +720,7 @@ class MNV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MNV")
-        fun finishSizePrefixedMNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MNV")
+        fun finishMNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MNV")
+        fun finishSizePrefixedMNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MNV")
     }
 }

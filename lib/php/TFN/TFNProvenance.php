@@ -25,7 +25,7 @@ class TFNProvenance extends Table
 
     public static function TFNProvenanceIdentifier()
     {
-        return "$TFN";
+        return '$TFN';
     }
 
     public static function TFNProvenanceBufferHasIdentifier(ByteBuffer $buf)

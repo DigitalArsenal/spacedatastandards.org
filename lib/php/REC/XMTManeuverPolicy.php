@@ -21,7 +21,7 @@ class XMTManeuverPolicy extends Table
 
     public static function XMTManeuverPolicyIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTManeuverPolicyBufferHasIdentifier(ByteBuffer $buf)

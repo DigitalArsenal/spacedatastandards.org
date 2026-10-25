@@ -21,7 +21,7 @@ class StokesParameters extends Table
 
     public static function StokesParametersIdentifier()
     {
-        return "$IDM";
+        return '$IDM';
     }
 
     public static function StokesParametersBufferHasIdentifier(ByteBuffer $buf)

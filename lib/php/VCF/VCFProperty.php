@@ -21,7 +21,7 @@ class VCFProperty extends Table
 
     public static function VCFPropertyIdentifier()
     {
-        return "$VCF";
+        return '$VCF';
     }
 
     public static function VCFPropertyBufferHasIdentifier(ByteBuffer $buf)

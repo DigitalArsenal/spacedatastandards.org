@@ -21,7 +21,7 @@ class CZMEllipsoid extends Table
 
     public static function CZMEllipsoidIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMEllipsoidBufferHasIdentifier(ByteBuffer $buf)

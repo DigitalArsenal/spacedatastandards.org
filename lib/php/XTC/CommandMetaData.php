@@ -21,7 +21,7 @@ class CommandMetaData extends Table
 
     public static function CommandMetaDataIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function CommandMetaDataBufferHasIdentifier(ByteBuffer $buf)

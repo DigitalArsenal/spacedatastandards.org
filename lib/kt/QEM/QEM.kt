@@ -162,7 +162,7 @@ class QEM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun QEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$QEM")
+        fun QEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$QEM")
         fun createQEM(builder: FlatBufferBuilder, modelIdOffset: Int, modelVersionOffset: Int, modelWeightsSha256Offset: Int, poolingMethod: Byte, templateVersionOffset: Int, dimensions: UInt, encoding: Byte, normalization: Byte, vocabSize: UInt, tokensOffset: Int) : Int {
             builder.startTable(10)
             addTOKENS(builder, tokensOffset)
@@ -200,7 +200,7 @@ class QEM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishQEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$QEM")
-        fun finishSizePrefixedQEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$QEM")
+        fun finishQEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$QEM")
+        fun finishSizePrefixedQEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$QEM")
     }
 }

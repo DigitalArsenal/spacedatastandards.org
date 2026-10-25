@@ -22,7 +22,7 @@ class LFVFeatureSeparation extends Table
 
     public static function LFVFeatureSeparationIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVFeatureSeparationBufferHasIdentifier(ByteBuffer $buf)

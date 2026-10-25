@@ -212,22 +212,18 @@ class targetStateObjectBuilder extends fb.ObjectBuilder {
   final int _FLAGS;
 
   targetStateObjectBuilder({
-    double POS_X,
-    double? posX,
-    double POS_Y,
-    double? posY,
-    double POS_Z,
-    double? posZ,
+    required double POS_X,
+    required double POS_Y,
+    required double POS_Z,
     required double RCS,
-    int TARGET_ID,
-    int? targetId,
+    required int TARGET_ID,
     required int FLAGS,
   })
-      : _POS_X = posX ?? POS_X,
-        _POS_Y = posY ?? POS_Y,
-        _POS_Z = posZ ?? POS_Z,
+      : _POS_X = POS_X,
+        _POS_Y = POS_Y,
+        _POS_Z = POS_Z,
         _RCS = RCS,
-        _TARGET_ID = targetId ?? TARGET_ID,
+        _TARGET_ID = TARGET_ID,
         _FLAGS = FLAGS;
 
   /// Finish building, and store into the [fbBuilder].
@@ -326,8 +322,7 @@ class detectionResultObjectBuilder extends fb.ObjectBuilder {
   final int _RESERVED;
 
   detectionResultObjectBuilder({
-    int TARGET_INDEX,
-    int? targetIndex,
+    required int TARGET_INDEX,
     required int DETECTED,
     required double RANGE,
     required double SNR,
@@ -336,7 +331,7 @@ class detectionResultObjectBuilder extends fb.ObjectBuilder {
     required int FLAGS,
     required int RESERVED,
   })
-      : _TARGET_INDEX = targetIndex ?? TARGET_INDEX,
+      : _TARGET_INDEX = TARGET_INDEX,
         _DETECTED = DETECTED,
         _RANGE = RANGE,
         _SNR = SNR,
@@ -690,9 +685,9 @@ class SDRSensorConfigObjectBuilder extends fb.ObjectBuilder {
     sensorOperationalFlags? FLAGS,
   })
       : _CATEGORY = CATEGORY,
-        _POS_X = posX ?? POS_X,
-        _POS_Y = posY ?? POS_Y,
-        _POS_Z = posZ ?? POS_Z,
+        _POS_X = POS_X,
+        _POS_Y = POS_Y,
+        _POS_Z = POS_Z,
         _ORIENT_W = orientW ?? ORIENT_W,
         _ORIENT_X = orientX ?? ORIENT_X,
         _ORIENT_Y = orientY ?? ORIENT_Y,

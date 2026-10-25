@@ -21,7 +21,7 @@ class PRWWindowReport extends Table
 
     public static function PRWWindowReportIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWWindowReportBufferHasIdentifier(ByteBuffer $buf)

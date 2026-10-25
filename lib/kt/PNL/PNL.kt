@@ -156,7 +156,7 @@ class PNL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PNLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PNL")
+        fun PNLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PNL")
         fun createPNL(builder: FlatBufferBuilder, objectIdOffset: Int, objectNameOffset: Int, noradCatId: UInt, bodyFrameOffset: Int, totalMassKg: Double, epochOffset: Int, panelsOffset: Int, referenceAreaM2: Double, sourceOffset: Int) : Int {
             builder.startTable(9)
             addREFERENCEAREAM2(builder, referenceAreaM2)
@@ -193,7 +193,7 @@ class PNL : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishPNLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PNL")
-        fun finishSizePrefixedPNLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PNL")
+        fun finishPNLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PNL")
+        fun finishSizePrefixedPNLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PNL")
     }
 }

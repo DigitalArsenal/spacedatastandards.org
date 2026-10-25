@@ -22,7 +22,7 @@ class PCFSpaceWeather extends Table
 
     public static function PCFSpaceWeatherIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFSpaceWeatherBufferHasIdentifier(ByteBuffer $buf)

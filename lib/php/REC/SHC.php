@@ -33,7 +33,7 @@ class SHC extends Table
 
     public static function SHCIdentifier()
     {
-        return "$SHC";
+        return '$SHC';
     }
 
     public static function SHCBufferHasIdentifier(ByteBuffer $buf)
@@ -712,6 +712,6 @@ class SHC extends Table
 
     public static function finishSHCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SHC");
+        $builder->finish($offset, '$SHC');
     }
 }

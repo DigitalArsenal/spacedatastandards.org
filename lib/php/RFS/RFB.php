@@ -33,7 +33,7 @@ class RFB extends Table
 
     public static function RFBIdentifier()
     {
-        return "$RFB";
+        return '$RFB';
     }
 
     public static function RFBBufferHasIdentifier(ByteBuffer $buf)
@@ -588,6 +588,6 @@ class RFB extends Table
 
     public static function finishRFBBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RFB");
+        $builder->finish($offset, '$RFB');
     }
 }

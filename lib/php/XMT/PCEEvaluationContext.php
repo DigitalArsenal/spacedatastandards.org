@@ -21,7 +21,7 @@ class PCEEvaluationContext extends Table
 
     public static function PCEEvaluationContextIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEEvaluationContextBufferHasIdentifier(ByteBuffer $buf)

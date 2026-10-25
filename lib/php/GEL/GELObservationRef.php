@@ -21,7 +21,7 @@ class GELObservationRef extends Table
 
     public static function GELObservationRefIdentifier()
     {
-        return "$GEL";
+        return '$GEL';
     }
 
     public static function GELObservationRefBufferHasIdentifier(ByteBuffer $buf)

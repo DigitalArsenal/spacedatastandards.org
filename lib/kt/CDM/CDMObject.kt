@@ -40,8 +40,8 @@ class CDMObject : Table() {
         }
     val commentAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(4, 1)
     fun commentInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 4, 1)
-    val object : CAT? get() = object(CAT())
-    fun object(obj: CAT) : CAT? {
+    val `object` : CAT? get() = `object`(CAT())
+    fun `object`(obj: CAT) : CAT? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -500,7 +500,7 @@ class CDMObject : Table() {
         }
         fun startCDMObject(builder: FlatBufferBuilder) = builder.startTable(41)
         fun addCOMMENT(builder: FlatBufferBuilder, comment: Int) = builder.addOffset(0, comment, 0)
-        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, `object`: Int) = builder.addOffset(1, `object`, 0)
         fun addPOC(builder: FlatBufferBuilder, poc: Int) = builder.addOffset(2, poc, 0)
         fun addOPERATORCONTACTPOSITION(builder: FlatBufferBuilder, operatorContactPosition: Int) = builder.addOffset(3, operatorContactPosition, 0)
         fun addOPERATORORGANIZATION(builder: FlatBufferBuilder, operatorOrganization: Int) = builder.addOffset(4, operatorOrganization, 0)

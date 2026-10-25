@@ -21,7 +21,7 @@ class ERMClipCentre extends Table
 
     public static function ERMClipCentreIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMClipCentreBufferHasIdentifier(ByteBuffer $buf)

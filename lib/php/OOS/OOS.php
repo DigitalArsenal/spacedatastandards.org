@@ -21,7 +21,7 @@ class OOS extends Table
 
     public static function OOSIdentifier()
     {
-        return "$OOS";
+        return '$OOS';
     }
 
     public static function OOSBufferHasIdentifier(ByteBuffer $buf)
@@ -391,6 +391,6 @@ class OOS extends Table
 
     public static function finishOOSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OOS");
+        $builder->finish($offset, '$OOS');
     }
 }

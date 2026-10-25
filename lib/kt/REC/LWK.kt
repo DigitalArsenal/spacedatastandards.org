@@ -224,7 +224,7 @@ class LWK : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LWKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LWK")
+        fun LWKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LWK")
         fun createLWK(builder: FlatBufferBuilder, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, contentKeyIdOffset: Int, recipientKeyIdOffset: Int, algorithm: Byte, requesterEphemeralPubkeyOffset: Int, providerEphemeralPubkeyOffset: Int, hkdfSaltOffset: Int, ivOffset: Int, ciphertextOffset: Int, tagOffset: Int, expiresAt: ULong) : Int {
             builder.startTable(13)
             addEXPIRESAT(builder, expiresAt)
@@ -316,7 +316,7 @@ class LWK : Table() {
                 builder.required(o, 6)
             return o
         }
-        fun finishLWKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LWK")
-        fun finishSizePrefixedLWKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LWK")
+        fun finishLWKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LWK")
+        fun finishSizePrefixedLWKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LWK")
     }
 }

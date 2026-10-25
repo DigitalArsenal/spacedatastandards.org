@@ -21,7 +21,7 @@ class RevenueSplit extends Table
 
     public static function RevenueSplitIdentifier()
     {
-        return "$CMT";
+        return '$CMT';
     }
 
     public static function RevenueSplitBufferHasIdentifier(ByteBuffer $buf)

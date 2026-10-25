@@ -21,7 +21,7 @@ class APM extends Table
 
     public static function APMIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMBufferHasIdentifier(ByteBuffer $buf)
@@ -681,6 +681,6 @@ class APM extends Table
 
     public static function finishAPMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$APM");
+        $builder->finish($offset, '$APM');
     }
 }

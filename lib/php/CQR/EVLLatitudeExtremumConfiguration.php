@@ -21,7 +21,7 @@ class EVLLatitudeExtremumConfiguration extends Table
 
     public static function EVLLatitudeExtremumConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLLatitudeExtremumConfigurationBufferHasIdentifier(ByteBuffer $buf)

@@ -20,7 +20,7 @@ class ODRSolverConfiguration extends Table
 
     public static function ODRSolverConfigurationIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODRSolverConfigurationBufferHasIdentifier(ByteBuffer $buf)

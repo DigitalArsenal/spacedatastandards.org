@@ -21,7 +21,7 @@ class KMLResourceMapAlias extends Table
 
     public static function KMLResourceMapAliasIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLResourceMapAliasBufferHasIdentifier(ByteBuffer $buf)

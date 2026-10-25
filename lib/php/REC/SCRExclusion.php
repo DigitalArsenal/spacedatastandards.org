@@ -21,7 +21,7 @@ class SCRExclusion extends Table
 
     public static function SCRExclusionIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRExclusionBufferHasIdentifier(ByteBuffer $buf)

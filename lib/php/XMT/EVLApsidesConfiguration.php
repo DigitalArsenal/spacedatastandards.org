@@ -21,7 +21,7 @@ class EVLApsidesConfiguration extends Table
 
     public static function EVLApsidesConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLApsidesConfigurationBufferHasIdentifier(ByteBuffer $buf)

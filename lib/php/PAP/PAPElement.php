@@ -21,7 +21,7 @@ class PAPElement extends Table
 
     public static function PAPElementIdentifier()
     {
-        return "$PAP";
+        return '$PAP';
     }
 
     public static function PAPElementBufferHasIdentifier(ByteBuffer $buf)

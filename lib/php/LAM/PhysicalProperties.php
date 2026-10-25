@@ -20,7 +20,7 @@ class PhysicalProperties extends Table
 
     public static function PhysicalPropertiesIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function PhysicalPropertiesBufferHasIdentifier(ByteBuffer $buf)

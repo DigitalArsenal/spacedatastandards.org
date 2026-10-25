@@ -31,7 +31,7 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.268.0+1792891565491",
+  version: "1.269.0+1792917162292",
   STANDARDS: {
     PCF: {
       IDL: `// Hash: 4b75ce8c585bdbcce38664486ead9587badc009933e1331eed59fba4f6a37a8f

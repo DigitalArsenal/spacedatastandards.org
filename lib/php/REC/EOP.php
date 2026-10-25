@@ -21,7 +21,7 @@ class EOP extends Table
 
     public static function EOPIdentifier()
     {
-        return "$EOP";
+        return '$EOP';
     }
 
     public static function EOPBufferHasIdentifier(ByteBuffer $buf)
@@ -731,6 +731,6 @@ class EOP extends Table
 
     public static function finishEOPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EOP");
+        $builder->finish($offset, '$EOP');
     }
 }

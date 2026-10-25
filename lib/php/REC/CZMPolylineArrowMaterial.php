@@ -21,7 +21,7 @@ class CZMPolylineArrowMaterial extends Table
 
     public static function CZMPolylineArrowMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolylineArrowMaterialBufferHasIdentifier(ByteBuffer $buf)

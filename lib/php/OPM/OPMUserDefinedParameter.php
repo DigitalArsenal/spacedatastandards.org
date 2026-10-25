@@ -22,7 +22,7 @@ class OPMUserDefinedParameter extends Table
 
     public static function OPMUserDefinedParameterIdentifier()
     {
-        return "$OPM";
+        return '$OPM';
     }
 
     public static function OPMUserDefinedParameterBufferHasIdentifier(ByteBuffer $buf)

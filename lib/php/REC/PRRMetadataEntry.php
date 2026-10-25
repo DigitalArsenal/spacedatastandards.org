@@ -21,7 +21,7 @@ class PRRMetadataEntry extends Table
 
     public static function PRRMetadataEntryIdentifier()
     {
-        return "$PRR";
+        return '$PRR';
     }
 
     public static function PRRMetadataEntryBufferHasIdentifier(ByteBuffer $buf)

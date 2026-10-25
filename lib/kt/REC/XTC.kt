@@ -159,7 +159,7 @@ class XTC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun XTCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$XTC")
+        fun XTCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$XTC")
         fun createXTC(builder: FlatBufferBuilder, nameOffset: Int, shortDescriptionOffset: Int, longDescriptionOffset: Int, operationalStatusOffset: Int, headerOffset: Int, telemetryMetaDataOffset: Int, commandMetaDataOffset: Int, serviceSetOffset: Int, childSystemsOffset: Int) : Int {
             builder.startTable(9)
             addCHILDSYSTEMS(builder, childSystemsOffset)
@@ -195,7 +195,7 @@ class XTC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishXTCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$XTC")
-        fun finishSizePrefixedXTCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$XTC")
+        fun finishXTCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$XTC")
+        fun finishSizePrefixedXTCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$XTC")
     }
 }

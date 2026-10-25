@@ -21,7 +21,7 @@ class CZMImageMaterial extends Table
 
     public static function CZMImageMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMImageMaterialBufferHasIdentifier(ByteBuffer $buf)

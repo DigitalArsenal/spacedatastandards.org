@@ -21,7 +21,7 @@ class ERMScreeningGeometry extends Table
 
     public static function ERMScreeningGeometryIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMScreeningGeometryBufferHasIdentifier(ByteBuffer $buf)

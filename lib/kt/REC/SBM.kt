@@ -426,7 +426,7 @@ class SBM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SBMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SBM")
+        fun SBMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SBM")
         fun createSBM(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, eventType: Byte, objectClass: Byte, epochOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, objectNameOffset: Int, objectIdOffset: Int, noradCatId: UInt, impactorObjectNameOffset: Int, impactorNoradCatId: UInt, targetMassKg: Double, targetLCM: Double, impactorMassKg: Double, impactorLCM: Double, relativeVelocityMPerS: Double, catastrophic: Boolean, parentPositionXKm: Double, parentPositionYKm: Double, parentPositionZKm: Double, parentVelocityXKmPerS: Double, parentVelocityYKmPerS: Double, parentVelocityZKmPerS: Double, minLcM: Double, seed: UInt, modelNameOffset: Int, modelVersionOffset: Int, fragmentCount: UInt, inputMassKg: Double, outputMassKg: Double, fragmentsOffset: Int, assumptionsOffset: Int, commentOffset: Int) : Int {
             builder.startTable(35)
             addOUTPUTMASSKG(builder, outputMassKg)
@@ -522,7 +522,7 @@ class SBM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSBMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SBM")
-        fun finishSizePrefixedSBMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SBM")
+        fun finishSBMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SBM")
+        fun finishSizePrefixedSBMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SBM")
     }
 }

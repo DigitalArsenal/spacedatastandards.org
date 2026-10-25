@@ -21,7 +21,7 @@ class RPC extends Table
 
     public static function RPCIdentifier()
     {
-        return "$RPC";
+        return '$RPC';
     }
 
     public static function RPCBufferHasIdentifier(ByteBuffer $buf)
@@ -584,6 +584,6 @@ class RPC extends Table
 
     public static function finishRPCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RPC");
+        $builder->finish($offset, '$RPC');
     }
 }

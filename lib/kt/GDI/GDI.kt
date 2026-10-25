@@ -294,7 +294,7 @@ class GDI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GDIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GDI")
+        fun GDIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GDI")
         fun createGDI(builder: FlatBufferBuilder, idOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, imageTimeOffset: Int, filenameOffset: Int, format: Byte, filesize: Long, checksumValueOffset: Int, regionGeoJsonOffset: Int, regionTextOffset: Int, regionOffset: Int, regionTypeOffset: Int, regionNdims: UByte, regionSrid: UShort, subjectIdOffset: Int, nameOffset: Int, transactionIdOffset: Int, tagsOffset: Int, keywordsOffset: Int, notesOffset: Int) : Int {
             builder.startTable(20)
             addFILESIZE(builder, filesize)
@@ -360,7 +360,7 @@ class GDI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GDI")
-        fun finishSizePrefixedGDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GDI")
+        fun finishGDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GDI")
+        fun finishSizePrefixedGDIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GDI")
     }
 }

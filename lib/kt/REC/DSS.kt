@@ -529,7 +529,7 @@ class DSS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DSS")
+        fun DSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DSS")
         fun createDSS(builder: FlatBufferBuilder, status: Byte, syncedRows: ULong, totalRows: ULong, localRows: ULong, pinnedRows: ULong, missingRows: ULong, cachedBytes: ULong, pinnedBytes: ULong, downloadedBytes: ULong, downloadSpeedBytesPerSecond: ULong, measuredWireSpeedBytesPerSecond: ULong, hasWireSpeedUtilization: Boolean, wireSpeedUtilization: Double, wireSpeedTarget: Double, hasWireSpeedTargetMet: Boolean, wireSpeedTargetMet: Boolean, manifestDiscoveryMs: ULong, networkTransferMs: ULong, verificationMs: ULong, flatsqlMaterializationMs: ULong, providerPeerIdOffset: Int, providerPublicKeyOffset: Int, snapshotIdOffset: Int, headOffset: Int, cursorOffset: Int, nextCursorOffset: Int, highWaterMarkOffset: Int, queryProfileOffset: Int, chunkHashOffset: Int, syncProtocolOffset: Int, syncFilterOffset: Int, verifiedChunksOffset: Int, lastSyncedAtOffset: Int, errorOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, datasetIdOffset: Int, connectorIdOffset: Int, channelIdOffset: Int, topicOffset: Int, subscribed: Boolean, pinPolicy: Byte, visibilityOffset: Int, encryptionStateOffset: Int, grantStateOffset: Int, feedHeadOffset: Int, lastPublicationCidOffset: Int, lastPnmCidOffset: Int, deltaRows: ULong, lastSyncStartedAt: ULong, requestedAction: Byte, originIdOffset: Int, retention: Byte) : Int {
             builder.startTable(54)
             addLASTSYNCSTARTEDAT(builder, lastSyncStartedAt)
@@ -655,7 +655,7 @@ class DSS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishDSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DSS")
-        fun finishSizePrefixedDSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DSS")
+        fun finishDSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DSS")
+        fun finishSizePrefixedDSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DSS")
     }
 }

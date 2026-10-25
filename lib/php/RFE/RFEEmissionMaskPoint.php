@@ -23,7 +23,7 @@ class RFEEmissionMaskPoint extends Table
 
     public static function RFEEmissionMaskPointIdentifier()
     {
-        return "$RFE";
+        return '$RFE';
     }
 
     public static function RFEEmissionMaskPointBufferHasIdentifier(ByteBuffer $buf)

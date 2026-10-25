@@ -21,7 +21,7 @@ class XMTMeasuredError extends Table
 
     public static function XMTMeasuredErrorIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTMeasuredErrorBufferHasIdentifier(ByteBuffer $buf)

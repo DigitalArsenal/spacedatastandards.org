@@ -21,7 +21,7 @@ class EVLEventLocationRequest extends Table
 
     public static function EVLEventLocationRequestIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLEventLocationRequestBufferHasIdentifier(ByteBuffer $buf)

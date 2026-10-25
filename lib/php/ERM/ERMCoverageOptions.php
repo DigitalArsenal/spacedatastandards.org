@@ -21,7 +21,7 @@ class ERMCoverageOptions extends Table
 
     public static function ERMCoverageOptionsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCoverageOptionsBufferHasIdentifier(ByteBuffer $buf)

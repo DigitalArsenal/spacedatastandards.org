@@ -21,7 +21,7 @@ class Interlock extends Table
 
     public static function InterlockIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function InterlockBufferHasIdentifier(ByteBuffer $buf)

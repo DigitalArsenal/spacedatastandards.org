@@ -21,7 +21,7 @@ class DOA extends Table
 
     public static function DOAIdentifier()
     {
-        return "$DOA";
+        return '$DOA';
     }
 
     public static function DOABufferHasIdentifier(ByteBuffer $buf)
@@ -806,6 +806,6 @@ class DOA extends Table
 
     public static function finishDOABuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DOA");
+        $builder->finish($offset, '$DOA');
     }
 }

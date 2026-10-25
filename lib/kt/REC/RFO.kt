@@ -810,7 +810,7 @@ class RFO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RFOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFO")
+        fun RFOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFO")
         fun createRFO(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, obsType: Byte, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, taskIdOffset: Int, transactionIdOffset: Int, trackIdOffset: Int, transponderOffset: Int, detectionStatus: Byte, azimuth: Double, azimuthUnc: Double, azimuthRate: Double, elevation: Double, elevationUnc: Double, elevationRate: Double, range: Double, rangeUnc: Double, rangeRate: Double, rangeRateUnc: Double, trackRange: Double, senlat: Double, senlon: Double, senalt: Double, elnotOffset: Int, antennaNameOffset: Int, collectionModeOffset: Int, frequency: Double, nominalFrequency: Double, startFrequency: Double, endFrequency: Double, frequencyShift: Double, bandwidth: Double, nominalBandwidth: Double, resolutionBandwidth: Double, videoBandwidth: Double, relativeCarrierPower: Double, spectrumAnalyzerPower: Double, relativeNoiseFloor: Double, referenceLevel: Double, noisePwrDensity: Double, pgri: Double, eirp: Double, nominalEirp: Double, minPsd: Double, maxPsd: Double, snr: Double, nominalSnr: Double, powerOverNoise: Double, nominalPowerOverNoise: Double, polarity: Double, polarityTypeOffset: Int, channel: UShort, baudRate: Double, symbolToNoiseRatio: Double, bitErrorRate: Double, peak: Boolean, incoming: Boolean, switchPoint: UShort, confidence: Double, carrierStandardOffset: Int, modulationOffset: Int, innerCodingRate: UByte, outerCodingRate: UByte, transmitFilterTypeOffset: Int, transmitFilterRollOff: Double, rawFileUriOffset: Int, descriptorOffset: Int, urlOffset: Int, tagsOffset: Int, corrMahalanobisSq: Double, corrDof: UByte, corrGate: Double, corrPValue: Double, corrAmbiguous: Boolean, frequencyUnc: Double) : Int {
             builder.startTable(80)
             addFREQUENCYUNC(builder, frequencyUnc)
@@ -988,7 +988,7 @@ class RFO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRFOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RFO")
-        fun finishSizePrefixedRFOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RFO")
+        fun finishRFOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RFO")
+        fun finishSizePrefixedRFOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RFO")
     }
 }

@@ -23,7 +23,7 @@ class EXOParameter extends Table
 
     public static function EXOParameterIdentifier()
     {
-        return "$EXO";
+        return '$EXO';
     }
 
     public static function EXOParameterBufferHasIdentifier(ByteBuffer $buf)

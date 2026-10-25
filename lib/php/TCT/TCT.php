@@ -21,7 +21,7 @@ class TCT extends Table
 
     public static function TCTIdentifier()
     {
-        return "$TCT";
+        return '$TCT';
     }
 
     public static function TCTBufferHasIdentifier(ByteBuffer $buf)
@@ -544,6 +544,6 @@ class TCT extends Table
 
     public static function finishTCTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TCT");
+        $builder->finish($offset, '$TCT');
     }
 }

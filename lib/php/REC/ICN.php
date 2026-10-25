@@ -21,7 +21,7 @@ class ICN extends Table
 
     public static function ICNIdentifier()
     {
-        return "$ICN";
+        return '$ICN';
     }
 
     public static function ICNBufferHasIdentifier(ByteBuffer $buf)
@@ -1160,6 +1160,6 @@ class ICN extends Table
 
     public static function finishICNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ICN");
+        $builder->finish($offset, '$ICN');
     }
 }

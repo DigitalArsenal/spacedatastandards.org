@@ -23,7 +23,7 @@ class EGPQuery extends Table
 
     public static function EGPQueryIdentifier()
     {
-        return "$EGP";
+        return '$EGP';
     }
 
     public static function EGPQueryBufferHasIdentifier(ByteBuffer $buf)

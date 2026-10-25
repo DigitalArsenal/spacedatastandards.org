@@ -21,7 +21,7 @@ class TRPGroup extends Table
 
     public static function TRPGroupIdentifier()
     {
-        return "$TRP";
+        return '$TRP';
     }
 
     public static function TRPGroupBufferHasIdentifier(ByteBuffer $buf)

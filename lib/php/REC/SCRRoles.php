@@ -21,7 +21,7 @@ class SCRRoles extends Table
 
     public static function SCRRolesIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRRolesBufferHasIdentifier(ByteBuffer $buf)

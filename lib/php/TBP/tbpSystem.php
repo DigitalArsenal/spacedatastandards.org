@@ -21,7 +21,7 @@ class tbpSystem extends Table
 
     public static function tbpSystemIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpSystemBufferHasIdentifier(ByteBuffer $buf)

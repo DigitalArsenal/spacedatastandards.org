@@ -21,7 +21,7 @@ class PRWVersionResult extends Table
 
     public static function PRWVersionResultIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWVersionResultBufferHasIdentifier(ByteBuffer $buf)

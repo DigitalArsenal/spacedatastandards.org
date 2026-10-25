@@ -1,6 +1,6 @@
 {
     "name": "@digitalarsenal/standards",
-    "version": "1.268.0+1792891565491",
+    "version": "1.269.0+1792917162292",
     "type": "module",
     "description": "space data standards framework based on ccsds standards and google flatbuffers",
     "main": "index.js",
@@ -87,7 +87,7 @@
         "type": "corporate",
         "url": "https://github.com/DigitalArsenal/spacedatastandards.org/FUNDING.md"
     },
-    "author": "sds@digitalarsenal.io",
+    "author": "Edgesource Corporation <tj@edgesource.com>",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/DigitalArsenal/spacedatastandards.org.git"

@@ -21,7 +21,7 @@ class ERMCalibrationObject extends Table
 
     public static function ERMCalibrationObjectIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCalibrationObjectBufferHasIdentifier(ByteBuffer $buf)

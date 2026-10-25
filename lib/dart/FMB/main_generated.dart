@@ -188,21 +188,19 @@ class FMBRowObjectBuilder extends fb.ObjectBuilder {
   FMBRowObjectBuilder({
     required int OFFSET,
     required int SEQ,
-    int SOURCE_TS,
-    int? sourceTs,
+    required int SOURCE_TS,
     required int LENGTH,
     required int GROUP,
-    int ROW_J,
-    int? rowJ,
+    required int ROW_J,
     required int FLAGS,
     required int RESERVED,
   })
       : _OFFSET = OFFSET,
         _SEQ = SEQ,
-        _SOURCE_TS = sourceTs ?? SOURCE_TS,
+        _SOURCE_TS = SOURCE_TS,
         _LENGTH = LENGTH,
         _GROUP = GROUP,
-        _ROW_J = rowJ ?? ROW_J,
+        _ROW_J = ROW_J,
         _FLAGS = FLAGS,
         _RESERVED = RESERVED;
 
@@ -294,22 +292,17 @@ class FMBGroupObjectBuilder extends fb.ObjectBuilder {
   final int _URL_ID;
 
   FMBGroupObjectBuilder({
-    int DELIVERED_AT,
-    int? deliveredAt,
-    int NODE_ID,
-    int? nodeId,
-    int BATCH_ID,
-    int? batchId,
-    int CONTENT_KEY_ID,
-    int? contentKeyId,
-    int URL_ID,
-    int? urlId,
+    required int DELIVERED_AT,
+    required int NODE_ID,
+    required int BATCH_ID,
+    required int CONTENT_KEY_ID,
+    required int URL_ID,
   })
-      : _DELIVERED_AT = deliveredAt ?? DELIVERED_AT,
-        _NODE_ID = nodeId ?? NODE_ID,
-        _BATCH_ID = batchId ?? BATCH_ID,
-        _CONTENT_KEY_ID = contentKeyId ?? CONTENT_KEY_ID,
-        _URL_ID = urlId ?? URL_ID;
+      : _DELIVERED_AT = DELIVERED_AT,
+        _NODE_ID = NODE_ID,
+        _BATCH_ID = BATCH_ID,
+        _CONTENT_KEY_ID = CONTENT_KEY_ID,
+        _URL_ID = URL_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -383,12 +376,11 @@ class FMBRemoveObjectBuilder extends fb.ObjectBuilder {
 
   FMBRemoveObjectBuilder({
     required int SEQ,
-    int ROW_J,
-    int? rowJ,
+    required int ROW_J,
     required fmbRemoveReason REASON,
   })
       : _SEQ = SEQ,
-        _ROW_J = rowJ ?? ROW_J,
+        _ROW_J = ROW_J,
         _REASON = REASON;
 
   /// Finish building, and store into the [fbBuilder].
@@ -462,14 +454,12 @@ class FMBUrlObjectBuilder extends fb.ObjectBuilder {
 
   FMBUrlObjectBuilder({
     required int SEQ,
-    int ROW_J,
-    int? rowJ,
-    int URL_ID,
-    int? urlId,
+    required int ROW_J,
+    required int URL_ID,
   })
       : _SEQ = SEQ,
-        _ROW_J = rowJ ?? ROW_J,
-        _URL_ID = urlId ?? URL_ID;
+        _ROW_J = ROW_J,
+        _URL_ID = URL_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override

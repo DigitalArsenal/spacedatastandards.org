@@ -21,7 +21,7 @@ class OMM extends Table
 
     public static function OMMIdentifier()
     {
-        return "$OMM";
+        return '$OMM';
     }
 
     public static function OMMBufferHasIdentifier(ByteBuffer $buf)
@@ -1069,6 +1069,6 @@ class OMM extends Table
 
     public static function finishOMMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OMM");
+        $builder->finish($offset, '$OMM');
     }
 }

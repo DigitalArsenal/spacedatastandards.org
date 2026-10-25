@@ -22,7 +22,7 @@ class SKT extends Table
 
     public static function SKTIdentifier()
     {
-        return "$SKT";
+        return '$SKT';
     }
 
     public static function SKTBufferHasIdentifier(ByteBuffer $buf)
@@ -1512,6 +1512,6 @@ class SKT extends Table
 
     public static function finishSKTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SKT");
+        $builder->finish($offset, '$SKT');
     }
 }

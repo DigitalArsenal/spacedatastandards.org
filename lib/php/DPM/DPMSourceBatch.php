@@ -21,7 +21,7 @@ class DPMSourceBatch extends Table
 
     public static function DPMSourceBatchIdentifier()
     {
-        return "$DPM";
+        return '$DPM';
     }
 
     public static function DPMSourceBatchBufferHasIdentifier(ByteBuffer $buf)

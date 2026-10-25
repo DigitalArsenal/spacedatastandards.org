@@ -22,7 +22,7 @@ class CQRLaunchClosure extends Table
 
     public static function CQRLaunchClosureIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRLaunchClosureBufferHasIdentifier(ByteBuffer $buf)

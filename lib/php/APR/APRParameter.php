@@ -22,7 +22,7 @@ class APRParameter extends Table
 
     public static function APRParameterIdentifier()
     {
-        return "$APR";
+        return '$APR';
     }
 
     public static function APRParameterBufferHasIdentifier(ByteBuffer $buf)

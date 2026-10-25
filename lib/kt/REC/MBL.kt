@@ -164,7 +164,7 @@ class MBL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MBLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MBL")
+        fun MBLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MBL")
         fun createMBL(builder: FlatBufferBuilder, bundleVersion: UShort, moduleFormatOffset: Int, canonicalizationOffset: Int, canonicalModuleHashOffset: Int, manifestHashOffset: Int, manifestExportSymbolOffset: Int, manifestSizeSymbolOffset: Int, entriesOffset: Int) : Int {
             builder.startTable(8)
             addEntries(builder, entriesOffset)
@@ -216,7 +216,7 @@ class MBL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMBLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MBL")
-        fun finishSizePrefixedMBLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MBL")
+        fun finishMBLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MBL")
+        fun finishSizePrefixedMBLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MBL")
     }
 }

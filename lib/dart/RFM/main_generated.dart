@@ -1801,13 +1801,12 @@ class RFMObjectBuilder extends fb.ObjectBuilder {
   RFMObjectBuilder({
     RFMUnionTypeId? REFERENCE_FRAME_type,
     RFMUnionTypeId? referenceFrameType,
-    dynamic REFERENCE_FRAME,
-    dynamic? referenceFrame,
+    required dynamic REFERENCE_FRAME,
     int? INDEX,
     String? NAME,
   })
       : _REFERENCE_FRAME_type = referenceFrameType ?? REFERENCE_FRAME_type,
-        _REFERENCE_FRAME = referenceFrame ?? REFERENCE_FRAME,
+        _REFERENCE_FRAME = REFERENCE_FRAME,
         _INDEX = INDEX,
         _NAME = NAME;
 

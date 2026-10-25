@@ -265,7 +265,7 @@ class GEL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GELBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GEL")
+        fun GELBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GEL")
         fun createGEL(builder: FlatBufferBuilder, gelIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, emitterIdOffset: Int, technique: Byte, solutionEpoch: Double, latitudeDeg: Double, longitudeDeg: Double, altitudeM: Double, enuCovarianceM2Offset: Int, errorEllipseSemiMajorM: Double, errorEllipseSemiMinorM: Double, errorEllipseOrientationDeg: Double, cep50M: Double, cep95M: Double, gdop: Double, velocityEastMS: Double, velocityNorthMS: Double, velocityUpMS: Double, velocityCovarianceM2S2Offset: Int, observationRefsOffset: Int, convergenceDiagnosticsOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(27)
             addCOMPUTEDAT(builder, computedAt)
@@ -379,7 +379,7 @@ class GEL : Table() {
                 builder.required(o, 56)
             return o
         }
-        fun finishGELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GEL")
-        fun finishSizePrefixedGELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GEL")
+        fun finishGELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GEL")
+        fun finishSizePrefixedGELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GEL")
     }
 }

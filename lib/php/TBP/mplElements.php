@@ -23,7 +23,7 @@ class mplElements extends Table
 
     public static function mplElementsIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplElementsBufferHasIdentifier(ByteBuffer $buf)

@@ -5,7 +5,9 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../MET/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 enum elementType {
   OSCULATING(0),
@@ -1306,16 +1308,13 @@ class VCM {
   VCMStateVector? get STATE_VECTOR => VCMStateVector.reader.vTableGetNullable(_bc, _bcOffset, 20);
   VCMStateVector? get stateVector => STATE_VECTOR;
   keplerianElements? get KEPLERIAN_ELEMENTS => keplerianElements.reader.vTableGetNullable(_bc, _bcOffset, 22);
-  keplerianElements? get keplerianElements => KEPLERIAN_ELEMENTS;
   equinoctialElements? get EQUINOCTIAL_ELEMENTS => equinoctialElements.reader.vTableGetNullable(_bc, _bcOffset, 24);
-  equinoctialElements? get equinoctialElements => EQUINOCTIAL_ELEMENTS;
   double get GM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
   VCMAtmosphericModelData? get ATMOSPHERIC_MODEL_DATA => VCMAtmosphericModelData.reader.vTableGetNullable(_bc, _bcOffset, 28);
   VCMAtmosphericModelData? get atmosphericModelData => ATMOSPHERIC_MODEL_DATA;
   propagatorConfig? get PROPAGATOR_SETTINGS => propagatorConfig.reader.vTableGetNullable(_bc, _bcOffset, 30);
   propagatorConfig? get propagatorSettings => PROPAGATOR_SETTINGS;
   uvwSigmas? get UVW_SIGMAS => uvwSigmas.reader.vTableGetNullable(_bc, _bcOffset, 32);
-  uvwSigmas? get uvwSigmas => UVW_SIGMAS;
   double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
   double get SOLAR_RAD_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
   double get solarRadArea => SOLAR_RAD_AREA;

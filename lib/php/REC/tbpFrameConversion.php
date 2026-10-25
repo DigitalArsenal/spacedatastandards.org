@@ -24,7 +24,7 @@ class tbpFrameConversion extends Table
 
     public static function tbpFrameConversionIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpFrameConversionBufferHasIdentifier(ByteBuffer $buf)

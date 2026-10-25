@@ -21,7 +21,7 @@ class FMBLarge extends Table
 
     public static function FMBLargeIdentifier()
     {
-        return "$FMB";
+        return '$FMB';
     }
 
     public static function FMBLargeBufferHasIdentifier(ByteBuffer $buf)

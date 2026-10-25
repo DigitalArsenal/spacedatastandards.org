@@ -20,7 +20,7 @@ class SFECOLLECTION extends Table
 
     public static function SFECOLLECTIONIdentifier()
     {
-        return "$SFE";
+        return '$SFE';
     }
 
     public static function SFECOLLECTIONBufferHasIdentifier(ByteBuffer $buf)

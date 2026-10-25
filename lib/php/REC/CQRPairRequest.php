@@ -22,7 +22,7 @@ class CQRPairRequest extends Table
 
     public static function CQRPairRequestIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRPairRequestBufferHasIdentifier(ByteBuffer $buf)

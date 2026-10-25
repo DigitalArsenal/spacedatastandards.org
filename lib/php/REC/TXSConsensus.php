@@ -26,7 +26,7 @@ class TXSConsensus extends Table
 
     public static function TXSConsensusIdentifier()
     {
-        return "$TXS";
+        return '$TXS';
     }
 
     public static function TXSConsensusBufferHasIdentifier(ByteBuffer $buf)

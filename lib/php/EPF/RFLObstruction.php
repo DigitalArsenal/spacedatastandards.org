@@ -29,7 +29,7 @@ class RFLObstruction extends Table
 
     public static function RFLObstructionIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLObstructionBufferHasIdentifier(ByteBuffer $buf)

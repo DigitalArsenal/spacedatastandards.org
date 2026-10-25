@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CCT/main_generated.dart';
+import '../STF/main_generated.dart';
 
 ///  Purchase lifecycle status tracked by the provider.
 enum purchaseLifecycleStatus {
@@ -86,7 +87,6 @@ class PUR {
   List<int>? get buyerEncryptionPubkey => BUYER_ENCRYPTION_PUBKEY;
   ///  Payment method used
   paymentMethod get PAYMENT_METHOD => paymentMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
-  paymentMethod get paymentMethod => PAYMENT_METHOD;
   ///  Payment amount in smallest unit
   int get PAYMENT_AMOUNT => const fb.Uint64Reader().vTableGet(_bc, _bcOffset, 16, 0);
   int get paymentAmount => PAYMENT_AMOUNT;

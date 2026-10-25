@@ -130,7 +130,7 @@ class WPN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun WPNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WPN")
+        fun WPNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$WPN")
         fun createWPN(builder: FlatBufferBuilder, caliber: Float, muzzleVelocity: Float, rateOfFire: Float, dispersion: Float, ammoCapacity: UShort, burstLength: UShort, reloadTime: Float, overheatRounds: UShort, cooldownRate: Float, elevationMin: Float, elevationMax: Float, traverseMin: Float, traverseMax: Float, slewRate: Float, weaponType: UByte, fuzeType: UByte, reservedOffset: Int) : Int {
             builder.startTable(17)
             addRESERVED(builder, reservedOffset)
@@ -183,7 +183,7 @@ class WPN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishWPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$WPN")
-        fun finishSizePrefixedWPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$WPN")
+        fun finishWPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$WPN")
+        fun finishSizePrefixedWPNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$WPN")
     }
 }

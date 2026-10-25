@@ -21,7 +21,7 @@ class XMTRecordRef extends Table
 
     public static function XMTRecordRefIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTRecordRefBufferHasIdentifier(ByteBuffer $buf)

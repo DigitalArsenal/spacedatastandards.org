@@ -21,7 +21,7 @@ class EnumerationValue extends Table
 
     public static function EnumerationValueIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function EnumerationValueBufferHasIdentifier(ByteBuffer $buf)

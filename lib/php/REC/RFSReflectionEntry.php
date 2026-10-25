@@ -23,7 +23,7 @@ class RFSReflectionEntry extends Table
 
     public static function RFSReflectionEntryIdentifier()
     {
-        return "$RFS";
+        return '$RFS';
     }
 
     public static function RFSReflectionEntryBufferHasIdentifier(ByteBuffer $buf)

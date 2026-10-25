@@ -21,7 +21,7 @@ class ContainerRefEntry extends Table
 
     public static function ContainerRefEntryIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ContainerRefEntryBufferHasIdentifier(ByteBuffer $buf)

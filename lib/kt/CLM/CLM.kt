@@ -212,7 +212,7 @@ class CLM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CLMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CLM")
+        fun CLMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CLM")
         fun createCLM(builder: FlatBufferBuilder, claimIdOffset: Int, claimantPeerIdOffset: Int, claimantProfileCidOffset: Int, objectKind: Byte, objectIdOffset: Int, objectNameOffset: Int, role: Byte, statementOffset: Int, evidenceUrlOffset: Int, createdAt: ULong, updatedAt: ULong, deleted: Boolean, signatureOffset: Int, countersignaturesOffset: Int) : Int {
             builder.startTable(14)
             addUPDATEDAT(builder, updatedAt)
@@ -270,7 +270,7 @@ class CLM : Table() {
                 builder.required(o, 12)
             return o
         }
-        fun finishCLMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CLM")
-        fun finishSizePrefixedCLMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CLM")
+        fun finishCLMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CLM")
+        fun finishSizePrefixedCLMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CLM")
     }
 }

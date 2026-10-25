@@ -23,7 +23,7 @@ class mplRendezvousRequest extends Table
 
     public static function mplRendezvousRequestIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplRendezvousRequestBufferHasIdentifier(ByteBuffer $buf)

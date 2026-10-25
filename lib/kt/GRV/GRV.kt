@@ -126,7 +126,7 @@ class GRV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GRVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GRV")
+        fun GRVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GRV")
         fun createGRV(builder: FlatBufferBuilder, modelType: Byte, modelName: Byte, centralBody: Byte, maxDegree: UShort, maxOrder: UShort, includeSun: Boolean, includeMoon: Boolean, includePlanets: Boolean, solidTides: Boolean, oceanTides: Boolean, poleTides: Boolean, equatorialRadius: Double, j2: Double, mu: Double, j3: Double, j4: Double, j5: Double, j6: Double) : Int {
             builder.startTable(18)
             addJ6(builder, j6)
@@ -172,7 +172,7 @@ class GRV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GRV")
-        fun finishSizePrefixedGRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GRV")
+        fun finishGRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GRV")
+        fun finishSizePrefixedGRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GRV")
     }
 }

@@ -524,7 +524,7 @@ class ACM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ACMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACM")
+        fun ACMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACM")
         fun createACM(builder: FlatBufferBuilder, ccsdsAcmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, catalogNameOffset: Int, epochOffset: Int, timeSystemOffset: Int, attStatesOffset: Int, physPropertiesOffset: Int, covDataOffset: Int, maneuversOffset: Int, maneuverable: Byte, commentOffset: Int, classificationOffset: Int, messageIdOffset: Int, objectDesignatorOffset: Int, originatorPocOffset: Int, originatorPositionOffset: Int, originatorPhoneOffset: Int, originatorEmailOffset: Int, originatorAddressOffset: Int, odmMsgLinkOffset: Int, centerNameOffset: Int, acmDataElementsOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, taimutcAtTzero: Double, nextLeapEpochOffset: Int, nextLeapTaimutc: Double, attBlocksOffset: Int, covBlocksOffset: Int, manBlocksOffset: Int, determinationOffset: Int, userDefinedParametersOffset: Int) : Int {
             builder.startTable(35)
             addNEXTLEAPTAIMUTC(builder, nextLeapTaimutc)
@@ -660,7 +660,7 @@ class ACM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishACMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ACM")
-        fun finishSizePrefixedACMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ACM")
+        fun finishACMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ACM")
+        fun finishSizePrefixedACMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ACM")
     }
 }

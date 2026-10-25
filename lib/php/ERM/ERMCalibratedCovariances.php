@@ -21,7 +21,7 @@ class ERMCalibratedCovariances extends Table
 
     public static function ERMCalibratedCovariancesIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCalibratedCovariancesBufferHasIdentifier(ByteBuffer $buf)

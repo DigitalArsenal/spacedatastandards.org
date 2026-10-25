@@ -318,7 +318,7 @@ class DCL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DCLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DCL")
+        fun DCLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DCL")
         fun createDCL(builder: FlatBufferBuilder, idOffset: Int, createdAtMs: Long, producerOffset: Int, product: UByte, atmosphereOffset: Int, jb2008DriversOffset: Int, spaceWeatherOffset: Int, gravityFieldOffset: Int, gravityDegree: UShort, gravityOrder: UShort, gmM3S2: Double, earthRotationRadS: Double, ballisticCoefficientM2Kg: Double, settingsOffset: Int, correctionOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, pointsOffset: Int, objectsOffset: Int, fitOffset: Int, levelsOffset: Int, historyOffset: Int, levelLnBCorrelation: Double, meanLevelSigmaK: Double, statesOffset: Int, provenanceOffset: Int) : Int {
             builder.startTable(27)
             addMEANLEVELSIGMAK(builder, meanLevelSigmaK)
@@ -414,7 +414,7 @@ class DCL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishDCLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DCL")
-        fun finishSizePrefixedDCLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DCL")
+        fun finishDCLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DCL")
+        fun finishSizePrefixedDCLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DCL")
     }
 }

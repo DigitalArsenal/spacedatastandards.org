@@ -21,7 +21,7 @@ class CZMRectangle extends Table
 
     public static function CZMRectangleIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMRectangleBufferHasIdentifier(ByteBuffer $buf)

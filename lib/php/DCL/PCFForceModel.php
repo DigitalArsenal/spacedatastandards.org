@@ -24,7 +24,7 @@ class PCFForceModel extends Table
 
     public static function PCFForceModelIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFForceModelBufferHasIdentifier(ByteBuffer $buf)

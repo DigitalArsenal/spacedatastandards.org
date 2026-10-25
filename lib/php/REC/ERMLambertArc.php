@@ -21,7 +21,7 @@ class ERMLambertArc extends Table
 
     public static function ERMLambertArcIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMLambertArcBufferHasIdentifier(ByteBuffer $buf)

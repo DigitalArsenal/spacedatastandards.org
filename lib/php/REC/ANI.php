@@ -21,7 +21,7 @@ class ANI extends Table
 
     public static function ANIIdentifier()
     {
-        return "$ANI";
+        return '$ANI';
     }
 
     public static function ANIBufferHasIdentifier(ByteBuffer $buf)
@@ -589,6 +589,6 @@ class ANI extends Table
 
     public static function finishANIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ANI");
+        $builder->finish($offset, '$ANI');
     }
 }

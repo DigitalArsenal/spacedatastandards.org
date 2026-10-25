@@ -21,7 +21,7 @@ class BSP extends Table
 
     public static function BSPIdentifier()
     {
-        return "$BSP";
+        return '$BSP';
     }
 
     public static function BSPBufferHasIdentifier(ByteBuffer $buf)
@@ -111,6 +111,6 @@ class BSP extends Table
 
     public static function finishBSPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BSP");
+        $builder->finish($offset, '$BSP');
     }
 }

@@ -21,7 +21,7 @@ class ERMStatePair extends Table
 
     public static function ERMStatePairIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMStatePairBufferHasIdentifier(ByteBuffer $buf)

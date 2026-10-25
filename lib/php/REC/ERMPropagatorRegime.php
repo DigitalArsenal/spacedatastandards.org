@@ -21,7 +21,7 @@ class ERMPropagatorRegime extends Table
 
     public static function ERMPropagatorRegimeIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMPropagatorRegimeBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class KMLMultiGeometry extends Table
 
     public static function KMLMultiGeometryIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLMultiGeometryBufferHasIdentifier(ByteBuffer $buf)

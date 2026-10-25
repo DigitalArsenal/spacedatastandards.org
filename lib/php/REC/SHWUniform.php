@@ -21,7 +21,7 @@ class SHWUniform extends Table
 
     public static function SHWUniformIdentifier()
     {
-        return "$SHW";
+        return '$SHW';
     }
 
     public static function SHWUniformBufferHasIdentifier(ByteBuffer $buf)

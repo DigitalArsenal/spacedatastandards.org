@@ -21,7 +21,7 @@ class APMManeuver extends Table
 
     public static function APMManeuverIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMManeuverBufferHasIdentifier(ByteBuffer $buf)

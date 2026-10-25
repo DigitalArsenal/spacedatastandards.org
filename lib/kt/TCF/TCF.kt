@@ -117,7 +117,7 @@ class TCF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TCF")
+        fun TCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TCF")
         fun createTCF(builder: FlatBufferBuilder, version: UByte, bypassFlag: Boolean, controlCmdFlag: Boolean, spacecraftId: UShort, virtualChannelId: UByte, frameLength: UShort, frameSequenceNum: UByte, dataOffset: Int, fecf: UShort) : Int {
             builder.startTable(9)
             addDATA(builder, dataOffset)
@@ -154,7 +154,7 @@ class TCF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TCF")
-        fun finishSizePrefixedTCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TCF")
+        fun finishTCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TCF")
+        fun finishSizePrefixedTCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TCF")
     }
 }

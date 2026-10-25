@@ -21,7 +21,7 @@ class ionoDataPoint extends Table
 
     public static function ionoDataPointIdentifier()
     {
-        return "$ION";
+        return '$ION';
     }
 
     public static function ionoDataPointBufferHasIdentifier(ByteBuffer $buf)

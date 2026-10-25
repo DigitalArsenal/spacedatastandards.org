@@ -29,7 +29,7 @@ class MDP extends Table
 
     public static function MDPIdentifier()
     {
-        return "$MDP";
+        return '$MDP';
     }
 
     public static function MDPBufferHasIdentifier(ByteBuffer $buf)
@@ -537,6 +537,6 @@ class MDP extends Table
 
     public static function finishMDPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MDP");
+        $builder->finish($offset, '$MDP');
     }
 }

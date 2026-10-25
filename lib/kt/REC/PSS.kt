@@ -116,7 +116,7 @@ class PSS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PSS")
+        fun PSSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PSS")
         fun createPSS(builder: FlatBufferBuilder, solutionSetIdOffset: Int, problemIdOffset: Int, objectiveIdsOffset: Int, solutionsOffset: Int, generatedAtOffset: Int, attestationOffset: Int) : Int {
             builder.startTable(6)
             addATTESTATION(builder, attestationOffset)
@@ -157,7 +157,7 @@ class PSS : Table() {
                 builder.required(o, 14)
             return o
         }
-        fun finishPSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PSS")
-        fun finishSizePrefixedPSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PSS")
+        fun finishPSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PSS")
+        fun finishSizePrefixedPSSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PSS")
     }
 }

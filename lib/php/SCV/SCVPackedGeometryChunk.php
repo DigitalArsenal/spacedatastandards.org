@@ -20,7 +20,7 @@ class SCVPackedGeometryChunk extends Table
 
     public static function SCVPackedGeometryChunkIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVPackedGeometryChunkBufferHasIdentifier(ByteBuffer $buf)

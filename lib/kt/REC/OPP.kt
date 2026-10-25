@@ -367,7 +367,7 @@ class OPP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OPPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OPP")
+        fun OPPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OPP")
         fun createOPP(builder: FlatBufferBuilder, idOffset: Int, versionOffset: Int, noradCatId: UInt, objectIdOffset: Int, objectNameOffset: Int, entityIdOffset: Int, busIdOffset: Int, busFamilyOffset: Int, busFamilyProvenanceOffset: Int, manufacturerOffset: Int, manufacturerProvenanceOffset: Int, massOffset: Int, dimensionsOffset: Int, areasOffset: Int, radarCrossSectionsOffset: Int, visualMagnitudeOffset: Int, surfacesOffset: Int, assetOffset: Int, sourcesOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, supersedesOppCidOffset: Int, notesOffset: Int) : Int {
             builder.startTable(23)
             addNOTES(builder, notesOffset)
@@ -448,7 +448,7 @@ class OPP : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishOPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OPP")
-        fun finishSizePrefixedOPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OPP")
+        fun finishOPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OPP")
+        fun finishSizePrefixedOPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OPP")
     }
 }

@@ -55,7 +55,7 @@ class PIV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PIVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PIV")
+        fun PIVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PIV")
         fun createPIV(builder: FlatBufferBuilder, requestOffset: Int, responseOffset: Int) : Int {
             builder.startTable(2)
             addRESPONSE(builder, responseOffset)
@@ -69,7 +69,7 @@ class PIV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPIVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PIV")
-        fun finishSizePrefixedPIVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PIV")
+        fun finishPIVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PIV")
+        fun finishSizePrefixedPIVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PIV")
     }
 }

@@ -60,7 +60,7 @@ class BSP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BSPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BSP")
+        fun BSPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BSP")
         fun createBSP(builder: FlatBufferBuilder, interpolationRequestOffset: Int, interpolationResultOffset: Int) : Int {
             builder.startTable(2)
             addINTERPOLATIONRESULT(builder, interpolationResultOffset)
@@ -74,7 +74,7 @@ class BSP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishBSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BSP")
-        fun finishSizePrefixedBSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BSP")
+        fun finishBSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BSP")
+        fun finishSizePrefixedBSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BSP")
     }
 }

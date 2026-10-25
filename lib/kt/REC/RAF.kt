@@ -121,7 +121,7 @@ class RAF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RAFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RAF")
+        fun RAFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RAF")
         fun createRAF(builder: FlatBufferBuilder, pduType: Byte, initiatorIdOffset: Int, responderPortIdOffset: Int, serviceType: UByte, version: UShort, invokeId: UInt, frameQuality: UByte, dataOffset: Int) : Int {
             builder.startTable(8)
             addDATA(builder, dataOffset)
@@ -156,7 +156,7 @@ class RAF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRAFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RAF")
-        fun finishSizePrefixedRAFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RAF")
+        fun finishRAFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RAF")
+        fun finishSizePrefixedRAFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RAF")
     }
 }

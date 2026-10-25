@@ -26,7 +26,7 @@ class SCX extends Table
 
     public static function SCXIdentifier()
     {
-        return "$SCX";
+        return '$SCX';
     }
 
     public static function SCXBufferHasIdentifier(ByteBuffer $buf)
@@ -354,6 +354,6 @@ class SCX extends Table
 
     public static function finishSCXBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SCX");
+        $builder->finish($offset, '$SCX');
     }
 }

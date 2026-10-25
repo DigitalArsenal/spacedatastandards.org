@@ -354,8 +354,8 @@ public struct Record : IFlatbufferObject
   }
   public void UnPackTo(RecordT _o) {
     _o.value = new RecordTypeUnion();
-    _o.value.Type = this.valueType;
-    switch (this.valueType) {
+    _o.value.Type = this.value_type;
+    switch (this.value_type) {
       default: break;
       case RecordType.ACL:
         _o.value.Value = this.value<ACL>().HasValue ? this.value<ACL>().Value.UnPack() : null;

@@ -21,7 +21,7 @@ class StaticAlarmRanges extends Table
 
     public static function StaticAlarmRangesIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function StaticAlarmRangesBufferHasIdentifier(ByteBuffer $buf)

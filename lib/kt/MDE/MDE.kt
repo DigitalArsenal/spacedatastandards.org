@@ -90,7 +90,7 @@ class MDE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MDEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MDE")
+        fun MDEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MDE")
         fun createMDE(builder: FlatBufferBuilder, detectOptionsOffset: Int, detectReportOffset: Int, compareOptionsOffset: Int, compareReportOffset: Int, scoreOptionsOffset: Int, scoreReportOffset: Int) : Int {
             builder.startTable(6)
             addSCOREREPORT(builder, scoreReportOffset)
@@ -112,7 +112,7 @@ class MDE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMDEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MDE")
-        fun finishSizePrefixedMDEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MDE")
+        fun finishMDEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MDE")
+        fun finishSizePrefixedMDEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MDE")
     }
 }

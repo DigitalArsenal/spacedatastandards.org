@@ -21,7 +21,7 @@ class MDSDeepSpaceManeuver extends Table
 
     public static function MDSDeepSpaceManeuverIdentifier()
     {
-        return "$MDS";
+        return '$MDS';
     }
 
     public static function MDSDeepSpaceManeuverBufferHasIdentifier(ByteBuffer $buf)

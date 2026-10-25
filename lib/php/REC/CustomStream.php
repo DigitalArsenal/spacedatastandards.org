@@ -21,7 +21,7 @@ class CustomStream extends Table
 
     public static function CustomStreamIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function CustomStreamBufferHasIdentifier(ByteBuffer $buf)

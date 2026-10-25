@@ -23,7 +23,7 @@ class ETM extends Table
 
     public static function ETMIdentifier()
     {
-        return "$ETM";
+        return '$ETM';
     }
 
     public static function ETMBufferHasIdentifier(ByteBuffer $buf)
@@ -639,6 +639,6 @@ class ETM extends Table
 
     public static function finishETMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ETM");
+        $builder->finish($offset, '$ETM');
     }
 }

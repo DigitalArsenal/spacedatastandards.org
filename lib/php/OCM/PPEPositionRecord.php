@@ -32,7 +32,7 @@ class PPEPositionRecord extends Table
 
     public static function PPEPositionRecordIdentifier()
     {
-        return "$PPE";
+        return '$PPE';
     }
 
     public static function PPEPositionRecordBufferHasIdentifier(ByteBuffer $buf)

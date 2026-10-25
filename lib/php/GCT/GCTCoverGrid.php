@@ -24,7 +24,7 @@ class GCTCoverGrid extends Table
 
     public static function GCTCoverGridIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTCoverGridBufferHasIdentifier(ByteBuffer $buf)

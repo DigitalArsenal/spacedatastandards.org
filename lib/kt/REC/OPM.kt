@@ -357,7 +357,7 @@ class OPM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OPM")
+        fun OPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OPM")
         fun createOPM(builder: FlatBufferBuilder, ccsdsOpmVersOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, refFrameOffset: Int, timeSystemOffset: Int, epochOffset: Int, x: Double, y: Double, z: Double, xDot: Double, yDot: Double, zDot: Double, semiMajorAxis: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, trueAnomaly: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, commentOffset: Int, classificationOffset: Int, messageIdOffset: Int, refFrameEpochOffset: Int, covRefFrameOffset: Int, covarianceOffset: Int, maneuversOffset: Int, userDefinedParametersOffset: Int) : Int {
             builder.startTable(36)
             addDRAGCOEFF(builder, dragCoeff)
@@ -463,7 +463,7 @@ class OPM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OPM")
-        fun finishSizePrefixedOPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OPM")
+        fun finishOPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OPM")
+        fun finishSizePrefixedOPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OPM")
     }
 }

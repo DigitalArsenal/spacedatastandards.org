@@ -21,7 +21,7 @@ class COTDetail extends Table
 
     public static function COTDetailIdentifier()
     {
-        return "$COT";
+        return '$COT';
     }
 
     public static function COTDetailBufferHasIdentifier(ByteBuffer $buf)

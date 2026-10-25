@@ -5,7 +5,9 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../PHB/main_generated.dart';
+import '../SKQ/main_generated.dart';
+import '../SKT/main_generated.dart';
 
 ///  Outcome of a sky query.
 ///  Append new values only; never reorder or reuse existing values.
@@ -129,26 +131,21 @@ class SKRHitObjectBuilder extends fb.ObjectBuilder {
   SKRHitObjectBuilder({
     required int ROW,
     required int FLAGS,
-    double RA_DEG,
-    double? raDeg,
-    double DEC_DEG,
-    double? decDeg,
-    double SEPARATION_DEG,
-    double? separationDeg,
-    double FIELD_X_DEG,
-    double? fieldXDeg,
-    double FIELD_Y_DEG,
-    double? fieldYDeg,
+    required double RA_DEG,
+    required double DEC_DEG,
+    required double SEPARATION_DEG,
+    required double FIELD_X_DEG,
+    required double FIELD_Y_DEG,
     required double MAG,
     required int RESERVED,
   })
       : _ROW = ROW,
         _FLAGS = FLAGS,
-        _RA_DEG = raDeg ?? RA_DEG,
-        _DEC_DEG = decDeg ?? DEC_DEG,
-        _SEPARATION_DEG = separationDeg ?? SEPARATION_DEG,
-        _FIELD_X_DEG = fieldXDeg ?? FIELD_X_DEG,
-        _FIELD_Y_DEG = fieldYDeg ?? FIELD_Y_DEG,
+        _RA_DEG = RA_DEG,
+        _DEC_DEG = DEC_DEG,
+        _SEPARATION_DEG = SEPARATION_DEG,
+        _FIELD_X_DEG = FIELD_X_DEG,
+        _FIELD_Y_DEG = FIELD_Y_DEG,
         _MAG = MAG,
         _RESERVED = RESERVED;
 
@@ -240,20 +237,17 @@ class SKROccultationObjectBuilder extends fb.ObjectBuilder {
   final int _RESERVED;
 
   SKROccultationObjectBuilder({
-    int BODY_ID,
-    int? bodyId,
+    required int BODY_ID,
     required int ROW,
-    double MIN_SEPARATION_DEG,
-    double? minSeparationDeg,
-    double TRACK_FRACTION,
-    double? trackFraction,
+    required double MIN_SEPARATION_DEG,
+    required double TRACK_FRACTION,
     required double MAG,
     required int RESERVED,
   })
-      : _BODY_ID = bodyId ?? BODY_ID,
+      : _BODY_ID = BODY_ID,
         _ROW = ROW,
-        _MIN_SEPARATION_DEG = minSeparationDeg ?? MIN_SEPARATION_DEG,
-        _TRACK_FRACTION = trackFraction ?? TRACK_FRACTION,
+        _MIN_SEPARATION_DEG = MIN_SEPARATION_DEG,
+        _TRACK_FRACTION = TRACK_FRACTION,
         _MAG = MAG,
         _RESERVED = RESERVED;
 
@@ -346,25 +340,20 @@ class SKRExclusionObjectBuilder extends fb.ObjectBuilder {
   final int _RESERVED2;
 
   SKRExclusionObjectBuilder({
-    int POINTING_ID,
-    int? pointingId,
-    int VIOLATING_COUNT,
-    int? violatingCount,
-    int BRIGHTEST_ROW,
-    int? brightestRow,
+    required int POINTING_ID,
+    required int VIOLATING_COUNT,
+    required int BRIGHTEST_ROW,
     required int RESERVED,
-    double BRIGHTEST_SEPARATION_DEG,
-    double? brightestSeparationDeg,
-    double BRIGHTEST_MAG,
-    double? brightestMag,
+    required double BRIGHTEST_SEPARATION_DEG,
+    required double BRIGHTEST_MAG,
     required int RESERVED2,
   })
-      : _POINTING_ID = pointingId ?? POINTING_ID,
-        _VIOLATING_COUNT = violatingCount ?? VIOLATING_COUNT,
-        _BRIGHTEST_ROW = brightestRow ?? BRIGHTEST_ROW,
+      : _POINTING_ID = POINTING_ID,
+        _VIOLATING_COUNT = VIOLATING_COUNT,
+        _BRIGHTEST_ROW = BRIGHTEST_ROW,
         _RESERVED = RESERVED,
-        _BRIGHTEST_SEPARATION_DEG = brightestSeparationDeg ?? BRIGHTEST_SEPARATION_DEG,
-        _BRIGHTEST_MAG = brightestMag ?? BRIGHTEST_MAG,
+        _BRIGHTEST_SEPARATION_DEG = BRIGHTEST_SEPARATION_DEG,
+        _BRIGHTEST_MAG = BRIGHTEST_MAG,
         _RESERVED2 = RESERVED2;
 
   /// Finish building, and store into the [fbBuilder].

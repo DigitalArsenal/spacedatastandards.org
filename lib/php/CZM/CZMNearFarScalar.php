@@ -21,7 +21,7 @@ class CZMNearFarScalar extends Table
 
     public static function CZMNearFarScalarIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMNearFarScalarBufferHasIdentifier(ByteBuffer $buf)

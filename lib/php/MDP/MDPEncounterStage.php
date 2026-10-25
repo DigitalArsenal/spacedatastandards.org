@@ -28,7 +28,7 @@ class MDPEncounterStage extends Table
 
     public static function MDPEncounterStageIdentifier()
     {
-        return "$MDP";
+        return '$MDP';
     }
 
     public static function MDPEncounterStageBufferHasIdentifier(ByteBuffer $buf)

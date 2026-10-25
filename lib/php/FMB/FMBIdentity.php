@@ -21,7 +21,7 @@ class FMBIdentity extends Table
 
     public static function FMBIdentityIdentifier()
     {
-        return "$FMB";
+        return '$FMB';
     }
 
     public static function FMBIdentityBufferHasIdentifier(ByteBuffer $buf)

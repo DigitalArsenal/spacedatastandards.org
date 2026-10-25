@@ -21,7 +21,7 @@ class ERMMappedCovariance extends Table
 
     public static function ERMMappedCovarianceIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMMappedCovarianceBufferHasIdentifier(ByteBuffer $buf)

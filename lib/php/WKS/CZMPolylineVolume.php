@@ -21,7 +21,7 @@ class CZMPolylineVolume extends Table
 
     public static function CZMPolylineVolumeIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolylineVolumeBufferHasIdentifier(ByteBuffer $buf)

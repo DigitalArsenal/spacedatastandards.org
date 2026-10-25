@@ -20,7 +20,7 @@ class SCVResult extends Table
 
     public static function SCVResultIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVResultBufferHasIdentifier(ByteBuffer $buf)

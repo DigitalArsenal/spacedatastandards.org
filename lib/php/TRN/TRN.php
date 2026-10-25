@@ -21,7 +21,7 @@ class TRN extends Table
 
     public static function TRNIdentifier()
     {
-        return "$TRN";
+        return '$TRN';
     }
 
     public static function TRNBufferHasIdentifier(ByteBuffer $buf)
@@ -207,6 +207,6 @@ class TRN extends Table
 
     public static function finishTRNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRN");
+        $builder->finish($offset, '$TRN');
     }
 }

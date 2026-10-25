@@ -21,7 +21,7 @@ class NHS extends Table
 
     public static function NHSIdentifier()
     {
-        return "$NHS";
+        return '$NHS';
     }
 
     public static function NHSBufferHasIdentifier(ByteBuffer $buf)
@@ -698,6 +698,6 @@ class NHS extends Table
 
     public static function finishNHSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NHS");
+        $builder->finish($offset, '$NHS');
     }
 }

@@ -22,7 +22,7 @@ class XMTEpochFitReport extends Table
 
     public static function XMTEpochFitReportIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTEpochFitReportBufferHasIdentifier(ByteBuffer $buf)

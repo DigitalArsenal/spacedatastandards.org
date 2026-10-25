@@ -23,7 +23,7 @@ class ACMCovarianceBlock extends Table
 
     public static function ACMCovarianceBlockIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMCovarianceBlockBufferHasIdentifier(ByteBuffer $buf)

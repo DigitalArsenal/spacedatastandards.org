@@ -25,7 +25,7 @@ class IQCGeolocation extends Table
 
     public static function IQCGeolocationIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCGeolocationBufferHasIdentifier(ByteBuffer $buf)

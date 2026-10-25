@@ -21,7 +21,7 @@ class ERMProcessNoise extends Table
 
     public static function ERMProcessNoiseIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMProcessNoiseBufferHasIdentifier(ByteBuffer $buf)

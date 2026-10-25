@@ -27,7 +27,7 @@ class FSO extends Table
 
     public static function FSOIdentifier()
     {
-        return "$FSO";
+        return '$FSO';
     }
 
     public static function FSOBufferHasIdentifier(ByteBuffer $buf)
@@ -776,6 +776,6 @@ class FSO extends Table
 
     public static function finishFSOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FSO");
+        $builder->finish($offset, '$FSO');
     }
 }

@@ -21,7 +21,7 @@ class tbpPeriodicOrbit extends Table
 
     public static function tbpPeriodicOrbitIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpPeriodicOrbitBufferHasIdentifier(ByteBuffer $buf)

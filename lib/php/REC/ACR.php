@@ -21,7 +21,7 @@ class ACR extends Table
 
     public static function ACRIdentifier()
     {
-        return "$ACR";
+        return '$ACR';
     }
 
     public static function ACRBufferHasIdentifier(ByteBuffer $buf)
@@ -604,6 +604,6 @@ class ACR extends Table
 
     public static function finishACRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ACR");
+        $builder->finish($offset, '$ACR');
     }
 }

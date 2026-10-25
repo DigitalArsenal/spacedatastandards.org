@@ -26,7 +26,7 @@ class TRE extends Table
 
     public static function TREIdentifier()
     {
-        return "$TRE";
+        return '$TRE';
     }
 
     public static function TREBufferHasIdentifier(ByteBuffer $buf)
@@ -280,6 +280,6 @@ class TRE extends Table
 
     public static function finishTREBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRE");
+        $builder->finish($offset, '$TRE');
     }
 }

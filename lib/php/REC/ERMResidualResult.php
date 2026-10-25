@@ -21,7 +21,7 @@ class ERMResidualResult extends Table
 
     public static function ERMResidualResultIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMResidualResultBufferHasIdentifier(ByteBuffer $buf)

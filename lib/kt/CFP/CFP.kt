@@ -177,7 +177,7 @@ class CFP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CFPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CFP")
+        fun CFPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CFP")
         fun createCFP(builder: FlatBufferBuilder, version: UByte, pduType: Byte, direction: UByte, transmissionMode: Byte, crcFlag: Boolean, largeFileFlag: Boolean, dataFieldLength: UShort, sourceEntityId: ULong, transactionSeqNum: ULong, destinationEntityId: ULong, checksumType: UByte, fileSize: ULong, sourceFilenameOffset: Int, destinationFilenameOffset: Int, dataOffset: Int) : Int {
             builder.startTable(15)
             addFILESIZE(builder, fileSize)
@@ -226,7 +226,7 @@ class CFP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCFPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CFP")
-        fun finishSizePrefixedCFPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CFP")
+        fun finishCFPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CFP")
+        fun finishSizePrefixedCFPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CFP")
     }
 }

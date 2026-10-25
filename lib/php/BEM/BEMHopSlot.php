@@ -21,7 +21,7 @@ class BEMHopSlot extends Table
 
     public static function BEMHopSlotIdentifier()
     {
-        return "$BEM";
+        return '$BEM';
     }
 
     public static function BEMHopSlotBufferHasIdentifier(ByteBuffer $buf)

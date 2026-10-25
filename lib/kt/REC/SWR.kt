@@ -252,7 +252,7 @@ class SWR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SWRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SWR")
+        fun SWRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SWR")
         fun createSWR(builder: FlatBufferBuilder, idOffset: Int, onOrbitOffset: Int, origObjectIdOffset: Int, satNo: UInt, tsOffset: Int, solarPhaseAngle: Double, lat: Double, lon: Double, locationNameOffset: Int, badWaveOffset: Int, wavelengthsOffset: Int, absFluxesOffset: Int, ratioWavelengthsOffset: Int, fluxRatiosOffset: Int, temperature: Double, signalNoiseRatio: Double, integrationTime: Double, quality: UByte) : Int {
             builder.startTable(18)
             addINTEGRATIONTIME(builder, integrationTime)
@@ -330,7 +330,7 @@ class SWR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SWR")
-        fun finishSizePrefixedSWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SWR")
+        fun finishSWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SWR")
+        fun finishSizePrefixedSWRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SWR")
     }
 }

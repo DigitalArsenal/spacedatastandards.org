@@ -21,7 +21,7 @@ class CZMCheckerboardMaterial extends Table
 
     public static function CZMCheckerboardMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMCheckerboardMaterialBufferHasIdentifier(ByteBuffer $buf)

@@ -397,7 +397,7 @@ class NCD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NCDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NCD")
+        fun NCDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NCD")
         fun createNCD(builder: FlatBufferBuilder, format: UByte, providerDefinedFormatNameOffset: Int, formatVersionOffset: Int, producerOffset: Int, creationDateOffset: Int, originatorOffset: Int, internalFileNameOffset: Int, commentAreaOffset: Int, nativeFrameNameOffset: Int, nativeFrameId: Int, nativeTimeSystemOffset: Int, segmentsOffset: Int, sp3HeaderOffset: Int, scenarioContainerOffset: Int, code500HeaderOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, sourceByteLength: ULong, sourceSha256Offset: Int, sourceCidOffset: Int, selectStartTimeOffset: Int, selectStopTimeOffset: Int, selectSampleIntervalSeconds: Double, selectSatelliteSystemsOffset: Int, selectObservationCodesOffset: Int, selectClockId: Int) : Int {
             builder.startTable(26)
             addSELECTSAMPLEINTERVALSECONDS(builder, selectSampleIntervalSeconds)
@@ -491,7 +491,7 @@ class NCD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNCDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NCD")
-        fun finishSizePrefixedNCDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NCD")
+        fun finishNCDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NCD")
+        fun finishSizePrefixedNCDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NCD")
     }
 }

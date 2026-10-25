@@ -23,7 +23,7 @@ class RFSGeometryRef extends Table
 
     public static function RFSGeometryRefIdentifier()
     {
-        return "$RFS";
+        return '$RFS';
     }
 
     public static function RFSGeometryRefBufferHasIdentifier(ByteBuffer $buf)

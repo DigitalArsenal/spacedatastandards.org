@@ -23,7 +23,7 @@ class mplOption extends Table
 
     public static function mplOptionIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplOptionBufferHasIdentifier(ByteBuffer $buf)

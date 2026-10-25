@@ -22,7 +22,7 @@ class mplTransferRequest extends Table
 
     public static function mplTransferRequestIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplTransferRequestBufferHasIdentifier(ByteBuffer $buf)

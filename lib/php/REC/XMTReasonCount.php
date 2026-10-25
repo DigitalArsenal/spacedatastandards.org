@@ -21,7 +21,7 @@ class XMTReasonCount extends Table
 
     public static function XMTReasonCountIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTReasonCountBufferHasIdentifier(ByteBuffer $buf)

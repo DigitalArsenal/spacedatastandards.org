@@ -21,7 +21,7 @@ class FCK extends Table
 
     public static function FCKIdentifier()
     {
-        return "$FCK";
+        return '$FCK';
     }
 
     public static function FCKBufferHasIdentifier(ByteBuffer $buf)
@@ -594,6 +594,6 @@ class FCK extends Table
 
     public static function finishFCKBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FCK");
+        $builder->finish($offset, '$FCK');
     }
 }

@@ -25,7 +25,7 @@ class GCTLevel extends Table
 
     public static function GCTLevelIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTLevelBufferHasIdentifier(ByteBuffer $buf)

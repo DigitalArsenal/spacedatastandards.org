@@ -32,7 +32,7 @@ class CMR extends Table
 
     public static function CMRIdentifier()
     {
-        return "$CMR";
+        return '$CMR';
     }
 
     public static function CMRBufferHasIdentifier(ByteBuffer $buf)
@@ -432,6 +432,6 @@ class CMR extends Table
 
     public static function finishCMRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CMR");
+        $builder->finish($offset, '$CMR');
     }
 }

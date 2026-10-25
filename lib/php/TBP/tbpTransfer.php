@@ -21,7 +21,7 @@ class tbpTransfer extends Table
 
     public static function tbpTransferIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpTransferBufferHasIdentifier(ByteBuffer $buf)

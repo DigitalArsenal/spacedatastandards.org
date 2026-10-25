@@ -21,7 +21,7 @@ class ParameterProperties extends Table
 
     public static function ParameterPropertiesIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ParameterPropertiesBufferHasIdentifier(ByteBuffer $buf)

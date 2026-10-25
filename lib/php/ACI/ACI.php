@@ -21,7 +21,7 @@ class ACI extends Table
 
     public static function ACIIdentifier()
     {
-        return "$ACI";
+        return '$ACI';
     }
 
     public static function ACIBufferHasIdentifier(ByteBuffer $buf)
@@ -517,6 +517,6 @@ class ACI extends Table
 
     public static function finishACIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ACI");
+        $builder->finish($offset, '$ACI');
     }
 }

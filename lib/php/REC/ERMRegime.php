@@ -23,7 +23,7 @@ class ERMRegime extends Table
 
     public static function ERMRegimeIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMRegimeBufferHasIdentifier(ByteBuffer $buf)

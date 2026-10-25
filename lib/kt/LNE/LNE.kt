@@ -326,7 +326,7 @@ class LNE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LNEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LNE")
+        fun LNEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LNE")
         fun createLNE(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, derivedFromOffset: Int, declassificationDateOffset: Int, declassificationStringOffset: Int, msgCreateDateOffset: Int, launchDateOffset: Int, outcome: Byte, launchFailureCodeOffset: Int, beNumberOffset: Int, oSuffixOffset: Int, launchFacilityNameOffset: Int, launchFacilityCodeOffset: Int, launchVehicleOffset: Int, launchVehicleConfigOffset: Int, targetOrbitOffset: Int, objectsOnOrbit: UShort, onOrbitOffset: Int, launchCountryOffset: Int, missionNameOffset: Int, remarksOffset: Int) : Int {
             builder.startTable(22)
             addREMARKS(builder, remarksOffset)
@@ -380,7 +380,7 @@ class LNE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLNEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LNE")
-        fun finishSizePrefixedLNEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LNE")
+        fun finishLNEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LNE")
+        fun finishSizePrefixedLNEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LNE")
     }
 }

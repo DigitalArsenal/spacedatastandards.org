@@ -21,7 +21,7 @@ class propagatorConfig extends Table
 
     public static function propagatorConfigIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function propagatorConfigBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SCRPossibilityKernel extends Table
 
     public static function SCRPossibilityKernelIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRPossibilityKernelBufferHasIdentifier(ByteBuffer $buf)

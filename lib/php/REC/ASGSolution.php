@@ -21,7 +21,7 @@ class ASGSolution extends Table
 
     public static function ASGSolutionIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGSolutionBufferHasIdentifier(ByteBuffer $buf)

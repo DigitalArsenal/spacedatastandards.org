@@ -21,7 +21,7 @@ class rfEmitterDetail extends Table
 
     public static function rfEmitterDetailIdentifier()
     {
-        return "$RFE";
+        return '$RFE';
     }
 
     public static function rfEmitterDetailBufferHasIdentifier(ByteBuffer $buf)

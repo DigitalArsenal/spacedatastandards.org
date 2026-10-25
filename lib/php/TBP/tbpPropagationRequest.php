@@ -21,7 +21,7 @@ class tbpPropagationRequest extends Table
 
     public static function tbpPropagationRequestIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpPropagationRequestBufferHasIdentifier(ByteBuffer $buf)

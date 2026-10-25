@@ -21,7 +21,7 @@ class PAPGainCut extends Table
 
     public static function PAPGainCutIdentifier()
     {
-        return "$PAP";
+        return '$PAP';
     }
 
     public static function PAPGainCutBufferHasIdentifier(ByteBuffer $buf)

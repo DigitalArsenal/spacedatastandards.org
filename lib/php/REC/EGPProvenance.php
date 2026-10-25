@@ -22,7 +22,7 @@ class EGPProvenance extends Table
 
     public static function EGPProvenanceIdentifier()
     {
-        return "$EGP";
+        return '$EGP';
     }
 
     public static function EGPProvenanceBufferHasIdentifier(ByteBuffer $buf)

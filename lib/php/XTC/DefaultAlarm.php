@@ -21,7 +21,7 @@ class DefaultAlarm extends Table
 
     public static function DefaultAlarmIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function DefaultAlarmBufferHasIdentifier(ByteBuffer $buf)

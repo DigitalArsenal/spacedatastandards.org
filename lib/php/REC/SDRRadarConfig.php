@@ -21,7 +21,7 @@ class SDRRadarConfig extends Table
 
     public static function SDRRadarConfigIdentifier()
     {
-        return "$SDR";
+        return '$SDR';
     }
 
     public static function SDRRadarConfigBufferHasIdentifier(ByteBuffer $buf)

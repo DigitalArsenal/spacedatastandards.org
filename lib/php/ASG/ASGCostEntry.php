@@ -21,7 +21,7 @@ class ASGCostEntry extends Table
 
     public static function ASGCostEntryIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGCostEntryBufferHasIdentifier(ByteBuffer $buf)

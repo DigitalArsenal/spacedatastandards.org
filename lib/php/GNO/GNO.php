@@ -21,7 +21,7 @@ class GNO extends Table
 
     public static function GNOIdentifier()
     {
-        return "$GNO";
+        return '$GNO';
     }
 
     public static function GNOBufferHasIdentifier(ByteBuffer $buf)
@@ -906,6 +906,6 @@ class GNO extends Table
 
     public static function finishGNOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GNO");
+        $builder->finish($offset, '$GNO');
     }
 }

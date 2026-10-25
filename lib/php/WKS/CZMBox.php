@@ -21,7 +21,7 @@ class CZMBox extends Table
 
     public static function CZMBoxIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMBoxBufferHasIdentifier(ByteBuffer $buf)

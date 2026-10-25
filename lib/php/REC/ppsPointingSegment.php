@@ -21,7 +21,7 @@ class ppsPointingSegment extends Table
 
     public static function ppsPointingSegmentIdentifier()
     {
-        return "$PPS";
+        return '$PPS';
     }
 
     public static function ppsPointingSegmentBufferHasIdentifier(ByteBuffer $buf)

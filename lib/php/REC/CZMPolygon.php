@@ -21,7 +21,7 @@ class CZMPolygon extends Table
 
     public static function CZMPolygonIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolygonBufferHasIdentifier(ByteBuffer $buf)

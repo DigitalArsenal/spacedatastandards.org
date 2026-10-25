@@ -28,7 +28,7 @@ class BPF extends Table
 
     public static function BPFIdentifier()
     {
-        return "$BPF";
+        return '$BPF';
     }
 
     public static function BPFBufferHasIdentifier(ByteBuffer $buf)
@@ -376,6 +376,6 @@ class BPF extends Table
 
     public static function finishBPFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BPF");
+        $builder->finish($offset, '$BPF');
     }
 }

@@ -21,7 +21,7 @@ class FixedValueEntry extends Table
 
     public static function FixedValueEntryIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function FixedValueEntryBufferHasIdentifier(ByteBuffer $buf)

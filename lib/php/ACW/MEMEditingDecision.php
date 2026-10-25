@@ -22,7 +22,7 @@ class MEMEditingDecision extends Table
 
     public static function MEMEditingDecisionIdentifier()
     {
-        return "$MEM";
+        return '$MEM';
     }
 
     public static function MEMEditingDecisionBufferHasIdentifier(ByteBuffer $buf)

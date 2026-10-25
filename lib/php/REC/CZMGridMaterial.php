@@ -21,7 +21,7 @@ class CZMGridMaterial extends Table
 
     public static function CZMGridMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMGridMaterialBufferHasIdentifier(ByteBuffer $buf)

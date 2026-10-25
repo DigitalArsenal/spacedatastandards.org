@@ -25,7 +25,7 @@ class OPPQuantity extends Table
 
     public static function OPPQuantityIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPQuantityBufferHasIdentifier(ByteBuffer $buf)

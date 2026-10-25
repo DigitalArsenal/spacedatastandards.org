@@ -26,7 +26,7 @@ class TXSEmission extends Table
 
     public static function TXSEmissionIdentifier()
     {
-        return "$TXS";
+        return '$TXS';
     }
 
     public static function TXSEmissionBufferHasIdentifier(ByteBuffer $buf)

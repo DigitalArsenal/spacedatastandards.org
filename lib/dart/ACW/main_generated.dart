@@ -5,7 +5,9 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../EOP/main_generated.dart';
+import '../MEM/main_generated.dart';
+import '../PVN/main_generated.dart';
 
 enum acwOperationCode {
   UNKNOWN(0),

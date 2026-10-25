@@ -21,7 +21,7 @@ class ERMRuleNote extends Table
 
     public static function ERMRuleNoteIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMRuleNoteBufferHasIdentifier(ByteBuffer $buf)

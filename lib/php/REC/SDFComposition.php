@@ -21,7 +21,7 @@ class SDFComposition extends Table
 
     public static function SDFCompositionIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFCompositionBufferHasIdentifier(ByteBuffer $buf)

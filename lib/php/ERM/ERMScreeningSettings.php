@@ -21,7 +21,7 @@ class ERMScreeningSettings extends Table
 
     public static function ERMScreeningSettingsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMScreeningSettingsBufferHasIdentifier(ByteBuffer $buf)

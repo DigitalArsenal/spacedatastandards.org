@@ -27,7 +27,7 @@ class DTTProvenance extends Table
 
     public static function DTTProvenanceIdentifier()
     {
-        return "$DTT";
+        return '$DTT';
     }
 
     public static function DTTProvenanceBufferHasIdentifier(ByteBuffer $buf)

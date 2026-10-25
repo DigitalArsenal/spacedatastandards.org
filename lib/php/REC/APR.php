@@ -21,7 +21,7 @@ class APR extends Table
 
     public static function APRIdentifier()
     {
-        return "$APR";
+        return '$APR';
     }
 
     public static function APRBufferHasIdentifier(ByteBuffer $buf)
@@ -545,6 +545,6 @@ class APR extends Table
 
     public static function finishAPRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$APR");
+        $builder->finish($offset, '$APR');
     }
 }

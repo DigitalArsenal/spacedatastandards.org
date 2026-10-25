@@ -21,7 +21,7 @@ class CAQResult extends Table
 
     public static function CAQResultIdentifier()
     {
-        return "$CAQ";
+        return '$CAQ';
     }
 
     public static function CAQResultBufferHasIdentifier(ByteBuffer $buf)

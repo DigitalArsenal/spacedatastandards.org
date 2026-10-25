@@ -264,7 +264,7 @@ class ACT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ACTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACT")
+        fun ACTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACT")
         fun createACT(builder: FlatBufferBuilder, accountIdOffset: Int, kind: Byte, xpubOffset: Int, xpubFingerprintOffset: Int, nameOffset: Int, trustLevel: Byte, signingPublicKeyOffset: Int, epmCidOffset: Int, peerIdOffset: Int, createdAt: Long, lastSeen: Long, expiresAt: Long, challengeIdOffset: Int, challengeOffset: Int, signatureOffset: Int, signatureTypeOffset: Int, externalChainOffset: Int, externalAddressOffset: Int, linked: Boolean, keySlotsOffset: Int) : Int {
             builder.startTable(20)
             addEXPIRESAT(builder, expiresAt)
@@ -331,7 +331,7 @@ class ACT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishACTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ACT")
-        fun finishSizePrefixedACTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ACT")
+        fun finishACTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ACT")
+        fun finishSizePrefixedACTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ACT")
     }
 }

@@ -21,7 +21,7 @@ class PKB extends Table
 
     public static function PKBIdentifier()
     {
-        return "$PKB";
+        return '$PKB';
     }
 
     public static function PKBBufferHasIdentifier(ByteBuffer $buf)
@@ -457,6 +457,6 @@ class PKB extends Table
 
     public static function finishPKBBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PKB");
+        $builder->finish($offset, '$PKB');
     }
 }

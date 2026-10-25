@@ -21,7 +21,7 @@ class ERMCounts extends Table
 
     public static function ERMCountsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCountsBufferHasIdentifier(ByteBuffer $buf)

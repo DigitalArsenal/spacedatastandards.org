@@ -21,7 +21,7 @@ class KMLTourControl extends Table
 
     public static function KMLTourControlIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLTourControlBufferHasIdentifier(ByteBuffer $buf)

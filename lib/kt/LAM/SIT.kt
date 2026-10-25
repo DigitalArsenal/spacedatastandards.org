@@ -576,7 +576,7 @@ class SIT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SITBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SIT")
+        fun SITBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SIT")
         fun createSIT(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, abbreviationOffset: Int, siteType: Byte, catcodeOffset: Int, networkOffset: Int, latitude: Float, longitude: Float, altitude: Float, geometryOffset: Int, centerPointGeometryOffset: Int, classificationOffset: Int, ctrIdOffset: Int, createdByOffset: Int, descriptionOffset: Int, modelUrlOffset: Int, sourceOffset: Int, taskable: Boolean, operationalStatusOffset: Int, establishmentDateOffset: Int, contactInfoOffset: Int, environmentalImpactOffset: Int, accessibilityInfraOffset: Int, integratedDevicesOffset: Int, lifecycleStatus: Byte, lifecycleStatusDateOffset: Int, statusVerifiedAtOffset: Int, statusEvidenceOffset: Int, siteKindOffset: Int, descriptionLanguageOffset: Int, descriptionCitationOffset: Int, positionCitationOffset: Int, externalReferencesOffset: Int, partiesOffset: Int, quantitiesOffset: Int, provenanceOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, missionOffset: Int, eventEpochOffset: Int) : Int {
             builder.startTable(40)
             addEVENTEPOCH(builder, eventEpochOffset)
@@ -714,7 +714,7 @@ class SIT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSITBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SIT")
-        fun finishSizePrefixedSITBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SIT")
+        fun finishSITBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SIT")
+        fun finishSizePrefixedSITBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SIT")
     }
 }

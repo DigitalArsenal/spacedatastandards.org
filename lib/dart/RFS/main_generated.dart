@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../LKS/main_generated.dart';
+import '../RFB/main_generated.dart';
 
 ///  Material class, in the generic building-and-natural-material vocabulary of
 ///  the reference physics. Capability classes only: a class is what the surface

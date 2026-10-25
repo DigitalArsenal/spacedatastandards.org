@@ -21,7 +21,7 @@ class ACWElevationMaskPoint extends Table
 
     public static function ACWElevationMaskPointIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWElevationMaskPointBufferHasIdentifier(ByteBuffer $buf)

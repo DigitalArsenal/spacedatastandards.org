@@ -25,7 +25,7 @@ class CMRProvenance extends Table
 
     public static function CMRProvenanceIdentifier()
     {
-        return "$CMR";
+        return '$CMR';
     }
 
     public static function CMRProvenanceBufferHasIdentifier(ByteBuffer $buf)

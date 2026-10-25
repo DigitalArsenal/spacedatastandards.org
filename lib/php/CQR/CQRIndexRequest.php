@@ -24,7 +24,7 @@ class CQRIndexRequest extends Table
 
     public static function CQRIndexRequestIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRIndexRequestBufferHasIdentifier(ByteBuffer $buf)

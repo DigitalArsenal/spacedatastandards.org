@@ -21,7 +21,7 @@ class ERMCommonEpochResult extends Table
 
     public static function ERMCommonEpochResultIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCommonEpochResultBufferHasIdentifier(ByteBuffer $buf)

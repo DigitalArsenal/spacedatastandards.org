@@ -22,7 +22,7 @@ class PRWFiniteBurn extends Table
 
     public static function PRWFiniteBurnIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWFiniteBurnBufferHasIdentifier(ByteBuffer $buf)

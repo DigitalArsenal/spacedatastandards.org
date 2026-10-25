@@ -21,7 +21,7 @@ class ACTKeySlot extends Table
 
     public static function ACTKeySlotIdentifier()
     {
-        return "$ACT";
+        return '$ACT';
     }
 
     public static function ACTKeySlotBufferHasIdentifier(ByteBuffer $buf)

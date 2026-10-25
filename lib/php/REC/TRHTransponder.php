@@ -20,7 +20,7 @@ class TRHTransponder extends Table
 
     public static function TRHTransponderIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHTransponderBufferHasIdentifier(ByteBuffer $buf)

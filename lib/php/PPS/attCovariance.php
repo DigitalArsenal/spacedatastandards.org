@@ -21,7 +21,7 @@ class attCovariance extends Table
 
     public static function attCovarianceIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function attCovarianceBufferHasIdentifier(ByteBuffer $buf)

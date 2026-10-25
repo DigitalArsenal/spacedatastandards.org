@@ -22,7 +22,7 @@ class APMEulerAngleState extends Table
 
     public static function APMEulerAngleStateIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMEulerAngleStateBufferHasIdentifier(ByteBuffer $buf)

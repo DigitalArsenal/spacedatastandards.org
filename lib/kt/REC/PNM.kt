@@ -200,7 +200,7 @@ class PNM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PNMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PNM")
+        fun PNMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PNM")
         fun createPNM(builder: FlatBufferBuilder, multiformatAddressOffset: Int, publishTimestampOffset: Int, cidOffset: Int, fileNameOffset: Int, fileIdOffset: Int, signatureOffset: Int, timestampSignatureOffset: Int, signatureTypeOffset: Int, timestampSignatureTypeOffset: Int) : Int {
             builder.startTable(9)
             addTIMESTAMPSIGNATURETYPE(builder, timestampSignatureTypeOffset)
@@ -228,7 +228,7 @@ class PNM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PNM")
-        fun finishSizePrefixedPNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PNM")
+        fun finishPNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PNM")
+        fun finishSizePrefixedPNMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PNM")
     }
 }

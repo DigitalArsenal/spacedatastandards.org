@@ -21,7 +21,7 @@ class MDEUnmatchedEvent extends Table
 
     public static function MDEUnmatchedEventIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEUnmatchedEventBufferHasIdentifier(ByteBuffer $buf)

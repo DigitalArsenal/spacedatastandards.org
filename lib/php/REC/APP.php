@@ -21,7 +21,7 @@ class APP extends Table
 
     public static function APPIdentifier()
     {
-        return "$APP";
+        return '$APP';
     }
 
     public static function APPBufferHasIdentifier(ByteBuffer $buf)
@@ -585,6 +585,6 @@ class APP extends Table
 
     public static function finishAPPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$APP");
+        $builder->finish($offset, '$APP');
     }
 }

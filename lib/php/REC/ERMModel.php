@@ -21,7 +21,7 @@ class ERMModel extends Table
 
     public static function ERMModelIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMModelBufferHasIdentifier(ByteBuffer $buf)

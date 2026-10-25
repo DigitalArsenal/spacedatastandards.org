@@ -5,7 +5,9 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../LKS/main_generated.dart';
+import '../RFB/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  Whether the link existed at a sample epoch, and how far the evaluation got.
 ///

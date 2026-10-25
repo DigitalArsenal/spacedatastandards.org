@@ -21,7 +21,7 @@ class SDI extends Table
 
     public static function SDIIdentifier()
     {
-        return "$SDI";
+        return '$SDI';
     }
 
     public static function SDIBufferHasIdentifier(ByteBuffer $buf)
@@ -974,6 +974,6 @@ class SDI extends Table
 
     public static function finishSDIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SDI");
+        $builder->finish($offset, '$SDI');
     }
 }

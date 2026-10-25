@@ -20,7 +20,7 @@ class FSP extends Table
 
     public static function FSPIdentifier()
     {
-        return "$FSP";
+        return '$FSP';
     }
 
     public static function FSPBufferHasIdentifier(ByteBuffer $buf)
@@ -604,6 +604,6 @@ class FSP extends Table
 
     public static function finishFSPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FSP");
+        $builder->finish($offset, '$FSP');
     }
 }

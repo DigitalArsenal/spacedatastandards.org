@@ -21,7 +21,7 @@ class AGR extends Table
 
     public static function AGRIdentifier()
     {
-        return "$AGR";
+        return '$AGR';
     }
 
     public static function AGRBufferHasIdentifier(ByteBuffer $buf)
@@ -748,6 +748,6 @@ class AGR extends Table
 
     public static function finishAGRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$AGR");
+        $builder->finish($offset, '$AGR');
     }
 }

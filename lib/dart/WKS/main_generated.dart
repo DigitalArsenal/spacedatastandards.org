@@ -5,7 +5,10 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../ACL/main_generated.dart';
+import '../CCT/main_generated.dart';
+import '../CZM/main_generated.dart';
+import '../STF/main_generated.dart';
 
 ///  One saved FlatSQL query belonging to a workspace.
 class WKSQuery {

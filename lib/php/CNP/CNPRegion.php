@@ -25,7 +25,7 @@ class CNPRegion extends Table
 
     public static function CNPRegionIdentifier()
     {
-        return "$CNP";
+        return '$CNP';
     }
 
     public static function CNPRegionBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class tbpLibrationPoint extends Table
 
     public static function tbpLibrationPointIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpLibrationPointBufferHasIdentifier(ByteBuffer $buf)

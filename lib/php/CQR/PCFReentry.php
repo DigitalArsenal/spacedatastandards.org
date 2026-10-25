@@ -22,7 +22,7 @@ class PCFReentry extends Table
 
     public static function PCFReentryIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFReentryBufferHasIdentifier(ByteBuffer $buf)

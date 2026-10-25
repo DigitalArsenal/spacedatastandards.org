@@ -21,7 +21,7 @@ class AGRBin extends Table
 
     public static function AGRBinIdentifier()
     {
-        return "$AGR";
+        return '$AGR';
     }
 
     public static function AGRBinBufferHasIdentifier(ByteBuffer $buf)

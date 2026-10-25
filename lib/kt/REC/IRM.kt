@@ -358,7 +358,7 @@ class IRM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun IRMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$IRM")
+        fun IRMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$IRM")
         fun createIRM(builder: FlatBufferBuilder, jobIdOffset: Int, sequence: ULong, providerIdOffset: Int, ingestorIdOffset: Int, sourceOffset: Int, state: Byte, rangeMode: Byte, nextOffset: ULong, nextChunkIndex: UInt, chunkByteBudget: ULong, decodeContextOffset: Int, lastChunkOffset: Int, chunksCommitted: UInt, bytesCommitted: ULong, recordsCommitted: ULong, targetStandardOffset: Int, reconcileModeOffset: Int, mergePolicyOffset: Int, faultOffset: Int, createdAtOffset: Int, startedAtOffset: Int, updatedAtOffset: Int, completedAtOffset: Int, expiresAtOffset: Int, tagsOffset: Int, notesOffset: Int) : Int {
             builder.startTable(26)
             addRECORDSCOMMITTED(builder, recordsCommitted)
@@ -432,7 +432,7 @@ class IRM : Table() {
                 builder.required(o, 46)
             return o
         }
-        fun finishIRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$IRM")
-        fun finishSizePrefixedIRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$IRM")
+        fun finishIRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$IRM")
+        fun finishSizePrefixedIRMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$IRM")
     }
 }

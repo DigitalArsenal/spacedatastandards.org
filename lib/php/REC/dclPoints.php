@@ -22,7 +22,7 @@ class dclPoints extends Table
 
     public static function dclPointsIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclPointsBufferHasIdentifier(ByteBuffer $buf)

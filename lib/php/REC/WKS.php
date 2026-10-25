@@ -21,7 +21,7 @@ class WKS extends Table
 
     public static function WKSIdentifier()
     {
-        return "$WKS";
+        return '$WKS';
     }
 
     public static function WKSBufferHasIdentifier(ByteBuffer $buf)
@@ -399,6 +399,6 @@ class WKS extends Table
 
     public static function finishWKSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$WKS");
+        $builder->finish($offset, '$WKS');
     }
 }

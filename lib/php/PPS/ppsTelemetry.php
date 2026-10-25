@@ -22,7 +22,7 @@ class ppsTelemetry extends Table
 
     public static function ppsTelemetryIdentifier()
     {
-        return "$PPS";
+        return '$PPS';
     }
 
     public static function ppsTelemetryBufferHasIdentifier(ByteBuffer $buf)

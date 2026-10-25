@@ -21,7 +21,7 @@ class MDEScoreSummary extends Table
 
     public static function MDEScoreSummaryIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEScoreSummaryBufferHasIdentifier(ByteBuffer $buf)

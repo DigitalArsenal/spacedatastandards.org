@@ -90,7 +90,7 @@ class MEM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MEM")
+        fun MEMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MEM")
         fun createMEM(builder: FlatBufferBuilder, errorModelsOffset: Int, editingLedgerOffset: Int, randomSeed: ULong, traceIdOffset: Int, attestationOffset: Int) : Int {
             builder.startTable(5)
             addRANDOMSEED(builder, randomSeed)
@@ -126,7 +126,7 @@ class MEM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MEM")
-        fun finishSizePrefixedMEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MEM")
+        fun finishMEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MEM")
+        fun finishSizePrefixedMEMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MEM")
     }
 }

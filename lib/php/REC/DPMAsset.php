@@ -22,7 +22,7 @@ class DPMAsset extends Table
 
     public static function DPMAssetIdentifier()
     {
-        return "$DPM";
+        return '$DPM';
     }
 
     public static function DPMAssetBufferHasIdentifier(ByteBuffer $buf)

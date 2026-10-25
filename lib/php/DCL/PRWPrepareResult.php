@@ -20,7 +20,7 @@ class PRWPrepareResult extends Table
 
     public static function PRWPrepareResultIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWPrepareResultBufferHasIdentifier(ByteBuffer $buf)

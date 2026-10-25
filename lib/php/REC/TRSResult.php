@@ -23,7 +23,7 @@ class TRSResult extends Table
 
     public static function TRSResultIdentifier()
     {
-        return "$TRS";
+        return '$TRS';
     }
 
     public static function TRSResultBufferHasIdentifier(ByteBuffer $buf)

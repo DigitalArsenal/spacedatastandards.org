@@ -395,7 +395,7 @@ class DOA : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DOABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DOA")
+        fun DOABufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DOA")
         fun createDOA(builder: FlatBufferBuilder, idOffset: Int, obTimeOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, uct: Boolean, taskIdOffset: Int, transactionIdOffset: Int, collectionMode: Byte, idSensor1Offset: Int, origSensorId1Offset: Int, senlat: Double, senlon: Double, senalt: Double, sensor1Delay: Double, idSensor2Offset: Int, origSensorId2Offset: Int, sen2Lat: Double, sen2Lon: Double, sen2Alt: Double, sensor2Delay: Double, frequency: Double, bandwidth: Double, snr: Double, deltaRange: Double, deltaRangeUnc: Double, deltaRangeRate: Double, deltaRangeRateUnc: Double, tdoa: Double, tdoaUnc: Double, fdoa: Double, fdoaUnc: Double, rawFileUriOffset: Int, descriptorOffset: Int, tagsOffset: Int) : Int {
             builder.startTable(35)
             addFDOAUNC(builder, fdoaUnc)
@@ -483,7 +483,7 @@ class DOA : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishDOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DOA")
-        fun finishSizePrefixedDOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DOA")
+        fun finishDOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DOA")
+        fun finishSizePrefixedDOABuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DOA")
     }
 }

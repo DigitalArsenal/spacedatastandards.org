@@ -21,7 +21,7 @@ class MPE extends Table
 
     public static function MPEIdentifier()
     {
-        return "$MPE";
+        return '$MPE';
     }
 
     public static function MPEBufferHasIdentifier(ByteBuffer $buf)
@@ -300,6 +300,6 @@ class MPE extends Table
 
     public static function finishMPEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MPE");
+        $builder->finish($offset, '$MPE');
     }
 }

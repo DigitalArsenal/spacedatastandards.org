@@ -21,7 +21,7 @@ class KMLIconStyle extends Table
 
     public static function KMLIconStyleIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLIconStyleBufferHasIdentifier(ByteBuffer $buf)

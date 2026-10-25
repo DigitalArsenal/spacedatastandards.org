@@ -34,7 +34,7 @@ class NCD extends Table
 
     public static function NCDIdentifier()
     {
-        return "$NCD";
+        return '$NCD';
     }
 
     public static function NCDBufferHasIdentifier(ByteBuffer $buf)
@@ -735,6 +735,6 @@ class NCD extends Table
 
     public static function finishNCDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NCD");
+        $builder->finish($offset, '$NCD');
     }
 }

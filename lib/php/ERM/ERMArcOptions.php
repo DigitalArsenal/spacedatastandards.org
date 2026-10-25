@@ -21,7 +21,7 @@ class ERMArcOptions extends Table
 
     public static function ERMArcOptionsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMArcOptionsBufferHasIdentifier(ByteBuffer $buf)

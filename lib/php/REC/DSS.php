@@ -20,7 +20,7 @@ class DSS extends Table
 
     public static function DSSIdentifier()
     {
-        return "$DSS";
+        return '$DSS';
     }
 
     public static function DSSBufferHasIdentifier(ByteBuffer $buf)
@@ -1128,6 +1128,6 @@ class DSS extends Table
 
     public static function finishDSSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$DSS");
+        $builder->finish($offset, '$DSS');
     }
 }

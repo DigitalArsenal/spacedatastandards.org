@@ -21,7 +21,7 @@ class SRGRetrievalStatus extends Table
 
     public static function SRGRetrievalStatusIdentifier()
     {
-        return "$SRG";
+        return '$SRG';
     }
 
     public static function SRGRetrievalStatusBufferHasIdentifier(ByteBuffer $buf)

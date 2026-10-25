@@ -21,7 +21,7 @@ class ERMPairSide extends Table
 
     public static function ERMPairSideIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMPairSideBufferHasIdentifier(ByteBuffer $buf)

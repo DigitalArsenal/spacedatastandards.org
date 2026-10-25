@@ -21,7 +21,7 @@ class TAB extends Table
 
     public static function TABIdentifier()
     {
-        return "$TAB";
+        return '$TAB';
     }
 
     public static function TABBufferHasIdentifier(ByteBuffer $buf)
@@ -260,6 +260,6 @@ class TAB extends Table
 
     public static function finishTABBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TAB");
+        $builder->finish($offset, '$TAB');
     }
 }

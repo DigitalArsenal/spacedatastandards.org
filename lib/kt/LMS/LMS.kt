@@ -166,7 +166,7 @@ class LMS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LMS")
+        fun LMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LMS")
         fun createLMS(builder: FlatBufferBuilder, requestIdOffset: Int, r1X: Double, r1Y: Double, r1Z: Double, r2X: Double, r2Y: Double, r2Z: Double, tofSec: Double, muKm3S2: Double, transferWay: Byte, maxRevs: UShort, refFrameOffset: Int, epochOffset: Int, flags: UShort) : Int {
             builder.startTable(14)
             addMUKM3S2(builder, muKm3S2)
@@ -204,7 +204,7 @@ class LMS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LMS")
-        fun finishSizePrefixedLMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LMS")
+        fun finishLMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LMS")
+        fun finishSizePrefixedLMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LMS")
     }
 }

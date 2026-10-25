@@ -25,7 +25,7 @@ class IQCHardware extends Table
 
     public static function IQCHardwareIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCHardwareBufferHasIdentifier(ByteBuffer $buf)

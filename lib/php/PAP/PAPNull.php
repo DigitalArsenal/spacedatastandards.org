@@ -21,7 +21,7 @@ class PAPNull extends Table
 
     public static function PAPNullIdentifier()
     {
-        return "$PAP";
+        return '$PAP';
     }
 
     public static function PAPNullBufferHasIdentifier(ByteBuffer $buf)

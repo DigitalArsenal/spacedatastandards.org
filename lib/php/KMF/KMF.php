@@ -48,7 +48,7 @@ class KMF extends Table
 
     public static function KMFIdentifier()
     {
-        return "$KMF";
+        return '$KMF';
     }
 
     public static function KMFBufferHasIdentifier(ByteBuffer $buf)
@@ -288,6 +288,6 @@ class KMF extends Table
 
     public static function finishKMFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$KMF");
+        $builder->finish($offset, '$KMF');
     }
 }

@@ -239,7 +239,7 @@ class OON : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OON")
+        fun OONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OON")
         fun createOON(builder: FlatBufferBuilder, satNo: Int, commonNameOffset: Int, constellationOffset: Int, intlDesOffset: Int, launchDateOffset: Int, decayDateOffset: Int, objectTypeOffset: Int, missionNumberOffset: Int, categoryOffset: Int, lifetimeYears: Int, altNameOffset: Int, launchSiteIdOffset: Int, antennasOffset: Int, batteriesOffset: Int, solarArraysOffset: Int, thrustersOffset: Int, onorbitDetailsOffset: Int, countryCodeOffset: Int, entityCollectionOffset: Int) : Int {
             builder.startTable(19)
             addENTITYCOLLECTION(builder, entityCollectionOffset)
@@ -335,7 +335,7 @@ class OON : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OON")
-        fun finishSizePrefixedOONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OON")
+        fun finishOONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OON")
+        fun finishSizePrefixedOONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OON")
     }
 }

@@ -171,7 +171,7 @@ class CMT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CMTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CMT")
+        fun CMTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CMT")
         fun createCMT(builder: FlatBufferBuilder, termsIdOffset: Int, scope: Byte, targetIdOffset: Int, commissionBps: UShort, splitsOffset: Int, platformRecipientOffset: Int, enforcement: Byte, contractsOffset: Int, effectiveAt: ULong, expiresAt: ULong, signatureOffset: Int) : Int {
             builder.startTable(11)
             addEXPIRESAT(builder, expiresAt)
@@ -229,7 +229,7 @@ class CMT : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishCMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CMT")
-        fun finishSizePrefixedCMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CMT")
+        fun finishCMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CMT")
+        fun finishSizePrefixedCMTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CMT")
     }
 }

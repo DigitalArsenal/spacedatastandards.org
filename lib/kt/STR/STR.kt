@@ -624,7 +624,7 @@ class STR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun STRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STR")
+        fun STRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$STR")
         fun createSTR(builder: FlatBufferBuilder, idOffset: Int, csId: Long, gncCatId: UInt, gaiaDr3SourceId: ULong, hipCatId: UInt, catVersionOffset: Int, astrometryOriginOffset: Int, starEpoch: Double, ra: Double, raUnc: Double, dec: Double, decUnc: Double, posUncFlag: Boolean, parallax: Double, parallaxUnc: Double, pmra: Double, pmraUnc: Double, pmdec: Double, pmdecUnc: Double, pmUncFlag: Boolean, gmag: Double, gmagUnc: Double, bpmag: Double, bpmagUnc: Double, rpmag: Double, rpmagUnc: Double, jmag: Double, jmagUnc: Double, kmag: Double, kmagUnc: Double, hmag: Double, hmagUnc: Double, varFlag: Boolean, multFlag: Boolean, neighborId: UInt, neighborFlag: Boolean, neighborDistance: Double, shiftFlag: Boolean, shift: Double, teff: Double, teffUnc: Double, logg: Double, loggUnc: Double, metallicity: Double, extinctionA0: Double, radialVelocity: Double, radialVelocityUnc: Double, spectralTypeOffset: Int, properNameOffset: Int, bayerFlamsteedOffset: Int, constellationOffset: Int, hrCatId: UInt, hdCatId: UInt, designationsOffset: Int, variabilityClassOffset: Int, variabilityPeriod: Double, variabilityAmplitude: Double, variabilityEpoch: Double, photometryOffset: Int, distancePc: Double, distanceLoPc: Double, distanceHiPc: Double, distanceMethod: UByte, distanceRefOffset: Int) : Int {
             builder.startTable(64)
             addDISTANCEHIPC(builder, distanceHiPc)
@@ -778,7 +778,7 @@ class STR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$STR")
-        fun finishSizePrefixedSTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$STR")
+        fun finishSTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$STR")
+        fun finishSizePrefixedSTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$STR")
     }
 }

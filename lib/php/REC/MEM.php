@@ -24,7 +24,7 @@ class MEM extends Table
 
     public static function MEMIdentifier()
     {
-        return "$MEM";
+        return '$MEM';
     }
 
     public static function MEMBufferHasIdentifier(ByteBuffer $buf)
@@ -239,6 +239,6 @@ class MEM extends Table
 
     public static function finishMEMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MEM");
+        $builder->finish($offset, '$MEM');
     }
 }

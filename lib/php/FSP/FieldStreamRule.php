@@ -20,7 +20,7 @@ class FieldStreamRule extends Table
 
     public static function FieldStreamRuleIdentifier()
     {
-        return "$FSP";
+        return '$FSP';
     }
 
     public static function FieldStreamRuleBufferHasIdentifier(ByteBuffer $buf)

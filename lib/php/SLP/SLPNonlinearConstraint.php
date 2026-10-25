@@ -20,7 +20,7 @@ class SLPNonlinearConstraint extends Table
 
     public static function SLPNonlinearConstraintIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPNonlinearConstraintBufferHasIdentifier(ByteBuffer $buf)

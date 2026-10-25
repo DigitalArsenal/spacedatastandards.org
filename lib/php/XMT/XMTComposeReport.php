@@ -21,7 +21,7 @@ class XMTComposeReport extends Table
 
     public static function XMTComposeReportIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTComposeReportBufferHasIdentifier(ByteBuffer $buf)

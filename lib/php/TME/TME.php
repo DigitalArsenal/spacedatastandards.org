@@ -21,7 +21,7 @@ class TME extends Table
 
     public static function TMEIdentifier()
     {
-        return "$TME";
+        return '$TME';
     }
 
     public static function TMEBufferHasIdentifier(ByteBuffer $buf)
@@ -280,6 +280,6 @@ class TME extends Table
 
     public static function finishTMEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TME");
+        $builder->finish($offset, '$TME');
     }
 }

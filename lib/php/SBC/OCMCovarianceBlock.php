@@ -24,7 +24,7 @@ class OCMCovarianceBlock extends Table
 
     public static function OCMCovarianceBlockIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function OCMCovarianceBlockBufferHasIdentifier(ByteBuffer $buf)

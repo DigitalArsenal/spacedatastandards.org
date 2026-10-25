@@ -21,7 +21,7 @@ class COTPoint extends Table
 
     public static function COTPointIdentifier()
     {
-        return "$COT";
+        return '$COT';
     }
 
     public static function COTPointBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class CZMInterpolation extends Table
 
     public static function CZMInterpolationIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMInterpolationBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class MDELevel extends Table
 
     public static function MDELevelIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDELevelBufferHasIdentifier(ByteBuffer $buf)

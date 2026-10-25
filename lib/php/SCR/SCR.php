@@ -21,7 +21,7 @@ class SCR extends Table
 
     public static function SCRIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRBufferHasIdentifier(ByteBuffer $buf)
@@ -217,6 +217,6 @@ class SCR extends Table
 
     public static function finishSCRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SCR");
+        $builder->finish($offset, '$SCR');
     }
 }

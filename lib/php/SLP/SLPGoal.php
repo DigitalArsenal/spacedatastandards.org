@@ -20,7 +20,7 @@ class SLPGoal extends Table
 
     public static function SLPGoalIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPGoalBufferHasIdentifier(ByteBuffer $buf)

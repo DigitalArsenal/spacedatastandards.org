@@ -21,7 +21,7 @@ class ParameterComparison extends Table
 
     public static function ParameterComparisonIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ParameterComparisonBufferHasIdentifier(ByteBuffer $buf)

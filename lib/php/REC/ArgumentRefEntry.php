@@ -21,7 +21,7 @@ class ArgumentRefEntry extends Table
 
     public static function ArgumentRefEntryIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArgumentRefEntryBufferHasIdentifier(ByteBuffer $buf)

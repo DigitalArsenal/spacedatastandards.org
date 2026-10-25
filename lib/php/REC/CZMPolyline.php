@@ -21,7 +21,7 @@ class CZMPolyline extends Table
 
     public static function CZMPolylineIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolylineBufferHasIdentifier(ByteBuffer $buf)

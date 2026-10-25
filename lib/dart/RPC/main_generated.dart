@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../ENC/main_generated.dart';
 
 ///  Direction of an RPC envelope.
 enum rpcDirection {

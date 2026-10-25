@@ -21,7 +21,7 @@ class ERMRowLabel extends Table
 
     public static function ERMRowLabelIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMRowLabelBufferHasIdentifier(ByteBuffer $buf)

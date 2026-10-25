@@ -21,7 +21,7 @@ class VSTCameraOptions extends Table
 
     public static function VSTCameraOptionsIdentifier()
     {
-        return "$VST";
+        return '$VST';
     }
 
     public static function VSTCameraOptionsBufferHasIdentifier(ByteBuffer $buf)

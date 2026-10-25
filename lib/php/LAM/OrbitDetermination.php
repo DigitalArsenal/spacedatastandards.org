@@ -20,7 +20,7 @@ class OrbitDetermination extends Table
 
     public static function OrbitDeterminationIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function OrbitDeterminationBufferHasIdentifier(ByteBuffer $buf)

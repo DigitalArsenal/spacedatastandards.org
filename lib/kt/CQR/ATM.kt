@@ -52,7 +52,7 @@ class ATM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ATMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ATM")
+        fun ATMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ATM")
         fun createATM(builder: FlatBufferBuilder, model: Byte, year: Int) : Int {
             builder.startTable(2)
             addYEAR(builder, year)
@@ -66,7 +66,7 @@ class ATM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishATMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ATM")
-        fun finishSizePrefixedATMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ATM")
+        fun finishATMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ATM")
+        fun finishSizePrefixedATMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ATM")
     }
 }

@@ -20,7 +20,7 @@ class SLPVariable extends Table
 
     public static function SLPVariableIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPVariableBufferHasIdentifier(ByteBuffer $buf)

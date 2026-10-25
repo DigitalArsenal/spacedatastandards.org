@@ -21,7 +21,7 @@ class AOF extends Table
 
     public static function AOFIdentifier()
     {
-        return "$AOF";
+        return '$AOF';
     }
 
     public static function AOFBufferHasIdentifier(ByteBuffer $buf)
@@ -430,6 +430,6 @@ class AOF extends Table
 
     public static function finishAOFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$AOF");
+        $builder->finish($offset, '$AOF');
     }
 }

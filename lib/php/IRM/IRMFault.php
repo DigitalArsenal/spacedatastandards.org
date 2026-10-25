@@ -21,7 +21,7 @@ class IRMFault extends Table
 
     public static function IRMFaultIdentifier()
     {
-        return "$IRM";
+        return '$IRM';
     }
 
     public static function IRMFaultBufferHasIdentifier(ByteBuffer $buf)

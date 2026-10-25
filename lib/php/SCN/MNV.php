@@ -27,7 +27,7 @@ class MNV extends Table
 
     public static function MNVIdentifier()
     {
-        return "$MNV";
+        return '$MNV';
     }
 
     public static function MNVBufferHasIdentifier(ByteBuffer $buf)
@@ -1199,6 +1199,6 @@ class MNV extends Table
 
     public static function finishMNVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MNV");
+        $builder->finish($offset, '$MNV');
     }
 }

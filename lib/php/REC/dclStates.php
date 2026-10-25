@@ -23,7 +23,7 @@ class dclStates extends Table
 
     public static function dclStatesIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclStatesBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class BMC extends Table
 
     public static function BMCIdentifier()
     {
-        return "$BMC";
+        return '$BMC';
     }
 
     public static function BMCBufferHasIdentifier(ByteBuffer $buf)
@@ -272,6 +272,6 @@ class BMC extends Table
 
     public static function finishBMCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BMC");
+        $builder->finish($offset, '$BMC');
     }
 }

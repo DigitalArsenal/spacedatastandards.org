@@ -22,7 +22,7 @@ class VSTCameraRotation extends Table
 
     public static function VSTCameraRotationIdentifier()
     {
-        return "$VST";
+        return '$VST';
     }
 
     public static function VSTCameraRotationBufferHasIdentifier(ByteBuffer $buf)

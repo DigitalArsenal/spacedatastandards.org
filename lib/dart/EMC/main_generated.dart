@@ -5,7 +5,11 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../LKS/main_generated.dart';
+import '../RFB/main_generated.dart';
+import '../RFL/main_generated.dart';
+import '../RFS/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  Physical path by which aggressor energy reaches the victim.
 enum emcCouplingPath {
@@ -470,7 +474,6 @@ class EMC {
   String? get RFS_MATERIAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
   String? get rfsMaterialId => RFS_MATERIAL_ID;
   rfsMaterialClass get RFS_MATERIAL_CLASS => rfsMaterialClass.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
-  rfsMaterialClass get rfsMaterialClass => RFS_MATERIAL_CLASS;
   double get ISOLATION_DB => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
   double get isolationDb => ISOLATION_DB;
   double get COUPLED_POWER_DBW => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);

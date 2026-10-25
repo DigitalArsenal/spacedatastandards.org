@@ -20,7 +20,7 @@ class SCVVec3 extends Table
 
     public static function SCVVec3Identifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVVec3BufferHasIdentifier(ByteBuffer $buf)

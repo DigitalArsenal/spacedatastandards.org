@@ -21,7 +21,7 @@ class LDM extends Table
 
     public static function LDMIdentifier()
     {
-        return "$LDM";
+        return '$LDM';
     }
 
     public static function LDMBufferHasIdentifier(ByteBuffer $buf)
@@ -990,6 +990,6 @@ class LDM extends Table
 
     public static function finishLDMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LDM");
+        $builder->finish($offset, '$LDM');
     }
 }

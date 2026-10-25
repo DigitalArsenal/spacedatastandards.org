@@ -155,7 +155,7 @@ class PGM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PGMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PGM")
+        fun PGMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PGM")
         fun createPGM(builder: FlatBufferBuilder, groupNameOffset: Int, descriptionOffset: Int, defaultTrustLevel: Byte, membersOffset: Int, createdAt: ULong, updatedAt: ULong, metadataOffset: Int, deleted: Boolean, providerPeerIdOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(10)
             addUPDATEDAT(builder, updatedAt)
@@ -211,7 +211,7 @@ class PGM : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishPGMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PGM")
-        fun finishSizePrefixedPGMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PGM")
+        fun finishPGMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PGM")
+        fun finishSizePrefixedPGMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PGM")
     }
 }

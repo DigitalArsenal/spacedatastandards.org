@@ -21,7 +21,7 @@ class lamTargetOrbit extends Table
 
     public static function lamTargetOrbitIdentifier()
     {
-        return "$LAM";
+        return '$LAM';
     }
 
     public static function lamTargetOrbitBufferHasIdentifier(ByteBuffer $buf)

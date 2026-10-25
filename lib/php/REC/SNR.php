@@ -21,7 +21,7 @@ class SNR extends Table
 
     public static function SNRIdentifier()
     {
-        return "$SNR";
+        return '$SNR';
     }
 
     public static function SNRBufferHasIdentifier(ByteBuffer $buf)
@@ -435,6 +435,6 @@ class SNR extends Table
 
     public static function finishSNRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SNR");
+        $builder->finish($offset, '$SNR');
     }
 }

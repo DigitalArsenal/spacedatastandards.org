@@ -172,7 +172,7 @@ class MDS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MDSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MDS")
+        fun MDSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MDS")
         fun createMDS(builder: FlatBufferBuilder, solutionSetIdOffset: Int, problemIdOffset: Int, objectivesOffset: Int, candidatesOffset: Int, solverOffset: Int, solverVersionOffset: Int, ephemerisSourceOffset: Int, creationDateOffset: Int, commentOffset: Int) : Int {
             builder.startTable(9)
             addCOMMENT(builder, commentOffset)
@@ -217,7 +217,7 @@ class MDS : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishMDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MDS")
-        fun finishSizePrefixedMDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MDS")
+        fun finishMDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MDS")
+        fun finishSizePrefixedMDSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MDS")
     }
 }

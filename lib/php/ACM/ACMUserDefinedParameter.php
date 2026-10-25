@@ -22,7 +22,7 @@ class ACMUserDefinedParameter extends Table
 
     public static function ACMUserDefinedParameterIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMUserDefinedParameterBufferHasIdentifier(ByteBuffer $buf)

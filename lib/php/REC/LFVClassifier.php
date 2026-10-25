@@ -22,7 +22,7 @@ class LFVClassifier extends Table
 
     public static function LFVClassifierIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVClassifierBufferHasIdentifier(ByteBuffer $buf)

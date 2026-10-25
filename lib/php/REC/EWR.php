@@ -21,7 +21,7 @@ class EWR extends Table
 
     public static function EWRIdentifier()
     {
-        return "$EWR";
+        return '$EWR';
     }
 
     public static function EWRBufferHasIdentifier(ByteBuffer $buf)
@@ -392,6 +392,6 @@ class EWR extends Table
 
     public static function finishEWRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EWR");
+        $builder->finish($offset, '$EWR');
     }
 }

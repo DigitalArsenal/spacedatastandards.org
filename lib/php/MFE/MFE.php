@@ -21,7 +21,7 @@ class MFE extends Table
 
     public static function MFEIdentifier()
     {
-        return "$MFE";
+        return '$MFE';
     }
 
     public static function MFEBufferHasIdentifier(ByteBuffer $buf)
@@ -441,6 +441,6 @@ class MFE extends Table
 
     public static function finishMFEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MFE");
+        $builder->finish($offset, '$MFE');
     }
 }

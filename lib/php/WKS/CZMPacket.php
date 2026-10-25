@@ -21,7 +21,7 @@ class CZMPacket extends Table
 
     public static function CZMPacketIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPacketBufferHasIdentifier(ByteBuffer $buf)

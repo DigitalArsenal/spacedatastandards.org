@@ -23,7 +23,7 @@ class MPETargeterSolution extends Table
 
     public static function MPETargeterSolutionIdentifier()
     {
-        return "$MPE";
+        return '$MPE';
     }
 
     public static function MPETargeterSolutionBufferHasIdentifier(ByteBuffer $buf)

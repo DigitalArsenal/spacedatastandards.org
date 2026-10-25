@@ -202,7 +202,7 @@ class ODR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ODRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ODR")
+        fun ODRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ODR")
         fun createODR(builder: FlatBufferBuilder, runIdOffset: Int, startedAtOffset: Int, completedAtOffset: Int, configurationOffset: Int, convergenceReason: UByte, iterationsOffset: Int, editedObservationsOffset: Int, estimatedParametersOffset: Int, estimatedEpochStateOffset: Int, covarianceDimension: UInt, stateCovarianceOffset: Int, ocmContentIdOffset: Int, filterHistoryOffset: Int, residualRms: Double, traceIdOffset: Int, attestationOffset: Int) : Int {
             builder.startTable(16)
             addRESIDUALRMS(builder, residualRms)
@@ -286,7 +286,7 @@ class ODR : Table() {
                 builder.required(o, 26)
             return o
         }
-        fun finishODRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ODR")
-        fun finishSizePrefixedODRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ODR")
+        fun finishODRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ODR")
+        fun finishSizePrefixedODRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ODR")
     }
 }

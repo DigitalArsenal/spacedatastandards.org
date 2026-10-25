@@ -125,7 +125,7 @@ class DMG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DMGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DMG")
+        fun DMGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DMG")
         fun createDMG(builder: FlatBufferBuilder, overallHealth: Float, mobility: Float, firepower: Float, moduleCount: UByte, crewCount: UByte, fireCount: UByte, floodCount: UByte, isDestroyed: UByte, destructionCause: UByte, extinguishers: UByte, repairActive: UByte, reloadMultiplier: Float, accuracyMultiplier: Float, crewAlive: UByte, crewWounded: UByte, reservedOffset: Int) : Int {
             builder.startTable(16)
             addRESERVED(builder, reservedOffset)
@@ -176,7 +176,7 @@ class DMG : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishDMGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DMG")
-        fun finishSizePrefixedDMGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DMG")
+        fun finishDMGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DMG")
+        fun finishSizePrefixedDMGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DMG")
     }
 }

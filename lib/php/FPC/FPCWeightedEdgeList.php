@@ -21,7 +21,7 @@ class FPCWeightedEdgeList extends Table
 
     public static function FPCWeightedEdgeListIdentifier()
     {
-        return "$FPC";
+        return '$FPC';
     }
 
     public static function FPCWeightedEdgeListBufferHasIdentifier(ByteBuffer $buf)

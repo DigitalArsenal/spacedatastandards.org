@@ -234,7 +234,7 @@ class BPF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BPFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BPF")
+        fun BPFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BPF")
         fun createBPF(builder: FlatBufferBuilder, profileIdOffset: Int, nameOffset: Int, descriptionOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, templateSha256Offset: Int, partsOffset: Int, modulesOffset: Int, runtimeLockOffset: Int, licenseMode: Byte, attestationOffset: Int) : Int {
             builder.startTable(11)
             addATTESTATION(builder, attestationOffset)
@@ -286,7 +286,7 @@ class BPF : Table() {
                 builder.required(o, 20)
             return o
         }
-        fun finishBPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BPF")
-        fun finishSizePrefixedBPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BPF")
+        fun finishBPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BPF")
+        fun finishSizePrefixedBPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BPF")
     }
 }

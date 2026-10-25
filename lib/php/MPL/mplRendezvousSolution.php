@@ -23,7 +23,7 @@ class mplRendezvousSolution extends Table
 
     public static function mplRendezvousSolutionIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplRendezvousSolutionBufferHasIdentifier(ByteBuffer $buf)

@@ -412,7 +412,7 @@ class STF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun STFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STF")
+        fun STFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$STF")
         fun createSTF(builder: FlatBufferBuilder, listingIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, titleOffset: Int, descriptionOffset: Int, dataTypesOffset: Int, coverageOffset: Int, sampleCidOffset: Int, accessType: Byte, encryptionRequired: Boolean, pricingOffset: Int, acceptedPaymentsOffset: Int, createdAt: ULong, updatedAt: ULong, active: Boolean, signatureOffset: Int, listingKind: Byte, tagsOffset: Int, sampleRecordCount: UInt, deliveryMethodsOffset: Int, protectedDeliveryOffset: Int, reputationOffset: Int, version: UInt, expiresAt: ULong, termsCidOffset: Int, licenseOffset: Int, sourcePeerIdOffset: Int, primaryCategory: UByte, categoriesOffset: Int, recommendedRetention: Byte) : Int {
             builder.startTable(30)
             addEXPIRESAT(builder, expiresAt)
@@ -543,7 +543,7 @@ class STF : Table() {
                 builder.required(o, 10)
             return o
         }
-        fun finishSTFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$STF")
-        fun finishSizePrefixedSTFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$STF")
+        fun finishSTFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$STF")
+        fun finishSizePrefixedSTFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$STF")
     }
 }

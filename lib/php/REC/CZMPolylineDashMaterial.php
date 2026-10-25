@@ -21,7 +21,7 @@ class CZMPolylineDashMaterial extends Table
 
     public static function CZMPolylineDashMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolylineDashMaterialBufferHasIdentifier(ByteBuffer $buf)

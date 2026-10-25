@@ -21,7 +21,7 @@ class DPMEncryptionBinding extends Table
 
     public static function DPMEncryptionBindingIdentifier()
     {
-        return "$DPM";
+        return '$DPM';
     }
 
     public static function DPMEncryptionBindingBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PRWInstance extends Table
 
     public static function PRWInstanceIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWInstanceBufferHasIdentifier(ByteBuffer $buf)

@@ -23,7 +23,7 @@ class PLGFlowNode extends Table
 
     public static function PLGFlowNodeIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGFlowNodeBufferHasIdentifier(ByteBuffer $buf)

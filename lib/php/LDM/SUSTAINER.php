@@ -21,7 +21,7 @@ class SUSTAINER extends Table
 
     public static function SUSTAINERIdentifier()
     {
-        return "$ROC";
+        return '$ROC';
     }
 
     public static function SUSTAINERBufferHasIdentifier(ByteBuffer $buf)

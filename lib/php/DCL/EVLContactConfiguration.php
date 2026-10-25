@@ -21,7 +21,7 @@ class EVLContactConfiguration extends Table
 
     public static function EVLContactConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLContactConfigurationBufferHasIdentifier(ByteBuffer $buf)

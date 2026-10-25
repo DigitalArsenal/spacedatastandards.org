@@ -20,7 +20,7 @@ class PSSSolution extends Table
 
     public static function PSSSolutionIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSSolutionBufferHasIdentifier(ByteBuffer $buf)

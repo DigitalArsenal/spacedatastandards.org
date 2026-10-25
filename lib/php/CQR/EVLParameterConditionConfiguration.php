@@ -21,7 +21,7 @@ class EVLParameterConditionConfiguration extends Table
 
     public static function EVLParameterConditionConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLParameterConditionConfigurationBufferHasIdentifier(ByteBuffer $buf)

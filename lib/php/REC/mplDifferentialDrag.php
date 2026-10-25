@@ -21,7 +21,7 @@ class mplDifferentialDrag extends Table
 
     public static function mplDifferentialDragIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplDifferentialDragBufferHasIdentifier(ByteBuffer $buf)

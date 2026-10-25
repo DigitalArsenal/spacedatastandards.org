@@ -23,7 +23,7 @@ class RFMOrigin extends Table
 
     public static function RFMOriginIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function RFMOriginBufferHasIdentifier(ByteBuffer $buf)

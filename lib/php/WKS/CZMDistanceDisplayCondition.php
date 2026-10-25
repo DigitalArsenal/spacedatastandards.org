@@ -21,7 +21,7 @@ class CZMDistanceDisplayCondition extends Table
 
     public static function CZMDistanceDisplayConditionIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMDistanceDisplayConditionBufferHasIdentifier(ByteBuffer $buf)

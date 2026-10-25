@@ -21,7 +21,7 @@ class GPX extends Table
 
     public static function GPXIdentifier()
     {
-        return "$GPX";
+        return '$GPX';
     }
 
     public static function GPXBufferHasIdentifier(ByteBuffer $buf)
@@ -594,6 +594,6 @@ class GPX extends Table
 
     public static function finishGPXBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GPX");
+        $builder->finish($offset, '$GPX');
     }
 }

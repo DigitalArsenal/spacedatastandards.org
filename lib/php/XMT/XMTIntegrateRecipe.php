@@ -21,7 +21,7 @@ class XMTIntegrateRecipe extends Table
 
     public static function XMTIntegrateRecipeIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTIntegrateRecipeBufferHasIdentifier(ByteBuffer $buf)

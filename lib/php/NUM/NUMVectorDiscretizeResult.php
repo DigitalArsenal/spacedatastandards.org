@@ -21,7 +21,7 @@ class NUMVectorDiscretizeResult extends Table
 
     public static function NUMVectorDiscretizeResultIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMVectorDiscretizeResultBufferHasIdentifier(ByteBuffer $buf)

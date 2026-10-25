@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../PHB/main_generated.dart';
+import '../SKT/main_generated.dart';
 
 ///  What a sky query asks.
 ///  Append new values only; never reorder or reuse existing values.
@@ -218,26 +219,20 @@ class SKQTrackObjectBuilder extends fb.ObjectBuilder {
   final int _RESERVED;
 
   SKQTrackObjectBuilder({
-    double START_RA_DEG,
-    double? startRaDeg,
-    double START_DEC_DEG,
-    double? startDecDeg,
-    double END_RA_DEG,
-    double? endRaDeg,
-    double END_DEC_DEG,
-    double? endDecDeg,
-    double RADIUS_DEG,
-    double? radiusDeg,
-    int BODY_ID,
-    int? bodyId,
+    required double START_RA_DEG,
+    required double START_DEC_DEG,
+    required double END_RA_DEG,
+    required double END_DEC_DEG,
+    required double RADIUS_DEG,
+    required int BODY_ID,
     required int RESERVED,
   })
-      : _START_RA_DEG = startRaDeg ?? START_RA_DEG,
-        _START_DEC_DEG = startDecDeg ?? START_DEC_DEG,
-        _END_RA_DEG = endRaDeg ?? END_RA_DEG,
-        _END_DEC_DEG = endDecDeg ?? END_DEC_DEG,
-        _RADIUS_DEG = radiusDeg ?? RADIUS_DEG,
-        _BODY_ID = bodyId ?? BODY_ID,
+      : _START_RA_DEG = START_RA_DEG,
+        _START_DEC_DEG = START_DEC_DEG,
+        _END_RA_DEG = END_RA_DEG,
+        _END_DEC_DEG = END_DEC_DEG,
+        _RADIUS_DEG = RADIUS_DEG,
+        _BODY_ID = BODY_ID,
         _RESERVED = RESERVED;
 
   /// Finish building, and store into the [fbBuilder].
@@ -318,17 +313,14 @@ class SKQPointingObjectBuilder extends fb.ObjectBuilder {
   final int _RESERVED;
 
   SKQPointingObjectBuilder({
-    double RA_DEG,
-    double? raDeg,
-    double DEC_DEG,
-    double? decDeg,
-    int POINTING_ID,
-    int? pointingId,
+    required double RA_DEG,
+    required double DEC_DEG,
+    required int POINTING_ID,
     required int RESERVED,
   })
-      : _RA_DEG = raDeg ?? RA_DEG,
-        _DEC_DEG = decDeg ?? DEC_DEG,
-        _POINTING_ID = pointingId ?? POINTING_ID,
+      : _RA_DEG = RA_DEG,
+        _DEC_DEG = DEC_DEG,
+        _POINTING_ID = POINTING_ID,
         _RESERVED = RESERVED;
 
   /// Finish building, and store into the [fbBuilder].
@@ -705,9 +697,9 @@ class SKQObjectBuilder extends fb.ObjectBuilder {
         _COLOR_RED_BAND_ID = colorRedBandId ?? COLOR_RED_BAND_ID,
         _LAYER_ID = layerId ?? LAYER_ID,
         _BAND_IDS = bandIds ?? BAND_IDS,
-        _RA_DEG = raDeg ?? RA_DEG,
-        _DEC_DEG = decDeg ?? DEC_DEG,
-        _RADIUS_DEG = radiusDeg ?? RADIUS_DEG,
+        _RA_DEG = RA_DEG,
+        _DEC_DEG = DEC_DEG,
+        _RADIUS_DEG = RADIUS_DEG,
         _HALF_WIDTH_DEG = halfWidthDeg ?? HALF_WIDTH_DEG,
         _HALF_HEIGHT_DEG = halfHeightDeg ?? HALF_HEIGHT_DEG,
         _ROLL_DEG = rollDeg ?? ROLL_DEG,

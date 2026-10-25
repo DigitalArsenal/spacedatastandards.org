@@ -21,7 +21,7 @@ class WPN extends Table
 
     public static function WPNIdentifier()
     {
-        return "$WPN";
+        return '$WPN';
     }
 
     public static function WPNBufferHasIdentifier(ByteBuffer $buf)
@@ -455,6 +455,6 @@ class WPN extends Table
 
     public static function finishWPNBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$WPN");
+        $builder->finish($offset, '$WPN');
     }
 }

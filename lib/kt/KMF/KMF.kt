@@ -129,7 +129,7 @@ class KMF : Table() {
          * malformed buffer.
          */
         fun decryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
-        fun KMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$KMF")
+        fun KMFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$KMF")
         fun createKMF(builder: FlatBufferBuilder, keyIdOffset: Int, role: Byte, algorithm: Byte, encoding: Byte, keyBytesOffset: Int, version: UInt, expiresAt: ULong) : Int {
             builder.startTable(7)
             addEXPIRESAT(builder, expiresAt)
@@ -162,7 +162,7 @@ class KMF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishKMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$KMF")
-        fun finishSizePrefixedKMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$KMF")
+        fun finishKMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$KMF")
+        fun finishSizePrefixedKMFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$KMF")
     }
 }

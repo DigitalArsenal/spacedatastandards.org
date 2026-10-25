@@ -23,7 +23,7 @@ class TRP extends Table
 
     public static function TRPIdentifier()
     {
-        return "$TRP";
+        return '$TRP';
     }
 
     public static function TRPBufferHasIdentifier(ByteBuffer $buf)
@@ -372,6 +372,6 @@ class TRP extends Table
 
     public static function finishTRPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRP");
+        $builder->finish($offset, '$TRP');
     }
 }

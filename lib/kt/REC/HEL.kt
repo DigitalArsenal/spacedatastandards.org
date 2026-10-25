@@ -143,7 +143,7 @@ class HEL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun HELBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$HEL")
+        fun HELBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$HEL")
         fun createHEL(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, quatW: Double, quatX: Double, quatY: Double, quatZ: Double, omegaBodyX: Double, omegaBodyY: Double, omegaBodyZ: Double, mainRotorOffset: Int, tailRotorOffset: Int, engineN1: Double, engineTorque: Double, flags: UInt, fuelRemaining: Float) : Int {
             builder.startTable(19)
             addENGINETORQUE(builder, engineTorque)
@@ -191,7 +191,7 @@ class HEL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishHELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$HEL")
-        fun finishSizePrefixedHELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$HEL")
+        fun finishHELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$HEL")
+        fun finishSizePrefixedHELBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$HEL")
     }
 }

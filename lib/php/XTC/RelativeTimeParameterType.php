@@ -21,7 +21,7 @@ class RelativeTimeParameterType extends Table
 
     public static function RelativeTimeParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function RelativeTimeParameterTypeBufferHasIdentifier(ByteBuffer $buf)

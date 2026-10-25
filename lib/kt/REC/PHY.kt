@@ -190,7 +190,7 @@ class PHY : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PHYBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PHY")
+        fun PHYBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PHY")
         fun createPHY(builder: FlatBufferBuilder, commandOffset: Int, simulationStepOffset: Int, rigidBodyOffset: Int, integrationConfigOffset: Int, collisionQueryAOffset: Int, collisionQueryBOffset: Int, transformAOffset: Int, transformBOffset: Int, positionAOffset: Int, positionBOffset: Int, fluidOffset: Int, aeroQueryOffset: Int, dragModelOffset: Int, thermalStateOffset: Int) : Int {
             builder.startTable(14)
             addTHERMALSTATE(builder, thermalStateOffset)
@@ -228,7 +228,7 @@ class PHY : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPHYBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PHY")
-        fun finishSizePrefixedPHYBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PHY")
+        fun finishPHYBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PHY")
+        fun finishSizePrefixedPHYBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PHY")
     }
 }

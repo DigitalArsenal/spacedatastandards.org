@@ -21,7 +21,7 @@ class SCRCandidates extends Table
 
     public static function SCRCandidatesIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRCandidatesBufferHasIdentifier(ByteBuffer $buf)

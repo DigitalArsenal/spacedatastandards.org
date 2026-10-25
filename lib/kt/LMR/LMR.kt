@@ -159,7 +159,7 @@ class LMR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LMRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LMR")
+        fun LMRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LMR")
         fun createLMR(builder: FlatBufferBuilder, action: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, wasmCidOffset: Int, moduleHashOffset: Int, statusOffset: Int, errorCodeOffset: Int, errorMessageOffset: Int) : Int {
             builder.startTable(9)
             addERRORMESSAGE(builder, errorMessageOffset)
@@ -198,7 +198,7 @@ class LMR : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishLMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LMR")
-        fun finishSizePrefixedLMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LMR")
+        fun finishLMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LMR")
+        fun finishSizePrefixedLMRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LMR")
     }
 }

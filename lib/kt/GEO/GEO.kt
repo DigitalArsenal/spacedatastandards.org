@@ -246,7 +246,7 @@ class GEO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GEOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GEO")
+        fun GEOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GEO")
         fun createGEO(builder: FlatBufferBuilder, idOffset: Int, origObjectIdOffset: Int, satNo: UInt, onOrbitOffset: Int, stationKeeping: Byte, ss: Double, sc: Double, relativeEnergy: Double, longitudeRate: Double, longitudeMin: Double, longitudeMax: Double, confidence: Byte, trough: Byte, planeChangeStatusOffset: Int, lostFlag: Boolean, semiAnnualCorrFlag: Boolean, objectStatusOffset: Int, inclination: Double, eccentricity: Double, epochOffset: Int, rawFileUriOffset: Int) : Int {
             builder.startTable(21)
             addECCENTRICITY(builder, eccentricity)
@@ -298,7 +298,7 @@ class GEO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GEO")
-        fun finishSizePrefixedGEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GEO")
+        fun finishGEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GEO")
+        fun finishSizePrefixedGEOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GEO")
     }
 }

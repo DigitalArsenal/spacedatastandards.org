@@ -21,7 +21,7 @@ class FMB extends Table
 
     public static function FMBIdentifier()
     {
-        return "$FMB";
+        return '$FMB';
     }
 
     public static function FMBBufferHasIdentifier(ByteBuffer $buf)
@@ -729,6 +729,6 @@ class FMB extends Table
 
     public static function finishFMBBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FMB");
+        $builder->finish($offset, '$FMB');
     }
 }

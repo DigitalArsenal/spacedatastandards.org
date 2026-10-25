@@ -21,7 +21,7 @@ class GEL extends Table
 
     public static function GELIdentifier()
     {
-        return "$GEL";
+        return '$GEL';
     }
 
     public static function GELBufferHasIdentifier(ByteBuffer $buf)
@@ -802,6 +802,6 @@ class GEL extends Table
 
     public static function finishGELBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GEL");
+        $builder->finish($offset, '$GEL');
     }
 }

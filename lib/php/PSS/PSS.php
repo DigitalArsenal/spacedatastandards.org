@@ -20,7 +20,7 @@ class PSS extends Table
 
     public static function PSSIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSBufferHasIdentifier(ByteBuffer $buf)
@@ -255,6 +255,6 @@ class PSS extends Table
 
     public static function finishPSSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PSS");
+        $builder->finish($offset, '$PSS');
     }
 }

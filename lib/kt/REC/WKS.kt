@@ -183,7 +183,7 @@ class WKS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun WKSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WKS")
+        fun WKSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$WKS")
         fun createWKS(builder: FlatBufferBuilder, workspaceIdOffset: Int, nameOffset: Int, descriptionOffset: Int, ownerEpmCidOffset: Int, appIdOffset: Int, sceneOffset: Int, queriesOffset: Int, shareGrantsOffset: Int, createdAt: ULong, updatedAt: ULong, signatureOffset: Int) : Int {
             builder.startTable(11)
             addUPDATEDAT(builder, updatedAt)
@@ -241,7 +241,7 @@ class WKS : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishWKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$WKS")
-        fun finishSizePrefixedWKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$WKS")
+        fun finishWKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$WKS")
+        fun finishSizePrefixedWKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$WKS")
     }
 }

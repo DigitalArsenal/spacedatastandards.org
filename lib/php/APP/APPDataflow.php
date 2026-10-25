@@ -28,7 +28,7 @@ class APPDataflow extends Table
 
     public static function APPDataflowIdentifier()
     {
-        return "$APP";
+        return '$APP';
     }
 
     public static function APPDataflowBufferHasIdentifier(ByteBuffer $buf)

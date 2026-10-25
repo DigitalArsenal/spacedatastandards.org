@@ -21,7 +21,7 @@ class ArgumentAssignment extends Table
 
     public static function ArgumentAssignmentIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArgumentAssignmentBufferHasIdentifier(ByteBuffer $buf)

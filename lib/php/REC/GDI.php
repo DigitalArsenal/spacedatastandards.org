@@ -21,7 +21,7 @@ class GDI extends Table
 
     public static function GDIIdentifier()
     {
-        return "$GDI";
+        return '$GDI';
     }
 
     public static function GDIBufferHasIdentifier(ByteBuffer $buf)
@@ -519,6 +519,6 @@ class GDI extends Table
 
     public static function finishGDIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GDI");
+        $builder->finish($offset, '$GDI');
     }
 }

@@ -21,7 +21,7 @@ class CZM extends Table
 
     public static function CZMIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMBufferHasIdentifier(ByteBuffer $buf)
@@ -257,6 +257,6 @@ class CZM extends Table
 
     public static function finishCZMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CZM");
+        $builder->finish($offset, '$CZM');
     }
 }

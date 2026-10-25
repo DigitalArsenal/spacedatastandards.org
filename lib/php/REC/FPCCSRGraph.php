@@ -21,7 +21,7 @@ class FPCCSRGraph extends Table
 
     public static function FPCCSRGraphIdentifier()
     {
-        return "$FPC";
+        return '$FPC';
     }
 
     public static function FPCCSRGraphBufferHasIdentifier(ByteBuffer $buf)

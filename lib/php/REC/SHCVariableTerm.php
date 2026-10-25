@@ -22,7 +22,7 @@ class SHCVariableTerm extends Table
 
     public static function SHCVariableTermIdentifier()
     {
-        return "$SHC";
+        return '$SHC';
     }
 
     public static function SHCVariableTermBufferHasIdentifier(ByteBuffer $buf)

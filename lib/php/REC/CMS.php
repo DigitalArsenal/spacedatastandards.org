@@ -21,7 +21,7 @@ class CMS extends Table
 
     public static function CMSIdentifier()
     {
-        return "$CMS";
+        return '$CMS';
     }
 
     public static function CMSBufferHasIdentifier(ByteBuffer $buf)
@@ -398,6 +398,6 @@ class CMS extends Table
 
     public static function finishCMSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CMS");
+        $builder->finish($offset, '$CMS');
     }
 }

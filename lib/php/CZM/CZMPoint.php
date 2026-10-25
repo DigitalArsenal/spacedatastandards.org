@@ -21,7 +21,7 @@ class CZMPoint extends Table
 
     public static function CZMPointIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPointBufferHasIdentifier(ByteBuffer $buf)

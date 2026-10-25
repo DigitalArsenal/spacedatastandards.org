@@ -312,7 +312,7 @@ class LKS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LKSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LKS")
+        fun LKSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LKS")
         fun createLKS(builder: FlatBufferBuilder, idOffset: Int, idOnOrbit1Offset: Int, satNo1: UInt, idOnOrbit2Offset: Int, satNo2: UInt, constellationOffset: Int, linkNameOffset: Int, linkType: Byte, linkState: Byte, bandOffset: Int, linkStartTimeOffset: Int, linkStopTimeOffset: Int, idBeam1Offset: Int, endPoint1NameOffset: Int, endPoint1Lat: Double, endPoint1Lon: Double, idBeam2Offset: Int, endPoint2NameOffset: Int, endPoint2Lat: Double, endPoint2Lon: Double, dataRate1To2: Double, dataRate2To1: Double, sysCapOffset: Int, opsCapOffset: Int) : Int {
             builder.startTable(24)
             addDATARATE2TO1(builder, dataRate2To1)
@@ -370,7 +370,7 @@ class LKS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LKS")
-        fun finishSizePrefixedLKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LKS")
+        fun finishLKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LKS")
+        fun finishSizePrefixedLKSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LKS")
     }
 }

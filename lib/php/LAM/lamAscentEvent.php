@@ -21,7 +21,7 @@ class lamAscentEvent extends Table
 
     public static function lamAscentEventIdentifier()
     {
-        return "$LAM";
+        return '$LAM';
     }
 
     public static function lamAscentEventBufferHasIdentifier(ByteBuffer $buf)

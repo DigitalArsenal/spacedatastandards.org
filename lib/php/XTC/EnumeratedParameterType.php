@@ -21,7 +21,7 @@ class EnumeratedParameterType extends Table
 
     public static function EnumeratedParameterTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function EnumeratedParameterTypeBufferHasIdentifier(ByteBuffer $buf)

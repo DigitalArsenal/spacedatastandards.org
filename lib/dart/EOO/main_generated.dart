@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../RFM/main_generated.dart';
 
 ///  Enumeration for data collection methods
 enum CollectMethod {

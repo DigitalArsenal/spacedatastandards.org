@@ -690,7 +690,7 @@ class IQC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun IQCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$IQC")
+        fun IQCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$IQC")
         fun createIQC(builder: FlatBufferBuilder, idOffset: Int, captureIdOffset: Int, sourceNameOffset: Int, sourceUrlOffset: Int, sourceRecordIdOffset: Int, sourceSha256Offset: Int, retrievedAtOffset: Int, titleOffset: Int, descriptionOffset: Int, authorOffset: Int, sigmfVersionOffset: Int, collectionOffset: Int, extensionsOffset: Int, datatypeOffset: Int, sampleRateHz: Double, numChannels: UInt, centerFreqHz: Double, freqLowerEdgeHz: Double, freqUpperEdgeHz: Double, sampleCount: ULong, durationSeconds: Double, sampleOffset: ULong, metadataOnly: Boolean, trailingBytes: ULong, captureStartOffset: Int, captureStopOffset: Int, segmentsOffset: Int, annotationsOffset: Int, labelsOffset: Int, geolocationOffset: Int, hardwareOffset: Int, signalNameOffset: Int, modulationOffset: Int, band: Byte, noradCatId: UInt, objectIdOffset: Int, emitterIdOffset: Int, rfbIdOffset: Int, licenseOffset: Int, licenseUrlOffset: Int, attributionOffset: Int, metaDoiOffset: Int, dataDoiOffset: Int, payloadsOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, supersedesIqcCidOffset: Int) : Int {
             builder.startTable(47)
             addTRAILINGBYTES(builder, trailingBytes)
@@ -834,7 +834,7 @@ class IQC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishIQCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$IQC")
-        fun finishSizePrefixedIQCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$IQC")
+        fun finishIQCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$IQC")
+        fun finishSizePrefixedIQCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$IQC")
     }
 }

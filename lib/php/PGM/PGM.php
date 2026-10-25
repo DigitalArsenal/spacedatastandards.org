@@ -20,7 +20,7 @@ class PGM extends Table
 
     public static function PGMIdentifier()
     {
-        return "$PGM";
+        return '$PGM';
     }
 
     public static function PGMBufferHasIdentifier(ByteBuffer $buf)
@@ -385,6 +385,6 @@ class PGM extends Table
 
     public static function finishPGMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PGM");
+        $builder->finish($offset, '$PGM');
     }
 }

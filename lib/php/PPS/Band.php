@@ -21,7 +21,7 @@ class Band extends Table
 
     public static function BandIdentifier()
     {
-        return "$IDM";
+        return '$IDM';
     }
 
     public static function BandBufferHasIdentifier(ByteBuffer $buf)

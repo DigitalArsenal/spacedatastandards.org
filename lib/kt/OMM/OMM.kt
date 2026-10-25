@@ -537,7 +537,7 @@ class OMM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OMM")
+        fun OMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OMM")
         fun createOMM(builder: FlatBufferBuilder, ccsdsOmmVers: Double, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, objectIdOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, referenceFrameEpochOffset: Int, timeSystem: Byte, meanElementTheory: Byte, commentOffset: Int, epochOffset: Int, semiMajorAxis: Double, meanMotion: Double, eccentricity: Double, inclination: Double, raOfAscNode: Double, argOfPericenter: Double, meanAnomaly: Double, gm: Double, mass: Double, solarRadArea: Double, solarRadCoeff: Double, dragArea: Double, dragCoeff: Double, ephemerisType: Byte, classificationTypeOffset: Int, noradCatId: UInt, elementSetNo: UInt, revAtEpoch: Double, bstar: Double, meanMotionDot: Double, meanMotionDdot: Double, covReferenceFrameOffset: Int, covarianceOffset: Int, userDefinedBip0044Type: UInt, userDefinedObjectDesignatorOffset: Int, userDefinedEarthModelOffset: Int, userDefinedEpochTimestamp: Double, userDefinedMicroseconds: Double, classificationOffset: Int, messageIdOffset: Int, userDefinedParametersOffset: Int, provenanceOffset: Int, covRealismOffset: Int) : Int {
             builder.startTable(45)
             addUSERDEFINEDMICROSECONDS(builder, userDefinedMicroseconds)
@@ -653,7 +653,7 @@ class OMM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OMM")
-        fun finishSizePrefixedOMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OMM")
+        fun finishOMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OMM")
+        fun finishSizePrefixedOMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OMM")
     }
 }

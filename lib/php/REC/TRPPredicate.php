@@ -22,7 +22,7 @@ class TRPPredicate extends Table
 
     public static function TRPPredicateIdentifier()
     {
-        return "$TRP";
+        return '$TRP';
     }
 
     public static function TRPPredicateBufferHasIdentifier(ByteBuffer $buf)

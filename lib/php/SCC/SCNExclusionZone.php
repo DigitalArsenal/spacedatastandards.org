@@ -22,7 +22,7 @@ class SCNExclusionZone extends Table
 
     public static function SCNExclusionZoneIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNExclusionZoneBufferHasIdentifier(ByteBuffer $buf)

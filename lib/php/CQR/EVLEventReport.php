@@ -21,7 +21,7 @@ class EVLEventReport extends Table
 
     public static function EVLEventReportIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLEventReportBufferHasIdentifier(ByteBuffer $buf)

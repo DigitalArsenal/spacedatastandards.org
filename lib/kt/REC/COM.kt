@@ -124,7 +124,7 @@ class COM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun COMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$COM")
+        fun COMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$COM")
         fun createCOM(builder: FlatBufferBuilder, systemId: UInt, entityId: UInt, isTransmitting: Boolean, isReceiving: Boolean, currentFrequencyHz: Double, currentPowerWatts: Double, currentDataRateBps: Double, messagesSent: ULong, messagesReceived: ULong, bytesSent: ULong, bytesReceived: ULong, connectedNodesOffset: Int, activeLinksOffset: Int, lastUpdateMs: Long) : Int {
             builder.startTable(14)
             addLASTUPDATEMS(builder, lastUpdateMs)
@@ -179,7 +179,7 @@ class COM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCOMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$COM")
-        fun finishSizePrefixedCOMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$COM")
+        fun finishCOMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$COM")
+        fun finishSizePrefixedCOMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$COM")
     }
 }

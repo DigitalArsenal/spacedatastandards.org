@@ -21,7 +21,7 @@ class CQRLaunchSegment extends Table
 
     public static function CQRLaunchSegmentIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRLaunchSegmentBufferHasIdentifier(ByteBuffer $buf)

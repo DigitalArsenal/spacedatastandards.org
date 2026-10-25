@@ -22,7 +22,7 @@ class ERMStrataSettings extends Table
 
     public static function ERMStrataSettingsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMStrataSettingsBufferHasIdentifier(ByteBuffer $buf)

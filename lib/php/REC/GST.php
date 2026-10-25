@@ -30,7 +30,7 @@ class GST extends Table
 
     public static function GSTIdentifier()
     {
-        return "$GST";
+        return '$GST';
     }
 
     public static function GSTBufferHasIdentifier(ByteBuffer $buf)
@@ -767,6 +767,6 @@ class GST extends Table
 
     public static function finishGSTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GST");
+        $builder->finish($offset, '$GST');
     }
 }

@@ -22,7 +22,7 @@ class CVPUncertainty extends Table
 
     public static function CVPUncertaintyIdentifier()
     {
-        return "$CVP";
+        return '$CVP';
     }
 
     public static function CVPUncertaintyBufferHasIdentifier(ByteBuffer $buf)

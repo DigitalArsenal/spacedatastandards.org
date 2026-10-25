@@ -21,7 +21,7 @@ class PRW extends Table
 
     public static function PRWIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWBufferHasIdentifier(ByteBuffer $buf)
@@ -491,6 +491,6 @@ class PRW extends Table
 
     public static function finishPRWBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PRW");
+        $builder->finish($offset, '$PRW');
     }
 }

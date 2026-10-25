@@ -210,7 +210,7 @@ class FSM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FSMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FSM")
+        fun FSMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FSM")
         fun createFSM(builder: FlatBufferBuilder, messageIdOffset: Int, providerPeerIdOffset: Int, listingIdOffset: Int, streamIdOffset: Int, schemaCodeOffset: Int, schemaHashOffset: Int, policyIdOffset: Int, policyVersion: UInt, keyEpochOffset: Int, sequence: ULong, producedAt: ULong, expiresAt: ULong, subjectIdOffset: Int, fieldsOffset: Int, payloadHashOffset: Int, previousMessageHashOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(17)
             addEXPIRESAT(builder, expiresAt)
@@ -304,7 +304,7 @@ class FSM : Table() {
                 builder.required(o, 16)
             return o
         }
-        fun finishFSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FSM")
-        fun finishSizePrefixedFSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FSM")
+        fun finishFSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FSM")
+        fun finishSizePrefixedFSMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FSM")
     }
 }

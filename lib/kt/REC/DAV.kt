@@ -264,7 +264,7 @@ class DAV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DAVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DAV")
+        fun DAVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DAV")
         fun createDAV(builder: FlatBufferBuilder, standardOffset: Int, schemaNameOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, known: Boolean, available: Boolean, unavailableReason: UByte, selfPublished: Boolean, pinned: Boolean, fresh: Boolean, batchIdOffset: Int, recordCount: ULong, byteCount: ULong, parts: UInt, publishedAtMs: Long, pnmCidOffset: Int, pnmFileIdOffset: Int, pnmPublishedAtMs: Long, pnmSignatureVerified: Boolean, publisherPeerIdOffset: Int, etagOffset: Int, bodyRefToken: ULong, bodyRefSize: ULong) : Int {
             builder.startTable(23)
             addBODYREFSIZE(builder, bodyRefSize)
@@ -320,7 +320,7 @@ class DAV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishDAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DAV")
-        fun finishSizePrefixedDAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DAV")
+        fun finishDAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DAV")
+        fun finishSizePrefixedDAVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DAV")
     }
 }

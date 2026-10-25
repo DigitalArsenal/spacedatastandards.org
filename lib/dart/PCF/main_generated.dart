@@ -5,7 +5,11 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../EVL/main_generated.dart';
+import '../FRM/main_generated.dart';
+import '../PCE/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  The orbit theory that computes the states. Append new values only; never
 ///  reorder or reuse a value.

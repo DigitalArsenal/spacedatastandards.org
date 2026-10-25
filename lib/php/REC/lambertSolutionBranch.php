@@ -21,7 +21,7 @@ class lambertSolutionBranch extends Table
 
     public static function lambertSolutionBranchIdentifier()
     {
-        return "$LMO";
+        return '$LMO';
     }
 
     public static function lambertSolutionBranchBufferHasIdentifier(ByteBuffer $buf)

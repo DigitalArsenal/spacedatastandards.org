@@ -21,7 +21,7 @@ class ERMElementFit extends Table
 
     public static function ERMElementFitIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMElementFitBufferHasIdentifier(ByteBuffer $buf)

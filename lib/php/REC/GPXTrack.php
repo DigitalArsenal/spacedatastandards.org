@@ -21,7 +21,7 @@ class GPXTrack extends Table
 
     public static function GPXTrackIdentifier()
     {
-        return "$GPX";
+        return '$GPX';
     }
 
     public static function GPXTrackBufferHasIdentifier(ByteBuffer $buf)

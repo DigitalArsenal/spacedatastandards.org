@@ -21,7 +21,7 @@ class SpatialCoverage extends Table
 
     public static function SpatialCoverageIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function SpatialCoverageBufferHasIdentifier(ByteBuffer $buf)

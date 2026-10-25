@@ -25,7 +25,7 @@ class AVLProvenance extends Table
 
     public static function AVLProvenanceIdentifier()
     {
-        return "$AVL";
+        return '$AVL';
     }
 
     public static function AVLProvenanceBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class AlgorithmOutput extends Table
 
     public static function AlgorithmOutputIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AlgorithmOutputBufferHasIdentifier(ByteBuffer $buf)

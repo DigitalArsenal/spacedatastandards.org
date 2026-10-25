@@ -21,7 +21,7 @@ class FlatBufferTypeRef extends Table
 
     public static function FlatBufferTypeRefIdentifier()
     {
-        return "$TAB";
+        return '$TAB';
     }
 
     public static function FlatBufferTypeRefBufferHasIdentifier(ByteBuffer $buf)

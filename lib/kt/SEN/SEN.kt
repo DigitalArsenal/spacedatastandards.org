@@ -200,7 +200,7 @@ class SEN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SENBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SEN")
+        fun SENBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SEN")
         fun createSEN(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, typeOffset: Int, status: Byte, siteIdOffset: Int, latitude: Double, longitude: Double, altitude: Double, statusTimeOffset: Int, maintenanceOffset: Int, plansOffset: Int, statisticsOffset: Int, notesOffset: Int) : Int {
             builder.startTable(13)
             addALTITUDE(builder, altitude)
@@ -260,7 +260,7 @@ class SEN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSENBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SEN")
-        fun finishSizePrefixedSENBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SEN")
+        fun finishSENBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SEN")
+        fun finishSizePrefixedSENBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SEN")
     }
 }

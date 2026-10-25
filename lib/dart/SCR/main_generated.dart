@@ -270,29 +270,22 @@ class SCRGridStateObjectBuilder extends fb.ObjectBuilder {
   final double _RESERVED;
 
   SCRGridStateObjectBuilder({
-    double X_KM,
-    double? xKm,
-    double Y_KM,
-    double? yKm,
-    double Z_KM,
-    double? zKm,
-    double DEVIATION_KM,
-    double? deviationKm,
-    double VX_KM_S,
-    double? vxKmS,
-    double VY_KM_S,
-    double? vyKmS,
-    double VZ_KM_S,
-    double? vzKmS,
+    required double X_KM,
+    required double Y_KM,
+    required double Z_KM,
+    required double DEVIATION_KM,
+    required double VX_KM_S,
+    required double VY_KM_S,
+    required double VZ_KM_S,
     required double RESERVED,
   })
-      : _X_KM = xKm ?? X_KM,
-        _Y_KM = yKm ?? Y_KM,
-        _Z_KM = zKm ?? Z_KM,
-        _DEVIATION_KM = deviationKm ?? DEVIATION_KM,
-        _VX_KM_S = vxKmS ?? VX_KM_S,
-        _VY_KM_S = vyKmS ?? VY_KM_S,
-        _VZ_KM_S = vzKmS ?? VZ_KM_S,
+      : _X_KM = X_KM,
+        _Y_KM = Y_KM,
+        _Z_KM = Z_KM,
+        _DEVIATION_KM = DEVIATION_KM,
+        _VX_KM_S = VX_KM_S,
+        _VY_KM_S = VY_KM_S,
+        _VZ_KM_S = VZ_KM_S,
         _RESERVED = RESERVED;
 
   /// Finish building, and store into the [fbBuilder].
@@ -366,13 +359,11 @@ class SCRRadiusBandObjectBuilder extends fb.ObjectBuilder {
   final double _HIGH_KM;
 
   SCRRadiusBandObjectBuilder({
-    double LOW_KM,
-    double? lowKm,
-    double HIGH_KM,
-    double? highKm,
+    required double LOW_KM,
+    required double HIGH_KM,
   })
-      : _LOW_KM = lowKm ?? LOW_KM,
-        _HIGH_KM = highKm ?? HIGH_KM;
+      : _LOW_KM = LOW_KM,
+        _HIGH_KM = HIGH_KM;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -1165,26 +1156,20 @@ class SCRPossibilityPointObjectBuilder extends fb.ObjectBuilder {
   final double _POSSIBILITY;
 
   SCRPossibilityPointObjectBuilder({
-    double X_M,
-    double? xM,
-    double Y_M,
-    double? yM,
-    double Z_M,
-    double? zM,
-    double VX_M_S,
-    double? vxMS,
-    double VY_M_S,
-    double? vyMS,
-    double VZ_M_S,
-    double? vzMS,
+    required double X_M,
+    required double Y_M,
+    required double Z_M,
+    required double VX_M_S,
+    required double VY_M_S,
+    required double VZ_M_S,
     required double POSSIBILITY,
   })
-      : _X_M = xM ?? X_M,
-        _Y_M = yM ?? Y_M,
-        _Z_M = zM ?? Z_M,
-        _VX_M_S = vxMS ?? VX_M_S,
-        _VY_M_S = vyMS ?? VY_M_S,
-        _VZ_M_S = vzMS ?? VZ_M_S,
+      : _X_M = X_M,
+        _Y_M = Y_M,
+        _Z_M = Z_M,
+        _VX_M_S = VX_M_S,
+        _VY_M_S = VY_M_S,
+        _VZ_M_S = VZ_M_S,
         _POSSIBILITY = POSSIBILITY;
 
   /// Finish building, and store into the [fbBuilder].

@@ -20,7 +20,7 @@ class SCVSensor extends Table
 
     public static function SCVSensorIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVSensorBufferHasIdentifier(ByteBuffer $buf)

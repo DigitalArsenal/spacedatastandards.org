@@ -54,7 +54,7 @@ class TRS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TRSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRS")
+        fun TRSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TRS")
         fun createTRS(builder: FlatBufferBuilder, requestOffset: Int, resultOffset: Int) : Int {
             builder.startTable(2)
             addRESULT(builder, resultOffset)
@@ -68,7 +68,7 @@ class TRS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTRSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TRS")
-        fun finishSizePrefixedTRSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TRS")
+        fun finishTRSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TRS")
+        fun finishSizePrefixedTRSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TRS")
     }
 }

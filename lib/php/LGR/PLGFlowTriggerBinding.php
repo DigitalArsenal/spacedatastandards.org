@@ -21,7 +21,7 @@ class PLGFlowTriggerBinding extends Table
 
     public static function PLGFlowTriggerBindingIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGFlowTriggerBindingBufferHasIdentifier(ByteBuffer $buf)

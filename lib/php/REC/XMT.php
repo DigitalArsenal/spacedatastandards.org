@@ -21,7 +21,7 @@ class XMT extends Table
 
     public static function XMTIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTBufferHasIdentifier(ByteBuffer $buf)
@@ -217,6 +217,6 @@ class XMT extends Table
 
     public static function finishXMTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$XMT");
+        $builder->finish($offset, '$XMT');
     }
 }

@@ -37,7 +37,7 @@ class BPFRuntimeLock extends Table
 
     public static function BPFRuntimeLockIdentifier()
     {
-        return "$BPF";
+        return '$BPF';
     }
 
     public static function BPFRuntimeLockBufferHasIdentifier(ByteBuffer $buf)

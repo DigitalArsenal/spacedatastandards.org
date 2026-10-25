@@ -20,7 +20,7 @@ class TRHTransmitter extends Table
 
     public static function TRHTransmitterIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHTransmitterBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SCRSearchReport extends Table
 
     public static function SCRSearchReportIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRSearchReportBufferHasIdentifier(ByteBuffer $buf)

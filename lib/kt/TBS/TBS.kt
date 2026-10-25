@@ -304,7 +304,7 @@ class TBS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TBSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TBS")
+        fun TBSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TBS")
         fun createTBS(builder: FlatBufferBuilder, idOffset: Int, nativeIdOffset: Int, radio: Byte, mcc: UInt, mnc: UInt, lac: UInt, tac: UInt, cellIdOffset: Int, latitude: Double, longitude: Double, rangeM: Double, samples: UInt, averageSignalDbm: Double, firstObservedOffset: Int, lastObservedOffset: Int, operatorOffset: Int, frequencyMhz: Double, siteNameOffset: Int, countryCodeOffset: Int, sourcesOffset: Int, consensusOffset: Int) : Int {
             builder.startTable(21)
             addFREQUENCYMHZ(builder, frequencyMhz)
@@ -367,7 +367,7 @@ class TBS : Table() {
                 builder.required(o, 44)
             return o
         }
-        fun finishTBSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TBS")
-        fun finishSizePrefixedTBSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TBS")
+        fun finishTBSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TBS")
+        fun finishSizePrefixedTBSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TBS")
     }
 }

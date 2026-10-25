@@ -21,7 +21,7 @@ class XMTProductChoice extends Table
 
     public static function XMTProductChoiceIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTProductChoiceBufferHasIdentifier(ByteBuffer $buf)

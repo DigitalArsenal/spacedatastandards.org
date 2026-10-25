@@ -21,7 +21,7 @@ class ERMScreeningCases extends Table
 
     public static function ERMScreeningCasesIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMScreeningCasesBufferHasIdentifier(ByteBuffer $buf)

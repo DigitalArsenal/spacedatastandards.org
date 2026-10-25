@@ -214,7 +214,7 @@ class OOT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOT")
+        fun OOTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOT")
         fun createOOT(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idThrusterOffset: Int, nameOffset: Int, type: Byte, quantity: UInt, thrust: Double, isp: Double, propellantOffset: Int, propellantMass: Double, propellantRemaining: Double, deltaVTotal: Double, deltaVRemaining: Double, totalImpulse: Double, mass: Double, purposeOffset: Int, notesOffset: Int) : Int {
             builder.startTable(17)
             addMASS(builder, mass)
@@ -258,7 +258,7 @@ class OOT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOT")
-        fun finishSizePrefixedOOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOT")
+        fun finishOOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOT")
+        fun finishSizePrefixedOOTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOT")
     }
 }

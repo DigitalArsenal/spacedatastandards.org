@@ -34,7 +34,7 @@ class VAMReview extends Table
 
     public static function VAMReviewIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMReviewBufferHasIdentifier(ByteBuffer $buf)

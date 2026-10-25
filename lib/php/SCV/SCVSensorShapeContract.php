@@ -20,7 +20,7 @@ class SCVSensorShapeContract extends Table
 
     public static function SCVSensorShapeContractIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVSensorShapeContractBufferHasIdentifier(ByteBuffer $buf)

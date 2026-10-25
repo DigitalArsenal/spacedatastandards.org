@@ -21,7 +21,7 @@ class KMLSoundCue extends Table
 
     public static function KMLSoundCueIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLSoundCueBufferHasIdentifier(ByteBuffer $buf)

@@ -24,7 +24,7 @@ class GNM extends Table
 
     public static function GNMIdentifier()
     {
-        return "$GNM";
+        return '$GNM';
     }
 
     public static function GNMBufferHasIdentifier(ByteBuffer $buf)
@@ -535,6 +535,6 @@ class GNM extends Table
 
     public static function finishGNMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GNM");
+        $builder->finish($offset, '$GNM');
     }
 }

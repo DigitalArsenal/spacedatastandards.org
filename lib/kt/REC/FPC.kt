@@ -100,7 +100,7 @@ class FPC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FPCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FPC")
+        fun FPCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FPC")
         fun createFPC(builder: FlatBufferBuilder, graphDefinitionOffset: Int, edgesOffset: Int, csrOffset: Int, shortestPathRequestOffset: Int, shortestPathResultOffset: Int, pathRequestOffset: Int, pathResultOffset: Int) : Int {
             builder.startTable(7)
             addPATHRESULT(builder, pathResultOffset)
@@ -124,7 +124,7 @@ class FPC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FPC")
-        fun finishSizePrefixedFPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FPC")
+        fun finishFPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FPC")
+        fun finishSizePrefixedFPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FPC")
     }
 }

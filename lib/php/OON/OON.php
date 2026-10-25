@@ -21,7 +21,7 @@ class OON extends Table
 
     public static function OONIdentifier()
     {
-        return "$OON";
+        return '$OON';
     }
 
     public static function OONBufferHasIdentifier(ByteBuffer $buf)
@@ -624,6 +624,6 @@ class OON extends Table
 
     public static function finishOONBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OON");
+        $builder->finish($offset, '$OON');
     }
 }

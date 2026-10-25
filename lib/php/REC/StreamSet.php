@@ -21,7 +21,7 @@ class StreamSet extends Table
 
     public static function StreamSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function StreamSetBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class MathAlgorithm extends Table
 
     public static function MathAlgorithmIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function MathAlgorithmBufferHasIdentifier(ByteBuffer $buf)

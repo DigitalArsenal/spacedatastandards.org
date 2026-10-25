@@ -21,7 +21,7 @@ class KMLSimpleData extends Table
 
     public static function KMLSimpleDataIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLSimpleDataBufferHasIdentifier(ByteBuffer $buf)

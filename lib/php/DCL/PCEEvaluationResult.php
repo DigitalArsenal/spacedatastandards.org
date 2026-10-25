@@ -20,7 +20,7 @@ class PCEEvaluationResult extends Table
 
     public static function PCEEvaluationResultIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEEvaluationResultBufferHasIdentifier(ByteBuffer $buf)

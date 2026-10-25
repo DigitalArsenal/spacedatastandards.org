@@ -21,7 +21,7 @@ class ERMDensitySegment extends Table
 
     public static function ERMDensitySegmentIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMDensitySegmentBufferHasIdentifier(ByteBuffer $buf)

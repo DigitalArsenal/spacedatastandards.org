@@ -21,7 +21,7 @@ class KMLItemIcon extends Table
 
     public static function KMLItemIconIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLItemIconBufferHasIdentifier(ByteBuffer $buf)

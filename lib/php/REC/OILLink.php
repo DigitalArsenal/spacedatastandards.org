@@ -21,7 +21,7 @@ class OILLink extends Table
 
     public static function OILLinkIdentifier()
     {
-        return "$OIL";
+        return '$OIL';
     }
 
     public static function OILLinkBufferHasIdentifier(ByteBuffer $buf)

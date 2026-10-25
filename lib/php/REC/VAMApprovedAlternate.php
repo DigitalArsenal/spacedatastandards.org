@@ -21,7 +21,7 @@ class VAMApprovedAlternate extends Table
 
     public static function VAMApprovedAlternateIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMApprovedAlternateBufferHasIdentifier(ByteBuffer $buf)

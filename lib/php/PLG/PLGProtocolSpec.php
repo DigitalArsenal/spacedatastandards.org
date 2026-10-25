@@ -21,7 +21,7 @@ class PLGProtocolSpec extends Table
 
     public static function PLGProtocolSpecIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGProtocolSpecBufferHasIdentifier(ByteBuffer $buf)

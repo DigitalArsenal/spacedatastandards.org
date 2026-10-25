@@ -23,7 +23,7 @@ class APMSpinState extends Table
 
     public static function APMSpinStateIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMSpinStateBufferHasIdentifier(ByteBuffer $buf)

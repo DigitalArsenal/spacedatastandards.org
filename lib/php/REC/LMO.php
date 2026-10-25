@@ -21,7 +21,7 @@ class LMO extends Table
 
     public static function LMOIdentifier()
     {
-        return "$LMO";
+        return '$LMO';
     }
 
     public static function LMOBufferHasIdentifier(ByteBuffer $buf)
@@ -264,6 +264,6 @@ class LMO extends Table
 
     public static function finishLMOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LMO");
+        $builder->finish($offset, '$LMO');
     }
 }

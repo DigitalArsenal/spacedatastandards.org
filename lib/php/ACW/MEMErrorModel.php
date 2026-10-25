@@ -22,7 +22,7 @@ class MEMErrorModel extends Table
 
     public static function MEMErrorModelIdentifier()
     {
-        return "$MEM";
+        return '$MEM';
     }
 
     public static function MEMErrorModelBufferHasIdentifier(ByteBuffer $buf)

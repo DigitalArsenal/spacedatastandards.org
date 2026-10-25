@@ -21,7 +21,7 @@ class CZMStripeMaterial extends Table
 
     public static function CZMStripeMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMStripeMaterialBufferHasIdentifier(ByteBuffer $buf)

@@ -20,7 +20,7 @@ class SCVMemoryRegion extends Table
 
     public static function SCVMemoryRegionIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVMemoryRegionBufferHasIdentifier(ByteBuffer $buf)

@@ -23,7 +23,7 @@ class ephemerisDataLine extends Table
 
     public static function ephemerisDataLineIdentifier()
     {
-        return "$OEM";
+        return '$OEM';
     }
 
     public static function ephemerisDataLineBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PHBMeasurement extends Table
 
     public static function PHBMeasurementIdentifier()
     {
-        return "$PHB";
+        return '$PHB';
     }
 
     public static function PHBMeasurementBufferHasIdentifier(ByteBuffer $buf)

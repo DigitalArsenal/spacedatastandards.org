@@ -21,7 +21,7 @@ class TCF extends Table
 
     public static function TCFIdentifier()
     {
-        return "$TCF";
+        return '$TCF';
     }
 
     public static function TCFBufferHasIdentifier(ByteBuffer $buf)
@@ -304,6 +304,6 @@ class TCF extends Table
 
     public static function finishTCFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TCF");
+        $builder->finish($offset, '$TCF');
     }
 }

@@ -21,7 +21,7 @@ class dclIteration extends Table
 
     public static function dclIterationIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclIterationBufferHasIdentifier(ByteBuffer $buf)

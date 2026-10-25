@@ -21,7 +21,7 @@ class STX extends Table
 
     public static function STXIdentifier()
     {
-        return "$STX";
+        return '$STX';
     }
 
     public static function STXBufferHasIdentifier(ByteBuffer $buf)
@@ -837,6 +837,6 @@ class STX extends Table
 
     public static function finishSTXBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$STX");
+        $builder->finish($offset, '$STX');
     }
 }

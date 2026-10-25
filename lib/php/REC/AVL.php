@@ -21,7 +21,7 @@ class AVL extends Table
 
     public static function AVLIdentifier()
     {
-        return "$AVL";
+        return '$AVL';
     }
 
     public static function AVLBufferHasIdentifier(ByteBuffer $buf)
@@ -708,6 +708,6 @@ class AVL extends Table
 
     public static function finishAVLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$AVL");
+        $builder->finish($offset, '$AVL');
     }
 }

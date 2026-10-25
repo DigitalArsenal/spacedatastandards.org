@@ -21,7 +21,7 @@ class ServiceSet extends Table
 
     public static function ServiceSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ServiceSetBufferHasIdentifier(ByteBuffer $buf)

@@ -34,7 +34,7 @@ class PNM extends Table
 
     public static function PNMIdentifier()
     {
-        return "$PNM";
+        return '$PNM';
     }
 
     public static function PNMBufferHasIdentifier(ByteBuffer $buf)
@@ -273,6 +273,6 @@ class PNM extends Table
 
     public static function finishPNMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PNM");
+        $builder->finish($offset, '$PNM');
     }
 }

@@ -4,7 +4,7 @@
 
 import flatbuffers
 from flatbuffers.compat import import_numpy
-from .FlatbuffersEncryption import FlatbuffersEncryption
+from FlatbuffersEncryption import FlatbuffersEncryption
 np = import_numpy()
 
 # Key Material Frame

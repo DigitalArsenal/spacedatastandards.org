@@ -22,7 +22,7 @@ class RFEProvenance extends Table
 
     public static function RFEProvenanceIdentifier()
     {
-        return "$RFE";
+        return '$RFE';
     }
 
     public static function RFEProvenanceBufferHasIdentifier(ByteBuffer $buf)

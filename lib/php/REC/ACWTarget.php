@@ -21,7 +21,7 @@ class ACWTarget extends Table
 
     public static function ACWTargetIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWTargetBufferHasIdentifier(ByteBuffer $buf)

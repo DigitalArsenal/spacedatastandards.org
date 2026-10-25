@@ -21,7 +21,7 @@ class XMTUnplacedRecord extends Table
 
     public static function XMTUnplacedRecordIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTUnplacedRecordBufferHasIdentifier(ByteBuffer $buf)

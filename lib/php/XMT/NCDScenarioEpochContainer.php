@@ -21,7 +21,7 @@ class NCDScenarioEpochContainer extends Table
 
     public static function NCDScenarioEpochContainerIdentifier()
     {
-        return "$NCD";
+        return '$NCD';
     }
 
     public static function NCDScenarioEpochContainerBufferHasIdentifier(ByteBuffer $buf)

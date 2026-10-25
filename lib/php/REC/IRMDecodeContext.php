@@ -22,7 +22,7 @@ class IRMDecodeContext extends Table
 
     public static function IRMDecodeContextIdentifier()
     {
-        return "$IRM";
+        return '$IRM';
     }
 
     public static function IRMDecodeContextBufferHasIdentifier(ByteBuffer $buf)

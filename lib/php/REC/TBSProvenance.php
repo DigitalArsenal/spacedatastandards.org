@@ -27,7 +27,7 @@ class TBSProvenance extends Table
 
     public static function TBSProvenanceIdentifier()
     {
-        return "$TBS";
+        return '$TBS';
     }
 
     public static function TBSProvenanceBufferHasIdentifier(ByteBuffer $buf)

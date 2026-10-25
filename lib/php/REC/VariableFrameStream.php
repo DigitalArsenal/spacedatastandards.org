@@ -21,7 +21,7 @@ class VariableFrameStream extends Table
 
     public static function VariableFrameStreamIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function VariableFrameStreamBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class VAMSource extends Table
 
     public static function VAMSourceIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMSourceBufferHasIdentifier(ByteBuffer $buf)

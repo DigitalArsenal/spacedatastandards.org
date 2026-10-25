@@ -21,7 +21,7 @@ class CZMDynamicProperty extends Table
 
     public static function CZMDynamicPropertyIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMDynamicPropertyBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class NHSThroughputSample extends Table
 
     public static function NHSThroughputSampleIdentifier()
     {
-        return "$NHS";
+        return '$NHS';
     }
 
     public static function NHSThroughputSampleBufferHasIdentifier(ByteBuffer $buf)

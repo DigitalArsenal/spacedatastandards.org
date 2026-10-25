@@ -21,7 +21,7 @@ class SITReference extends Table
 
     public static function SITReferenceIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function SITReferenceBufferHasIdentifier(ByteBuffer $buf)

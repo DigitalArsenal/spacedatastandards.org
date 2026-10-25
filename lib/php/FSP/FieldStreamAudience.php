@@ -20,7 +20,7 @@ class FieldStreamAudience extends Table
 
     public static function FieldStreamAudienceIdentifier()
     {
-        return "$FSP";
+        return '$FSP';
     }
 
     public static function FieldStreamAudienceBufferHasIdentifier(ByteBuffer $buf)

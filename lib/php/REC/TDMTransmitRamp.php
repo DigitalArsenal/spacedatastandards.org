@@ -37,7 +37,7 @@ class TDMTransmitRamp extends Table
 
     public static function TDMTransmitRampIdentifier()
     {
-        return "$TDM";
+        return '$TDM';
     }
 
     public static function TDMTransmitRampBufferHasIdentifier(ByteBuffer $buf)

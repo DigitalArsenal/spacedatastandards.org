@@ -24,7 +24,7 @@ class mplLambertRequest extends Table
 
     public static function mplLambertRequestIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplLambertRequestBufferHasIdentifier(ByteBuffer $buf)

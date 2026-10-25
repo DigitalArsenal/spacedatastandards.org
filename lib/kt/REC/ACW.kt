@@ -54,7 +54,7 @@ class ACW : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ACWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACW")
+        fun ACWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACW")
         fun createACW(builder: FlatBufferBuilder, requestOffset: Int, resultOffset: Int) : Int {
             builder.startTable(2)
             addRESULT(builder, resultOffset)
@@ -68,7 +68,7 @@ class ACW : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishACWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ACW")
-        fun finishSizePrefixedACWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ACW")
+        fun finishACWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ACW")
+        fun finishSizePrefixedACWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ACW")
     }
 }

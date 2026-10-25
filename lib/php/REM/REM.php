@@ -21,7 +21,7 @@ class REM extends Table
 
     public static function REMIdentifier()
     {
-        return "$REM";
+        return '$REM';
     }
 
     public static function REMBufferHasIdentifier(ByteBuffer $buf)
@@ -1058,6 +1058,6 @@ class REM extends Table
 
     public static function finishREMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$REM");
+        $builder->finish($offset, '$REM');
     }
 }

@@ -243,7 +243,7 @@ class ERM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ERMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ERM")
+        fun ERMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ERM")
         fun createERM(builder: FlatBufferBuilder, strataSettingsOffset: Int, accumulatorOffset: Int, gateOffset: Int, modelOffset: Int, scaleOptionsOffset: Int, screeningSettingsOffset: Int, screeningCasesOffset: Int, screeningReportOffset: Int, arcOptionsOffset: Int, arcPlanOffset: Int, arcPredictionsOffset: Int, coverageOptionsOffset: Int, propagatorCoverageOffset: Int, commonEpochOffset: Int, covarianceMapOffset: Int, pairStatisticsOffset: Int, calibrationOffset: Int, calibratedCovariancesOffset: Int, considerCovariancesOffset: Int, noiseResponsesOffset: Int, elementFitsOffset: Int, attachRecipeOffset: Int, attachReportOffset: Int) : Int {
             builder.startTable(23)
             addATTACHREPORT(builder, attachReportOffset)
@@ -299,7 +299,7 @@ class ERM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishERMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ERM")
-        fun finishSizePrefixedERMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ERM")
+        fun finishERMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ERM")
+        fun finishSizePrefixedERMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ERM")
     }
 }

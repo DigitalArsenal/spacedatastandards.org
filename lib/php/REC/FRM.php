@@ -20,7 +20,7 @@ class FRM extends Table
 
     public static function FRMIdentifier()
     {
-        return "$FRM";
+        return '$FRM';
     }
 
     public static function FRMBufferHasIdentifier(ByteBuffer $buf)
@@ -108,6 +108,6 @@ class FRM extends Table
 
     public static function finishFRMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FRM");
+        $builder->finish($offset, '$FRM');
     }
 }

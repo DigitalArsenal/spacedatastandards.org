@@ -320,7 +320,7 @@ class ATD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ATDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ATD")
+        fun ATDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ATD")
         fun createATD(builder: FlatBufferBuilder, idOffset: Int, asIdOffset: Int, satNo: UInt, origObjectIdOffset: Int, epochOffset: Int, representation: Byte, motionType: Byte, qc: Double, q1: Double, q2: Double, q3: Double, qcDot: Double, q1Dot: Double, q2Dot: Double, q3Dot: Double, xAngle: Double, yAngle: Double, zAngle: Double, xRate: Double, yRate: Double, zRate: Double, ra: Double, declination: Double, coningAngle: Double, precPeriod: Double, spinPeriod: Double, attitudeUnc: Double, rateUnc: Double, quality: UByte, refFrameOffset: Int, sensorIdOffset: Int) : Int {
             builder.startTable(31)
             addRATEUNC(builder, rateUnc)
@@ -392,7 +392,7 @@ class ATD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishATDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ATD")
-        fun finishSizePrefixedATDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ATD")
+        fun finishATDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ATD")
+        fun finishSizePrefixedATDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ATD")
     }
 }

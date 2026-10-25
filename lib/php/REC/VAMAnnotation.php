@@ -21,7 +21,7 @@ class VAMAnnotation extends Table
 
     public static function VAMAnnotationIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMAnnotationBufferHasIdentifier(ByteBuffer $buf)

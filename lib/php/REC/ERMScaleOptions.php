@@ -21,7 +21,7 @@ class ERMScaleOptions extends Table
 
     public static function ERMScaleOptionsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMScaleOptionsBufferHasIdentifier(ByteBuffer $buf)

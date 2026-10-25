@@ -21,7 +21,7 @@ class EPFVerdict extends Table
 
     public static function EPFVerdictIdentifier()
     {
-        return "$EPF";
+        return '$EPF';
     }
 
     public static function EPFVerdictBufferHasIdentifier(ByteBuffer $buf)

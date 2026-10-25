@@ -462,7 +462,7 @@ class GCT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GCTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GCT")
+        fun GCTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GCT")
         fun createGCT(builder: FlatBufferBuilder, fieldIdOffset: Int, tiling: Byte, level: UByte, x: UInt, y: UInt, childMask: UByte, maxLevel: UByte, refine: Byte, geometricErrorM: Float, westRad: Double, southRad: Double, eastRad: Double, northRad: Double, minHeightM: Double, maxHeightM: Double, originLonRad: Double, originLatRad: Double, originHeightM: Double, enuToEcefOffset: Int, fieldQuantity: Byte, fieldQuantityNameOffset: Int, amplitudeUnitsOffset: Int, massTolerance: Float, variantsOffset: Int, instancesOffset: Int, coverOffset: Int, validTimeMs: ULong, initTimeMs: ULong, leadHours: Float, timeBasis: Byte, modelClass: Byte, modelIdOffset: Int, sourceFieldIdsOffset: Int, producerPeerIdOffset: Int, producerVersionOffset: Int, producerNotesOffset: Int, producedAtMs: ULong, authoringSeed: UInt, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int) : Int {
             builder.startTable(41)
             addPRODUCEDATMS(builder, producedAtMs)
@@ -588,7 +588,7 @@ class GCT : Table() {
                 builder.required(o, 46)
             return o
         }
-        fun finishGCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GCT")
-        fun finishSizePrefixedGCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GCT")
+        fun finishGCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GCT")
+        fun finishSizePrefixedGCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GCT")
     }
 }

@@ -22,7 +22,7 @@ class OMMUserDefinedParameter extends Table
 
     public static function OMMUserDefinedParameterIdentifier()
     {
-        return "$OMM";
+        return '$OMM';
     }
 
     public static function OMMUserDefinedParameterBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class ppsScenario extends Table
 
     public static function ppsScenarioIdentifier()
     {
-        return "$PPS";
+        return '$PPS';
     }
 
     public static function ppsScenarioBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class BooleanArgumentType extends Table
 
     public static function BooleanArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function BooleanArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

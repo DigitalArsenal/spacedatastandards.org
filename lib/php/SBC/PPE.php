@@ -26,7 +26,7 @@ class PPE extends Table
 
     public static function PPEIdentifier()
     {
-        return "$PPE";
+        return '$PPE';
     }
 
     public static function PPEBufferHasIdentifier(ByteBuffer $buf)
@@ -463,6 +463,6 @@ class PPE extends Table
 
     public static function finishPPEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PPE");
+        $builder->finish($offset, '$PPE');
     }
 }

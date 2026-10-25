@@ -21,7 +21,7 @@ class CommandVerifier extends Table
 
     public static function CommandVerifierIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function CommandVerifierBufferHasIdentifier(ByteBuffer $buf)

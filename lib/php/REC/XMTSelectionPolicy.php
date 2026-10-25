@@ -21,7 +21,7 @@ class XMTSelectionPolicy extends Table
 
     public static function XMTSelectionPolicyIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTSelectionPolicyBufferHasIdentifier(ByteBuffer $buf)

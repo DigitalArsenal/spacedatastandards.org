@@ -25,7 +25,7 @@ class VEPProvenance extends Table
 
     public static function VEPProvenanceIdentifier()
     {
-        return "$VEP";
+        return '$VEP';
     }
 
     public static function VEPProvenanceBufferHasIdentifier(ByteBuffer $buf)

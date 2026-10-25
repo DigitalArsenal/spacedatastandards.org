@@ -110,7 +110,7 @@ class ARM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ARMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ARM")
+        fun ARMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ARM")
         fun createARM(builder: FlatBufferBuilder, thickness: Double, angle: Double, material: UByte, hardness: UByte, quality: UByte, eraType: UByte, eraEffectiveness: Float, eraVsKe: Float, rhaEquivalent: Float, normalX: Double, normalY: Double, normalZ: Double, reservedOffset: Int) : Int {
             builder.startTable(13)
             addNORMALZ(builder, normalZ)
@@ -155,7 +155,7 @@ class ARM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishARMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ARM")
-        fun finishSizePrefixedARMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ARM")
+        fun finishARMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ARM")
+        fun finishSizePrefixedARMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ARM")
     }
 }

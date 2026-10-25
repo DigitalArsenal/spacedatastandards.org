@@ -21,7 +21,7 @@ class SBCCovarianceRequest extends Table
 
     public static function SBCCovarianceRequestIdentifier()
     {
-        return "$SBC";
+        return '$SBC';
     }
 
     public static function SBCCovarianceRequestBufferHasIdentifier(ByteBuffer $buf)

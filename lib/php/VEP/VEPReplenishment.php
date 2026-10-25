@@ -21,7 +21,7 @@ class VEPReplenishment extends Table
 
     public static function VEPReplenishmentIdentifier()
     {
-        return "$VEP";
+        return '$VEP';
     }
 
     public static function VEPReplenishmentBufferHasIdentifier(ByteBuffer $buf)

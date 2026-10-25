@@ -23,7 +23,7 @@ class CQRObjectSource extends Table
 
     public static function CQRObjectSourceIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRObjectSourceBufferHasIdentifier(ByteBuffer $buf)

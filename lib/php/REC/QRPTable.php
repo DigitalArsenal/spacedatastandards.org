@@ -21,7 +21,7 @@ class QRPTable extends Table
 
     public static function QRPTableIdentifier()
     {
-        return "$QRP";
+        return '$QRP';
     }
 
     public static function QRPTableBufferHasIdentifier(ByteBuffer $buf)

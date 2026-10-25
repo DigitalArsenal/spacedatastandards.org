@@ -21,7 +21,7 @@ class LCC extends Table
 
     public static function LCCIdentifier()
     {
-        return "$LCC";
+        return '$LCC';
     }
 
     public static function LCCBufferHasIdentifier(ByteBuffer $buf)
@@ -186,6 +186,6 @@ class LCC extends Table
 
     public static function finishLCCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LCC");
+        $builder->finish($offset, '$LCC');
     }
 }

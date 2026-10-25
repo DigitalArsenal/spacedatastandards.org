@@ -21,7 +21,7 @@ class SDFRectangular extends Table
 
     public static function SDFRectangularIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFRectangularBufferHasIdentifier(ByteBuffer $buf)

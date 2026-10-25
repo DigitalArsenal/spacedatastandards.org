@@ -24,7 +24,7 @@ class RFMCoordinateSystem extends Table
 
     public static function RFMCoordinateSystemIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function RFMCoordinateSystemBufferHasIdentifier(ByteBuffer $buf)

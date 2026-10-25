@@ -20,7 +20,7 @@ class Score extends Table
 
     public static function ScoreIdentifier()
     {
-        return "$HYP";
+        return '$HYP';
     }
 
     public static function ScoreBufferHasIdentifier(ByteBuffer $buf)

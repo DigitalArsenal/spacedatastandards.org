@@ -21,7 +21,7 @@ class ACW extends Table
 
     public static function ACWIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWBufferHasIdentifier(ByteBuffer $buf)
@@ -109,6 +109,6 @@ class ACW extends Table
 
     public static function finishACWBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ACW");
+        $builder->finish($offset, '$ACW');
     }
 }

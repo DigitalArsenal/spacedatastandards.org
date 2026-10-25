@@ -351,7 +351,7 @@ class SRT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SRTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SRT")
+        fun SRTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SRT")
         fun createSRT(builder: FlatBufferBuilder, tilesetIdOffset: Int, tilesetNameOffset: Int, quantity: Byte, quantityNameOffset: Int, unitOffset: Int, sampleType: Byte, scaleFactor: Double, addOffset: Double, noDataValue: Double, classLegendOffset: Int, crsOffset: Int, affineTransformOffset: Int, pixelRegistration: Byte, gridWidth: UInt, gridHeight: UInt, tilingScheme: Byte, level: UInt, x: UInt, y: UInt, westDeg: Double, southDeg: Double, eastDeg: Double, northDeg: Double, horizontalDatumNameOffset: Int, payloadFormat: Byte, payloadOffset: Int, minValue: Double, maxValue: Double, dataCoverageFraction: Double, epochOffset: Int, provenanceOffset: Int) : Int {
             builder.startTable(31)
             addDATACOVERAGEFRACTION(builder, dataCoverageFraction)
@@ -443,7 +443,7 @@ class SRT : Table() {
                 builder.required(o, 64)
             return o
         }
-        fun finishSRTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SRT")
-        fun finishSizePrefixedSRTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SRT")
+        fun finishSRTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SRT")
+        fun finishSizePrefixedSRTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SRT")
     }
 }

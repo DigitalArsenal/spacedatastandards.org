@@ -20,7 +20,7 @@ class FSM extends Table
 
     public static function FSMIdentifier()
     {
-        return "$FSM";
+        return '$FSM';
     }
 
     public static function FSMBufferHasIdentifier(ByteBuffer $buf)
@@ -602,6 +602,6 @@ class FSM extends Table
 
     public static function finishFSMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FSM");
+        $builder->finish($offset, '$FSM');
     }
 }

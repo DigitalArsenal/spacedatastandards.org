@@ -21,7 +21,7 @@ class MDEDetectReport extends Table
 
     public static function MDEDetectReportIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEDetectReportBufferHasIdentifier(ByteBuffer $buf)

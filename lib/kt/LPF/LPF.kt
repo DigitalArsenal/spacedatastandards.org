@@ -262,7 +262,7 @@ class LPF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LPFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LPF")
+        fun LPFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LPF")
         fun createLPF(builder: FlatBufferBuilder, messageType: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, requesterEphemeralPubkeyOffset: Int, challengeNonceOffset: Int, challengeExpiresAt: ULong, providerPeerIdOffset: Int, signatureOffset: Int, signingPubkeyOffset: Int, timestampMs: ULong, rejectionCodeOffset: Int, rejectionMessageOffset: Int) : Int {
             builder.startTable(17)
             addTIMESTAMPMS(builder, timestampMs)
@@ -344,7 +344,7 @@ class LPF : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishLPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LPF")
-        fun finishSizePrefixedLPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LPF")
+        fun finishLPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LPF")
+        fun finishSizePrefixedLPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LPF")
     }
 }

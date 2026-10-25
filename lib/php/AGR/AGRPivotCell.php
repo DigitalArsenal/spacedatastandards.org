@@ -21,7 +21,7 @@ class AGRPivotCell extends Table
 
     public static function AGRPivotCellIdentifier()
     {
-        return "$AGR";
+        return '$AGR';
     }
 
     public static function AGRPivotCellBufferHasIdentifier(ByteBuffer $buf)

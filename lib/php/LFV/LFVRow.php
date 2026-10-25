@@ -21,7 +21,7 @@ class LFVRow extends Table
 
     public static function LFVRowIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVRowBufferHasIdentifier(ByteBuffer $buf)

@@ -20,7 +20,7 @@ class PRWInitSource extends Table
 
     public static function PRWInitSourceIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWInitSourceBufferHasIdentifier(ByteBuffer $buf)

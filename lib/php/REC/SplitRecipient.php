@@ -22,7 +22,7 @@ class SplitRecipient extends Table
 
     public static function SplitRecipientIdentifier()
     {
-        return "$SCX";
+        return '$SCX';
     }
 
     public static function SplitRecipientBufferHasIdentifier(ByteBuffer $buf)

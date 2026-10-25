@@ -21,7 +21,7 @@ class GELConvergenceDiagnostics extends Table
 
     public static function GELConvergenceDiagnosticsIdentifier()
     {
-        return "$GEL";
+        return '$GEL';
     }
 
     public static function GELConvergenceDiagnosticsBufferHasIdentifier(ByteBuffer $buf)

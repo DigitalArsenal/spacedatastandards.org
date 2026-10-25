@@ -21,7 +21,7 @@ class FMBSignature extends Table
 
     public static function FMBSignatureIdentifier()
     {
-        return "$FMB";
+        return '$FMB';
     }
 
     public static function FMBSignatureBufferHasIdentifier(ByteBuffer $buf)

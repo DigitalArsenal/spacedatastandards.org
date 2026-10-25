@@ -21,7 +21,7 @@ class ASGCandidate extends Table
 
     public static function ASGCandidateIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGCandidateBufferHasIdentifier(ByteBuffer $buf)

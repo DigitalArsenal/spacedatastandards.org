@@ -21,7 +21,7 @@ class PRWNativeInput extends Table
 
     public static function PRWNativeInputIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWNativeInputBufferHasIdentifier(ByteBuffer $buf)

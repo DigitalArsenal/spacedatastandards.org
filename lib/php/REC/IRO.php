@@ -21,7 +21,7 @@ class IRO extends Table
 
     public static function IROIdentifier()
     {
-        return "$IRO";
+        return '$IRO';
     }
 
     public static function IROBufferHasIdentifier(ByteBuffer $buf)
@@ -744,6 +744,6 @@ class IRO extends Table
 
     public static function finishIROBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$IRO");
+        $builder->finish($offset, '$IRO');
     }
 }

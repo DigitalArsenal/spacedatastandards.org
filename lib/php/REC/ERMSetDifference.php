@@ -21,7 +21,7 @@ class ERMSetDifference extends Table
 
     public static function ERMSetDifferenceIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMSetDifferenceBufferHasIdentifier(ByteBuffer $buf)

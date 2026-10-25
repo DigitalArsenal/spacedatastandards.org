@@ -21,7 +21,7 @@ class ACWConstraint extends Table
 
     public static function ACWConstraintIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWConstraintBufferHasIdentifier(ByteBuffer $buf)

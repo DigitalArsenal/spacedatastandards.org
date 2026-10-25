@@ -20,7 +20,7 @@ class Metadata extends Table
 
     public static function MetadataIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function MetadataBufferHasIdentifier(ByteBuffer $buf)

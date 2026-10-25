@@ -260,7 +260,7 @@ class BUS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BUSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BUS")
+        fun BUSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BUS")
         fun createBUS(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, manufacturerOffset: Int, size: Byte, dryMass: Double, wetMass: Double, payloadMass: Double, dimX: Double, dimY: Double, dimZ: Double, stowedX: Double, stowedY: Double, stowedZ: Double, powerGeneration: Double, payloadPower: Double, batteryCapacity: Double, stabilization: Byte, pointingAccuracy: Double, pointingKnowledge: Double, designLife: Double, dataStorage: Double, downlinkRate: Double, payloadSlots: UInt, heritageCount: UInt, notesOffset: Int) : Int {
             builder.startTable(25)
             addDOWNLINKRATE(builder, downlinkRate)
@@ -320,7 +320,7 @@ class BUS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishBUSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BUS")
-        fun finishSizePrefixedBUSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BUS")
+        fun finishBUSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BUS")
+        fun finishSizePrefixedBUSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BUS")
     }
 }

@@ -82,7 +82,7 @@ class VST : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun VSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$VST")
+        fun VSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$VST")
         fun createVST(builder: FlatBufferBuilder, cameraOffset: Int, displaySettingsOffset: Int, focusedReferenceIdOffset: Int, focusedReferenceIndex: Int) : Int {
             builder.startTable(4)
             addFOCUSEDREFERENCEINDEX(builder, focusedReferenceIndex)
@@ -100,7 +100,7 @@ class VST : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishVSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$VST")
-        fun finishSizePrefixedVSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$VST")
+        fun finishVSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$VST")
+        fun finishSizePrefixedVSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$VST")
     }
 }

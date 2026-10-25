@@ -21,7 +21,7 @@ class ArgumentTypeSet extends Table
 
     public static function ArgumentTypeSetIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArgumentTypeSetBufferHasIdentifier(ByteBuffer $buf)

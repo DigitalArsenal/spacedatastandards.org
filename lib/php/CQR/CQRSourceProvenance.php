@@ -21,7 +21,7 @@ class CQRSourceProvenance extends Table
 
     public static function CQRSourceProvenanceIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRSourceProvenanceBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class VAMValidation extends Table
 
     public static function VAMValidationIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMValidationBufferHasIdentifier(ByteBuffer $buf)

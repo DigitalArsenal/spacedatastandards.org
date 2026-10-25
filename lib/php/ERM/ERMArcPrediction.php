@@ -21,7 +21,7 @@ class ERMArcPrediction extends Table
 
     public static function ERMArcPredictionIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMArcPredictionBufferHasIdentifier(ByteBuffer $buf)

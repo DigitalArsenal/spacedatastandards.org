@@ -21,7 +21,7 @@ class OPPAreas extends Table
 
     public static function OPPAreasIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPAreasBufferHasIdentifier(ByteBuffer $buf)

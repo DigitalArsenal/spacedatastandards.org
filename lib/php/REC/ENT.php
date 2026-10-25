@@ -26,7 +26,7 @@ class ENT extends Table
 
     public static function ENTIdentifier()
     {
-        return "$ENT";
+        return '$ENT';
     }
 
     public static function ENTBufferHasIdentifier(ByteBuffer $buf)
@@ -371,6 +371,6 @@ class ENT extends Table
 
     public static function finishENTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ENT");
+        $builder->finish($offset, '$ENT');
     }
 }

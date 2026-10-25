@@ -21,7 +21,7 @@ class MDEScoreOptions extends Table
 
     public static function MDEScoreOptionsIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEScoreOptionsBufferHasIdentifier(ByteBuffer $buf)

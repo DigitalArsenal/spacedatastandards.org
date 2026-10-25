@@ -21,7 +21,7 @@ class KMLFlyTo extends Table
 
     public static function KMLFlyToIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLFlyToBufferHasIdentifier(ByteBuffer $buf)

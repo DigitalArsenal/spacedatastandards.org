@@ -151,7 +151,7 @@ class AOF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun AOFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AOF")
+        fun AOFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$AOF")
         fun createAOF(builder: FlatBufferBuilder, version: UByte, spacecraftId: UShort, virtualChannelId: UByte, virtualFrameCount: UInt, replayFlag: Boolean, vcFrameCountUsage: Boolean, vcFrameCountCycle: UByte, insertZoneOffset: Int, dataOffset: Int, ocfOffset: Int, fecf: UShort) : Int {
             builder.startTable(11)
             addOCF(builder, ocfOffset)
@@ -210,7 +210,7 @@ class AOF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishAOFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$AOF")
-        fun finishSizePrefixedAOFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$AOF")
+        fun finishAOFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$AOF")
+        fun finishSizePrefixedAOFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$AOF")
     }
 }

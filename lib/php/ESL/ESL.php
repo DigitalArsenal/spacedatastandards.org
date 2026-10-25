@@ -23,7 +23,7 @@ class ESL extends Table
 
     public static function ESLIdentifier()
     {
-        return "$ESL";
+        return '$ESL';
     }
 
     public static function ESLBufferHasIdentifier(ByteBuffer $buf)
@@ -312,6 +312,6 @@ class ESL extends Table
 
     public static function finishESLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ESL");
+        $builder->finish($offset, '$ESL');
     }
 }

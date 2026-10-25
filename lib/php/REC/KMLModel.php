@@ -21,7 +21,7 @@ class KMLModel extends Table
 
     public static function KMLModelIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLModelBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class VAMMetrics extends Table
 
     public static function VAMMetricsIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMMetricsBufferHasIdentifier(ByteBuffer $buf)

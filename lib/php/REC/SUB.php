@@ -21,7 +21,7 @@ class SUB extends Table
 
     public static function SUBIdentifier()
     {
-        return "$SUB";
+        return '$SUB';
     }
 
     public static function SUBBufferHasIdentifier(ByteBuffer $buf)
@@ -355,6 +355,6 @@ class SUB extends Table
 
     public static function finishSUBBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SUB");
+        $builder->finish($offset, '$SUB');
     }
 }

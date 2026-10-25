@@ -21,7 +21,7 @@ class CZMPolygonHole extends Table
 
     public static function CZMPolygonHoleIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolygonHoleBufferHasIdentifier(ByteBuffer $buf)

@@ -22,7 +22,7 @@ class OPPMass extends Table
 
     public static function OPPMassIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPMassBufferHasIdentifier(ByteBuffer $buf)

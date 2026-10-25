@@ -21,7 +21,7 @@ class KMLRegion extends Table
 
     public static function KMLRegionIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLRegionBufferHasIdentifier(ByteBuffer $buf)

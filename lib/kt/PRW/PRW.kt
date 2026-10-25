@@ -245,7 +245,7 @@ class PRW : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PRWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PRW")
+        fun PRWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PRW")
         fun createPRW(builder: FlatBufferBuilder, initOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int, executionRequestOffset: Int, executionResultOffset: Int, residentStateOffset: Int, residentRequestOffset: Int, prepareRequestOffset: Int, prepareResultOffset: Int, describeRequestOffset: Int, describeResultOffset: Int, nativeInputOffset: Int, ephemerisRequestOffset: Int, ephemerisResultOffset: Int, atmosphereRequestOffset: Int, atmosphereResultOffset: Int, versionQuery: Boolean, versionResultOffset: Int, earthOrientationOffset: Int, spaceWeatherOffset: Int, jb2008IndicesOffset: Int, windowRequestOffset: Int, windowReportOffset: Int) : Int {
             builder.startTable(23)
             addWINDOWREPORT(builder, windowReportOffset)
@@ -301,7 +301,7 @@ class PRW : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPRWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PRW")
-        fun finishSizePrefixedPRWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PRW")
+        fun finishPRWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PRW")
+        fun finishSizePrefixedPRWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PRW")
     }
 }

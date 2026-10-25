@@ -22,7 +22,7 @@ class SRGContentReceipt extends Table
 
     public static function SRGContentReceiptIdentifier()
     {
-        return "$SRG";
+        return '$SRG';
     }
 
     public static function SRGContentReceiptBufferHasIdentifier(ByteBuffer $buf)

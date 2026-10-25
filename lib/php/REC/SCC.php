@@ -22,7 +22,7 @@ class SCC extends Table
 
     public static function SCCIdentifier()
     {
-        return "$SCC";
+        return '$SCC';
     }
 
     public static function SCCBufferHasIdentifier(ByteBuffer $buf)
@@ -263,6 +263,6 @@ class SCC extends Table
 
     public static function finishSCCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SCC");
+        $builder->finish($offset, '$SCC');
     }
 }

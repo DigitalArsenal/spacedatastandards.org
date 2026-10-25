@@ -255,7 +255,7 @@ class FSO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FSOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FSO")
+        fun FSOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FSO")
         fun createFSO(builder: FlatBufferBuilder, operation: UByte, requestId: ULong, databaseNameOffset: Int, schemaIdlOffset: Int, tableBindingsOffset: Int, tableNameOffset: Int, indexNameOffset: Int, indexExpressionOffset: Int, viewNameOffset: Int, queryOffset: Int, parametersOffset: Int, parameterCount: UInt, upsertKeyExpressionOffset: Int, retentionMaxRecords: ULong, retentionMaxAgeMillis: ULong, compactionTargetBytes: ULong, status: UByte, affectedRecords: ULong, resultBytes: ULong, errorCodeOffset: Int, messageOffset: Int) : Int {
             builder.startTable(21)
             addRESULTBYTES(builder, resultBytes)
@@ -369,7 +369,7 @@ class FSO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FSO")
-        fun finishSizePrefixedFSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FSO")
+        fun finishFSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FSO")
+        fun finishSizePrefixedFSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FSO")
     }
 }

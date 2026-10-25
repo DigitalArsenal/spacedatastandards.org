@@ -5,7 +5,21 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CVR/main_generated.dart';
+import '../EOO/main_generated.dart';
+import '../GJN/main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../MET/main_generated.dart';
+import '../MNV/main_generated.dart';
+import '../OMM/main_generated.dart';
+import '../PVN/main_generated.dart';
+import '../RDO/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../SEN/main_generated.dart';
+import '../SIT/main_generated.dart';
+import '../STV/main_generated.dart';
+import '../TIM/main_generated.dart';
+import '../VST/main_generated.dart';
 
 ///  Scenario reference category. This is intentionally broader than the
 ///  underlying domain schemas because a scene reference can point at an SDS

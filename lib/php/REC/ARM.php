@@ -21,7 +21,7 @@ class ARM extends Table
 
     public static function ARMIdentifier()
     {
-        return "$ARM";
+        return '$ARM';
     }
 
     public static function ARMBufferHasIdentifier(ByteBuffer $buf)
@@ -375,6 +375,6 @@ class ARM extends Table
 
     public static function finishARMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ARM");
+        $builder->finish($offset, '$ARM');
     }
 }

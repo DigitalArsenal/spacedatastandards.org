@@ -20,7 +20,7 @@ class SCVTimeGrid extends Table
 
     public static function SCVTimeGridIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVTimeGridBufferHasIdentifier(ByteBuffer $buf)

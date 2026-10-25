@@ -48,7 +48,7 @@ class CNP extends Table
 
     public static function CNPIdentifier()
     {
-        return "$CNP";
+        return '$CNP';
     }
 
     public static function CNPBufferHasIdentifier(ByteBuffer $buf)
@@ -459,6 +459,6 @@ class CNP extends Table
 
     public static function finishCNPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CNP");
+        $builder->finish($offset, '$CNP');
     }
 }

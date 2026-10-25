@@ -20,7 +20,7 @@ class Maneuver extends Table
 
     public static function ManeuverIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function ManeuverBufferHasIdentifier(ByteBuffer $buf)

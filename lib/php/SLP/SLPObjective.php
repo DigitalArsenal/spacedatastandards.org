@@ -20,7 +20,7 @@ class SLPObjective extends Table
 
     public static function SLPObjectiveIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPObjectiveBufferHasIdentifier(ByteBuffer $buf)

@@ -112,7 +112,7 @@ class FCS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FCSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FCS")
+        fun FCSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FCS")
         fun createFCS(builder: FlatBufferBuilder, mode: UByte, leadMethod: UByte, rangefinderType: UByte, ammoSelected: UByte, targetOffset: Int, solutionOffset: Int, lastRange: Double, rangeRate: Double, roundsRemaining: UShort, temperature: Float, reservedOffset: Int) : Int {
             builder.startTable(11)
             addRANGERATE(builder, rangeRate)
@@ -153,7 +153,7 @@ class FCS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFCSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FCS")
-        fun finishSizePrefixedFCSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FCS")
+        fun finishFCSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FCS")
+        fun finishSizePrefixedFCSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FCS")
     }
 }

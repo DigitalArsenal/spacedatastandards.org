@@ -21,7 +21,7 @@ class VCF extends Table
 
     public static function VCFIdentifier()
     {
-        return "$VCF";
+        return '$VCF';
     }
 
     public static function VCFBufferHasIdentifier(ByteBuffer $buf)
@@ -507,6 +507,6 @@ class VCF extends Table
 
     public static function finishVCFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$VCF");
+        $builder->finish($offset, '$VCF');
     }
 }

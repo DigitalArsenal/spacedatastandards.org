@@ -112,7 +112,7 @@ class BAL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun BALBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$BAL")
+        fun BALBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$BAL")
         fun createBAL(builder: FlatBufferBuilder, commandOffset: Int, trajectoryRequestOffset: Int, tableRequestOffset: Int, fireControlOffset: Int, penetrationProjectileOffset: Int, penetrationArmorOffset: Int, impactVelocityMps: Double, impactAngleDeg: Double) : Int {
             builder.startTable(8)
             addIMPACTANGLEDEG(builder, impactAngleDeg)
@@ -138,7 +138,7 @@ class BAL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishBALBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$BAL")
-        fun finishSizePrefixedBALBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$BAL")
+        fun finishBALBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$BAL")
+        fun finishSizePrefixedBALBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$BAL")
     }
 }

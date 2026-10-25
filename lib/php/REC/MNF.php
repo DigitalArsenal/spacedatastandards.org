@@ -21,7 +21,7 @@ class MNF extends Table
 
     public static function MNFIdentifier()
     {
-        return "$MNF";
+        return '$MNF';
     }
 
     public static function MNFBufferHasIdentifier(ByteBuffer $buf)
@@ -506,6 +506,6 @@ class MNF extends Table
 
     public static function finishMNFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MNF");
+        $builder->finish($offset, '$MNF');
     }
 }

@@ -21,7 +21,7 @@ class ENC extends Table
 
     public static function ENCIdentifier()
     {
-        return "$ENC";
+        return '$ENC';
     }
 
     public static function ENCBufferHasIdentifier(ByteBuffer $buf)
@@ -470,6 +470,6 @@ class ENC extends Table
 
     public static function finishENCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ENC");
+        $builder->finish($offset, '$ENC');
     }
 }

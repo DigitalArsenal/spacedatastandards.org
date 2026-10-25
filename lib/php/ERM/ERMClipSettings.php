@@ -21,7 +21,7 @@ class ERMClipSettings extends Table
 
     public static function ERMClipSettingsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMClipSettingsBufferHasIdentifier(ByteBuffer $buf)

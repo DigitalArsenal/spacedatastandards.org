@@ -21,7 +21,7 @@ class BEM extends Table
 
     public static function BEMIdentifier()
     {
-        return "$BEM";
+        return '$BEM';
     }
 
     public static function BEMBufferHasIdentifier(ByteBuffer $buf)
@@ -654,6 +654,6 @@ class BEM extends Table
 
     public static function finishBEMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BEM");
+        $builder->finish($offset, '$BEM');
     }
 }

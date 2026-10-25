@@ -20,7 +20,7 @@ class TRHReceiver extends Table
 
     public static function TRHReceiverIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHReceiverBufferHasIdentifier(ByteBuffer $buf)

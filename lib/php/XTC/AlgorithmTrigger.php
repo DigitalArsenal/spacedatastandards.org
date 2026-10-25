@@ -21,7 +21,7 @@ class AlgorithmTrigger extends Table
 
     public static function AlgorithmTriggerIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AlgorithmTriggerBufferHasIdentifier(ByteBuffer $buf)

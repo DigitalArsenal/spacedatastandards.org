@@ -26,7 +26,7 @@ class CMT extends Table
 
     public static function CMTIdentifier()
     {
-        return "$CMT";
+        return '$CMT';
     }
 
     public static function CMTBufferHasIdentifier(ByteBuffer $buf)
@@ -414,6 +414,6 @@ class CMT extends Table
 
     public static function finishCMTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CMT");
+        $builder->finish($offset, '$CMT');
     }
 }

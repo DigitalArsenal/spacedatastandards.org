@@ -561,7 +561,7 @@ class QRP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun QRPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$QRP")
+        fun QRPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$QRP")
         fun createQRP(builder: FlatBufferBuilder, kind: Byte, status: Byte, errorCodeOffset: Int, messageOffset: Int, retryAfterMs: UInt, schemaNameOffset: Int, fileIdentifierOffset: Int, sqlOffset: Int, searchOffset: Int, filtersOffset: Int, sortFieldOffset: Int, sortDesc: Boolean, providerIdOffset: Int, sourceNameOffset: Int, batchIdOffset: Int, producerPeerIdOffset: Int, originIdOffset: Int, fromEpochMs: Long, toEpochMs: Long, page: UInt, limit: UInt, cursorOffset: Int, nextCursorOffset: Int, recordCount: UInt, totalCount: ULong, scanned: ULong, stored: ULong, partial: Boolean, truncated: Boolean, asOfMs: Long, stale: Boolean, elapsedMs: UInt, generatedAtMs: Long, etagOffset: Int, cidOffset: Int, archiveIdOffset: Int, columnsOffset: Int, timeProfile: Byte, profileEpochMs: Long, representation: Byte, parametersOffset: Int, rowsOffset: Int, tablesOffset: Int, maxElapsedMs: UInt, maxRows: ULong, maxBytes: ULong, httpStatus: UShort, bodyRefToken: ULong, bodyRefSize: ULong, resumeCursorOffset: Int) : Int {
             builder.startTable(50)
             addBODYREFSIZE(builder, bodyRefSize)
@@ -711,7 +711,7 @@ class QRP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishQRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$QRP")
-        fun finishSizePrefixedQRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$QRP")
+        fun finishQRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$QRP")
+        fun finishSizePrefixedQRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$QRP")
     }
 }

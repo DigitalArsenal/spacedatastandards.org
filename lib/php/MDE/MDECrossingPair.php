@@ -22,7 +22,7 @@ class MDECrossingPair extends Table
 
     public static function MDECrossingPairIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDECrossingPairBufferHasIdentifier(ByteBuffer $buf)

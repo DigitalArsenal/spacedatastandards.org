@@ -21,7 +21,7 @@ class KMLSchema extends Table
 
     public static function KMLSchemaIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLSchemaBufferHasIdentifier(ByteBuffer $buf)

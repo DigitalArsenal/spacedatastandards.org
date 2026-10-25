@@ -22,7 +22,7 @@ class FMBSealed extends Table
 
     public static function FMBSealedIdentifier()
     {
-        return "$FMB";
+        return '$FMB';
     }
 
     public static function FMBSealedBufferHasIdentifier(ByteBuffer $buf)

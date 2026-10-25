@@ -195,7 +195,7 @@ class LCF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LCF")
+        fun LCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LCF")
         fun createLCF(builder: FlatBufferBuilder, messageType: Byte, role: Byte, providerPeerIdOffset: Int, providerSigningKeyOffset: Int, providerWrappingKeyOffset: Int, requesterSigningKeyOffset: Int, activeKeyVersion: UInt, expiresAt: ULong, maxClockSkewMs: ULong, challengeTtlMs: ULong, capabilityTokenOffset: Int, initialized: Boolean, needsRotation: Boolean, statusCodeOffset: Int, statusMessageOffset: Int) : Int {
             builder.startTable(15)
             addCHALLENGETTLMS(builder, challengeTtlMs)
@@ -244,7 +244,7 @@ class LCF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LCF")
-        fun finishSizePrefixedLCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LCF")
+        fun finishLCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LCF")
+        fun finishSizePrefixedLCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LCF")
     }
 }

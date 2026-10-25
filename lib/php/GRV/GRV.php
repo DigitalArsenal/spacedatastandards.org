@@ -21,7 +21,7 @@ class GRV extends Table
 
     public static function GRVIdentifier()
     {
-        return "$GRV";
+        return '$GRV';
     }
 
     public static function GRVBufferHasIdentifier(ByteBuffer $buf)
@@ -433,6 +433,6 @@ class GRV extends Table
 
     public static function finishGRVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GRV");
+        $builder->finish($offset, '$GRV');
     }
 }

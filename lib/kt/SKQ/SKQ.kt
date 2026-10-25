@@ -357,7 +357,7 @@ class SKQ : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SKQBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SKQ")
+        fun SKQBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SKQ")
         fun createSKQ(builder: FlatBufferBuilder, queryIdOffset: Int, queryKind: UByte, epochJdTt: Double, epochJdTtFraction: Double, observerIdOffset: Int, observerPositionMOffset: Int, observerVelocityMPerSOffset: Int, place: UByte, bandIdOffset: Int, magLimit: Float, maxResults: UInt, tileOrder: UByte, colorEncoding: UByte, colorBlueBandIdOffset: Int, colorRedBandIdOffset: Int, layerIdOffset: Int, bandIdsOffset: Int, raDeg: Double, decDeg: Double, radiusDeg: Double, halfWidthDeg: Double, halfHeightDeg: Double, rollDeg: Double, detectionsOffset: Int, toleranceArcsec: Double, maxFieldDeg: Double, tracksOffset: Int, pointingsOffset: Int, exclusionRadiusDeg: Double, magThreshold: Float) : Int {
             builder.startTable(30)
             addEXCLUSIONRADIUSDEG(builder, exclusionRadiusDeg)
@@ -454,7 +454,7 @@ class SKQ : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSKQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SKQ")
-        fun finishSizePrefixedSKQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SKQ")
+        fun finishSKQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SKQ")
+        fun finishSizePrefixedSKQBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SKQ")
     }
 }

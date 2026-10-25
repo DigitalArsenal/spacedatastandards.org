@@ -472,7 +472,7 @@ class OBD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OBDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OBD")
+        fun OBDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OBD")
         fun createOBD(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, startTimeOffset: Int, endTimeOffset: Int, method: Byte, methodSourceOffset: Int, initialOd: Boolean, aprioriIdElsetOffset: Int, aprioriElsetOffset: Int, aprioriIdStateVectorOffset: Int, aprioriStateVectorOffset: Int, lastObStartOffset: Int, lastObEndOffset: Int, timeSpan: Double, fitSpan: Double, effectiveFromOffset: Int, effectiveUntilOffset: Int, wrms: Double, previousWrms: Double, firstPassWrms: Double, bestPassWrms: Double, errorGrowthRate: Double, edr: Double, ballisticCoeffEst: Boolean, ballisticCoeffModelOffset: Int, agomEst: Boolean, agomModelOffset: Int, rmsConvergenceCriteria: Double, numIterations: UShort, numAcceptedObs: UInt, numRejectedObs: UInt, sensorsOffset: Int, acceptedObTypsOffset: Int, acceptedObIdsOffset: Int, rejectedObTypsOffset: Int, rejectedObIdsOffset: Int) : Int {
             builder.startTable(38)
             addRMSCONVERGENCECRITERIA(builder, rmsConvergenceCriteria)
@@ -598,7 +598,7 @@ class OBD : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OBD")
-        fun finishSizePrefixedOBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OBD")
+        fun finishOBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OBD")
+        fun finishSizePrefixedOBDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OBD")
     }
 }

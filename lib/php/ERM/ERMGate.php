@@ -21,7 +21,7 @@ class ERMGate extends Table
 
     public static function ERMGateIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMGateBufferHasIdentifier(ByteBuffer $buf)

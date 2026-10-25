@@ -54,7 +54,7 @@ class IQC extends Table
 
     public static function IQCIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCBufferHasIdentifier(ByteBuffer $buf)
@@ -1205,6 +1205,6 @@ class IQC extends Table
 
     public static function finishIQCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$IQC");
+        $builder->finish($offset, '$IQC');
     }
 }

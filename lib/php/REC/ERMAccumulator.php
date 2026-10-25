@@ -21,7 +21,7 @@ class ERMAccumulator extends Table
 
     public static function ERMAccumulatorIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMAccumulatorBufferHasIdentifier(ByteBuffer $buf)

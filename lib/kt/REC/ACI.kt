@@ -223,7 +223,7 @@ class ACI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ACIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACI")
+        fun ACIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ACI")
         fun createACI(builder: FlatBufferBuilder, aciIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rflIdOffset: Int, intervalsOffset: Int, windowStart: Double, windowStop: Double, timeSystem: Byte, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, dataVolumeByModcodOffset: Int) : Int {
             builder.startTable(14)
             addCOMPUTEDAT(builder, computedAt)
@@ -298,7 +298,7 @@ class ACI : Table() {
                 builder.required(o, 20)
             return o
         }
-        fun finishACIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ACI")
-        fun finishSizePrefixedACIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ACI")
+        fun finishACIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ACI")
+        fun finishSizePrefixedACIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ACI")
     }
 }

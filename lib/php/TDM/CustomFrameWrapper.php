@@ -20,7 +20,7 @@ class CustomFrameWrapper extends Table
 
     public static function CustomFrameWrapperIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function CustomFrameWrapperBufferHasIdentifier(ByteBuffer $buf)

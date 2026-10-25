@@ -125,7 +125,7 @@ class SNR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SNR")
+        fun SNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SNR")
         fun createSNR(builder: FlatBufferBuilder, type: UByte, mode: UByte, reserved1: UShort, maxRange: Double, minRange: Double, fovAzimuth: Float, fovElevation: Float, angularResolution: Float, rangeResolution: Float, updateRate: Float, detectionThreshold: Float, azimuthScanRate: Float, elevationScanRate: Float, power: Float, frequency: Float, reservedOffset: Int) : Int {
             builder.startTable(16)
             addMINRANGE(builder, minRange)
@@ -176,7 +176,7 @@ class SNR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SNR")
-        fun finishSizePrefixedSNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SNR")
+        fun finishSNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SNR")
+        fun finishSizePrefixedSNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SNR")
     }
 }

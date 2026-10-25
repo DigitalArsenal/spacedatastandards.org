@@ -20,7 +20,7 @@ class CQRDestroyRequest extends Table
 
     public static function CQRDestroyRequestIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRDestroyRequestBufferHasIdentifier(ByteBuffer $buf)

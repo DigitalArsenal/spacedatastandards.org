@@ -179,7 +179,7 @@ class CHN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CHNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CHN")
+        fun CHNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CHN")
         fun createCHN(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, typeOffset: Int, beamNameOffset: Int, idRfbandOffset: Int, encryptionOffset: Int, pkgOffset: Int, resOffset: Int, compressionOffset: Int, vpidOffset: Int, apidOffset: Int, sidOffset: Int, ownerOffset: Int) : Int {
             builder.startTable(13)
             addOWNER(builder, ownerOffset)
@@ -215,7 +215,7 @@ class CHN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCHNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CHN")
-        fun finishSizePrefixedCHNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CHN")
+        fun finishCHNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CHN")
+        fun finishSizePrefixedCHNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CHN")
     }
 }

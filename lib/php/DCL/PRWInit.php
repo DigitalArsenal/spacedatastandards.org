@@ -28,7 +28,7 @@ class PRWInit extends Table
 
     public static function PRWInitIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWInitBufferHasIdentifier(ByteBuffer $buf)

@@ -324,7 +324,7 @@ class EOP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EOPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EOP")
+        fun EOPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EOP")
         fun createEOP(builder: FlatBufferBuilder, dateOffset: Int, mjd: UInt, xPoleWanderRadians: Float, yPoleWanderRadians: Float, xCelestialPoleOffsetRadians: Float, yCelestialPoleOffsetRadians: Float, ut1MinusUtcSeconds: Float, taiMinusUtcSeconds: UShort, lengthOfDayCorrectionSeconds: Float, dataType: Byte, series: UByte, iauConvention: UByte, xPoleWanderUncertaintyRadians: Float, yPoleWanderUncertaintyRadians: Float, xCelestialPoleOffsetUncertaintyRadians: Float, yCelestialPoleOffsetUncertaintyRadians: Float, ut1MinusUtcUncertaintySeconds: Float, lengthOfDayUncertaintySeconds: Float, xPoleWanderRadiansHp: Double, yPoleWanderRadiansHp: Double, xCelestialPoleOffsetRadiansHp: Double, yCelestialPoleOffsetRadiansHp: Double, ut1MinusUtcSecondsHp: Double, lengthOfDayCorrectionSecondsHp: Double, dataSetEpochOffset: Int, dataSetCidOffset: Int, nutationDpsiRadians: Double, nutationDepsRadians: Double, nutationDpsiUncertaintyRadians: Double, nutationDepsUncertaintyRadians: Double, provenanceOffset: Int) : Int {
             builder.startTable(31)
             addNUTATIONDEPSUNCERTAINTYRADIANS(builder, nutationDepsUncertaintyRadians)
@@ -396,7 +396,7 @@ class EOP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishEOPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EOP")
-        fun finishSizePrefixedEOPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EOP")
+        fun finishEOPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EOP")
+        fun finishSizePrefixedEOPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EOP")
     }
 }

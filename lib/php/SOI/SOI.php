@@ -21,7 +21,7 @@ class SOI extends Table
 
     public static function SOIIdentifier()
     {
-        return "$SOI";
+        return '$SOI';
     }
 
     public static function SOIBufferHasIdentifier(ByteBuffer $buf)
@@ -1506,6 +1506,6 @@ class SOI extends Table
 
     public static function finishSOIBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SOI");
+        $builder->finish($offset, '$SOI');
     }
 }

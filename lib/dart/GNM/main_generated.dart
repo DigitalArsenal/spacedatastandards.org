@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../GNO/main_generated.dart';
 
 ///  Which broadcast message a navigation record came from. Append new values
 ///  only; never reorder or reuse a value.

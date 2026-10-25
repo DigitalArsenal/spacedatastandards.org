@@ -20,7 +20,7 @@ class CQRProbabilityRequest extends Table
 
     public static function CQRProbabilityRequestIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRProbabilityRequestBufferHasIdentifier(ByteBuffer $buf)

@@ -109,7 +109,7 @@ class TNR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TNR")
+        fun TNRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TNR")
         fun createTNR(builder: FlatBufferBuilder, nodeIdOffset: Int, createdAt: ULong, updatedAt: ULong, deleted: Boolean, providerPeerIdOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(6)
             addUPDATEDAT(builder, updatedAt)
@@ -141,7 +141,7 @@ class TNR : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishTNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TNR")
-        fun finishSizePrefixedTNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TNR")
+        fun finishTNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TNR")
+        fun finishSizePrefixedTNRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TNR")
     }
 }

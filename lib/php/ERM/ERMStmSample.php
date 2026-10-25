@@ -21,7 +21,7 @@ class ERMStmSample extends Table
 
     public static function ERMStmSampleIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMStmSampleBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SPW extends Table
 
     public static function SPWIdentifier()
     {
-        return "$SPW";
+        return '$SPW';
     }
 
     public static function SPWBufferHasIdentifier(ByteBuffer $buf)
@@ -740,6 +740,6 @@ class SPW extends Table
 
     public static function finishSPWBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SPW");
+        $builder->finish($offset, '$SPW');
     }
 }

@@ -21,7 +21,7 @@ class KMLPolygon extends Table
 
     public static function KMLPolygonIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLPolygonBufferHasIdentifier(ByteBuffer $buf)

@@ -23,7 +23,7 @@ class PRWBatchRequest extends Table
 
     public static function PRWBatchRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWBatchRequestBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class CZMColor extends Table
 
     public static function CZMColorIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMColorBufferHasIdentifier(ByteBuffer $buf)

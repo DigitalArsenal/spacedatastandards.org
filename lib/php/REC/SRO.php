@@ -21,7 +21,7 @@ class SRO extends Table
 
     public static function SROIdentifier()
     {
-        return "$SRO";
+        return '$SRO';
     }
 
     public static function SROBufferHasIdentifier(ByteBuffer $buf)
@@ -466,6 +466,6 @@ class SRO extends Table
 
     public static function finishSROBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SRO");
+        $builder->finish($offset, '$SRO');
     }
 }

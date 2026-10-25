@@ -22,7 +22,7 @@ class SCNReference extends Table
 
     public static function SCNReferenceIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNReferenceBufferHasIdentifier(ByteBuffer $buf)

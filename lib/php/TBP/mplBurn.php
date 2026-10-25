@@ -21,7 +21,7 @@ class mplBurn extends Table
 
     public static function mplBurnIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplBurnBufferHasIdentifier(ByteBuffer $buf)

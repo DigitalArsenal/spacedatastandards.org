@@ -21,7 +21,7 @@ class KMLPlacemark extends Table
 
     public static function KMLPlacemarkIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLPlacemarkBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SKR extends Table
 
     public static function SKRIdentifier()
     {
-        return "$SKR";
+        return '$SKR';
     }
 
     public static function SKRBufferHasIdentifier(ByteBuffer $buf)
@@ -901,6 +901,6 @@ class SKR extends Table
 
     public static function finishSKRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SKR");
+        $builder->finish($offset, '$SKR');
     }
 }

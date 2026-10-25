@@ -22,7 +22,7 @@ class OCMDynamicParameter extends Table
 
     public static function OCMDynamicParameterIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function OCMDynamicParameterBufferHasIdentifier(ByteBuffer $buf)

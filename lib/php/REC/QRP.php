@@ -21,7 +21,7 @@ class QRP extends Table
 
     public static function QRPIdentifier()
     {
-        return "$QRP";
+        return '$QRP';
     }
 
     public static function QRPBufferHasIdentifier(ByteBuffer $buf)
@@ -1238,6 +1238,6 @@ class QRP extends Table
 
     public static function finishQRPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$QRP");
+        $builder->finish($offset, '$QRP');
     }
 }

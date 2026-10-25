@@ -21,7 +21,7 @@ class SBCDiagnostics extends Table
 
     public static function SBCDiagnosticsIdentifier()
     {
-        return "$SBC";
+        return '$SBC';
     }
 
     public static function SBCDiagnosticsBufferHasIdentifier(ByteBuffer $buf)

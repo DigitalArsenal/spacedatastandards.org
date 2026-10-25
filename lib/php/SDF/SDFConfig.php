@@ -21,7 +21,7 @@ class SDFConfig extends Table
 
     public static function SDFConfigIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFConfigBufferHasIdentifier(ByteBuffer $buf)

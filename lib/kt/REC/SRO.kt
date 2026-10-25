@@ -261,7 +261,7 @@ class SRO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SROBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SRO")
+        fun SROBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SRO")
         fun createSRO(builder: FlatBufferBuilder, regionNumber: UInt, regionAuthorityOffset: Int, issuedAtOffset: Int, observedDateOffset: Int, positionEpochOffset: Int, regionKind: Byte, locationTokenOffset: Int, hgLatitudeDeg: Double, hgLongitudeDeg: Double, carringtonLongitudeDeg: Double, areaMsh: Double, longitudinalExtentDeg: Double, spotCount: UInt, hasSpotCount: Boolean, mcintoshClassOffset: Int, magneticClassOffset: Int, provenanceOffset: Int, sourceCidOffset: Int, sourceDigestOffset: Int, retrievedAtOffset: Int) : Int {
             builder.startTable(20)
             addLONGITUDINALEXTENTDEG(builder, longitudinalExtentDeg)
@@ -313,7 +313,7 @@ class SRO : Table() {
                 builder.required(o, 36)
             return o
         }
-        fun finishSROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SRO")
-        fun finishSizePrefixedSROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SRO")
+        fun finishSROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SRO")
+        fun finishSizePrefixedSROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SRO")
     }
 }

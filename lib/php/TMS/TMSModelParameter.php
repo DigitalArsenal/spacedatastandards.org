@@ -22,7 +22,7 @@ class TMSModelParameter extends Table
 
     public static function TMSModelParameterIdentifier()
     {
-        return "$TMS";
+        return '$TMS';
     }
 
     public static function TMSModelParameterBufferHasIdentifier(ByteBuffer $buf)

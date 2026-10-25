@@ -20,7 +20,7 @@ class SCVHistogramBin extends Table
 
     public static function SCVHistogramBinIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVHistogramBinBufferHasIdentifier(ByteBuffer $buf)

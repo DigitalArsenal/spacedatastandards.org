@@ -21,7 +21,7 @@ class EPM extends Table
 
     public static function EPMIdentifier()
     {
-        return "$EPM";
+        return '$EPM';
     }
 
     public static function EPMBufferHasIdentifier(ByteBuffer $buf)
@@ -674,6 +674,6 @@ class EPM extends Table
 
     public static function finishEPMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EPM");
+        $builder->finish($offset, '$EPM');
     }
 }

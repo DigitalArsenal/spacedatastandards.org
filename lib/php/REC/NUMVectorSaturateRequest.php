@@ -21,7 +21,7 @@ class NUMVectorSaturateRequest extends Table
 
     public static function NUMVectorSaturateRequestIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMVectorSaturateRequestBufferHasIdentifier(ByteBuffer $buf)

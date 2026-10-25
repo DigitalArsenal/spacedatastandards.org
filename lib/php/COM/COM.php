@@ -21,7 +21,7 @@ class COM extends Table
 
     public static function COMIdentifier()
     {
-        return "$COM";
+        return '$COM';
     }
 
     public static function COMBufferHasIdentifier(ByteBuffer $buf)
@@ -421,6 +421,6 @@ class COM extends Table
 
     public static function finishCOMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$COM");
+        $builder->finish($offset, '$COM');
     }
 }

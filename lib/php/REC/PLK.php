@@ -23,7 +23,7 @@ class PLK extends Table
 
     public static function PLKIdentifier()
     {
-        return "$PLK";
+        return '$PLK';
     }
 
     public static function PLKBufferHasIdentifier(ByteBuffer $buf)
@@ -612,6 +612,6 @@ class PLK extends Table
 
     public static function finishPLKBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PLK");
+        $builder->finish($offset, '$PLK');
     }
 }

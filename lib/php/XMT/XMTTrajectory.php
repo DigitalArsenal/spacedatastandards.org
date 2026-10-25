@@ -21,7 +21,7 @@ class XMTTrajectory extends Table
 
     public static function XMTTrajectoryIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTTrajectoryBufferHasIdentifier(ByteBuffer $buf)

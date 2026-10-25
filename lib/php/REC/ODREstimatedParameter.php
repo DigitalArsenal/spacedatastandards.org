@@ -20,7 +20,7 @@ class ODREstimatedParameter extends Table
 
     public static function ODREstimatedParameterIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODREstimatedParameterBufferHasIdentifier(ByteBuffer $buf)

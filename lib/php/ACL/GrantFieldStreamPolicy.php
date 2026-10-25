@@ -21,7 +21,7 @@ class GrantFieldStreamPolicy extends Table
 
     public static function GrantFieldStreamPolicyIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function GrantFieldStreamPolicyBufferHasIdentifier(ByteBuffer $buf)

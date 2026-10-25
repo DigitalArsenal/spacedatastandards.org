@@ -124,7 +124,7 @@ class SON : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SON")
+        fun SONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SON")
         fun createSON(builder: FlatBufferBuilder, commandOffset: Int, activeConfigOffset: Int, passiveConfigOffset: Int, tlRequestOffset: Int, environmentOffset: Int, targetSignatureOffset: Int, tmaInputOffset: Int, torpedoSeekerOffset: Int) : Int {
             builder.startTable(8)
             addTORPEDOSEEKER(builder, torpedoSeekerOffset)
@@ -150,7 +150,7 @@ class SON : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SON")
-        fun finishSizePrefixedSONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SON")
+        fun finishSONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SON")
+        fun finishSizePrefixedSONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SON")
     }
 }

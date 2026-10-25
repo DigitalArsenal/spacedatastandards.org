@@ -21,7 +21,7 @@ class MDEObjectDetection extends Table
 
     public static function MDEObjectDetectionIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEObjectDetectionBufferHasIdentifier(ByteBuffer $buf)

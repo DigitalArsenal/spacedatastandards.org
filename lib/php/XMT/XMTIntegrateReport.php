@@ -21,7 +21,7 @@ class XMTIntegrateReport extends Table
 
     public static function XMTIntegrateReportIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTIntegrateReportBufferHasIdentifier(ByteBuffer $buf)

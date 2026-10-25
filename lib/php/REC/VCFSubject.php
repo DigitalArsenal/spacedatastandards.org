@@ -21,7 +21,7 @@ class VCFSubject extends Table
 
     public static function VCFSubjectIdentifier()
     {
-        return "$VCF";
+        return '$VCF';
     }
 
     public static function VCFSubjectBufferHasIdentifier(ByteBuffer $buf)

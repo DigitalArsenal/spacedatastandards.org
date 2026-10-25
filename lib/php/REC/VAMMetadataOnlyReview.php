@@ -24,7 +24,7 @@ class VAMMetadataOnlyReview extends Table
 
     public static function VAMMetadataOnlyReviewIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMMetadataOnlyReviewBufferHasIdentifier(ByteBuffer $buf)

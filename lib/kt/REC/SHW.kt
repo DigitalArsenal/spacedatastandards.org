@@ -55,7 +55,7 @@ class SHW : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SHWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SHW")
+        fun SHWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SHW")
         fun createSHW(builder: FlatBufferBuilder, compileRequestOffset: Int, compileResponseOffset: Int) : Int {
             builder.startTable(2)
             addCOMPILERESPONSE(builder, compileResponseOffset)
@@ -69,7 +69,7 @@ class SHW : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSHWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SHW")
-        fun finishSizePrefixedSHWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SHW")
+        fun finishSHWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SHW")
+        fun finishSizePrefixedSHWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SHW")
     }
 }

@@ -450,7 +450,7 @@ class OBT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OBTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OBT")
+        fun OBTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OBT")
         fun createOBT(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, tsOffset: Int, lat: Double, lon: Double, alt: Double, spd: Double, angElev: Double, rdfRf: Double, callSignOffset: Int, rptNumOffset: Int, trkIdOffset: Int, objIdentOffset: Int, identAmpOffset: Int, satStatusOffset: Int, objType: Byte, countryCodeOffset: Int, decay: Double, charlieLineOffset: Int, aouType: Byte, aouDataOffset: Int, cntnmnt: Double, xrefOffset: Int, chXrefOffset: Int, amplificationOffset: Int, iffOffset: Int, vehTypeOffset: Int, reinforced: Boolean, reduced: Boolean, hq: Boolean, dummy: Boolean, taskForce: Boolean, feint: Boolean, installation: Boolean, trackSensorsOffset: Int) : Int {
             builder.startTable(37)
             addCNTNMNT(builder, cntnmnt)
@@ -550,7 +550,7 @@ class OBT : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOBTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OBT")
-        fun finishSizePrefixedOBTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OBT")
+        fun finishOBTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OBT")
+        fun finishSizePrefixedOBTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OBT")
     }
 }

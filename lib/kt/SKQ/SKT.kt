@@ -675,7 +675,7 @@ class SKT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SKTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SKT")
+        fun SKTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SKT")
         fun createSKT(builder: FlatBufferBuilder, layerIdOffset: Int, frame: UByte, order: UByte, pixel: ULong, maxOrder: UByte, childMask: UByte, payloadKind: UByte, refine: UByte, spectralRegime: UByte, bandIdOffset: Int, wavelengthEffNm: Double, wavelengthMinNm: Double, wavelengthMaxNm: Double, magnitudeSystem: UByte, place: UByte, epoch: Double, observerIdOffset: Int, pointCount: UInt, magBrightest: Float, magLimit: Float, colorEncoding: UByte, colorBlueBandIdOffset: Int, colorRedBandIdOffset: Int, pointsOffset: Int, rowCollectionCidOffset: Int, mapDepth: UByte, mapEncoding: UByte, mapQuantity: UByte, mapQuantityNameOffset: Int, mapUnitsOffset: Int, mapScale: Double, mapOffset: Double, mapBlank: UInt, mapValuesOffset: Int, stretch: UByte, blackPoint: Double, whitePoint: Double, stretchSoftening: Double, percentileLevelsOffset: Int, percentileValuesOffset: Int, payloadCidOffset: Int, payloadBytes: ULong, observationStartOffset: Int, observationEndOffset: Int, sourceNamesOffset: Int, producerPeerIdOffset: Int, producerVersionOffset: Int, producedAtOffset: Int, citationOffset: Int, licenseUrlOffset: Int, partition: UByte, octreeLevel: UByte, octreeKey: ULong, centerXPc: Double, centerYPc: Double, centerZPc: Double, halfSizePc: Double, absMagBrightest: Float, absMagFaintest: Float, points3DOffset: Int) : Int {
             builder.startTable(60)
             addHALFSIZEPC(builder, halfSizePc)
@@ -774,7 +774,7 @@ class SKT : Table() {
         fun addMAPUNITS(builder: FlatBufferBuilder, mapUnits: Int) = builder.addOffset(29, mapUnits, 0)
         fun addMAPSCALE(builder: FlatBufferBuilder, mapScale: Double) = builder.addDouble(30, mapScale, 1.0)
         fun addMAPOFFSET(builder: FlatBufferBuilder, mapOffset: Double) = builder.addDouble(31, mapOffset, 0.0)
-        fun addMAPBLANK(builder: FlatBufferBuilder, mapBlank: UInt) = builder.addInt(32, mapBlank.toInt(), 4294967295)
+        fun addMAPBLANK(builder: FlatBufferBuilder, mapBlank: UInt) = builder.addInt(32, mapBlank.toInt(), 4294967295L.toInt())
         fun addMAPVALUES(builder: FlatBufferBuilder, mapValues: Int) = builder.addOffset(33, mapValues, 0)
         @kotlin.ExperimentalUnsignedTypes
         fun createMapValuesVector(builder: FlatBufferBuilder, data: UByteArray) : Int {
@@ -841,7 +841,7 @@ class SKT : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishSKTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SKT")
-        fun finishSizePrefixedSKTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SKT")
+        fun finishSKTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SKT")
+        fun finishSizePrefixedSKTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SKT")
     }
 }

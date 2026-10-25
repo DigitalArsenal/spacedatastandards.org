@@ -22,7 +22,7 @@ class PIV extends Table
 
     public static function PIVIdentifier()
     {
-        return "$PIV";
+        return '$PIV';
     }
 
     public static function PIVBufferHasIdentifier(ByteBuffer $buf)
@@ -110,6 +110,6 @@ class PIV extends Table
 
     public static function finishPIVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PIV");
+        $builder->finish($offset, '$PIV');
     }
 }

@@ -21,7 +21,7 @@ class EVLIntrusionConfiguration extends Table
 
     public static function EVLIntrusionConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLIntrusionConfigurationBufferHasIdentifier(ByteBuffer $buf)

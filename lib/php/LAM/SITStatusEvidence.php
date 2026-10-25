@@ -21,7 +21,7 @@ class SITStatusEvidence extends Table
 
     public static function SITStatusEvidenceIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function SITStatusEvidenceBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class LMR extends Table
 
     public static function LMRIdentifier()
     {
-        return "$LMR";
+        return '$LMR';
     }
 
     public static function LMRBufferHasIdentifier(ByteBuffer $buf)
@@ -287,6 +287,6 @@ class LMR extends Table
 
     public static function finishLMRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LMR");
+        $builder->finish($offset, '$LMR');
     }
 }

@@ -20,7 +20,7 @@ class PRWKeplerianElements extends Table
 
     public static function PRWKeplerianElementsIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWKeplerianElementsBufferHasIdentifier(ByteBuffer $buf)

@@ -24,7 +24,7 @@ class OCMTrajectoryBlock extends Table
 
     public static function OCMTrajectoryBlockIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function OCMTrajectoryBlockBufferHasIdentifier(ByteBuffer $buf)

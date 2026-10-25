@@ -348,7 +348,7 @@ class IRO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun IROBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$IRO")
+        fun IROBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$IRO")
         fun createIRO(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, descriptionOffset: Int, entityOffset: Int, epochOffset: Int, sensorIdOffset: Int, satNo: UInt, objectDesignatorOffset: Int, band: Byte, detectionType: Byte, ra: Double, dec: Double, raUnc: Double, decUnc: Double, azimuth: Double, elevation: Double, range: Double, irradiance: Double, irradianceUnc: Double, irMag: Double, magUnc: Double, temperature: Double, integrationTime: Double, background: Double, snr: Double, wavelengthsOffset: Int, spectralValuesOffset: Int, quality: UByte, notesOffset: Int) : Int {
             builder.startTable(30)
             addSNR(builder, snr)
@@ -434,7 +434,7 @@ class IRO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishIROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$IRO")
-        fun finishSizePrefixedIROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$IRO")
+        fun finishIROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$IRO")
+        fun finishSizePrefixedIROBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$IRO")
     }
 }

@@ -21,7 +21,7 @@ class KMLNetworkLink extends Table
 
     public static function KMLNetworkLinkIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLNetworkLinkBufferHasIdentifier(ByteBuffer $buf)

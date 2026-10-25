@@ -21,7 +21,7 @@ class OILEvidence extends Table
 
     public static function OILEvidenceIdentifier()
     {
-        return "$OIL";
+        return '$OIL';
     }
 
     public static function OILEvidenceBufferHasIdentifier(ByteBuffer $buf)

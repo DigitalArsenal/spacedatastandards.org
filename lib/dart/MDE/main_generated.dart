@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../MNV/main_generated.dart';
+import '../PVN/main_generated.dart';
 
 ///  A detection test. Append new values only; never reorder or reuse existing
 ///  values.

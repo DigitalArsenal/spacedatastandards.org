@@ -5,7 +5,21 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CAT/main_generated.dart';
+import '../EOP/main_generated.dart';
+import '../EVL/main_generated.dart';
+import '../FRM/main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../LCC/main_generated.dart';
+import '../NCD/main_generated.dart';
+import '../PCE/main_generated.dart';
+import '../PCF/main_generated.dart';
+import '../PLD/main_generated.dart';
+import '../PPE/main_generated.dart';
+import '../PVN/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../SPW/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  Propagator Runtime Wire — arena-addressed init / batch request / batch
 ///  response envelopes for orbital propagators that produce state vectors

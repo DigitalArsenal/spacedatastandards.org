@@ -21,7 +21,7 @@ class SCRPossibilityRequest extends Table
 
     public static function SCRPossibilityRequestIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRPossibilityRequestBufferHasIdentifier(ByteBuffer $buf)

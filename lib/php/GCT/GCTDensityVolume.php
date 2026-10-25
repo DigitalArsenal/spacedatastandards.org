@@ -23,7 +23,7 @@ class GCTDensityVolume extends Table
 
     public static function GCTDensityVolumeIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTDensityVolumeBufferHasIdentifier(ByteBuffer $buf)

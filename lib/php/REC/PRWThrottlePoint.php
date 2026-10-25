@@ -21,7 +21,7 @@ class PRWThrottlePoint extends Table
 
     public static function PRWThrottlePointIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWThrottlePointBufferHasIdentifier(ByteBuffer $buf)

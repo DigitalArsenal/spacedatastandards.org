@@ -24,7 +24,7 @@ class XTC extends Table
 
     public static function XTCIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function XTCBufferHasIdentifier(ByteBuffer $buf)
@@ -279,6 +279,6 @@ class XTC extends Table
 
     public static function finishXTCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$XTC");
+        $builder->finish($offset, '$XTC');
     }
 }

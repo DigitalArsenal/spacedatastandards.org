@@ -200,7 +200,7 @@ class CQR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CQRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CQR")
+        fun CQRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CQR")
         fun createCQR(builder: FlatBufferBuilder, pairRequestOffset: Int, catalogRequestOffset: Int, probabilityRequestOffset: Int, probabilityResultOffset: Int, alfanoRequestOffset: Int, alfanoResultOffset: Int, eventResultOffset: Int, tcaResultOffset: Int, catalogResultOffset: Int, nativeDocumentOffset: Int, indexRequestOffset: Int, indexResultOffset: Int, windowRequestOffset: Int, destroyRequestOffset: Int, versionQuery: Boolean, versionResultOffset: Int, launchRequestOffset: Int, launchResultOffset: Int) : Int {
             builder.startTable(18)
             addLAUNCHRESULT(builder, launchResultOffset)
@@ -246,7 +246,7 @@ class CQR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCQRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CQR")
-        fun finishSizePrefixedCQRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CQR")
+        fun finishCQRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CQR")
+        fun finishSizePrefixedCQRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CQR")
     }
 }

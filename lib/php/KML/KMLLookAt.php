@@ -21,7 +21,7 @@ class KMLLookAt extends Table
 
     public static function KMLLookAtIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLLookAtBufferHasIdentifier(ByteBuffer $buf)

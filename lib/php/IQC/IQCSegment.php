@@ -23,7 +23,7 @@ class IQCSegment extends Table
 
     public static function IQCSegmentIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCSegmentBufferHasIdentifier(ByteBuffer $buf)

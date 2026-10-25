@@ -27,7 +27,7 @@ class DomainProof extends Table
 
     public static function DomainProofIdentifier()
     {
-        return "$EPM";
+        return '$EPM';
     }
 
     public static function DomainProofBufferHasIdentifier(ByteBuffer $buf)

@@ -24,7 +24,7 @@ class TRH extends Table
 
     public static function TRHIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHBufferHasIdentifier(ByteBuffer $buf)
@@ -381,6 +381,6 @@ class TRH extends Table
 
     public static function finishTRHBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRH");
+        $builder->finish($offset, '$TRH');
     }
 }

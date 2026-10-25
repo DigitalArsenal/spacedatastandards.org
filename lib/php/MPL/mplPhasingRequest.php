@@ -21,7 +21,7 @@ class mplPhasingRequest extends Table
 
     public static function mplPhasingRequestIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplPhasingRequestBufferHasIdentifier(ByteBuffer $buf)

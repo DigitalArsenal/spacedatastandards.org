@@ -21,7 +21,7 @@ class COT extends Table
 
     public static function COTIdentifier()
     {
-        return "$COT";
+        return '$COT';
     }
 
     public static function COTBufferHasIdentifier(ByteBuffer $buf)
@@ -295,6 +295,6 @@ class COT extends Table
 
     public static function finishCOTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$COT");
+        $builder->finish($offset, '$COT');
     }
 }

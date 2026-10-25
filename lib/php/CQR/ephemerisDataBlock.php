@@ -21,7 +21,7 @@ class ephemerisDataBlock extends Table
 
     public static function ephemerisDataBlockIdentifier()
     {
-        return "$OEM";
+        return '$OEM';
     }
 
     public static function ephemerisDataBlockBufferHasIdentifier(ByteBuffer $buf)

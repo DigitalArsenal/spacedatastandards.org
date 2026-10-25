@@ -50,7 +50,7 @@ class attitudeDataLine extends Table
 
     public static function attitudeDataLineIdentifier()
     {
-        return "$AEM";
+        return '$AEM';
     }
 
     public static function attitudeDataLineBufferHasIdentifier(ByteBuffer $buf)

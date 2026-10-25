@@ -20,7 +20,7 @@ class GLX extends Table
 
     public static function GLXIdentifier()
     {
-        return "$GLX";
+        return '$GLX';
     }
 
     public static function GLXBufferHasIdentifier(ByteBuffer $buf)
@@ -839,6 +839,6 @@ class GLX extends Table
 
     public static function finishGLXBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$GLX");
+        $builder->finish($offset, '$GLX');
     }
 }

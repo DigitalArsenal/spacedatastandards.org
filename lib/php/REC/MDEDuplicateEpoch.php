@@ -21,7 +21,7 @@ class MDEDuplicateEpoch extends Table
 
     public static function MDEDuplicateEpochIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEDuplicateEpochBufferHasIdentifier(ByteBuffer $buf)

@@ -90,7 +90,7 @@ class NEV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NEVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NEV")
+        fun NEVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NEV")
         fun createNEV(builder: FlatBufferBuilder, nodeIdOffset: Int, generatedAtMs: Long, eventsOffset: Int, totalEvents: ULong, oldestTimeMs: Long) : Int {
             builder.startTable(5)
             addOLDESTTIMEMS(builder, oldestTimeMs)
@@ -118,7 +118,7 @@ class NEV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NEV")
-        fun finishSizePrefixedNEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NEV")
+        fun finishNEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NEV")
+        fun finishSizePrefixedNEVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NEV")
     }
 }

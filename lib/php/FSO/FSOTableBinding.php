@@ -22,7 +22,7 @@ class FSOTableBinding extends Table
 
     public static function FSOTableBindingIdentifier()
     {
-        return "$FSO";
+        return '$FSO';
     }
 
     public static function FSOTableBindingBufferHasIdentifier(ByteBuffer $buf)

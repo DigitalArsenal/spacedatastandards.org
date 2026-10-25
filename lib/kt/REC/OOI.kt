@@ -438,7 +438,7 @@ class OOI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOI")
+        fun OOIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOI")
         fun createOOI(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, nameOffset: Int, onOrbitOffset: Int, status: Byte, statusDateOffset: Int, priority: Byte, descriptionOffset: Int, sensorTaskingStartTimeOffset: Int, sensorTaskingStopTimeOffset: Int, lastObTimeOffset: Int, missedObTimeOffset: Int, svEpochOffset: Int, x: Double, y: Double, z: Double, xvel: Double, yvel: Double, zvel: Double, elsetEpochOffset: Int, meanMotion: Double, eccentricity: Double, inclination: Double, raan: Double, argOfPerigee: Double, meanAnomaly: Double, revNo: UInt, bStar: Double, meanMotionDot: Double, meanMotionDdot: Double, semiMajorAxis: Double, period: Double, apogee: Double, perigee: Double, deltaVsOffset: Int, deltaTsOffset: Int, affectedObjectsOffset: Int, manifoldsOffset: Int) : Int {
             builder.startTable(38)
             addPERIGEE(builder, perigee)
@@ -556,7 +556,7 @@ class OOI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOI")
-        fun finishSizePrefixedOOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOI")
+        fun finishOOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOI")
+        fun finishSizePrefixedOOIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOI")
     }
 }

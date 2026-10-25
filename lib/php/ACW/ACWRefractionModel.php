@@ -21,7 +21,7 @@ class ACWRefractionModel extends Table
 
     public static function ACWRefractionModelIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWRefractionModelBufferHasIdentifier(ByteBuffer $buf)

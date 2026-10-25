@@ -21,7 +21,7 @@ class CLT extends Table
 
     public static function CLTIdentifier()
     {
-        return "$CLT";
+        return '$CLT';
     }
 
     public static function CLTBufferHasIdentifier(ByteBuffer $buf)
@@ -256,6 +256,6 @@ class CLT extends Table
 
     public static function finishCLTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CLT");
+        $builder->finish($offset, '$CLT');
     }
 }

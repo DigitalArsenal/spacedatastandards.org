@@ -21,7 +21,7 @@ class XMTIntegratedObject extends Table
 
     public static function XMTIntegratedObjectIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTIntegratedObjectBufferHasIdentifier(ByteBuffer $buf)

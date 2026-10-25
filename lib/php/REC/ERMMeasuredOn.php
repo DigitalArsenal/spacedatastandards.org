@@ -21,7 +21,7 @@ class ERMMeasuredOn extends Table
 
     public static function ERMMeasuredOnIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMMeasuredOnBufferHasIdentifier(ByteBuffer $buf)

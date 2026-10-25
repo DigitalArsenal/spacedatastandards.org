@@ -21,7 +21,7 @@ class CZMModel extends Table
 
     public static function CZMModelIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMModelBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class ASGMeasurement extends Table
 
     public static function ASGMeasurementIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGMeasurementBufferHasIdentifier(ByteBuffer $buf)

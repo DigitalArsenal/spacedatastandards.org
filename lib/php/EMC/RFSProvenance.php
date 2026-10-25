@@ -21,7 +21,7 @@ class RFSProvenance extends Table
 
     public static function RFSProvenanceIdentifier()
     {
-        return "$RFS";
+        return '$RFS';
     }
 
     public static function RFSProvenanceBufferHasIdentifier(ByteBuffer $buf)

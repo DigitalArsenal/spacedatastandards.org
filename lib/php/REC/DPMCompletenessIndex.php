@@ -21,7 +21,7 @@ class DPMCompletenessIndex extends Table
 
     public static function DPMCompletenessIndexIdentifier()
     {
-        return "$DPM";
+        return '$DPM';
     }
 
     public static function DPMCompletenessIndexBufferHasIdentifier(ByteBuffer $buf)

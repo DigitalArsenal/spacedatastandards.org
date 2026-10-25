@@ -21,7 +21,7 @@ class ERMScreeningStratum extends Table
 
     public static function ERMScreeningStratumIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMScreeningStratumBufferHasIdentifier(ByteBuffer $buf)

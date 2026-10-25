@@ -22,7 +22,7 @@ class ERMFitSettings extends Table
 
     public static function ERMFitSettingsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMFitSettingsBufferHasIdentifier(ByteBuffer $buf)

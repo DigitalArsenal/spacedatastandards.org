@@ -22,7 +22,7 @@ class GCTVariant extends Table
 
     public static function GCTVariantIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTVariantBufferHasIdentifier(ByteBuffer $buf)

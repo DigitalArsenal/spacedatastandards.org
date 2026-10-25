@@ -23,7 +23,7 @@ class gnssKeplerianBroadcast extends Table
 
     public static function gnssKeplerianBroadcastIdentifier()
     {
-        return "$GNM";
+        return '$GNM';
     }
 
     public static function gnssKeplerianBroadcastBufferHasIdentifier(ByteBuffer $buf)

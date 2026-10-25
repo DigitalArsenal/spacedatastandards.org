@@ -21,7 +21,7 @@ class OEM extends Table
 
     public static function OEMIdentifier()
     {
-        return "$OEM";
+        return '$OEM';
     }
 
     public static function OEMBufferHasIdentifier(ByteBuffer $buf)
@@ -241,6 +241,6 @@ class OEM extends Table
 
     public static function finishOEMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OEM");
+        $builder->finish($offset, '$OEM');
     }
 }

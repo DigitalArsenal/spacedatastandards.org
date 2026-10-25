@@ -217,7 +217,7 @@ class TFN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TFNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TFN")
+        fun TFNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TFN")
         fun createTFN(builder: FlatBufferBuilder, idOffset: Int, placeIdOffset: Int, facilityType: Byte, nameOffset: Int, designatorsOffset: Int, countryCodeOffset: Int, elevationM: Double, elevationPublished: Boolean, magneticVariationDeg: Double, operatingSurfacesOffset: Int, maximumDraftM: Double, anchorageDepthM: Double, harborTypeOffset: Int, shelterAffordedOffset: Int, sourceOffset: Int) : Int {
             builder.startTable(15)
             addANCHORAGEDEPTHM(builder, anchorageDepthM)
@@ -275,7 +275,7 @@ class TFN : Table() {
                 builder.required(o, 32)
             return o
         }
-        fun finishTFNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TFN")
-        fun finishSizePrefixedTFNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TFN")
+        fun finishTFNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TFN")
+        fun finishSizePrefixedTFNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TFN")
     }
 }

@@ -21,7 +21,7 @@ class ACWAccessWindow extends Table
 
     public static function ACWAccessWindowIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWAccessWindowBufferHasIdentifier(ByteBuffer $buf)

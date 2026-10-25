@@ -21,7 +21,7 @@ class IRM extends Table
 
     public static function IRMIdentifier()
     {
-        return "$IRM";
+        return '$IRM';
     }
 
     public static function IRMBufferHasIdentifier(ByteBuffer $buf)
@@ -636,6 +636,6 @@ class IRM extends Table
 
     public static function finishIRMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$IRM");
+        $builder->finish($offset, '$IRM');
     }
 }

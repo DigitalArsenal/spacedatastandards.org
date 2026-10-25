@@ -280,7 +280,7 @@ class AGR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun AGRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AGR")
+        fun AGRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$AGR")
         fun createAGR(builder: FlatBufferBuilder, kind: Byte, schemaNameOffset: Int, sqlOffset: Int, xFieldOffset: Int, yFieldsOffset: Int, xIsTime: Boolean, xUnitOffset: Int, binsOffset: Int, categoriesOffset: Int, seriesOffset: Int, pivotOffset: Int, rowKeysOffset: Int, colKeysOffset: Int, scanned: ULong, matched: ULong, stored: ULong, partial: Boolean, truncated: Boolean, elapsedMs: UInt, asOfMs: Long, providerIdOffset: Int, sourceNameOffset: Int) : Int {
             builder.startTable(22)
             addASOFMS(builder, asOfMs)
@@ -390,7 +390,7 @@ class AGR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishAGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$AGR")
-        fun finishSizePrefixedAGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$AGR")
+        fun finishAGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$AGR")
+        fun finishSizePrefixedAGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$AGR")
     }
 }

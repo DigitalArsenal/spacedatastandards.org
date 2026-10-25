@@ -208,7 +208,7 @@ class PCF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PCF")
+        fun PCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PCF")
         fun createPCF(builder: FlatBufferBuilder, configurationIdOffset: Int, profileOffset: Int, theory: UByte, integratorOffset: Int, forcesOffset: Int, meanElementOffset: Int, segmentsOffset: Int, fitOffset: Int, eventsOffset: Int, maneuverDetectionOffset: Int, reentryOffset: Int, launchOffset: Int, outputOffset: Int) : Int {
             builder.startTable(13)
             addOUTPUT(builder, outputOffset)
@@ -252,7 +252,7 @@ class PCF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PCF")
-        fun finishSizePrefixedPCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PCF")
+        fun finishPCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PCF")
+        fun finishSizePrefixedPCFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PCF")
     }
 }

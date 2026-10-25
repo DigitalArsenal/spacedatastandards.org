@@ -21,7 +21,7 @@ class SNWBatchResponse extends Table
 
     public static function SNWBatchResponseIdentifier()
     {
-        return "$SNW";
+        return '$SNW';
     }
 
     public static function SNWBatchResponseBufferHasIdentifier(ByteBuffer $buf)

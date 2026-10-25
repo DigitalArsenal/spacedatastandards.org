@@ -23,7 +23,7 @@ class CVPEmitterRef extends Table
 
     public static function CVPEmitterRefIdentifier()
     {
-        return "$CVP";
+        return '$CVP';
     }
 
     public static function CVPEmitterRefBufferHasIdentifier(ByteBuffer $buf)

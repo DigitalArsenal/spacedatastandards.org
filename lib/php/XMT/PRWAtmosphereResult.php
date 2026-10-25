@@ -20,7 +20,7 @@ class PRWAtmosphereResult extends Table
 
     public static function PRWAtmosphereResultIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWAtmosphereResultBufferHasIdentifier(ByteBuffer $buf)

@@ -20,7 +20,7 @@ class ODRFilterEpoch extends Table
 
     public static function ODRFilterEpochIdentifier()
     {
-        return "$ODR";
+        return '$ODR';
     }
 
     public static function ODRFilterEpochBufferHasIdentifier(ByteBuffer $buf)

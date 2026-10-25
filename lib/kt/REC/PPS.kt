@@ -153,7 +153,7 @@ class PPS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PPSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PPS")
+        fun PPSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PPS")
         fun createPPS(builder: FlatBufferBuilder, runIdOffset: Int, createdAtMs: Long, providerOffset: Int, scenarioOffset: Int, status: UByte, errorCodeOffset: Int, errorMessageOffset: Int, productsOffset: Int, assumptionsOffset: Int, telemetryOffset: Int) : Int {
             builder.startTable(10)
             addCREATEDATMS(builder, createdAtMs)
@@ -200,7 +200,7 @@ class PPS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PPS")
-        fun finishSizePrefixedPPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PPS")
+        fun finishPPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PPS")
+        fun finishSizePrefixedPPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PPS")
     }
 }

@@ -249,7 +249,7 @@ class REV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun REVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REV")
+        fun REVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$REV")
         fun createREV(builder: FlatBufferBuilder, reviewIdOffset: Int, listingIdOffset: Int, reviewerPeerIdOffset: Int, rating: UByte, titleOffset: Int, contentOffset: Int, aclGrantIdOffset: Int, timestamp: ULong, reviewerSignatureOffset: Int, qualityMetricsOffset: Int, verifiedPurchase: Boolean, updatedAt: ULong, status: Byte, helpfulCount: UInt, notHelpfulCount: UInt, providerResponseOffset: Int, providerResponseAt: ULong, flaggedCount: UInt, moderationNotesOffset: Int) : Int {
             builder.startTable(19)
             addPROVIDERRESPONSEAT(builder, providerResponseAt)
@@ -309,7 +309,7 @@ class REV : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishREVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$REV")
-        fun finishSizePrefixedREVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$REV")
+        fun finishREVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$REV")
+        fun finishSizePrefixedREVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$REV")
     }
 }

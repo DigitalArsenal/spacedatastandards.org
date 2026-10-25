@@ -280,7 +280,7 @@ class ION : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun IONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ION")
+        fun IONBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ION")
         fun createION(builder: FlatBufferBuilder, idOffset: Int, source: Byte, stationIdOffset: Int, stationNameOffset: Int, latitude: Double, longitude: Double, altitude: Double, startTimeOffset: Int, stopTimeOffset: Int, fof2: Double, fof1: Double, foe: Double, foes: Double, hmf2: Double, hmf1: Double, hme: Double, nmf2: Double, vtec: Double, stec: Double, s4: Double, dataPointsOffset: Int, densityProfilesOffset: Int, quality: UByte, notesOffset: Int) : Int {
             builder.startTable(24)
             addS4(builder, s4)
@@ -354,7 +354,7 @@ class ION : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ION")
-        fun finishSizePrefixedIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ION")
+        fun finishIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ION")
+        fun finishSizePrefixedIONBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ION")
     }
 }

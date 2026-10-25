@@ -185,7 +185,7 @@ class AST : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ASTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AST")
+        fun ASTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$AST")
         fun createAST(builder: FlatBufferBuilder, commandOffset: Int, propagationRequestOffset: Int, tleOffset: Int, initialElementsOffset: Int, initialStateOffset: Int, epochMs: Long, maneuverPlanOffset: Int, conjunctionPrimaryOffset: Int, conjunctionSecondaryOffset: Int, observationsOffset: Int, odConfigOffset: Int, groundStationOffset: Int, formationConfigOffset: Int, targetElementsOffset: Int) : Int {
             builder.startTable(14)
             addEPOCHMS(builder, epochMs)
@@ -231,7 +231,7 @@ class AST : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishASTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$AST")
-        fun finishSizePrefixedASTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$AST")
+        fun finishASTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$AST")
+        fun finishSizePrefixedASTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$AST")
     }
 }

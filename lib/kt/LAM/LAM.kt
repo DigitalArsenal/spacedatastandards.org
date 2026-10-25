@@ -918,7 +918,7 @@ class LAM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LAMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LAM")
+        fun LAMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LAM")
         fun createLAM(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, missionNameOffset: Int, vehicleNameOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, launchEpochOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, launchDataOffset: Int, rocketConfigurationOffset: Int, eventRecordsOffset: Int, detectionsOffset: Int, boostTracksOffset: Int, burnOutVectorsOffset: Int, trajectoryOemOffset: Int, trajectoryOcmOffset: Int, atmosphereOffset: Int, hypersonicConditionsOffset: Int, propagatorNameOffset: Int, propagatorVersionOffset: Int, guidanceModelOffset: Int, thrustModelOffset: Int, aerodynamicModelOffset: Int, phase: Byte, constraintStatus: Byte, timeFromLaunchSOffset: Int, latitudeDegOffset: Int, longitudeDegOffset: Int, altitudeMOffset: Int, downrangeMOffset: Int, speedMPerSOffset: Int, machOffset: Int, dynamicPressurePaOffset: Int, heatFluxWPerM2Offset: Int, massKgOffset: Int, thrustNOffset: Int, accelerationGOffset: Int, pitchDegOffset: Int, flightPathAngleDegOffset: Int, iipLatitudeDegOffset: Int, iipLongitudeDegOffset: Int, maxDynamicPressurePa: Double, maxDynamicPressureEpochOffset: Int, maxHeatFluxWPerM2: Double, maxHeatFluxEpochOffset: Int, orbitInsertionEpochOffset: Int, apoapsisM: Double, periapsisM: Double, inclinationDeg: Double, payloadInjectionErrorMPerS: Double, ascentEventsOffset: Int, constraintViolationsOffset: Int, assumptionsOffset: Int, commentOffset: Int, targetOrbitOffset: Int, trajectorySource: Byte, speedReference: Byte, insertionOffset: Int, instantaneousPeriapsisAltitudeMOffset: Int, instantaneousApoapsisAltitudeMOffset: Int, inPlaneLiftoffEpochsOffset: Int) : Int {
             builder.startTable(64)
             addPAYLOADINJECTIONERRORMPERS(builder, payloadInjectionErrorMPerS)
@@ -1264,7 +1264,7 @@ class LAM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishLAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LAM")
-        fun finishSizePrefixedLAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LAM")
+        fun finishLAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LAM")
+        fun finishSizePrefixedLAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LAM")
     }
 }

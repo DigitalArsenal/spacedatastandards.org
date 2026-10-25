@@ -157,7 +157,7 @@ class ESL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ESLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ESL")
+        fun ESLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ESL")
         fun createESL(builder: FlatBufferBuilder, linkKeyOffset: Int, entityIdOffset: Int, entityRecordKeyOffset: Int, entityRowid: Double, recordKeyOffset: Int, schemaNameOffset: Int, recordRowid: Double, cascadeDelete: Boolean, updatedAtMs: Double, reservedOffset: Int) : Int {
             builder.startTable(10)
             addUPDATEDATMS(builder, updatedAtMs)
@@ -196,7 +196,7 @@ class ESL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishESLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ESL")
-        fun finishSizePrefixedESLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ESL")
+        fun finishESLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ESL")
+        fun finishSizePrefixedESLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ESL")
     }
 }

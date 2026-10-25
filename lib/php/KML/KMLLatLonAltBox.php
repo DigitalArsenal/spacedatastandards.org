@@ -21,7 +21,7 @@ class KMLLatLonAltBox extends Table
 
     public static function KMLLatLonAltBoxIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLLatLonAltBoxBufferHasIdentifier(ByteBuffer $buf)

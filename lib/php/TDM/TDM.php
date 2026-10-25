@@ -21,7 +21,7 @@ class TDM extends Table
 
     public static function TDMIdentifier()
     {
-        return "$TDM";
+        return '$TDM';
     }
 
     public static function TDMBufferHasIdentifier(ByteBuffer $buf)
@@ -2892,6 +2892,6 @@ class TDM extends Table
 
     public static function finishTDMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TDM");
+        $builder->finish($offset, '$TDM');
     }
 }

@@ -21,7 +21,7 @@ class MSL extends Table
 
     public static function MSLIdentifier()
     {
-        return "$MSL";
+        return '$MSL';
     }
 
     public static function MSLBufferHasIdentifier(ByteBuffer $buf)
@@ -746,6 +746,6 @@ class MSL extends Table
 
     public static function finishMSLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MSL");
+        $builder->finish($offset, '$MSL');
     }
 }

@@ -23,7 +23,7 @@ class APPDataRef extends Table
 
     public static function APPDataRefIdentifier()
     {
-        return "$APP";
+        return '$APP';
     }
 
     public static function APPDataRefBufferHasIdentifier(ByteBuffer $buf)

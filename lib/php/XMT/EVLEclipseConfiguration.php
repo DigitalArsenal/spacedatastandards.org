@@ -21,7 +21,7 @@ class EVLEclipseConfiguration extends Table
 
     public static function EVLEclipseConfigurationIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLEclipseConfigurationBufferHasIdentifier(ByteBuffer $buf)

@@ -20,7 +20,7 @@ class PRWEphemerisResult extends Table
 
     public static function PRWEphemerisResultIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWEphemerisResultBufferHasIdentifier(ByteBuffer $buf)

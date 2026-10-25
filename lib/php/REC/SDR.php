@@ -21,7 +21,7 @@ class SDR extends Table
 
     public static function SDRIdentifier()
     {
-        return "$SDR";
+        return '$SDR';
     }
 
     public static function SDRBufferHasIdentifier(ByteBuffer $buf)
@@ -163,6 +163,6 @@ class SDR extends Table
 
     public static function finishSDRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SDR");
+        $builder->finish($offset, '$SDR');
     }
 }

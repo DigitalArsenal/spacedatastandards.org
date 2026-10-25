@@ -21,7 +21,7 @@ class KMLLineString extends Table
 
     public static function KMLLineStringIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLLineStringBufferHasIdentifier(ByteBuffer $buf)

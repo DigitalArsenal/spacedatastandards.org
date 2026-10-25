@@ -21,7 +21,7 @@ class ERMHorizonFactor extends Table
 
     public static function ERMHorizonFactorIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMHorizonFactorBufferHasIdentifier(ByteBuffer $buf)

@@ -48,7 +48,7 @@ class Record extends Table
 
     public static function RecordIdentifier()
     {
-        return "$REC";
+        return '$REC';
     }
 
     public static function RecordBufferHasIdentifier(ByteBuffer $buf)

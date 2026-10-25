@@ -21,7 +21,7 @@ class ProtectedDeliveryBinding extends Table
 
     public static function ProtectedDeliveryBindingIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function ProtectedDeliveryBindingBufferHasIdentifier(ByteBuffer $buf)

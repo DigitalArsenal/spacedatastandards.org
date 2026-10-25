@@ -21,7 +21,7 @@ class SHWCompileResponse extends Table
 
     public static function SHWCompileResponseIdentifier()
     {
-        return "$SHW";
+        return '$SHW';
     }
 
     public static function SHWCompileResponseBufferHasIdentifier(ByteBuffer $buf)

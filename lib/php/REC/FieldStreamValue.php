@@ -20,7 +20,7 @@ class FieldStreamValue extends Table
 
     public static function FieldStreamValueIdentifier()
     {
-        return "$FSM";
+        return '$FSM';
     }
 
     public static function FieldStreamValueBufferHasIdentifier(ByteBuffer $buf)

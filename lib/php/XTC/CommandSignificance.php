@@ -21,7 +21,7 @@ class CommandSignificance extends Table
 
     public static function CommandSignificanceIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function CommandSignificanceBufferHasIdentifier(ByteBuffer $buf)

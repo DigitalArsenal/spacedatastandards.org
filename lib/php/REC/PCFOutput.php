@@ -21,7 +21,7 @@ class PCFOutput extends Table
 
     public static function PCFOutputIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFOutputBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SRTClass extends Table
 
     public static function SRTClassIdentifier()
     {
-        return "$SRT";
+        return '$SRT';
     }
 
     public static function SRTClassBufferHasIdentifier(ByteBuffer $buf)

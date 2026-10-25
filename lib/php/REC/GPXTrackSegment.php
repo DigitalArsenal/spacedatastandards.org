@@ -21,7 +21,7 @@ class GPXTrackSegment extends Table
 
     public static function GPXTrackSegmentIdentifier()
     {
-        return "$GPX";
+        return '$GPX';
     }
 
     public static function GPXTrackSegmentBufferHasIdentifier(ByteBuffer $buf)

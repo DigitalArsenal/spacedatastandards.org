@@ -21,7 +21,7 @@ class KMLScreenOverlay extends Table
 
     public static function KMLScreenOverlayIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLScreenOverlayBufferHasIdentifier(ByteBuffer $buf)

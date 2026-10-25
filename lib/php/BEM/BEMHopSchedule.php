@@ -21,7 +21,7 @@ class BEMHopSchedule extends Table
 
     public static function BEMHopScheduleIdentifier()
     {
-        return "$BEM";
+        return '$BEM';
     }
 
     public static function BEMHopScheduleBufferHasIdentifier(ByteBuffer $buf)

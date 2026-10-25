@@ -207,7 +207,7 @@ class VAM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun VAMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$VAM")
+        fun VAMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$VAM")
         fun createVAM(builder: FlatBufferBuilder, idOffset: Int, versionOffset: Int, entityIdOffset: Int, entityKindOffset: Int, canonicalVariantIdOffset: Int, alternateVariantIdsOffset: Int, variantsOffset: Int, reviewOffset: Int, reviewState: Byte, createdAtOffset: Int, updatedAtOffset: Int, supersedesVamCidOffset: Int, dpmCidOffset: Int, metadataReviewOffset: Int) : Int {
             builder.startTable(14)
             addMETADATAREVIEW(builder, metadataReviewOffset)
@@ -263,7 +263,7 @@ class VAM : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishVAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$VAM")
-        fun finishSizePrefixedVAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$VAM")
+        fun finishVAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$VAM")
+        fun finishSizePrefixedVAMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$VAM")
     }
 }

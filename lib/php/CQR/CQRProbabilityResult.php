@@ -25,7 +25,7 @@ class CQRProbabilityResult extends Table
 
     public static function CQRProbabilityResultIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRProbabilityResultBufferHasIdentifier(ByteBuffer $buf)

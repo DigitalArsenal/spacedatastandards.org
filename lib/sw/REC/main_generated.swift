@@ -799,7 +799,7 @@ public struct Record: FlatBufferVerifiableTable, FlatbuffersVectorInitializable 
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(unionKey: VT.valueType, unionField: VT.value, unionKeyName: "valueType", fieldName: "value", required: false, completion: { (verifier, key: RecordType, pos) in
+    try _v.visit(unionKey: VT.value_type, unionField: VT.value, unionKeyName: "valueType", fieldName: "value", required: false, completion: { (verifier, key: RecordType, pos) in
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none

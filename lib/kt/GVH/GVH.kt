@@ -212,7 +212,7 @@ class GVH : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GVHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GVH")
+        fun GVHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GVH")
         fun createGVH(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, attitudeX: Double, attitudeY: Double, attitudeZ: Double, attitudeW: Double, omegaX: Double, omegaY: Double, omegaZ: Double, speed: Float, heading: Float, lateralG: Float, longitudinalG: Float, turretOffset: Int, drivetrainOffset: Int, suspensionLfOffset: Int, suspensionRfOffset: Int, suspensionLrOffset: Int, suspensionRrOffset: Int, vehicleType: UByte, driveType: UByte, engineRunning: UByte, lights: UByte, fuelLevel: Float) : Int {
             builder.startTable(28)
             addOMEGAZ(builder, omegaZ)
@@ -278,7 +278,7 @@ class GVH : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGVHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GVH")
-        fun finishSizePrefixedGVHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GVH")
+        fun finishGVHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GVH")
+        fun finishSizePrefixedGVHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GVH")
     }
 }

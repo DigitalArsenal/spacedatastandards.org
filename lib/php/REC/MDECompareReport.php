@@ -21,7 +21,7 @@ class MDECompareReport extends Table
 
     public static function MDECompareReportIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDECompareReportBufferHasIdentifier(ByteBuffer $buf)

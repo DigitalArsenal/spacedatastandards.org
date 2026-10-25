@@ -21,7 +21,7 @@ class TMS extends Table
 
     public static function TMSIdentifier()
     {
-        return "$TMS";
+        return '$TMS';
     }
 
     public static function TMSBufferHasIdentifier(ByteBuffer $buf)
@@ -735,6 +735,6 @@ class TMS extends Table
 
     public static function finishTMSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TMS");
+        $builder->finish($offset, '$TMS');
     }
 }

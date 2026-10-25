@@ -21,7 +21,7 @@ class ENV extends Table
 
     public static function ENVIdentifier()
     {
-        return "$ENV";
+        return '$ENV';
     }
 
     public static function ENVBufferHasIdentifier(ByteBuffer $buf)
@@ -349,6 +349,6 @@ class ENV extends Table
 
     public static function finishENVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ENV");
+        $builder->finish($offset, '$ENV');
     }
 }

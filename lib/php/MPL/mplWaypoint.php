@@ -21,7 +21,7 @@ class mplWaypoint extends Table
 
     public static function mplWaypointIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplWaypointBufferHasIdentifier(ByteBuffer $buf)

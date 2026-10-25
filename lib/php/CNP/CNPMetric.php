@@ -26,7 +26,7 @@ class CNPMetric extends Table
 
     public static function CNPMetricIdentifier()
     {
-        return "$CNP";
+        return '$CNP';
     }
 
     public static function CNPMetricBufferHasIdentifier(ByteBuffer $buf)

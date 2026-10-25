@@ -384,7 +384,7 @@ class EXO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EXOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EXO")
+        fun EXOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EXO")
         fun createEXO(builder: FlatBufferBuilder, plNameOffset: Int, hostnameOffset: Int, gaiaDr3IdOffset: Int, simbadIdOffset: Int, plOrbperOffset: Int, plOrbsmaxOffset: Int, plOrbeccenOffset: Int, plOrblperOffset: Int, plOrbinclOffset: Int, plTranmidOffset: Int, plTranmidSystemrefOffset: Int, plOrbtperOffset: Int, plOrbtperSystemrefOffset: Int, longAscNodeOffset: Int, longAscNodeUnknown: Boolean, longAscNodeFrameOffset: Int, plProjobliqOffset: Int, plRadeOffset: Int, plBmasseOffset: Int, plBmassprovOffset: Int, plEqtOffset: Int, geometricAlbedoOffset: Int, geometricAlbedoBandOffset: Int, discoverymethodOffset: Int, discYear: Int, discRefnameOffset: Int, archiveStatus: UByte, plControvFlag: Byte, statusReferenceOffset: Int, retrievedAtOffset: Int, sourceCatalogOffset: Int, sourceQueryOffset: Int) : Int {
             builder.startTable(32)
             addSOURCEQUERY(builder, sourceQueryOffset)
@@ -460,7 +460,7 @@ class EXO : Table() {
                 builder.required(o, 62)
             return o
         }
-        fun finishEXOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EXO")
-        fun finishSizePrefixedEXOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EXO")
+        fun finishEXOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EXO")
+        fun finishSizePrefixedEXOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EXO")
     }
 }

@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../FRM/main_generated.dart';
+import '../RFM/main_generated.dart';
 
 ///  Which kind of object owns a parameter. A parameter is meaningless without
 ///  its owner: the same symbol evaluated on a space object and on a thruster

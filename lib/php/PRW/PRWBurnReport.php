@@ -21,7 +21,7 @@ class PRWBurnReport extends Table
 
     public static function PRWBurnReportIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWBurnReportBufferHasIdentifier(ByteBuffer $buf)

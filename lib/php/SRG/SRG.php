@@ -22,7 +22,7 @@ class SRG extends Table
 
     public static function SRGIdentifier()
     {
-        return "$SRG";
+        return '$SRG';
     }
 
     public static function SRGBufferHasIdentifier(ByteBuffer $buf)
@@ -368,6 +368,6 @@ class SRG extends Table
 
     public static function finishSRGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SRG");
+        $builder->finish($offset, '$SRG');
     }
 }

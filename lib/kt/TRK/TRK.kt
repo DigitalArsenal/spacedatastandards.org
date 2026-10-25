@@ -751,7 +751,7 @@ class TRK : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TRKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRK")
+        fun TRKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TRK")
         fun createTRK(builder: FlatBufferBuilder, idOffset: Int, cntctOffset: Int, msgTsOffset: Int, msnIdOffset: Int, assetNatOffset: Int, assetOffset: Int, sensorIdOffset: Int, senQualOffset: Int, trkIdOffset: Int, trkNumOffset: Int, trkStat: Byte, objNatOffset: Int, objIdOffset: Int, objTypeOffset: Int, objSpecOffset: Int, objPlatOffset: Int, objActOffset: Int, modTypeOffset: Int, trkItmIdOffset: Int, tsOffset: Int, trkQual: UByte, trkPtTypeOffset: Int, objIdentOffset: Int, identCred: UByte, identRel: UByte, identAmpOffset: Int, environment: Byte, environmentConf: Double, trkConf: Double, lat: Double, lon: Double, alt: Double, spd: Double, hdng: Double, course: Double, srcTypsOffset: Int, srcIdsOffset: Int, callSignOffset: Int, multiSource: Boolean, jSeriesOffset: Int, strength: UShort, m1: UShort, m1V: UByte, m2: UShort, m2V: UByte, m3A: UShort, m3Av: UByte, tagsOffset: Int, trackStartTimeOffset: Int, trackStepSize: Double, trackComponents: UByte, ecefPosOffset: Int, ecefVelOffset: Int, ecefAccOffset: Int, lcPosOffset: Int, lcVelOffset: Int, lcAccOffset: Int, covOffset: Int, errEllpOffset: Int) : Int {
             builder.startTable(59)
             addTRACKSTEPSIZE(builder, trackStepSize)
@@ -967,7 +967,7 @@ class TRK : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTRKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TRK")
-        fun finishSizePrefixedTRKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TRK")
+        fun finishTRKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TRK")
+        fun finishSizePrefixedTRKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TRK")
     }
 }

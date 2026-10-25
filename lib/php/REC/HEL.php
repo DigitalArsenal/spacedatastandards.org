@@ -21,7 +21,7 @@ class HEL extends Table
 
     public static function HELIdentifier()
     {
-        return "$HEL";
+        return '$HEL';
     }
 
     public static function HELBufferHasIdentifier(ByteBuffer $buf)
@@ -447,6 +447,6 @@ class HEL extends Table
 
     public static function finishHELBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$HEL");
+        $builder->finish($offset, '$HEL');
     }
 }

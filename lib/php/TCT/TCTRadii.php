@@ -24,7 +24,7 @@ class TCTRadii extends Table
 
     public static function TCTRadiiIdentifier()
     {
-        return "$TCT";
+        return '$TCT';
     }
 
     public static function TCTRadiiBufferHasIdentifier(ByteBuffer $buf)

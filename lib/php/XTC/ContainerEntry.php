@@ -21,7 +21,7 @@ class ContainerEntry extends Table
 
     public static function ContainerEntryIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ContainerEntryBufferHasIdentifier(ByteBuffer $buf)

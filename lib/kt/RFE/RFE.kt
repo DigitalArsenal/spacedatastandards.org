@@ -347,7 +347,7 @@ class RFE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFE")
+        fun RFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFE")
         fun createRFE(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, type: Byte, entityOffset: Int, elnotOffset: Int, natoNameOffset: Int, platformTypeOffset: Int, countryOffset: Int, functionOffset: Int, bandOffset: Int, freqMin: Double, freqMax: Double, peakPower: Double, avgPower: Double, antennaGain: Double, numModes: UInt, rfEmitterDetailsOffset: Int, threatLevelOffset: Int, notesOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(25)
             addCOMPUTEDAT(builder, computedAt)
@@ -433,7 +433,7 @@ class RFE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RFE")
-        fun finishSizePrefixedRFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RFE")
+        fun finishRFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RFE")
+        fun finishSizePrefixedRFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RFE")
     }
 }

@@ -21,7 +21,7 @@ class CVP extends Table
 
     public static function CVPIdentifier()
     {
-        return "$CVP";
+        return '$CVP';
     }
 
     public static function CVPBufferHasIdentifier(ByteBuffer $buf)
@@ -1532,6 +1532,6 @@ class CVP extends Table
 
     public static function finishCVPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CVP");
+        $builder->finish($offset, '$CVP');
     }
 }

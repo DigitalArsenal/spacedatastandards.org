@@ -21,7 +21,7 @@ class SDFCustom extends Table
 
     public static function SDFCustomIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFCustomBufferHasIdentifier(ByteBuffer $buf)

@@ -22,7 +22,7 @@ class SRGResource extends Table
 
     public static function SRGResourceIdentifier()
     {
-        return "$SRG";
+        return '$SRG';
     }
 
     public static function SRGResourceBufferHasIdentifier(ByteBuffer $buf)

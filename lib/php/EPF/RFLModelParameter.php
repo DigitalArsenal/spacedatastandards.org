@@ -22,7 +22,7 @@ class RFLModelParameter extends Table
 
     public static function RFLModelParameterIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLModelParameterBufferHasIdentifier(ByteBuffer $buf)

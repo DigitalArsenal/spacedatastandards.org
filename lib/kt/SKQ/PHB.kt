@@ -200,7 +200,7 @@ class PHB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PHBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PHB")
+        fun PHBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PHB")
         fun createPHB(builder: FlatBufferBuilder, bandIdOffset: Int, nameOffset: Int, systemNameOffset: Int, spectralRegime: UByte, wavelengthEffNm: Double, wavelengthMinNm: Double, wavelengthMaxNm: Double, magnitudeSystem: UByte, zeroPointJy: Double, responseWavelengthNmOffset: Int, responseOffset: Int, responseIsEnergy: Boolean, citationOffset: Int, definitionUrlOffset: Int) : Int {
             builder.startTable(14)
             addZEROPOINTJY(builder, zeroPointJy)
@@ -255,7 +255,7 @@ class PHB : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishPHBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PHB")
-        fun finishSizePrefixedPHBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PHB")
+        fun finishPHBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PHB")
+        fun finishSizePrefixedPHBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PHB")
     }
 }

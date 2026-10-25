@@ -22,7 +22,7 @@ class APPModuleRef extends Table
 
     public static function APPModuleRefIdentifier()
     {
-        return "$APP";
+        return '$APP';
     }
 
     public static function APPModuleRefBufferHasIdentifier(ByteBuffer $buf)

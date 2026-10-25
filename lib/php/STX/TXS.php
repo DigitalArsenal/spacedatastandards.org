@@ -21,7 +21,7 @@ class TXS extends Table
 
     public static function TXSIdentifier()
     {
-        return "$TXS";
+        return '$TXS';
     }
 
     public static function TXSBufferHasIdentifier(ByteBuffer $buf)
@@ -698,6 +698,6 @@ class TXS extends Table
 
     public static function finishTXSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TXS");
+        $builder->finish($offset, '$TXS');
     }
 }

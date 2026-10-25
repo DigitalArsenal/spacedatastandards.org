@@ -21,7 +21,7 @@ class PIVRequest extends Table
 
     public static function PIVRequestIdentifier()
     {
-        return "$PIV";
+        return '$PIV';
     }
 
     public static function PIVRequestBufferHasIdentifier(ByteBuffer $buf)

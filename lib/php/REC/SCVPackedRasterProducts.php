@@ -20,7 +20,7 @@ class SCVPackedRasterProducts extends Table
 
     public static function SCVPackedRasterProductsIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVPackedRasterProductsBufferHasIdentifier(ByteBuffer $buf)

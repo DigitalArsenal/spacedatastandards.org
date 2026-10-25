@@ -21,7 +21,7 @@ class LCH extends Table
 
     public static function LCHIdentifier()
     {
-        return "$LCH";
+        return '$LCH';
     }
 
     public static function LCHBufferHasIdentifier(ByteBuffer $buf)
@@ -598,6 +598,6 @@ class LCH extends Table
 
     public static function finishLCHBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LCH");
+        $builder->finish($offset, '$LCH');
     }
 }

@@ -444,7 +444,7 @@ class GNO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GNOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GNO")
+        fun GNOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GNO")
         fun createGNO(builder: FlatBufferBuilder, idOffset: Int, receiverIdOffset: Int, receiverTypeOffset: Int, antennaIdOffset: Int, antennaTypeOffset: Int, firmwareVersionOffset: Int, epochOffset: Int, clockOffset: Double, clockDrift: Double, latitude: Double, longitude: Double, altitude: Double, approxX: Double, approxY: Double, approxZ: Double, interval: Double, numSats: UInt, pdop: Double, hdop: Double, vdop: Double, satObsOffset: Int, obsCodeSetOffset: Int, notesOffset: Int, timeSystemOffset: Int, epochFlag: UByte, markerNameOffset: Int, markerNumberOffset: Int, markerTypeOffset: Int, observerOffset: Int, agencyOffset: Int, antennaDeltaHenOffset: Int, phaseShiftsOffset: Int, signalStrengthUnitOffset: Int, leapSeconds: Int, hasLeapSeconds: Boolean) : Int {
             builder.startTable(35)
             addVDOP(builder, vdop)
@@ -556,7 +556,7 @@ class GNO : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGNOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GNO")
-        fun finishSizePrefixedGNOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GNO")
+        fun finishGNOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GNO")
+        fun finishSizePrefixedGNOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GNO")
     }
 }

@@ -114,7 +114,7 @@ class RND : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RNDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RND")
+        fun RNDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RND")
         fun createRND(builder: FlatBufferBuilder, length: UInt, bytesOffset: Int, source: UByte, generatedAtMs: Long, generatorIdOffset: Int, sequence: ULong, seedOffset: Int) : Int {
             builder.startTable(7)
             addSEQUENCE(builder, sequence)
@@ -156,7 +156,7 @@ class RND : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RND")
-        fun finishSizePrefixedRNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RND")
+        fun finishRNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RND")
+        fun finishSizePrefixedRNDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RND")
     }
 }

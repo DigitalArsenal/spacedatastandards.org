@@ -21,7 +21,7 @@ class tbpState extends Table
 
     public static function tbpStateIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpStateBufferHasIdentifier(ByteBuffer $buf)

@@ -32,7 +32,7 @@ class CCT extends Table
 
     public static function CCTIdentifier()
     {
-        return "$CCT";
+        return '$CCT';
     }
 
     public static function CCTBufferHasIdentifier(ByteBuffer $buf)
@@ -340,6 +340,6 @@ class CCT extends Table
 
     public static function finishCCTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CCT");
+        $builder->finish($offset, '$CCT');
     }
 }

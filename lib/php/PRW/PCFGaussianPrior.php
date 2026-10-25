@@ -22,7 +22,7 @@ class PCFGaussianPrior extends Table
 
     public static function PCFGaussianPriorIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFGaussianPriorBufferHasIdentifier(ByteBuffer $buf)

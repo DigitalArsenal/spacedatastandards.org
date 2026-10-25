@@ -283,7 +283,7 @@ class TCT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TCTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TCT")
+        fun TCTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TCT")
         fun createTCT(builder: FlatBufferBuilder, stormIdOffset: Int, stormNameOffset: Int, basin: Byte, trackKind: Byte, trackOrigin: Byte, modelClass: Byte, modelIdOffset: Int, modelVersionOffset: Int, initTimeMs: ULong, memberKind: Byte, memberIndex: UShort, ensembleSize: UShort, windAveragingPeriodS: UShort, pointsOffset: Int, originIdOffset: Int, datasetIdOffset: Int, sourceUrlOffset: Int, retrievedAt: ULong, licenseClass: Byte, licenseUrlOffset: Int, citationOffset: Int, producerPeerIdOffset: Int) : Int {
             builder.startTable(22)
             addRETRIEVEDAT(builder, retrievedAt)
@@ -346,7 +346,7 @@ class TCT : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishTCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TCT")
-        fun finishSizePrefixedTCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TCT")
+        fun finishTCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TCT")
+        fun finishSizePrefixedTCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TCT")
     }
 }

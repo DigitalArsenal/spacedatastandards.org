@@ -21,7 +21,7 @@ class KMLCoordinate extends Table
 
     public static function KMLCoordinateIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLCoordinateBufferHasIdentifier(ByteBuffer $buf)

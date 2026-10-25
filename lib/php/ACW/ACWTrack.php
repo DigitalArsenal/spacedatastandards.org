@@ -21,7 +21,7 @@ class ACWTrack extends Table
 
     public static function ACWTrackIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWTrackBufferHasIdentifier(ByteBuffer $buf)

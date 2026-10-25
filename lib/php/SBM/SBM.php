@@ -37,7 +37,7 @@ class SBM extends Table
 
     public static function SBMIdentifier()
     {
-        return "$SBM";
+        return '$SBM';
     }
 
     public static function SBMBufferHasIdentifier(ByteBuffer $buf)
@@ -863,6 +863,6 @@ class SBM extends Table
 
     public static function finishSBMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SBM");
+        $builder->finish($offset, '$SBM');
     }
 }

@@ -25,7 +25,7 @@ class IQCPayloadRef extends Table
 
     public static function IQCPayloadRefIdentifier()
     {
-        return "$IQC";
+        return '$IQC';
     }
 
     public static function IQCPayloadRefBufferHasIdentifier(ByteBuffer $buf)

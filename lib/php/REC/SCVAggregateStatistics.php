@@ -20,7 +20,7 @@ class SCVAggregateStatistics extends Table
 
     public static function SCVAggregateStatisticsIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVAggregateStatisticsBufferHasIdentifier(ByteBuffer $buf)

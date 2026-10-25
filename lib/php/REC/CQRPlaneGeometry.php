@@ -25,7 +25,7 @@ class CQRPlaneGeometry extends Table
 
     public static function CQRPlaneGeometryIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRPlaneGeometryBufferHasIdentifier(ByteBuffer $buf)

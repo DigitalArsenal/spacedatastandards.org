@@ -21,7 +21,7 @@ class CQRLaunchObject extends Table
 
     public static function CQRLaunchObjectIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRLaunchObjectBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PLGFlowEdge extends Table
 
     public static function PLGFlowEdgeIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGFlowEdgeBufferHasIdentifier(ByteBuffer $buf)

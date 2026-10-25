@@ -1139,7 +1139,7 @@ public struct RFM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
-    try _v.visit(unionKey: VT.REFERENCE_FRAMEType, unionField: VT.REFERENCE_FRAME, unionKeyName: "REFERENCE_FRAMEType", fieldName: "REFERENCE_FRAME", required: false, completion: { (verifier, key: RFMUnion, pos) in
+    try _v.visit(unionKey: VT.REFERENCE_FRAME_type, unionField: VT.REFERENCE_FRAME, unionKeyName: "REFERENCE_FRAMEType", fieldName: "REFERENCE_FRAME", required: false, completion: { (verifier, key: RFMUnion, pos) in
       switch key {
       case .none_:
         break // NOTE - SWIFT doesnt support none

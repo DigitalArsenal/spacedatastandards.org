@@ -21,7 +21,7 @@ class PINRule extends Table
 
     public static function PINRuleIdentifier()
     {
-        return "$PIN";
+        return '$PIN';
     }
 
     public static function PINRuleBufferHasIdentifier(ByteBuffer $buf)

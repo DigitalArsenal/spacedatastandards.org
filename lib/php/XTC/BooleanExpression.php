@@ -21,7 +21,7 @@ class BooleanExpression extends Table
 
     public static function BooleanExpressionIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function BooleanExpressionBufferHasIdentifier(ByteBuffer $buf)

@@ -56,7 +56,7 @@ class KMLTrack : Table() {
     /**
      * Time stamps (ISO 8601)
      */
-    fun when(j: Int) : String? {
+    fun `when`(j: Int) : String? {
         val o = __offset(10)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
@@ -134,7 +134,7 @@ class KMLTrack : Table() {
         fun addEXTRUDE(builder: FlatBufferBuilder, extrude: Boolean) = builder.addBoolean(0, extrude, false)
         fun addTESSELLATE(builder: FlatBufferBuilder, tessellate: Boolean) = builder.addBoolean(1, tessellate, false)
         fun addALTITUDEMODE(builder: FlatBufferBuilder, altitudeMode: Byte) = builder.addByte(2, altitudeMode, 0)
-        fun addWHEN(builder: FlatBufferBuilder, when: Int) = builder.addOffset(3, when, 0)
+        fun addWHEN(builder: FlatBufferBuilder, `when`: Int) = builder.addOffset(3, `when`, 0)
         fun createWhenVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

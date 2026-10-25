@@ -24,7 +24,7 @@ class TRV extends Table
 
     public static function TRVIdentifier()
     {
-        return "$TRV";
+        return '$TRV';
     }
 
     public static function TRVBufferHasIdentifier(ByteBuffer $buf)
@@ -395,6 +395,6 @@ class TRV extends Table
 
     public static function finishTRVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRV");
+        $builder->finish($offset, '$TRV');
     }
 }

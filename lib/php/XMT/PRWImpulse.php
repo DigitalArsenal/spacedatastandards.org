@@ -21,7 +21,7 @@ class PRWImpulse extends Table
 
     public static function PRWImpulseIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWImpulseBufferHasIdentifier(ByteBuffer $buf)

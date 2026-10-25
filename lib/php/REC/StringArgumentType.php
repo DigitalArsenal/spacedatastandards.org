@@ -21,7 +21,7 @@ class StringArgumentType extends Table
 
     public static function StringArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function StringArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

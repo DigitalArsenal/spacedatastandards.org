@@ -184,7 +184,7 @@ class OOB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOB")
+        fun OOBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOB")
         fun createOOB(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idBatteryOffset: Int, nameOffset: Int, chemistryOffset: Int, quantity: UInt, voltage: Double, capacityAh: Double, energyWh: Double, maxDod: Double, cycleLife: UInt, mass: Double, stateOfHealth: Double, notesOffset: Int) : Int {
             builder.startTable(14)
             addSTATEOFHEALTH(builder, stateOfHealth)
@@ -222,7 +222,7 @@ class OOB : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOB")
-        fun finishSizePrefixedOOBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOB")
+        fun finishOOBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOB")
+        fun finishSizePrefixedOOBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOB")
     }
 }

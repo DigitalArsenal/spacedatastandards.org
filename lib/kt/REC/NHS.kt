@@ -291,7 +291,7 @@ class NHS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NHSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NHS")
+        fun NHSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NHS")
         fun createNHS(builder: FlatBufferBuilder, nodeIdOffset: Int, generatedAtMs: Long, startedAtMs: Long, uptimeS: ULong, serviceState: UByte, serviceModeOffset: Int, softwareVersionOffset: Int, storagePathOffset: Int, storeTotalRecords: ULong, storeTotalBytes: ULong, hasDisk: Boolean, diskCapacityBytes: ULong, diskFreeBytes: ULong, diskAvailableBytes: ULong, hasNetwork: Boolean, totalInBytes: ULong, totalOutBytes: ULong, rateInBps: Double, rateOutBps: Double, throughputHistoryOffset: Int, hasCompute: Boolean, cpuLoad: Float, cpuCores: UShort, memoryUsedBytes: ULong, memoryTotalBytes: ULong, connectionCount: UInt, notesOffset: Int) : Int {
             builder.startTable(27)
             addMEMORYTOTALBYTES(builder, memoryTotalBytes)
@@ -371,7 +371,7 @@ class NHS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNHSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NHS")
-        fun finishSizePrefixedNHSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NHS")
+        fun finishNHSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NHS")
+        fun finishSizePrefixedNHSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NHS")
     }
 }

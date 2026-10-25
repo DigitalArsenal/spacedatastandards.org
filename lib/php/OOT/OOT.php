@@ -21,7 +21,7 @@ class OOT extends Table
 
     public static function OOTIdentifier()
     {
-        return "$OOT";
+        return '$OOT';
     }
 
     public static function OOTBufferHasIdentifier(ByteBuffer $buf)
@@ -409,6 +409,6 @@ class OOT extends Table
 
     public static function finishOOTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OOT");
+        $builder->finish($offset, '$OOT');
     }
 }

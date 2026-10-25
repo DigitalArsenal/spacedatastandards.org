@@ -214,7 +214,7 @@ class FMB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FMBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FMB")
+        fun FMBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FMB")
         fun createFMB(builder: FlatBufferBuilder, selfOffset: ULong, previous: ULong, feedId: UInt, committedAt: Long, typeSeqHigh: ULong, rowsOffset: Int, digestsOffset: Int, groupsOffset: Int, dictionaryOffset: Int, removalsOffset: Int, urlsOffset: Int, signaturesOffset: Int, sealedOffset: Int, identitiesOffset: Int, largeOffset: Int) : Int {
             builder.startTable(15)
             addTYPESEQHIGH(builder, typeSeqHigh)
@@ -307,7 +307,7 @@ class FMB : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFMBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FMB")
-        fun finishSizePrefixedFMBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FMB")
+        fun finishFMBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FMB")
+        fun finishSizePrefixedFMBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FMB")
     }
 }

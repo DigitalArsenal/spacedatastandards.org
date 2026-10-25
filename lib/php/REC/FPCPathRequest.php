@@ -21,7 +21,7 @@ class FPCPathRequest extends Table
 
     public static function FPCPathRequestIdentifier()
     {
-        return "$FPC";
+        return '$FPC';
     }
 
     public static function FPCPathRequestBufferHasIdentifier(ByteBuffer $buf)

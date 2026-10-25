@@ -21,7 +21,7 @@ class NDSSchemaStat extends Table
 
     public static function NDSSchemaStatIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSSchemaStatBufferHasIdentifier(ByteBuffer $buf)

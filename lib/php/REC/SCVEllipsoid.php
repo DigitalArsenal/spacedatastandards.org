@@ -20,7 +20,7 @@ class SCVEllipsoid extends Table
 
     public static function SCVEllipsoidIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVEllipsoidBufferHasIdentifier(ByteBuffer $buf)

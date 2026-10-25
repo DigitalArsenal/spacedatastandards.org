@@ -21,7 +21,7 @@ class ModuleBundleEntry extends Table
 
     public static function ModuleBundleEntryIdentifier()
     {
-        return "$MBL";
+        return '$MBL';
     }
 
     public static function ModuleBundleEntryBufferHasIdentifier(ByteBuffer $buf)

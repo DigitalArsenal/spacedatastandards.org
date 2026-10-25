@@ -21,7 +21,7 @@ class ASGObjectRef extends Table
 
     public static function ASGObjectRefIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGObjectRefBufferHasIdentifier(ByteBuffer $buf)

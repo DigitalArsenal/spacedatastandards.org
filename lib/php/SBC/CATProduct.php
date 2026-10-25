@@ -21,7 +21,7 @@ class CATProduct extends Table
 
     public static function CATProductIdentifier()
     {
-        return "$CAT";
+        return '$CAT';
     }
 
     public static function CATProductBufferHasIdentifier(ByteBuffer $buf)

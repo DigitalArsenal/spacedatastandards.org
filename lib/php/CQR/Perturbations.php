@@ -20,7 +20,7 @@ class Perturbations extends Table
 
     public static function PerturbationsIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function PerturbationsBufferHasIdentifier(ByteBuffer $buf)

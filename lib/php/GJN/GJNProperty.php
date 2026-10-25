@@ -21,7 +21,7 @@ class GJNProperty extends Table
 
     public static function GJNPropertyIdentifier()
     {
-        return "$GJN";
+        return '$GJN';
     }
 
     public static function GJNPropertyBufferHasIdentifier(ByteBuffer $buf)

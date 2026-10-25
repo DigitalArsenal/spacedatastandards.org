@@ -21,7 +21,7 @@ class CSM extends Table
 
     public static function CSMIdentifier()
     {
-        return "$CSM";
+        return '$CSM';
     }
 
     public static function CSMBufferHasIdentifier(ByteBuffer $buf)
@@ -258,6 +258,6 @@ class CSM extends Table
 
     public static function finishCSMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CSM");
+        $builder->finish($offset, '$CSM');
     }
 }

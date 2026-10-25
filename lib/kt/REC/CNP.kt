@@ -271,7 +271,7 @@ class CNP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CNPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CNP")
+        fun CNPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CNP")
         fun createCNP(builder: FlatBufferBuilder, idOffset: Int, constellationOffset: Int, operatorOffset: Int, asn: UInt, asNameOffset: Int, serviceTierOffset: Int, regionOffset: Int, windowStartOffset: Int, windowStopOffset: Int, aggregationPeriod: Byte, metricsOffset: Int, sourcesOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, supersedesCnpCidOffset: Int) : Int {
             builder.startTable(15)
             addSUPERSEDESCNPCID(builder, supersedesCnpCidOffset)
@@ -327,7 +327,7 @@ class CNP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CNP")
-        fun finishSizePrefixedCNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CNP")
+        fun finishCNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CNP")
+        fun finishSizePrefixedCNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CNP")
     }
 }

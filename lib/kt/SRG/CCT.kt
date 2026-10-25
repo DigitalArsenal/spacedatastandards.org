@@ -148,7 +148,7 @@ class CCT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CCTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CCT")
+        fun CCTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CCT")
         fun createCCT(builder: FlatBufferBuilder, taxonomyIdOffset: Int, versionOffset: Int, issuedAt: ULong, titleOffset: Int, categoriesOffset: Int, rollupsOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(7)
             addISSUEDAT(builder, issuedAt)
@@ -200,7 +200,7 @@ class CCT : Table() {
                 builder.required(o, 12)
             return o
         }
-        fun finishCCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CCT")
-        fun finishSizePrefixedCCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CCT")
+        fun finishCCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CCT")
+        fun finishSizePrefixedCCTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CCT")
     }
 }

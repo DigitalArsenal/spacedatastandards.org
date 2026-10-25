@@ -20,7 +20,7 @@ class SPWCOLLECTION extends Table
 
     public static function SPWCOLLECTIONIdentifier()
     {
-        return "$SPW";
+        return '$SPW';
     }
 
     public static function SPWCOLLECTIONBufferHasIdentifier(ByteBuffer $buf)

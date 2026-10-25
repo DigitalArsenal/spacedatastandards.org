@@ -21,7 +21,7 @@ class ERMPredictionSample extends Table
 
     public static function ERMPredictionSampleIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMPredictionSampleBufferHasIdentifier(ByteBuffer $buf)

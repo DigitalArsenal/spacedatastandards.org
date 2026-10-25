@@ -87,7 +87,7 @@ class REC : Table() {
          * malformed buffer.
          */
         fun decryptBuffer(_bb: ByteBuffer, key: ByteArray, recordIndex: Int) = FlatbuffersEncryption.cryptBuffer(_bb, key, recordIndex, FLATBUFFERS_ENCRYPTION_PROGRAM)
-        fun RECBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$REC")
+        fun RECBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$REC")
         fun createREC(builder: FlatBufferBuilder, versionOffset: Int, recordsOffset: Int) : Int {
             builder.startTable(2)
             addRECORDS(builder, recordsOffset)
@@ -109,7 +109,7 @@ class REC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRECBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$REC")
-        fun finishSizePrefixedRECBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$REC")
+        fun finishRECBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$REC")
+        fun finishSizePrefixedRECBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$REC")
     }
 }

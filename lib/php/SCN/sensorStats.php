@@ -21,7 +21,7 @@ class sensorStats extends Table
 
     public static function sensorStatsIdentifier()
     {
-        return "$SEN";
+        return '$SEN';
     }
 
     public static function sensorStatsBufferHasIdentifier(ByteBuffer $buf)

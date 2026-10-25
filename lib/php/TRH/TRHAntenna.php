@@ -20,7 +20,7 @@ class TRHAntenna extends Table
 
     public static function TRHAntennaIdentifier()
     {
-        return "$TRH";
+        return '$TRH';
     }
 
     public static function TRHAntennaBufferHasIdentifier(ByteBuffer $buf)

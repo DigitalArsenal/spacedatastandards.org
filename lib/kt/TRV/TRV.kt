@@ -182,7 +182,7 @@ class TRV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TRVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRV")
+        fun TRVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TRV")
         fun createTRV(builder: FlatBufferBuilder, verdictIdOffset: Int, policyIdOffset: Int, subjectIdOffset: Int, passed: Boolean, previousPassed: Boolean, score: Double, previousScore: Double, resultsOffset: Int, triggerOffset: Int, evaluatedAt: ULong, evaluatorPeerIdOffset: Int, evaluatorSignatureOffset: Int) : Int {
             builder.startTable(12)
             addEVALUATEDAT(builder, evaluatedAt)
@@ -236,7 +236,7 @@ class TRV : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishTRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TRV")
-        fun finishSizePrefixedTRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TRV")
+        fun finishTRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TRV")
+        fun finishSizePrefixedTRVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TRV")
     }
 }

@@ -21,7 +21,7 @@ class STAGE extends Table
 
     public static function STAGEIdentifier()
     {
-        return "$ROC";
+        return '$ROC';
     }
 
     public static function STAGEBufferHasIdentifier(ByteBuffer $buf)

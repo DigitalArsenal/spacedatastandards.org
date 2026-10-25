@@ -22,7 +22,7 @@ class TBSConsensus extends Table
 
     public static function TBSConsensusIdentifier()
     {
-        return "$TBS";
+        return '$TBS';
     }
 
     public static function TBSConsensusBufferHasIdentifier(ByteBuffer $buf)

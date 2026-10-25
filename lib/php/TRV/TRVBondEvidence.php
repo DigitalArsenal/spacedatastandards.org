@@ -21,7 +21,7 @@ class TRVBondEvidence extends Table
 
     public static function TRVBondEvidenceIdentifier()
     {
-        return "$TRV";
+        return '$TRV';
     }
 
     public static function TRVBondEvidenceBufferHasIdentifier(ByteBuffer $buf)

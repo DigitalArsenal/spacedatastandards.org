@@ -21,7 +21,7 @@ class Argument extends Table
 
     public static function ArgumentIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArgumentBufferHasIdentifier(ByteBuffer $buf)

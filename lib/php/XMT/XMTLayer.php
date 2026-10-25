@@ -21,7 +21,7 @@ class XMTLayer extends Table
 
     public static function XMTLayerIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTLayerBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PluginCapability extends Table
 
     public static function PluginCapabilityIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PluginCapabilityBufferHasIdentifier(ByteBuffer $buf)

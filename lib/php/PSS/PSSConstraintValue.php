@@ -20,7 +20,7 @@ class PSSConstraintValue extends Table
 
     public static function PSSConstraintValueIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSConstraintValueBufferHasIdentifier(ByteBuffer $buf)

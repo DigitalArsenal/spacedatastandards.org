@@ -20,7 +20,7 @@ class CDMObject extends Table
 
     public static function CDMObjectIdentifier()
     {
-        return "$CDM";
+        return '$CDM';
     }
 
     public static function CDMObjectBufferHasIdentifier(ByteBuffer $buf)

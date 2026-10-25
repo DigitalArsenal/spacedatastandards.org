@@ -21,7 +21,7 @@ class covarianceMatrixLine extends Table
 
     public static function covarianceMatrixLineIdentifier()
     {
-        return "$OEM";
+        return '$OEM';
     }
 
     public static function covarianceMatrixLineBufferHasIdentifier(ByteBuffer $buf)

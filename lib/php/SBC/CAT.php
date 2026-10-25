@@ -21,7 +21,7 @@ class CAT extends Table
 
     public static function CATIdentifier()
     {
-        return "$CAT";
+        return '$CAT';
     }
 
     public static function CATBufferHasIdentifier(ByteBuffer $buf)
@@ -712,6 +712,6 @@ class CAT extends Table
 
     public static function finishCATBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CAT");
+        $builder->finish($offset, '$CAT');
     }
 }

@@ -23,7 +23,7 @@ class PCEStopRequest extends Table
 
     public static function PCEStopRequestIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEStopRequestBufferHasIdentifier(ByteBuffer $buf)

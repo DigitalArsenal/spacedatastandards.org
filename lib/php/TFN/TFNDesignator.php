@@ -21,7 +21,7 @@ class TFNDesignator extends Table
 
     public static function TFNDesignatorIdentifier()
     {
-        return "$TFN";
+        return '$TFN';
     }
 
     public static function TFNDesignatorBufferHasIdentifier(ByteBuffer $buf)

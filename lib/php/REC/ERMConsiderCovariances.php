@@ -21,7 +21,7 @@ class ERMConsiderCovariances extends Table
 
     public static function ERMConsiderCovariancesIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMConsiderCovariancesBufferHasIdentifier(ByteBuffer $buf)

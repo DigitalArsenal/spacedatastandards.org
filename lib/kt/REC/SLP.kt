@@ -216,7 +216,7 @@ class SLP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SLPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SLP")
+        fun SLPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SLP")
         fun createSLP(builder: FlatBufferBuilder, problemIdOffset: Int, nameOffset: Int, kind: UByte, propagatorPortIdOffset: Int, objectiveEvaluatorPortIdOffset: Int, variablesOffset: Int, goalsOffset: Int, objectiveOffset: Int, constraintsOffset: Int, settingsOffset: Int, reportOffset: Int, createdAtOffset: Int, attestationOffset: Int) : Int {
             builder.startTable(13)
             addATTESTATION(builder, attestationOffset)
@@ -279,7 +279,7 @@ class SLP : Table() {
                 builder.required(o, 28)
             return o
         }
-        fun finishSLPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SLP")
-        fun finishSizePrefixedSLPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SLP")
+        fun finishSLPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SLP")
+        fun finishSizePrefixedSLPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SLP")
     }
 }

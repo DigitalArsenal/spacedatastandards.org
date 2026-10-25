@@ -20,7 +20,7 @@ class PRWDescribeRequest extends Table
 
     public static function PRWDescribeRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWDescribeRequestBufferHasIdentifier(ByteBuffer $buf)

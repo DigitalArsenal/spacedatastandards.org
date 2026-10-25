@@ -21,7 +21,7 @@ class ACIProvenance extends Table
 
     public static function ACIProvenanceIdentifier()
     {
-        return "$ACI";
+        return '$ACI';
     }
 
     public static function ACIProvenanceBufferHasIdentifier(ByteBuffer $buf)

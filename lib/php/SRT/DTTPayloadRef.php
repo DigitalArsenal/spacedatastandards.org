@@ -26,7 +26,7 @@ class DTTPayloadRef extends Table
 
     public static function DTTPayloadRefIdentifier()
     {
-        return "$DTT";
+        return '$DTT';
     }
 
     public static function DTTPayloadRefBufferHasIdentifier(ByteBuffer $buf)

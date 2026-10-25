@@ -21,7 +21,7 @@ class PAP extends Table
 
     public static function PAPIdentifier()
     {
-        return "$PAP";
+        return '$PAP';
     }
 
     public static function PAPBufferHasIdentifier(ByteBuffer $buf)
@@ -1009,6 +1009,6 @@ class PAP extends Table
 
     public static function finishPAPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PAP");
+        $builder->finish($offset, '$PAP');
     }
 }

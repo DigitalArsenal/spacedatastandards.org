@@ -21,7 +21,7 @@ class SCRGrid extends Table
 
     public static function SCRGridIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRGridBufferHasIdentifier(ByteBuffer $buf)

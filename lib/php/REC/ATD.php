@@ -21,7 +21,7 @@ class ATD extends Table
 
     public static function ATDIdentifier()
     {
-        return "$ATD";
+        return '$ATD';
     }
 
     public static function ATDBufferHasIdentifier(ByteBuffer $buf)
@@ -706,6 +706,6 @@ class ATD extends Table
 
     public static function finishATDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ATD");
+        $builder->finish($offset, '$ATD');
     }
 }

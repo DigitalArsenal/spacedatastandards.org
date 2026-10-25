@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CVR/main_generated.dart';
+import '../PVN/main_generated.dart';
 
 ///  What the errors are taken against. Append new values only; never reorder
 ///  or reuse existing values.
@@ -9294,8 +9295,8 @@ class _ERMCalibrationObjectReader extends fb.TableReader<ERMCalibrationObject> {
     ERMCalibrationObject._(bc, offset);
 }
 
-class ERMCalibrationObjectBuilder {
-  ERMCalibrationObjectBuilder(this.fbBuilder);
+class ERMCalibrationObjectBuilder_ {
+  ERMCalibrationObjectBuilder_(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 

@@ -21,7 +21,7 @@ class QRPColumn extends Table
 
     public static function QRPColumnIdentifier()
     {
-        return "$QRP";
+        return '$QRP';
     }
 
     public static function QRPColumnBufferHasIdentifier(ByteBuffer $buf)

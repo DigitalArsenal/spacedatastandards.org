@@ -21,7 +21,7 @@ class CanonicalizationRule extends Table
 
     public static function CanonicalizationRuleIdentifier()
     {
-        return "$MBL";
+        return '$MBL';
     }
 
     public static function CanonicalizationRuleBufferHasIdentifier(ByteBuffer $buf)

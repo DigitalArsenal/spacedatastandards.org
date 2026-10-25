@@ -340,7 +340,7 @@ class TXS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TXSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TXS")
+        fun TXSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TXS")
         fun createTXS(builder: FlatBufferBuilder, idOffset: Int, nativeIdOffset: Int, siteNameOffset: Int, stationIdentityOffset: Int, licenseeOffset: Int, licenseIdOffset: Int, service: Byte, status: Byte, countryCodeOffset: Int, adminAreaOffset: Int, latitude: Double, longitude: Double, positionAuthority: Byte, positionUncertaintyM: Double, positionDisputed: Boolean, priorPositionsOffset: Int, groundElevationAmslM: Double, structureHeightAglM: Double, structure: Byte, structureCount: UInt, emissionsOffset: Int, firstObservedOffset: Int, lastObservedOffset: Int, sourcesOffset: Int, consensusOffset: Int) : Int {
             builder.startTable(25)
             addSTRUCTUREHEIGHTAGLM(builder, structureHeightAglM)
@@ -427,7 +427,7 @@ class TXS : Table() {
                 builder.required(o, 52)
             return o
         }
-        fun finishTXSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TXS")
-        fun finishSizePrefixedTXSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TXS")
+        fun finishTXSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TXS")
+        fun finishSizePrefixedTXSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TXS")
     }
 }

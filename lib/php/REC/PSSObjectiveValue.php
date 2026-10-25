@@ -20,7 +20,7 @@ class PSSObjectiveValue extends Table
 
     public static function PSSObjectiveValueIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSObjectiveValueBufferHasIdentifier(ByteBuffer $buf)

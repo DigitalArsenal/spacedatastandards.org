@@ -21,7 +21,7 @@ class PolynomialCalibrator extends Table
 
     public static function PolynomialCalibratorIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function PolynomialCalibratorBufferHasIdentifier(ByteBuffer $buf)

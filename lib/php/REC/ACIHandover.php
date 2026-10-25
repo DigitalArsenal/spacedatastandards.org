@@ -21,7 +21,7 @@ class ACIHandover extends Table
 
     public static function ACIHandoverIdentifier()
     {
-        return "$ACI";
+        return '$ACI';
     }
 
     public static function ACIHandoverBufferHasIdentifier(ByteBuffer $buf)

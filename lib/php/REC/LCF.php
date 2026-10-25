@@ -21,7 +21,7 @@ class LCF extends Table
 
     public static function LCFIdentifier()
     {
-        return "$LCF";
+        return '$LCF';
     }
 
     public static function LCFBufferHasIdentifier(ByteBuffer $buf)
@@ -415,6 +415,6 @@ class LCF extends Table
 
     public static function finishLCFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LCF");
+        $builder->finish($offset, '$LCF');
     }
 }

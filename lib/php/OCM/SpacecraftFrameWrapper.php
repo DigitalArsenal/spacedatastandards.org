@@ -20,7 +20,7 @@ class SpacecraftFrameWrapper extends Table
 
     public static function SpacecraftFrameWrapperIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function SpacecraftFrameWrapperBufferHasIdentifier(ByteBuffer $buf)

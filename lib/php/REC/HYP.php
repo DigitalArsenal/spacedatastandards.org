@@ -21,7 +21,7 @@ class HYP extends Table
 
     public static function HYPIdentifier()
     {
-        return "$HYP";
+        return '$HYP';
     }
 
     public static function HYPBufferHasIdentifier(ByteBuffer $buf)
@@ -491,6 +491,6 @@ class HYP extends Table
 
     public static function finishHYPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$HYP");
+        $builder->finish($offset, '$HYP');
     }
 }

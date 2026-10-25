@@ -21,7 +21,7 @@ class IDM extends Table
 
     public static function IDMIdentifier()
     {
-        return "$IDM";
+        return '$IDM';
     }
 
     public static function IDMBufferHasIdentifier(ByteBuffer $buf)
@@ -693,6 +693,6 @@ class IDM extends Table
 
     public static function finishIDMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$IDM");
+        $builder->finish($offset, '$IDM');
     }
 }

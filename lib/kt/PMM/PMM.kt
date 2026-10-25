@@ -227,7 +227,7 @@ class PMM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PMM")
+        fun PMMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PMM")
         fun createPMM(builder: FlatBufferBuilder, providerDomainOffset: Int, providerNameOffset: Int, descriptionOffset: Int, epoch: ULong, trustOffset: Int, modulesOffset: Int, canonicalUrlOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, expiresAtOffset: Int, signatureOffset: Int, signedStatementOffset: Int) : Int {
             builder.startTable(12)
             addEPOCH(builder, epoch)
@@ -279,7 +279,7 @@ class PMM : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishPMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PMM")
-        fun finishSizePrefixedPMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PMM")
+        fun finishPMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PMM")
+        fun finishSizePrefixedPMMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PMM")
     }
 }

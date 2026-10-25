@@ -23,7 +23,7 @@ class ACIBestServer extends Table
 
     public static function ACIBestServerIdentifier()
     {
-        return "$ACI";
+        return '$ACI';
     }
 
     public static function ACIBestServerBufferHasIdentifier(ByteBuffer $buf)

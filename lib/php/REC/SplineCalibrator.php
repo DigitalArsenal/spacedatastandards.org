@@ -21,7 +21,7 @@ class SplineCalibrator extends Table
 
     public static function SplineCalibratorIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function SplineCalibratorBufferHasIdentifier(ByteBuffer $buf)

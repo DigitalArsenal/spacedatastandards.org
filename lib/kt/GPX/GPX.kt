@@ -298,7 +298,7 @@ class GPX : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GPXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GPX")
+        fun GPXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GPX")
         fun createGPX(builder: FlatBufferBuilder, versionOffset: Int, creatorOffset: Int, nameOffset: Int, descriptionOffset: Int, authorNameOffset: Int, authorEmailOffset: Int, authorLinkOffset: Int, copyrightAuthorOffset: Int, copyrightYearOffset: Int, copyrightLicenseOffset: Int, linksOffset: Int, timeOffset: Int, keywordsOffset: Int, boundsMinLat: Double, boundsMinLon: Double, boundsMaxLat: Double, boundsMaxLon: Double, waypointsOffset: Int, routesOffset: Int, tracksOffset: Int) : Int {
             builder.startTable(20)
             addBOUNDSMAXLON(builder, boundsMaxLon)
@@ -380,7 +380,7 @@ class GPX : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGPXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GPX")
-        fun finishSizePrefixedGPXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GPX")
+        fun finishGPXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GPX")
+        fun finishSizePrefixedGPXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GPX")
     }
 }

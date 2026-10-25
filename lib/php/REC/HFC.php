@@ -21,7 +21,7 @@ class HFC extends Table
 
     public static function HFCIdentifier()
     {
-        return "$HFC";
+        return '$HFC';
     }
 
     public static function HFCBufferHasIdentifier(ByteBuffer $buf)
@@ -1896,6 +1896,6 @@ class HFC extends Table
 
     public static function finishHFCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$HFC");
+        $builder->finish($offset, '$HFC');
     }
 }

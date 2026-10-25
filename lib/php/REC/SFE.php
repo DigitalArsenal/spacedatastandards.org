@@ -21,7 +21,7 @@ class SFE extends Table
 
     public static function SFEIdentifier()
     {
-        return "$SFE";
+        return '$SFE';
     }
 
     public static function SFEBufferHasIdentifier(ByteBuffer $buf)
@@ -609,6 +609,6 @@ class SFE extends Table
 
     public static function finishSFEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SFE");
+        $builder->finish($offset, '$SFE');
     }
 }

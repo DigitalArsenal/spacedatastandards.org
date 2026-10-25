@@ -21,7 +21,7 @@ class EMC extends Table
 
     public static function EMCIdentifier()
     {
-        return "$EMC";
+        return '$EMC';
     }
 
     public static function EMCBufferHasIdentifier(ByteBuffer $buf)
@@ -745,6 +745,6 @@ class EMC extends Table
 
     public static function finishEMCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EMC");
+        $builder->finish($offset, '$EMC');
     }
 }

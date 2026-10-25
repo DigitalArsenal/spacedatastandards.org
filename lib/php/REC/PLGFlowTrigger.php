@@ -21,7 +21,7 @@ class PLGFlowTrigger extends Table
 
     public static function PLGFlowTriggerIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGFlowTriggerBufferHasIdentifier(ByteBuffer $buf)

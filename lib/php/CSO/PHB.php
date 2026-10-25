@@ -21,7 +21,7 @@ class PHB extends Table
 
     public static function PHBIdentifier()
     {
-        return "$PHB";
+        return '$PHB';
     }
 
     public static function PHBBufferHasIdentifier(ByteBuffer $buf)
@@ -426,6 +426,6 @@ class PHB extends Table
 
     public static function finishPHBBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PHB");
+        $builder->finish($offset, '$PHB');
     }
 }

@@ -21,7 +21,7 @@ class PRWEventRecord extends Table
 
     public static function PRWEventRecordIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWEventRecordBufferHasIdentifier(ByteBuffer $buf)

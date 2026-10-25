@@ -21,7 +21,7 @@ class WHAAccount extends Table
 
     public static function WHAAccountIdentifier()
     {
-        return "$WHA";
+        return '$WHA';
     }
 
     public static function WHAAccountBufferHasIdentifier(ByteBuffer $buf)

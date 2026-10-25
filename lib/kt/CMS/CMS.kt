@@ -212,7 +212,7 @@ class CMS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CMS")
+        fun CMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CMS")
         fun createCMS(builder: FlatBufferBuilder, idOffset: Int, idEntityOffset: Int, nameOffset: Int, descriptionOffset: Int, entityOffset: Int, satNo: UInt, numTransponders: UInt, transpondersOffset: Int, totalPower: Double, totalMass: Double, totalBandwidth: Double, missionOffset: Int, coverageOffset: Int, designLife: Double, notesOffset: Int) : Int {
             builder.startTable(15)
             addDESIGNLIFE(builder, designLife)
@@ -260,7 +260,7 @@ class CMS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CMS")
-        fun finishSizePrefixedCMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CMS")
+        fun finishCMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CMS")
+        fun finishSizePrefixedCMSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CMS")
     }
 }

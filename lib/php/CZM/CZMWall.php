@@ -21,7 +21,7 @@ class CZMWall extends Table
 
     public static function CZMWallIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMWallBufferHasIdentifier(ByteBuffer $buf)

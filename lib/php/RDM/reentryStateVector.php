@@ -21,7 +21,7 @@ class reentryStateVector extends Table
 
     public static function reentryStateVectorIdentifier()
     {
-        return "$RDM";
+        return '$RDM';
     }
 
     public static function reentryStateVectorBufferHasIdentifier(ByteBuffer $buf)

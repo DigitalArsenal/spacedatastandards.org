@@ -21,7 +21,7 @@ class ppsBattery extends Table
 
     public static function ppsBatteryIdentifier()
     {
-        return "$PPS";
+        return '$PPS';
     }
 
     public static function ppsBatteryBufferHasIdentifier(ByteBuffer $buf)

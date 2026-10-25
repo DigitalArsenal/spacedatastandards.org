@@ -21,7 +21,7 @@ class TelemetryMetaData extends Table
 
     public static function TelemetryMetaDataIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function TelemetryMetaDataBufferHasIdentifier(ByteBuffer $buf)

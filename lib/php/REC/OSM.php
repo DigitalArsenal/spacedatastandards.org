@@ -21,7 +21,7 @@ class OSM extends Table
 
     public static function OSMIdentifier()
     {
-        return "$OSM";
+        return '$OSM';
     }
 
     public static function OSMBufferHasIdentifier(ByteBuffer $buf)
@@ -190,6 +190,6 @@ class OSM extends Table
 
     public static function finishOSMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OSM");
+        $builder->finish($offset, '$OSM');
     }
 }

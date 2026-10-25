@@ -54,7 +54,7 @@ class SBC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SBCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SBC")
+        fun SBCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SBC")
         fun createSBC(builder: FlatBufferBuilder, requestOffset: Int, diagnosticsOffset: Int) : Int {
             builder.startTable(2)
             addDIAGNOSTICS(builder, diagnosticsOffset)
@@ -68,7 +68,7 @@ class SBC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSBCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SBC")
-        fun finishSizePrefixedSBCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SBC")
+        fun finishSBCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SBC")
+        fun finishSizePrefixedSBCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SBC")
     }
 }

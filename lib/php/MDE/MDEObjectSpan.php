@@ -21,7 +21,7 @@ class MDEObjectSpan extends Table
 
     public static function MDEObjectSpanIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEObjectSpanBufferHasIdentifier(ByteBuffer $buf)

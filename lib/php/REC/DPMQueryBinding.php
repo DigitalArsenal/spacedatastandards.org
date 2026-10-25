@@ -21,7 +21,7 @@ class DPMQueryBinding extends Table
 
     public static function DPMQueryBindingIdentifier()
     {
-        return "$DPM";
+        return '$DPM';
     }
 
     public static function DPMQueryBindingBufferHasIdentifier(ByteBuffer $buf)

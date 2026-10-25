@@ -21,7 +21,7 @@ class MPL extends Table
 
     public static function MPLIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function MPLBufferHasIdentifier(ByteBuffer $buf)
@@ -639,6 +639,6 @@ class MPL extends Table
 
     public static function finishMPLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MPL");
+        $builder->finish($offset, '$MPL');
     }
 }

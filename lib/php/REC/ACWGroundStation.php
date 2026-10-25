@@ -21,7 +21,7 @@ class ACWGroundStation extends Table
 
     public static function ACWGroundStationIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWGroundStationBufferHasIdentifier(ByteBuffer $buf)

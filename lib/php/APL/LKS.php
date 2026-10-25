@@ -21,7 +21,7 @@ class LKS extends Table
 
     public static function LKSIdentifier()
     {
-        return "$LKS";
+        return '$LKS';
     }
 
     public static function LKSBufferHasIdentifier(ByteBuffer $buf)
@@ -535,6 +535,6 @@ class LKS extends Table
 
     public static function finishLKSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LKS");
+        $builder->finish($offset, '$LKS');
     }
 }

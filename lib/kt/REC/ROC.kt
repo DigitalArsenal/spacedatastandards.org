@@ -110,7 +110,7 @@ class ROC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ROCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ROC")
+        fun ROCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ROC")
         fun createROC(builder: FlatBufferBuilder, nameOffset: Int, familyOffset: Int, variantOffset: Int, stagesOffset: Int, sustainersOffset: Int) : Int {
             builder.startTable(5)
             addSUSTAINERS(builder, sustainersOffset)
@@ -146,7 +146,7 @@ class ROC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishROCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ROC")
-        fun finishSizePrefixedROCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ROC")
+        fun finishROCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ROC")
+        fun finishSizePrefixedROCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ROC")
     }
 }

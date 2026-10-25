@@ -60,7 +60,7 @@ class RFM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RFMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFM")
+        fun RFMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFM")
         fun createRFM(builder: FlatBufferBuilder, referenceFrameType: UByte, referenceFrameOffset: Int, index: Int, nameOffset: Int) : Int {
             builder.startTable(4)
             addNAME(builder, nameOffset)
@@ -78,7 +78,7 @@ class RFM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishRFMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RFM")
-        fun finishSizePrefixedRFMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RFM")
+        fun finishRFMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RFM")
+        fun finishSizePrefixedRFMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RFM")
     }
 }

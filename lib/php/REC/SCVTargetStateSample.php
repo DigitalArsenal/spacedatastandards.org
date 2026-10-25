@@ -20,7 +20,7 @@ class SCVTargetStateSample extends Table
 
     public static function SCVTargetStateSampleIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVTargetStateSampleBufferHasIdentifier(ByteBuffer $buf)

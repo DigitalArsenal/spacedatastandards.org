@@ -21,7 +21,7 @@ class mplPhasingSolution extends Table
 
     public static function mplPhasingSolutionIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplPhasingSolutionBufferHasIdentifier(ByteBuffer $buf)

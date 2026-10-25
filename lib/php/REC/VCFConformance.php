@@ -22,7 +22,7 @@ class VCFConformance extends Table
 
     public static function VCFConformanceIdentifier()
     {
-        return "$VCF";
+        return '$VCF';
     }
 
     public static function VCFConformanceBufferHasIdentifier(ByteBuffer $buf)

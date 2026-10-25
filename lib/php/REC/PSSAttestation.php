@@ -20,7 +20,7 @@ class PSSAttestation extends Table
 
     public static function PSSAttestationIdentifier()
     {
-        return "$PSS";
+        return '$PSS';
     }
 
     public static function PSSAttestationBufferHasIdentifier(ByteBuffer $buf)

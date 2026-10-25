@@ -21,7 +21,7 @@ class ACMSensor extends Table
 
     public static function ACMSensorIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMSensorBufferHasIdentifier(ByteBuffer $buf)

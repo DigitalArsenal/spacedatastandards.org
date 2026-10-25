@@ -21,7 +21,7 @@ class KMLLatLonQuad extends Table
 
     public static function KMLLatLonQuadIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLLatLonQuadBufferHasIdentifier(ByteBuffer $buf)

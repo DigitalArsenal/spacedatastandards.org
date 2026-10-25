@@ -23,7 +23,7 @@ class RFLEndpoint extends Table
 
     public static function RFLEndpointIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLEndpointBufferHasIdentifier(ByteBuffer $buf)

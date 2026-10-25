@@ -21,7 +21,7 @@ class SCRAlphaCut extends Table
 
     public static function SCRAlphaCutIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRAlphaCutBufferHasIdentifier(ByteBuffer $buf)

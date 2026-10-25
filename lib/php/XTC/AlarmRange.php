@@ -21,7 +21,7 @@ class AlarmRange extends Table
 
     public static function AlarmRangeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AlarmRangeBufferHasIdentifier(ByteBuffer $buf)

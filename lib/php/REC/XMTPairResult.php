@@ -21,7 +21,7 @@ class XMTPairResult extends Table
 
     public static function XMTPairResultIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTPairResultBufferHasIdentifier(ByteBuffer $buf)

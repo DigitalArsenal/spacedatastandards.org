@@ -21,7 +21,7 @@ class MatchCriteria extends Table
 
     public static function MatchCriteriaIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function MatchCriteriaBufferHasIdentifier(ByteBuffer $buf)

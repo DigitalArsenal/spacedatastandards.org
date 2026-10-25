@@ -383,7 +383,7 @@ class RFS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RFSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFS")
+        fun RFSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFS")
         fun createRFS(builder: FlatBufferBuilder, materialIdOffset: Int, nameOffset: Int, materialClass: Byte, descriptionOffset: Int, frequencyMinMhz: Double, frequencyMaxMhz: Double, permittivityCoefficientA: Double, permittivityExponentB: Double, conductivityCoefficientC: Double, conductivityExponentD: Double, referenceFrequencyMhz: Double, relativePermittivityReal: Double, relativePermittivityImaginary: Double, conductivitySPerM: Double, lossTangent: Double, relativePermeabilityReal: Double, relativePermeabilityImaginary: Double, reflectivity: Double, reflectionLossDb: Double, thicknessM: Double, transmissionLossDb: Double, attenuationDbPerM: Double, absorptionCoefficient: Double, surfaceRoughnessRmsM: Double, roughnessCorrelationLengthM: Double, scatteringClass: Byte, diffuseScatteringCoefficient: Double, backscatterCoefficientDb: Double, temperatureK: Double, moistureContentFraction: Double, salinityPsu: Double, frequencySamplesOffset: Int, reflectionTableOffset: Int, geometryOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int) : Int {
             builder.startTable(38)
             addCOMPUTEDAT(builder, computedAt)
@@ -504,7 +504,7 @@ class RFS : Table() {
                 builder.required(o, 72)
             return o
         }
-        fun finishRFSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RFS")
-        fun finishSizePrefixedRFSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RFS")
+        fun finishRFSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RFS")
+        fun finishSizePrefixedRFSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RFS")
     }
 }

@@ -21,7 +21,7 @@ class ACMManeuverBlock extends Table
 
     public static function ACMManeuverBlockIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMManeuverBlockBufferHasIdentifier(ByteBuffer $buf)

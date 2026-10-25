@@ -21,7 +21,7 @@ class EOO extends Table
 
     public static function EOOIdentifier()
     {
-        return "$EOO";
+        return '$EOO';
     }
 
     public static function EOOBufferHasIdentifier(ByteBuffer $buf)
@@ -2945,6 +2945,6 @@ class EOO extends Table
 
     public static function finishEOOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EOO");
+        $builder->finish($offset, '$EOO');
     }
 }

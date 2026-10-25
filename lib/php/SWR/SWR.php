@@ -21,7 +21,7 @@ class SWR extends Table
 
     public static function SWRIdentifier()
     {
-        return "$SWR";
+        return '$SWR';
     }
 
     public static function SWRBufferHasIdentifier(ByteBuffer $buf)
@@ -569,6 +569,6 @@ class SWR extends Table
 
     public static function finishSWRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SWR");
+        $builder->finish($offset, '$SWR');
     }
 }

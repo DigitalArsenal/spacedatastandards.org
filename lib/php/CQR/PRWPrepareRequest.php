@@ -21,7 +21,7 @@ class PRWPrepareRequest extends Table
 
     public static function PRWPrepareRequestIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWPrepareRequestBufferHasIdentifier(ByteBuffer $buf)

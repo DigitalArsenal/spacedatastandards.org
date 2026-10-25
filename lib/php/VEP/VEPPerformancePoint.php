@@ -22,7 +22,7 @@ class VEPPerformancePoint extends Table
 
     public static function VEPPerformancePointIdentifier()
     {
-        return "$VEP";
+        return '$VEP';
     }
 
     public static function VEPPerformancePointBufferHasIdentifier(ByteBuffer $buf)

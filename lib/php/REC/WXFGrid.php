@@ -26,7 +26,7 @@ class WXFGrid extends Table
 
     public static function WXFGridIdentifier()
     {
-        return "$WXF";
+        return '$WXF';
     }
 
     public static function WXFGridBufferHasIdentifier(ByteBuffer $buf)

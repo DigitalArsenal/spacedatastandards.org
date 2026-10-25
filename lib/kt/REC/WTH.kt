@@ -442,7 +442,7 @@ class WTH : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun WTHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WTH")
+        fun WTHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$WTH")
         fun createWTH(builder: FlatBufferBuilder, idOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, obTimeOffset: Int, fileCreationOffset: Int, qcValue: UByte, termAlt: Double, avgTxPwr: Double, avgRefPwr: Double, sectorNum: UShort, numElements: UShort, checksum: UInt, sigPwrsOffset: Int, noiseLvlsOffset: Int, specWidthsOffset: Int, firstGuessAvgsOffset: Int, tdAvgSampleNumsOffset: Int, coIntegsOffset: Int, specAvgsOffset: Int, interpulsePeriodsOffset: Int, doppVelsOffset: Int, consRecsOffset: Int, snrsOffset: Int, sigStrength: Double, semiMajorAxis: Double, semiMinorAxis: Double, angleOrientation: Double, lightEventNum: UInt, lightDetSensorsOffset: Int, posConfidence: Double, srcTypsOffset: Int, srcIdsOffset: Int) : Int {
             builder.startTable(32)
             addPOSCONFIDENCE(builder, posConfidence)
@@ -628,7 +628,7 @@ class WTH : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishWTHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$WTH")
-        fun finishSizePrefixedWTHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$WTH")
+        fun finishWTHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$WTH")
+        fun finishSizePrefixedWTHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$WTH")
     }
 }

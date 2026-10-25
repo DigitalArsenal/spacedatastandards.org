@@ -21,7 +21,7 @@ class SEV extends Table
 
     public static function SEVIdentifier()
     {
-        return "$SEV";
+        return '$SEV';
     }
 
     public static function SEVBufferHasIdentifier(ByteBuffer $buf)
@@ -252,6 +252,6 @@ class SEV extends Table
 
     public static function finishSEVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SEV");
+        $builder->finish($offset, '$SEV');
     }
 }

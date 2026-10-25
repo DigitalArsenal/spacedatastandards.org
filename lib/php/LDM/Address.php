@@ -21,7 +21,7 @@ class Address extends Table
 
     public static function AddressIdentifier()
     {
-        return "$EPM";
+        return '$EPM';
     }
 
     public static function AddressBufferHasIdentifier(ByteBuffer $buf)

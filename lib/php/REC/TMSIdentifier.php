@@ -21,7 +21,7 @@ class TMSIdentifier extends Table
 
     public static function TMSIdentifierIdentifier()
     {
-        return "$TMS";
+        return '$TMS';
     }
 
     public static function TMSIdentifierBufferHasIdentifier(ByteBuffer $buf)

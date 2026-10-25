@@ -21,7 +21,7 @@ class SDFComponent extends Table
 
     public static function SDFComponentIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFComponentBufferHasIdentifier(ByteBuffer $buf)

@@ -24,7 +24,7 @@ class CVPObstacleRef extends Table
 
     public static function CVPObstacleRefIdentifier()
     {
-        return "$CVP";
+        return '$CVP';
     }
 
     public static function CVPObstacleRefBufferHasIdentifier(ByteBuffer $buf)

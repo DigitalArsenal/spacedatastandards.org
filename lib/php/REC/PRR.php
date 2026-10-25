@@ -20,7 +20,7 @@ class PRR extends Table
 
     public static function PRRIdentifier()
     {
-        return "$PRR";
+        return '$PRR';
     }
 
     public static function PRRBufferHasIdentifier(ByteBuffer $buf)
@@ -704,6 +704,6 @@ class PRR extends Table
 
     public static function finishPRRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PRR");
+        $builder->finish($offset, '$PRR');
     }
 }

@@ -21,7 +21,7 @@ class SCHEMA_STANDARD extends Table
 
     public static function SCHEMA_STANDARDIdentifier()
     {
-        return "$SCM";
+        return '$SCM';
     }
 
     public static function SCHEMA_STANDARDBufferHasIdentifier(ByteBuffer $buf)
@@ -89,7 +89,7 @@ class SCHEMA_STANDARD extends Table
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Four-character file identifier, e.g. "$OMM".
+    /// Four-character file identifier, e.g. '$OMM'.
     public function getFILE_IDENTIFIER()
     {
         $o = $this->__offset(14);

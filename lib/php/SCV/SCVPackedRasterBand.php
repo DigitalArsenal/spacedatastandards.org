@@ -20,7 +20,7 @@ class SCVPackedRasterBand extends Table
 
     public static function SCVPackedRasterBandIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVPackedRasterBandBufferHasIdentifier(ByteBuffer $buf)

@@ -144,7 +144,7 @@ class CZM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CZMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CZM")
+        fun CZMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CZM")
         fun createCZM(builder: FlatBufferBuilder, nameOffset: Int, versionOffset: Int, clockCurrentTimeOffset: Int, clockIntervalOffset: Int, clockMultiplier: Double, clockRangeOffset: Int, clockStepOffset: Int, packetsOffset: Int) : Int {
             builder.startTable(8)
             addCLOCKMULTIPLIER(builder, clockMultiplier)
@@ -178,7 +178,7 @@ class CZM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCZMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CZM")
-        fun finishSizePrefixedCZMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CZM")
+        fun finishCZMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CZM")
+        fun finishSizePrefixedCZMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CZM")
     }
 }

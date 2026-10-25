@@ -21,7 +21,7 @@ class SCRPossibilityResult extends Table
 
     public static function SCRPossibilityResultIdentifier()
     {
-        return "$SCR";
+        return '$SCR';
     }
 
     public static function SCRPossibilityResultBufferHasIdentifier(ByteBuffer $buf)

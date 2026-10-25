@@ -21,7 +21,7 @@ class EMCEndpointRef extends Table
 
     public static function EMCEndpointRefIdentifier()
     {
-        return "$EMC";
+        return '$EMC';
     }
 
     public static function EMCEndpointRefBufferHasIdentifier(ByteBuffer $buf)

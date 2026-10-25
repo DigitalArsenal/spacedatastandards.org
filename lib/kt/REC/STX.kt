@@ -436,7 +436,7 @@ class STX : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun STXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STX")
+        fun STXBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$STX")
         fun createSTX(builder: FlatBufferBuilder, idOffset: Int, siteIdOffset: Int, siteNativeIdOffset: Int, stationNameOffset: Int, stationIdentityOffset: Int, frequencyKhz: Double, bandwidthKhz: Double, emissionDesignatorOffset: Int, modulation: Byte, polarization: Byte, service: Byte, content: Byte, timeStartUtcOffset: Int, timeStopUtcOffset: Int, days: UByte, irregular: Boolean, validFromOffset: Int, validUntilOffset: Int, seasonOffset: Int, targetAreaOffset: Int, targetZonesOffset: Int, languageOffset: Int, transmitterPowerKw: Double, antennaAzimuthDeg: Double, antennaAzimuthSecondaryDeg: Double, omnidirectional: Boolean, antennaDesignationOffset: Int, emissionIdOffset: Int, authority: Byte, status: Byte, firstObservedOffset: Int, lastObservedOffset: Int, observationCount: UInt, sourcesOffset: Int) : Int {
             builder.startTable(34)
             addANTENNAAZIMUTHSECONDARYDEG(builder, antennaAzimuthSecondaryDeg)
@@ -532,7 +532,7 @@ class STX : Table() {
                 builder.required(o, 70)
             return o
         }
-        fun finishSTXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$STX")
-        fun finishSizePrefixedSTXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$STX")
+        fun finishSTXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$STX")
+        fun finishSizePrefixedSTXBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$STX")
     }
 }

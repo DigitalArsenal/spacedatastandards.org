@@ -21,7 +21,7 @@ class KMLPolyStyle extends Table
 
     public static function KMLPolyStyleIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLPolyStyleBufferHasIdentifier(ByteBuffer $buf)

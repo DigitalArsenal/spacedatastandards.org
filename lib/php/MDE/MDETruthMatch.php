@@ -21,7 +21,7 @@ class MDETruthMatch extends Table
 
     public static function MDETruthMatchIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDETruthMatchBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SDFCylindrical extends Table
 
     public static function SDFCylindricalIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFCylindricalBufferHasIdentifier(ByteBuffer $buf)

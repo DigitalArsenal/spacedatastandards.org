@@ -372,7 +372,7 @@ class SFE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SFE")
+        fun SFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SFE")
         fun createSFE(builder: FlatBufferBuilder, eventIdOffset: Int, productOffset: Int, observatoryOffset: Int, platformOffset: Int, eventKind: Byte, eventTypeCodeOffset: Int, beginTimeOffset: Int, peakTimeOffset: Int, endTimeOffset: Int, beginQualifierOffset: Int, peakQualifierOffset: Int, endQualifierOffset: Int, xrayClassOffset: Int, opticalImportanceOffset: Int, peakFluxWM2: Double, integratedFluxJM2: Double, passbandMinNm: Double, passbandMaxNm: Double, regionNumber: UInt, hasRegionNumber: Boolean, hgLatitudeDeg: Double, hgLongitudeDeg: Double, statusOffset: Int, revisionOffset: Int, provenanceOffset: Int, sourceCidOffset: Int, sourceDigestOffset: Int, retrievedAtOffset: Int) : Int {
             builder.startTable(28)
             addHGLONGITUDEDEG(builder, hgLongitudeDeg)
@@ -440,7 +440,7 @@ class SFE : Table() {
                 builder.required(o, 52)
             return o
         }
-        fun finishSFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SFE")
-        fun finishSizePrefixedSFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SFE")
+        fun finishSFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SFE")
+        fun finishSizePrefixedSFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SFE")
     }
 }

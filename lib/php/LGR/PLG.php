@@ -21,7 +21,7 @@ class PLG extends Table
 
     public static function PLGIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGBufferHasIdentifier(ByteBuffer $buf)
@@ -2200,6 +2200,6 @@ class PLG extends Table
 
     public static function finishPLGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PLG");
+        $builder->finish($offset, '$PLG');
     }
 }

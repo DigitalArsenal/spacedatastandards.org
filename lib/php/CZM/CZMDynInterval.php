@@ -21,7 +21,7 @@ class CZMDynInterval extends Table
 
     public static function CZMDynIntervalIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMDynIntervalBufferHasIdentifier(ByteBuffer $buf)

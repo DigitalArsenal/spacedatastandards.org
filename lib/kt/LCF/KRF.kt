@@ -121,7 +121,7 @@ class KRF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun KRFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$KRF")
+        fun KRFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$KRF")
         fun createKRF(builder: FlatBufferBuilder, keyIdOffset: Int, slotIdOffset: Int, role: Byte, algorithm: Byte, publicKeyOffset: Int, version: UInt, expiresAt: ULong, hostManaged: Boolean) : Int {
             builder.startTable(8)
             addEXPIRESAT(builder, expiresAt)
@@ -156,7 +156,7 @@ class KRF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishKRFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$KRF")
-        fun finishSizePrefixedKRFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$KRF")
+        fun finishKRFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$KRF")
+        fun finishSizePrefixedKRFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$KRF")
     }
 }

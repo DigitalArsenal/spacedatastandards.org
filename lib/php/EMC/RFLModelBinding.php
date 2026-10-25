@@ -24,7 +24,7 @@ class RFLModelBinding extends Table
 
     public static function RFLModelBindingIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLModelBindingBufferHasIdentifier(ByteBuffer $buf)

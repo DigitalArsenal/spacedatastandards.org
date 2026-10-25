@@ -21,7 +21,7 @@ class SDFSpherical extends Table
 
     public static function SDFSphericalIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFSphericalBufferHasIdentifier(ByteBuffer $buf)

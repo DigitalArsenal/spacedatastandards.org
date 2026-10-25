@@ -23,7 +23,7 @@ class ACIDataVolumeByModCod extends Table
 
     public static function ACIDataVolumeByModCodIdentifier()
     {
-        return "$ACI";
+        return '$ACI';
     }
 
     public static function ACIDataVolumeByModCodBufferHasIdentifier(ByteBuffer $buf)

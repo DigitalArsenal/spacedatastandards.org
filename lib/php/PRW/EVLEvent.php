@@ -22,7 +22,7 @@ class EVLEvent extends Table
 
     public static function EVLEventIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLEventBufferHasIdentifier(ByteBuffer $buf)

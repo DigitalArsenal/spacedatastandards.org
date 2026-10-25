@@ -21,7 +21,7 @@ class APMAngularVelocity extends Table
 
     public static function APMAngularVelocityIdentifier()
     {
-        return "$APM";
+        return '$APM';
     }
 
     public static function APMAngularVelocityBufferHasIdentifier(ByteBuffer $buf)

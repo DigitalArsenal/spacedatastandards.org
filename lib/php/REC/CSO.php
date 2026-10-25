@@ -21,7 +21,7 @@ class CSO extends Table
 
     public static function CSOIdentifier()
     {
-        return "$CSO";
+        return '$CSO';
     }
 
     public static function CSOBufferHasIdentifier(ByteBuffer $buf)
@@ -975,6 +975,6 @@ class CSO extends Table
 
     public static function finishCSOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CSO");
+        $builder->finish($offset, '$CSO');
     }
 }

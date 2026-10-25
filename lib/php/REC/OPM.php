@@ -21,7 +21,7 @@ class OPM extends Table
 
     public static function OPMIdentifier()
     {
-        return "$OPM";
+        return '$OPM';
     }
 
     public static function OPMBufferHasIdentifier(ByteBuffer $buf)
@@ -869,6 +869,6 @@ class OPM extends Table
 
     public static function finishOPMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OPM");
+        $builder->finish($offset, '$OPM');
     }
 }

@@ -14,5 +14,5 @@ public final class entityKind {
   public static final byte SHIP = 5;
   public static final byte VEHICLE = 6;
   public static final byte SENSOR = 7;
-  public static final byte OTHER = 127;
+  public static final byte OTHER = (byte) 127;
 }

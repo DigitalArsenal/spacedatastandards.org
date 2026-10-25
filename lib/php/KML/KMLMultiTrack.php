@@ -21,7 +21,7 @@ class KMLMultiTrack extends Table
 
     public static function KMLMultiTrackIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLMultiTrackBufferHasIdentifier(ByteBuffer $buf)

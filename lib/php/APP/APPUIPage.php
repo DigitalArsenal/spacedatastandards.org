@@ -25,7 +25,7 @@ class APPUIPage extends Table
 
     public static function APPUIPageIdentifier()
     {
-        return "$APP";
+        return '$APP';
     }
 
     public static function APPUIPageBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PUR extends Table
 
     public static function PURIdentifier()
     {
-        return "$PUR";
+        return '$PUR';
     }
 
     public static function PURBufferHasIdentifier(ByteBuffer $buf)
@@ -825,6 +825,6 @@ class PUR extends Table
 
     public static function finishPURBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PUR");
+        $builder->finish($offset, '$PUR');
     }
 }

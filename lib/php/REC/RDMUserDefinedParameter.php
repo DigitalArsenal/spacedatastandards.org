@@ -22,7 +22,7 @@ class RDMUserDefinedParameter extends Table
 
     public static function RDMUserDefinedParameterIdentifier()
     {
-        return "$RDM";
+        return '$RDM';
     }
 
     public static function RDMUserDefinedParameterBufferHasIdentifier(ByteBuffer $buf)

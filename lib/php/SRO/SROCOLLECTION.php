@@ -20,7 +20,7 @@ class SROCOLLECTION extends Table
 
     public static function SROCOLLECTIONIdentifier()
     {
-        return "$SRO";
+        return '$SRO';
     }
 
     public static function SROCOLLECTIONBufferHasIdentifier(ByteBuffer $buf)

@@ -25,7 +25,7 @@ class TNR extends Table
 
     public static function TNRIdentifier()
     {
-        return "$TNR";
+        return '$TNR';
     }
 
     public static function TNRBufferHasIdentifier(ByteBuffer $buf)
@@ -241,6 +241,6 @@ class TNR extends Table
 
     public static function finishTNRBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TNR");
+        $builder->finish($offset, '$TNR');
     }
 }

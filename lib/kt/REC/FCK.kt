@@ -219,7 +219,7 @@ class FCK : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FCKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FCK")
+        fun FCKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FCK")
         fun startFCK(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addSELFOFFSET(builder: FlatBufferBuilder, selfOffset: ULong) = builder.addLong(0, selfOffset.toLong(), 0)
         fun addPREVIOUS(builder: FlatBufferBuilder, previous: ULong) = builder.addLong(1, previous.toLong(), 0)
@@ -271,7 +271,7 @@ class FCK : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishFCKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FCK")
-        fun finishSizePrefixedFCKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FCK")
+        fun finishFCKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FCK")
+        fun finishSizePrefixedFCKBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FCK")
     }
 }

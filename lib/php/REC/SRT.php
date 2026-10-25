@@ -21,7 +21,7 @@ class SRT extends Table
 
     public static function SRTIdentifier()
     {
-        return "$SRT";
+        return '$SRT';
     }
 
     public static function SRTBufferHasIdentifier(ByteBuffer $buf)
@@ -775,6 +775,6 @@ class SRT extends Table
 
     public static function finishSRTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SRT");
+        $builder->finish($offset, '$SRT');
     }
 }

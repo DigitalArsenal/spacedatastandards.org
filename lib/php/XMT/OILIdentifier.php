@@ -21,7 +21,7 @@ class OILIdentifier extends Table
 
     public static function OILIdentifierIdentifier()
     {
-        return "$OIL";
+        return '$OIL';
     }
 
     public static function OILIdentifierBufferHasIdentifier(ByteBuffer $buf)

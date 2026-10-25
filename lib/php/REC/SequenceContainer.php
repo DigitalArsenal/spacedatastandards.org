@@ -21,7 +21,7 @@ class SequenceContainer extends Table
 
     public static function SequenceContainerIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function SequenceContainerBufferHasIdentifier(ByteBuffer $buf)

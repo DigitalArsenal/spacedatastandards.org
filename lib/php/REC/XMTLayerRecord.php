@@ -21,7 +21,7 @@ class XMTLayerRecord extends Table
 
     public static function XMTLayerRecordIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTLayerRecordBufferHasIdentifier(ByteBuffer $buf)

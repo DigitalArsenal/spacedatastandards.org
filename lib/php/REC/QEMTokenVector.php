@@ -21,7 +21,7 @@ class QEMTokenVector extends Table
 
     public static function QEMTokenVectorIdentifier()
     {
-        return "$QEM";
+        return '$QEM';
     }
 
     public static function QEMTokenVectorBufferHasIdentifier(ByteBuffer $buf)

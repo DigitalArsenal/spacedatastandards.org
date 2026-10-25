@@ -502,7 +502,7 @@ class OCM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OCM")
+        fun OCMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OCM")
         fun createOCM(builder: FlatBufferBuilder, headerOffset: Int, metadataOffset: Int, trajType: Byte, trajTypeDescriptionOffset: Int, stateStepSize: Double, stateVectorSize: UByte, stateDataOffset: Int, covarianceDataOffset: Int, polynomialPositionRecordsOffset: Int, polynomialOeRecordsOffset: Int, physicalPropertiesOffset: Int, maneuverDataOffset: Int, perturbationsOffset: Int, orbitDeterminationOffset: Int, userDefinedParametersOffset: Int, centerNameOffset: Int, trajRefFrameOffset: Int, trajFrameEpochOffset: Int, covRefFrameOffset: Int, orbRevnum: UInt, orbAveragingOffset: Int, covCalibration: Byte, covCalibrationReferenceOffset: Int, stateEpochsOffset: Int, covTypeOffset: Int, covOrdering: Byte, covSize: UByte, covParametersOffset: Int, covUnitsOffset: Int, trajectoryBlocksOffset: Int, covarianceBlocksOffset: Int, provenanceOffset: Int, covRealismOffset: Int) : Int {
             builder.startTable(33)
             addSTATESTEPSIZE(builder, stateStepSize)
@@ -674,7 +674,7 @@ class OCM : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OCM")
-        fun finishSizePrefixedOCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OCM")
+        fun finishOCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OCM")
+        fun finishSizePrefixedOCMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OCM")
     }
 }

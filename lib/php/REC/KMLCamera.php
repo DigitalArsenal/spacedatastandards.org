@@ -21,7 +21,7 @@ class KMLCamera extends Table
 
     public static function KMLCameraIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLCameraBufferHasIdentifier(ByteBuffer $buf)

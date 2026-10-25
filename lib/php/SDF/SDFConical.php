@@ -21,7 +21,7 @@ class SDFConical extends Table
 
     public static function SDFConicalIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFConicalBufferHasIdentifier(ByteBuffer $buf)

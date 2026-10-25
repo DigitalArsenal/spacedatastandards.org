@@ -21,7 +21,7 @@ class OOL extends Table
 
     public static function OOLIdentifier()
     {
-        return "$OOL";
+        return '$OOL';
     }
 
     public static function OOLBufferHasIdentifier(ByteBuffer $buf)
@@ -178,6 +178,6 @@ class OOL extends Table
 
     public static function finishOOLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$OOL");
+        $builder->finish($offset, '$OOL');
     }
 }

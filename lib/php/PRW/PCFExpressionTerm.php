@@ -21,7 +21,7 @@ class PCFExpressionTerm extends Table
 
     public static function PCFExpressionTermIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFExpressionTermBufferHasIdentifier(ByteBuffer $buf)

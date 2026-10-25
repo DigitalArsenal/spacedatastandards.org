@@ -21,7 +21,7 @@ class ERM extends Table
 
     public static function ERMIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMBufferHasIdentifier(ByteBuffer $buf)
@@ -487,6 +487,6 @@ class ERM extends Table
 
     public static function finishERMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ERM");
+        $builder->finish($offset, '$ERM');
     }
 }

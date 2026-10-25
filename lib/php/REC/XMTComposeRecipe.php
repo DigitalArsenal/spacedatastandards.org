@@ -21,7 +21,7 @@ class XMTComposeRecipe extends Table
 
     public static function XMTComposeRecipeIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTComposeRecipeBufferHasIdentifier(ByteBuffer $buf)

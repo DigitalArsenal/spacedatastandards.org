@@ -207,7 +207,7 @@ class RPC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RPCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RPC")
+        fun RPCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RPC")
         fun createRPC(builder: FlatBufferBuilder, version: UByte, direction: Byte, encryptionOffset: Int, sessionIdOffset: Int, senderKeyIdOffset: Int, timestamp: ULong, nonceOffset: Int, ciphertextOffset: Int, signerPublicKeyOffset: Int, signatureTypeOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(12)
             addTIMESTAMP(builder, timestamp)
@@ -300,7 +300,7 @@ class RPC : Table() {
                 builder.required(o, 26)
             return o
         }
-        fun finishRPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RPC")
-        fun finishSizePrefixedRPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RPC")
+        fun finishRPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RPC")
+        fun finishSizePrefixedRPCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RPC")
     }
 }

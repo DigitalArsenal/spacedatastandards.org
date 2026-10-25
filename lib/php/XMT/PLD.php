@@ -21,7 +21,7 @@ class PLD extends Table
 
     public static function PLDIdentifier()
     {
-        return "$PLD";
+        return '$PLD';
     }
 
     public static function PLDBufferHasIdentifier(ByteBuffer $buf)
@@ -235,6 +235,6 @@ class PLD extends Table
 
     public static function finishPLDBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PLD");
+        $builder->finish($offset, '$PLD');
     }
 }

@@ -21,7 +21,7 @@ class ION extends Table
 
     public static function IONIdentifier()
     {
-        return "$ION";
+        return '$ION';
     }
 
     public static function IONBufferHasIdentifier(ByteBuffer $buf)
@@ -627,6 +627,6 @@ class ION extends Table
 
     public static function finishIONBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ION");
+        $builder->finish($offset, '$ION');
     }
 }

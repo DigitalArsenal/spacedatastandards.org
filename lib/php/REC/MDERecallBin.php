@@ -21,7 +21,7 @@ class MDERecallBin extends Table
 
     public static function MDERecallBinIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDERecallBinBufferHasIdentifier(ByteBuffer $buf)

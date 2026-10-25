@@ -94,7 +94,7 @@ class PCE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PCEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PCE")
+        fun PCEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PCE")
         fun createPCE(builder: FlatBufferBuilder, catalogOffset: Int, evaluationRequestOffset: Int, evaluationResultOffset: Int, stopRequestOffset: Int, stopReportOffset: Int) : Int {
             builder.startTable(5)
             addSTOPREPORT(builder, stopReportOffset)
@@ -114,7 +114,7 @@ class PCE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPCEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PCE")
-        fun finishSizePrefixedPCEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PCE")
+        fun finishPCEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PCE")
+        fun finishSizePrefixedPCEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PCE")
     }
 }

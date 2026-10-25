@@ -20,7 +20,7 @@ class SLPIteration extends Table
 
     public static function SLPIterationIdentifier()
     {
-        return "$SLP";
+        return '$SLP';
     }
 
     public static function SLPIterationBufferHasIdentifier(ByteBuffer $buf)

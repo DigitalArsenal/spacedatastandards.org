@@ -21,7 +21,7 @@ class CFP extends Table
 
     public static function CFPIdentifier()
     {
-        return "$CFP";
+        return '$CFP';
     }
 
     public static function CFPBufferHasIdentifier(ByteBuffer $buf)
@@ -424,6 +424,6 @@ class CFP extends Table
 
     public static function finishCFPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CFP");
+        $builder->finish($offset, '$CFP');
     }
 }

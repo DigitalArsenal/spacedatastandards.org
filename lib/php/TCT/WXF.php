@@ -22,7 +22,7 @@ class WXF extends Table
 
     public static function WXFIdentifier()
     {
-        return "$WXF";
+        return '$WXF';
     }
 
     public static function WXFBufferHasIdentifier(ByteBuffer $buf)
@@ -1284,6 +1284,6 @@ class WXF extends Table
 
     public static function finishWXFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$WXF");
+        $builder->finish($offset, '$WXF');
     }
 }

@@ -21,7 +21,7 @@ class mplSolver extends Table
 
     public static function mplSolverIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplSolverBufferHasIdentifier(ByteBuffer $buf)

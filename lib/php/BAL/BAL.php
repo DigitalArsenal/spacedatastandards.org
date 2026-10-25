@@ -21,7 +21,7 @@ class BAL extends Table
 
     public static function BALIdentifier()
     {
-        return "$BAL";
+        return '$BAL';
     }
 
     public static function BALBufferHasIdentifier(ByteBuffer $buf)
@@ -215,6 +215,6 @@ class BAL extends Table
 
     public static function finishBALBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$BAL");
+        $builder->finish($offset, '$BAL');
     }
 }

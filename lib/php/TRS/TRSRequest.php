@@ -28,7 +28,7 @@ class TRSRequest extends Table
 
     public static function TRSRequestIdentifier()
     {
-        return "$TRS";
+        return '$TRS';
     }
 
     public static function TRSRequestBufferHasIdentifier(ByteBuffer $buf)

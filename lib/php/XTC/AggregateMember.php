@@ -21,7 +21,7 @@ class AggregateMember extends Table
 
     public static function AggregateMemberIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function AggregateMemberBufferHasIdentifier(ByteBuffer $buf)

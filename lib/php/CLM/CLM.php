@@ -21,7 +21,7 @@ class CLM extends Table
 
     public static function CLMIdentifier()
     {
-        return "$CLM";
+        return '$CLM';
     }
 
     public static function CLMBufferHasIdentifier(ByteBuffer $buf)
@@ -433,6 +433,6 @@ class CLM extends Table
 
     public static function finishCLMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$CLM");
+        $builder->finish($offset, '$CLM');
     }
 }

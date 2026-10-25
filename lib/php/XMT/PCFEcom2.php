@@ -24,7 +24,7 @@ class PCFEcom2 extends Table
 
     public static function PCFEcom2Identifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFEcom2BufferHasIdentifier(ByteBuffer $buf)

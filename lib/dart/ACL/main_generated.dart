@@ -5,7 +5,8 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CCT/main_generated.dart';
+import '../STF/main_generated.dart';
 
 ///  Grant lifecycle status tracked by the provider.
 enum grantLifecycleStatus {
@@ -90,7 +91,6 @@ class ACL {
   String? get paymentTxHash => PAYMENT_TX_HASH;
   ///  Payment method used
   paymentMethod get PAYMENT_METHOD => paymentMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
-  paymentMethod get paymentMethod => PAYMENT_METHOD;
   ///  Ed25519 signature from provider
   List<int>? get PROVIDER_SIGNATURE => const fb.Uint8ListReader().vTableGetNullable(_bc, _bcOffset, 24);
   List<int>? get providerSignature => PROVIDER_SIGNATURE;

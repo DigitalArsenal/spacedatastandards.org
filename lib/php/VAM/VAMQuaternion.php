@@ -21,7 +21,7 @@ class VAMQuaternion extends Table
 
     public static function VAMQuaternionIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMQuaternionBufferHasIdentifier(ByteBuffer $buf)

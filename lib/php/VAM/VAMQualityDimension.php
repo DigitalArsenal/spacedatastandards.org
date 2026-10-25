@@ -21,7 +21,7 @@ class VAMQualityDimension extends Table
 
     public static function VAMQualityDimensionIdentifier()
     {
-        return "$VAM";
+        return '$VAM';
     }
 
     public static function VAMQualityDimensionBufferHasIdentifier(ByteBuffer $buf)

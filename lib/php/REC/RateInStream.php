@@ -21,7 +21,7 @@ class RateInStream extends Table
 
     public static function RateInStreamIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function RateInStreamBufferHasIdentifier(ByteBuffer $buf)

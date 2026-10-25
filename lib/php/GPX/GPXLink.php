@@ -21,7 +21,7 @@ class GPXLink extends Table
 
     public static function GPXLinkIdentifier()
     {
-        return "$GPX";
+        return '$GPX';
     }
 
     public static function GPXLinkBufferHasIdentifier(ByteBuffer $buf)

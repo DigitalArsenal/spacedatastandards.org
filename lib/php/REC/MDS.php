@@ -28,7 +28,7 @@ class MDS extends Table
 
     public static function MDSIdentifier()
     {
-        return "$MDS";
+        return '$MDS';
     }
 
     public static function MDSBufferHasIdentifier(ByteBuffer $buf)
@@ -320,6 +320,6 @@ class MDS extends Table
 
     public static function finishMDSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$MDS");
+        $builder->finish($offset, '$MDS');
     }
 }

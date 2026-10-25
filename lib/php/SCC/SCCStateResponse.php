@@ -22,7 +22,7 @@ class SCCStateResponse extends Table
 
     public static function SCCStateResponseIdentifier()
     {
-        return "$SCC";
+        return '$SCC';
     }
 
     public static function SCCStateResponseBufferHasIdentifier(ByteBuffer $buf)

@@ -307,7 +307,7 @@ class SKR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SKRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SKR")
+        fun SKRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SKR")
         fun createSKR(builder: FlatBufferBuilder, queryIdOffset: Int, queryKind: UByte, status: UByte, messageOffset: Int, epochJdTt: Double, epochJdTtFraction: Double, place: UByte, rowCount: UInt, rowsAdded: UInt, rejectedCount: UInt, bandCount: UInt, matchedCount: UInt, hitsOffset: Int, bandIdsOffset: Int, magnitudesOffset: Int, derivationsOffset: Int, matchedDetections: UInt, rotationOffset: Int, quaternionOffset: Int, residualRmsArcsec: Double, boresightRaDeg: Double, boresightDecDeg: Double, matchedRowsOffset: Int, occultationsOffset: Int, exclusionsOffset: Int) : Int {
             builder.startTable(25)
             addBORESIGHTDECDEG(builder, boresightDecDeg)
@@ -420,7 +420,7 @@ class SKR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSKRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SKR")
-        fun finishSizePrefixedSKRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SKR")
+        fun finishSKRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SKR")
+        fun finishSizePrefixedSKRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SKR")
     }
 }

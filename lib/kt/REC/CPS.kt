@@ -228,7 +228,7 @@ class CPS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CPSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CPS")
+        fun CPSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CPS")
         fun createCPS(builder: FlatBufferBuilder, algorithm: UByte, packetLength: UShort, packetCount: UInt, robustness: UByte, maskUpdatePeriod: UShort, maskSendPeriod: UShort, referencePeriod: UShort, selfSynchronizing: Boolean, streamIdOffset: Int, segmentIndex: UInt, apid: UShort, spacecraftId: UShort, startEpochOffset: Int, stopEpochOffset: Int, compressedDataOffset: Int, uncompressedLength: UInt, uncompressedCrc32: UInt) : Int {
             builder.startTable(17)
             addUNCOMPRESSEDCRC32(builder, uncompressedCrc32)
@@ -282,7 +282,7 @@ class CPS : Table() {
                 builder.required(o, 32)
             return o
         }
-        fun finishCPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CPS")
-        fun finishSizePrefixedCPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CPS")
+        fun finishCPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CPS")
+        fun finishSizePrefixedCPSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CPS")
     }
 }

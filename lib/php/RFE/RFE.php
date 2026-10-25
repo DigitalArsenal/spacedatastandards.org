@@ -21,7 +21,7 @@ class RFE extends Table
 
     public static function RFEIdentifier()
     {
-        return "$RFE";
+        return '$RFE';
     }
 
     public static function RFEBufferHasIdentifier(ByteBuffer $buf)
@@ -678,6 +678,6 @@ class RFE extends Table
 
     public static function finishRFEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RFE");
+        $builder->finish($offset, '$RFE');
     }
 }

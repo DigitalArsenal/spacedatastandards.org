@@ -21,7 +21,7 @@ class ACM extends Table
 
     public static function ACMIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMBufferHasIdentifier(ByteBuffer $buf)
@@ -979,6 +979,6 @@ class ACM extends Table
 
     public static function finishACMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ACM");
+        $builder->finish($offset, '$ACM');
     }
 }

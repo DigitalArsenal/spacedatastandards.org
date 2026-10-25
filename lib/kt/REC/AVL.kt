@@ -315,7 +315,7 @@ class AVL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun AVLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$AVL")
+        fun AVLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$AVL")
         fun createAVL(builder: FlatBufferBuilder, idOffset: Int, designatorOffset: Int, nameOffset: Int, airspaceClass: Byte, volumeType: Byte, countryCodeOffset: Int, floorValue: Double, floorDatum: Byte, ceilingValue: Double, ceilingDatum: Byte, effectiveFromOffset: Int, effectiveToOffset: Int, timeOfActivityOffset: Int, vertexLongitudeDegOffset: Int, vertexLatitudeDegOffset: Int, ringOffsetsOffset: Int, ringPolygonIndexesOffset: Int, ringRolesOffset: Int, polygonCount: UInt, arcDensified: Boolean, densificationToleranceM: Double, sourceOffset: Int) : Int {
             builder.startTable(22)
             addDENSIFICATIONTOLERANCEM(builder, densificationToleranceM)
@@ -418,7 +418,7 @@ class AVL : Table() {
                 builder.required(o, 46)
             return o
         }
-        fun finishAVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$AVL")
-        fun finishSizePrefixedAVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$AVL")
+        fun finishAVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$AVL")
+        fun finishSizePrefixedAVLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$AVL")
     }
 }

@@ -302,7 +302,7 @@ class SPW : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SPWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SPW")
+        fun SPWBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SPW")
         fun createSPW(builder: FlatBufferBuilder, dateOffset: Int, bsrn: Int, nd: Int, kp1: Int, kp2: Int, kp3: Int, kp4: Int, kp5: Int, kp6: Int, kp7: Int, kp8: Int, kpSum: Int, ap1: Int, ap2: Int, ap3: Int, ap4: Int, ap5: Int, ap6: Int, ap7: Int, ap8: Int, apAvg: Int, cp: Float, c9: Int, isn: Int, f107Obs: Float, f107Adj: Float, f107DataType: Byte, f107ObsCenter81: Float, f107ObsLast81: Float, f107AdjCenter81: Float, f107AdjLast81: Float, provenanceOffset: Int) : Int {
             builder.startTable(32)
             addPROVENANCE(builder, provenanceOffset)
@@ -376,7 +376,7 @@ class SPW : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSPWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SPW")
-        fun finishSizePrefixedSPWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SPW")
+        fun finishSPWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SPW")
+        fun finishSizePrefixedSPWBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SPW")
     }
 }

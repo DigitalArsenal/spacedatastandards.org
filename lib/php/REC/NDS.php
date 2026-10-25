@@ -21,7 +21,7 @@ class NDS extends Table
 
     public static function NDSIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSBufferHasIdentifier(ByteBuffer $buf)
@@ -513,6 +513,6 @@ class NDS extends Table
 
     public static function finishNDSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NDS");
+        $builder->finish($offset, '$NDS');
     }
 }

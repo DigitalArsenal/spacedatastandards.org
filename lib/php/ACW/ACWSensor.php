@@ -21,7 +21,7 @@ class ACWSensor extends Table
 
     public static function ACWSensorIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWSensorBufferHasIdentifier(ByteBuffer $buf)

@@ -22,7 +22,7 @@ class ASGAssociationReport extends Table
 
     public static function ASGAssociationReportIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGAssociationReportBufferHasIdentifier(ByteBuffer $buf)

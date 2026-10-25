@@ -21,7 +21,7 @@ class MDERefusedSet extends Table
 
     public static function MDERefusedSetIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDERefusedSetBufferHasIdentifier(ByteBuffer $buf)

@@ -64,7 +64,7 @@ class GJN : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GJNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GJN")
+        fun GJNBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GJN")
         fun createGJN(builder: FlatBufferBuilder, featuresOffset: Int, bboxOffset: Int) : Int {
             builder.startTable(2)
             addBBOX(builder, bboxOffset)
@@ -86,7 +86,7 @@ class GJN : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishGJNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GJN")
-        fun finishSizePrefixedGJNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GJN")
+        fun finishGJNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GJN")
+        fun finishSizePrefixedGJNBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GJN")
     }
 }

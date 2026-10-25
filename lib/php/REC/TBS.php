@@ -37,7 +37,7 @@ class TBS extends Table
 
     public static function TBSIdentifier()
     {
-        return "$TBS";
+        return '$TBS';
     }
 
     public static function TBSBufferHasIdentifier(ByteBuffer $buf)
@@ -574,6 +574,6 @@ class TBS extends Table
 
     public static function finishTBSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TBS");
+        $builder->finish($offset, '$TBS');
     }
 }

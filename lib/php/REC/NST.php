@@ -21,7 +21,7 @@ class NST extends Table
 
     public static function NSTIdentifier()
     {
-        return "$NST";
+        return '$NST';
     }
 
     public static function NSTBufferHasIdentifier(ByteBuffer $buf)
@@ -184,6 +184,6 @@ class NST extends Table
 
     public static function finishNSTBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$NST");
+        $builder->finish($offset, '$NST');
     }
 }

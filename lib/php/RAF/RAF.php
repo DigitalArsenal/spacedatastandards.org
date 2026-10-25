@@ -21,7 +21,7 @@ class RAF extends Table
 
     public static function RAFIdentifier()
     {
-        return "$RAF";
+        return '$RAF';
     }
 
     public static function RAFBufferHasIdentifier(ByteBuffer $buf)
@@ -277,6 +277,6 @@ class RAF extends Table
 
     public static function finishRAFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RAF");
+        $builder->finish($offset, '$RAF');
     }
 }

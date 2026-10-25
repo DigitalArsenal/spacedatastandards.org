@@ -21,7 +21,7 @@ class ContextAlarm extends Table
 
     public static function ContextAlarmIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ContextAlarmBufferHasIdentifier(ByteBuffer $buf)

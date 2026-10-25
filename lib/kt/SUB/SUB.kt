@@ -169,7 +169,7 @@ class SUB : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SUBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SUB")
+        fun SUBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SUB")
         fun createSUB(builder: FlatBufferBuilder, subscriptionIdOffset: Int, entitlementIdOffset: Int, listingIdOffset: Int, authKind: Byte, chainSettlementOffset: Int, periodDays: UInt, amountPerPeriod: ULong, currencyOffset: Int, nextChargeAt: ULong, maxPeriods: UInt, status: Byte, signatureOffset: Int) : Int {
             builder.startTable(12)
             addNEXTCHARGEAT(builder, nextChargeAt)
@@ -213,7 +213,7 @@ class SUB : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishSUBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SUB")
-        fun finishSizePrefixedSUBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SUB")
+        fun finishSUBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SUB")
+        fun finishSizePrefixedSUBBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SUB")
     }
 }

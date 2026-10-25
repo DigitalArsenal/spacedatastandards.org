@@ -155,7 +155,7 @@ class MFE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MFE")
+        fun MFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MFE")
         fun createMFE(builder: FlatBufferBuilder, idOffset: Int, tmpSatNo: Int, epochOffset: Int, meanMotion: Double, eccentricity: Double, inclination: Double, raan: Double, argOfPerigee: Double, meanAnomaly: Double, revNo: Int, bStar: Double, meanMotionDot: Double, meanMotionDdot: Double, semiMajorAxis: Double, period: Double, apogee: Double, perigee: Double, line1Offset: Int, line2Offset: Int) : Int {
             builder.startTable(19)
             addPERIGEE(builder, perigee)
@@ -203,7 +203,7 @@ class MFE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MFE")
-        fun finishSizePrefixedMFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MFE")
+        fun finishMFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MFE")
+        fun finishSizePrefixedMFEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MFE")
     }
 }

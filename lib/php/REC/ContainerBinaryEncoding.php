@@ -21,7 +21,7 @@ class ContainerBinaryEncoding extends Table
 
     public static function ContainerBinaryEncodingIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ContainerBinaryEncodingBufferHasIdentifier(ByteBuffer $buf)

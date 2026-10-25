@@ -235,7 +235,7 @@ class OIL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OILBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OIL")
+        fun OILBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OIL")
         fun createOIL(builder: FlatBufferBuilder, providerOffset: Int, kindOffset: Int, leftNamespaceOffset: Int, rightNamespaceOffset: Int, headerOffset: Int, sha256Offset: Int, bytes: ULong, rows: UInt, duplicateLines: UInt, linkCount: UInt, cleanCount: UInt, ambiguousCount: UInt, leftIdCount: UInt, rightIdCount: UInt, datesDifferCount: UInt, unreadableDateCount: UInt, linksOffset: Int, conflictsOffset: Int, generatedAtMs: Long) : Int {
             builder.startTable(19)
             addGENERATEDATMS(builder, generatedAtMs)
@@ -299,7 +299,7 @@ class OIL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OIL")
-        fun finishSizePrefixedOILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OIL")
+        fun finishOILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OIL")
+        fun finishSizePrefixedOILBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OIL")
     }
 }

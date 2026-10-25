@@ -21,7 +21,7 @@ class ERMProvenanceFile extends Table
 
     public static function ERMProvenanceFileIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMProvenanceFileBufferHasIdentifier(ByteBuffer $buf)

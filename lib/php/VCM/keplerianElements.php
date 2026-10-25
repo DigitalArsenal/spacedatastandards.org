@@ -21,7 +21,7 @@ class keplerianElements extends Table
 
     public static function keplerianElementsIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function keplerianElementsBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class RepeatEntry extends Table
 
     public static function RepeatEntryIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function RepeatEntryBufferHasIdentifier(ByteBuffer $buf)

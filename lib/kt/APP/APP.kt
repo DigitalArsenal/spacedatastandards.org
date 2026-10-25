@@ -335,7 +335,7 @@ class APP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun APPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$APP")
+        fun APPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$APP")
         fun createAPP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, modulesOffset: Int, dataOffset: Int, sourcesOffset: Int, uiOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, dataflowOffset: Int, runtimeClass: UByte, primaryCategory: UByte, categoriesOffset: Int) : Int {
             builder.startTable(14)
             addCATEGORIES(builder, categoriesOffset)
@@ -423,7 +423,7 @@ class APP : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishAPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$APP")
-        fun finishSizePrefixedAPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$APP")
+        fun finishAPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$APP")
+        fun finishSizePrefixedAPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$APP")
     }
 }

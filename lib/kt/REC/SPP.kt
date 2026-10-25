@@ -96,10 +96,6 @@ class SPP : Table() {
             0u
         }
     }
-    val dataLength : Int
-        get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
-        }
     val dataAsByteBuffer : ByteBuffer? get() = __vector_as_bytebuffer(18, 1)
     fun dataInByteBuffer(_bb: ByteBuffer) : ByteBuffer? = __vector_in_bytebuffer(_bb, 18, 1)
     companion object {
@@ -109,7 +105,7 @@ class SPP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SPPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SPP")
+        fun SPPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SPP")
         fun createSPP(builder: FlatBufferBuilder, version: UByte, packetType: Byte, secHdrFlag: Boolean, apid: UShort, sequenceFlags: UByte, sequenceCount: UShort, dataLength: UShort, dataOffset: Int) : Int {
             builder.startTable(8)
             addDATA(builder, dataOffset)
@@ -144,7 +140,7 @@ class SPP : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SPP")
-        fun finishSizePrefixedSPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SPP")
+        fun finishSPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SPP")
+        fun finishSizePrefixedSPPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SPP")
     }
 }

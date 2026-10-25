@@ -21,7 +21,7 @@ class ArrayParameterRefEntry extends Table
 
     public static function ArrayParameterRefEntryIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function ArrayParameterRefEntryBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class XMTStateCandidate extends Table
 
     public static function XMTStateCandidateIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTStateCandidateBufferHasIdentifier(ByteBuffer $buf)

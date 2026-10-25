@@ -21,7 +21,7 @@ class OPMManeuver extends Table
 
     public static function OPMManeuverIdentifier()
     {
-        return "$OPM";
+        return '$OPM';
     }
 
     public static function OPMManeuverBufferHasIdentifier(ByteBuffer $buf)

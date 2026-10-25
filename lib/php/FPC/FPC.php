@@ -22,7 +22,7 @@ class FPC extends Table
 
     public static function FPCIdentifier()
     {
-        return "$FPC";
+        return '$FPC';
     }
 
     public static function FPCBufferHasIdentifier(ByteBuffer $buf)
@@ -200,6 +200,6 @@ class FPC extends Table
 
     public static function finishFPCBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FPC");
+        $builder->finish($offset, '$FPC');
     }
 }

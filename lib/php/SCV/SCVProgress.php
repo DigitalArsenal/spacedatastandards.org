@@ -20,7 +20,7 @@ class SCVProgress extends Table
 
     public static function SCVProgressIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVProgressBufferHasIdentifier(ByteBuffer $buf)

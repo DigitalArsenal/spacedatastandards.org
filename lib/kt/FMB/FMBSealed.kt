@@ -44,7 +44,7 @@ class FMBSealed : Table() {
     val epoch : Long
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getLong(o + bb_pos) else -9223372036854775808L
+            return if(o != 0) bb.getLong(o + bb_pos) else Long.MIN_VALUE
         }
     /**
      * OBJECT_KEY dictionary id; 0 none.
@@ -106,7 +106,7 @@ class FMBSealed : Table() {
         }
         fun startFMBSealed(builder: FlatBufferBuilder) = builder.startTable(5)
         fun addROW(builder: FlatBufferBuilder, row: UInt) = builder.addInt(0, row.toInt(), 0)
-        fun addEPOCH(builder: FlatBufferBuilder, epoch: Long) = builder.addLong(1, epoch, -9223372036854775808L)
+        fun addEPOCH(builder: FlatBufferBuilder, epoch: Long) = builder.addLong(1, epoch, Long.MIN_VALUE)
         fun addOBJECTKEYID(builder: FlatBufferBuilder, objectKeyId: UInt) = builder.addInt(2, objectKeyId.toInt(), 0)
         fun addLEAFDIGEST(builder: FlatBufferBuilder, leafDigest: Int) = builder.addOffset(3, leafDigest, 0)
         @kotlin.ExperimentalUnsignedTypes

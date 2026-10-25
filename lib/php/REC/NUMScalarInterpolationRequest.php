@@ -21,7 +21,7 @@ class NUMScalarInterpolationRequest extends Table
 
     public static function NUMScalarInterpolationRequestIdentifier()
     {
-        return "$NUM";
+        return '$NUM';
     }
 
     public static function NUMScalarInterpolationRequestBufferHasIdentifier(ByteBuffer $buf)

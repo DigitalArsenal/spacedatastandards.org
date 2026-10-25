@@ -21,7 +21,7 @@ class RFLLink extends Table
 
     public static function RFLLinkIdentifier()
     {
-        return "$RFL";
+        return '$RFL';
     }
 
     public static function RFLLinkBufferHasIdentifier(ByteBuffer $buf)

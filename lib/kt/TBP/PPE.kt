@@ -52,8 +52,8 @@ class PPE : Table() {
     /**
      * Space object identification.
      */
-    val object : CAT? get() = object(CAT())
-    fun object(obj: CAT) : CAT? {
+    val `object` : CAT? get() = `object`(CAT())
+    fun `object`(obj: CAT) : CAT? {
         val o = __offset(6)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
@@ -219,7 +219,7 @@ class PPE : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PPE")
+        fun PPEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PPE")
         fun createPPE(builder: FlatBufferBuilder, commentOffset: Int, objectOffset: Int, centerNameOffset: Int, referenceFrameOffset: Int, timeSystem: Byte, startTimeOffset: Int, stopTimeOffset: Int, defaultBasisType: Byte, positionRecordsOffset: Int, orbitalElementRecordsOffset: Int, ephemerisSourceOffset: Int, nominalSegmentSpan: Double, nominalNumCoefficients: UShort, provenanceOffset: Int) : Int {
             builder.startTable(14)
             addNOMINALSEGMENTSPAN(builder, nominalSegmentSpan)
@@ -248,7 +248,7 @@ class PPE : Table() {
             return builder.endVector()
         }
         fun startCommentVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addOBJECT(builder: FlatBufferBuilder, object: Int) = builder.addOffset(1, object, 0)
+        fun addOBJECT(builder: FlatBufferBuilder, `object`: Int) = builder.addOffset(1, `object`, 0)
         fun addCENTERNAME(builder: FlatBufferBuilder, centerName: Int) = builder.addOffset(2, centerName, 0)
         fun addREFERENCEFRAME(builder: FlatBufferBuilder, referenceFrame: Int) = builder.addOffset(3, referenceFrame, 0)
         fun addTIMESYSTEM(builder: FlatBufferBuilder, timeSystem: Byte) = builder.addByte(4, timeSystem, 0)
@@ -281,7 +281,7 @@ class PPE : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPPEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PPE")
-        fun finishSizePrefixedPPEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PPE")
+        fun finishPPEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PPE")
+        fun finishSizePrefixedPPEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PPE")
     }
 }

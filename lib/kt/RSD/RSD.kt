@@ -332,7 +332,7 @@ class RSD : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RSDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RSD")
+        fun RSDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RSD")
         fun createRSD(builder: FlatBufferBuilder, rsdIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, sensorIdOffset: Int, snrIdOffset: Int, sdrIdOffset: Int, aplIdOffset: Int, waveform: Byte, integration: Byte, cfar: Byte, targetModel: Byte, pulseCount: UInt, cfarReferenceCellCount: UInt, cfarGuardCellCount: UInt, cfarLossDb: Double, targetRcsM2: Double, falseAlarmProbabilityRequirement: Double, detectionProbabilityRequirement: Double, rangeMOffset: Int, detectionProbabilityOffset: Int, falseAlarmProbabilityOffset: Int, snrDbOffset: Int, maximumDetectionRangeM: Double, minimumDetectableRcsM2: Double, rangeAtPd0P5M: Double, rangeAtPd0P9M: Double, clutterToNoiseDb: Double, propagationLossDb: Double, jammingToSignalDb: Double, burnThroughRangeM: Double, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(35)
             addCOMPUTEDAT(builder, computedAt)
@@ -471,7 +471,7 @@ class RSD : Table() {
                 builder.required(o, 72)
             return o
         }
-        fun finishRSDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RSD")
-        fun finishSizePrefixedRSDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RSD")
+        fun finishRSDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RSD")
+        fun finishSizePrefixedRSDBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RSD")
     }
 }

@@ -449,7 +449,7 @@ class CSO : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CSOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CSO")
+        fun CSOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CSO")
         fun createCSO(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, designationsOffset: Int, sourceClass: UByte, classNameOffset: Int, classProbability: Float, messenger: UByte, ra: Double, dec: Double, positionEpoch: Double, posErrMajorArcsec: Double, posErrMinorArcsec: Double, posErrPaDeg: Double, posErrConfidence: Float, localizationLayerIdOffset: Int, parallax: Double, pmra: Double, pmdec: Double, redshift: Double, redshiftUnc: Double, distanceMpc: Double, distanceUncMpc: Double, sizeMajorArcsec: Double, sizeMinorArcsec: Double, sizePaDeg: Double, photometryOffset: Int, isTransient: Boolean, eventTimeOffset: Int, startTimeOffset: Int, endTimeOffset: Int, durationT90S: Double, periodS: Double, periodDerivative: Double, significanceSigma: Double, falseAlarmRatePerYr: Double, alertState: UByte, alertRevision: UInt, issuedTimeOffset: Int, sourceCatalogOffset: Int, sourceUrlOffset: Int, citationOffset: Int) : Int {
             builder.startTable(41)
             addFALSEALARMRATEPERYR(builder, falseAlarmRatePerYr)
@@ -558,7 +558,7 @@ class CSO : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishCSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CSO")
-        fun finishSizePrefixedCSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CSO")
+        fun finishCSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CSO")
+        fun finishSizePrefixedCSOBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CSO")
     }
 }

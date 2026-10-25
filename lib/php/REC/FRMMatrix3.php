@@ -20,7 +20,7 @@ class FRMMatrix3 extends Table
 
     public static function FRMMatrix3Identifier()
     {
-        return "$FRM";
+        return '$FRM';
     }
 
     public static function FRMMatrix3BufferHasIdentifier(ByteBuffer $buf)

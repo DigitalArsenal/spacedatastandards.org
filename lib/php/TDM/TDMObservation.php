@@ -45,7 +45,7 @@ class TDMObservation extends Table
 
     public static function TDMObservationIdentifier()
     {
-        return "$TDM";
+        return '$TDM';
     }
 
     public static function TDMObservationBufferHasIdentifier(ByteBuffer $buf)

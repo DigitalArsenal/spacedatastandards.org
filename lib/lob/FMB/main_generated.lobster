@@ -243,7 +243,7 @@ class FMBSealed : flatbuffers.handle
         return flatbuffers.field_uint32(buf_, pos_, 4, 0)
     /// The plaintext's epoch (Unix seconds); INT64_MIN when none.
     def EPOCH() -> int:
-        return flatbuffers.field_int64(buf_, pos_, 6, -9223372036854775808)
+        return flatbuffers.field_int64(buf_, pos_, 6, (-9223372036854775807 - 1))
     /// OBJECT_KEY dictionary id; 0 none.
     def OBJECT_KEY_ID() -> int:
         return flatbuffers.field_uint32(buf_, pos_, 8, 0)
@@ -269,7 +269,7 @@ struct FMBSealedBuilder:
         b_.PrependUint32Slot(0, ROW, 0)
         return this
     def add_EPOCH(EPOCH:int):
-        b_.PrependInt64Slot(1, EPOCH, -9223372036854775808)
+        b_.PrependInt64Slot(1, EPOCH, (-9223372036854775807 - 1))
         return this
     def add_OBJECT_KEY_ID(OBJECT_KEY_ID:int):
         b_.PrependUint32Slot(2, OBJECT_KEY_ID, 0)

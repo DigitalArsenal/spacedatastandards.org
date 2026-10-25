@@ -21,7 +21,7 @@ class CZMPolylineGlowMaterial extends Table
 
     public static function CZMPolylineGlowMaterialIdentifier()
     {
-        return "$CZM";
+        return '$CZM';
     }
 
     public static function CZMPolylineGlowMaterialBufferHasIdentifier(ByteBuffer $buf)

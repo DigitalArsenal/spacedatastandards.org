@@ -227,7 +227,7 @@ class MDP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MDPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MDP")
+        fun MDPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MDP")
         fun createMDP(builder: FlatBufferBuilder, problemIdOffset: Int, nameOffset: Int, encounterStagesOffset: Int, flightTimeBoundsOffset: Int, maxTotalFlightTimeDays: Double, maxLaunchC3Km2S2: Double, maxTotalDeltaVKmS: Double, dsmMode: UByte, maxDsmDeltaVKmS: Double, dsmGridStepKmS: Double, maxRevolutions: UByte, transferDirection: UByte, outputTimeBinDays: Double, maxThrustN: Double, specificImpulseS: Double, dryMassKg: Double, initialMassKg: Double, ephemerisSourceOffset: Int, commentOffset: Int) : Int {
             builder.startTable(19)
             addINITIALMASSKG(builder, initialMassKg)
@@ -292,7 +292,7 @@ class MDP : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishMDPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MDP")
-        fun finishSizePrefixedMDPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MDP")
+        fun finishMDPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MDP")
+        fun finishSizePrefixedMDPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MDP")
     }
 }

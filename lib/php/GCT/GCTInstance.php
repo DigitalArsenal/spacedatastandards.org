@@ -25,7 +25,7 @@ class GCTInstance extends Table
 
     public static function GCTInstanceIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTInstanceBufferHasIdentifier(ByteBuffer $buf)

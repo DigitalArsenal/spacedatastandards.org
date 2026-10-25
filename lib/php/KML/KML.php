@@ -21,7 +21,7 @@ class KML extends Table
 
     public static function KMLIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLBufferHasIdentifier(ByteBuffer $buf)
@@ -720,6 +720,6 @@ class KML extends Table
 
     public static function finishKMLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$KML");
+        $builder->finish($offset, '$KML');
     }
 }

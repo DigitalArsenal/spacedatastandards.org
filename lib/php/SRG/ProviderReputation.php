@@ -21,7 +21,7 @@ class ProviderReputation extends Table
 
     public static function ProviderReputationIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function ProviderReputationBufferHasIdentifier(ByteBuffer $buf)

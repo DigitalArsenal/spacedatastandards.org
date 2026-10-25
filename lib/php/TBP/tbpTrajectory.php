@@ -22,7 +22,7 @@ class tbpTrajectory extends Table
 
     public static function tbpTrajectoryIdentifier()
     {
-        return "$TBP";
+        return '$TBP';
     }
 
     public static function tbpTrajectoryBufferHasIdentifier(ByteBuffer $buf)

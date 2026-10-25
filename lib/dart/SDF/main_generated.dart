@@ -155,18 +155,15 @@ class sdfResultObjectBuilder extends fb.ObjectBuilder {
   final double _CLOSEST_DISTANCE;
 
   sdfResultObjectBuilder({
-    int ENTITY_ID,
-    int? entityId,
+    required int ENTITY_ID,
     required int DETECTED,
-    double SIGNED_DISTANCE,
-    double? signedDistance,
-    double CLOSEST_DISTANCE,
-    double? closestDistance,
+    required double SIGNED_DISTANCE,
+    required double CLOSEST_DISTANCE,
   })
-      : _ENTITY_ID = entityId ?? ENTITY_ID,
+      : _ENTITY_ID = ENTITY_ID,
         _DETECTED = DETECTED,
-        _SIGNED_DISTANCE = signedDistance ?? SIGNED_DISTANCE,
-        _CLOSEST_DISTANCE = closestDistance ?? CLOSEST_DISTANCE;
+        _SIGNED_DISTANCE = SIGNED_DISTANCE,
+        _CLOSEST_DISTANCE = CLOSEST_DISTANCE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -256,24 +253,19 @@ class sdfTimeRangeResultObjectBuilder extends fb.ObjectBuilder {
   final double _DWELL_TIME;
 
   sdfTimeRangeResultObjectBuilder({
-    int ENTITY_ID,
-    int? entityId,
+    required int ENTITY_ID,
     required int FLAGS,
-    double ENTRY_TIME,
-    double? entryTime,
-    double EXIT_TIME,
-    double? exitTime,
-    double MIN_DISTANCE,
-    double? minDistance,
-    double DWELL_TIME,
-    double? dwellTime,
+    required double ENTRY_TIME,
+    required double EXIT_TIME,
+    required double MIN_DISTANCE,
+    required double DWELL_TIME,
   })
-      : _ENTITY_ID = entityId ?? ENTITY_ID,
+      : _ENTITY_ID = ENTITY_ID,
         _FLAGS = FLAGS,
-        _ENTRY_TIME = entryTime ?? ENTRY_TIME,
-        _EXIT_TIME = exitTime ?? EXIT_TIME,
-        _MIN_DISTANCE = minDistance ?? MIN_DISTANCE,
-        _DWELL_TIME = dwellTime ?? DWELL_TIME;
+        _ENTRY_TIME = ENTRY_TIME,
+        _EXIT_TIME = EXIT_TIME,
+        _MIN_DISTANCE = MIN_DISTANCE,
+        _DWELL_TIME = DWELL_TIME;
 
   /// Finish building, and store into the [fbBuilder].
   @override

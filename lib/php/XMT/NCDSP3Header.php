@@ -21,7 +21,7 @@ class NCDSP3Header extends Table
 
     public static function NCDSP3HeaderIdentifier()
     {
-        return "$NCD";
+        return '$NCD';
     }
 
     public static function NCDSP3HeaderBufferHasIdentifier(ByteBuffer $buf)

@@ -206,7 +206,7 @@ class DFH : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DFHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DFH")
+        fun DFHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DFH")
         fun createDFH(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, objectDesignatorOffset: Int, objectNameOffset: Int, startTimeOffset: Int, endTimeOffset: Int, effectiveUntilOffset: Int, driftRate: Double, meanLongitude: Double, slotCenter: Double, slotHalfWidth: Double, stationKeeping: Boolean, recordsOffset: Int, numRecords: UInt, notesOffset: Int) : Int {
             builder.startTable(15)
             addSLOTHALFWIDTH(builder, slotHalfWidth)
@@ -254,7 +254,7 @@ class DFH : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishDFHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DFH")
-        fun finishSizePrefixedDFHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DFH")
+        fun finishDFHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DFH")
+        fun finishSizePrefixedDFHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DFH")
     }
 }

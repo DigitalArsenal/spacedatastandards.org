@@ -21,7 +21,7 @@ class ACMDetermination extends Table
 
     public static function ACMDeterminationIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function ACMDeterminationBufferHasIdentifier(ByteBuffer $buf)

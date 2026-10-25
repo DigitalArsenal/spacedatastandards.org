@@ -21,7 +21,7 @@ class TKG extends Table
 
     public static function TKGIdentifier()
     {
-        return "$TKG";
+        return '$TKG';
     }
 
     public static function TKGBufferHasIdentifier(ByteBuffer $buf)
@@ -280,6 +280,6 @@ class TKG extends Table
 
     public static function finishTKGBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TKG");
+        $builder->finish($offset, '$TKG');
     }
 }

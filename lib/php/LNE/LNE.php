@@ -21,7 +21,7 @@ class LNE extends Table
 
     public static function LNEIdentifier()
     {
-        return "$LNE";
+        return '$LNE';
     }
 
     public static function LNEBufferHasIdentifier(ByteBuffer $buf)
@@ -478,6 +478,6 @@ class LNE extends Table
 
     public static function finishLNEBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LNE");
+        $builder->finish($offset, '$LNE');
     }
 }

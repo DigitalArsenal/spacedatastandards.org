@@ -21,7 +21,7 @@ class dclRefusal extends Table
 
     public static function dclRefusalIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclRefusalBufferHasIdentifier(ByteBuffer $buf)

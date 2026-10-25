@@ -21,7 +21,7 @@ class ERMCovarianceMap extends Table
 
     public static function ERMCovarianceMapIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCovarianceMapBufferHasIdentifier(ByteBuffer $buf)

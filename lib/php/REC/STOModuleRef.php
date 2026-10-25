@@ -21,7 +21,7 @@ class STOModuleRef extends Table
 
     public static function STOModuleRefIdentifier()
     {
-        return "$STO";
+        return '$STO';
     }
 
     public static function STOModuleRefBufferHasIdentifier(ByteBuffer $buf)

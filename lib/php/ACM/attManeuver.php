@@ -21,7 +21,7 @@ class attManeuver extends Table
 
     public static function attManeuverIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function attManeuverBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class PGMMetadataEntry extends Table
 
     public static function PGMMetadataEntryIdentifier()
     {
-        return "$PGM";
+        return '$PGM';
     }
 
     public static function PGMMetadataEntryBufferHasIdentifier(ByteBuffer $buf)

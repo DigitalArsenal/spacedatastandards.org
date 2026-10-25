@@ -21,7 +21,7 @@ class KMLWait extends Table
 
     public static function KMLWaitIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLWaitBufferHasIdentifier(ByteBuffer $buf)

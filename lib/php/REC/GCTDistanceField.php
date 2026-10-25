@@ -25,7 +25,7 @@ class GCTDistanceField extends Table
 
     public static function GCTDistanceFieldIdentifier()
     {
-        return "$GCT";
+        return '$GCT';
     }
 
     public static function GCTDistanceFieldBufferHasIdentifier(ByteBuffer $buf)

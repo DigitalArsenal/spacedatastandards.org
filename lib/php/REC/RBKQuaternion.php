@@ -21,7 +21,7 @@ class RBKQuaternion extends Table
 
     public static function RBKQuaternionIdentifier()
     {
-        return "$RBK";
+        return '$RBK';
     }
 
     public static function RBKQuaternionBufferHasIdentifier(ByteBuffer $buf)

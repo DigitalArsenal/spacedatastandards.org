@@ -21,7 +21,7 @@ class EGP extends Table
 
     public static function EGPIdentifier()
     {
-        return "$EGP";
+        return '$EGP';
     }
 
     public static function EGPBufferHasIdentifier(ByteBuffer $buf)
@@ -395,6 +395,6 @@ class EGP extends Table
 
     public static function finishEGPBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EGP");
+        $builder->finish($offset, '$EGP');
     }
 }

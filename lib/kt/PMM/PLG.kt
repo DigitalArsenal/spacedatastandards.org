@@ -855,7 +855,7 @@ class PLG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PLG")
+        fun PLGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PLG")
         fun createPLG(builder: FlatBufferBuilder, pluginIdOffset: Int, nameOffset: Int, versionOffset: Int, descriptionOffset: Int, taglineOffset: Int, pluginType: Byte, publisherNameOffset: Int, publisherHandleOffset: Int, publisherUrlOffset: Int, supportUrlOffset: Int, tagsOffset: Int, featuresOffset: Int, screenshotUrlsOffset: Int, bannerUrlOffset: Int, abiVersion: UInt, wasmHashOffset: Int, wasmSize: ULong, wasmCidOffset: Int, encryptedWasmHashOffset: Int, encryptedWasmSize: ULong, entryFunctionsOffset: Int, requiredSchemasOffset: Int, dependenciesOffset: Int, capabilitiesOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, encrypted: Boolean, requiredScopeOffset: Int, keyIdOffset: Int, maxGrantTimeoutMs: ULong, minPermissionsOffset: Int, createdAt: ULong, updatedAt: ULong, documentationUrlOffset: Int, changelogUrlOffset: Int, iconUrlOffset: Int, licenseOffset: Int, paymentModel: Byte, priceUsdCents: UInt, subscriptionPeriodDays: UInt, acceptedPaymentMethodsOffset: Int, listingStatus: Byte, signatureOffset: Int, invokeSurfacesOffset: Int, methodsOffset: Int, hostCapabilitiesOffset: Int, timersOffset: Int, protocolsOffset: Int, schemasUsedOffset: Int, buildArtifactsOffset: Int, runtimeTargetsOffset: Int, allowedXpubsOffset: Int, flowNodesOffset: Int, flowEdgesOffset: Int, flowTriggersOffset: Int, flowTriggerBindingsOffset: Int, primaryCategory: UByte, categoriesOffset: Int) : Int {
             builder.startTable(58)
             addUPDATEDAT(builder, updatedAt)
@@ -1197,7 +1197,7 @@ class PLG : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishPLGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PLG")
-        fun finishSizePrefixedPLGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PLG")
+        fun finishPLGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PLG")
+        fun finishSizePrefixedPLGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PLG")
     }
 }

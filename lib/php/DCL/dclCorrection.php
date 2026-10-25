@@ -21,7 +21,7 @@ class dclCorrection extends Table
 
     public static function dclCorrectionIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclCorrectionBufferHasIdentifier(ByteBuffer $buf)

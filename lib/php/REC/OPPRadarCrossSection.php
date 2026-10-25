@@ -25,7 +25,7 @@ class OPPRadarCrossSection extends Table
 
     public static function OPPRadarCrossSectionIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPRadarCrossSectionBufferHasIdentifier(ByteBuffer $buf)

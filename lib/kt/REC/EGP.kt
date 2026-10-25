@@ -190,7 +190,7 @@ class EGP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EGPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EGP")
+        fun EGPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EGP")
         fun createEGP(builder: FlatBufferBuilder, groupIdOffset: Int, nameOffset: Int, descriptionOffset: Int, tagsOffset: Int, membershipMode: Byte, membersOffset: Int, queryOffset: Int, createdAtOffset: Int, updatedAtOffset: Int, provenanceOffset: Int, datasetCidOffset: Int) : Int {
             builder.startTable(11)
             addDATASETCID(builder, datasetCidOffset)
@@ -249,7 +249,7 @@ class EGP : Table() {
                 builder.required(o, 20)
             return o
         }
-        fun finishEGPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EGP")
-        fun finishSizePrefixedEGPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EGP")
+        fun finishEGPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EGP")
+        fun finishSizePrefixedEGPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EGP")
     }
 }

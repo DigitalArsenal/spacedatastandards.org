@@ -21,7 +21,7 @@ class ERMCoverageTally extends Table
 
     public static function ERMCoverageTallyIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMCoverageTallyBufferHasIdentifier(ByteBuffer $buf)

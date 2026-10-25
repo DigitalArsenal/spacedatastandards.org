@@ -21,7 +21,7 @@ class attitudeState extends Table
 
     public static function attitudeStateIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function attitudeStateBufferHasIdentifier(ByteBuffer $buf)

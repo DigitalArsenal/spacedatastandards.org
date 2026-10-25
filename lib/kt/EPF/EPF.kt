@@ -323,7 +323,7 @@ class EPF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun EPFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$EPF")
+        fun EPFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$EPF")
         fun createEPF(builder: FlatBufferBuilder, epfIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, rflIdOffset: Int, aciIdOffset: Int, victimEndpointIdOffset: Int, limitKind: Byte, limitModelNameOffset: Int, valueUnitsOffset: Int, sampleCount: UInt, sampleEpochsOffset: Int, sampleValuesOffset: Int, sampleLimitValuesOffset: Int, sampleMarginDbOffset: Int, sampleExceedsLimitOffset: Int, contributorsOffset: Int, cdfValuesOffset: Int, cdfPercentTimeExceededOffset: Int, verdictOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int) : Int {
             builder.startTable(24)
             addCOMPUTEDAT(builder, computedAt)
@@ -477,7 +477,7 @@ class EPF : Table() {
                 builder.required(o, 50)
             return o
         }
-        fun finishEPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$EPF")
-        fun finishSizePrefixedEPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$EPF")
+        fun finishEPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$EPF")
+        fun finishSizePrefixedEPFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$EPF")
     }
 }

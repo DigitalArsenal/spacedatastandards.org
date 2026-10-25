@@ -21,7 +21,7 @@ class ERMMapResult extends Table
 
     public static function ERMMapResultIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMMapResultBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class IntegerDataEncoding extends Table
 
     public static function IntegerDataEncodingIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function IntegerDataEncodingBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class RDM extends Table
 
     public static function RDMIdentifier()
     {
-        return "$RDM";
+        return '$RDM';
     }
 
     public static function RDMBufferHasIdentifier(ByteBuffer $buf)
@@ -2338,6 +2338,6 @@ class RDM extends Table
 
     public static function finishRDMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$RDM");
+        $builder->finish($offset, '$RDM');
     }
 }

@@ -20,7 +20,7 @@ class OrbitFrameWrapper extends Table
 
     public static function OrbitFrameWrapperIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function OrbitFrameWrapperBufferHasIdentifier(ByteBuffer $buf)

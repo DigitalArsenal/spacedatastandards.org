@@ -214,7 +214,7 @@ class FSP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun FSPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$FSP")
+        fun FSPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$FSP")
         fun createFSP(builder: FlatBufferBuilder, policyIdOffset: Int, policyVersion: UInt, providerPeerIdOffset: Int, listingIdOffset: Int, streamIdOffset: Int, schemaCodeOffset: Int, schemaHashOffset: Int, audiencesOffset: Int, rulesOffset: Int, allowedOperationsOffset: Int, keyScopeOffset: Int, keyEpochOffset: Int, validFrom: ULong, expiresAt: ULong, revocationStatus: Byte, revokedAt: ULong, revocationReasonOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(18)
             addREVOKEDAT(builder, revokedAt)
@@ -307,7 +307,7 @@ class FSP : Table() {
                 builder.required(o, 14)
             return o
         }
-        fun finishFSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$FSP")
-        fun finishSizePrefixedFSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$FSP")
+        fun finishFSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$FSP")
+        fun finishSizePrefixedFSPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$FSP")
     }
 }

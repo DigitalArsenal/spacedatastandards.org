@@ -21,7 +21,7 @@ class MDECompareOptions extends Table
 
     public static function MDECompareOptionsIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDECompareOptionsBufferHasIdentifier(ByteBuffer $buf)

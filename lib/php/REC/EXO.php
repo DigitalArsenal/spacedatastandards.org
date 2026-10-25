@@ -20,7 +20,7 @@ class EXO extends Table
 
     public static function EXOIdentifier()
     {
-        return "$EXO";
+        return '$EXO';
     }
 
     public static function EXOBufferHasIdentifier(ByteBuffer $buf)
@@ -664,6 +664,6 @@ class EXO extends Table
 
     public static function finishEXOBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EXO");
+        $builder->finish($offset, '$EXO');
     }
 }

@@ -23,7 +23,7 @@ class RFMLocalAlignedConstrainedAxes extends Table
 
     public static function RFMLocalAlignedConstrainedAxesIdentifier()
     {
-        return "$RFM";
+        return '$RFM';
     }
 
     public static function RFMLocalAlignedConstrainedAxesBufferHasIdentifier(ByteBuffer $buf)

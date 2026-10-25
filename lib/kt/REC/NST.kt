@@ -85,7 +85,7 @@ class NST : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun NSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$NST")
+        fun NSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$NST")
         fun createNST(builder: FlatBufferBuilder, nodesOffset: Int, generatedAt: Long, sourcePeerIdOffset: Int, etagOffset: Int) : Int {
             builder.startTable(4)
             addGENERATEDAT(builder, generatedAt)
@@ -111,7 +111,7 @@ class NST : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishNSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$NST")
-        fun finishSizePrefixedNSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$NST")
+        fun finishNSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$NST")
+        fun finishSizePrefixedNSTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$NST")
     }
 }

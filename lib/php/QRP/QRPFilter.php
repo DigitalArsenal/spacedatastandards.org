@@ -21,7 +21,7 @@ class QRPFilter extends Table
 
     public static function QRPFilterIdentifier()
     {
-        return "$QRP";
+        return '$QRP';
     }
 
     public static function QRPFilterBufferHasIdentifier(ByteBuffer $buf)

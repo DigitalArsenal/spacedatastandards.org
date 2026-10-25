@@ -21,7 +21,7 @@ class EnumeratedArgumentType extends Table
 
     public static function EnumeratedArgumentTypeIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function EnumeratedArgumentTypeBufferHasIdentifier(ByteBuffer $buf)

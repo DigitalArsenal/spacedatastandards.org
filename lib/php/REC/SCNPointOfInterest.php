@@ -21,7 +21,7 @@ class SCNPointOfInterest extends Table
 
     public static function SCNPointOfInterestIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNPointOfInterestBufferHasIdentifier(ByteBuffer $buf)

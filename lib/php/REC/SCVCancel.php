@@ -20,7 +20,7 @@ class SCVCancel extends Table
 
     public static function SCVCancelIdentifier()
     {
-        return "$SCV";
+        return '$SCV';
     }
 
     public static function SCVCancelBufferHasIdentifier(ByteBuffer $buf)

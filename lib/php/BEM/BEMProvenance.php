@@ -21,7 +21,7 @@ class BEMProvenance extends Table
 
     public static function BEMProvenanceIdentifier()
     {
-        return "$BEM";
+        return '$BEM';
     }
 
     public static function BEMProvenanceBufferHasIdentifier(ByteBuffer $buf)

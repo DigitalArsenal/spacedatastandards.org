@@ -66,8 +66,8 @@ public struct RFM : IFlatbufferObject
   }
   public void UnPackTo(RFMT _o) {
     _o.REFERENCE_FRAME = new RFMUnionUnion();
-    _o.REFERENCE_FRAME.Type = this.REFERENCE_FRAMEType;
-    switch (this.REFERENCE_FRAMEType) {
+    _o.REFERENCE_FRAME.Type = this.REFERENCE_FRAME_type;
+    switch (this.REFERENCE_FRAME_type) {
       default: break;
       case RFMUnion.CelestialFrameWrapper:
         _o.REFERENCE_FRAME.Value = this.REFERENCE_FRAME<CelestialFrameWrapper>().HasValue ? this.REFERENCE_FRAME<CelestialFrameWrapper>().Value.UnPack() : null;

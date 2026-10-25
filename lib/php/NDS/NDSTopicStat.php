@@ -21,7 +21,7 @@ class NDSTopicStat extends Table
 
     public static function NDSTopicStatIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSTopicStatBufferHasIdentifier(ByteBuffer $buf)

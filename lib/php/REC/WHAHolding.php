@@ -21,7 +21,7 @@ class WHAHolding extends Table
 
     public static function WHAHoldingIdentifier()
     {
-        return "$WHA";
+        return '$WHA';
     }
 
     public static function WHAHoldingBufferHasIdentifier(ByteBuffer $buf)

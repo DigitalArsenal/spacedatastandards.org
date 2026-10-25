@@ -85,7 +85,7 @@ class PNV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PNVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PNV")
+        fun PNVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PNV")
         fun createPNV(builder: FlatBufferBuilder, verifierPeerIdOffset: Int, generatedAtMs: Long, entriesOffset: Int, etagOffset: Int) : Int {
             builder.startTable(4)
             addGENERATEDATMS(builder, generatedAtMs)
@@ -111,7 +111,7 @@ class PNV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishPNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PNV")
-        fun finishSizePrefixedPNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PNV")
+        fun finishPNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PNV")
+        fun finishSizePrefixedPNVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PNV")
     }
 }

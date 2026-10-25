@@ -124,7 +124,7 @@ class TRH : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TRHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRH")
+        fun TRHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TRH")
         fun createTRH(builder: FlatBufferBuilder, antennasOffset: Int, transmittersOffset: Int, receiversOffset: Int, transpondersOffset: Int, installationsOffset: Int, traceIdOffset: Int, attestationOffset: Int) : Int {
             builder.startTable(7)
             addATTESTATION(builder, attestationOffset)
@@ -188,7 +188,7 @@ class TRH : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTRHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TRH")
-        fun finishSizePrefixedTRHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TRH")
+        fun finishTRHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TRH")
+        fun finishSizePrefixedTRHBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TRH")
     }
 }

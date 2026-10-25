@@ -148,7 +148,7 @@ class CTR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun CTRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CTR")
+        fun CTRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$CTR")
         fun createCTR(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, gencCodeOffset: Int, alpha2CodeOffset: Int, alpha3CodeOffset: Int, stanagCodeOffset: Int, internetCctldOffset: Int, commentOffset: Int) : Int {
             builder.startTable(8)
             addCOMMENT(builder, commentOffset)
@@ -174,7 +174,7 @@ class CTR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishCTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$CTR")
-        fun finishSizePrefixedCTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$CTR")
+        fun finishCTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$CTR")
+        fun finishSizePrefixedCTRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$CTR")
     }
 }

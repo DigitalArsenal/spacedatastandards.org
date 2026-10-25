@@ -21,7 +21,7 @@ class NDSModuleStat extends Table
 
     public static function NDSModuleStatIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSModuleStatBufferHasIdentifier(ByteBuffer $buf)

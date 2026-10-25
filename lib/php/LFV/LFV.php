@@ -22,7 +22,7 @@ class LFV extends Table
 
     public static function LFVIdentifier()
     {
-        return "$LFV";
+        return '$LFV';
     }
 
     public static function LFVBufferHasIdentifier(ByteBuffer $buf)
@@ -422,6 +422,6 @@ class LFV extends Table
 
     public static function finishLFVBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LFV");
+        $builder->finish($offset, '$LFV');
     }
 }

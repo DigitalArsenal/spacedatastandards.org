@@ -21,7 +21,7 @@ class SIT extends Table
 
     public static function SITIdentifier()
     {
-        return "$SIT";
+        return '$SIT';
     }
 
     public static function SITBufferHasIdentifier(ByteBuffer $buf)
@@ -1051,6 +1051,6 @@ class SIT extends Table
 
     public static function finishSITBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SIT");
+        $builder->finish($offset, '$SIT');
     }
 }

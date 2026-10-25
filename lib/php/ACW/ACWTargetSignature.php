@@ -21,7 +21,7 @@ class ACWTargetSignature extends Table
 
     public static function ACWTargetSignatureIdentifier()
     {
-        return "$ACW";
+        return '$ACW';
     }
 
     public static function ACWTargetSignatureBufferHasIdentifier(ByteBuffer $buf)

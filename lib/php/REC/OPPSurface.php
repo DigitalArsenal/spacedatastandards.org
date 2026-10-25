@@ -28,7 +28,7 @@ class OPPSurface extends Table
 
     public static function OPPSurfaceIdentifier()
     {
-        return "$OPP";
+        return '$OPP';
     }
 
     public static function OPPSurfaceBufferHasIdentifier(ByteBuffer $buf)

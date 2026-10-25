@@ -20,7 +20,7 @@ class CQRIndexResult extends Table
 
     public static function CQRIndexResultIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRIndexResultBufferHasIdentifier(ByteBuffer $buf)

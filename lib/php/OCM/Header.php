@@ -20,7 +20,7 @@ class Header extends Table
 
     public static function HeaderIdentifier()
     {
-        return "$OCM";
+        return '$OCM';
     }
 
     public static function HeaderBufferHasIdentifier(ByteBuffer $buf)

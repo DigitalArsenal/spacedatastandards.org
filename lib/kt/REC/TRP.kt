@@ -172,7 +172,7 @@ class TRP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TRPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRP")
+        fun TRPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TRP")
         fun createTRP(builder: FlatBufferBuilder, policyIdOffset: Int, nameOffset: Int, descriptionOffset: Int, rootOffset: Int, evaluationIntervalMs: UInt, eventSourcesOffset: Int, active: Boolean, createdAt: ULong, updatedAt: ULong, evaluatorPeerIdOffset: Int, evaluatorSignatureOffset: Int) : Int {
             builder.startTable(11)
             addUPDATEDAT(builder, updatedAt)
@@ -222,7 +222,7 @@ class TRP : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishTRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TRP")
-        fun finishSizePrefixedTRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TRP")
+        fun finishTRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TRP")
+        fun finishSizePrefixedTRPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TRP")
     }
 }

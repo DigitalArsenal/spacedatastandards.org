@@ -21,7 +21,7 @@ class dclSettings extends Table
 
     public static function dclSettingsIdentifier()
     {
-        return "$DCL";
+        return '$DCL';
     }
 
     public static function dclSettingsBufferHasIdentifier(ByteBuffer $buf)

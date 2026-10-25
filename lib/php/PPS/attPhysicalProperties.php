@@ -21,7 +21,7 @@ class attPhysicalProperties extends Table
 
     public static function attPhysicalPropertiesIdentifier()
     {
-        return "$ACM";
+        return '$ACM';
     }
 
     public static function attPhysicalPropertiesBufferHasIdentifier(ByteBuffer $buf)

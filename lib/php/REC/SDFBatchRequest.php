@@ -21,7 +21,7 @@ class SDFBatchRequest extends Table
 
     public static function SDFBatchRequestIdentifier()
     {
-        return "$SDF";
+        return '$SDF';
     }
 
     public static function SDFBatchRequestBufferHasIdentifier(ByteBuffer $buf)

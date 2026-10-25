@@ -223,7 +223,7 @@ class MSL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MSLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MSL")
+        fun MSLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MSL")
         fun createMSL(builder: FlatBufferBuilder, positionX: Double, positionY: Double, positionZ: Double, velocityX: Double, velocityY: Double, velocityZ: Double, attitudeX: Double, attitudeY: Double, attitudeZ: Double, attitudeW: Double, omegaX: Double, omegaY: Double, omegaZ: Double, mass: Double, massInitial: Double, targetPositionX: Double, targetPositionY: Double, targetPositionZ: Double, targetVelocityX: Double, targetVelocityY: Double, targetVelocityZ: Double, missDistance: Double, seekerOffset: Int, motorOffset: Int, guidanceCmdOffset: Int, phase: UByte, guidanceLaw: UByte, type: UByte, armed: UByte, timeOfFlight: Float, maxG: Float, reservedOffset: Int) : Int {
             builder.startTable(32)
             addMISSDISTANCE(builder, missDistance)
@@ -306,7 +306,7 @@ class MSL : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMSLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MSL")
-        fun finishSizePrefixedMSLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MSL")
+        fun finishMSLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MSL")
+        fun finishSizePrefixedMSLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MSL")
     }
 }

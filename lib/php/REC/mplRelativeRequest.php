@@ -23,7 +23,7 @@ class mplRelativeRequest extends Table
 
     public static function mplRelativeRequestIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplRelativeRequestBufferHasIdentifier(ByteBuffer $buf)

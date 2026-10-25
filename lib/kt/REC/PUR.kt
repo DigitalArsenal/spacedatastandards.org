@@ -427,7 +427,7 @@ class PUR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PURBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PUR")
+        fun PURBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PUR")
         fun createPUR(builder: FlatBufferBuilder, requestIdOffset: Int, listingIdOffset: Int, tierNameOffset: Int, buyerPeerIdOffset: Int, buyerEncryptionPubkeyOffset: Int, paymentMethod: Byte, paymentAmount: ULong, paymentCurrencyOffset: Int, paymentTxHashOffset: Int, paymentChainOffset: Int, paymentReferenceOffset: Int, buyerSignatureOffset: Int, timestamp: ULong, keyAlgorithmOffset: Int, buyerEmailOffset: Int, senderAddressOffset: Int, confirmationBlock: ULong, paymentIntentIdOffset: Int, creditsTransactionIdOffset: Int, status: Byte, statusMessageOffset: Int, createdAt: ULong, updatedAt: ULong, paymentDeadline: ULong, paymentConfirmedAt: ULong, grantIssuedAt: ULong, grantIdOffset: Int, providerPeerIdOffset: Int, providerAcknowledgedAt: ULong, preferredDeliveryMethodOffset: Int, webhookUrlOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(32)
             addPROVIDERACKNOWLEDGEDAT(builder, providerAcknowledgedAt)
@@ -532,7 +532,7 @@ class PUR : Table() {
                 builder.required(o, 10)
             return o
         }
-        fun finishPURBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PUR")
-        fun finishSizePrefixedPURBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PUR")
+        fun finishPURBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PUR")
+        fun finishSizePrefixedPURBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PUR")
     }
 }

@@ -21,7 +21,7 @@ class StringDataEncoding extends Table
 
     public static function StringDataEncodingIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function StringDataEncodingBufferHasIdentifier(ByteBuffer $buf)

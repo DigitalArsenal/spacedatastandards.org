@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../WXF/main_generated.dart';
 
 ///  Quadtree the tile keys are stated in. ORDINALS ARE WIRE VALUES; new
 ///  schemes are APPENDED ONLY.

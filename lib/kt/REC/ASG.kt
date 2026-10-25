@@ -72,7 +72,7 @@ class ASG : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ASGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ASG")
+        fun ASGBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ASG")
         fun createASG(builder: FlatBufferBuilder, problemOffset: Int, solutionOffset: Int, associationOptionsOffset: Int, associationReportOffset: Int) : Int {
             builder.startTable(4)
             addASSOCIATIONREPORT(builder, associationReportOffset)
@@ -90,7 +90,7 @@ class ASG : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishASGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ASG")
-        fun finishSizePrefixedASGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ASG")
+        fun finishASGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ASG")
+        fun finishSizePrefixedASGBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ASG")
     }
 }

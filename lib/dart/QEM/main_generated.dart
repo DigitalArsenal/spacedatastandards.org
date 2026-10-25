@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CES/main_generated.dart';
 
 ///  One pruned-vocabulary token's static embedding row.
 class QEMTokenVector {

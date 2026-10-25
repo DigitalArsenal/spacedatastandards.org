@@ -21,7 +21,7 @@ class ENGINE extends Table
 
     public static function ENGINEIdentifier()
     {
-        return "$ROC";
+        return '$ROC';
     }
 
     public static function ENGINEBufferHasIdentifier(ByteBuffer $buf)

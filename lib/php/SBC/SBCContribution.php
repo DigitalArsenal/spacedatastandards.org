@@ -21,7 +21,7 @@ class SBCContribution extends Table
 
     public static function SBCContributionIdentifier()
     {
-        return "$SBC";
+        return '$SBC';
     }
 
     public static function SBCContributionBufferHasIdentifier(ByteBuffer $buf)

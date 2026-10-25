@@ -21,7 +21,7 @@ class ppsSolarArray extends Table
 
     public static function ppsSolarArrayIdentifier()
     {
-        return "$PPS";
+        return '$PPS';
     }
 
     public static function ppsSolarArrayBufferHasIdentifier(ByteBuffer $buf)

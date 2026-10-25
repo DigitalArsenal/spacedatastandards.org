@@ -21,7 +21,7 @@ class SCNEvent extends Table
 
     public static function SCNEventIdentifier()
     {
-        return "$SCN";
+        return '$SCN';
     }
 
     public static function SCNEventBufferHasIdentifier(ByteBuffer $buf)

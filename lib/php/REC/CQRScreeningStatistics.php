@@ -20,7 +20,7 @@ class CQRScreeningStatistics extends Table
 
     public static function CQRScreeningStatisticsIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRScreeningStatisticsBufferHasIdentifier(ByteBuffer $buf)

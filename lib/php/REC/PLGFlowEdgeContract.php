@@ -23,7 +23,7 @@ class PLGFlowEdgeContract extends Table
 
     public static function PLGFlowEdgeContractIdentifier()
     {
-        return "$PLG";
+        return '$PLG';
     }
 
     public static function PLGFlowEdgeContractBufferHasIdentifier(ByteBuffer $buf)

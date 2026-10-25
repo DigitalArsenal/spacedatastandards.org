@@ -20,7 +20,7 @@ class PRWExecutionResult extends Table
 
     public static function PRWExecutionResultIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWExecutionResultBufferHasIdentifier(ByteBuffer $buf)

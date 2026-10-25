@@ -23,7 +23,7 @@ class mplOrbit extends Table
 
     public static function mplOrbitIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplOrbitBufferHasIdentifier(ByteBuffer $buf)

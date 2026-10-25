@@ -21,7 +21,7 @@ class BinaryDataEncoding extends Table
 
     public static function BinaryDataEncodingIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function BinaryDataEncodingBufferHasIdentifier(ByteBuffer $buf)

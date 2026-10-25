@@ -21,7 +21,7 @@ class KMLLineStyle extends Table
 
     public static function KMLLineStyleIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLLineStyleBufferHasIdentifier(ByteBuffer $buf)

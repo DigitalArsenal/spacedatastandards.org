@@ -24,7 +24,7 @@ class PRWStateMatrix extends Table
 
     public static function PRWStateMatrixIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWStateMatrixBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class reentryImpact extends Table
 
     public static function reentryImpactIdentifier()
     {
-        return "$RDM";
+        return '$RDM';
     }
 
     public static function reentryImpactBufferHasIdentifier(ByteBuffer $buf)

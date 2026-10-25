@@ -21,7 +21,7 @@ class PCEParameterSample extends Table
 
     public static function PCEParameterSampleIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEParameterSampleBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class TRS extends Table
 
     public static function TRSIdentifier()
     {
-        return "$TRS";
+        return '$TRS';
     }
 
     public static function TRSBufferHasIdentifier(ByteBuffer $buf)
@@ -109,6 +109,6 @@ class TRS extends Table
 
     public static function finishTRSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TRS");
+        $builder->finish($offset, '$TRS');
     }
 }

@@ -21,7 +21,7 @@ class TIM extends Table
 
     public static function TIMIdentifier()
     {
-        return "$TIM";
+        return '$TIM';
     }
 
     public static function TIMBufferHasIdentifier(ByteBuffer $buf)
@@ -151,6 +151,6 @@ class TIM extends Table
 
     public static function finishTIMBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$TIM");
+        $builder->finish($offset, '$TIM');
     }
 }

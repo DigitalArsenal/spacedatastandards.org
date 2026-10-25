@@ -21,7 +21,7 @@ class NDSIngestEvent extends Table
 
     public static function NDSIngestEventIdentifier()
     {
-        return "$NDS";
+        return '$NDS';
     }
 
     public static function NDSIngestEventBufferHasIdentifier(ByteBuffer $buf)

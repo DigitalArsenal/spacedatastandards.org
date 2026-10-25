@@ -21,7 +21,7 @@ class PRWWindowRefusal extends Table
 
     public static function PRWWindowRefusalIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWWindowRefusalBufferHasIdentifier(ByteBuffer $buf)

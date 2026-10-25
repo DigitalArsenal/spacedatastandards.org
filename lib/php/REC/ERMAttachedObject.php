@@ -21,7 +21,7 @@ class ERMAttachedObject extends Table
 
     public static function ERMAttachedObjectIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMAttachedObjectBufferHasIdentifier(ByteBuffer $buf)

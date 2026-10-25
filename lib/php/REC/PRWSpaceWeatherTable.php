@@ -24,7 +24,7 @@ class PRWSpaceWeatherTable extends Table
 
     public static function PRWSpaceWeatherTableIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWSpaceWeatherTableBufferHasIdentifier(ByteBuffer $buf)

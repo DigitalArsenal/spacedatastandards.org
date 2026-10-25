@@ -22,7 +22,7 @@ class CLMCountersignature extends Table
 
     public static function CLMCountersignatureIdentifier()
     {
-        return "$CLM";
+        return '$CLM';
     }
 
     public static function CLMCountersignatureBufferHasIdentifier(ByteBuffer $buf)

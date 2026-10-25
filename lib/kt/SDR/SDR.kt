@@ -81,7 +81,7 @@ class SDR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SDRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SDR")
+        fun SDRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SDR")
         fun createSDR(builder: FlatBufferBuilder, configOffset: Int, batchRequestOffset: Int, batchResponseOffset: Int, singleInputOffset: Int, singleResultOffset: Int) : Int {
             builder.startTable(5)
             addSINGLERESULT(builder, singleResultOffset)
@@ -101,7 +101,7 @@ class SDR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSDRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SDR")
-        fun finishSizePrefixedSDRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SDR")
+        fun finishSDRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SDR")
+        fun finishSizePrefixedSDRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SDR")
     }
 }

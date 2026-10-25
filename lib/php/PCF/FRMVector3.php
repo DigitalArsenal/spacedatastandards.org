@@ -20,7 +20,7 @@ class FRMVector3 extends Table
 
     public static function FRMVector3Identifier()
     {
-        return "$FRM";
+        return '$FRM';
     }
 
     public static function FRMVector3BufferHasIdentifier(ByteBuffer $buf)

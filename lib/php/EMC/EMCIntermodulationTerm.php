@@ -22,7 +22,7 @@ class EMCIntermodulationTerm extends Table
 
     public static function EMCIntermodulationTermIdentifier()
     {
-        return "$EMC";
+        return '$EMC';
     }
 
     public static function EMCIntermodulationTermBufferHasIdentifier(ByteBuffer $buf)

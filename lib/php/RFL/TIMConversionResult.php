@@ -21,7 +21,7 @@ class TIMConversionResult extends Table
 
     public static function TIMConversionResultIdentifier()
     {
-        return "$TIM";
+        return '$TIM';
     }
 
     public static function TIMConversionResultBufferHasIdentifier(ByteBuffer $buf)

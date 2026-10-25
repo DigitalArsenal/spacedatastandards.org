@@ -21,7 +21,7 @@ class XMTComposedObject extends Table
 
     public static function XMTComposedObjectIdentifier()
     {
-        return "$XMT";
+        return '$XMT';
     }
 
     public static function XMTComposedObjectBufferHasIdentifier(ByteBuffer $buf)

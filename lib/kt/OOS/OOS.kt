@@ -200,7 +200,7 @@ class OOS : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun OOSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOS")
+        fun OOSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$OOS")
         fun createOOS(builder: FlatBufferBuilder, idOffset: Int, idOnOrbitOffset: Int, idSolarArrayOffset: Int, nameOffset: Int, cellTypeOffset: Int, quantity: UInt, area: Double, powerBol: Double, powerEol: Double, efficiency: Double, degradationRate: Double, numPanels: UInt, deployable: Boolean, tracking: Boolean, mass: Double, notesOffset: Int) : Int {
             builder.startTable(16)
             addMASS(builder, mass)
@@ -242,7 +242,7 @@ class OOS : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishOOSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$OOS")
-        fun finishSizePrefixedOOSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$OOS")
+        fun finishOOSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$OOS")
+        fun finishSizePrefixedOOSBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$OOS")
     }
 }

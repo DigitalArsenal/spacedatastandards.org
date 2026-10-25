@@ -21,7 +21,7 @@ class KMLSimpleField extends Table
 
     public static function KMLSimpleFieldIdentifier()
     {
-        return "$KML";
+        return '$KML';
     }
 
     public static function KMLSimpleFieldBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class mplRelativeSolution extends Table
 
     public static function mplRelativeSolutionIdentifier()
     {
-        return "$MPL";
+        return '$MPL';
     }
 
     public static function mplRelativeSolutionBufferHasIdentifier(ByteBuffer $buf)

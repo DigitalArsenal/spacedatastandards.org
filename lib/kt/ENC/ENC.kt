@@ -172,7 +172,7 @@ class ENC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun ENCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ENC")
+        fun ENCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$ENC")
         fun createENC(builder: FlatBufferBuilder, version: UByte, keyExchange: Byte, symmetric: Byte, keyDerivation: Byte, ephemeralPublicKeyOffset: Int, nonceStartOffset: Int, recipientKeyIdOffset: Int, contextOffset: Int, schemaHashOffset: Int, rootTypeOffset: Int, timestamp: ULong) : Int {
             builder.startTable(11)
             addTIMESTAMP(builder, timestamp)
@@ -242,7 +242,7 @@ class ENC : Table() {
                 builder.required(o, 14)
             return o
         }
-        fun finishENCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$ENC")
-        fun finishSizePrefixedENCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$ENC")
+        fun finishENCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$ENC")
+        fun finishSizePrefixedENCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$ENC")
     }
 }

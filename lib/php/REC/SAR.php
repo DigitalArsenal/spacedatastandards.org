@@ -21,7 +21,7 @@ class SAR extends Table
 
     public static function SARIdentifier()
     {
-        return "$SAR";
+        return '$SAR';
     }
 
     public static function SARBufferHasIdentifier(ByteBuffer $buf)
@@ -1330,6 +1330,6 @@ class SAR extends Table
 
     public static function finishSARBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$SAR");
+        $builder->finish($offset, '$SAR');
     }
 }

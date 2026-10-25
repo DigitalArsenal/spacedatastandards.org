@@ -21,7 +21,7 @@ class ASGObservation extends Table
 
     public static function ASGObservationIdentifier()
     {
-        return "$ASG";
+        return '$ASG';
     }
 
     public static function ASGObservationBufferHasIdentifier(ByteBuffer $buf)

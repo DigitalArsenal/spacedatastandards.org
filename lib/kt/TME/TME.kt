@@ -149,7 +149,7 @@ class TME : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun TMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TME")
+        fun TMEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$TME")
         fun createTME(builder: FlatBufferBuilder, commandOffset: Int, conversionRequestOffset: Int, leapSecondQueryOffset: Int, eopQueryOffset: Int, siderealQueryOffset: Int, intervalRequestOffset: Int, solarPositionQueryOffset: Int, lunarPositionQueryOffset: Int, sunriseSunsetQueryOffset: Int, clockPropagationOffset: Int) : Int {
             builder.startTable(10)
             addCLOCKPROPAGATION(builder, clockPropagationOffset)
@@ -187,7 +187,7 @@ class TME : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishTMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$TME")
-        fun finishSizePrefixedTMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$TME")
+        fun finishTMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$TME")
+        fun finishSizePrefixedTMEBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$TME")
     }
 }

@@ -21,7 +21,7 @@ class equinoctialElements extends Table
 
     public static function equinoctialElementsIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function equinoctialElementsBufferHasIdentifier(ByteBuffer $buf)

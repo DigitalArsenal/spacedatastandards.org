@@ -5,7 +5,19 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CAT/main_generated.dart';
+import '../CDM/main_generated.dart';
+import '../EPM/main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../LCC/main_generated.dart';
+import '../MNV/main_generated.dart';
+import '../OEM/main_generated.dart';
+import '../PLD/main_generated.dart';
+import '../PNM/main_generated.dart';
+import '../PPE/main_generated.dart';
+import '../PVN/main_generated.dart';
+import '../RFM/main_generated.dart';
+import '../TIM/main_generated.dart';
 
 ///  Maneuver Plan (MPL)
 ///  Description

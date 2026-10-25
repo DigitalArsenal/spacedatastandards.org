@@ -1009,7 +1009,7 @@ class RFL : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun RFLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFL")
+        fun RFLBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$RFL")
         fun createRFL(builder: FlatBufferBuilder, rflIdOffset: Int, nameOffset: Int, scenarioIdOffset: Int, linksOffset: Int, sampleCount: UInt, sampleLinkIndexesOffset: Int, sampleEpochsOffset: Int, timeSystem: Byte, accessStatesOffset: Int, rangeMOffset: Int, rangeRateMSOffset: Int, azimuthDegOffset: Int, elevationDegOffset: Int, transmitAzimuthDegOffset: Int, transmitElevationDegOffset: Int, dopplerShiftHzOffset: Int, dopplerRateHzSOffset: Int, eirpDbwOffset: Int, transmitAntennaGainDbiOffset: Int, receiveAntennaGainDbiOffset: Int, freeSpacePathLossDbOffset: Int, gaseousAbsorptionLossDbOffset: Int, rainLossDbOffset: Int, cloudFogLossDbOffset: Int, scintillationLossDbOffset: Int, terrainDiffractionLossDbOffset: Int, obstructionLossDbOffset: Int, polarizationLossDbOffset: Int, pointingLossDbOffset: Int, implementationLossDbOffset: Int, totalPathLossDbOffset: Int, receivedPowerDbwOffset: Int, systemNoiseTemperatureKOffset: Int, gainToNoiseTemperatureDbPerKOffset: Int, carrierToNoiseDensityDbhzOffset: Int, carrierToNoiseDbOffset: Int, energyPerBitToNoiseDensityDbOffset: Int, bitErrorRateOffset: Int, linkMarginDbOffset: Int, channelCapacityBpsOffset: Int, interferencePowerDbwOffset: Int, carrierToNoisePlusInterferenceDbOffset: Int, signalToInterferencePlusNoiseDbOffset: Int, interferenceContributionsOffset: Int, obstructionsOffset: Int, limitingConstraintsOffset: Int, limitingConstraintNoteOffset: Int, provenanceOffset: Int, computedAt: ULong, producerIdOffset: Int, signatureOffset: Int, canonicalJsonSignatureOffset: Int, selectedModcodIndexOffset: Int, selectedModcodValidOffset: Int, spectralEfficiencyBpsHzOffset: Int, achievedDataRateBpsOffset: Int, acmMarginDbOffset: Int, energyPerSymbolToNoiseDensityDbOffset: Int, blockErrorRateOffset: Int) : Int {
             builder.startTable(59)
             addCOMPUTEDAT(builder, computedAt)
@@ -1546,7 +1546,7 @@ class RFL : Table() {
                 builder.required(o, 98)
             return o
         }
-        fun finishRFLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$RFL")
-        fun finishSizePrefixedRFLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$RFL")
+        fun finishRFLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$RFL")
+        fun finishSizePrefixedRFLBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$RFL")
     }
 }

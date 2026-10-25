@@ -24,7 +24,7 @@ class FSB extends Table
 
     public static function FSBIdentifier()
     {
-        return "$FSB";
+        return '$FSB';
     }
 
     public static function FSBBufferHasIdentifier(ByteBuffer $buf)
@@ -374,6 +374,6 @@ class FSB extends Table
 
     public static function finishFSBBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FSB");
+        $builder->finish($offset, '$FSB');
     }
 }

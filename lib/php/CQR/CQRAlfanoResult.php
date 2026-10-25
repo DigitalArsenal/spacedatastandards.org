@@ -20,7 +20,7 @@ class CQRAlfanoResult extends Table
 
     public static function CQRAlfanoResultIdentifier()
     {
-        return "$CQR";
+        return '$CQR';
     }
 
     public static function CQRAlfanoResultBufferHasIdentifier(ByteBuffer $buf)

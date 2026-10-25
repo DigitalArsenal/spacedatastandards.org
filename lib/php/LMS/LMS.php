@@ -21,7 +21,7 @@ class LMS extends Table
 
     public static function LMSIdentifier()
     {
-        return "$LMS";
+        return '$LMS';
     }
 
     public static function LMSBufferHasIdentifier(ByteBuffer $buf)
@@ -358,6 +358,6 @@ class LMS extends Table
 
     public static function finishLMSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$LMS");
+        $builder->finish($offset, '$LMS');
     }
 }

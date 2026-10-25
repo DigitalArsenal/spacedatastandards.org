@@ -24,7 +24,7 @@ class GNPName extends Table
 
     public static function GNPNameIdentifier()
     {
-        return "$GNP";
+        return '$GNP';
     }
 
     public static function GNPNameBufferHasIdentifier(ByteBuffer $buf)

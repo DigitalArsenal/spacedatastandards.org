@@ -21,7 +21,7 @@ class VCMStateVector extends Table
 
     public static function VCMStateVectorIdentifier()
     {
-        return "$VCM";
+        return '$VCM';
     }
 
     public static function VCMStateVectorBufferHasIdentifier(ByteBuffer $buf)

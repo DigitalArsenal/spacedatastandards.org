@@ -21,7 +21,7 @@ class PIVResponse extends Table
 
     public static function PIVResponseIdentifier()
     {
-        return "$PIV";
+        return '$PIV';
     }
 
     public static function PIVResponseBufferHasIdentifier(ByteBuffer $buf)

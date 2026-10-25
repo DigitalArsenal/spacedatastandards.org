@@ -246,7 +246,7 @@ class MNF : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun MNFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MNF")
+        fun MNFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$MNF")
         fun createMNF(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, objectDesignatorOffset: Int, status: Byte, eventEpochOffset: Int, sourceOffset: Int, refFrameOffset: Int, origSemiMajorAxis: Double, origEccentricity: Double, origInclination: Double, deltaVMin: Double, deltaVMax: Double, deltaVStep: Double, deltaTMin: Double, deltaTMax: Double, deltaTStep: Double, numElements: UInt, elementsOffset: Int, correlatedIdOffset: Int, notesOffset: Int) : Int {
             builder.startTable(20)
             addDELTATSTEP(builder, deltaTStep)
@@ -304,7 +304,7 @@ class MNF : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishMNFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$MNF")
-        fun finishSizePrefixedMNFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$MNF")
+        fun finishMNFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$MNF")
+        fun finishSizePrefixedMNFBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$MNF")
     }
 }

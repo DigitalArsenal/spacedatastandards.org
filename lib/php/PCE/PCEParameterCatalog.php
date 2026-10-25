@@ -22,7 +22,7 @@ class PCEParameterCatalog extends Table
 
     public static function PCEParameterCatalogIdentifier()
     {
-        return "$PCE";
+        return '$PCE';
     }
 
     public static function PCEParameterCatalogBufferHasIdentifier(ByteBuffer $buf)

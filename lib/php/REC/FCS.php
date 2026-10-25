@@ -21,7 +21,7 @@ class FCS extends Table
 
     public static function FCSIdentifier()
     {
-        return "$FCS";
+        return '$FCS';
     }
 
     public static function FCSBufferHasIdentifier(ByteBuffer $buf)
@@ -329,6 +329,6 @@ class FCS extends Table
 
     public static function finishFCSBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FCS");
+        $builder->finish($offset, '$FCS');
     }
 }

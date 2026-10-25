@@ -22,7 +22,7 @@ class PCFSegmentOptions extends Table
 
     public static function PCFSegmentOptionsIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFSegmentOptionsBufferHasIdentifier(ByteBuffer $buf)

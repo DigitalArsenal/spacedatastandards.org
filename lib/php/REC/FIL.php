@@ -21,7 +21,7 @@ class FIL extends Table
 
     public static function FILIdentifier()
     {
-        return "$FIL";
+        return '$FIL';
     }
 
     public static function FILBufferHasIdentifier(ByteBuffer $buf)
@@ -455,6 +455,6 @@ class FIL extends Table
 
     public static function finishFILBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$FIL");
+        $builder->finish($offset, '$FIL');
     }
 }

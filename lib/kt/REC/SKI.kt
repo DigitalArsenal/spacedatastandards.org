@@ -486,7 +486,7 @@ class SKI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SKIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SKI")
+        fun SKIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SKI")
         fun createSKI(builder: FlatBufferBuilder, idOffset: Int, onOrbitOffset: Int, origObjectIdOffset: Int, satNo: UInt, idSensorOffset: Int, origSensorIdOffset: Int, senlat: Double, senlon: Double, senalt: Double, senx: Double, seny: Double, senz: Double, senQuatOffset: Int, senQuatDotOffset: Int, imageType: Byte, expStartTimeOffset: Int, expEndTimeOffset: Int, imageSourceInfoOffset: Int, topLeftStartAz: Double, topLeftStartEl: Double, topLeftStopAz: Double, topLeftStopEl: Double, imageSetIdOffset: Int, imageSetLength: UShort, sequenceId: UShort, frameFovwidth: Double, frameFovheight: Double, pixelFovwidth: Double, pixelFovheight: Double, frameWidthPixels: UShort, frameHeightPixels: UShort, pixelBitDepth: UByte, annotationKeyOffset: Int, calibrationKeyOffset: Int, filenameOffset: Int, filesize: Long, checksumValueOffset: Int, transactionIdOffset: Int, tagsOffset: Int, descriptionOffset: Int, eoObservationsOffset: Int) : Int {
             builder.startTable(41)
             addFILESIZE(builder, filesize)
@@ -610,7 +610,7 @@ class SKI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSKIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SKI")
-        fun finishSizePrefixedSKIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SKI")
+        fun finishSKIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SKI")
+        fun finishSizePrefixedSKIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SKI")
     }
 }

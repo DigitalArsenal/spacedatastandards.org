@@ -566,7 +566,7 @@ class DTT : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DTTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DTT")
+        fun DTTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DTT")
         fun createDTT(builder: FlatBufferBuilder, tilesetIdOffset: Int, tilesetNameOffset: Int, tilingScheme: Byte, level: UInt, x: UInt, y: UInt, rowOriginNorth: Boolean, westDeg: Double, southDeg: Double, eastDeg: Double, northDeg: Double, minHeightM: Double, maxHeightM: Double, payloadFormat: Byte, payloadFormatVersionOffset: Int, payloadOffset: Int, gridWidth: UInt, gridHeight: UInt, postSpacingM: Double, sourcePostSpacingM: Double, verticalDatum: Byte, verticalDatumNameOffset: Int, horizontalDatumNameOffset: Int, verticalAccuracyM: Double, accuracyConfidence: Double, horizontalAccuracyM: Double, dataCoverageFraction: Double, noDataValue: Double, waterMaskKind: Byte, waterMaskOffset: Int, waterMaskWidth: UInt, waterMaskHeight: UInt, waterMaskProvenanceOffset: Int, vertexNormalsOffset: Int, landCoverOffset: Int, childAvailability: UByte, maxLevel: UInt, sourceClass: Byte, provenanceOffset: Int, epochOffset: Int, etagOffset: Int, expiresOffset: Int, remarksOffset: Int, centerNameOffset: Int, referenceRadiiMOffset: Int, horizonElevationsOffset: Int, horizonSectors: UByte) : Int {
             builder.startTable(47)
             addNODATAVALUE(builder, noDataValue)
@@ -681,7 +681,7 @@ class DTT : Table() {
                 builder.required(o, 80)
             return o
         }
-        fun finishDTTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DTT")
-        fun finishSizePrefixedDTTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DTT")
+        fun finishDTTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DTT")
+        fun finishSizePrefixedDTTBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DTT")
     }
 }

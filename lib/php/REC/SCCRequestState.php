@@ -21,7 +21,7 @@ class SCCRequestState extends Table
 
     public static function SCCRequestStateIdentifier()
     {
-        return "$SCC";
+        return '$SCC';
     }
 
     public static function SCCRequestStateBufferHasIdentifier(ByteBuffer $buf)

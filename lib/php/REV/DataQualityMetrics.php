@@ -21,7 +21,7 @@ class DataQualityMetrics extends Table
 
     public static function DataQualityMetricsIdentifier()
     {
-        return "$REV";
+        return '$REV';
     }
 
     public static function DataQualityMetricsBufferHasIdentifier(ByteBuffer $buf)

@@ -21,7 +21,7 @@ class SDRSensorConfig extends Table
 
     public static function SDRSensorConfigIdentifier()
     {
-        return "$SDR";
+        return '$SDR';
     }
 
     public static function SDRSensorConfigBufferHasIdentifier(ByteBuffer $buf)

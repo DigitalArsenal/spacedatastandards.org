@@ -26,7 +26,7 @@ class CCTCategory extends Table
 
     public static function CCTCategoryIdentifier()
     {
-        return "$CCT";
+        return '$CCT';
     }
 
     public static function CCTCategoryBufferHasIdentifier(ByteBuffer $buf)

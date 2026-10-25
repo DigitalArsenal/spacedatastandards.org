@@ -429,7 +429,7 @@ class GNP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun GNPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$GNP")
+        fun GNPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$GNP")
         fun createGNP(builder: FlatBufferBuilder, idOffset: Int, nameOffset: Int, asciiNameOffset: Int, alternateNamesOffset: Int, latitude: Double, longitude: Double, elevationM: Double, elevationPublished: Boolean, demElevationM: Double, demModelOffset: Int, featureClass: Byte, featureClassCodeOffset: Int, featureCodeOffset: Int, featureNameOffset: Int, countryCodeOffset: Int, countryNameOffset: Int, alternateCountryCodesOffset: Int, admin1CodeOffset: Int, admin1NameOffset: Int, admin2CodeOffset: Int, admin2NameOffset: Int, admin3CodeOffset: Int, admin3NameOffset: Int, admin4CodeOffset: Int, admin4NameOffset: Int, population: Long, timeZoneIdOffset: Int, timeZoneUtcOffsetH: Double, timeZoneDstOffsetH: Double, sourceOffset: Int) : Int {
             builder.startTable(30)
             addTIMEZONEDSTOFFSETH(builder, timeZoneDstOffsetH)
@@ -518,7 +518,7 @@ class GNP : Table() {
                 builder.required(o, 62)
             return o
         }
-        fun finishGNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$GNP")
-        fun finishSizePrefixedGNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$GNP")
+        fun finishGNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$GNP")
+        fun finishSizePrefixedGNPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$GNP")
     }
 }

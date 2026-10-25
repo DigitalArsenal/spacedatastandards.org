@@ -21,7 +21,7 @@ class ERMMoments extends Table
 
     public static function ERMMomentsIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMMomentsBufferHasIdentifier(ByteBuffer $buf)

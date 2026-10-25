@@ -229,7 +229,7 @@ class VEP : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun VEPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$VEP")
+        fun VEPBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$VEP")
         fun createVEP(builder: FlatBufferBuilder, idOffset: Int, vehicleClassIdOffset: Int, vehicleTypeDesignatorOffset: Int, environment: Byte, energyType: Byte, capacityValue: Double, capacityUnitsOffset: Int, reserveFraction: Double, performancePointsOffset: Int, interpolation: Byte, maximumEnduranceS: Double, maximumRangeM: Double, loiterSpeedMps: Double, serviceCeilingM: Double, replenishmentOffset: Int, refinesIdOffset: Int, sourceOffset: Int) : Int {
             builder.startTable(17)
             addSERVICECEILINGM(builder, serviceCeilingM)
@@ -293,7 +293,7 @@ class VEP : Table() {
                 builder.required(o, 36)
             return o
         }
-        fun finishVEPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$VEP")
-        fun finishSizePrefixedVEPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$VEP")
+        fun finishVEPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$VEP")
+        fun finishSizePrefixedVEPBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$VEP")
     }
 }

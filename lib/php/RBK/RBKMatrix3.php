@@ -21,7 +21,7 @@ class RBKMatrix3 extends Table
 
     public static function RBKMatrix3Identifier()
     {
-        return "$RBK";
+        return '$RBK';
     }
 
     public static function RBKMatrix3BufferHasIdentifier(ByteBuffer $buf)

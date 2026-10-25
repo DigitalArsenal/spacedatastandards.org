@@ -5,7 +5,13 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-import './main_generated.dart';
+import '../CAT/main_generated.dart';
+import '../EPM/main_generated.dart';
+import '../IDM/main_generated.dart';
+import '../LCC/main_generated.dart';
+import '../PLD/main_generated.dart';
+import '../PNM/main_generated.dart';
+import '../RFM/main_generated.dart';
 
 enum screeningVolumeShape {
   ELLIPSOID(0),
@@ -263,8 +269,8 @@ class _CDMObjectReader extends fb.TableReader<CDMObject> {
     CDMObject._(bc, offset);
 }
 
-class CDMObjectBuilder {
-  CDMObjectBuilder(this.fbBuilder);
+class CDMObjectBuilder_ {
+  CDMObjectBuilder_(this.fbBuilder);
 
   final fb.Builder fbBuilder;
 

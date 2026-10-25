@@ -23,7 +23,7 @@ class PCFEventDefinition extends Table
 
     public static function PCFEventDefinitionIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFEventDefinitionBufferHasIdentifier(ByteBuffer $buf)

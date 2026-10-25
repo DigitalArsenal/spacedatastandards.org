@@ -21,7 +21,7 @@ class TIMInstant extends Table
 
     public static function TIMInstantIdentifier()
     {
-        return "$TIM";
+        return '$TIM';
     }
 
     public static function TIMInstantBufferHasIdentifier(ByteBuffer $buf)

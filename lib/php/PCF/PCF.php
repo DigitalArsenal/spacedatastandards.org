@@ -32,7 +32,7 @@ class PCF extends Table
 
     public static function PCFIdentifier()
     {
-        return "$PCF";
+        return '$PCF';
     }
 
     public static function PCFBufferHasIdentifier(ByteBuffer $buf)
@@ -368,6 +368,6 @@ class PCF extends Table
 
     public static function finishPCFBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$PCF");
+        $builder->finish($offset, '$PCF');
     }
 }

@@ -257,7 +257,7 @@ class DPM : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun DPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DPM")
+        fun DPMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$DPM")
         fun createDPM(builder: FlatBufferBuilder, versionOffset: Int, datasetIdOffset: Int, updateIdOffset: Int, fileIdOffset: Int, providerPeerIdOffset: Int, providerEpmCidOffset: Int, publishTimestampOffset: Int, assetsOffset: Int, sourcesOffset: Int, queryOffset: Int, indexesOffset: Int, encryptionOffset: Int, providerSignatureOffset: Int, signatureTypeOffset: Int) : Int {
             builder.startTable(14)
             addSIGNATURETYPE(builder, signatureTypeOffset)
@@ -332,7 +332,7 @@ class DPM : Table() {
                 builder.required(o, 16)
             return o
         }
-        fun finishDPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$DPM")
-        fun finishSizePrefixedDPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$DPM")
+        fun finishDPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$DPM")
+        fun finishSizePrefixedDPMBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$DPM")
     }
 }

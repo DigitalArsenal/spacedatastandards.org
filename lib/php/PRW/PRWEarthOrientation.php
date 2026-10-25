@@ -24,7 +24,7 @@ class PRWEarthOrientation extends Table
 
     public static function PRWEarthOrientationIdentifier()
     {
-        return "$PRW";
+        return '$PRW';
     }
 
     public static function PRWEarthOrientationBufferHasIdentifier(ByteBuffer $buf)

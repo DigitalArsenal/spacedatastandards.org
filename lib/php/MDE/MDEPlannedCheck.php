@@ -21,7 +21,7 @@ class MDEPlannedCheck extends Table
 
     public static function MDEPlannedCheckIdentifier()
     {
-        return "$MDE";
+        return '$MDE';
     }
 
     public static function MDEPlannedCheckBufferHasIdentifier(ByteBuffer $buf)

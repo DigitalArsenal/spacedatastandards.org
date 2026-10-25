@@ -20,7 +20,7 @@ class AEMSegment extends Table
 
     public static function AEMSegmentIdentifier()
     {
-        return "$AEM";
+        return '$AEM';
     }
 
     public static function AEMSegmentBufferHasIdentifier(ByteBuffer $buf)

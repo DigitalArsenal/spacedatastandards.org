@@ -21,7 +21,7 @@ class CESObjectVector extends Table
 
     public static function CESObjectVectorIdentifier()
     {
-        return "$CES";
+        return '$CES';
     }
 
     public static function CESObjectVectorBufferHasIdentifier(ByteBuffer $buf)

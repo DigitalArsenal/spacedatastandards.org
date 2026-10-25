@@ -34,7 +34,7 @@ class EVL extends Table
 
     public static function EVLIdentifier()
     {
-        return "$EVL";
+        return '$EVL';
     }
 
     public static function EVLBufferHasIdentifier(ByteBuffer $buf)
@@ -122,6 +122,6 @@ class EVL extends Table
 
     public static function finishEVLBuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$EVL");
+        $builder->finish($offset, '$EVL');
     }
 }

@@ -749,7 +749,7 @@ class HFC : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun HFCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$HFC")
+        fun HFCBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$HFC")
         fun createHFC(builder: FlatBufferBuilder, messageIdOffset: Int, creationDateOffset: Int, originatorOffset: Int, objectNameOffset: Int, timeSystemOffset: Int, refFrameOffset: Int, startTimeOffset: Int, stopTimeOffset: Int, stepSize: Double, sourceOemOffset: Int, sourceOcmOffset: Int, atmosphereOffset: Int, atmosphereProviderOffset: Int, atmosphereModelRevisionOffset: Int, atmosphereCoupling: Byte, aerothermalModelOffset: Int, gasModelOffset: Int, flowRegime: Byte, stateVectorSize: UInt, stateDataOffset: Int, sampleEpochsOffset: Int, latitudeDegOffset: Int, longitudeDegOffset: Int, altitudeMOffset: Int, speedMPerSOffset: Int, machOffset: Int, dynamicPressurePaOffset: Int, densityKgPerM3Offset: Int, temperatureKOffset: Int, pressurePaOffset: Int, speedOfSoundMPerSOffset: Int, knudsenNumberOffset: Int, reynoldsNumberOffset: Int, convectiveHeatFluxWPerM2Offset: Int, radiativeHeatFluxWPerM2Offset: Int, stagnationHeatFluxWPerM2Offset: Int, loadFactorGOffset: Int, angleOfAttackDegOffset: Int, sideslipDegOffset: Int, bankAngleDegOffset: Int, referenceAreaM2: Double, referenceLengthM: Double, noseRadiusM: Double, massKg: Double, surfaceTemperatureK: Double, assumptionsOffset: Int, commentOffset: Int, windNorthMPerSOffset: Int, windEastMPerSOffset: Int, windModelOffset: Int) : Int {
             builder.startTable(50)
             addSURFACETEMPERATUREK(builder, surfaceTemperatureK)
@@ -1051,7 +1051,7 @@ class HFC : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishHFCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$HFC")
-        fun finishSizePrefixedHFCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$HFC")
+        fun finishHFCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$HFC")
+        fun finishSizePrefixedHFCBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$HFC")
     }
 }

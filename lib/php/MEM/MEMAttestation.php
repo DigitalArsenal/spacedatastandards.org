@@ -23,7 +23,7 @@ class MEMAttestation extends Table
 
     public static function MEMAttestationIdentifier()
     {
-        return "$MEM";
+        return '$MEM';
     }
 
     public static function MEMAttestationBufferHasIdentifier(ByteBuffer $buf)

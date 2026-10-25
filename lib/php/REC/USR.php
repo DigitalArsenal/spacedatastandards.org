@@ -20,7 +20,7 @@ class USR extends Table
 
     public static function USRIdentifier()
     {
-        return "$PRG";
+        return '$PRG';
     }
 
     public static function USRBufferHasIdentifier(ByteBuffer $buf)

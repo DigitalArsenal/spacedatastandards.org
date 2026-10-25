@@ -21,7 +21,7 @@ class PricingTier extends Table
 
     public static function PricingTierIdentifier()
     {
-        return "$STF";
+        return '$STF';
     }
 
     public static function PricingTierBufferHasIdentifier(ByteBuffer $buf)

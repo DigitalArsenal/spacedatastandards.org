@@ -21,7 +21,7 @@ class ABA extends Table
 
     public static function ABAIdentifier()
     {
-        return "$ABA";
+        return '$ABA';
     }
 
     public static function ABABufferHasIdentifier(ByteBuffer $buf)
@@ -508,6 +508,6 @@ class ABA extends Table
 
     public static function finishABABuffer(FlatBufferBuilder $builder, $offset)
     {
-        $builder->finish($offset, "$ABA");
+        $builder->finish($offset, '$ABA');
     }
 }

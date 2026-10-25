@@ -21,7 +21,7 @@ class CustomAlgorithm extends Table
 
     public static function CustomAlgorithmIdentifier()
     {
-        return "$XTC";
+        return '$XTC';
     }
 
     public static function CustomAlgorithmBufferHasIdentifier(ByteBuffer $buf)

@@ -302,7 +302,7 @@ class LGR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun LGRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LGR")
+        fun LGRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$LGR")
         fun createLGR(builder: FlatBufferBuilder, messageType: Byte, requestIdOffset: Int, moduleIdOffset: Int, moduleVersionOffset: Int, requesterPeerIdOffset: Int, requesterXpubOffset: Int, requestedDomainOffset: Int, requestedTimeoutMs: ULong, grantedDomainOffset: Int, grantedTimeoutMs: ULong, expiresAt: ULong, requiredScopeOffset: Int, grantStatusOffset: Int, denialReasonOffset: Int, capabilityTokenOffset: Int, moduleDescriptorOffset: Int, wrappedContentKeyHeaderOffset: Int, wrappedContentKeyPayloadOffset: Int, grantVerifierPubkeyOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(20)
             addEXPIRESAT(builder, expiresAt)
@@ -390,7 +390,7 @@ class LGR : Table() {
                 builder.required(o, 8)
             return o
         }
-        fun finishLGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$LGR")
-        fun finishSizePrefixedLGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$LGR")
+        fun finishLGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$LGR")
+        fun finishSizePrefixedLGRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$LGR")
     }
 }

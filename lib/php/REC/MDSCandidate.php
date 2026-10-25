@@ -21,7 +21,7 @@ class MDSCandidate extends Table
 
     public static function MDSCandidateIdentifier()
     {
-        return "$MDS";
+        return '$MDS';
     }
 
     public static function MDSCandidateBufferHasIdentifier(ByteBuffer $buf)

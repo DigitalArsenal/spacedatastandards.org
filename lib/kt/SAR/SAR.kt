@@ -647,7 +647,7 @@ class SAR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SARBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SAR")
+        fun SARBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SAR")
         fun createSAR(builder: FlatBufferBuilder, idOffset: Int, satNo: UInt, origObjectIdOffset: Int, onOrbitOffset: Int, idSensorOffset: Int, origSensorIdOffset: Int, externalIdOffset: Int, collectionIdOffset: Int, detectionIdOffset: Int, collectionStartOffset: Int, collectionEndOffset: Int, centerTimeOffset: Int, detectionStartOffset: Int, detectionEndOffset: Int, dwellTime: Double, orbitStateOffset: Int, sarMode: Byte, operatingBandOffset: Int, operatingFreq: Double, snr: Double, txPolarization: Byte, rxPolarization: Byte, grazeAngle: Double, incidenceAngle: Double, squintAngle: Double, pulseBandwidth: Double, pulseDuration: Double, continuousSpotAngle: Double, slantRange: Double, nearRange: Double, farRange: Double, swathLength: Double, agjsonOffset: Int, atextOffset: Int, atypeOffset: Int, coordSysOffset: Int, spacingRange: Double, spacingAzimuth: Double, looksAzimuth: UByte, looksRange: UByte, resolutionRange: Double, resolutionAzimuth: Double, obDirectionOffset: Int, targetposx: Double, targetposy: Double, targetposz: Double, senalt: Double, senvelx: Double, senvely: Double, senvelz: Double, senlatStart: Double, senlonStart: Double, senlatEnd: Double, senlonEnd: Double, transactionIdOffset: Int, tagsOffset: Int, srcTypsOffset: Int, srcIdsOffset: Int) : Int {
             builder.startTable(58)
             addSENLONEND(builder, senlonEnd)
@@ -797,7 +797,7 @@ class SAR : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSARBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SAR")
-        fun finishSizePrefixedSARBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SAR")
+        fun finishSARBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SAR")
+        fun finishSizePrefixedSARBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SAR")
     }
 }

@@ -218,7 +218,7 @@ class SRI : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SRIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SRI")
+        fun SRIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SRI")
         fun createSRI(builder: FlatBufferBuilder, recordKeyOffset: Int, schemaNameOffset: Int, roleOffset: Int, attachedViaOffset: Int, payloadKindOffset: Int, updatedAtMs: Double, reservedOffset: Int, cidOffset: Int, byteOffset: ULong, byteLength: UInt, epochMs: ULong, entityKeyOffset: Int, providerIdOffset: Int, sourceNameOffset: Int, batchIdOffset: Int) : Int {
             builder.startTable(15)
             addEPOCHMS(builder, epochMs)
@@ -267,7 +267,7 @@ class SRI : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSRIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SRI")
-        fun finishSizePrefixedSRIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SRI")
+        fun finishSRIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SRI")
+        fun finishSizePrefixedSRIBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SRI")
     }
 }

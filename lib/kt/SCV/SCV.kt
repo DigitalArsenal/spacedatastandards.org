@@ -92,7 +92,7 @@ class SCV : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun SCVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SCV")
+        fun SCVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$SCV")
         fun createSCV(builder: FlatBufferBuilder, envelopeKind: UByte, requestOffset: Int, progressOffset: Int, cancelOffset: Int, resultOffset: Int, geometryOffset: Int, rasterProductsOffset: Int) : Int {
             builder.startTable(7)
             addRASTERPRODUCTS(builder, rasterProductsOffset)
@@ -116,7 +116,7 @@ class SCV : Table() {
             val o = builder.endTable()
             return o
         }
-        fun finishSCVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$SCV")
-        fun finishSizePrefixedSCVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$SCV")
+        fun finishSCVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$SCV")
+        fun finishSizePrefixedSCVBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$SCV")
     }
 }

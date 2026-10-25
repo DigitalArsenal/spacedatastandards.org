@@ -21,7 +21,7 @@ class ERMRealismFactor extends Table
 
     public static function ERMRealismFactorIdentifier()
     {
-        return "$ERM";
+        return '$ERM';
     }
 
     public static function ERMRealismFactorBufferHasIdentifier(ByteBuffer $buf)

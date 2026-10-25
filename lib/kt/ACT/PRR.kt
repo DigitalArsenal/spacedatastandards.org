@@ -285,7 +285,7 @@ class PRR : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun PRRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$PRR")
+        fun PRRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PRR")
         fun createPRR(builder: FlatBufferBuilder, peerIdOffset: Int, multiformatAddressOffset: Int, trustLevel: Byte, nameOffset: Int, organizationOffset: Int, groupsOffset: Int, notesOffset: Int, addedAt: ULong, lastSeen: ULong, lastConnected: ULong, connectionCount: ULong, messagesReceived: ULong, messagesSent: ULong, bytesReceived: ULong, bytesSent: ULong, epmDataOffset: Int, vcardDataOffset: Int, metadataOffset: Int, updatedAt: ULong, deleted: Boolean, providerPeerIdOffset: Int, providerSignatureOffset: Int) : Int {
             builder.startTable(22)
             addUPDATEDAT(builder, updatedAt)
@@ -382,7 +382,7 @@ class PRR : Table() {
                 builder.required(o, 4)
             return o
         }
-        fun finishPRRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "$PRR")
-        fun finishSizePrefixedPRRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "$PRR")
+        fun finishPRRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finish(offset, "\$PRR")
+        fun finishSizePrefixedPRRBuffer(builder: FlatBufferBuilder, offset: Int) = builder.finishSizePrefixed(offset, "\$PRR")
     }
 }

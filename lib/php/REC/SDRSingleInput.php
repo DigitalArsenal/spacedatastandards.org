@@ -22,7 +22,7 @@ class SDRSingleInput extends Table
 
     public static function SDRSingleInputIdentifier()
     {
-        return "$SDR";
+        return '$SDR';
     }
 
     public static function SDRSingleInputBufferHasIdentifier(ByteBuffer $buf)

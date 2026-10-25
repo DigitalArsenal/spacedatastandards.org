@@ -21,7 +21,7 @@ class IRMChunk extends Table
 
     public static function IRMChunkIdentifier()
     {
-        return "$IRM";
+        return '$IRM';
     }
 
     public static function IRMChunkBufferHasIdentifier(ByteBuffer $buf)
