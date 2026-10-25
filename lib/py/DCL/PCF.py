@@ -199,8 +199,20 @@ class PCF(object):
             return obj
         return None
 
+    # The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+    # PCF
+    def EPOCH_STORE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from PCFEpochStore import PCFEpochStore
+            obj = PCFEpochStore()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
 def PCFStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(14)
 
 def Start(builder):
     PCFStart(builder)
@@ -295,12 +307,19 @@ def PCFAddOUTPUT(builder, OUTPUT):
 def AddOUTPUT(builder, OUTPUT):
     PCFAddOUTPUT(builder, OUTPUT)
 
+def PCFAddEPOCH_STORE(builder, EPOCH_STORE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH_STORE), 0)
+
+def AddEPOCH_STORE(builder, EPOCH_STORE):
+    PCFAddEPOCH_STORE(builder, EPOCH_STORE)
+
 def PCFEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return PCFEnd(builder)
 
+import PCFEpochStore
 import PCFEventDefinition
 import PCFFitPolicy
 import PCFForceModel
@@ -334,6 +353,7 @@ class PCFT(object):
         REENTRY = None,
         LAUNCH = None,
         OUTPUT = None,
+        EPOCH_STORE = None,
     ):
         self.CONFIGURATION_ID = CONFIGURATION_ID  # type: Optional[str]
         self.PROFILE = PROFILE  # type: Optional[str]
@@ -348,6 +368,7 @@ class PCFT(object):
         self.REENTRY = REENTRY  # type: Optional[PCFReentry.PCFReentryT]
         self.LAUNCH = LAUNCH  # type: Optional[PCFLaunch.PCFLaunchT]
         self.OUTPUT = OUTPUT  # type: Optional[PCFOutput.PCFOutputT]
+        self.EPOCH_STORE = EPOCH_STORE  # type: Optional[PCFEpochStore.PCFEpochStoreT]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -399,6 +420,8 @@ class PCFT(object):
             self.LAUNCH = PCFLaunch.PCFLaunchT.InitFromObj(PCF.LAUNCH())
         if PCF.OUTPUT() is not None:
             self.OUTPUT = PCFOutput.PCFOutputT.InitFromObj(PCF.OUTPUT())
+        if PCF.EPOCH_STORE() is not None:
+            self.EPOCH_STORE = PCFEpochStore.PCFEpochStoreT.InitFromObj(PCF.EPOCH_STORE())
 
     # PCFT
     def Pack(self, builder):
@@ -432,6 +455,8 @@ class PCFT(object):
             LAUNCH = self.LAUNCH.Pack(builder)
         if self.OUTPUT is not None:
             OUTPUT = self.OUTPUT.Pack(builder)
+        if self.EPOCH_STORE is not None:
+            EPOCH_STORE = self.EPOCH_STORE.Pack(builder)
         PCFStart(builder)
         if self.CONFIGURATION_ID is not None:
             PCFAddCONFIGURATION_ID(builder, CONFIGURATION_ID)
@@ -458,5 +483,7 @@ class PCFT(object):
             PCFAddLAUNCH(builder, LAUNCH)
         if self.OUTPUT is not None:
             PCFAddOUTPUT(builder, OUTPUT)
+        if self.EPOCH_STORE is not None:
+            PCFAddEPOCH_STORE(builder, EPOCH_STORE)
         PCF = PCFEnd(builder)
         return PCF

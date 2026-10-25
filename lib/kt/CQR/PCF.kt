@@ -201,6 +201,18 @@ class PCF : Table() {
             null
         }
     }
+    /**
+     * The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+     */
+    val epochStore : PCFEpochStore? get() = epochStore(PCFEpochStore())
+    fun epochStore(obj: PCFEpochStore) : PCFEpochStore? {
+        val o = __offset(30)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_25_12_19()
         fun getRootAsPCF(_bb: ByteBuffer): PCF = getRootAsPCF(_bb, PCF())
@@ -209,8 +221,9 @@ class PCF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PCF")
-        fun createPCF(builder: FlatBufferBuilder, configurationIdOffset: Int, profileOffset: Int, theory: UByte, integratorOffset: Int, forcesOffset: Int, meanElementOffset: Int, segmentsOffset: Int, fitOffset: Int, eventsOffset: Int, maneuverDetectionOffset: Int, reentryOffset: Int, launchOffset: Int, outputOffset: Int) : Int {
-            builder.startTable(13)
+        fun createPCF(builder: FlatBufferBuilder, configurationIdOffset: Int, profileOffset: Int, theory: UByte, integratorOffset: Int, forcesOffset: Int, meanElementOffset: Int, segmentsOffset: Int, fitOffset: Int, eventsOffset: Int, maneuverDetectionOffset: Int, reentryOffset: Int, launchOffset: Int, outputOffset: Int, epochStoreOffset: Int) : Int {
+            builder.startTable(14)
+            addEPOCHSTORE(builder, epochStoreOffset)
             addOUTPUT(builder, outputOffset)
             addLAUNCH(builder, launchOffset)
             addREENTRY(builder, reentryOffset)
@@ -226,7 +239,7 @@ class PCF : Table() {
             addTHEORY(builder, theory)
             return endPCF(builder)
         }
-        fun startPCF(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startPCF(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addCONFIGURATIONID(builder: FlatBufferBuilder, configurationId: Int) = builder.addOffset(0, configurationId, 0)
         fun addPROFILE(builder: FlatBufferBuilder, profile: Int) = builder.addOffset(1, profile, 0)
         fun addTHEORY(builder: FlatBufferBuilder, theory: UByte) = builder.addByte(2, theory.toByte(), 0)
@@ -248,6 +261,7 @@ class PCF : Table() {
         fun addREENTRY(builder: FlatBufferBuilder, reentry: Int) = builder.addOffset(10, reentry, 0)
         fun addLAUNCH(builder: FlatBufferBuilder, launch: Int) = builder.addOffset(11, launch, 0)
         fun addOUTPUT(builder: FlatBufferBuilder, output: Int) = builder.addOffset(12, output, 0)
+        fun addEPOCHSTORE(builder: FlatBufferBuilder, epochStore: Int) = builder.addOffset(13, epochStore, 0)
         fun endPCF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

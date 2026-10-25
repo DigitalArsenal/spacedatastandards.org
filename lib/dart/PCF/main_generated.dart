@@ -57,6 +57,76 @@ class _pcfTheoryReader extends fb.Reader<pcfTheory> {
 
 ///  How a propagator learns the space weather beyond the daily rows it was
 ///  given. Append new values only.
+///  How the epoch store picks the element set for a request time.
+enum pcfEpochSelection {
+  NEAREST(0),
+  LATEST_BEFORE(1);
+
+  final int value;
+  const pcfEpochSelection(this.value);
+
+  factory pcfEpochSelection.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfEpochSelection.NEAREST;
+      case 1: return pcfEpochSelection.LATEST_BEFORE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfEpochSelection? _createOrNull(int? value) =>
+      value == null ? null : pcfEpochSelection.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfEpochSelection> reader = _pcfEpochSelectionReader();
+}
+
+class _pcfEpochSelectionReader extends fb.Reader<pcfEpochSelection> {
+  const _pcfEpochSelectionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfEpochSelection read(fb.BufferContext bc, int offset) =>
+      pcfEpochSelection.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
+///  The weight curve of the handover blend between two consecutive sets.
+enum pcfBlendShape {
+  SMOOTHSTEP(0),
+  HERMITE(1);
+
+  final int value;
+  const pcfBlendShape(this.value);
+
+  factory pcfBlendShape.fromValue(int value) {
+    switch (value) {
+      case 0: return pcfBlendShape.SMOOTHSTEP;
+      case 1: return pcfBlendShape.HERMITE;
+      default: throw StateError('Invalid value $value for bit flag enum');
+    }
+  }
+
+  static pcfBlendShape? _createOrNull(int? value) =>
+      value == null ? null : pcfBlendShape.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 1;
+  static const fb.Reader<pcfBlendShape> reader = _pcfBlendShapeReader();
+}
+
+class _pcfBlendShapeReader extends fb.Reader<pcfBlendShape> {
+  const _pcfBlendShapeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  pcfBlendShape read(fb.BufferContext bc, int offset) =>
+      pcfBlendShape.fromValue(const fb.Uint8Reader().read(bc, offset));
+}
+
 enum pcfWeatherExtension {
   UNSPECIFIED(0),
   REFUSE(1),
@@ -3965,6 +4035,143 @@ class PCFForceModelObjectBuilder extends fb.ObjectBuilder {
     return fbBuilder.buffer;
   }
 }
+///  The multi-epoch element store of SDN-AP and the sync harness that fills it:
+///  how many days of element sets are kept, which set answers a request time and
+///  how consecutive sets are blended across a handover. Absent: every default below.
+class PCFEpochStore {
+  PCFEpochStore._(this._bc, this._bcOffset);
+  factory PCFEpochStore(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<PCFEpochStore> reader = _PCFEpochStoreReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Days of element sets kept, counted back from now by epoch. Default 7.
+  double get CACHE_DAYS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 7.0);
+  double get cacheDays => CACHE_DAYS;
+  ///  Most sets kept per object and theory, the oldest epochs dropping first.
+  ///  Default 0 (no cap beyond CACHE_DAYS).
+  int get MAX_SETS_PER_OBJECT => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  int get maxSetsPerObject => MAX_SETS_PER_OBJECT;
+  ///  Which set answers a request time. Default NEAREST.
+  pcfEpochSelection get SELECTION => pcfEpochSelection.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Width, seconds, of the blend window centered on the midpoint between two
+  ///  consecutive sets; 0 switches sets without a blend. Default 3600.
+  double get BLEND_WINDOW_SECONDS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 3600.0);
+  double get blendWindowSeconds => BLEND_WINDOW_SECONDS;
+  ///  The weight curve across the blend window. Default SMOOTHSTEP.
+  pcfBlendShape get BLEND_SHAPE => pcfBlendShape.fromValue(const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  pcfBlendShape get blendShape => BLEND_SHAPE;
+  ///  Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  List<pcfTheory>? get THEORIES => const fb.ListReader<pcfTheory>(pcfTheory.reader).vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'PCFEpochStore{cacheDays: ${cacheDays}, maxSetsPerObject: ${maxSetsPerObject}, SELECTION: ${SELECTION}, blendWindowSeconds: ${blendWindowSeconds}, blendShape: ${blendShape}, THEORIES: ${THEORIES}}';
+  }
+}
+
+class _PCFEpochStoreReader extends fb.TableReader<PCFEpochStore> {
+  const _PCFEpochStoreReader();
+
+  @override
+  PCFEpochStore createObject(fb.BufferContext bc, int offset) =>
+    PCFEpochStore._(bc, offset);
+}
+
+class PCFEpochStoreBuilder {
+  PCFEpochStoreBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addCacheDays(double? CACHE_DAYS) {
+    fbBuilder.addFloat64(0, CACHE_DAYS);
+    return fbBuilder.offset;
+  }
+  int addMaxSetsPerObject(int? MAX_SETS_PER_OBJECT) {
+    fbBuilder.addUint32(1, MAX_SETS_PER_OBJECT);
+    return fbBuilder.offset;
+  }
+  int addSelection(pcfEpochSelection? SELECTION) {
+    fbBuilder.addUint8(2, SELECTION?.value);
+    return fbBuilder.offset;
+  }
+  int addBlendWindowSeconds(double? BLEND_WINDOW_SECONDS) {
+    fbBuilder.addFloat64(3, BLEND_WINDOW_SECONDS);
+    return fbBuilder.offset;
+  }
+  int addBlendShape(pcfBlendShape? BLEND_SHAPE) {
+    fbBuilder.addUint8(4, BLEND_SHAPE?.value);
+    return fbBuilder.offset;
+  }
+  int addTheoriesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class PCFEpochStoreObjectBuilder extends fb.ObjectBuilder {
+  final double? _CACHE_DAYS;
+  final int? _MAX_SETS_PER_OBJECT;
+  final pcfEpochSelection? _SELECTION;
+  final double? _BLEND_WINDOW_SECONDS;
+  final pcfBlendShape? _BLEND_SHAPE;
+  final List<pcfTheory>? _THEORIES;
+
+  PCFEpochStoreObjectBuilder({
+    double? CACHE_DAYS,
+    double? cacheDays,
+    int? MAX_SETS_PER_OBJECT,
+    int? maxSetsPerObject,
+    pcfEpochSelection? SELECTION,
+    double? BLEND_WINDOW_SECONDS,
+    double? blendWindowSeconds,
+    pcfBlendShape? BLEND_SHAPE,
+    pcfBlendShape? blendShape,
+    List<pcfTheory>? THEORIES,
+  })
+      : _CACHE_DAYS = cacheDays ?? CACHE_DAYS,
+        _MAX_SETS_PER_OBJECT = maxSetsPerObject ?? MAX_SETS_PER_OBJECT,
+        _SELECTION = SELECTION,
+        _BLEND_WINDOW_SECONDS = blendWindowSeconds ?? BLEND_WINDOW_SECONDS,
+        _BLEND_SHAPE = blendShape ?? BLEND_SHAPE,
+        _THEORIES = THEORIES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? THEORIESOffset = _THEORIES == null ? null
+        : fbBuilder.writeListUint8(_THEORIES!.map((f) => f.value).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addFloat64(0, _CACHE_DAYS);
+    fbBuilder.addUint32(1, _MAX_SETS_PER_OBJECT);
+    fbBuilder.addUint8(2, _SELECTION?.value);
+    fbBuilder.addFloat64(3, _BLEND_WINDOW_SECONDS);
+    fbBuilder.addUint8(4, _BLEND_SHAPE?.value);
+    fbBuilder.addOffset(5, THEORIESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
 ///  any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
 ///  force model, Kepler): the theory, the integrator and its settings, the
@@ -4019,10 +4226,13 @@ class PCF {
   PCFLaunch? get LAUNCH => PCFLaunch.reader.vTableGetNullable(_bc, _bcOffset, 26);
   ///  Output states.
   PCFOutput? get OUTPUT => PCFOutput.reader.vTableGetNullable(_bc, _bcOffset, 28);
+  ///  The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+  PCFEpochStore? get EPOCH_STORE => PCFEpochStore.reader.vTableGetNullable(_bc, _bcOffset, 30);
+  PCFEpochStore? get epochStore => EPOCH_STORE;
 
   @override
   String toString() {
-    return 'PCF{configurationId: ${configurationId}, PROFILE: ${PROFILE}, THEORY: ${THEORY}, INTEGRATOR: ${INTEGRATOR}, FORCES: ${FORCES}, meanElement: ${meanElement}, SEGMENTS: ${SEGMENTS}, FIT: ${FIT}, EVENTS: ${EVENTS}, maneuverDetection: ${maneuverDetection}, REENTRY: ${REENTRY}, LAUNCH: ${LAUNCH}, OUTPUT: ${OUTPUT}}';
+    return 'PCF{configurationId: ${configurationId}, PROFILE: ${PROFILE}, THEORY: ${THEORY}, INTEGRATOR: ${INTEGRATOR}, FORCES: ${FORCES}, meanElement: ${meanElement}, SEGMENTS: ${SEGMENTS}, FIT: ${FIT}, EVENTS: ${EVENTS}, maneuverDetection: ${maneuverDetection}, REENTRY: ${REENTRY}, LAUNCH: ${LAUNCH}, OUTPUT: ${OUTPUT}, epochStore: ${epochStore}}';
   }
 }
 
@@ -4040,7 +4250,7 @@ class PCFBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(14);
   }
 
   int addConfigurationIdOffset(int? offset) {
@@ -4095,6 +4305,10 @@ class PCFBuilder {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+  int addEpochStoreOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -4115,6 +4329,7 @@ class PCFObjectBuilder extends fb.ObjectBuilder {
   final PCFReentryObjectBuilder? _REENTRY;
   final PCFLaunchObjectBuilder? _LAUNCH;
   final PCFOutputObjectBuilder? _OUTPUT;
+  final PCFEpochStoreObjectBuilder? _EPOCH_STORE;
 
   PCFObjectBuilder({
     String? CONFIGURATION_ID,
@@ -4133,6 +4348,8 @@ class PCFObjectBuilder extends fb.ObjectBuilder {
     PCFReentryObjectBuilder? REENTRY,
     PCFLaunchObjectBuilder? LAUNCH,
     PCFOutputObjectBuilder? OUTPUT,
+    PCFEpochStoreObjectBuilder? EPOCH_STORE,
+    PCFEpochStoreObjectBuilder? epochStore,
   })
       : _CONFIGURATION_ID = configurationId ?? CONFIGURATION_ID,
         _PROFILE = PROFILE,
@@ -4146,7 +4363,8 @@ class PCFObjectBuilder extends fb.ObjectBuilder {
         _MANEUVER_DETECTION = maneuverDetection ?? MANEUVER_DETECTION,
         _REENTRY = REENTRY,
         _LAUNCH = LAUNCH,
-        _OUTPUT = OUTPUT;
+        _OUTPUT = OUTPUT,
+        _EPOCH_STORE = epochStore ?? EPOCH_STORE;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -4166,7 +4384,8 @@ class PCFObjectBuilder extends fb.ObjectBuilder {
     final int? REENTRYOffset = _REENTRY?.getOrCreateOffset(fbBuilder);
     final int? LAUNCHOffset = _LAUNCH?.getOrCreateOffset(fbBuilder);
     final int? OUTPUTOffset = _OUTPUT?.getOrCreateOffset(fbBuilder);
-    fbBuilder.startTable(13);
+    final int? EPOCH_STOREOffset = _EPOCH_STORE?.getOrCreateOffset(fbBuilder);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, CONFIGURATION_IDOffset);
     fbBuilder.addOffset(1, PROFILEOffset);
     fbBuilder.addUint8(2, _THEORY?.value);
@@ -4180,6 +4399,7 @@ class PCFObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(10, REENTRYOffset);
     fbBuilder.addOffset(11, LAUNCHOffset);
     fbBuilder.addOffset(12, OUTPUTOffset);
+    fbBuilder.addOffset(13, EPOCH_STOREOffset);
     return fbBuilder.endTable();
   }
 

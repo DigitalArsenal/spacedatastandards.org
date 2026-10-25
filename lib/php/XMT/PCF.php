@@ -169,22 +169,30 @@ class PCF extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
+    /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+    public function getEPOCH_STORE()
+    {
+        $obj = new PCFEpochStore();
+        $o = $this->__offset(30);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
     /**
      * @param FlatBufferBuilder $builder
      * @return void
      */
     public static function startPCF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCF
      */
-    public static function createPCF(FlatBufferBuilder $builder, $CONFIGURATION_ID, $PROFILE, $THEORY, $INTEGRATOR, $FORCES, $MEAN_ELEMENT, $SEGMENTS, $FIT, $EVENTS, $MANEUVER_DETECTION, $REENTRY, $LAUNCH, $OUTPUT)
+    public static function createPCF(FlatBufferBuilder $builder, $CONFIGURATION_ID, $PROFILE, $THEORY, $INTEGRATOR, $FORCES, $MEAN_ELEMENT, $SEGMENTS, $FIT, $EVENTS, $MANEUVER_DETECTION, $REENTRY, $LAUNCH, $OUTPUT, $EPOCH_STORE)
     {
-        $builder->startObject(13);
+        $builder->startObject(14);
         self::addCONFIGURATION_ID($builder, $CONFIGURATION_ID);
         self::addPROFILE($builder, $PROFILE);
         self::addTHEORY($builder, $THEORY);
@@ -198,6 +206,7 @@ class PCF extends Table
         self::addREENTRY($builder, $REENTRY);
         self::addLAUNCH($builder, $LAUNCH);
         self::addOUTPUT($builder, $OUTPUT);
+        self::addEPOCH_STORE($builder, $EPOCH_STORE);
         $o = $builder->endObject();
         return $o;
     }
@@ -354,6 +363,16 @@ class PCF extends Table
     public static function addOUTPUT(FlatBufferBuilder $builder, $OUTPUT)
     {
         $builder->addOffsetX(12, $OUTPUT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addEPOCH_STORE(FlatBufferBuilder $builder, $EPOCH_STORE)
+    {
+        $builder->addOffsetX(13, $EPOCH_STORE, 0);
     }
 
     /**

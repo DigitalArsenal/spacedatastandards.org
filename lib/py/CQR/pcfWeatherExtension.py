@@ -2,8 +2,6 @@
 
 # namespace:
 
-# How a propagator learns the space weather beyond the daily rows it was
-# given. Append new values only.
 class pcfWeatherExtension(object):
     # The provider's own rule (the numerical propagator refuses, the advanced
     # mean-element propagator chains forecasts).

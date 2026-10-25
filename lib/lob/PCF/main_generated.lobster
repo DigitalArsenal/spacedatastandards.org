@@ -30,6 +30,20 @@ enum pcfTheory:
 
 /// How a propagator learns the space weather beyond the daily rows it was
 /// given. Append new values only.
+/// How the epoch store picks the element set for a request time.
+enum pcfEpochSelection:
+    /// The set whose epoch is nearest the request time (the default).
+    pcfEpochSelection_NEAREST = 0
+    /// The latest set whose epoch is at or before the request time.
+    pcfEpochSelection_LATEST_BEFORE = 1
+
+/// The weight curve of the handover blend between two consecutive sets.
+enum pcfBlendShape:
+    /// Smoothstep weight on the two propagated states (the default).
+    pcfBlendShape_SMOOTHSTEP = 0
+    /// Cubic Hermite matching of position and velocity across the window.
+    pcfBlendShape_HERMITE = 1
+
 enum pcfWeatherExtension:
     /// The provider's own rule (the numerical propagator refuses, the advanced
     /// mean-element propagator chains forecasts).
@@ -388,6 +402,8 @@ class PCFEcom2
 class PCFIntegratorSettings
 
 class PCFForceModel
+
+class PCFEpochStore
 
 class PCF
 
@@ -1698,6 +1714,68 @@ def PCFForceModelCreateTHIRDBODYIDSVector(b_:flatbuffers.builder, v_:[int]):
     reverse(v_) e_: b_.PrependInt32(e_)
     return b_.EndVector(v_.length)
 
+/// The multi-epoch element store of SDN-AP and the sync harness that fills it:
+/// how many days of element sets are kept, which set answers a request time and
+/// how consecutive sets are blended across a handover. Absent: every default below.
+class PCFEpochStore : flatbuffers.handle
+    /// Days of element sets kept, counted back from now by epoch. Default 7.
+    def CACHE_DAYS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 4, 7.0)
+    /// Most sets kept per object and theory, the oldest epochs dropping first.
+    /// Default 0 (no cap beyond CACHE_DAYS).
+    def MAX_SETS_PER_OBJECT() -> int:
+        return flatbuffers.field_uint32(buf_, pos_, 6, 0)
+    /// Which set answers a request time. Default NEAREST.
+    def SELECTION() -> pcfEpochSelection:
+        return pcfEpochSelection(flatbuffers.field_uint8(buf_, pos_, 8, 0))
+    /// Width, seconds, of the blend window centered on the midpoint between two
+    /// consecutive sets; 0 switches sets without a blend. Default 3600.
+    def BLEND_WINDOW_SECONDS() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 10, 3600.0)
+    /// The weight curve across the blend window. Default SMOOTHSTEP.
+    def BLEND_SHAPE() -> pcfBlendShape:
+        return pcfBlendShape(flatbuffers.field_uint8(buf_, pos_, 12, 0))
+    /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+    def THEORIES(i:int) -> pcfTheory:
+        return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
+    def THEORIES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 14)
+
+def GetRootAsPCFEpochStore(buf:string): return PCFEpochStore { buf, flatbuffers.indirect(buf, 0) }
+
+struct PCFEpochStoreBuilder:
+    b_:flatbuffers.builder
+    def start():
+        b_.StartObject(6)
+        return this
+    def add_CACHE_DAYS(CACHE_DAYS:float):
+        b_.PrependFloat64Slot(0, CACHE_DAYS, 7.0)
+        return this
+    def add_MAX_SETS_PER_OBJECT(MAX_SETS_PER_OBJECT:int):
+        b_.PrependUint32Slot(1, MAX_SETS_PER_OBJECT, 0)
+        return this
+    def add_SELECTION(SELECTION:pcfEpochSelection):
+        b_.PrependUint8Slot(2, SELECTION, 0)
+        return this
+    def add_BLEND_WINDOW_SECONDS(BLEND_WINDOW_SECONDS:float):
+        b_.PrependFloat64Slot(3, BLEND_WINDOW_SECONDS, 3600.0)
+        return this
+    def add_BLEND_SHAPE(BLEND_SHAPE:pcfBlendShape):
+        b_.PrependUint8Slot(4, BLEND_SHAPE, 0)
+        return this
+    def add_THEORIES(THEORIES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(5, THEORIES)
+        return this
+    def end():
+        return b_.EndObject()
+
+def PCFEpochStoreStartTHEORIESVector(b_:flatbuffers.builder, n_:int):
+    b_.StartVector(1, n_, 1)
+def PCFEpochStoreCreateTHEORIESVector(b_:flatbuffers.builder, v_:[pcfTheory]):
+    b_.StartVector(1, v_.length, 1)
+    reverse(v_) e_: b_.PrependUint8(e_)
+    return b_.EndVector(v_.length)
+
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
 /// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
 /// force model, Kepler): the theory, the integrator and its settings, the
@@ -1762,13 +1840,17 @@ class PCF : flatbuffers.handle
     def OUTPUT() -> PCFOutput?:
         let o = flatbuffers.field_table(buf_, pos_, 28)
         return if o: PCFOutput { buf_, o } else: nil
+    /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+    def EPOCH_STORE() -> PCFEpochStore?:
+        let o = flatbuffers.field_table(buf_, pos_, 30)
+        return if o: PCFEpochStore { buf_, o } else: nil
 
 def GetRootAsPCF(buf:string): return PCF { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(13)
+        b_.StartObject(14)
         return this
     def add_CONFIGURATION_ID(CONFIGURATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CONFIGURATION_ID)
@@ -1808,6 +1890,9 @@ struct PCFBuilder:
         return this
     def add_OUTPUT(OUTPUT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(12, OUTPUT)
+        return this
+    def add_EPOCH_STORE(EPOCH_STORE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, EPOCH_STORE)
         return this
     def end():
         return b_.EndObject()

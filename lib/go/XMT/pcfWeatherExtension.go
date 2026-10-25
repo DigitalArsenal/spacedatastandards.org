@@ -4,8 +4,6 @@ package XMT
 
 import "strconv"
 
-/// How a propagator learns the space weather beyond the daily rows it was
-/// given. Append new values only.
 type pcfWeatherExtension byte
 
 const (

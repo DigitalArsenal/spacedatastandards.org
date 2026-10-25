@@ -40,6 +40,36 @@ public enum pcfTheory: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
 
 ///  How a propagator learns the space weather beyond the daily rows it was
 ///  given. Append new values only.
+///  How the epoch store picks the element set for a request time.
+public enum pcfEpochSelection: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  The set whose epoch is nearest the request time (the default).
+  case nearest = 0
+  ///  The latest set whose epoch is at or before the request time.
+  case latestBefore = 1
+
+  public static var max: pcfEpochSelection { return .latestBefore }
+  public static var min: pcfEpochSelection { return .nearest }
+}
+
+
+///  The weight curve of the handover blend between two consecutive sets.
+public enum pcfBlendShape: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
+  public typealias T = UInt8
+  public static var byteSize: Int { return MemoryLayout<UInt8>.size }
+  public var value: UInt8 { return self.rawValue }
+  ///  Smoothstep weight on the two propagated states (the default).
+  case smoothstep = 0
+  ///  Cubic Hermite matching of position and velocity across the window.
+  case hermite = 1
+
+  public static var max: pcfBlendShape { return .hermite }
+  public static var min: pcfBlendShape { return .smoothstep }
+}
+
+
 public enum pcfWeatherExtension: UInt8, FlatbuffersVectorInitializable, Enum, Verifiable {
   public typealias T = UInt8
   public static var byteSize: Int { return MemoryLayout<UInt8>.size }
@@ -2258,6 +2288,82 @@ public struct PCFForceModel: FlatBufferVerifiableTable, FlatbuffersVectorInitial
   }
 }
 
+///  The multi-epoch element store of SDN-AP and the sync harness that fills it:
+///  how many days of element sets are kept, which set answers a request time and
+///  how consecutive sets are blended across a handover. Absent: every default below.
+public struct PCFEpochStore: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
+
+  static func validateVersion() { FlatBuffersVersion_25_12_19() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$PCF" }
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: PCFEpochStore.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private struct VT {
+    static let CACHE_DAYS: VOffset = 4
+    static let MAX_SETS_PER_OBJECT: VOffset = 6
+    static let SELECTION: VOffset = 8
+    static let BLEND_WINDOW_SECONDS: VOffset = 10
+    static let BLEND_SHAPE: VOffset = 12
+    static let THEORIES: VOffset = 14
+  }
+
+  ///  Days of element sets kept, counted back from now by epoch. Default 7.
+  public var CACHE_DAYS: Double { let o = _accessor.offset(VT.CACHE_DAYS); return o == 0 ? 7.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Most sets kept per object and theory, the oldest epochs dropping first.
+  ///  Default 0 (no cap beyond CACHE_DAYS).
+  public var MAX_SETS_PER_OBJECT: UInt32 { let o = _accessor.offset(VT.MAX_SETS_PER_OBJECT); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Which set answers a request time. Default NEAREST.
+  public var SELECTION: pcfEpochSelection { let o = _accessor.offset(VT.SELECTION); return o == 0 ? .nearest : pcfEpochSelection(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .nearest }
+  ///  Width, seconds, of the blend window centered on the midpoint between two
+  ///  consecutive sets; 0 switches sets without a blend. Default 3600.
+  public var BLEND_WINDOW_SECONDS: Double { let o = _accessor.offset(VT.BLEND_WINDOW_SECONDS); return o == 0 ? 3600.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  The weight curve across the blend window. Default SMOOTHSTEP.
+  public var BLEND_SHAPE: pcfBlendShape { let o = _accessor.offset(VT.BLEND_SHAPE); return o == 0 ? .smoothstep : pcfBlendShape(rawValue: _accessor.readBuffer(of: UInt8.self, at: o)) ?? .smoothstep }
+  ///  Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  public var THEORIES: FlatbufferVector<pcfTheory> { return _accessor.vector(at: VT.THEORIES, byteSize: 1) }
+  public static func startPCFEpochStore(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(CACHE_DAYS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CACHE_DAYS, def: 7.0, at: VT.CACHE_DAYS) }
+  public static func add(MAX_SETS_PER_OBJECT: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAX_SETS_PER_OBJECT, def: 0, at: VT.MAX_SETS_PER_OBJECT) }
+  public static func add(SELECTION: pcfEpochSelection, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SELECTION.rawValue, def: 0, at: VT.SELECTION) }
+  public static func add(BLEND_WINDOW_SECONDS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLEND_WINDOW_SECONDS, def: 3600.0, at: VT.BLEND_WINDOW_SECONDS) }
+  public static func add(BLEND_SHAPE: pcfBlendShape, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BLEND_SHAPE.rawValue, def: 0, at: VT.BLEND_SHAPE) }
+  public static func addVectorOf(THEORIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: THEORIES, at: VT.THEORIES) }
+  public static func endPCFEpochStore(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createPCFEpochStore(
+    _ fbb: inout FlatBufferBuilder,
+    CACHE_DAYS: Double = 7.0,
+    MAX_SETS_PER_OBJECT: UInt32 = 0,
+    SELECTION: pcfEpochSelection = .nearest,
+    BLEND_WINDOW_SECONDS: Double = 3600.0,
+    BLEND_SHAPE: pcfBlendShape = .smoothstep,
+    THEORIESVectorOffset THEORIES: Offset = Offset()
+  ) -> Offset {
+    let __start = PCFEpochStore.startPCFEpochStore(&fbb)
+    PCFEpochStore.add(CACHE_DAYS: CACHE_DAYS, &fbb)
+    PCFEpochStore.add(MAX_SETS_PER_OBJECT: MAX_SETS_PER_OBJECT, &fbb)
+    PCFEpochStore.add(SELECTION: SELECTION, &fbb)
+    PCFEpochStore.add(BLEND_WINDOW_SECONDS: BLEND_WINDOW_SECONDS, &fbb)
+    PCFEpochStore.add(BLEND_SHAPE: BLEND_SHAPE, &fbb)
+    PCFEpochStore.addVectorOf(THEORIES: THEORIES, &fbb)
+    return PCFEpochStore.endPCFEpochStore(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VT.CACHE_DAYS, fieldName: "CACHE_DAYS", required: false, type: Double.self)
+    try _v.visit(field: VT.MAX_SETS_PER_OBJECT, fieldName: "MAX_SETS_PER_OBJECT", required: false, type: UInt32.self)
+    try _v.visit(field: VT.SELECTION, fieldName: "SELECTION", required: false, type: pcfEpochSelection.self)
+    try _v.visit(field: VT.BLEND_WINDOW_SECONDS, fieldName: "BLEND_WINDOW_SECONDS", required: false, type: Double.self)
+    try _v.visit(field: VT.BLEND_SHAPE, fieldName: "BLEND_SHAPE", required: false, type: pcfBlendShape.self)
+    try _v.visit(field: VT.THEORIES, fieldName: "THEORIES", required: false, type: ForwardOffset<Vector<pcfTheory, pcfTheory>>.self)
+    _v.finish()
+  }
+}
+
 ///  Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
 ///  any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
 ///  force model, Kepler): the theory, the integrator and its settings, the
@@ -2295,6 +2401,7 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     static let REENTRY: VOffset = 24
     static let LAUNCH: VOffset = 26
     static let OUTPUT: VOffset = 28
+    static let EPOCH_STORE: VOffset = 30
   }
 
   ///  Opaque identifier of this configuration, for provenance. Default empty.
@@ -2326,7 +2433,9 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var LAUNCH: PCFLaunch? { let o = _accessor.offset(VT.LAUNCH); return o == 0 ? nil : PCFLaunch(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
   ///  Output states.
   public var OUTPUT: PCFOutput? { let o = _accessor.offset(VT.OUTPUT); return o == 0 ? nil : PCFOutput(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
-  public static func startPCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 13) }
+  ///  The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+  public var EPOCH_STORE: PCFEpochStore? { let o = _accessor.offset(VT.EPOCH_STORE); return o == 0 ? nil : PCFEpochStore(_accessor.bb, o: _accessor.indirect(o + _accessor.position)) }
+  public static func startPCF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
   public static func add(CONFIGURATION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONFIGURATION_ID, at: VT.CONFIGURATION_ID) }
   public static func add(PROFILE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PROFILE, at: VT.PROFILE) }
   public static func add(THEORY: pcfTheory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THEORY.rawValue, def: 0, at: VT.THEORY) }
@@ -2340,6 +2449,7 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public static func add(REENTRY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY, at: VT.REENTRY) }
   public static func add(LAUNCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH, at: VT.LAUNCH) }
   public static func add(OUTPUT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OUTPUT, at: VT.OUTPUT) }
+  public static func add(EPOCH_STORE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH_STORE, at: VT.EPOCH_STORE) }
   public static func endPCF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createPCF(
     _ fbb: inout FlatBufferBuilder,
@@ -2355,7 +2465,8 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     MANEUVER_DETECTIONOffset MANEUVER_DETECTION: Offset = Offset(),
     REENTRYOffset REENTRY: Offset = Offset(),
     LAUNCHOffset LAUNCH: Offset = Offset(),
-    OUTPUTOffset OUTPUT: Offset = Offset()
+    OUTPUTOffset OUTPUT: Offset = Offset(),
+    EPOCH_STOREOffset EPOCH_STORE: Offset = Offset()
   ) -> Offset {
     let __start = PCF.startPCF(&fbb)
     PCF.add(CONFIGURATION_ID: CONFIGURATION_ID, &fbb)
@@ -2371,6 +2482,7 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     PCF.add(REENTRY: REENTRY, &fbb)
     PCF.add(LAUNCH: LAUNCH, &fbb)
     PCF.add(OUTPUT: OUTPUT, &fbb)
+    PCF.add(EPOCH_STORE: EPOCH_STORE, &fbb)
     return PCF.endPCF(&fbb, start: __start)
   }
 
@@ -2389,6 +2501,7 @@ public struct PCF: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
     try _v.visit(field: VT.REENTRY, fieldName: "REENTRY", required: false, type: ForwardOffset<PCFReentry>.self)
     try _v.visit(field: VT.LAUNCH, fieldName: "LAUNCH", required: false, type: ForwardOffset<PCFLaunch>.self)
     try _v.visit(field: VT.OUTPUT, fieldName: "OUTPUT", required: false, type: ForwardOffset<PCFOutput>.self)
+    try _v.visit(field: VT.EPOCH_STORE, fieldName: "EPOCH_STORE", required: false, type: ForwardOffset<PCFEpochStore>.self)
     _v.finish()
   }
 }

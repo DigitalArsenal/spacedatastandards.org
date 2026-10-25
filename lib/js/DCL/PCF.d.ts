@@ -1,4 +1,5 @@
 import * as flatbuffers from 'flatbuffers';
+import { PCFEpochStore, PCFEpochStoreT } from './PCFEpochStore.js';
 import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js';
 import { PCFFitPolicy, PCFFitPolicyT } from './PCFFitPolicy.js';
 import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
@@ -87,6 +88,10 @@ export declare class PCF implements flatbuffers.IUnpackableObject<PCFT> {
      * Output states.
      */
     OUTPUT(obj?: PCFOutput): PCFOutput | null;
+    /**
+     * The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+     */
+    EPOCH_STORE(obj?: PCFEpochStore): PCFEpochStore | null;
     static startPCF(builder: flatbuffers.Builder): void;
     static addConfigurationId(builder: flatbuffers.Builder, CONFIGURATION_IDOffset: flatbuffers.Offset): void;
     static addProfile(builder: flatbuffers.Builder, PROFILEOffset: flatbuffers.Offset): void;
@@ -103,6 +108,7 @@ export declare class PCF implements flatbuffers.IUnpackableObject<PCFT> {
     static addReentry(builder: flatbuffers.Builder, REENTRYOffset: flatbuffers.Offset): void;
     static addLaunch(builder: flatbuffers.Builder, LAUNCHOffset: flatbuffers.Offset): void;
     static addOutput(builder: flatbuffers.Builder, OUTPUTOffset: flatbuffers.Offset): void;
+    static addEpochStore(builder: flatbuffers.Builder, EPOCH_STOREOffset: flatbuffers.Offset): void;
     static endPCF(builder: flatbuffers.Builder): flatbuffers.Offset;
     static finishPCFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
     static finishSizePrefixedPCFBuffer(builder: flatbuffers.Builder, offset: flatbuffers.Offset): void;
@@ -123,7 +129,8 @@ export declare class PCFT implements flatbuffers.IGeneratedObject {
     REENTRY: PCFReentryT | null;
     LAUNCH: PCFLaunchT | null;
     OUTPUT: PCFOutputT | null;
-    constructor(CONFIGURATION_ID?: string | Uint8Array | null, PROFILE?: string | Uint8Array | null, THEORY?: pcfTheory, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, MEAN_ELEMENT?: PCFMeanElementOptionsT | null, SEGMENTS?: PCFSegmentOptionsT | null, FIT?: PCFFitPolicyT | null, EVENTS?: (PCFEventDefinitionT)[], MANEUVER_DETECTION?: PCFManeuverDetectionT | null, REENTRY?: PCFReentryT | null, LAUNCH?: PCFLaunchT | null, OUTPUT?: PCFOutputT | null);
+    EPOCH_STORE: PCFEpochStoreT | null;
+    constructor(CONFIGURATION_ID?: string | Uint8Array | null, PROFILE?: string | Uint8Array | null, THEORY?: pcfTheory, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, MEAN_ELEMENT?: PCFMeanElementOptionsT | null, SEGMENTS?: PCFSegmentOptionsT | null, FIT?: PCFFitPolicyT | null, EVENTS?: (PCFEventDefinitionT)[], MANEUVER_DETECTION?: PCFManeuverDetectionT | null, REENTRY?: PCFReentryT | null, LAUNCH?: PCFLaunchT | null, OUTPUT?: PCFOutputT | null, EPOCH_STORE?: PCFEpochStoreT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PCF.d.ts.map

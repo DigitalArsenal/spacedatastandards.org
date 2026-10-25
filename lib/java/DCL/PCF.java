@@ -109,6 +109,11 @@ public final class PCF extends com.google.flatbuffers.Table {
    */
   public PCFOutput OUTPUT() { return OUTPUT(new PCFOutput()); }
   public PCFOutput OUTPUT(PCFOutput obj) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+   */
+  public PCFEpochStore EPOCH_STORE() { return EPOCH_STORE(new PCFEpochStore()); }
+  public PCFEpochStore EPOCH_STORE(PCFEpochStore obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
 
   public static int createPCF(FlatBufferBuilder builder,
       int CONFIGURATION_IDOffset,
@@ -123,8 +128,10 @@ public final class PCF extends com.google.flatbuffers.Table {
       int MANEUVER_DETECTIONOffset,
       int REENTRYOffset,
       int LAUNCHOffset,
-      int OUTPUTOffset) {
-    builder.startTable(13);
+      int OUTPUTOffset,
+      int EPOCH_STOREOffset) {
+    builder.startTable(14);
+    PCF.addEpochStore(builder, EPOCH_STOREOffset);
     PCF.addOutput(builder, OUTPUTOffset);
     PCF.addLaunch(builder, LAUNCHOffset);
     PCF.addReentry(builder, REENTRYOffset);
@@ -141,7 +148,7 @@ public final class PCF extends com.google.flatbuffers.Table {
     return PCF.endPCF(builder);
   }
 
-  public static void startPCF(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startPCF(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addConfigurationId(FlatBufferBuilder builder, int CONFIGURATION_IDOffset) { builder.addOffset(0, CONFIGURATION_IDOffset, 0); }
   public static void addProfile(FlatBufferBuilder builder, int PROFILEOffset) { builder.addOffset(1, PROFILEOffset, 0); }
   public static void addTheory(FlatBufferBuilder builder, int THEORY) { builder.addByte(2, (byte) THEORY, (byte) 0); }
@@ -157,6 +164,7 @@ public final class PCF extends com.google.flatbuffers.Table {
   public static void addReentry(FlatBufferBuilder builder, int REENTRYOffset) { builder.addOffset(10, REENTRYOffset, 0); }
   public static void addLaunch(FlatBufferBuilder builder, int LAUNCHOffset) { builder.addOffset(11, LAUNCHOffset, 0); }
   public static void addOutput(FlatBufferBuilder builder, int OUTPUTOffset) { builder.addOffset(12, OUTPUTOffset, 0); }
+  public static void addEpochStore(FlatBufferBuilder builder, int EPOCH_STOREOffset) { builder.addOffset(13, EPOCH_STOREOffset, 0); }
   public static int endPCF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

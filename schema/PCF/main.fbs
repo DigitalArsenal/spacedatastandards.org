@@ -1,5 +1,5 @@
-// Hash: 4b75ce8c585bdbcce38664486ead9587badc009933e1331eed59fba4f6a37a8f
-// Version: 1.0.2
+// Hash: 257c2ee0144189d96eefd4a5c52dcf75ed31d07f9908f82f94b36a3947f2465d
+// Version: 1.0.4
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -32,6 +32,22 @@ enum pcfTheory : ubyte {
 
 /// How a propagator learns the space weather beyond the daily rows it was
 /// given. Append new values only.
+/// How the epoch store picks the element set for a request time.
+enum pcfEpochSelection : ubyte {
+  /// The set whose epoch is nearest the request time (the default).
+  NEAREST = 0,
+  /// The latest set whose epoch is at or before the request time.
+  LATEST_BEFORE = 1
+}
+
+/// The weight curve of the handover blend between two consecutive sets.
+enum pcfBlendShape : ubyte {
+  /// Smoothstep weight on the two propagated states (the default).
+  SMOOTHSTEP = 0,
+  /// Cubic Hermite matching of position and velocity across the window.
+  HERMITE = 1
+}
+
 enum pcfWeatherExtension : ubyte {
   /// The provider's own rule (the numerical propagator refuses, the advanced
   /// mean-element propagator chains forecasts).
@@ -834,6 +850,26 @@ table PCFForceModel {
   THIRD_BODY_MAXIMUM_ORDER:ushort = 0;
 }
 
+/// The multi-epoch element store of SDN-AP and the sync harness that fills it:
+/// how many days of element sets are kept, which set answers a request time and
+/// how consecutive sets are blended across a handover. Absent: every default below.
+table PCFEpochStore {
+  /// Days of element sets kept, counted back from now by epoch. Default 7.
+  CACHE_DAYS:double = 7;
+  /// Most sets kept per object and theory, the oldest epochs dropping first.
+  /// Default 0 (no cap beyond CACHE_DAYS).
+  MAX_SETS_PER_OBJECT:uint = 0;
+  /// Which set answers a request time. Default NEAREST.
+  SELECTION:pcfEpochSelection = NEAREST;
+  /// Width, seconds, of the blend window centered on the midpoint between two
+  /// consecutive sets; 0 switches sets without a blend. Default 3600.
+  BLEND_WINDOW_SECONDS:double = 3600;
+  /// The weight curve across the blend window. Default SMOOTHSTEP.
+  BLEND_SHAPE:pcfBlendShape = SMOOTHSTEP;
+  /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  THEORIES:[pcfTheory];
+}
+
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
 /// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
 /// force model, Kepler): the theory, the integrator and its settings, the
@@ -874,6 +910,8 @@ table PCF {
   LAUNCH:PCFLaunch;
   /// Output states.
   OUTPUT:PCFOutput;
+  /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+  EPOCH_STORE:PCFEpochStore;
 }
 
 root_type PCF;

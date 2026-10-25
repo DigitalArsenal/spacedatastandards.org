@@ -2,10 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
-/**
- * How a propagator learns the space weather beyond the daily rows it was
- * given. Append new values only.
- */
 export enum pcfWeatherExtension {
   /**
    * The provider's own rule (the numerical propagator refuses, the advanced

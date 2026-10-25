@@ -133,6 +133,204 @@ impl<'a> ::flatbuffers::Verifiable for pcfTheory {
 impl ::flatbuffers::SimpleToVerifyInSlice for pcfTheory {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_EPOCH_SELECTION: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_EPOCH_SELECTION: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_EPOCH_SELECTION: [pcfEpochSelection; 2] = [
+    pcfEpochSelection::NEAREST,
+    pcfEpochSelection::LATEST_BEFORE,
+];
+
+/// How a propagator learns the space weather beyond the daily rows it was
+/// given. Append new values only.
+/// How the epoch store picks the element set for a request time.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfEpochSelection(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfEpochSelection {
+    /// The set whose epoch is nearest the request time (the default).
+    pub const NEAREST: Self = Self(0);
+    /// The latest set whose epoch is at or before the request time.
+    pub const LATEST_BEFORE: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::NEAREST,
+        Self::LATEST_BEFORE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::NEAREST => Some("NEAREST"),
+            Self::LATEST_BEFORE => Some("LATEST_BEFORE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfEpochSelection {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfEpochSelection {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfEpochSelection {
+    type Output = pcfEpochSelection;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfEpochSelection {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfEpochSelection {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfEpochSelection {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_PCF_BLEND_SHAPE: u8 = 0;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_PCF_BLEND_SHAPE: u8 = 1;
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_PCF_BLEND_SHAPE: [pcfBlendShape; 2] = [
+    pcfBlendShape::SMOOTHSTEP,
+    pcfBlendShape::HERMITE,
+];
+
+/// The weight curve of the handover blend between two consecutive sets.
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct pcfBlendShape(pub u8);
+
+#[allow(non_upper_case_globals)]
+impl pcfBlendShape {
+    /// Smoothstep weight on the two propagated states (the default).
+    pub const SMOOTHSTEP: Self = Self(0);
+    /// Cubic Hermite matching of position and velocity across the window.
+    pub const HERMITE: Self = Self(1);
+
+    pub const ENUM_MIN: u8 = 0;
+    pub const ENUM_MAX: u8 = 1;
+    pub const ENUM_VALUES: &'static [Self] = &[
+        Self::SMOOTHSTEP,
+        Self::HERMITE,
+    ];
+
+    /// Returns the variant's name or "" if unknown.
+    pub fn variant_name(self) -> Option<&'static str> {
+        match self {
+            Self::SMOOTHSTEP => Some("SMOOTHSTEP"),
+            Self::HERMITE => Some("HERMITE"),
+            _ => None,
+        }
+    }
+}
+
+impl ::core::fmt::Debug for pcfBlendShape {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
+        if let Some(name) = self.variant_name() {
+            f.write_str(name)
+        } else {
+            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+        }
+    }
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for pcfBlendShape {
+    type Inner = Self;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
+        Self(b)
+    }
+}
+
+impl ::flatbuffers::Push for pcfBlendShape {
+    type Output = pcfBlendShape;
+
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
+    }
+}
+
+impl ::flatbuffers::EndianScalar for pcfBlendShape {
+    type Scalar = u8;
+
+    #[inline]
+    fn to_little_endian(self) -> u8 {
+        self.0.to_le()
+    }
+
+    #[inline]
+    #[allow(clippy::wrong_self_convention)]
+    fn from_little_endian(v: u8) -> Self {
+        let b = u8::from_le(v);
+        Self(b)
+    }
+}
+
+impl<'a> ::flatbuffers::Verifiable for pcfBlendShape {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        u8::run_verifier(v, pos)
+    }
+}
+
+impl ::flatbuffers::SimpleToVerifyInSlice for pcfBlendShape {}
+
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PCF_WEATHER_EXTENSION: u8 = 0;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
@@ -147,8 +345,6 @@ pub const ENUM_VALUES_PCF_WEATHER_EXTENSION: [pcfWeatherExtension; 4] = [
     pcfWeatherExtension::FORECAST_CHAIN,
 ];
 
-/// How a propagator learns the space weather beyond the daily rows it was
-/// given. Append new values only.
 #[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
 #[repr(transparent)]
 pub struct pcfWeatherExtension(pub u8);
@@ -8685,6 +8881,282 @@ impl PCFForceModelT {
     }
 }
 
+pub enum PCFEpochStoreOffset {}
+
+/// The multi-epoch element store of SDN-AP and the sync harness that fills it:
+/// how many days of element sets are kept, which set answers a request time and
+/// how consecutive sets are blended across a handover. Absent: every default below.
+#[derive(Copy, Clone, PartialEq)]
+pub struct PCFEpochStore<'a> {
+    pub _tab: ::flatbuffers::Table<'a>,
+}
+
+impl<'a> ::flatbuffers::Follow<'a> for PCFEpochStore<'a> {
+    type Inner = PCFEpochStore<'a>;
+
+    #[inline]
+    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
+    }
+}
+
+impl<'a> PCFEpochStore<'a> {
+    pub const VT_CACHE_DAYS: ::flatbuffers::VOffsetT = 4;
+    pub const VT_MAX_SETS_PER_OBJECT: ::flatbuffers::VOffsetT = 6;
+    pub const VT_SELECTION: ::flatbuffers::VOffsetT = 8;
+    pub const VT_BLEND_WINDOW_SECONDS: ::flatbuffers::VOffsetT = 10;
+    pub const VT_BLEND_SHAPE: ::flatbuffers::VOffsetT = 12;
+    pub const VT_THEORIES: ::flatbuffers::VOffsetT = 14;
+
+    #[inline]
+    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
+        PCFEpochStore { _tab: table }
+    }
+
+    #[allow(unused_mut)]
+    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
+        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
+        args: &'args PCFEpochStoreArgs<'args>
+    ) -> ::flatbuffers::WIPOffset<PCFEpochStore<'bldr>> {
+        let mut builder = PCFEpochStoreBuilder::new(_fbb);
+        builder.add_BLEND_WINDOW_SECONDS(args.BLEND_WINDOW_SECONDS);
+        builder.add_CACHE_DAYS(args.CACHE_DAYS);
+        if let Some(x) = args.THEORIES { builder.add_THEORIES(x); }
+        builder.add_MAX_SETS_PER_OBJECT(args.MAX_SETS_PER_OBJECT);
+        builder.add_BLEND_SHAPE(args.BLEND_SHAPE);
+        builder.add_SELECTION(args.SELECTION);
+        builder.finish()
+    }
+
+    pub fn unpack(&self) -> PCFEpochStoreT {
+        let CACHE_DAYS = self.CACHE_DAYS();
+        let MAX_SETS_PER_OBJECT = self.MAX_SETS_PER_OBJECT();
+        let SELECTION = self.SELECTION();
+        let BLEND_WINDOW_SECONDS = self.BLEND_WINDOW_SECONDS();
+        let BLEND_SHAPE = self.BLEND_SHAPE();
+        let THEORIES = self.THEORIES().map(|x| {
+            x.into_iter().collect()
+        });
+        PCFEpochStoreT {
+            CACHE_DAYS,
+            MAX_SETS_PER_OBJECT,
+            SELECTION,
+            BLEND_WINDOW_SECONDS,
+            BLEND_SHAPE,
+            THEORIES,
+        }
+    }
+
+    /// Days of element sets kept, counted back from now by epoch. Default 7.
+    #[inline]
+    pub fn CACHE_DAYS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFEpochStore::VT_CACHE_DAYS, Some(7.0)).unwrap()}
+    }
+
+    /// Most sets kept per object and theory, the oldest epochs dropping first.
+    /// Default 0 (no cap beyond CACHE_DAYS).
+    #[inline]
+    pub fn MAX_SETS_PER_OBJECT(&self) -> u32 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<u32>(PCFEpochStore::VT_MAX_SETS_PER_OBJECT, Some(0)).unwrap()}
+    }
+
+    /// Which set answers a request time. Default NEAREST.
+    #[inline]
+    pub fn SELECTION(&self) -> pcfEpochSelection {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfEpochSelection>(PCFEpochStore::VT_SELECTION, Some(pcfEpochSelection::NEAREST)).unwrap()}
+    }
+
+    /// Width, seconds, of the blend window centered on the midpoint between two
+    /// consecutive sets; 0 switches sets without a blend. Default 3600.
+    #[inline]
+    pub fn BLEND_WINDOW_SECONDS(&self) -> f64 {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<f64>(PCFEpochStore::VT_BLEND_WINDOW_SECONDS, Some(3600.0)).unwrap()}
+    }
+
+    /// The weight curve across the blend window. Default SMOOTHSTEP.
+    #[inline]
+    pub fn BLEND_SHAPE(&self) -> pcfBlendShape {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<pcfBlendShape>(PCFEpochStore::VT_BLEND_SHAPE, Some(pcfBlendShape::SMOOTHSTEP)).unwrap()}
+    }
+
+    /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+    #[inline]
+    pub fn THEORIES(&self) -> Option<::flatbuffers::Vector<'a, pcfTheory>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, pcfTheory>>>(PCFEpochStore::VT_THEORIES, None)}
+    }
+}
+
+impl ::flatbuffers::Verifiable for PCFEpochStore<'_> {
+    #[inline]
+    fn run_verifier(
+        v: &mut ::flatbuffers::Verifier, pos: usize
+    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
+        v.visit_table(pos)?
+            .visit_field::<f64>("CACHE_DAYS", Self::VT_CACHE_DAYS, false)?
+            .visit_field::<u32>("MAX_SETS_PER_OBJECT", Self::VT_MAX_SETS_PER_OBJECT, false)?
+            .visit_field::<pcfEpochSelection>("SELECTION", Self::VT_SELECTION, false)?
+            .visit_field::<f64>("BLEND_WINDOW_SECONDS", Self::VT_BLEND_WINDOW_SECONDS, false)?
+            .visit_field::<pcfBlendShape>("BLEND_SHAPE", Self::VT_BLEND_SHAPE, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, pcfTheory>>>("THEORIES", Self::VT_THEORIES, false)?
+            .finish();
+        Ok(())
+    }
+}
+
+pub struct PCFEpochStoreArgs<'a> {
+    pub CACHE_DAYS: f64,
+    pub MAX_SETS_PER_OBJECT: u32,
+    pub SELECTION: pcfEpochSelection,
+    pub BLEND_WINDOW_SECONDS: f64,
+    pub BLEND_SHAPE: pcfBlendShape,
+    pub THEORIES: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, pcfTheory>>>,
+}
+
+impl<'a> Default for PCFEpochStoreArgs<'a> {
+    #[inline]
+    fn default() -> Self {
+        PCFEpochStoreArgs {
+            CACHE_DAYS: 7.0,
+            MAX_SETS_PER_OBJECT: 0,
+            SELECTION: pcfEpochSelection::NEAREST,
+            BLEND_WINDOW_SECONDS: 3600.0,
+            BLEND_SHAPE: pcfBlendShape::SMOOTHSTEP,
+            THEORIES: None,
+        }
+    }
+}
+
+pub struct PCFEpochStoreBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
+    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
+    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
+}
+
+impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEpochStoreBuilder<'a, 'b, A> {
+    #[inline]
+    pub fn add_CACHE_DAYS(&mut self, CACHE_DAYS: f64) {
+        self.fbb_.push_slot::<f64>(PCFEpochStore::VT_CACHE_DAYS, CACHE_DAYS, 7.0);
+    }
+
+    #[inline]
+    pub fn add_MAX_SETS_PER_OBJECT(&mut self, MAX_SETS_PER_OBJECT: u32) {
+        self.fbb_.push_slot::<u32>(PCFEpochStore::VT_MAX_SETS_PER_OBJECT, MAX_SETS_PER_OBJECT, 0);
+    }
+
+    #[inline]
+    pub fn add_SELECTION(&mut self, SELECTION: pcfEpochSelection) {
+        self.fbb_.push_slot::<pcfEpochSelection>(PCFEpochStore::VT_SELECTION, SELECTION, pcfEpochSelection::NEAREST);
+    }
+
+    #[inline]
+    pub fn add_BLEND_WINDOW_SECONDS(&mut self, BLEND_WINDOW_SECONDS: f64) {
+        self.fbb_.push_slot::<f64>(PCFEpochStore::VT_BLEND_WINDOW_SECONDS, BLEND_WINDOW_SECONDS, 3600.0);
+    }
+
+    #[inline]
+    pub fn add_BLEND_SHAPE(&mut self, BLEND_SHAPE: pcfBlendShape) {
+        self.fbb_.push_slot::<pcfBlendShape>(PCFEpochStore::VT_BLEND_SHAPE, BLEND_SHAPE, pcfBlendShape::SMOOTHSTEP);
+    }
+
+    #[inline]
+    pub fn add_THEORIES(&mut self, THEORIES: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , pcfTheory>>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCFEpochStore::VT_THEORIES, THEORIES);
+    }
+
+    #[inline]
+    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFEpochStoreBuilder<'a, 'b, A> {
+        let start = _fbb.start_table();
+        PCFEpochStoreBuilder {
+            fbb_: _fbb,
+            start_: start,
+        }
+    }
+
+    #[inline]
+    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFEpochStore<'a>> {
+        let o = self.fbb_.end_table(self.start_);
+        ::flatbuffers::WIPOffset::new(o.value())
+    }
+}
+
+impl ::core::fmt::Debug for PCFEpochStore<'_> {
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut ds = f.debug_struct("PCFEpochStore");
+        ds.field("CACHE_DAYS", &self.CACHE_DAYS());
+        ds.field("MAX_SETS_PER_OBJECT", &self.MAX_SETS_PER_OBJECT());
+        ds.field("SELECTION", &self.SELECTION());
+        ds.field("BLEND_WINDOW_SECONDS", &self.BLEND_WINDOW_SECONDS());
+        ds.field("BLEND_SHAPE", &self.BLEND_SHAPE());
+        ds.field("THEORIES", &self.THEORIES());
+        ds.finish()
+    }
+}
+
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct PCFEpochStoreT {
+    pub CACHE_DAYS: f64,
+    pub MAX_SETS_PER_OBJECT: u32,
+    pub SELECTION: pcfEpochSelection,
+    pub BLEND_WINDOW_SECONDS: f64,
+    pub BLEND_SHAPE: pcfBlendShape,
+    pub THEORIES: Option<alloc::vec::Vec<pcfTheory>>,
+}
+
+impl Default for PCFEpochStoreT {
+    fn default() -> Self {
+        Self {
+            CACHE_DAYS: 7.0,
+            MAX_SETS_PER_OBJECT: 0,
+            SELECTION: pcfEpochSelection::NEAREST,
+            BLEND_WINDOW_SECONDS: 3600.0,
+            BLEND_SHAPE: pcfBlendShape::SMOOTHSTEP,
+            THEORIES: None,
+        }
+    }
+}
+
+impl PCFEpochStoreT {
+    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
+        &self,
+        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
+    ) -> ::flatbuffers::WIPOffset<PCFEpochStore<'b>> {
+        let CACHE_DAYS = self.CACHE_DAYS;
+        let MAX_SETS_PER_OBJECT = self.MAX_SETS_PER_OBJECT;
+        let SELECTION = self.SELECTION;
+        let BLEND_WINDOW_SECONDS = self.BLEND_WINDOW_SECONDS;
+        let BLEND_SHAPE = self.BLEND_SHAPE;
+        let THEORIES = self.THEORIES.as_ref().map(|x|{
+            _fbb.create_vector(x)
+        });
+        PCFEpochStore::create(_fbb, &PCFEpochStoreArgs{
+            CACHE_DAYS,
+            MAX_SETS_PER_OBJECT,
+            SELECTION,
+            BLEND_WINDOW_SECONDS,
+            BLEND_SHAPE,
+            THEORIES,
+        })
+    }
+}
+
 pub enum PCFOffset {}
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
@@ -8727,6 +9199,7 @@ impl<'a> PCF<'a> {
     pub const VT_REENTRY: ::flatbuffers::VOffsetT = 24;
     pub const VT_LAUNCH: ::flatbuffers::VOffsetT = 26;
     pub const VT_OUTPUT: ::flatbuffers::VOffsetT = 28;
+    pub const VT_EPOCH_STORE: ::flatbuffers::VOffsetT = 30;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -8739,6 +9212,7 @@ impl<'a> PCF<'a> {
         args: &'args PCFArgs<'args>
     ) -> ::flatbuffers::WIPOffset<PCF<'bldr>> {
         let mut builder = PCFBuilder::new(_fbb);
+        if let Some(x) = args.EPOCH_STORE { builder.add_EPOCH_STORE(x); }
         if let Some(x) = args.OUTPUT { builder.add_OUTPUT(x); }
         if let Some(x) = args.LAUNCH { builder.add_LAUNCH(x); }
         if let Some(x) = args.REENTRY { builder.add_REENTRY(x); }
@@ -8793,6 +9267,9 @@ impl<'a> PCF<'a> {
         let OUTPUT = self.OUTPUT().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
+        let EPOCH_STORE = self.EPOCH_STORE().map(|x| {
+            alloc::boxed::Box::new(x.unpack())
+        });
         PCFT {
             CONFIGURATION_ID,
             PROFILE,
@@ -8807,6 +9284,7 @@ impl<'a> PCF<'a> {
             REENTRY,
             LAUNCH,
             OUTPUT,
+            EPOCH_STORE,
         }
     }
 
@@ -8927,6 +9405,15 @@ impl<'a> PCF<'a> {
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFOutput>>(PCF::VT_OUTPUT, None)}
     }
+
+    /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+    #[inline]
+    pub fn EPOCH_STORE(&self) -> Option<PCFEpochStore<'a>> {
+        // Safety:
+        // Created from valid Table for this object
+        // which contains a valid value in this slot
+        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFEpochStore>>(PCF::VT_EPOCH_STORE, None)}
+    }
 }
 
 impl ::flatbuffers::Verifiable for PCF<'_> {
@@ -8948,6 +9435,7 @@ impl ::flatbuffers::Verifiable for PCF<'_> {
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFReentry>>("REENTRY", Self::VT_REENTRY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFLaunch>>("LAUNCH", Self::VT_LAUNCH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFOutput>>("OUTPUT", Self::VT_OUTPUT, false)?
+            .visit_field::<::flatbuffers::ForwardsUOffset<PCFEpochStore>>("EPOCH_STORE", Self::VT_EPOCH_STORE, false)?
             .finish();
         Ok(())
     }
@@ -8967,6 +9455,7 @@ pub struct PCFArgs<'a> {
     pub REENTRY: Option<::flatbuffers::WIPOffset<PCFReentry<'a>>>,
     pub LAUNCH: Option<::flatbuffers::WIPOffset<PCFLaunch<'a>>>,
     pub OUTPUT: Option<::flatbuffers::WIPOffset<PCFOutput<'a>>>,
+    pub EPOCH_STORE: Option<::flatbuffers::WIPOffset<PCFEpochStore<'a>>>,
 }
 
 impl<'a> Default for PCFArgs<'a> {
@@ -8986,6 +9475,7 @@ impl<'a> Default for PCFArgs<'a> {
             REENTRY: None,
             LAUNCH: None,
             OUTPUT: None,
+            EPOCH_STORE: None,
         }
     }
 }
@@ -9062,6 +9552,11 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFBuilder<'a, 'b, A> {
     }
 
     #[inline]
+    pub fn add_EPOCH_STORE(&mut self, EPOCH_STORE: ::flatbuffers::WIPOffset<PCFEpochStore<'b >>) {
+        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFEpochStore>>(PCF::VT_EPOCH_STORE, EPOCH_STORE);
+    }
+
+    #[inline]
     pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFBuilder<'a, 'b, A> {
         let start = _fbb.start_table();
         PCFBuilder {
@@ -9093,6 +9588,7 @@ impl ::core::fmt::Debug for PCF<'_> {
         ds.field("REENTRY", &self.REENTRY());
         ds.field("LAUNCH", &self.LAUNCH());
         ds.field("OUTPUT", &self.OUTPUT());
+        ds.field("EPOCH_STORE", &self.EPOCH_STORE());
         ds.finish()
     }
 }
@@ -9113,6 +9609,7 @@ pub struct PCFT {
     pub REENTRY: Option<alloc::boxed::Box<PCFReentryT>>,
     pub LAUNCH: Option<alloc::boxed::Box<PCFLaunchT>>,
     pub OUTPUT: Option<alloc::boxed::Box<PCFOutputT>>,
+    pub EPOCH_STORE: Option<alloc::boxed::Box<PCFEpochStoreT>>,
 }
 
 impl Default for PCFT {
@@ -9131,6 +9628,7 @@ impl Default for PCFT {
             REENTRY: None,
             LAUNCH: None,
             OUTPUT: None,
+            EPOCH_STORE: None,
         }
     }
 }
@@ -9177,6 +9675,9 @@ impl PCFT {
         let OUTPUT = self.OUTPUT.as_ref().map(|x|{
             x.pack(_fbb)
         });
+        let EPOCH_STORE = self.EPOCH_STORE.as_ref().map(|x|{
+            x.pack(_fbb)
+        });
         PCF::create(_fbb, &PCFArgs{
             CONFIGURATION_ID,
             PROFILE,
@@ -9191,6 +9692,7 @@ impl PCFT {
             REENTRY,
             LAUNCH,
             OUTPUT,
+            EPOCH_STORE,
         })
     }
 }

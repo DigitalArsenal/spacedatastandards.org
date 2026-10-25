@@ -66,6 +66,9 @@ struct PCFIntegratorSettingsBuilder;
 struct PCFForceModel;
 struct PCFForceModelBuilder;
 
+struct PCFEpochStore;
+struct PCFEpochStoreBuilder;
+
 struct PCF;
 struct PCFBuilder;
 
@@ -127,6 +130,72 @@ inline const char *EnumNamepcfTheory(pcfTheory e) {
 
 /// How a propagator learns the space weather beyond the daily rows it was
 /// given. Append new values only.
+/// How the epoch store picks the element set for a request time.
+enum pcfEpochSelection : uint8_t {
+  /// The set whose epoch is nearest the request time (the default).
+  pcfEpochSelection_NEAREST = 0,
+  /// The latest set whose epoch is at or before the request time.
+  pcfEpochSelection_LATEST_BEFORE = 1,
+  pcfEpochSelection_MIN = pcfEpochSelection_NEAREST,
+  pcfEpochSelection_MAX = pcfEpochSelection_LATEST_BEFORE
+};
+
+inline const pcfEpochSelection (&EnumValuespcfEpochSelection())[2] {
+  static const pcfEpochSelection values[] = {
+    pcfEpochSelection_NEAREST,
+    pcfEpochSelection_LATEST_BEFORE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfEpochSelection() {
+  static const char * const names[3] = {
+    "NEAREST",
+    "LATEST_BEFORE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfEpochSelection(pcfEpochSelection e) {
+  if (::flatbuffers::IsOutRange(e, pcfEpochSelection_NEAREST, pcfEpochSelection_LATEST_BEFORE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfEpochSelection()[index];
+}
+
+/// The weight curve of the handover blend between two consecutive sets.
+enum pcfBlendShape : uint8_t {
+  /// Smoothstep weight on the two propagated states (the default).
+  pcfBlendShape_SMOOTHSTEP = 0,
+  /// Cubic Hermite matching of position and velocity across the window.
+  pcfBlendShape_HERMITE = 1,
+  pcfBlendShape_MIN = pcfBlendShape_SMOOTHSTEP,
+  pcfBlendShape_MAX = pcfBlendShape_HERMITE
+};
+
+inline const pcfBlendShape (&EnumValuespcfBlendShape())[2] {
+  static const pcfBlendShape values[] = {
+    pcfBlendShape_SMOOTHSTEP,
+    pcfBlendShape_HERMITE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamespcfBlendShape() {
+  static const char * const names[3] = {
+    "SMOOTHSTEP",
+    "HERMITE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamepcfBlendShape(pcfBlendShape e) {
+  if (::flatbuffers::IsOutRange(e, pcfBlendShape_SMOOTHSTEP, pcfBlendShape_HERMITE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamespcfBlendShape()[index];
+}
+
 enum pcfWeatherExtension : uint8_t {
   /// The provider's own rule (the numerical propagator refuses, the advanced
   /// mean-element propagator chains forecasts).
@@ -3739,6 +3808,129 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModelDirect(
       THIRD_BODY_MAXIMUM_ORDER);
 }
 
+/// The multi-epoch element store of SDN-AP and the sync harness that fills it:
+/// how many days of element sets are kept, which set answers a request time and
+/// how consecutive sets are blended across a handover. Absent: every default below.
+struct PCFEpochStore FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef PCFEpochStoreBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CACHE_DAYS = 4,
+    VT_MAX_SETS_PER_OBJECT = 6,
+    VT_SELECTION = 8,
+    VT_BLEND_WINDOW_SECONDS = 10,
+    VT_BLEND_SHAPE = 12,
+    VT_THEORIES = 14
+  };
+  /// Days of element sets kept, counted back from now by epoch. Default 7.
+  double CACHE_DAYS() const {
+    return GetField<double>(VT_CACHE_DAYS, 7.0);
+  }
+  /// Most sets kept per object and theory, the oldest epochs dropping first.
+  /// Default 0 (no cap beyond CACHE_DAYS).
+  uint32_t MAX_SETS_PER_OBJECT() const {
+    return GetField<uint32_t>(VT_MAX_SETS_PER_OBJECT, 0);
+  }
+  /// Which set answers a request time. Default NEAREST.
+  pcfEpochSelection SELECTION() const {
+    return static_cast<pcfEpochSelection>(GetField<uint8_t>(VT_SELECTION, 0));
+  }
+  /// Width, seconds, of the blend window centered on the midpoint between two
+  /// consecutive sets; 0 switches sets without a blend. Default 3600.
+  double BLEND_WINDOW_SECONDS() const {
+    return GetField<double>(VT_BLEND_WINDOW_SECONDS, 3600.0);
+  }
+  /// The weight curve across the blend window. Default SMOOTHSTEP.
+  pcfBlendShape BLEND_SHAPE() const {
+    return static_cast<pcfBlendShape>(GetField<uint8_t>(VT_BLEND_SHAPE, 0));
+  }
+  /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  const ::flatbuffers::Vector<uint8_t> *THEORIES() const {
+    return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_THEORIES);
+  }
+  template <bool B = false>
+  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_CACHE_DAYS, 8) &&
+           VerifyField<uint32_t>(verifier, VT_MAX_SETS_PER_OBJECT, 4) &&
+           VerifyField<uint8_t>(verifier, VT_SELECTION, 1) &&
+           VerifyField<double>(verifier, VT_BLEND_WINDOW_SECONDS, 8) &&
+           VerifyField<uint8_t>(verifier, VT_BLEND_SHAPE, 1) &&
+           VerifyOffset(verifier, VT_THEORIES) &&
+           verifier.VerifyVector(THEORIES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct PCFEpochStoreBuilder {
+  typedef PCFEpochStore Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CACHE_DAYS(double CACHE_DAYS) {
+    fbb_.AddElement<double>(PCFEpochStore::VT_CACHE_DAYS, CACHE_DAYS, 7.0);
+  }
+  void add_MAX_SETS_PER_OBJECT(uint32_t MAX_SETS_PER_OBJECT) {
+    fbb_.AddElement<uint32_t>(PCFEpochStore::VT_MAX_SETS_PER_OBJECT, MAX_SETS_PER_OBJECT, 0);
+  }
+  void add_SELECTION(pcfEpochSelection SELECTION) {
+    fbb_.AddElement<uint8_t>(PCFEpochStore::VT_SELECTION, static_cast<uint8_t>(SELECTION), 0);
+  }
+  void add_BLEND_WINDOW_SECONDS(double BLEND_WINDOW_SECONDS) {
+    fbb_.AddElement<double>(PCFEpochStore::VT_BLEND_WINDOW_SECONDS, BLEND_WINDOW_SECONDS, 3600.0);
+  }
+  void add_BLEND_SHAPE(pcfBlendShape BLEND_SHAPE) {
+    fbb_.AddElement<uint8_t>(PCFEpochStore::VT_BLEND_SHAPE, static_cast<uint8_t>(BLEND_SHAPE), 0);
+  }
+  void add_THEORIES(::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> THEORIES) {
+    fbb_.AddOffset(PCFEpochStore::VT_THEORIES, THEORIES);
+  }
+  explicit PCFEpochStoreBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<PCFEpochStore> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<PCFEpochStore>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<PCFEpochStore> CreatePCFEpochStore(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double CACHE_DAYS = 7.0,
+    uint32_t MAX_SETS_PER_OBJECT = 0,
+    pcfEpochSelection SELECTION = pcfEpochSelection_NEAREST,
+    double BLEND_WINDOW_SECONDS = 3600.0,
+    pcfBlendShape BLEND_SHAPE = pcfBlendShape_SMOOTHSTEP,
+    ::flatbuffers::Offset<::flatbuffers::Vector<uint8_t>> THEORIES = 0) {
+  PCFEpochStoreBuilder builder_(_fbb);
+  builder_.add_BLEND_WINDOW_SECONDS(BLEND_WINDOW_SECONDS);
+  builder_.add_CACHE_DAYS(CACHE_DAYS);
+  builder_.add_THEORIES(THEORIES);
+  builder_.add_MAX_SETS_PER_OBJECT(MAX_SETS_PER_OBJECT);
+  builder_.add_BLEND_SHAPE(BLEND_SHAPE);
+  builder_.add_SELECTION(SELECTION);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<PCFEpochStore> CreatePCFEpochStoreDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double CACHE_DAYS = 7.0,
+    uint32_t MAX_SETS_PER_OBJECT = 0,
+    pcfEpochSelection SELECTION = pcfEpochSelection_NEAREST,
+    double BLEND_WINDOW_SECONDS = 3600.0,
+    pcfBlendShape BLEND_SHAPE = pcfBlendShape_SMOOTHSTEP,
+    const std::vector<uint8_t> *THEORIES = nullptr) {
+  auto THEORIES__ = THEORIES ? _fbb.CreateVector<uint8_t>(*THEORIES) : 0;
+  return CreatePCFEpochStore(
+      _fbb,
+      CACHE_DAYS,
+      MAX_SETS_PER_OBJECT,
+      SELECTION,
+      BLEND_WINDOW_SECONDS,
+      BLEND_SHAPE,
+      THEORIES__);
+}
+
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
 /// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
 /// force model, Kepler): the theory, the integrator and its settings, the
@@ -3766,7 +3958,8 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MANEUVER_DETECTION = 22,
     VT_REENTRY = 24,
     VT_LAUNCH = 26,
-    VT_OUTPUT = 28
+    VT_OUTPUT = 28,
+    VT_EPOCH_STORE = 30
   };
   /// Opaque identifier of this configuration, for provenance. Default empty.
   const ::flatbuffers::String *CONFIGURATION_ID() const {
@@ -3821,6 +4014,10 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PCFOutput *OUTPUT() const {
     return GetPointer<const PCFOutput *>(VT_OUTPUT);
   }
+  /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+  const PCFEpochStore *EPOCH_STORE() const {
+    return GetPointer<const PCFEpochStore *>(VT_EPOCH_STORE);
+  }
   template <bool B = false>
   bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -3850,6 +4047,8 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(LAUNCH()) &&
            VerifyOffset(verifier, VT_OUTPUT) &&
            verifier.VerifyTable(OUTPUT()) &&
+           VerifyOffset(verifier, VT_EPOCH_STORE) &&
+           verifier.VerifyTable(EPOCH_STORE()) &&
            verifier.EndTable();
   }
 };
@@ -3897,6 +4096,9 @@ struct PCFBuilder {
   void add_OUTPUT(::flatbuffers::Offset<PCFOutput> OUTPUT) {
     fbb_.AddOffset(PCF::VT_OUTPUT, OUTPUT);
   }
+  void add_EPOCH_STORE(::flatbuffers::Offset<PCFEpochStore> EPOCH_STORE) {
+    fbb_.AddOffset(PCF::VT_EPOCH_STORE, EPOCH_STORE);
+  }
   explicit PCFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -3922,8 +4124,10 @@ inline ::flatbuffers::Offset<PCF> CreatePCF(
     ::flatbuffers::Offset<PCFManeuverDetection> MANEUVER_DETECTION = 0,
     ::flatbuffers::Offset<PCFReentry> REENTRY = 0,
     ::flatbuffers::Offset<PCFLaunch> LAUNCH = 0,
-    ::flatbuffers::Offset<PCFOutput> OUTPUT = 0) {
+    ::flatbuffers::Offset<PCFOutput> OUTPUT = 0,
+    ::flatbuffers::Offset<PCFEpochStore> EPOCH_STORE = 0) {
   PCFBuilder builder_(_fbb);
+  builder_.add_EPOCH_STORE(EPOCH_STORE);
   builder_.add_OUTPUT(OUTPUT);
   builder_.add_LAUNCH(LAUNCH);
   builder_.add_REENTRY(REENTRY);
@@ -3954,7 +4158,8 @@ inline ::flatbuffers::Offset<PCF> CreatePCFDirect(
     ::flatbuffers::Offset<PCFManeuverDetection> MANEUVER_DETECTION = 0,
     ::flatbuffers::Offset<PCFReentry> REENTRY = 0,
     ::flatbuffers::Offset<PCFLaunch> LAUNCH = 0,
-    ::flatbuffers::Offset<PCFOutput> OUTPUT = 0) {
+    ::flatbuffers::Offset<PCFOutput> OUTPUT = 0,
+    ::flatbuffers::Offset<PCFEpochStore> EPOCH_STORE = 0) {
   auto CONFIGURATION_ID__ = CONFIGURATION_ID ? _fbb.CreateString(CONFIGURATION_ID) : 0;
   auto PROFILE__ = PROFILE ? _fbb.CreateString(PROFILE) : 0;
   auto EVENTS__ = EVENTS ? _fbb.CreateVector<::flatbuffers::Offset<PCFEventDefinition>>(*EVENTS) : 0;
@@ -3972,7 +4177,8 @@ inline ::flatbuffers::Offset<PCF> CreatePCFDirect(
       MANEUVER_DETECTION,
       REENTRY,
       LAUNCH,
-      OUTPUT);
+      OUTPUT,
+      EPOCH_STORE);
 }
 
 inline const PCF *GetPCF(const void *buf) {

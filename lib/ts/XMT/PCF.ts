@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { PCFEpochStore, PCFEpochStoreT } from './PCFEpochStore.js';
 import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js';
 import { PCFFitPolicy, PCFFitPolicyT } from './PCFFitPolicy.js';
 import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
@@ -167,8 +168,16 @@ OUTPUT(obj?:PCFOutput):PCFOutput|null {
   return offset ? (obj || new PCFOutput()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
+/**
+ * The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+ */
+EPOCH_STORE(obj?:PCFEpochStore):PCFEpochStore|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? (obj || new PCFEpochStore()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
 static startPCF(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(14);
 }
 
 static addConfigurationId(builder:flatbuffers.Builder, CONFIGURATION_IDOffset:flatbuffers.Offset) {
@@ -235,6 +244,10 @@ static addOutput(builder:flatbuffers.Builder, OUTPUTOffset:flatbuffers.Offset) {
   builder.addFieldOffset(12, OUTPUTOffset, 0);
 }
 
+static addEpochStore(builder:flatbuffers.Builder, EPOCH_STOREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, EPOCH_STOREOffset, 0);
+}
+
 static endPCF(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -263,7 +276,8 @@ unpack(): PCFT {
     (this.MANEUVER_DETECTION() !== null ? this.MANEUVER_DETECTION()!.unpack() : null),
     (this.REENTRY() !== null ? this.REENTRY()!.unpack() : null),
     (this.LAUNCH() !== null ? this.LAUNCH()!.unpack() : null),
-    (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null)
+    (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null),
+    (this.EPOCH_STORE() !== null ? this.EPOCH_STORE()!.unpack() : null)
   );
 }
 
@@ -282,6 +296,7 @@ unpackTo(_o: PCFT): void {
   _o.REENTRY = (this.REENTRY() !== null ? this.REENTRY()!.unpack() : null);
   _o.LAUNCH = (this.LAUNCH() !== null ? this.LAUNCH()!.unpack() : null);
   _o.OUTPUT = (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null);
+  _o.EPOCH_STORE = (this.EPOCH_STORE() !== null ? this.EPOCH_STORE()!.unpack() : null);
 }
 }
 
@@ -299,7 +314,8 @@ constructor(
   public MANEUVER_DETECTION: PCFManeuverDetectionT|null = null,
   public REENTRY: PCFReentryT|null = null,
   public LAUNCH: PCFLaunchT|null = null,
-  public OUTPUT: PCFOutputT|null = null
+  public OUTPUT: PCFOutputT|null = null,
+  public EPOCH_STORE: PCFEpochStoreT|null = null
 ){}
 
 
@@ -316,6 +332,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const REENTRY = (this.REENTRY !== null ? this.REENTRY!.pack(builder) : 0);
   const LAUNCH = (this.LAUNCH !== null ? this.LAUNCH!.pack(builder) : 0);
   const OUTPUT = (this.OUTPUT !== null ? this.OUTPUT!.pack(builder) : 0);
+  const EPOCH_STORE = (this.EPOCH_STORE !== null ? this.EPOCH_STORE!.pack(builder) : 0);
 
   PCF.startPCF(builder);
   PCF.addConfigurationId(builder, CONFIGURATION_ID);
@@ -331,6 +348,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PCF.addReentry(builder, REENTRY);
   PCF.addLaunch(builder, LAUNCH);
   PCF.addOutput(builder, OUTPUT);
+  PCF.addEpochStore(builder, EPOCH_STORE);
 
   return PCF.endPCF(builder);
 }

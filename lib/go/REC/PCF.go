@@ -321,8 +321,27 @@ func (rcv *PCF) Output(obj *PCFOutput) *PCFOutput {
 }
 
 /// Output states.
+/// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+func (rcv *PCF) EPOCH_STORE(obj *PCFEpochStore) *PCFEpochStore {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(PCFEpochStore)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+func (rcv *PCF) EpochStore(obj *PCFEpochStore) *PCFEpochStore {
+	return rcv.EPOCH_STORE(obj)
+}
+
+/// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
 func PCFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(13)
+	builder.StartObject(14)
 }
 func PCFAddCONFIGURATION_ID(builder *flatbuffers.Builder, CONFIGURATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONFIGURATION_ID), 0)
@@ -407,6 +426,12 @@ func PCFAddOUTPUT(builder *flatbuffers.Builder, OUTPUT flatbuffers.UOffsetT) {
 }
 func PCFAddOutput(builder *flatbuffers.Builder, OUTPUT flatbuffers.UOffsetT) {
 	PCFAddOUTPUT(builder, OUTPUT)
+}
+func PCFAddEPOCH_STORE(builder *flatbuffers.Builder, EPOCH_STORE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(EPOCH_STORE), 0)
+}
+func PCFAddEpochStore(builder *flatbuffers.Builder, EPOCH_STORE flatbuffers.UOffsetT) {
+	PCFAddEPOCH_STORE(builder, EPOCH_STORE)
 }
 func PCFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

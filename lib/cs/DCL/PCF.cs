@@ -70,6 +70,8 @@ public struct PCF : IFlatbufferObject
   public PCFLaunch? LAUNCH { get { int o = __p.__offset(26); return o != 0 ? (PCFLaunch?)(new PCFLaunch()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Output states.
   public PCFOutput? OUTPUT { get { int o = __p.__offset(28); return o != 0 ? (PCFOutput?)(new PCFOutput()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
+  public PCFEpochStore? EPOCH_STORE { get { int o = __p.__offset(30); return o != 0 ? (PCFEpochStore?)(new PCFEpochStore()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PCF> CreatePCF(FlatBufferBuilder builder,
       StringOffset CONFIGURATION_IDOffset = default(StringOffset),
@@ -84,8 +86,10 @@ public struct PCF : IFlatbufferObject
       Offset<PCFManeuverDetection> MANEUVER_DETECTIONOffset = default(Offset<PCFManeuverDetection>),
       Offset<PCFReentry> REENTRYOffset = default(Offset<PCFReentry>),
       Offset<PCFLaunch> LAUNCHOffset = default(Offset<PCFLaunch>),
-      Offset<PCFOutput> OUTPUTOffset = default(Offset<PCFOutput>)) {
-    builder.StartTable(13);
+      Offset<PCFOutput> OUTPUTOffset = default(Offset<PCFOutput>),
+      Offset<PCFEpochStore> EPOCH_STOREOffset = default(Offset<PCFEpochStore>)) {
+    builder.StartTable(14);
+    PCF.AddEPOCH_STORE(builder, EPOCH_STOREOffset);
     PCF.AddOUTPUT(builder, OUTPUTOffset);
     PCF.AddLAUNCH(builder, LAUNCHOffset);
     PCF.AddREENTRY(builder, REENTRYOffset);
@@ -102,7 +106,7 @@ public struct PCF : IFlatbufferObject
     return PCF.EndPCF(builder);
   }
 
-  public static void StartPCF(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartPCF(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddCONFIGURATION_ID(FlatBufferBuilder builder, StringOffset CONFIGURATION_IDOffset) { builder.AddOffset(0, CONFIGURATION_IDOffset.Value, 0); }
   public static void AddPROFILE(FlatBufferBuilder builder, StringOffset PROFILEOffset) { builder.AddOffset(1, PROFILEOffset.Value, 0); }
   public static void AddTHEORY(FlatBufferBuilder builder, pcfTheory THEORY) { builder.AddByte(2, (byte)THEORY, 0); }
@@ -121,6 +125,7 @@ public struct PCF : IFlatbufferObject
   public static void AddREENTRY(FlatBufferBuilder builder, Offset<PCFReentry> REENTRYOffset) { builder.AddOffset(10, REENTRYOffset.Value, 0); }
   public static void AddLAUNCH(FlatBufferBuilder builder, Offset<PCFLaunch> LAUNCHOffset) { builder.AddOffset(11, LAUNCHOffset.Value, 0); }
   public static void AddOUTPUT(FlatBufferBuilder builder, Offset<PCFOutput> OUTPUTOffset) { builder.AddOffset(12, OUTPUTOffset.Value, 0); }
+  public static void AddEPOCH_STORE(FlatBufferBuilder builder, Offset<PCFEpochStore> EPOCH_STOREOffset) { builder.AddOffset(13, EPOCH_STOREOffset.Value, 0); }
   public static Offset<PCF> EndPCF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCF>(o);
@@ -147,6 +152,7 @@ public struct PCF : IFlatbufferObject
     _o.REENTRY = this.REENTRY.HasValue ? this.REENTRY.Value.UnPack() : null;
     _o.LAUNCH = this.LAUNCH.HasValue ? this.LAUNCH.Value.UnPack() : null;
     _o.OUTPUT = this.OUTPUT.HasValue ? this.OUTPUT.Value.UnPack() : null;
+    _o.EPOCH_STORE = this.EPOCH_STORE.HasValue ? this.EPOCH_STORE.Value.UnPack() : null;
   }
   public static Offset<PCF> Pack(FlatBufferBuilder builder, PCFT _o) {
     if (_o == null) return default(Offset<PCF>);
@@ -167,6 +173,7 @@ public struct PCF : IFlatbufferObject
     var _REENTRY = _o.REENTRY == null ? default(Offset<PCFReentry>) : PCFReentry.Pack(builder, _o.REENTRY);
     var _LAUNCH = _o.LAUNCH == null ? default(Offset<PCFLaunch>) : PCFLaunch.Pack(builder, _o.LAUNCH);
     var _OUTPUT = _o.OUTPUT == null ? default(Offset<PCFOutput>) : PCFOutput.Pack(builder, _o.OUTPUT);
+    var _EPOCH_STORE = _o.EPOCH_STORE == null ? default(Offset<PCFEpochStore>) : PCFEpochStore.Pack(builder, _o.EPOCH_STORE);
     return CreatePCF(
       builder,
       _CONFIGURATION_ID,
@@ -181,7 +188,8 @@ public struct PCF : IFlatbufferObject
       _MANEUVER_DETECTION,
       _REENTRY,
       _LAUNCH,
-      _OUTPUT);
+      _OUTPUT,
+      _EPOCH_STORE);
   }
 }
 
@@ -200,6 +208,7 @@ public class PCFT
   public PCFReentryT REENTRY { get; set; }
   public PCFLaunchT LAUNCH { get; set; }
   public PCFOutputT OUTPUT { get; set; }
+  public PCFEpochStoreT EPOCH_STORE { get; set; }
 
   public PCFT() {
     this.CONFIGURATION_ID = null;
@@ -215,6 +224,7 @@ public class PCFT
     this.REENTRY = null;
     this.LAUNCH = null;
     this.OUTPUT = null;
+    this.EPOCH_STORE = null;
   }
   public static PCFT DeserializeFromBinary(byte[] fbBuffer) {
     return PCF.GetRootAsPCF(new ByteBuffer(fbBuffer)).UnPack();
@@ -245,6 +255,7 @@ static public class PCFVerify
       && verifier.VerifyTable(tablePos, 24 /*REENTRY*/, PCFReentryVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 26 /*LAUNCH*/, PCFLaunchVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 28 /*OUTPUT*/, PCFOutputVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 30 /*EPOCH_STORE*/, PCFEpochStoreVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

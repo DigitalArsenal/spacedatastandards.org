@@ -4748,6 +4748,44 @@
         }
       }
     },
+    "pcfEpochSelection": {
+      "type": "string",
+      "enum": [
+        "NEAREST",
+        "LATEST_BEFORE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "NEAREST": {
+          "value": 0,
+          "description": "The set whose epoch is nearest the request time (the default)."
+        },
+        "LATEST_BEFORE": {
+          "value": 1,
+          "description": "The latest set whose epoch is at or before the request time."
+        }
+      }
+    },
+    "pcfBlendShape": {
+      "type": "string",
+      "enum": [
+        "SMOOTHSTEP",
+        "HERMITE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "ubyte",
+      "x-flatbuffer-enum-values": {
+        "SMOOTHSTEP": {
+          "value": 0,
+          "description": "Smoothstep weight on the two propagated states (the default)."
+        },
+        "HERMITE": {
+          "value": 1,
+          "description": "Cubic Hermite matching of position and velocity across the window."
+        }
+      }
+    },
     "pcfWeatherExtension": {
       "type": "string",
       "enum": [
@@ -20643,6 +20681,75 @@
       ],
       "additionalProperties": false
     },
+    "PCFEpochStore": {
+      "type": "object",
+      "description": "The multi-epoch element store of SDN-AP and the sync harness that fills it:\nhow many days of element sets are kept, which set answers a request time and\nhow consecutive sets are blended across a handover. Absent: every default below.",
+      "properties": {
+        "CACHE_DAYS": {
+          "type": "number",
+          "description": "Days of element sets kept, counted back from now by epoch. Default 7.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "7"
+        },
+        "MAX_SETS_PER_OBJECT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Most sets kept per object and theory, the oldest epochs dropping first.\nDefault 0 (no cap beyond CACHE_DAYS).",
+          "x-flatbuffer-type": "uint",
+          "x-flatbuffer-default": "0"
+        },
+        "SELECTION": {
+          "$ref": "#/definitions/pcfEpochSelection",
+          "description": "Which set answers a request time. Default NEAREST.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "NEAREST": {
+              "value": 0,
+              "description": "The set whose epoch is nearest the request time (the default)."
+            },
+            "LATEST_BEFORE": {
+              "value": 1,
+              "description": "The latest set whose epoch is at or before the request time."
+            }
+          },
+          "x-flatbuffer-default": "NEAREST"
+        },
+        "BLEND_WINDOW_SECONDS": {
+          "type": "number",
+          "description": "Width, seconds, of the blend window centered on the midpoint between two\nconsecutive sets; 0 switches sets without a blend. Default 3600.",
+          "x-flatbuffer-type": "double",
+          "x-flatbuffer-default": "3600"
+        },
+        "BLEND_SHAPE": {
+          "$ref": "#/definitions/pcfBlendShape",
+          "description": "The weight curve across the blend window. Default SMOOTHSTEP.",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "ubyte",
+          "x-flatbuffer-enum-values": {
+            "SMOOTHSTEP": {
+              "value": 0,
+              "description": "Smoothstep weight on the two propagated states (the default)."
+            },
+            "HERMITE": {
+              "value": 1,
+              "description": "Cubic Hermite matching of position and velocity across the window."
+            }
+          },
+          "x-flatbuffer-default": "SMOOTHSTEP"
+        },
+        "THEORIES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/pcfTheory"
+          },
+          "description": "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+          "x-flatbuffer-type": "[pcfTheory]"
+        }
+      },
+      "additionalProperties": false
+    },
     "PCF": {
       "type": "object",
       "description": "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
@@ -20742,6 +20849,11 @@
           "$ref": "#/definitions/PCFOutput",
           "description": "Output states.",
           "x-flatbuffer-type": "PCFOutput"
+        },
+        "EPOCH_STORE": {
+          "$ref": "#/definitions/PCFEpochStore",
+          "description": "The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.",
+          "x-flatbuffer-type": "PCFEpochStore"
         }
       },
       "additionalProperties": false
