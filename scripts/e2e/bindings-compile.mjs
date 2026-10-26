@@ -210,8 +210,9 @@ if (PCF::getRootAsPCF(ByteBuffer::wrap($cb))->getCONFIGURATION_ID() !== 'cfg-1')
 echo count($files) . " ok\\n";
 `);
     const { out } = await run("php", ["-d", "error_reporting=E_ALL", "-d", "display_errors=1", `${dir}/main.php`]);
-    check(/2082 ok/.test(out) && !/Warning|Notice|Deprecated/.test(out), `php: ${out.slice(0, 500)}`);
-    return "loaded 2082 classes (REC), OMM and PCF round trip with identifiers";
+    const classes = fs.readdirSync(`${LIB}/php/REC`).filter((f) => f.endsWith(".php")).length;
+    check(out.trim() === `${classes} ok` && !/Warning|Notice|Deprecated/.test(out), `php: ${out.slice(0, 500)}`);
+    return `loaded ${classes} classes (REC), OMM and PCF round trip with identifiers`;
   },
 
   async python() {
@@ -244,8 +245,9 @@ assert PCF.PCF.GetRootAs(cb, 0).CONFIGURATION_ID() == b'cfg-1'
 print(len(mods), 'ok')
 `);
     const { out } = await run(`${venv}/bin/python`, [`${dir}/main.py`]);
-    check(/2082 ok/.test(out), `python: ${out}`);
-    return "imported 2082 modules (REC), OMM and PCF round trip with identifiers";
+    const modules = fs.readdirSync(`${LIB}/py/REC`).filter((f) => f.endsWith(".py")).length;
+    check(out.trim() === `${modules} ok`, `python: ${out}`);
+    return `imported ${modules} modules (REC), OMM and PCF round trip with identifiers`;
   },
 
   async go() {
