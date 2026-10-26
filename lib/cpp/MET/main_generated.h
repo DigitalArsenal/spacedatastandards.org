@@ -26,40 +26,33 @@ enum meanElementSource : int8_t {
   meanElementSource_DSST = 2,
   /// Universal Semianalytical Method
   meanElementSource_USM = 3,
-  /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
-  /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
-  /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
-  /// (Earth, Moon, Sun or a planet); see $OMM.
-  meanElementSource_SDNAP = 4,
   meanElementSource_MIN = meanElementSource_SGP4,
-  meanElementSource_MAX = meanElementSource_SDNAP
+  meanElementSource_MAX = meanElementSource_USM
 };
 
-inline const meanElementSource (&EnumValuesmeanElementSource())[5] {
+inline const meanElementSource (&EnumValuesmeanElementSource())[4] {
   static const meanElementSource values[] = {
     meanElementSource_SGP4,
     meanElementSource_SGP4XP,
     meanElementSource_DSST,
-    meanElementSource_USM,
-    meanElementSource_SDNAP
+    meanElementSource_USM
   };
   return values;
 }
 
 inline const char * const *EnumNamesmeanElementSource() {
-  static const char * const names[6] = {
+  static const char * const names[5] = {
     "SGP4",
     "SGP4XP",
     "DSST",
     "USM",
-    "SDNAP",
     nullptr
   };
   return names;
 }
 
 inline const char *EnumNamemeanElementSource(meanElementSource e) {
-  if (::flatbuffers::IsOutRange(e, meanElementSource_SGP4, meanElementSource_SDNAP)) return "";
+  if (::flatbuffers::IsOutRange(e, meanElementSource_SGP4, meanElementSource_USM)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamesmeanElementSource()[index];
 }

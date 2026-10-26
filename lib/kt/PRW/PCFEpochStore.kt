@@ -74,7 +74,7 @@ class PCFEpochStore : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
-     * Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+     * Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
      */
     fun theories(j: Int) : UByte {
         val o = __offset(14)

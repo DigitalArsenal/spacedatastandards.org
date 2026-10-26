@@ -7,13 +7,12 @@ import (
 )
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -155,47 +154,9 @@ func (rcv *PCF) Forces(obj *PCFForceModel) *PCFForceModel {
 }
 
 /// Forces. Absent: the theory's built-in set.
-/// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-func (rcv *PCF) MEAN_ELEMENT(obj *PCFMeanElementOptions) *PCFMeanElementOptions {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(PCFMeanElementOptions)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCF) MeanElement(obj *PCFMeanElementOptions) *PCFMeanElementOptions {
-	return rcv.MEAN_ELEMENT(obj)
-}
-
-/// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-/// Beyond-Earth segment sets.
-func (rcv *PCF) SEGMENTS(obj *PCFSegmentOptions) *PCFSegmentOptions {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(PCFSegmentOptions)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCF) Segments(obj *PCFSegmentOptions) *PCFSegmentOptions {
-	return rcv.SEGMENTS(obj)
-}
-
-/// Beyond-Earth segment sets.
 /// Fit policy.
 func (rcv *PCF) FIT(obj *PCFFitPolicy) *PCFFitPolicy {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -214,7 +175,7 @@ func (rcv *PCF) Fit(obj *PCFFitPolicy) *PCFFitPolicy {
 /// Fit policy.
 /// Events located while integrating. Default empty.
 func (rcv *PCF) EVENTS(obj *PCFEventDefinition, j int) bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		x := rcv._tab.Vector(o)
 		x += flatbuffers.UOffsetT(j) * 4
@@ -233,7 +194,7 @@ func (rcv *PCF) Events(obj *PCFEventDefinition, j int) bool {
 }
 
 func (rcv *PCF) EVENTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
@@ -245,66 +206,9 @@ func (rcv *PCF) EventsLength() int {
 }
 
 /// Events located while integrating. Default empty.
-/// Maneuver detection.
-func (rcv *PCF) MANEUVER_DETECTION(obj *PCFManeuverDetection) *PCFManeuverDetection {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(PCFManeuverDetection)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCF) ManeuverDetection(obj *PCFManeuverDetection) *PCFManeuverDetection {
-	return rcv.MANEUVER_DETECTION(obj)
-}
-
-/// Maneuver detection.
-/// Reentry hand-off and window.
-func (rcv *PCF) REENTRY(obj *PCFReentry) *PCFReentry {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(PCFReentry)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCF) Reentry(obj *PCFReentry) *PCFReentry {
-	return rcv.REENTRY(obj)
-}
-
-/// Reentry hand-off and window.
-/// Launch initialization priors.
-func (rcv *PCF) LAUNCH(obj *PCFLaunch) *PCFLaunch {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		x := rcv._tab.Indirect(o + rcv._tab.Pos)
-		if obj == nil {
-			obj = new(PCFLaunch)
-		}
-		obj.Init(rcv._tab.Bytes, x)
-		return obj
-	}
-	return nil
-}
-
-func (rcv *PCF) Launch(obj *PCFLaunch) *PCFLaunch {
-	return rcv.LAUNCH(obj)
-}
-
-/// Launch initialization priors.
 /// Output states.
 func (rcv *PCF) OUTPUT(obj *PCFOutput) *PCFOutput {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -323,7 +227,7 @@ func (rcv *PCF) Output(obj *PCFOutput) *PCFOutput {
 /// Output states.
 /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
 func (rcv *PCF) EPOCH_STORE(obj *PCFEpochStore) *PCFEpochStore {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		x := rcv._tab.Indirect(o + rcv._tab.Pos)
 		if obj == nil {
@@ -341,7 +245,7 @@ func (rcv *PCF) EpochStore(obj *PCFEpochStore) *PCFEpochStore {
 
 /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
 func PCFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(9)
 }
 func PCFAddCONFIGURATION_ID(builder *flatbuffers.Builder, CONFIGURATION_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CONFIGURATION_ID), 0)
@@ -373,26 +277,14 @@ func PCFAddFORCES(builder *flatbuffers.Builder, FORCES flatbuffers.UOffsetT) {
 func PCFAddForces(builder *flatbuffers.Builder, FORCES flatbuffers.UOffsetT) {
 	PCFAddFORCES(builder, FORCES)
 }
-func PCFAddMEAN_ELEMENT(builder *flatbuffers.Builder, MEAN_ELEMENT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(MEAN_ELEMENT), 0)
-}
-func PCFAddMeanElement(builder *flatbuffers.Builder, MEAN_ELEMENT flatbuffers.UOffsetT) {
-	PCFAddMEAN_ELEMENT(builder, MEAN_ELEMENT)
-}
-func PCFAddSEGMENTS(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SEGMENTS), 0)
-}
-func PCFAddSegments(builder *flatbuffers.Builder, SEGMENTS flatbuffers.UOffsetT) {
-	PCFAddSEGMENTS(builder, SEGMENTS)
-}
 func PCFAddFIT(builder *flatbuffers.Builder, FIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(FIT), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(FIT), 0)
 }
 func PCFAddFit(builder *flatbuffers.Builder, FIT flatbuffers.UOffsetT) {
 	PCFAddFIT(builder, FIT)
 }
 func PCFAddEVENTS(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EVENTS), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EVENTS), 0)
 }
 func PCFAddEvents(builder *flatbuffers.Builder, EVENTS flatbuffers.UOffsetT) {
 	PCFAddEVENTS(builder, EVENTS)
@@ -403,32 +295,14 @@ func PCFStartEVENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffer
 func PCFStartEventsVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return PCFStartEVENTSVector(builder, numElems)
 }
-func PCFAddMANEUVER_DETECTION(builder *flatbuffers.Builder, MANEUVER_DETECTION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(MANEUVER_DETECTION), 0)
-}
-func PCFAddManeuverDetection(builder *flatbuffers.Builder, MANEUVER_DETECTION flatbuffers.UOffsetT) {
-	PCFAddMANEUVER_DETECTION(builder, MANEUVER_DETECTION)
-}
-func PCFAddREENTRY(builder *flatbuffers.Builder, REENTRY flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(REENTRY), 0)
-}
-func PCFAddReentry(builder *flatbuffers.Builder, REENTRY flatbuffers.UOffsetT) {
-	PCFAddREENTRY(builder, REENTRY)
-}
-func PCFAddLAUNCH(builder *flatbuffers.Builder, LAUNCH flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(LAUNCH), 0)
-}
-func PCFAddLaunch(builder *flatbuffers.Builder, LAUNCH flatbuffers.UOffsetT) {
-	PCFAddLAUNCH(builder, LAUNCH)
-}
 func PCFAddOUTPUT(builder *flatbuffers.Builder, OUTPUT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OUTPUT), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OUTPUT), 0)
 }
 func PCFAddOutput(builder *flatbuffers.Builder, OUTPUT flatbuffers.UOffsetT) {
 	PCFAddOUTPUT(builder, OUTPUT)
 }
 func PCFAddEPOCH_STORE(builder *flatbuffers.Builder, EPOCH_STORE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(EPOCH_STORE), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(EPOCH_STORE), 0)
 }
 func PCFAddEpochStore(builder *flatbuffers.Builder, EPOCH_STORE flatbuffers.UOffsetT) {
 	PCFAddEPOCH_STORE(builder, EPOCH_STORE)

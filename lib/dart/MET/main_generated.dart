@@ -10,8 +10,7 @@ enum meanElementSource {
   SGP4(0),
   SGP4XP(1),
   DSST(2),
-  USM(3),
-  SDNAP(4);
+  USM(3);
 
   final int value;
   const meanElementSource(this.value);
@@ -22,7 +21,6 @@ enum meanElementSource {
       case 1: return meanElementSource.SGP4XP;
       case 2: return meanElementSource.DSST;
       case 3: return meanElementSource.USM;
-      case 4: return meanElementSource.SDNAP;
       default: throw StateError('Invalid value $value for bit flag enum');
     }
   }
@@ -31,7 +29,7 @@ enum meanElementSource {
       value == null ? null : meanElementSource.fromValue(value);
 
   static const int minValue = 0;
-  static const int maxValue = 4;
+  static const int maxValue = 3;
   static const fb.Reader<meanElementSource> reader = _meanElementSourceReader();
 }
 

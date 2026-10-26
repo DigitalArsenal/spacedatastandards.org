@@ -421,11 +421,7 @@ impl<'a> OMM<'a> {
     }
 
     /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-    /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-    /// Earth's reach states its elements about that center; GM is then the
-    /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-    /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-    /// MEAN_ANOMALY.
+    /// SUN or a planet.
     #[inline]
     pub fn CENTER_NAME(&self) -> Option<&'a str> {
         // Safety:
@@ -663,8 +659,7 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<f64>(OMM::VT_REV_AT_EPOCH, Some(0.0)).unwrap()}
     }
 
-    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-    /// signed effective ballistic coefficient B_eff) [C]
+    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
     #[inline]
     pub fn BSTAR(&self) -> f64 {
         // Safety:
@@ -682,7 +677,7 @@ impl<'a> OMM<'a> {
         unsafe { self._tab.get::<f64>(OMM::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
     }
 
-    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
     #[inline]
     pub fn MEAN_MOTION_DDOT(&self) -> f64 {
         // Safety:

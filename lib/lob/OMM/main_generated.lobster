@@ -40,11 +40,7 @@ class OMM : flatbuffers.handle
     def OBJECT_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 12)
     /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-    /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-    /// Earth's reach states its elements about that center; GM is then the
-    /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-    /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-    /// MEAN_ANOMALY.
+    /// SUN or a planet.
     def CENTER_NAME() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
     /// Reference Frame
@@ -133,14 +129,13 @@ class OMM : flatbuffers.handle
     /// REV_AT_EPOCH [O if SGP/SGP4]
     def REV_AT_EPOCH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
-    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-    /// signed effective ballistic coefficient B_eff) [C]
+    /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
     def BSTAR() -> float:
         return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
     /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
     def MEAN_MOTION_DOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
-    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+    /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
     def MEAN_MOTION_DDOT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 68, 0.0)
     /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]

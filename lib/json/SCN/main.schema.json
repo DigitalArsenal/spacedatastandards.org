@@ -83,7 +83,7 @@
     },
     "meanElementSource" : {
       "type" : "string",
-      "enum": ["SGP4", "SGP4XP", "DSST", "USM", "SDNAP"]
+      "enum": ["SGP4", "SGP4XP", "DSST", "USM"]
     },
     "covarianceCalibration" : {
       "type" : "string",
@@ -1724,7 +1724,7 @@
               },
         "CENTER_NAME" : {
                 "type" : "string",
-                "description" : "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+                "description" : "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
               },
         "REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",
@@ -1824,7 +1824,7 @@
               },
         "BSTAR" : {
                 "type" : "number",
-                "description" : "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+                "description" : "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
               },
         "MEAN_MOTION_DOT" : {
                 "type" : "number",
@@ -1832,7 +1832,7 @@
               },
         "MEAN_MOTION_DDOT" : {
                 "type" : "number",
-                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+                "description" : "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
               },
         "COV_REFERENCE_FRAME" : {
                 "$ref" : "#/definitions/RFM",

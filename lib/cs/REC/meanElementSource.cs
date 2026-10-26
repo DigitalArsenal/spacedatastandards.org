@@ -13,9 +13,4 @@ public enum meanElementSource : sbyte
   DSST = 2,
   /// Universal Semianalytical Method
   USM = 3,
-  /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
-  /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
-  /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
-  /// (Earth, Moon, Sun or a planet); see $OMM.
-  SDNAP = 4,
 };

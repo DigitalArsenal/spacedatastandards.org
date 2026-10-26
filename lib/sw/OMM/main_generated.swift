@@ -103,11 +103,7 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var OBJECT_ID: String? { let o = _accessor.offset(VT.OBJECT_ID); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VT.OBJECT_ID) }
   ///  Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-  ///  SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-  ///  Earth's reach states its elements about that center; GM is then the
-  ///  center's gravitational parameter, and an open orbit has ECCENTRICITY above
-  ///  1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-  ///  MEAN_ANOMALY.
+  ///  SUN or a planet.
   public var CENTER_NAME: String? { let o = _accessor.offset(VT.CENTER_NAME); return o == 0 ? nil : _accessor.string(at: o) }
   public var CENTER_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VT.CENTER_NAME) }
   ///  Reference Frame
@@ -175,12 +171,11 @@ public struct OMM: FlatBufferVerifiableTable, FlatbuffersVectorInitializable {
   public var ELEMENT_SET_NO: UInt32 { let o = _accessor.offset(VT.ELEMENT_SET_NO); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
   ///  REV_AT_EPOCH [O if SGP/SGP4]
   public var REV_AT_EPOCH: Double { let o = _accessor.offset(VT.REV_AT_EPOCH); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-  ///  signed effective ballistic coefficient B_eff) [C]
+  ///  BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
   public var BSTAR: Double { let o = _accessor.offset(VT.BSTAR); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public var MEAN_MOTION_DOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+  ///  MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   public var MEAN_MOTION_DDOT: Double { let o = _accessor.offset(VT.MEAN_MOTION_DDOT); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   ///  Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   ///  COV_REF_FRAME reference frame for covariance [C if covariance given]

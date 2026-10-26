@@ -158,7 +158,7 @@ func (rcv *PCFEpochStore) MutateBlendShape(n pcfBlendShape) bool {
 	return rcv.MutateBLEND_SHAPE(n)
 }
 
-/// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+/// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
 func (rcv *PCFEpochStore) THEORIES(j int) pcfTheory {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -196,7 +196,7 @@ func (rcv *PCFEpochStore) TheoriesBytes() []byte {
 	return rcv.THEORIESBytes()
 }
 
-/// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+/// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
 func (rcv *PCFEpochStore) MutateTHEORIES(j int, n pcfTheory) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {

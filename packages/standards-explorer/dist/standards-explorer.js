@@ -31,11 +31,11 @@ var init_module = __esm({
 
 // ../../dist/manifest.json
 var manifest_default = {
-  version: "1.270.0+1792938489444",
+  version: "1.271.0+1792973018242",
   STANDARDS: {
     PCF: {
-      IDL: `// Hash: 257c2ee0144189d96eefd4a5c52dcf75ed31d07f9908f82f94b36a3947f2465d
-// Version: 1.0.4
+      IDL: `// Hash: cfbbb6d32f7962636fdd4577fc865fe6883ea9a5b6dc1330f8f0143440a3f946
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -56,9 +56,6 @@ enum pcfTheory : ubyte {
   /// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
   /// astrodynamics conference literature); the same value as $MET SGP4XP.
   SGP4XP = 2,
-  /// SDN's own advanced mean-element theory, labeled as its own; carried in
-  /// $OMM as a user-defined theory until $MET appends it.
-  SDNAP = 3,
   /// Numerical integration of the equations of motion under the full force
   /// model of PCFForceModel (profile FFM-1).
   FFM = 4,
@@ -222,30 +219,6 @@ enum pcfExpressionOperation : ubyte {
   /// Pop two, push the lesser or the greater.
   MINIMUM = 12,
   MAXIMUM = 13
-}
-
-/// How the correlation of maneuver-detection innovations is weighted. Append
-/// new values only.
-enum pcfInnovationCorrelation : ubyte {
-  UNSPECIFIED = 0,
-  /// Every sample independent (the white-noise assumption).
-  WHITE = 1,
-  /// One sample per revolution counts, so a revolution is one independent
-  /// innovation.
-  ONE_SAMPLE_PER_REVOLUTION = 2,
-  /// An exponential correlation of the innovations over a correlation time.
-  CORRELATION_TIME = 3
-}
-
-/// How the reentry-time window is computed. Append new values only.
-enum pcfReentryWindowMethod : ubyte {
-  UNSPECIFIED = 0,
-  /// First-order propagation of the ballistic and density sigmas through the
-  /// remaining life.
-  LINEAR = 1,
-  /// The unscented transform over the hand-off state, the ballistic
-  /// coefficient and the density level.
-  UNSCENTED = 2
 }
 
 /// Frame of the output states. Append new values only.
@@ -418,91 +391,6 @@ table PCFGaussianPrior {
   HAS_SIGMA:bool = false;
 }
 
-/// Empirical along-track terms of the averaged theories: a transverse
-/// acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
-/// latitude and g = 1 on the fit arc.
-table PCFEmpiricalTerms {
-  /// Fit the once-per-revolution pair (TAUC, TAUS). Default true.
-  ONCE_PER_REVOLUTION:bool = true;
-  /// The constant term TAU0 is free only when this rule selects it: a fitted
-  /// B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
-  /// prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
-  TAU0_RULE_LIMIT_M2_KG:double = 0.5;
-  /// True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
-  /// default) leaves TAU0 off.
-  HAS_TAU0_RULE_LIMIT_M2_KG:bool = false;
-  /// True holds TAUC and TAUS after the arc end above the drag regime
-  /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
-  /// once-per-revolution part of radiation pressure; false decays them over
-  /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
-  /// written before 1.268.0 omits a false value, so it reads true.
-  HELD_ABOVE_DRAG_REGIME:bool = true;
-  /// Persistence time of the empirical force after the arc end, hours.
-  /// Default 24.
-  PERSISTENCE_HOURS:double = 24;
-}
-
-/// Truncations and switches of the averaged (mean-element) theories SGP4XP
-/// and SDNAP. SGP4's constants are fixed by its specification and are not
-/// options.
-table PCFMeanElementOptions {
-  /// Highest even degree of the m-daily short-periodic gravity terms; 0
-  /// omits them. Range 0 to 16. Default 12.
-  M_DAILY_MAXIMUM_DEGREE:ubyte = 12;
-  /// Highest degree of the zonal tail (secular and long-period terms past
-  /// J5). Range 6 to 70. Default 20.
-  ZONAL_MAXIMUM_DEGREE:ubyte = 20;
-  /// Highest degree of the eccentricity-vector short-periodic terms. Range
-  /// 2 to 16. Default 7.
-  SHORT_PERIODIC_MAXIMUM_DEGREE:ubyte = 7;
-  /// Resonance terms on or off. Default true.
-  ENABLE_RESONANCE:bool = true;
-  /// Highest odd degree of the shallow-resonance terms. Default 31.
-  RESONANCE_MAXIMUM_DEGREE:ubyte = 31;
-  /// Resonance band: terms whose angle drifts slower than this fraction of
-  /// the mean motion are integrated with the rates. Default 0.045.
-  RESONANCE_BAND:double = 0.045;
-  /// Highest multiple of the mean anomaly in a resonance angle. Default 1.
-  RESONANCE_MAXIMUM_K:ubyte = 1;
-  /// Near-resonance band at output time, as a fraction of the mean motion
-  /// beyond RESONANCE_BAND; 0 is off. Default 0.
-  NEAR_RESONANCE_BAND:double = 0;
-  /// Divisor of the integration grid step; >= 1. Default 1.
-  GRID_STEP_DIVISOR:ubyte = 1;
-  /// The catalog-shared density kernel (a gridded log-density table shared by
-  /// every object) on or off; off evaluates the atmosphere model directly.
-  /// Default true.
-  DENSITY_KERNEL:bool = true;
-  /// Perigee height below which B_eff and TAU0 act (the drag regime), km.
-  /// Default 2500.
-  DRAG_REGIME_PERIGEE_KM:double = 2500;
-}
-
-/// Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
-/// cut into segments at maneuvers and sphere-of-influence passages.
-table PCFSegmentOptions {
-  /// Moon-centered gravity field degree. Default 70.
-  MOON_GRAVITY_MAXIMUM_DEGREE:ushort = 70;
-  /// Moon-centered short-periodic degree. Default 8.
-  MOON_SHORT_PERIODIC_MAXIMUM_DEGREE:ubyte = 8;
-  /// Moon-centered eccentricity order (highest |q| of the mean-anomaly
-  /// multiple kept). Default 2.
-  MOON_ECCENTRICITY_ORDER:ubyte = 2;
-  /// Moon-centered integration step, seconds. Default 240.
-  MOON_STEP_SECONDS:double = 240;
-  /// Cislunar integration step, seconds. Default 60.
-  CISLUNAR_STEP_SECONDS:double = 60;
-  /// Heliocentric integration step, seconds. Default 1800.
-  HELIOCENTRIC_STEP_SECONDS:double = 1800;
-  /// A segment is accepted when its RMS is within max(RMS_FACTOR x the
-  /// cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
-  SEGMENT_RMS_FACTOR:double = 2;
-  /// The additive term of the same rule, km. Default 0.05.
-  SEGMENT_RMS_MARGIN_KM:double = 0.05;
-  /// Shortest cislunar segment, hours. Default 6.
-  CISLUNAR_MINIMUM_SEGMENT_HOURS:double = 6;
-}
-
 /// Fit policy: how long an arc a fit uses, how that is validated, and what a
 /// fit refuses.
 table PCFFitPolicy {
@@ -541,7 +429,7 @@ table PCFFitPolicy {
   /// 100.
   IMPLAUSIBLE_RMS_KM:double = 100;
   /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  /// or without sigma: mean 0, sigma 0.05.
   DRAG_PRIOR:PCFGaussianPrior;
   /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   /// Absent or without sigma: mean 0, sigma 0.05.
@@ -589,87 +477,6 @@ table PCFEventDefinition {
   SECOND_TRAJECTORY_PORT:string;
   /// EXPRESSION: the program. Default absent.
   EXPRESSION:PCFExpression;
-}
-
-/// Maneuver detection from fit innovations: a generalized-likelihood-ratio
-/// scan of the six mean elements.
-table PCFManeuverDetection {
-  /// False-alarm rate the THRESHOLD is calibrated for, per object-year. A
-  /// provider that cannot recalibrate refuses another rate. Default 1.
-  FALSE_ALARMS_PER_OBJECT_YEAR:double = 1;
-  /// How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
-  CORRELATION_MODEL:pcfInnovationCorrelation = ONE_SAMPLE_PER_REVOLUTION;
-  /// The statistic Lambda (chi-square, 3 degrees of freedom) above which a
-  /// maneuver is declared. Default 20.
-  THRESHOLD:double = 20;
-  /// States kept clear at each end of the arc when scanning. Default 12.
-  MARGIN_STATES:uint = 12;
-  /// Half-width of the window the burn epoch is refined in, hours. Default 2.
-  REFINE_WINDOW_HOURS:double = 2;
-  /// Fewest states an arc must hold to be scanned. Default 48.
-  MINIMUM_STATES:uint = 48;
-}
-
-/// Reentry: where the averaged theory hands off to osculating integration,
-/// where the trajectory ends, and the width of the reentry window.
-table PCFReentry {
-  /// Altitude at which the trajectory ends as reentered, km. Default 80.
-  ALTITUDE_KM:double = 80;
-  /// Hand-off when the perigee altitude falls below this, km. Default 180.
-  HANDOFF_PERIGEE_ALTITUDE_KM:double = 180;
-  /// Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
-  /// fraction of the density scale height H. Default 0.05.
-  HANDOFF_DECAY_RATIO:double = 0.05;
-  /// Hand-off when the eccentricity collapses by more than this fraction of
-  /// a e per revolution, with the eccentricity above
-  /// HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
-  HANDOFF_ECCENTRICITY_COLLAPSE:double = 0.01;
-  /// Eccentricity above which the collapse test applies. Default 0.01.
-  HANDOFF_MINIMUM_ECCENTRICITY:double = 0.01;
-  /// Spacing of the nodes the hand-off tests are evaluated at, minutes.
-  /// Default 30.
-  NODE_STEP_MINUTES:double = 30;
-  /// Longest look-ahead for a hand-off or reentry, days. Default 120.
-  HORIZON_DAYS:double = 120;
-  /// How the reentry window is computed. Default LINEAR.
-  WINDOW_METHOD:pcfReentryWindowMethod = LINEAR;
-  /// Fractional 1-sigma density error of the window. Default 0.15.
-  WINDOW_DENSITY_SIGMA:double = 0.15;
-  /// Correlation time of the density error, days. Default 2.
-  WINDOW_CORRELATION_DAYS:double = 2;
-  /// Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
-  WINDOW_BALLISTIC_SIGMA:double = 0.05;
-  /// Step of the osculating integration after the hand-off, seconds. Default
-  /// 10.
-  OSCULATING_STEP_SECONDS:double = 10;
-  /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
-  /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
-  /// steps once per revolution while the averaged theory ramps, and the
-  /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
-  /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
-  /// Default 0.5.
-  HANDOFF_SAWTOOTH_KM:double = 0.5;
-  /// Eccentricity above which the sawtooth test applies. Default 0.02.
-  HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY:double = 0.02;
-}
-
-/// Launch initialization: priors for the first element sets of new objects
-/// and for a deployment batch fitted jointly.
-table PCFLaunch {
-  /// A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
-  DRAG_AREA_OVER_MASS_PRIOR_M2_KG:double = 0.01;
-  /// A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
-  SRP_AREA_OVER_MASS_PRIOR_M2_KG:double = 0.01;
-  /// Prior 1-sigma of each object's separation velocity per axis, m/s.
-  /// Default 1.
-  SEPARATION_SIGMA_M_S:double = 1;
-  /// Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
-  /// Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
-  SHRINK_SIGMA_M2_KG:double = 0;
-  /// True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
-  HAS_SHRINK_SIGMA_M2_KG:bool = false;
-  /// Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
-  BATCH_MEAN_SIGMA_M2_KG:double = 1;
 }
 
 /// Output states: frame, step and size.
@@ -874,9 +681,6 @@ table PCFForceModel {
   HAS_DENSITY_CORRECTION_RELAXATION_HOURS:bool = false;
   /// Neutral wind in the drag relative velocity. Default NONE.
   NEUTRAL_WIND:pcfNeutralWind = NONE;
-  /// Empirical along-track terms of the averaged theories. Absent (the
-  /// default): the theory's own.
-  EMPIRICAL_TERMS:PCFEmpiricalTerms;
   /// Highest degree of the harmonic field of the third body that has one (the
   /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
   /// The field's acceleration at the frame origin is subtracted. Default 0:
@@ -902,18 +706,17 @@ table PCFEpochStore {
   BLEND_WINDOW_SECONDS:double = 3600;
   /// The weight curve across the blend window. Default SMOOTHSTEP.
   BLEND_SHAPE:pcfBlendShape = SMOOTHSTEP;
-  /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   THEORIES:[pcfTheory];
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -930,20 +733,10 @@ table PCF {
   INTEGRATOR:PCFIntegratorSettings;
   /// Forces. Absent: the theory's built-in set.
   FORCES:PCFForceModel;
-  /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-  MEAN_ELEMENT:PCFMeanElementOptions;
-  /// Beyond-Earth segment sets.
-  SEGMENTS:PCFSegmentOptions;
   /// Fit policy.
   FIT:PCFFitPolicy;
   /// Events located while integrating. Default empty.
   EVENTS:[PCFEventDefinition];
-  /// Maneuver detection.
-  MANEUVER_DETECTION:PCFManeuverDetection;
-  /// Reentry hand-off and window.
-  REENTRY:PCFReentry;
-  /// Launch initialization priors.
-  LAUNCH:PCFLaunch;
   /// Output states.
   OUTPUT:PCFOutput;
   /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
@@ -11970,32 +11763,7 @@ file_identifier "$TBP";`,
       ]
     },
     MET: {
-      IDL: `// Hash: ac07468994099f25d4d8ed5eb6f0853a064b54a6013755dd31058cfb7d95c496
-// Version: 1.0.4
-// -----------------------------------END_HEADER
-enum meanElementSource : byte {
-  /// Simplified General Perturbation Model 4
-  SGP4,
-  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),
-  /// as published in the 2022 astrodynamics conference literature.
-  SGP4XP,
-  /// Draper Semi-analytical Satellite Theory
-  DSST,
-  /// Universal Semianalytical Method
-  USM,
-  /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
-  /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
-  /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
-  /// (Earth, Moon, Sun or a planet); see $OMM.
-  SDNAP
-}
-
-/// Mean Element Theory
-table MET {
-  MEAN_ELEMENT_THEORY:meanElementSource;
-}
-root_type MET;
-file_identifier "$MET";`,
+      IDL: '// Hash: baf37f69ec211c87c4c638876f09a2cbf7d780681463980fee792c7fc1053d96\n// Version: 1.0.5\n// -----------------------------------END_HEADER\nenum meanElementSource : byte {\n  /// Simplified General Perturbation Model 4\n  SGP4,\n  /// Simplified General Perturbation Model 4 eXtended Perturbations (SGP4-XP),\n  /// as published in the 2022 astrodynamics conference literature.\n  SGP4XP,\n  /// Draper Semi-analytical Satellite Theory\n  DSST,\n  /// Universal Semianalytical Method\n  USM\n}\n\n/// Mean Element Theory\ntable MET {\n  MEAN_ELEMENT_THEORY:meanElementSource;\n}\nroot_type MET;\nfile_identifier "$MET";',
       files: [
         "./dist/MET/MET.sw.tar.gz",
         "./dist/MET/MET.py.tar.gz",
@@ -17316,8 +17084,8 @@ file_identifier "$ABA";`,
       ]
     },
     OMM: {
-      IDL: `// Hash: 7721e4ea9699308906e69e22cfae5a3647161d65c408f4e15fdf41095018a108
-// Version: 2.0.6
+      IDL: `// Hash: e556fe7f5374fe31d7be192907f72ef4b39c53cf39f1a1a33153373fe966a234
+// Version: 2.0.7
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -17362,11 +17130,7 @@ table OMM {
   /// International Designator (YYYY-NNNAAA)
   OBJECT_ID:string;
   /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-  /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-  /// Earth's reach states its elements about that center; GM is then the
-  /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-  /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-  /// MEAN_ANOMALY.
+  /// SUN or a planet.
   CENTER_NAME:string;
   /// Reference Frame
   /// Typically TEMEOFDATE
@@ -17432,12 +17196,11 @@ table OMM {
   ELEMENT_SET_NO:uint32;
   /// REV_AT_EPOCH [O if SGP/SGP4]
   REV_AT_EPOCH:double;
-  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-  /// signed effective ballistic coefficient B_eff) [C]
+  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
   BSTAR:double;
   /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   MEAN_MOTION_DOT:double;
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   MEAN_MOTION_DDOT:double;
 
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
@@ -33794,7 +33557,6 @@ var json_default = {
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ]
@@ -33900,23 +33662,6 @@ var json_default = {
             "COSINE",
             "MINIMUM",
             "MAXIMUM"
-          ]
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ]
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
           ]
         },
         pcfOutputFrame: {
@@ -35696,145 +35441,6 @@ var json_default = {
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true."
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG."
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off."
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true."
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12."
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20."
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7."
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true."
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31."
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045."
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1."
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0."
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1."
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true."
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70."
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8."
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2."
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240."
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60."
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800."
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2."
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05."
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6."
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -35896,7 +35502,7 @@ var json_default = {
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP."
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
@@ -35979,135 +35585,6 @@ var json_default = {
             EXPRESSION: {
               $ref: "#/definitions/PCFExpression",
               description: "EXPRESSION: the program. Default absent."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1."
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION."
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20."
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12."
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2."
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80."
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180."
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05."
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01."
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01."
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30."
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120."
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR."
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15."
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2."
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05."
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10."
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5."
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1."
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG."
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent."
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1."
             }
           },
           additionalProperties: false
@@ -36465,10 +35942,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/pcfNeutralWind",
               description: "Neutral wind in the drag relative velocity. Default NONE."
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -36518,14 +35991,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all."
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
             }
           },
           additionalProperties: false
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -36547,14 +36020,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/PCFForceModel",
               description: "Forces. Absent: the theory's built-in set."
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP)."
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets."
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy."
@@ -36565,18 +36030,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/PCFEventDefinition"
               },
               description: "Events located while integrating. Default empty."
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection."
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window."
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors."
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -41602,8 +41055,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         elementType: {
@@ -51494,8 +50946,7 @@ Decoding applies the inverses from the last back.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -52204,7 +51655,7 @@ Decoding applies the inverses from the last back.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -52308,7 +51759,7 @@ Decoding applies the inverses from the last back.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -52316,7 +51767,7 @@ Decoding applies the inverses from the last back.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -53725,8 +53176,7 @@ Decoding applies the inverses from the last back.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         ephemerisFormat: {
@@ -56538,7 +55988,7 @@ Decoding applies the inverses from the last back.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -56642,7 +56092,7 @@ Decoding applies the inverses from the last back.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -56650,7 +56100,7 @@ Decoding applies the inverses from the last back.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -72218,7 +71668,6 @@ verbatim what that source states about itself.`,
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ]
@@ -72324,23 +71773,6 @@ verbatim what that source states about itself.`,
             "COSINE",
             "MINIMUM",
             "MAXIMUM"
-          ]
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ]
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
           ]
         },
         pcfOutputFrame: {
@@ -72586,8 +72018,7 @@ verbatim what that source states about itself.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -75747,145 +75178,6 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true."
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG."
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off."
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true."
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12."
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20."
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7."
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true."
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31."
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045."
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1."
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0."
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1."
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true."
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70."
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8."
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2."
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240."
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60."
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800."
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2."
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05."
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6."
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -75947,7 +75239,7 @@ verbatim what that source states about itself.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP."
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
@@ -76030,135 +75322,6 @@ verbatim what that source states about itself.`,
             EXPRESSION: {
               $ref: "#/definitions/PCFExpression",
               description: "EXPRESSION: the program. Default absent."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1."
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION."
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20."
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12."
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2."
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80."
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180."
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05."
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01."
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01."
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30."
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120."
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR."
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15."
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2."
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05."
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10."
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5."
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1."
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG."
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent."
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1."
             }
           },
           additionalProperties: false
@@ -76516,10 +75679,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/pcfNeutralWind",
               description: "Neutral wind in the drag relative velocity. Default NONE."
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -76569,14 +75728,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all."
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
             }
           },
           additionalProperties: false
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -76598,14 +75757,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/PCFForceModel",
               description: "Forces. Absent: the theory's built-in set."
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP)."
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets."
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy."
@@ -76616,18 +75767,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/PCFEventDefinition"
               },
               description: "Events located while integrating. Default empty."
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection."
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window."
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors."
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -78226,7 +77365,7 @@ empty = the provider's native frame.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -78330,7 +77469,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -78338,7 +77477,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -95775,8 +94914,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -97675,7 +96813,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -97779,7 +96917,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -97787,7 +96925,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -113731,8 +112869,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         MET: {
@@ -134252,7 +133389,6 @@ format class are named by $NCD's container format.`
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ]
@@ -134358,23 +133494,6 @@ format class are named by $NCD's container format.`
             "COSINE",
             "MINIMUM",
             "MAXIMUM"
-          ]
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ]
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
           ]
         },
         pcfOutputFrame: {
@@ -134620,8 +133739,7 @@ format class are named by $NCD's container format.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -154980,145 +154098,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true."
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG."
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off."
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true."
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12."
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20."
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7."
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true."
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31."
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045."
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1."
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0."
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1."
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true."
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70."
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8."
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2."
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240."
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60."
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800."
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2."
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05."
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6."
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -155180,7 +154159,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP."
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
@@ -155263,135 +154242,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             EXPRESSION: {
               $ref: "#/definitions/PCFExpression",
               description: "EXPRESSION: the program. Default absent."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1."
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION."
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20."
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12."
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2."
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80."
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180."
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05."
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01."
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01."
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30."
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120."
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR."
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15."
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2."
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05."
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10."
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5."
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1."
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG."
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent."
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1."
             }
           },
           additionalProperties: false
@@ -155749,10 +154599,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/pcfNeutralWind",
               description: "Neutral wind in the drag relative velocity. Default NONE."
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -155802,14 +154648,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all."
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
             }
           },
           additionalProperties: false
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -155831,14 +154677,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/PCFForceModel",
               description: "Forces. Absent: the theory's built-in set."
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP)."
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets."
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy."
@@ -155849,18 +154687,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/PCFEventDefinition"
               },
               description: "Events located while integrating. Default empty."
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection."
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window."
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors."
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -157459,7 +156285,7 @@ empty = the provider's native frame.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -157563,7 +156389,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -157571,7 +156397,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -222717,8 +221543,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -223411,7 +222236,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -223515,7 +222340,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -223523,7 +222348,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -234317,7 +233142,6 @@ balance service's own rate.`
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ]
@@ -234423,23 +233247,6 @@ balance service's own rate.`
             "COSINE",
             "MINIMUM",
             "MAXIMUM"
-          ]
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ]
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
           ]
         },
         pcfOutputFrame: {
@@ -237758,145 +236565,6 @@ balance service's own rate.`
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true."
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG."
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off."
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true."
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12."
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20."
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7."
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true."
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31."
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045."
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1."
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0."
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1."
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true."
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70."
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8."
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2."
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240."
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60."
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800."
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2."
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05."
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6."
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -237958,7 +236626,7 @@ balance service's own rate.`
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP."
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
@@ -238041,135 +236709,6 @@ balance service's own rate.`
             EXPRESSION: {
               $ref: "#/definitions/PCFExpression",
               description: "EXPRESSION: the program. Default absent."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1."
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION."
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20."
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12."
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2."
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80."
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180."
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05."
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01."
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01."
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30."
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120."
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR."
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15."
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2."
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05."
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10."
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5."
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1."
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG."
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent."
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1."
             }
           },
           additionalProperties: false
@@ -238527,10 +237066,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/pcfNeutralWind",
               description: "Neutral wind in the drag relative velocity. Default NONE."
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -238580,14 +237115,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all."
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
             }
           },
           additionalProperties: false
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -238609,14 +237144,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/PCFForceModel",
               description: "Forces. Absent: the theory's built-in set."
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP)."
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets."
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy."
@@ -238627,18 +237154,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/PCFEventDefinition"
               },
               description: "Events located while integrating. Default empty."
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection."
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window."
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors."
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -254930,8 +253445,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         MET: {
@@ -270031,7 +268545,6 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ]
@@ -270137,23 +268650,6 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "COSINE",
             "MINIMUM",
             "MAXIMUM"
-          ]
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ]
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
           ]
         },
         pcfOutputFrame: {
@@ -270399,8 +268895,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -273732,145 +272227,6 @@ compressed). Nothing hashes the payload before the protocol hash.`
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true."
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG."
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off."
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true."
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12."
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20."
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7."
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true."
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31."
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045."
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1."
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0."
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1."
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true."
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70."
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8."
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2."
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240."
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60."
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800."
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2."
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05."
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6."
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -273932,7 +272288,7 @@ compressed). Nothing hashes the payload before the protocol hash.`
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP."
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
@@ -274015,135 +272371,6 @@ compressed). Nothing hashes the payload before the protocol hash.`
             EXPRESSION: {
               $ref: "#/definitions/PCFExpression",
               description: "EXPRESSION: the program. Default absent."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1."
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION."
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20."
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12."
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2."
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80."
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180."
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05."
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01."
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01."
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30."
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120."
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR."
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15."
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2."
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05."
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10."
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5."
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1."
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG."
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent."
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1."
             }
           },
           additionalProperties: false
@@ -274501,10 +272728,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/pcfNeutralWind",
               description: "Neutral wind in the drag relative velocity. Default NONE."
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -274554,14 +272777,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all."
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
             }
           },
           additionalProperties: false
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -274583,14 +272806,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/PCFForceModel",
               description: "Forces. Absent: the theory's built-in set."
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP)."
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets."
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy."
@@ -274601,18 +272816,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/PCFEventDefinition"
               },
               description: "Events located while integrating. Default empty."
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection."
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window."
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors."
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -276211,7 +274414,7 @@ empty = the provider's native frame.`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -276315,7 +274518,7 @@ empty = the provider's native frame.`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -276323,7 +274526,7 @@ empty = the provider's native frame.`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -285123,8 +283326,7 @@ assumptions".`
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ]
         },
         covarianceCalibration: {
@@ -287052,7 +285254,7 @@ assumptions".`
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY."
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet."
             },
             REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -287156,7 +285358,7 @@ assumptions".`
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]"
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]"
             },
             MEAN_MOTION_DOT: {
               type: "number",
@@ -287164,7 +285366,7 @@ assumptions".`
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]"
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]"
             },
             COV_REFERENCE_FRAME: {
               $ref: "#/definitions/RFM",
@@ -313855,7 +312057,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ]
@@ -313961,23 +312162,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             "COSINE",
             "MINIMUM",
             "MAXIMUM"
-          ]
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ]
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
           ]
         },
         pcfOutputFrame: {
@@ -318046,145 +316230,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true."
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG."
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off."
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true."
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12."
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20."
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7."
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true."
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31."
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045."
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1."
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0."
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1."
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true."
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70."
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8."
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2."
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240."
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60."
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800."
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2."
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05."
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6."
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -318246,7 +316291,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP."
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05."
             },
             SRP_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
@@ -318329,135 +316374,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`
             EXPRESSION: {
               $ref: "#/definitions/PCFExpression",
               description: "EXPRESSION: the program. Default absent."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1."
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION."
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20."
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12."
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2."
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80."
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180."
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05."
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01."
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01."
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30."
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120."
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR."
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15."
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2."
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05."
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10."
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5."
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02."
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01."
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1."
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG."
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent."
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1."
             }
           },
           additionalProperties: false
@@ -318815,10 +316731,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/pcfNeutralWind",
               description: "Neutral wind in the drag relative velocity. Default NONE."
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own."
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -318868,14 +316780,14 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all."
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all."
             }
           },
           additionalProperties: false
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -318897,14 +316809,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
               $ref: "#/definitions/PCFForceModel",
               description: "Forces. Absent: the theory's built-in set."
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP)."
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets."
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy."
@@ -318915,18 +316819,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`
                 $ref: "#/definitions/PCFEventDefinition"
               },
               description: "Events located while integrating. Default empty."
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection."
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window."
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors."
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -325937,7 +323829,6 @@ var fbjson_default = {
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ],
@@ -325955,10 +323846,6 @@ var fbjson_default = {
             SGP4XP: {
               value: 2,
               description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
-            },
-            SDNAP: {
-              value: 3,
-              description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
             },
             FFM: {
               value: 4,
@@ -326295,57 +324182,6 @@ var fbjson_default = {
             },
             MAXIMUM: {
               value: 13
-            }
-          }
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            WHITE: {
-              value: 1,
-              description: "Every sample independent (the white-noise assumption)."
-            },
-            ONE_SAMPLE_PER_REVOLUTION: {
-              value: 2,
-              description: "One sample per revolution counts, so a revolution is one independent innovation."
-            },
-            CORRELATION_TIME: {
-              value: 3,
-              description: "An exponential correlation of the innovations over a correlation time."
-            }
-          }
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            LINEAR: {
-              value: 1,
-              description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-            },
-            UNSCENTED: {
-              value: 2,
-              description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
             }
           }
         },
@@ -334516,195 +332352,6 @@ var fbjson_default = {
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "12"
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "20"
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "7"
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "31"
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.045"
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2500"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70.",
-              "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "70"
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "8"
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "2"
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "240"
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "60"
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1800"
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "6"
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -334791,7 +332438,7 @@ var fbjson_default = {
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
@@ -335751,219 +333398,6 @@ var fbjson_default = {
           },
           additionalProperties: false
         },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                WHITE: {
-                  value: 1,
-                  description: "Every sample independent (the white-noise assumption)."
-                },
-                ONE_SAMPLE_PER_REVOLUTION: {
-                  value: 2,
-                  description: "One sample per revolution counts, so a revolution is one independent innovation."
-                },
-                CORRELATION_TIME: {
-                  value: 3,
-                  description: "An exponential correlation of the innovations over a correlation time."
-                }
-              },
-              "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "20"
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "12"
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "48"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "80"
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "180"
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "30"
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                LINEAR: {
-                  value: 1,
-                  description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-                },
-                UNSCENTED: {
-                  value: 2,
-                  description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
-                }
-              },
-              "x-flatbuffer-default": "LINEAR"
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.15"
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "10"
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.02"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            }
-          },
-          additionalProperties: false
-        },
         PCFOutput: {
           type: "object",
           description: "Output states: frame, step and size.",
@@ -336719,11 +334153,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               "x-flatbuffer-default": "NONE"
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
-              "x-flatbuffer-type": "PCFEmpiricalTerms"
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -336809,7 +334238,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
             }
           },
@@ -336817,7 +334246,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -336847,10 +334276,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                   value: 2,
                   description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
                 },
-                SDNAP: {
-                  value: 3,
-                  description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
-                },
                 FFM: {
                   value: 4,
                   description: "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
@@ -336872,16 +334297,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               description: "Forces. Absent: the theory's built-in set.",
               "x-flatbuffer-type": "PCFForceModel"
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
-              "x-flatbuffer-type": "PCFMeanElementOptions"
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets.",
-              "x-flatbuffer-type": "PCFSegmentOptions"
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy.",
@@ -336894,21 +334309,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Events located while integrating. Default empty.",
               "x-flatbuffer-type": "[PCFEventDefinition]"
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection.",
-              "x-flatbuffer-type": "PCFManeuverDetection"
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window.",
-              "x-flatbuffer-type": "PCFReentry"
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors.",
-              "x-flatbuffer-type": "PCFLaunch"
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -353923,8 +351323,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -353944,10 +351343,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -355840,10 +353235,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -376009,8 +373400,7 @@ Decoding applies the inverses from the last back.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -376030,10 +373420,6 @@ Decoding applies the inverses from the last back.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -377804,10 +375190,6 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -378095,7 +375477,7 @@ Decoding applies the inverses from the last back.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -378214,10 +375596,6 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -378352,7 +375730,7 @@ Decoding applies the inverses from the last back.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -378362,7 +375740,7 @@ Decoding applies the inverses from the last back.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -382206,8 +379584,7 @@ Decoding applies the inverses from the last back.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -382227,10 +379604,6 @@ Decoding applies the inverses from the last back.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -388667,10 +386040,6 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -388708,7 +386077,7 @@ Decoding applies the inverses from the last back.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -388827,10 +386196,6 @@ Decoding applies the inverses from the last back.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -388965,7 +386330,7 @@ Decoding applies the inverses from the last back.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -388975,7 +386340,7 @@ Decoding applies the inverses from the last back.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -424423,7 +421788,6 @@ verbatim what that source states about itself.`,
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ],
@@ -424441,10 +421805,6 @@ verbatim what that source states about itself.`,
             SGP4XP: {
               value: 2,
               description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
-            },
-            SDNAP: {
-              value: 3,
-              description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
             },
             FFM: {
               value: 4,
@@ -424781,57 +422141,6 @@ verbatim what that source states about itself.`,
             },
             MAXIMUM: {
               value: 13
-            }
-          }
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            WHITE: {
-              value: 1,
-              description: "Every sample independent (the white-noise assumption)."
-            },
-            ONE_SAMPLE_PER_REVOLUTION: {
-              value: 2,
-              description: "One sample per revolution counts, so a revolution is one independent innovation."
-            },
-            CORRELATION_TIME: {
-              value: 3,
-              description: "An exponential correlation of the innovations over a correlation time."
-            }
-          }
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            LINEAR: {
-              value: 1,
-              description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-            },
-            UNSCENTED: {
-              value: 2,
-              description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
             }
           }
         },
@@ -425413,8 +422722,7 @@ verbatim what that source states about itself.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -425434,10 +422742,6 @@ verbatim what that source states about itself.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -437219,195 +434523,6 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "12"
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "20"
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "7"
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "31"
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.045"
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2500"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70.",
-              "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "70"
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "8"
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "2"
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "240"
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "60"
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1800"
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "6"
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -437494,7 +434609,7 @@ verbatim what that source states about itself.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
@@ -438454,219 +435569,6 @@ verbatim what that source states about itself.`,
           },
           additionalProperties: false
         },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                WHITE: {
-                  value: 1,
-                  description: "Every sample independent (the white-noise assumption)."
-                },
-                ONE_SAMPLE_PER_REVOLUTION: {
-                  value: 2,
-                  description: "One sample per revolution counts, so a revolution is one independent innovation."
-                },
-                CORRELATION_TIME: {
-                  value: 3,
-                  description: "An exponential correlation of the innovations over a correlation time."
-                }
-              },
-              "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "20"
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "12"
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "48"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "80"
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "180"
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "30"
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                LINEAR: {
-                  value: 1,
-                  description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-                },
-                UNSCENTED: {
-                  value: 2,
-                  description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
-                }
-              },
-              "x-flatbuffer-default": "LINEAR"
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.15"
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "10"
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.02"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            }
-          },
-          additionalProperties: false
-        },
         PCFOutput: {
           type: "object",
           description: "Output states: frame, step and size.",
@@ -439422,11 +436324,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               "x-flatbuffer-default": "NONE"
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
-              "x-flatbuffer-type": "PCFEmpiricalTerms"
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -439512,7 +436409,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
             }
           },
@@ -439520,7 +436417,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -439550,10 +436447,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                   value: 2,
                   description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
                 },
-                SDNAP: {
-                  value: 3,
-                  description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
-                },
                 FFM: {
                   value: 4,
                   description: "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
@@ -439575,16 +436468,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               description: "Forces. Absent: the theory's built-in set.",
               "x-flatbuffer-type": "PCFForceModel"
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
-              "x-flatbuffer-type": "PCFMeanElementOptions"
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets.",
-              "x-flatbuffer-type": "PCFSegmentOptions"
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy.",
@@ -439597,21 +436480,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Events located while integrating. Default empty.",
               "x-flatbuffer-type": "[PCFEventDefinition]"
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection.",
-              "x-flatbuffer-type": "PCFManeuverDetection"
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window.",
-              "x-flatbuffer-type": "PCFReentry"
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors.",
-              "x-flatbuffer-type": "PCFLaunch"
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -441692,10 +438560,6 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -441888,7 +438752,7 @@ empty = the provider's native frame.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -442007,10 +438871,6 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -442145,7 +439005,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -442155,7 +439015,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -488536,8 +485396,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -488557,10 +485416,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -492662,10 +489517,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -492953,7 +489804,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -493072,10 +489923,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -493210,7 +490057,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -493220,7 +490067,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -524907,8 +521754,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -524928,10 +521774,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -524959,10 +521801,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -574336,7 +571174,6 @@ format class are named by $NCD's container format.`,
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ],
@@ -574354,10 +571191,6 @@ format class are named by $NCD's container format.`,
             SGP4XP: {
               value: 2,
               description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
-            },
-            SDNAP: {
-              value: 3,
-              description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
             },
             FFM: {
               value: 4,
@@ -574694,57 +571527,6 @@ format class are named by $NCD's container format.`,
             },
             MAXIMUM: {
               value: 13
-            }
-          }
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            WHITE: {
-              value: 1,
-              description: "Every sample independent (the white-noise assumption)."
-            },
-            ONE_SAMPLE_PER_REVOLUTION: {
-              value: 2,
-              description: "One sample per revolution counts, so a revolution is one independent innovation."
-            },
-            CORRELATION_TIME: {
-              value: 3,
-              description: "An exponential correlation of the innovations over a correlation time."
-            }
-          }
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            LINEAR: {
-              value: 1,
-              description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-            },
-            UNSCENTED: {
-              value: 2,
-              description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
             }
           }
         },
@@ -575326,8 +572108,7 @@ format class are named by $NCD's container format.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -575347,10 +572128,6 @@ format class are named by $NCD's container format.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -624005,195 +620782,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "12"
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "20"
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "7"
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "31"
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.045"
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2500"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70.",
-              "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "70"
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "8"
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "2"
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "240"
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "60"
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1800"
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "6"
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -624280,7 +620868,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
@@ -625240,219 +621828,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
           },
           additionalProperties: false
         },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                WHITE: {
-                  value: 1,
-                  description: "Every sample independent (the white-noise assumption)."
-                },
-                ONE_SAMPLE_PER_REVOLUTION: {
-                  value: 2,
-                  description: "One sample per revolution counts, so a revolution is one independent innovation."
-                },
-                CORRELATION_TIME: {
-                  value: 3,
-                  description: "An exponential correlation of the innovations over a correlation time."
-                }
-              },
-              "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "20"
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "12"
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "48"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "80"
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "180"
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "30"
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                LINEAR: {
-                  value: 1,
-                  description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-                },
-                UNSCENTED: {
-                  value: 2,
-                  description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
-                }
-              },
-              "x-flatbuffer-default": "LINEAR"
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.15"
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "10"
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.02"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            }
-          },
-          additionalProperties: false
-        },
         PCFOutput: {
           type: "object",
           description: "Output states: frame, step and size.",
@@ -626208,11 +622583,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               "x-flatbuffer-default": "NONE"
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
-              "x-flatbuffer-type": "PCFEmpiricalTerms"
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -626298,7 +622668,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
             }
           },
@@ -626306,7 +622676,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -626336,10 +622706,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                   value: 2,
                   description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
                 },
-                SDNAP: {
-                  value: 3,
-                  description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
-                },
                 FFM: {
                   value: 4,
                   description: "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
@@ -626361,16 +622727,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               description: "Forces. Absent: the theory's built-in set.",
               "x-flatbuffer-type": "PCFForceModel"
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
-              "x-flatbuffer-type": "PCFMeanElementOptions"
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets.",
-              "x-flatbuffer-type": "PCFSegmentOptions"
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy.",
@@ -626383,21 +622739,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Events located while integrating. Default empty.",
               "x-flatbuffer-type": "[PCFEventDefinition]"
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection.",
-              "x-flatbuffer-type": "PCFManeuverDetection"
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window.",
-              "x-flatbuffer-type": "PCFReentry"
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors.",
-              "x-flatbuffer-type": "PCFLaunch"
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -628478,10 +624819,6 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -628674,7 +625011,7 @@ empty = the provider's native frame.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -628793,10 +625130,6 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -628931,7 +625264,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -628941,7 +625274,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -670447,10 +666780,6 @@ provider's reviewed register). Never free text.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -737436,8 +733765,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -737457,10 +733785,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -739183,10 +735507,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -739474,7 +735794,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -739593,10 +735913,6 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -739731,7 +736047,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -739741,7 +736057,7 @@ CONTRACTS \u2014 never by a manual or off-chain settlement step.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -761962,7 +758278,6 @@ balance service's own rate.`,
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ],
@@ -761980,10 +758295,6 @@ balance service's own rate.`,
             SGP4XP: {
               value: 2,
               description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
-            },
-            SDNAP: {
-              value: 3,
-              description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
             },
             FFM: {
               value: 4,
@@ -762320,57 +758631,6 @@ balance service's own rate.`,
             },
             MAXIMUM: {
               value: 13
-            }
-          }
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            WHITE: {
-              value: 1,
-              description: "Every sample independent (the white-noise assumption)."
-            },
-            ONE_SAMPLE_PER_REVOLUTION: {
-              value: 2,
-              description: "One sample per revolution counts, so a revolution is one independent innovation."
-            },
-            CORRELATION_TIME: {
-              value: 3,
-              description: "An exponential correlation of the innovations over a correlation time."
-            }
-          }
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            LINEAR: {
-              value: 1,
-              description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-            },
-            UNSCENTED: {
-              value: 2,
-              description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
             }
           }
         },
@@ -774428,195 +770688,6 @@ balance service's own rate.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "12"
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "20"
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "7"
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "31"
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.045"
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2500"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70.",
-              "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "70"
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "8"
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "2"
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "240"
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "60"
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1800"
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "6"
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -774703,7 +770774,7 @@ balance service's own rate.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
@@ -775663,219 +771734,6 @@ balance service's own rate.`,
           },
           additionalProperties: false
         },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                WHITE: {
-                  value: 1,
-                  description: "Every sample independent (the white-noise assumption)."
-                },
-                ONE_SAMPLE_PER_REVOLUTION: {
-                  value: 2,
-                  description: "One sample per revolution counts, so a revolution is one independent innovation."
-                },
-                CORRELATION_TIME: {
-                  value: 3,
-                  description: "An exponential correlation of the innovations over a correlation time."
-                }
-              },
-              "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "20"
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "12"
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "48"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "80"
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "180"
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "30"
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                LINEAR: {
-                  value: 1,
-                  description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-                },
-                UNSCENTED: {
-                  value: 2,
-                  description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
-                }
-              },
-              "x-flatbuffer-default": "LINEAR"
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.15"
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "10"
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.02"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            }
-          },
-          additionalProperties: false
-        },
         PCFOutput: {
           type: "object",
           description: "Output states: frame, step and size.",
@@ -776631,11 +772489,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               "x-flatbuffer-default": "NONE"
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
-              "x-flatbuffer-type": "PCFEmpiricalTerms"
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -776721,7 +772574,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
             }
           },
@@ -776729,7 +772582,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -776759,10 +772612,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                   value: 2,
                   description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
                 },
-                SDNAP: {
-                  value: 3,
-                  description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
-                },
                 FFM: {
                   value: 4,
                   description: "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
@@ -776784,16 +772633,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               description: "Forces. Absent: the theory's built-in set.",
               "x-flatbuffer-type": "PCFForceModel"
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
-              "x-flatbuffer-type": "PCFMeanElementOptions"
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets.",
-              "x-flatbuffer-type": "PCFSegmentOptions"
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy.",
@@ -776806,21 +772645,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Events located while integrating. Default empty.",
               "x-flatbuffer-type": "[PCFEventDefinition]"
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection.",
-              "x-flatbuffer-type": "PCFManeuverDetection"
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window.",
-              "x-flatbuffer-type": "PCFReentry"
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors.",
-              "x-flatbuffer-type": "PCFLaunch"
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -815444,8 +811268,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -815465,10 +811288,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -815496,10 +811315,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -815685,10 +811500,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -851536,7 +847347,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ],
@@ -851554,10 +847364,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             SGP4XP: {
               value: 2,
               description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
-            },
-            SDNAP: {
-              value: 3,
-              description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
             },
             FFM: {
               value: 4,
@@ -851894,57 +847700,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             MAXIMUM: {
               value: 13
-            }
-          }
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            WHITE: {
-              value: 1,
-              description: "Every sample independent (the white-noise assumption)."
-            },
-            ONE_SAMPLE_PER_REVOLUTION: {
-              value: 2,
-              description: "One sample per revolution counts, so a revolution is one independent innovation."
-            },
-            CORRELATION_TIME: {
-              value: 3,
-              description: "An exponential correlation of the innovations over a correlation time."
-            }
-          }
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            LINEAR: {
-              value: 1,
-              description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-            },
-            UNSCENTED: {
-              value: 2,
-              description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
             }
           }
         },
@@ -852526,8 +848281,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -852547,10 +848301,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -864766,195 +860516,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "12"
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "20"
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "7"
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "31"
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.045"
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2500"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70.",
-              "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "70"
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "8"
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "2"
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "240"
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "60"
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1800"
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "6"
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -865041,7 +860602,7 @@ compressed). Nothing hashes the payload before the protocol hash.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
@@ -866001,219 +861562,6 @@ compressed). Nothing hashes the payload before the protocol hash.`,
           },
           additionalProperties: false
         },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                WHITE: {
-                  value: 1,
-                  description: "Every sample independent (the white-noise assumption)."
-                },
-                ONE_SAMPLE_PER_REVOLUTION: {
-                  value: 2,
-                  description: "One sample per revolution counts, so a revolution is one independent innovation."
-                },
-                CORRELATION_TIME: {
-                  value: 3,
-                  description: "An exponential correlation of the innovations over a correlation time."
-                }
-              },
-              "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "20"
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "12"
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "48"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "80"
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "180"
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "30"
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                LINEAR: {
-                  value: 1,
-                  description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-                },
-                UNSCENTED: {
-                  value: 2,
-                  description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
-                }
-              },
-              "x-flatbuffer-default": "LINEAR"
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.15"
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "10"
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.02"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            }
-          },
-          additionalProperties: false
-        },
         PCFOutput: {
           type: "object",
           description: "Output states: frame, step and size.",
@@ -866969,11 +862317,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               "x-flatbuffer-default": "NONE"
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
-              "x-flatbuffer-type": "PCFEmpiricalTerms"
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -867059,7 +862402,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
             }
           },
@@ -867067,7 +862410,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -867097,10 +862440,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                   value: 2,
                   description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
                 },
-                SDNAP: {
-                  value: 3,
-                  description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
-                },
                 FFM: {
                   value: 4,
                   description: "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
@@ -867122,16 +862461,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               description: "Forces. Absent: the theory's built-in set.",
               "x-flatbuffer-type": "PCFForceModel"
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
-              "x-flatbuffer-type": "PCFMeanElementOptions"
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets.",
-              "x-flatbuffer-type": "PCFSegmentOptions"
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy.",
@@ -867144,21 +862473,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Events located while integrating. Default empty.",
               "x-flatbuffer-type": "[PCFEventDefinition]"
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection.",
-              "x-flatbuffer-type": "PCFManeuverDetection"
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window.",
-              "x-flatbuffer-type": "PCFReentry"
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors.",
-              "x-flatbuffer-type": "PCFLaunch"
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -869239,10 +864553,6 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -869435,7 +864745,7 @@ empty = the provider's native frame.`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -869554,10 +864864,6 @@ empty = the provider's native frame.`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -869692,7 +864998,7 @@ empty = the provider's native frame.`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -869702,7 +865008,7 @@ empty = the provider's native frame.`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -883305,8 +878611,7 @@ assumptions".`,
             "SGP4",
             "SGP4XP",
             "DSST",
-            "USM",
-            "SDNAP"
+            "USM"
           ],
           "x-flatbuffer-type": "enum",
           "x-flatbuffer-enum-type": "byte",
@@ -883326,10 +878631,6 @@ assumptions".`,
             USM: {
               value: 3,
               description: "Universal Semianalytical Method"
-            },
-            SDNAP: {
-              value: 4,
-              description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         },
@@ -887514,10 +882815,6 @@ assumptions".`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               }
             }
@@ -887805,7 +883102,7 @@ assumptions".`,
             },
             CENTER_NAME: {
               type: "string",
-              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+              description: "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
               "x-flatbuffer-type": "string"
             },
             REFERENCE_FRAME: {
@@ -887924,10 +883221,6 @@ assumptions".`,
                 USM: {
                   value: 3,
                   description: "Universal Semianalytical Method"
-                },
-                SDNAP: {
-                  value: 4,
-                  description: "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
                 }
               },
               "x-flatbuffer-default": "SGP4"
@@ -888062,7 +883355,7 @@ assumptions".`,
             },
             BSTAR: {
               type: "number",
-              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+              description: "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             MEAN_MOTION_DOT: {
@@ -888072,7 +883365,7 @@ assumptions".`,
             },
             MEAN_MOTION_DDOT: {
               type: "number",
-              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+              description: "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
               "x-flatbuffer-type": "double"
             },
             COV_REFERENCE_FRAME: {
@@ -943678,7 +938971,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             "UNSPECIFIED",
             "SGP4",
             "SGP4XP",
-            "SDNAP",
             "FFM",
             "KEPLER"
           ],
@@ -943696,10 +938988,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             SGP4XP: {
               value: 2,
               description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
-            },
-            SDNAP: {
-              value: 3,
-              description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
             },
             FFM: {
               value: 4,
@@ -944036,57 +939324,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             MAXIMUM: {
               value: 13
-            }
-          }
-        },
-        pcfInnovationCorrelation: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "WHITE",
-            "ONE_SAMPLE_PER_REVOLUTION",
-            "CORRELATION_TIME"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            WHITE: {
-              value: 1,
-              description: "Every sample independent (the white-noise assumption)."
-            },
-            ONE_SAMPLE_PER_REVOLUTION: {
-              value: 2,
-              description: "One sample per revolution counts, so a revolution is one independent innovation."
-            },
-            CORRELATION_TIME: {
-              value: 3,
-              description: "An exponential correlation of the innovations over a correlation time."
-            }
-          }
-        },
-        pcfReentryWindowMethod: {
-          type: "string",
-          enum: [
-            "UNSPECIFIED",
-            "LINEAR",
-            "UNSCENTED"
-          ],
-          "x-flatbuffer-type": "enum",
-          "x-flatbuffer-enum-type": "ubyte",
-          "x-flatbuffer-enum-values": {
-            UNSPECIFIED: {
-              value: 0
-            },
-            LINEAR: {
-              value: 1,
-              description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-            },
-            UNSCENTED: {
-              value: 2,
-              description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
             }
           }
         },
@@ -957416,195 +952653,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           },
           additionalProperties: false
         },
-        PCFEmpiricalTerms: {
-          type: "object",
-          description: "Empirical along-track terms of the averaged theories: a transverse\nacceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of\nlatitude and g = 1 on the fit arc.",
-          properties: {
-            ONCE_PER_REVOLUTION: {
-              type: "boolean",
-              description: "Fit the once-per-revolution pair (TAUC, TAUS). Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            TAU0_RULE_LIMIT_M2_KG: {
-              type: "number",
-              description: "The constant term TAU0 is free only when this rule selects it: a fitted\nB_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its\nprior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HAS_TAU0_RULE_LIMIT_M2_KG: {
-              type: "boolean",
-              description: "True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the\ndefault) leaves TAU0 off.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            HELD_ABOVE_DRAG_REGIME: {
-              type: "boolean",
-              description: "True holds TAUC and TAUS after the arc end above the drag regime\n(perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the\nonce-per-revolution part of radiation pressure; false decays them over\nPERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer\nwritten before 1.268.0 omits a false value, so it reads true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            PERSISTENCE_HOURS: {
-              type: "number",
-              description: "Persistence time of the empirical force after the arc end, hours.\nDefault 24.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "24"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFMeanElementOptions: {
-          type: "object",
-          description: "Truncations and switches of the averaged (mean-element) theories SGP4XP\nand SDNAP. SGP4's constants are fixed by its specification and are not\noptions.",
-          properties: {
-            M_DAILY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest even degree of the m-daily short-periodic gravity terms; 0\nomits them. Range 0 to 16. Default 12.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "12"
-            },
-            ZONAL_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the zonal tail (secular and long-period terms past\nJ5). Range 6 to 70. Default 20.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "20"
-            },
-            SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest degree of the eccentricity-vector short-periodic terms. Range\n2 to 16. Default 7.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "7"
-            },
-            ENABLE_RESONANCE: {
-              type: "boolean",
-              description: "Resonance terms on or off. Default true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            RESONANCE_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest odd degree of the shallow-resonance terms. Default 31.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "31"
-            },
-            RESONANCE_BAND: {
-              type: "number",
-              description: "Resonance band: terms whose angle drifts slower than this fraction of\nthe mean motion are integrated with the rates. Default 0.045.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.045"
-            },
-            RESONANCE_MAXIMUM_K: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Highest multiple of the mean anomaly in a resonance angle. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            NEAR_RESONANCE_BAND: {
-              type: "number",
-              description: "Near-resonance band at output time, as a fraction of the mean motion\nbeyond RESONANCE_BAND; 0 is off. Default 0.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            GRID_STEP_DIVISOR: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Divisor of the integration grid step; >= 1. Default 1.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "1"
-            },
-            DENSITY_KERNEL: {
-              type: "boolean",
-              description: "The catalog-shared density kernel (a gridded log-density table shared by\nevery object) on or off; off evaluates the atmosphere model directly.\nDefault true.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "true"
-            },
-            DRAG_REGIME_PERIGEE_KM: {
-              type: "number",
-              description: "Perigee height below which B_eff and TAU0 act (the drag regime), km.\nDefault 2500.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2500"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFSegmentOptions: {
-          type: "object",
-          description: "Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs\ncut into segments at maneuvers and sphere-of-influence passages.",
-          properties: {
-            MOON_GRAVITY_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 65535,
-              description: "Moon-centered gravity field degree. Default 70.",
-              "x-flatbuffer-type": "ushort",
-              "x-flatbuffer-default": "70"
-            },
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered short-periodic degree. Default 8.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "8"
-            },
-            MOON_ECCENTRICITY_ORDER: {
-              type: "integer",
-              minimum: 0,
-              maximum: 255,
-              description: "Moon-centered eccentricity order (highest |q| of the mean-anomaly\nmultiple kept). Default 2.",
-              "x-flatbuffer-type": "ubyte",
-              "x-flatbuffer-default": "2"
-            },
-            MOON_STEP_SECONDS: {
-              type: "number",
-              description: "Moon-centered integration step, seconds. Default 240.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "240"
-            },
-            CISLUNAR_STEP_SECONDS: {
-              type: "number",
-              description: "Cislunar integration step, seconds. Default 60.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "60"
-            },
-            HELIOCENTRIC_STEP_SECONDS: {
-              type: "number",
-              description: "Heliocentric integration step, seconds. Default 1800.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1800"
-            },
-            SEGMENT_RMS_FACTOR: {
-              type: "number",
-              description: "A segment is accepted when its RMS is within max(RMS_FACTOR x the\ncleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            SEGMENT_RMS_MARGIN_KM: {
-              type: "number",
-              description: "The additive term of the same rule, km. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: {
-              type: "number",
-              description: "Shortest cislunar segment, hours. Default 6.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "6"
-            }
-          },
-          additionalProperties: false
-        },
         PCFFitPolicy: {
           type: "object",
           description: "Fit policy: how long an arc a fit uses, how that is validated, and what a\nfit refuses.",
@@ -957691,7 +952739,7 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
             },
             DRAG_PRIOR: {
               $ref: "#/definitions/PCFGaussianPrior",
-              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.",
+              description: "Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent\nor without sigma: mean 0, sigma 0.05.",
               "x-flatbuffer-type": "PCFGaussianPrior"
             },
             SRP_PRIOR: {
@@ -958651,219 +953699,6 @@ A signature over SHA-256(SHA-256(bytes)) does not verify.`,
           },
           additionalProperties: false
         },
-        PCFManeuverDetection: {
-          type: "object",
-          description: "Maneuver detection from fit innovations: a generalized-likelihood-ratio\nscan of the six mean elements.",
-          properties: {
-            FALSE_ALARMS_PER_OBJECT_YEAR: {
-              type: "number",
-              description: "False-alarm rate the THRESHOLD is calibrated for, per object-year. A\nprovider that cannot recalibrate refuses another rate. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            CORRELATION_MODEL: {
-              $ref: "#/definitions/pcfInnovationCorrelation",
-              description: "How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                WHITE: {
-                  value: 1,
-                  description: "Every sample independent (the white-noise assumption)."
-                },
-                ONE_SAMPLE_PER_REVOLUTION: {
-                  value: 2,
-                  description: "One sample per revolution counts, so a revolution is one independent innovation."
-                },
-                CORRELATION_TIME: {
-                  value: 3,
-                  description: "An exponential correlation of the innovations over a correlation time."
-                }
-              },
-              "x-flatbuffer-default": "ONE_SAMPLE_PER_REVOLUTION"
-            },
-            THRESHOLD: {
-              type: "number",
-              description: "The statistic Lambda (chi-square, 3 degrees of freedom) above which a\nmaneuver is declared. Default 20.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "20"
-            },
-            MARGIN_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "States kept clear at each end of the arc when scanning. Default 12.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "12"
-            },
-            REFINE_WINDOW_HOURS: {
-              type: "number",
-              description: "Half-width of the window the burn epoch is refined in, hours. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            MINIMUM_STATES: {
-              type: "integer",
-              minimum: 0,
-              maximum: 4294967295,
-              description: "Fewest states an arc must hold to be scanned. Default 48.",
-              "x-flatbuffer-type": "uint",
-              "x-flatbuffer-default": "48"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFReentry: {
-          type: "object",
-          description: "Reentry: where the averaged theory hands off to osculating integration,\nwhere the trajectory ends, and the width of the reentry window.",
-          properties: {
-            ALTITUDE_KM: {
-              type: "number",
-              description: "Altitude at which the trajectory ends as reentered, km. Default 80.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "80"
-            },
-            HANDOFF_PERIGEE_ALTITUDE_KM: {
-              type: "number",
-              description: "Hand-off when the perigee altitude falls below this, km. Default 180.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "180"
-            },
-            HANDOFF_DECAY_RATIO: {
-              type: "number",
-              description: "Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this\nfraction of the density scale height H. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            HANDOFF_ECCENTRICITY_COLLAPSE: {
-              type: "number",
-              description: "Hand-off when the eccentricity collapses by more than this fraction of\na e per revolution, with the eccentricity above\nHANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            HANDOFF_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the collapse test applies. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            NODE_STEP_MINUTES: {
-              type: "number",
-              description: "Spacing of the nodes the hand-off tests are evaluated at, minutes.\nDefault 30.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "30"
-            },
-            HORIZON_DAYS: {
-              type: "number",
-              description: "Longest look-ahead for a hand-off or reentry, days. Default 120.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "120"
-            },
-            WINDOW_METHOD: {
-              $ref: "#/definitions/pcfReentryWindowMethod",
-              description: "How the reentry window is computed. Default LINEAR.",
-              "x-flatbuffer-type": "enum",
-              "x-flatbuffer-enum-type": "ubyte",
-              "x-flatbuffer-enum-values": {
-                UNSPECIFIED: {
-                  value: 0
-                },
-                LINEAR: {
-                  value: 1,
-                  description: "First-order propagation of the ballistic and density sigmas through the remaining life."
-                },
-                UNSCENTED: {
-                  value: 2,
-                  description: "The unscented transform over the hand-off state, the ballistic coefficient and the density level."
-                }
-              },
-              "x-flatbuffer-default": "LINEAR"
-            },
-            WINDOW_DENSITY_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma density error of the window. Default 0.15.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.15"
-            },
-            WINDOW_CORRELATION_DAYS: {
-              type: "number",
-              description: "Correlation time of the density error, days. Default 2.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "2"
-            },
-            WINDOW_BALLISTIC_SIGMA: {
-              type: "number",
-              description: "Fractional 1-sigma error of the ballistic coefficient. Default 0.05.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.05"
-            },
-            OSCULATING_STEP_SECONDS: {
-              type: "number",
-              description: "Step of the osculating integration after the hand-off, seconds. Default\n10.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "10"
-            },
-            HANDOFF_SAWTOOTH_KM: {
-              type: "number",
-              description: "Hand-off when the along-track sawtooth of an eccentric orbit passes this,\nkm: drag acts mostly in the perigee pass, so the osculating semi-major axis\nsteps once per revolution while the averaged theory ramps, and the\nalong-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.\nApplies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.\nDefault 0.5.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.5"
-            },
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: {
-              type: "number",
-              description: "Eccentricity above which the sawtooth test applies. Default 0.02.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.02"
-            }
-          },
-          additionalProperties: false
-        },
-        PCFLaunch: {
-          type: "object",
-          description: "Launch initialization: priors for the first element sets of new objects\nand for a deployment batch fitted jointly.",
-          properties: {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: {
-              type: "number",
-              description: "A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0.01"
-            },
-            SEPARATION_SIGMA_M_S: {
-              type: "number",
-              description: "Prior 1-sigma of each object's separation velocity per axis, m/s.\nDefault 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            },
-            SHRINK_SIGMA_M2_KG: {
-              type: "number",
-              description: "Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.\nAbsent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "0"
-            },
-            HAS_SHRINK_SIGMA_M2_KG: {
-              type: "boolean",
-              description: "True when SHRINK_SIGMA_M2_KG carries a value; false means absent.",
-              "x-flatbuffer-type": "bool",
-              "x-flatbuffer-default": "false"
-            },
-            BATCH_MEAN_SIGMA_M2_KG: {
-              type: "number",
-              description: "Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.",
-              "x-flatbuffer-type": "double",
-              "x-flatbuffer-default": "1"
-            }
-          },
-          additionalProperties: false
-        },
         PCFOutput: {
           type: "object",
           description: "Output states: frame, step and size.",
@@ -959619,11 +954454,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               "x-flatbuffer-default": "NONE"
             },
-            EMPIRICAL_TERMS: {
-              $ref: "#/definitions/PCFEmpiricalTerms",
-              description: "Empirical along-track terms of the averaged theories. Absent (the\ndefault): the theory's own.",
-              "x-flatbuffer-type": "PCFEmpiricalTerms"
-            },
             THIRD_BODY_MAXIMUM_DEGREE: {
               type: "integer",
               minimum: 0,
@@ -959709,7 +954539,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               items: {
                 $ref: "#/definitions/pcfTheory"
               },
-              description: "Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.",
+              description: "Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.",
               "x-flatbuffer-type": "[pcfTheory]"
             }
           },
@@ -959717,7 +954547,7 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
         },
         PCF: {
           type: "object",
-          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full\nforce model, Kepler): the theory, the integrator and its settings, the\nforces, the fit policy, the events to locate, maneuver detection, reentry\nhand-off, launch priors and the output. A host passes it beside the\nrequest; the method it invokes (propagate, fit, detect maneuvers, reentry,\nlaunch) selects the tables that method reads. An absent table takes the\ntheory's own defaults; a table or value the selected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
+          description: "Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures\nany propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,\nthe integrator and its settings, the forces, the fit policy, the events to\nlocate, the epoch store and the output. A host passes it beside the\nrequest; the method it invokes selects the tables that method reads. An\nabsent table takes the theory's own defaults; a table or value the\nselected theory cannot honor is\nrefused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,\nPCFForceModel and their enums, so the runtime wire and the configuration\nshare one definition of each. Units are in the field names and docs; every\nfield states its default.",
           properties: {
             CONFIGURATION_ID: {
               type: "string",
@@ -959747,10 +954577,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
                   value: 2,
                   description: "SGP4 with extended perturbations (SGP4-XP, as published in the 2022 astrodynamics conference literature); the same value as $MET SGP4XP."
                 },
-                SDNAP: {
-                  value: 3,
-                  description: "SDN's own advanced mean-element theory, labeled as its own; carried in $OMM as a user-defined theory until $MET appends it."
-                },
                 FFM: {
                   value: 4,
                   description: "Numerical integration of the equations of motion under the full force model of PCFForceModel (profile FFM-1)."
@@ -959772,16 +954598,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               description: "Forces. Absent: the theory's built-in set.",
               "x-flatbuffer-type": "PCFForceModel"
             },
-            MEAN_ELEMENT: {
-              $ref: "#/definitions/PCFMeanElementOptions",
-              description: "Truncations and switches of the averaged theories (SGP4XP, SDNAP).",
-              "x-flatbuffer-type": "PCFMeanElementOptions"
-            },
-            SEGMENTS: {
-              $ref: "#/definitions/PCFSegmentOptions",
-              description: "Beyond-Earth segment sets.",
-              "x-flatbuffer-type": "PCFSegmentOptions"
-            },
             FIT: {
               $ref: "#/definitions/PCFFitPolicy",
               description: "Fit policy.",
@@ -959794,21 +954610,6 @@ MAXIMUM_ORDER nn and MAXIMUM_TESSERAL_DEGREE nn. Default absent.`,
               },
               description: "Events located while integrating. Default empty.",
               "x-flatbuffer-type": "[PCFEventDefinition]"
-            },
-            MANEUVER_DETECTION: {
-              $ref: "#/definitions/PCFManeuverDetection",
-              description: "Maneuver detection.",
-              "x-flatbuffer-type": "PCFManeuverDetection"
-            },
-            REENTRY: {
-              $ref: "#/definitions/PCFReentry",
-              description: "Reentry hand-off and window.",
-              "x-flatbuffer-type": "PCFReentry"
-            },
-            LAUNCH: {
-              $ref: "#/definitions/PCFLaunch",
-              description: "Launch initialization priors.",
-              "x-flatbuffer-type": "PCFLaunch"
             },
             OUTPUT: {
               $ref: "#/definitions/PCFOutput",
@@ -966616,7 +961417,7 @@ Decoding applies the inverses from the last back.`,
   }
 };
 
-// ../../node_modules/flatc-wasm/dist/flatc-wasm.js
+// node_modules/flatc-wasm/dist/flatc-wasm.js
 var FlatcWasmHE = (() => {
   var _scriptName = import.meta.url;
   return async function(moduleArg = {}) {

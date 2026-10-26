@@ -16,11 +16,6 @@ const (
 	meanElementSourceDSST   meanElementSource = 2
 	/// Universal Semianalytical Method
 	meanElementSourceUSM    meanElementSource = 3
-	/// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
-	/// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
-	/// terms. Its sets are osculating or mean about the center named in CENTER_NAME
-	/// (Earth, Moon, Sun or a planet); see $OMM.
-	meanElementSourceSDNAP  meanElementSource = 4
 )
 
 var EnumNamesmeanElementSource = map[meanElementSource]string{
@@ -28,7 +23,6 @@ var EnumNamesmeanElementSource = map[meanElementSource]string{
 	meanElementSourceSGP4XP: "SGP4XP",
 	meanElementSourceDSST:   "DSST",
 	meanElementSourceUSM:    "USM",
-	meanElementSourceSDNAP:  "SDNAP",
 }
 
 var EnumValuesmeanElementSource = map[string]meanElementSource{
@@ -36,7 +30,6 @@ var EnumValuesmeanElementSource = map[string]meanElementSource{
 	"SGP4XP": meanElementSourceSGP4XP,
 	"DSST":   meanElementSourceDSST,
 	"USM":    meanElementSourceUSM,
-	"SDNAP":  meanElementSourceSDNAP,
 }
 
 func (v meanElementSource) String() string {

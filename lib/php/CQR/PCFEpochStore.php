@@ -95,7 +95,7 @@ class PCFEpochStore extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfBlendShape::SMOOTHSTEP;
     }
 
-    /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+    /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
     /**
      * @param int offset
      * @return byte

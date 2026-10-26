@@ -60,7 +60,7 @@ public struct PCFFitPolicy : IFlatbufferObject
   /// 100.
   public double IMPLAUSIBLE_RMS_KM { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)100.0; } }
   /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  /// or without sigma: mean 0, sigma 0.05.
   public PCFGaussianPrior? DRAG_PRIOR { get { int o = __p.__offset(30); return o != 0 ? (PCFGaussianPrior?)(new PCFGaussianPrior()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   /// Absent or without sigma: mean 0, sigma 0.05.

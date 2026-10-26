@@ -15,11 +15,10 @@ pub const ENUM_MAX_PCF_THEORY: u8 = 5;
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_THEORY: [pcfTheory; 6] = [
+pub const ENUM_VALUES_PCF_THEORY: [pcfTheory; 5] = [
     pcfTheory::UNSPECIFIED,
     pcfTheory::SGP4,
     pcfTheory::SGP4XP,
-    pcfTheory::SDNAP,
     pcfTheory::FFM,
     pcfTheory::KEPLER,
 ];
@@ -42,9 +41,6 @@ impl pcfTheory {
     /// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
     /// astrodynamics conference literature); the same value as $MET SGP4XP.
     pub const SGP4XP: Self = Self(2);
-    /// SDN's own advanced mean-element theory, labeled as its own; carried in
-    /// $OMM as a user-defined theory until $MET appends it.
-    pub const SDNAP: Self = Self(3);
     /// Numerical integration of the equations of motion under the full force
     /// model of PCFForceModel (profile FFM-1).
     pub const FFM: Self = Self(4);
@@ -57,7 +53,6 @@ impl pcfTheory {
         Self::UNSPECIFIED,
         Self::SGP4,
         Self::SGP4XP,
-        Self::SDNAP,
         Self::FFM,
         Self::KEPLER,
     ];
@@ -68,7 +63,6 @@ impl pcfTheory {
             Self::UNSPECIFIED => Some("UNSPECIFIED"),
             Self::SGP4 => Some("SGP4"),
             Self::SGP4XP => Some("SGP4XP"),
-            Self::SDNAP => Some("SDNAP"),
             Self::FFM => Some("FFM"),
             Self::KEPLER => Some("KEPLER"),
             _ => None,
@@ -1357,219 +1351,6 @@ impl<'a> ::flatbuffers::Verifiable for pcfExpressionOperation {
 }
 
 impl ::flatbuffers::SimpleToVerifyInSlice for pcfExpressionOperation {}
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PCF_INNOVATION_CORRELATION: u8 = 0;
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_INNOVATION_CORRELATION: u8 = 3;
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_INNOVATION_CORRELATION: [pcfInnovationCorrelation; 4] = [
-    pcfInnovationCorrelation::UNSPECIFIED,
-    pcfInnovationCorrelation::WHITE,
-    pcfInnovationCorrelation::ONE_SAMPLE_PER_REVOLUTION,
-    pcfInnovationCorrelation::CORRELATION_TIME,
-];
-
-/// How the correlation of maneuver-detection innovations is weighted. Append
-/// new values only.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct pcfInnovationCorrelation(pub u8);
-
-#[allow(non_upper_case_globals)]
-impl pcfInnovationCorrelation {
-    pub const UNSPECIFIED: Self = Self(0);
-    /// Every sample independent (the white-noise assumption).
-    pub const WHITE: Self = Self(1);
-    /// One sample per revolution counts, so a revolution is one independent
-    /// innovation.
-    pub const ONE_SAMPLE_PER_REVOLUTION: Self = Self(2);
-    /// An exponential correlation of the innovations over a correlation time.
-    pub const CORRELATION_TIME: Self = Self(3);
-
-    pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 3;
-    pub const ENUM_VALUES: &'static [Self] = &[
-        Self::UNSPECIFIED,
-        Self::WHITE,
-        Self::ONE_SAMPLE_PER_REVOLUTION,
-        Self::CORRELATION_TIME,
-    ];
-
-    /// Returns the variant's name or "" if unknown.
-    pub fn variant_name(self) -> Option<&'static str> {
-        match self {
-            Self::UNSPECIFIED => Some("UNSPECIFIED"),
-            Self::WHITE => Some("WHITE"),
-            Self::ONE_SAMPLE_PER_REVOLUTION => Some("ONE_SAMPLE_PER_REVOLUTION"),
-            Self::CORRELATION_TIME => Some("CORRELATION_TIME"),
-            _ => None,
-        }
-    }
-}
-
-impl ::core::fmt::Debug for pcfInnovationCorrelation {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-        if let Some(name) = self.variant_name() {
-            f.write_str(name)
-        } else {
-            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-        }
-    }
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for pcfInnovationCorrelation {
-    type Inner = Self;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
-        Self(b)
-    }
-}
-
-impl ::flatbuffers::Push for pcfInnovationCorrelation {
-    type Output = pcfInnovationCorrelation;
-
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for pcfInnovationCorrelation {
-    type Scalar = u8;
-
-    #[inline]
-    fn to_little_endian(self) -> u8 {
-        self.0.to_le()
-    }
-
-    #[inline]
-    #[allow(clippy::wrong_self_convention)]
-    fn from_little_endian(v: u8) -> Self {
-        let b = u8::from_le(v);
-        Self(b)
-    }
-}
-
-impl<'a> ::flatbuffers::Verifiable for pcfInnovationCorrelation {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        u8::run_verifier(v, pos)
-    }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for pcfInnovationCorrelation {}
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MIN_PCF_REENTRY_WINDOW_METHOD: u8 = 0;
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_PCF_REENTRY_WINDOW_METHOD: u8 = 2;
-
-#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-#[allow(non_camel_case_types)]
-pub const ENUM_VALUES_PCF_REENTRY_WINDOW_METHOD: [pcfReentryWindowMethod; 3] = [
-    pcfReentryWindowMethod::UNSPECIFIED,
-    pcfReentryWindowMethod::LINEAR,
-    pcfReentryWindowMethod::UNSCENTED,
-];
-
-/// How the reentry-time window is computed. Append new values only.
-#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
-#[repr(transparent)]
-pub struct pcfReentryWindowMethod(pub u8);
-
-#[allow(non_upper_case_globals)]
-impl pcfReentryWindowMethod {
-    pub const UNSPECIFIED: Self = Self(0);
-    /// First-order propagation of the ballistic and density sigmas through the
-    /// remaining life.
-    pub const LINEAR: Self = Self(1);
-    /// The unscented transform over the hand-off state, the ballistic
-    /// coefficient and the density level.
-    pub const UNSCENTED: Self = Self(2);
-
-    pub const ENUM_MIN: u8 = 0;
-    pub const ENUM_MAX: u8 = 2;
-    pub const ENUM_VALUES: &'static [Self] = &[
-        Self::UNSPECIFIED,
-        Self::LINEAR,
-        Self::UNSCENTED,
-    ];
-
-    /// Returns the variant's name or "" if unknown.
-    pub fn variant_name(self) -> Option<&'static str> {
-        match self {
-            Self::UNSPECIFIED => Some("UNSPECIFIED"),
-            Self::LINEAR => Some("LINEAR"),
-            Self::UNSCENTED => Some("UNSCENTED"),
-            _ => None,
-        }
-    }
-}
-
-impl ::core::fmt::Debug for pcfReentryWindowMethod {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter) -> ::core::fmt::Result {
-        if let Some(name) = self.variant_name() {
-            f.write_str(name)
-        } else {
-            f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
-        }
-    }
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for pcfReentryWindowMethod {
-    type Inner = Self;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        let b = unsafe { ::flatbuffers::read_scalar_at::<u8>(buf, loc) };
-        Self(b)
-    }
-}
-
-impl ::flatbuffers::Push for pcfReentryWindowMethod {
-    type Output = pcfReentryWindowMethod;
-
-    #[inline]
-    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
-        unsafe { ::flatbuffers::emplace_scalar::<u8>(dst, self.0) };
-    }
-}
-
-impl ::flatbuffers::EndianScalar for pcfReentryWindowMethod {
-    type Scalar = u8;
-
-    #[inline]
-    fn to_little_endian(self) -> u8 {
-        self.0.to_le()
-    }
-
-    #[inline]
-    #[allow(clippy::wrong_self_convention)]
-    fn from_little_endian(v: u8) -> Self {
-        let b = u8::from_le(v);
-        Self(b)
-    }
-}
-
-impl<'a> ::flatbuffers::Verifiable for pcfReentryWindowMethod {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        u8::run_verifier(v, pos)
-    }
-}
-
-impl ::flatbuffers::SimpleToVerifyInSlice for pcfReentryWindowMethod {}
 
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_PCF_OUTPUT_FRAME: u8 = 0;
@@ -2960,1015 +2741,6 @@ impl PCFGaussianPriorT {
     }
 }
 
-pub enum PCFEmpiricalTermsOffset {}
-
-/// Empirical along-track terms of the averaged theories: a transverse
-/// acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
-/// latitude and g = 1 on the fit arc.
-#[derive(Copy, Clone, PartialEq)]
-pub struct PCFEmpiricalTerms<'a> {
-    pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PCFEmpiricalTerms<'a> {
-    type Inner = PCFEmpiricalTerms<'a>;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-    }
-}
-
-impl<'a> PCFEmpiricalTerms<'a> {
-    pub const VT_ONCE_PER_REVOLUTION: ::flatbuffers::VOffsetT = 4;
-    pub const VT_TAU0_RULE_LIMIT_M2_KG: ::flatbuffers::VOffsetT = 6;
-    pub const VT_HAS_TAU0_RULE_LIMIT_M2_KG: ::flatbuffers::VOffsetT = 8;
-    pub const VT_HELD_ABOVE_DRAG_REGIME: ::flatbuffers::VOffsetT = 10;
-    pub const VT_PERSISTENCE_HOURS: ::flatbuffers::VOffsetT = 12;
-
-    #[inline]
-    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-        PCFEmpiricalTerms { _tab: table }
-    }
-
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFEmpiricalTermsArgs
-    ) -> ::flatbuffers::WIPOffset<PCFEmpiricalTerms<'bldr>> {
-        let mut builder = PCFEmpiricalTermsBuilder::new(_fbb);
-        builder.add_PERSISTENCE_HOURS(args.PERSISTENCE_HOURS);
-        builder.add_TAU0_RULE_LIMIT_M2_KG(args.TAU0_RULE_LIMIT_M2_KG);
-        builder.add_HELD_ABOVE_DRAG_REGIME(args.HELD_ABOVE_DRAG_REGIME);
-        builder.add_HAS_TAU0_RULE_LIMIT_M2_KG(args.HAS_TAU0_RULE_LIMIT_M2_KG);
-        builder.add_ONCE_PER_REVOLUTION(args.ONCE_PER_REVOLUTION);
-        builder.finish()
-    }
-
-    pub fn unpack(&self) -> PCFEmpiricalTermsT {
-        let ONCE_PER_REVOLUTION = self.ONCE_PER_REVOLUTION();
-        let TAU0_RULE_LIMIT_M2_KG = self.TAU0_RULE_LIMIT_M2_KG();
-        let HAS_TAU0_RULE_LIMIT_M2_KG = self.HAS_TAU0_RULE_LIMIT_M2_KG();
-        let HELD_ABOVE_DRAG_REGIME = self.HELD_ABOVE_DRAG_REGIME();
-        let PERSISTENCE_HOURS = self.PERSISTENCE_HOURS();
-        PCFEmpiricalTermsT {
-            ONCE_PER_REVOLUTION,
-            TAU0_RULE_LIMIT_M2_KG,
-            HAS_TAU0_RULE_LIMIT_M2_KG,
-            HELD_ABOVE_DRAG_REGIME,
-            PERSISTENCE_HOURS,
-        }
-    }
-
-    /// Fit the once-per-revolution pair (TAUC, TAUS). Default true.
-    #[inline]
-    pub fn ONCE_PER_REVOLUTION(&self) -> bool {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFEmpiricalTerms::VT_ONCE_PER_REVOLUTION, Some(true)).unwrap()}
-    }
-
-    /// The constant term TAU0 is free only when this rule selects it: a fitted
-    /// B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
-    /// prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
-    #[inline]
-    pub fn TAU0_RULE_LIMIT_M2_KG(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFEmpiricalTerms::VT_TAU0_RULE_LIMIT_M2_KG, Some(0.5)).unwrap()}
-    }
-
-    /// True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
-    /// default) leaves TAU0 off.
-    #[inline]
-    pub fn HAS_TAU0_RULE_LIMIT_M2_KG(&self) -> bool {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFEmpiricalTerms::VT_HAS_TAU0_RULE_LIMIT_M2_KG, Some(false)).unwrap()}
-    }
-
-    /// True holds TAUC and TAUS after the arc end above the drag regime
-    /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
-    /// once-per-revolution part of radiation pressure; false decays them over
-    /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
-    /// written before 1.268.0 omits a false value, so it reads true.
-    #[inline]
-    pub fn HELD_ABOVE_DRAG_REGIME(&self) -> bool {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, Some(true)).unwrap()}
-    }
-
-    /// Persistence time of the empirical force after the arc end, hours.
-    /// Default 24.
-    #[inline]
-    pub fn PERSISTENCE_HOURS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFEmpiricalTerms::VT_PERSISTENCE_HOURS, Some(24.0)).unwrap()}
-    }
-}
-
-impl ::flatbuffers::Verifiable for PCFEmpiricalTerms<'_> {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        v.visit_table(pos)?
-            .visit_field::<bool>("ONCE_PER_REVOLUTION", Self::VT_ONCE_PER_REVOLUTION, false)?
-            .visit_field::<f64>("TAU0_RULE_LIMIT_M2_KG", Self::VT_TAU0_RULE_LIMIT_M2_KG, false)?
-            .visit_field::<bool>("HAS_TAU0_RULE_LIMIT_M2_KG", Self::VT_HAS_TAU0_RULE_LIMIT_M2_KG, false)?
-            .visit_field::<bool>("HELD_ABOVE_DRAG_REGIME", Self::VT_HELD_ABOVE_DRAG_REGIME, false)?
-            .visit_field::<f64>("PERSISTENCE_HOURS", Self::VT_PERSISTENCE_HOURS, false)?
-            .finish();
-        Ok(())
-    }
-}
-
-pub struct PCFEmpiricalTermsArgs {
-    pub ONCE_PER_REVOLUTION: bool,
-    pub TAU0_RULE_LIMIT_M2_KG: f64,
-    pub HAS_TAU0_RULE_LIMIT_M2_KG: bool,
-    pub HELD_ABOVE_DRAG_REGIME: bool,
-    pub PERSISTENCE_HOURS: f64,
-}
-
-impl<'a> Default for PCFEmpiricalTermsArgs {
-    #[inline]
-    fn default() -> Self {
-        PCFEmpiricalTermsArgs {
-            ONCE_PER_REVOLUTION: true,
-            TAU0_RULE_LIMIT_M2_KG: 0.5,
-            HAS_TAU0_RULE_LIMIT_M2_KG: false,
-            HELD_ABOVE_DRAG_REGIME: true,
-            PERSISTENCE_HOURS: 24.0,
-        }
-    }
-}
-
-pub struct PCFEmpiricalTermsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFEmpiricalTermsBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_ONCE_PER_REVOLUTION(&mut self, ONCE_PER_REVOLUTION: bool) {
-        self.fbb_.push_slot::<bool>(PCFEmpiricalTerms::VT_ONCE_PER_REVOLUTION, ONCE_PER_REVOLUTION, true);
-    }
-
-    #[inline]
-    pub fn add_TAU0_RULE_LIMIT_M2_KG(&mut self, TAU0_RULE_LIMIT_M2_KG: f64) {
-        self.fbb_.push_slot::<f64>(PCFEmpiricalTerms::VT_TAU0_RULE_LIMIT_M2_KG, TAU0_RULE_LIMIT_M2_KG, 0.5);
-    }
-
-    #[inline]
-    pub fn add_HAS_TAU0_RULE_LIMIT_M2_KG(&mut self, HAS_TAU0_RULE_LIMIT_M2_KG: bool) {
-        self.fbb_.push_slot::<bool>(PCFEmpiricalTerms::VT_HAS_TAU0_RULE_LIMIT_M2_KG, HAS_TAU0_RULE_LIMIT_M2_KG, false);
-    }
-
-    #[inline]
-    pub fn add_HELD_ABOVE_DRAG_REGIME(&mut self, HELD_ABOVE_DRAG_REGIME: bool) {
-        self.fbb_.push_slot::<bool>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, HELD_ABOVE_DRAG_REGIME, true);
-    }
-
-    #[inline]
-    pub fn add_PERSISTENCE_HOURS(&mut self, PERSISTENCE_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFEmpiricalTerms::VT_PERSISTENCE_HOURS, PERSISTENCE_HOURS, 24.0);
-    }
-
-    #[inline]
-    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFEmpiricalTermsBuilder<'a, 'b, A> {
-        let start = _fbb.start_table();
-        PCFEmpiricalTermsBuilder {
-            fbb_: _fbb,
-            start_: start,
-        }
-    }
-
-    #[inline]
-    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFEmpiricalTerms<'a>> {
-        let o = self.fbb_.end_table(self.start_);
-        ::flatbuffers::WIPOffset::new(o.value())
-    }
-}
-
-impl ::core::fmt::Debug for PCFEmpiricalTerms<'_> {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        let mut ds = f.debug_struct("PCFEmpiricalTerms");
-        ds.field("ONCE_PER_REVOLUTION", &self.ONCE_PER_REVOLUTION());
-        ds.field("TAU0_RULE_LIMIT_M2_KG", &self.TAU0_RULE_LIMIT_M2_KG());
-        ds.field("HAS_TAU0_RULE_LIMIT_M2_KG", &self.HAS_TAU0_RULE_LIMIT_M2_KG());
-        ds.field("HELD_ABOVE_DRAG_REGIME", &self.HELD_ABOVE_DRAG_REGIME());
-        ds.field("PERSISTENCE_HOURS", &self.PERSISTENCE_HOURS());
-        ds.finish()
-    }
-}
-
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PCFEmpiricalTermsT {
-    pub ONCE_PER_REVOLUTION: bool,
-    pub TAU0_RULE_LIMIT_M2_KG: f64,
-    pub HAS_TAU0_RULE_LIMIT_M2_KG: bool,
-    pub HELD_ABOVE_DRAG_REGIME: bool,
-    pub PERSISTENCE_HOURS: f64,
-}
-
-impl Default for PCFEmpiricalTermsT {
-    fn default() -> Self {
-        Self {
-            ONCE_PER_REVOLUTION: true,
-            TAU0_RULE_LIMIT_M2_KG: 0.5,
-            HAS_TAU0_RULE_LIMIT_M2_KG: false,
-            HELD_ABOVE_DRAG_REGIME: true,
-            PERSISTENCE_HOURS: 24.0,
-        }
-    }
-}
-
-impl PCFEmpiricalTermsT {
-    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-        &self,
-        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-    ) -> ::flatbuffers::WIPOffset<PCFEmpiricalTerms<'b>> {
-        let ONCE_PER_REVOLUTION = self.ONCE_PER_REVOLUTION;
-        let TAU0_RULE_LIMIT_M2_KG = self.TAU0_RULE_LIMIT_M2_KG;
-        let HAS_TAU0_RULE_LIMIT_M2_KG = self.HAS_TAU0_RULE_LIMIT_M2_KG;
-        let HELD_ABOVE_DRAG_REGIME = self.HELD_ABOVE_DRAG_REGIME;
-        let PERSISTENCE_HOURS = self.PERSISTENCE_HOURS;
-        PCFEmpiricalTerms::create(_fbb, &PCFEmpiricalTermsArgs{
-            ONCE_PER_REVOLUTION,
-            TAU0_RULE_LIMIT_M2_KG,
-            HAS_TAU0_RULE_LIMIT_M2_KG,
-            HELD_ABOVE_DRAG_REGIME,
-            PERSISTENCE_HOURS,
-        })
-    }
-}
-
-pub enum PCFMeanElementOptionsOffset {}
-
-/// Truncations and switches of the averaged (mean-element) theories SGP4XP
-/// and SDNAP. SGP4's constants are fixed by its specification and are not
-/// options.
-#[derive(Copy, Clone, PartialEq)]
-pub struct PCFMeanElementOptions<'a> {
-    pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PCFMeanElementOptions<'a> {
-    type Inner = PCFMeanElementOptions<'a>;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-    }
-}
-
-impl<'a> PCFMeanElementOptions<'a> {
-    pub const VT_M_DAILY_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 4;
-    pub const VT_ZONAL_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 6;
-    pub const VT_SHORT_PERIODIC_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 8;
-    pub const VT_ENABLE_RESONANCE: ::flatbuffers::VOffsetT = 10;
-    pub const VT_RESONANCE_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 12;
-    pub const VT_RESONANCE_BAND: ::flatbuffers::VOffsetT = 14;
-    pub const VT_RESONANCE_MAXIMUM_K: ::flatbuffers::VOffsetT = 16;
-    pub const VT_NEAR_RESONANCE_BAND: ::flatbuffers::VOffsetT = 18;
-    pub const VT_GRID_STEP_DIVISOR: ::flatbuffers::VOffsetT = 20;
-    pub const VT_DENSITY_KERNEL: ::flatbuffers::VOffsetT = 22;
-    pub const VT_DRAG_REGIME_PERIGEE_KM: ::flatbuffers::VOffsetT = 24;
-
-    #[inline]
-    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-        PCFMeanElementOptions { _tab: table }
-    }
-
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFMeanElementOptionsArgs
-    ) -> ::flatbuffers::WIPOffset<PCFMeanElementOptions<'bldr>> {
-        let mut builder = PCFMeanElementOptionsBuilder::new(_fbb);
-        builder.add_DRAG_REGIME_PERIGEE_KM(args.DRAG_REGIME_PERIGEE_KM);
-        builder.add_NEAR_RESONANCE_BAND(args.NEAR_RESONANCE_BAND);
-        builder.add_RESONANCE_BAND(args.RESONANCE_BAND);
-        builder.add_DENSITY_KERNEL(args.DENSITY_KERNEL);
-        builder.add_GRID_STEP_DIVISOR(args.GRID_STEP_DIVISOR);
-        builder.add_RESONANCE_MAXIMUM_K(args.RESONANCE_MAXIMUM_K);
-        builder.add_RESONANCE_MAXIMUM_DEGREE(args.RESONANCE_MAXIMUM_DEGREE);
-        builder.add_ENABLE_RESONANCE(args.ENABLE_RESONANCE);
-        builder.add_SHORT_PERIODIC_MAXIMUM_DEGREE(args.SHORT_PERIODIC_MAXIMUM_DEGREE);
-        builder.add_ZONAL_MAXIMUM_DEGREE(args.ZONAL_MAXIMUM_DEGREE);
-        builder.add_M_DAILY_MAXIMUM_DEGREE(args.M_DAILY_MAXIMUM_DEGREE);
-        builder.finish()
-    }
-
-    pub fn unpack(&self) -> PCFMeanElementOptionsT {
-        let M_DAILY_MAXIMUM_DEGREE = self.M_DAILY_MAXIMUM_DEGREE();
-        let ZONAL_MAXIMUM_DEGREE = self.ZONAL_MAXIMUM_DEGREE();
-        let SHORT_PERIODIC_MAXIMUM_DEGREE = self.SHORT_PERIODIC_MAXIMUM_DEGREE();
-        let ENABLE_RESONANCE = self.ENABLE_RESONANCE();
-        let RESONANCE_MAXIMUM_DEGREE = self.RESONANCE_MAXIMUM_DEGREE();
-        let RESONANCE_BAND = self.RESONANCE_BAND();
-        let RESONANCE_MAXIMUM_K = self.RESONANCE_MAXIMUM_K();
-        let NEAR_RESONANCE_BAND = self.NEAR_RESONANCE_BAND();
-        let GRID_STEP_DIVISOR = self.GRID_STEP_DIVISOR();
-        let DENSITY_KERNEL = self.DENSITY_KERNEL();
-        let DRAG_REGIME_PERIGEE_KM = self.DRAG_REGIME_PERIGEE_KM();
-        PCFMeanElementOptionsT {
-            M_DAILY_MAXIMUM_DEGREE,
-            ZONAL_MAXIMUM_DEGREE,
-            SHORT_PERIODIC_MAXIMUM_DEGREE,
-            ENABLE_RESONANCE,
-            RESONANCE_MAXIMUM_DEGREE,
-            RESONANCE_BAND,
-            RESONANCE_MAXIMUM_K,
-            NEAR_RESONANCE_BAND,
-            GRID_STEP_DIVISOR,
-            DENSITY_KERNEL,
-            DRAG_REGIME_PERIGEE_KM,
-        }
-    }
-
-    /// Highest even degree of the m-daily short-periodic gravity terms; 0
-    /// omits them. Range 0 to 16. Default 12.
-    #[inline]
-    pub fn M_DAILY_MAXIMUM_DEGREE(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFMeanElementOptions::VT_M_DAILY_MAXIMUM_DEGREE, Some(12)).unwrap()}
-    }
-
-    /// Highest degree of the zonal tail (secular and long-period terms past
-    /// J5). Range 6 to 70. Default 20.
-    #[inline]
-    pub fn ZONAL_MAXIMUM_DEGREE(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFMeanElementOptions::VT_ZONAL_MAXIMUM_DEGREE, Some(20)).unwrap()}
-    }
-
-    /// Highest degree of the eccentricity-vector short-periodic terms. Range
-    /// 2 to 16. Default 7.
-    #[inline]
-    pub fn SHORT_PERIODIC_MAXIMUM_DEGREE(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFMeanElementOptions::VT_SHORT_PERIODIC_MAXIMUM_DEGREE, Some(7)).unwrap()}
-    }
-
-    /// Resonance terms on or off. Default true.
-    #[inline]
-    pub fn ENABLE_RESONANCE(&self) -> bool {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFMeanElementOptions::VT_ENABLE_RESONANCE, Some(true)).unwrap()}
-    }
-
-    /// Highest odd degree of the shallow-resonance terms. Default 31.
-    #[inline]
-    pub fn RESONANCE_MAXIMUM_DEGREE(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFMeanElementOptions::VT_RESONANCE_MAXIMUM_DEGREE, Some(31)).unwrap()}
-    }
-
-    /// Resonance band: terms whose angle drifts slower than this fraction of
-    /// the mean motion are integrated with the rates. Default 0.045.
-    #[inline]
-    pub fn RESONANCE_BAND(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFMeanElementOptions::VT_RESONANCE_BAND, Some(0.045)).unwrap()}
-    }
-
-    /// Highest multiple of the mean anomaly in a resonance angle. Default 1.
-    #[inline]
-    pub fn RESONANCE_MAXIMUM_K(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFMeanElementOptions::VT_RESONANCE_MAXIMUM_K, Some(1)).unwrap()}
-    }
-
-    /// Near-resonance band at output time, as a fraction of the mean motion
-    /// beyond RESONANCE_BAND; 0 is off. Default 0.
-    #[inline]
-    pub fn NEAR_RESONANCE_BAND(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFMeanElementOptions::VT_NEAR_RESONANCE_BAND, Some(0.0)).unwrap()}
-    }
-
-    /// Divisor of the integration grid step; >= 1. Default 1.
-    #[inline]
-    pub fn GRID_STEP_DIVISOR(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFMeanElementOptions::VT_GRID_STEP_DIVISOR, Some(1)).unwrap()}
-    }
-
-    /// The catalog-shared density kernel (a gridded log-density table shared by
-    /// every object) on or off; off evaluates the atmosphere model directly.
-    /// Default true.
-    #[inline]
-    pub fn DENSITY_KERNEL(&self) -> bool {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFMeanElementOptions::VT_DENSITY_KERNEL, Some(true)).unwrap()}
-    }
-
-    /// Perigee height below which B_eff and TAU0 act (the drag regime), km.
-    /// Default 2500.
-    #[inline]
-    pub fn DRAG_REGIME_PERIGEE_KM(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFMeanElementOptions::VT_DRAG_REGIME_PERIGEE_KM, Some(2500.0)).unwrap()}
-    }
-}
-
-impl ::flatbuffers::Verifiable for PCFMeanElementOptions<'_> {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        v.visit_table(pos)?
-            .visit_field::<u8>("M_DAILY_MAXIMUM_DEGREE", Self::VT_M_DAILY_MAXIMUM_DEGREE, false)?
-            .visit_field::<u8>("ZONAL_MAXIMUM_DEGREE", Self::VT_ZONAL_MAXIMUM_DEGREE, false)?
-            .visit_field::<u8>("SHORT_PERIODIC_MAXIMUM_DEGREE", Self::VT_SHORT_PERIODIC_MAXIMUM_DEGREE, false)?
-            .visit_field::<bool>("ENABLE_RESONANCE", Self::VT_ENABLE_RESONANCE, false)?
-            .visit_field::<u8>("RESONANCE_MAXIMUM_DEGREE", Self::VT_RESONANCE_MAXIMUM_DEGREE, false)?
-            .visit_field::<f64>("RESONANCE_BAND", Self::VT_RESONANCE_BAND, false)?
-            .visit_field::<u8>("RESONANCE_MAXIMUM_K", Self::VT_RESONANCE_MAXIMUM_K, false)?
-            .visit_field::<f64>("NEAR_RESONANCE_BAND", Self::VT_NEAR_RESONANCE_BAND, false)?
-            .visit_field::<u8>("GRID_STEP_DIVISOR", Self::VT_GRID_STEP_DIVISOR, false)?
-            .visit_field::<bool>("DENSITY_KERNEL", Self::VT_DENSITY_KERNEL, false)?
-            .visit_field::<f64>("DRAG_REGIME_PERIGEE_KM", Self::VT_DRAG_REGIME_PERIGEE_KM, false)?
-            .finish();
-        Ok(())
-    }
-}
-
-pub struct PCFMeanElementOptionsArgs {
-    pub M_DAILY_MAXIMUM_DEGREE: u8,
-    pub ZONAL_MAXIMUM_DEGREE: u8,
-    pub SHORT_PERIODIC_MAXIMUM_DEGREE: u8,
-    pub ENABLE_RESONANCE: bool,
-    pub RESONANCE_MAXIMUM_DEGREE: u8,
-    pub RESONANCE_BAND: f64,
-    pub RESONANCE_MAXIMUM_K: u8,
-    pub NEAR_RESONANCE_BAND: f64,
-    pub GRID_STEP_DIVISOR: u8,
-    pub DENSITY_KERNEL: bool,
-    pub DRAG_REGIME_PERIGEE_KM: f64,
-}
-
-impl<'a> Default for PCFMeanElementOptionsArgs {
-    #[inline]
-    fn default() -> Self {
-        PCFMeanElementOptionsArgs {
-            M_DAILY_MAXIMUM_DEGREE: 12,
-            ZONAL_MAXIMUM_DEGREE: 20,
-            SHORT_PERIODIC_MAXIMUM_DEGREE: 7,
-            ENABLE_RESONANCE: true,
-            RESONANCE_MAXIMUM_DEGREE: 31,
-            RESONANCE_BAND: 0.045,
-            RESONANCE_MAXIMUM_K: 1,
-            NEAR_RESONANCE_BAND: 0.0,
-            GRID_STEP_DIVISOR: 1,
-            DENSITY_KERNEL: true,
-            DRAG_REGIME_PERIGEE_KM: 2500.0,
-        }
-    }
-}
-
-pub struct PCFMeanElementOptionsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFMeanElementOptionsBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_M_DAILY_MAXIMUM_DEGREE(&mut self, M_DAILY_MAXIMUM_DEGREE: u8) {
-        self.fbb_.push_slot::<u8>(PCFMeanElementOptions::VT_M_DAILY_MAXIMUM_DEGREE, M_DAILY_MAXIMUM_DEGREE, 12);
-    }
-
-    #[inline]
-    pub fn add_ZONAL_MAXIMUM_DEGREE(&mut self, ZONAL_MAXIMUM_DEGREE: u8) {
-        self.fbb_.push_slot::<u8>(PCFMeanElementOptions::VT_ZONAL_MAXIMUM_DEGREE, ZONAL_MAXIMUM_DEGREE, 20);
-    }
-
-    #[inline]
-    pub fn add_SHORT_PERIODIC_MAXIMUM_DEGREE(&mut self, SHORT_PERIODIC_MAXIMUM_DEGREE: u8) {
-        self.fbb_.push_slot::<u8>(PCFMeanElementOptions::VT_SHORT_PERIODIC_MAXIMUM_DEGREE, SHORT_PERIODIC_MAXIMUM_DEGREE, 7);
-    }
-
-    #[inline]
-    pub fn add_ENABLE_RESONANCE(&mut self, ENABLE_RESONANCE: bool) {
-        self.fbb_.push_slot::<bool>(PCFMeanElementOptions::VT_ENABLE_RESONANCE, ENABLE_RESONANCE, true);
-    }
-
-    #[inline]
-    pub fn add_RESONANCE_MAXIMUM_DEGREE(&mut self, RESONANCE_MAXIMUM_DEGREE: u8) {
-        self.fbb_.push_slot::<u8>(PCFMeanElementOptions::VT_RESONANCE_MAXIMUM_DEGREE, RESONANCE_MAXIMUM_DEGREE, 31);
-    }
-
-    #[inline]
-    pub fn add_RESONANCE_BAND(&mut self, RESONANCE_BAND: f64) {
-        self.fbb_.push_slot::<f64>(PCFMeanElementOptions::VT_RESONANCE_BAND, RESONANCE_BAND, 0.045);
-    }
-
-    #[inline]
-    pub fn add_RESONANCE_MAXIMUM_K(&mut self, RESONANCE_MAXIMUM_K: u8) {
-        self.fbb_.push_slot::<u8>(PCFMeanElementOptions::VT_RESONANCE_MAXIMUM_K, RESONANCE_MAXIMUM_K, 1);
-    }
-
-    #[inline]
-    pub fn add_NEAR_RESONANCE_BAND(&mut self, NEAR_RESONANCE_BAND: f64) {
-        self.fbb_.push_slot::<f64>(PCFMeanElementOptions::VT_NEAR_RESONANCE_BAND, NEAR_RESONANCE_BAND, 0.0);
-    }
-
-    #[inline]
-    pub fn add_GRID_STEP_DIVISOR(&mut self, GRID_STEP_DIVISOR: u8) {
-        self.fbb_.push_slot::<u8>(PCFMeanElementOptions::VT_GRID_STEP_DIVISOR, GRID_STEP_DIVISOR, 1);
-    }
-
-    #[inline]
-    pub fn add_DENSITY_KERNEL(&mut self, DENSITY_KERNEL: bool) {
-        self.fbb_.push_slot::<bool>(PCFMeanElementOptions::VT_DENSITY_KERNEL, DENSITY_KERNEL, true);
-    }
-
-    #[inline]
-    pub fn add_DRAG_REGIME_PERIGEE_KM(&mut self, DRAG_REGIME_PERIGEE_KM: f64) {
-        self.fbb_.push_slot::<f64>(PCFMeanElementOptions::VT_DRAG_REGIME_PERIGEE_KM, DRAG_REGIME_PERIGEE_KM, 2500.0);
-    }
-
-    #[inline]
-    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFMeanElementOptionsBuilder<'a, 'b, A> {
-        let start = _fbb.start_table();
-        PCFMeanElementOptionsBuilder {
-            fbb_: _fbb,
-            start_: start,
-        }
-    }
-
-    #[inline]
-    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFMeanElementOptions<'a>> {
-        let o = self.fbb_.end_table(self.start_);
-        ::flatbuffers::WIPOffset::new(o.value())
-    }
-}
-
-impl ::core::fmt::Debug for PCFMeanElementOptions<'_> {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        let mut ds = f.debug_struct("PCFMeanElementOptions");
-        ds.field("M_DAILY_MAXIMUM_DEGREE", &self.M_DAILY_MAXIMUM_DEGREE());
-        ds.field("ZONAL_MAXIMUM_DEGREE", &self.ZONAL_MAXIMUM_DEGREE());
-        ds.field("SHORT_PERIODIC_MAXIMUM_DEGREE", &self.SHORT_PERIODIC_MAXIMUM_DEGREE());
-        ds.field("ENABLE_RESONANCE", &self.ENABLE_RESONANCE());
-        ds.field("RESONANCE_MAXIMUM_DEGREE", &self.RESONANCE_MAXIMUM_DEGREE());
-        ds.field("RESONANCE_BAND", &self.RESONANCE_BAND());
-        ds.field("RESONANCE_MAXIMUM_K", &self.RESONANCE_MAXIMUM_K());
-        ds.field("NEAR_RESONANCE_BAND", &self.NEAR_RESONANCE_BAND());
-        ds.field("GRID_STEP_DIVISOR", &self.GRID_STEP_DIVISOR());
-        ds.field("DENSITY_KERNEL", &self.DENSITY_KERNEL());
-        ds.field("DRAG_REGIME_PERIGEE_KM", &self.DRAG_REGIME_PERIGEE_KM());
-        ds.finish()
-    }
-}
-
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PCFMeanElementOptionsT {
-    pub M_DAILY_MAXIMUM_DEGREE: u8,
-    pub ZONAL_MAXIMUM_DEGREE: u8,
-    pub SHORT_PERIODIC_MAXIMUM_DEGREE: u8,
-    pub ENABLE_RESONANCE: bool,
-    pub RESONANCE_MAXIMUM_DEGREE: u8,
-    pub RESONANCE_BAND: f64,
-    pub RESONANCE_MAXIMUM_K: u8,
-    pub NEAR_RESONANCE_BAND: f64,
-    pub GRID_STEP_DIVISOR: u8,
-    pub DENSITY_KERNEL: bool,
-    pub DRAG_REGIME_PERIGEE_KM: f64,
-}
-
-impl Default for PCFMeanElementOptionsT {
-    fn default() -> Self {
-        Self {
-            M_DAILY_MAXIMUM_DEGREE: 12,
-            ZONAL_MAXIMUM_DEGREE: 20,
-            SHORT_PERIODIC_MAXIMUM_DEGREE: 7,
-            ENABLE_RESONANCE: true,
-            RESONANCE_MAXIMUM_DEGREE: 31,
-            RESONANCE_BAND: 0.045,
-            RESONANCE_MAXIMUM_K: 1,
-            NEAR_RESONANCE_BAND: 0.0,
-            GRID_STEP_DIVISOR: 1,
-            DENSITY_KERNEL: true,
-            DRAG_REGIME_PERIGEE_KM: 2500.0,
-        }
-    }
-}
-
-impl PCFMeanElementOptionsT {
-    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-        &self,
-        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-    ) -> ::flatbuffers::WIPOffset<PCFMeanElementOptions<'b>> {
-        let M_DAILY_MAXIMUM_DEGREE = self.M_DAILY_MAXIMUM_DEGREE;
-        let ZONAL_MAXIMUM_DEGREE = self.ZONAL_MAXIMUM_DEGREE;
-        let SHORT_PERIODIC_MAXIMUM_DEGREE = self.SHORT_PERIODIC_MAXIMUM_DEGREE;
-        let ENABLE_RESONANCE = self.ENABLE_RESONANCE;
-        let RESONANCE_MAXIMUM_DEGREE = self.RESONANCE_MAXIMUM_DEGREE;
-        let RESONANCE_BAND = self.RESONANCE_BAND;
-        let RESONANCE_MAXIMUM_K = self.RESONANCE_MAXIMUM_K;
-        let NEAR_RESONANCE_BAND = self.NEAR_RESONANCE_BAND;
-        let GRID_STEP_DIVISOR = self.GRID_STEP_DIVISOR;
-        let DENSITY_KERNEL = self.DENSITY_KERNEL;
-        let DRAG_REGIME_PERIGEE_KM = self.DRAG_REGIME_PERIGEE_KM;
-        PCFMeanElementOptions::create(_fbb, &PCFMeanElementOptionsArgs{
-            M_DAILY_MAXIMUM_DEGREE,
-            ZONAL_MAXIMUM_DEGREE,
-            SHORT_PERIODIC_MAXIMUM_DEGREE,
-            ENABLE_RESONANCE,
-            RESONANCE_MAXIMUM_DEGREE,
-            RESONANCE_BAND,
-            RESONANCE_MAXIMUM_K,
-            NEAR_RESONANCE_BAND,
-            GRID_STEP_DIVISOR,
-            DENSITY_KERNEL,
-            DRAG_REGIME_PERIGEE_KM,
-        })
-    }
-}
-
-pub enum PCFSegmentOptionsOffset {}
-
-/// Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
-/// cut into segments at maneuvers and sphere-of-influence passages.
-#[derive(Copy, Clone, PartialEq)]
-pub struct PCFSegmentOptions<'a> {
-    pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PCFSegmentOptions<'a> {
-    type Inner = PCFSegmentOptions<'a>;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-    }
-}
-
-impl<'a> PCFSegmentOptions<'a> {
-    pub const VT_MOON_GRAVITY_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 4;
-    pub const VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 6;
-    pub const VT_MOON_ECCENTRICITY_ORDER: ::flatbuffers::VOffsetT = 8;
-    pub const VT_MOON_STEP_SECONDS: ::flatbuffers::VOffsetT = 10;
-    pub const VT_CISLUNAR_STEP_SECONDS: ::flatbuffers::VOffsetT = 12;
-    pub const VT_HELIOCENTRIC_STEP_SECONDS: ::flatbuffers::VOffsetT = 14;
-    pub const VT_SEGMENT_RMS_FACTOR: ::flatbuffers::VOffsetT = 16;
-    pub const VT_SEGMENT_RMS_MARGIN_KM: ::flatbuffers::VOffsetT = 18;
-    pub const VT_CISLUNAR_MINIMUM_SEGMENT_HOURS: ::flatbuffers::VOffsetT = 20;
-
-    #[inline]
-    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-        PCFSegmentOptions { _tab: table }
-    }
-
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFSegmentOptionsArgs
-    ) -> ::flatbuffers::WIPOffset<PCFSegmentOptions<'bldr>> {
-        let mut builder = PCFSegmentOptionsBuilder::new(_fbb);
-        builder.add_CISLUNAR_MINIMUM_SEGMENT_HOURS(args.CISLUNAR_MINIMUM_SEGMENT_HOURS);
-        builder.add_SEGMENT_RMS_MARGIN_KM(args.SEGMENT_RMS_MARGIN_KM);
-        builder.add_SEGMENT_RMS_FACTOR(args.SEGMENT_RMS_FACTOR);
-        builder.add_HELIOCENTRIC_STEP_SECONDS(args.HELIOCENTRIC_STEP_SECONDS);
-        builder.add_CISLUNAR_STEP_SECONDS(args.CISLUNAR_STEP_SECONDS);
-        builder.add_MOON_STEP_SECONDS(args.MOON_STEP_SECONDS);
-        builder.add_MOON_GRAVITY_MAXIMUM_DEGREE(args.MOON_GRAVITY_MAXIMUM_DEGREE);
-        builder.add_MOON_ECCENTRICITY_ORDER(args.MOON_ECCENTRICITY_ORDER);
-        builder.add_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE(args.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE);
-        builder.finish()
-    }
-
-    pub fn unpack(&self) -> PCFSegmentOptionsT {
-        let MOON_GRAVITY_MAXIMUM_DEGREE = self.MOON_GRAVITY_MAXIMUM_DEGREE();
-        let MOON_SHORT_PERIODIC_MAXIMUM_DEGREE = self.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE();
-        let MOON_ECCENTRICITY_ORDER = self.MOON_ECCENTRICITY_ORDER();
-        let MOON_STEP_SECONDS = self.MOON_STEP_SECONDS();
-        let CISLUNAR_STEP_SECONDS = self.CISLUNAR_STEP_SECONDS();
-        let HELIOCENTRIC_STEP_SECONDS = self.HELIOCENTRIC_STEP_SECONDS();
-        let SEGMENT_RMS_FACTOR = self.SEGMENT_RMS_FACTOR();
-        let SEGMENT_RMS_MARGIN_KM = self.SEGMENT_RMS_MARGIN_KM();
-        let CISLUNAR_MINIMUM_SEGMENT_HOURS = self.CISLUNAR_MINIMUM_SEGMENT_HOURS();
-        PCFSegmentOptionsT {
-            MOON_GRAVITY_MAXIMUM_DEGREE,
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE,
-            MOON_ECCENTRICITY_ORDER,
-            MOON_STEP_SECONDS,
-            CISLUNAR_STEP_SECONDS,
-            HELIOCENTRIC_STEP_SECONDS,
-            SEGMENT_RMS_FACTOR,
-            SEGMENT_RMS_MARGIN_KM,
-            CISLUNAR_MINIMUM_SEGMENT_HOURS,
-        }
-    }
-
-    /// Moon-centered gravity field degree. Default 70.
-    #[inline]
-    pub fn MOON_GRAVITY_MAXIMUM_DEGREE(&self) -> u16 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u16>(PCFSegmentOptions::VT_MOON_GRAVITY_MAXIMUM_DEGREE, Some(70)).unwrap()}
-    }
-
-    /// Moon-centered short-periodic degree. Default 8.
-    #[inline]
-    pub fn MOON_SHORT_PERIODIC_MAXIMUM_DEGREE(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFSegmentOptions::VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, Some(8)).unwrap()}
-    }
-
-    /// Moon-centered eccentricity order (highest |q| of the mean-anomaly
-    /// multiple kept). Default 2.
-    #[inline]
-    pub fn MOON_ECCENTRICITY_ORDER(&self) -> u8 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u8>(PCFSegmentOptions::VT_MOON_ECCENTRICITY_ORDER, Some(2)).unwrap()}
-    }
-
-    /// Moon-centered integration step, seconds. Default 240.
-    #[inline]
-    pub fn MOON_STEP_SECONDS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFSegmentOptions::VT_MOON_STEP_SECONDS, Some(240.0)).unwrap()}
-    }
-
-    /// Cislunar integration step, seconds. Default 60.
-    #[inline]
-    pub fn CISLUNAR_STEP_SECONDS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFSegmentOptions::VT_CISLUNAR_STEP_SECONDS, Some(60.0)).unwrap()}
-    }
-
-    /// Heliocentric integration step, seconds. Default 1800.
-    #[inline]
-    pub fn HELIOCENTRIC_STEP_SECONDS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFSegmentOptions::VT_HELIOCENTRIC_STEP_SECONDS, Some(1800.0)).unwrap()}
-    }
-
-    /// A segment is accepted when its RMS is within max(RMS_FACTOR x the
-    /// cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
-    #[inline]
-    pub fn SEGMENT_RMS_FACTOR(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFSegmentOptions::VT_SEGMENT_RMS_FACTOR, Some(2.0)).unwrap()}
-    }
-
-    /// The additive term of the same rule, km. Default 0.05.
-    #[inline]
-    pub fn SEGMENT_RMS_MARGIN_KM(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFSegmentOptions::VT_SEGMENT_RMS_MARGIN_KM, Some(0.05)).unwrap()}
-    }
-
-    /// Shortest cislunar segment, hours. Default 6.
-    #[inline]
-    pub fn CISLUNAR_MINIMUM_SEGMENT_HOURS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFSegmentOptions::VT_CISLUNAR_MINIMUM_SEGMENT_HOURS, Some(6.0)).unwrap()}
-    }
-}
-
-impl ::flatbuffers::Verifiable for PCFSegmentOptions<'_> {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        v.visit_table(pos)?
-            .visit_field::<u16>("MOON_GRAVITY_MAXIMUM_DEGREE", Self::VT_MOON_GRAVITY_MAXIMUM_DEGREE, false)?
-            .visit_field::<u8>("MOON_SHORT_PERIODIC_MAXIMUM_DEGREE", Self::VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, false)?
-            .visit_field::<u8>("MOON_ECCENTRICITY_ORDER", Self::VT_MOON_ECCENTRICITY_ORDER, false)?
-            .visit_field::<f64>("MOON_STEP_SECONDS", Self::VT_MOON_STEP_SECONDS, false)?
-            .visit_field::<f64>("CISLUNAR_STEP_SECONDS", Self::VT_CISLUNAR_STEP_SECONDS, false)?
-            .visit_field::<f64>("HELIOCENTRIC_STEP_SECONDS", Self::VT_HELIOCENTRIC_STEP_SECONDS, false)?
-            .visit_field::<f64>("SEGMENT_RMS_FACTOR", Self::VT_SEGMENT_RMS_FACTOR, false)?
-            .visit_field::<f64>("SEGMENT_RMS_MARGIN_KM", Self::VT_SEGMENT_RMS_MARGIN_KM, false)?
-            .visit_field::<f64>("CISLUNAR_MINIMUM_SEGMENT_HOURS", Self::VT_CISLUNAR_MINIMUM_SEGMENT_HOURS, false)?
-            .finish();
-        Ok(())
-    }
-}
-
-pub struct PCFSegmentOptionsArgs {
-    pub MOON_GRAVITY_MAXIMUM_DEGREE: u16,
-    pub MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: u8,
-    pub MOON_ECCENTRICITY_ORDER: u8,
-    pub MOON_STEP_SECONDS: f64,
-    pub CISLUNAR_STEP_SECONDS: f64,
-    pub HELIOCENTRIC_STEP_SECONDS: f64,
-    pub SEGMENT_RMS_FACTOR: f64,
-    pub SEGMENT_RMS_MARGIN_KM: f64,
-    pub CISLUNAR_MINIMUM_SEGMENT_HOURS: f64,
-}
-
-impl<'a> Default for PCFSegmentOptionsArgs {
-    #[inline]
-    fn default() -> Self {
-        PCFSegmentOptionsArgs {
-            MOON_GRAVITY_MAXIMUM_DEGREE: 70,
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: 8,
-            MOON_ECCENTRICITY_ORDER: 2,
-            MOON_STEP_SECONDS: 240.0,
-            CISLUNAR_STEP_SECONDS: 60.0,
-            HELIOCENTRIC_STEP_SECONDS: 1800.0,
-            SEGMENT_RMS_FACTOR: 2.0,
-            SEGMENT_RMS_MARGIN_KM: 0.05,
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: 6.0,
-        }
-    }
-}
-
-pub struct PCFSegmentOptionsBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFSegmentOptionsBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_MOON_GRAVITY_MAXIMUM_DEGREE(&mut self, MOON_GRAVITY_MAXIMUM_DEGREE: u16) {
-        self.fbb_.push_slot::<u16>(PCFSegmentOptions::VT_MOON_GRAVITY_MAXIMUM_DEGREE, MOON_GRAVITY_MAXIMUM_DEGREE, 70);
-    }
-
-    #[inline]
-    pub fn add_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE(&mut self, MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: u8) {
-        self.fbb_.push_slot::<u8>(PCFSegmentOptions::VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, 8);
-    }
-
-    #[inline]
-    pub fn add_MOON_ECCENTRICITY_ORDER(&mut self, MOON_ECCENTRICITY_ORDER: u8) {
-        self.fbb_.push_slot::<u8>(PCFSegmentOptions::VT_MOON_ECCENTRICITY_ORDER, MOON_ECCENTRICITY_ORDER, 2);
-    }
-
-    #[inline]
-    pub fn add_MOON_STEP_SECONDS(&mut self, MOON_STEP_SECONDS: f64) {
-        self.fbb_.push_slot::<f64>(PCFSegmentOptions::VT_MOON_STEP_SECONDS, MOON_STEP_SECONDS, 240.0);
-    }
-
-    #[inline]
-    pub fn add_CISLUNAR_STEP_SECONDS(&mut self, CISLUNAR_STEP_SECONDS: f64) {
-        self.fbb_.push_slot::<f64>(PCFSegmentOptions::VT_CISLUNAR_STEP_SECONDS, CISLUNAR_STEP_SECONDS, 60.0);
-    }
-
-    #[inline]
-    pub fn add_HELIOCENTRIC_STEP_SECONDS(&mut self, HELIOCENTRIC_STEP_SECONDS: f64) {
-        self.fbb_.push_slot::<f64>(PCFSegmentOptions::VT_HELIOCENTRIC_STEP_SECONDS, HELIOCENTRIC_STEP_SECONDS, 1800.0);
-    }
-
-    #[inline]
-    pub fn add_SEGMENT_RMS_FACTOR(&mut self, SEGMENT_RMS_FACTOR: f64) {
-        self.fbb_.push_slot::<f64>(PCFSegmentOptions::VT_SEGMENT_RMS_FACTOR, SEGMENT_RMS_FACTOR, 2.0);
-    }
-
-    #[inline]
-    pub fn add_SEGMENT_RMS_MARGIN_KM(&mut self, SEGMENT_RMS_MARGIN_KM: f64) {
-        self.fbb_.push_slot::<f64>(PCFSegmentOptions::VT_SEGMENT_RMS_MARGIN_KM, SEGMENT_RMS_MARGIN_KM, 0.05);
-    }
-
-    #[inline]
-    pub fn add_CISLUNAR_MINIMUM_SEGMENT_HOURS(&mut self, CISLUNAR_MINIMUM_SEGMENT_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFSegmentOptions::VT_CISLUNAR_MINIMUM_SEGMENT_HOURS, CISLUNAR_MINIMUM_SEGMENT_HOURS, 6.0);
-    }
-
-    #[inline]
-    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFSegmentOptionsBuilder<'a, 'b, A> {
-        let start = _fbb.start_table();
-        PCFSegmentOptionsBuilder {
-            fbb_: _fbb,
-            start_: start,
-        }
-    }
-
-    #[inline]
-    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFSegmentOptions<'a>> {
-        let o = self.fbb_.end_table(self.start_);
-        ::flatbuffers::WIPOffset::new(o.value())
-    }
-}
-
-impl ::core::fmt::Debug for PCFSegmentOptions<'_> {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        let mut ds = f.debug_struct("PCFSegmentOptions");
-        ds.field("MOON_GRAVITY_MAXIMUM_DEGREE", &self.MOON_GRAVITY_MAXIMUM_DEGREE());
-        ds.field("MOON_SHORT_PERIODIC_MAXIMUM_DEGREE", &self.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE());
-        ds.field("MOON_ECCENTRICITY_ORDER", &self.MOON_ECCENTRICITY_ORDER());
-        ds.field("MOON_STEP_SECONDS", &self.MOON_STEP_SECONDS());
-        ds.field("CISLUNAR_STEP_SECONDS", &self.CISLUNAR_STEP_SECONDS());
-        ds.field("HELIOCENTRIC_STEP_SECONDS", &self.HELIOCENTRIC_STEP_SECONDS());
-        ds.field("SEGMENT_RMS_FACTOR", &self.SEGMENT_RMS_FACTOR());
-        ds.field("SEGMENT_RMS_MARGIN_KM", &self.SEGMENT_RMS_MARGIN_KM());
-        ds.field("CISLUNAR_MINIMUM_SEGMENT_HOURS", &self.CISLUNAR_MINIMUM_SEGMENT_HOURS());
-        ds.finish()
-    }
-}
-
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PCFSegmentOptionsT {
-    pub MOON_GRAVITY_MAXIMUM_DEGREE: u16,
-    pub MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: u8,
-    pub MOON_ECCENTRICITY_ORDER: u8,
-    pub MOON_STEP_SECONDS: f64,
-    pub CISLUNAR_STEP_SECONDS: f64,
-    pub HELIOCENTRIC_STEP_SECONDS: f64,
-    pub SEGMENT_RMS_FACTOR: f64,
-    pub SEGMENT_RMS_MARGIN_KM: f64,
-    pub CISLUNAR_MINIMUM_SEGMENT_HOURS: f64,
-}
-
-impl Default for PCFSegmentOptionsT {
-    fn default() -> Self {
-        Self {
-            MOON_GRAVITY_MAXIMUM_DEGREE: 70,
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE: 8,
-            MOON_ECCENTRICITY_ORDER: 2,
-            MOON_STEP_SECONDS: 240.0,
-            CISLUNAR_STEP_SECONDS: 60.0,
-            HELIOCENTRIC_STEP_SECONDS: 1800.0,
-            SEGMENT_RMS_FACTOR: 2.0,
-            SEGMENT_RMS_MARGIN_KM: 0.05,
-            CISLUNAR_MINIMUM_SEGMENT_HOURS: 6.0,
-        }
-    }
-}
-
-impl PCFSegmentOptionsT {
-    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-        &self,
-        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-    ) -> ::flatbuffers::WIPOffset<PCFSegmentOptions<'b>> {
-        let MOON_GRAVITY_MAXIMUM_DEGREE = self.MOON_GRAVITY_MAXIMUM_DEGREE;
-        let MOON_SHORT_PERIODIC_MAXIMUM_DEGREE = self.MOON_SHORT_PERIODIC_MAXIMUM_DEGREE;
-        let MOON_ECCENTRICITY_ORDER = self.MOON_ECCENTRICITY_ORDER;
-        let MOON_STEP_SECONDS = self.MOON_STEP_SECONDS;
-        let CISLUNAR_STEP_SECONDS = self.CISLUNAR_STEP_SECONDS;
-        let HELIOCENTRIC_STEP_SECONDS = self.HELIOCENTRIC_STEP_SECONDS;
-        let SEGMENT_RMS_FACTOR = self.SEGMENT_RMS_FACTOR;
-        let SEGMENT_RMS_MARGIN_KM = self.SEGMENT_RMS_MARGIN_KM;
-        let CISLUNAR_MINIMUM_SEGMENT_HOURS = self.CISLUNAR_MINIMUM_SEGMENT_HOURS;
-        PCFSegmentOptions::create(_fbb, &PCFSegmentOptionsArgs{
-            MOON_GRAVITY_MAXIMUM_DEGREE,
-            MOON_SHORT_PERIODIC_MAXIMUM_DEGREE,
-            MOON_ECCENTRICITY_ORDER,
-            MOON_STEP_SECONDS,
-            CISLUNAR_STEP_SECONDS,
-            HELIOCENTRIC_STEP_SECONDS,
-            SEGMENT_RMS_FACTOR,
-            SEGMENT_RMS_MARGIN_KM,
-            CISLUNAR_MINIMUM_SEGMENT_HOURS,
-        })
-    }
-}
-
 pub enum PCFFitPolicyOffset {}
 
 /// Fit policy: how long an arc a fit uses, how that is validated, and what a
@@ -4200,7 +2972,7 @@ impl<'a> PCFFitPolicy<'a> {
     }
 
     /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+    /// or without sigma: mean 0, sigma 0.05.
     #[inline]
     pub fn DRAG_PRIOR(&self) -> Option<PCFGaussianPrior<'a>> {
         // Safety:
@@ -5185,1035 +3957,6 @@ impl PCFEventDefinitionT {
             PLANE_NORMAL,
             SECOND_TRAJECTORY_PORT,
             EXPRESSION,
-        })
-    }
-}
-
-pub enum PCFManeuverDetectionOffset {}
-
-/// Maneuver detection from fit innovations: a generalized-likelihood-ratio
-/// scan of the six mean elements.
-#[derive(Copy, Clone, PartialEq)]
-pub struct PCFManeuverDetection<'a> {
-    pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PCFManeuverDetection<'a> {
-    type Inner = PCFManeuverDetection<'a>;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-    }
-}
-
-impl<'a> PCFManeuverDetection<'a> {
-    pub const VT_FALSE_ALARMS_PER_OBJECT_YEAR: ::flatbuffers::VOffsetT = 4;
-    pub const VT_CORRELATION_MODEL: ::flatbuffers::VOffsetT = 6;
-    pub const VT_THRESHOLD: ::flatbuffers::VOffsetT = 8;
-    pub const VT_MARGIN_STATES: ::flatbuffers::VOffsetT = 10;
-    pub const VT_REFINE_WINDOW_HOURS: ::flatbuffers::VOffsetT = 12;
-    pub const VT_MINIMUM_STATES: ::flatbuffers::VOffsetT = 14;
-
-    #[inline]
-    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-        PCFManeuverDetection { _tab: table }
-    }
-
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFManeuverDetectionArgs
-    ) -> ::flatbuffers::WIPOffset<PCFManeuverDetection<'bldr>> {
-        let mut builder = PCFManeuverDetectionBuilder::new(_fbb);
-        builder.add_REFINE_WINDOW_HOURS(args.REFINE_WINDOW_HOURS);
-        builder.add_THRESHOLD(args.THRESHOLD);
-        builder.add_FALSE_ALARMS_PER_OBJECT_YEAR(args.FALSE_ALARMS_PER_OBJECT_YEAR);
-        builder.add_MINIMUM_STATES(args.MINIMUM_STATES);
-        builder.add_MARGIN_STATES(args.MARGIN_STATES);
-        builder.add_CORRELATION_MODEL(args.CORRELATION_MODEL);
-        builder.finish()
-    }
-
-    pub fn unpack(&self) -> PCFManeuverDetectionT {
-        let FALSE_ALARMS_PER_OBJECT_YEAR = self.FALSE_ALARMS_PER_OBJECT_YEAR();
-        let CORRELATION_MODEL = self.CORRELATION_MODEL();
-        let THRESHOLD = self.THRESHOLD();
-        let MARGIN_STATES = self.MARGIN_STATES();
-        let REFINE_WINDOW_HOURS = self.REFINE_WINDOW_HOURS();
-        let MINIMUM_STATES = self.MINIMUM_STATES();
-        PCFManeuverDetectionT {
-            FALSE_ALARMS_PER_OBJECT_YEAR,
-            CORRELATION_MODEL,
-            THRESHOLD,
-            MARGIN_STATES,
-            REFINE_WINDOW_HOURS,
-            MINIMUM_STATES,
-        }
-    }
-
-    /// False-alarm rate the THRESHOLD is calibrated for, per object-year. A
-    /// provider that cannot recalibrate refuses another rate. Default 1.
-    #[inline]
-    pub fn FALSE_ALARMS_PER_OBJECT_YEAR(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFManeuverDetection::VT_FALSE_ALARMS_PER_OBJECT_YEAR, Some(1.0)).unwrap()}
-    }
-
-    /// How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
-    #[inline]
-    pub fn CORRELATION_MODEL(&self) -> pcfInnovationCorrelation {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<pcfInnovationCorrelation>(PCFManeuverDetection::VT_CORRELATION_MODEL, Some(pcfInnovationCorrelation::ONE_SAMPLE_PER_REVOLUTION)).unwrap()}
-    }
-
-    /// The statistic Lambda (chi-square, 3 degrees of freedom) above which a
-    /// maneuver is declared. Default 20.
-    #[inline]
-    pub fn THRESHOLD(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFManeuverDetection::VT_THRESHOLD, Some(20.0)).unwrap()}
-    }
-
-    /// States kept clear at each end of the arc when scanning. Default 12.
-    #[inline]
-    pub fn MARGIN_STATES(&self) -> u32 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u32>(PCFManeuverDetection::VT_MARGIN_STATES, Some(12)).unwrap()}
-    }
-
-    /// Half-width of the window the burn epoch is refined in, hours. Default 2.
-    #[inline]
-    pub fn REFINE_WINDOW_HOURS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFManeuverDetection::VT_REFINE_WINDOW_HOURS, Some(2.0)).unwrap()}
-    }
-
-    /// Fewest states an arc must hold to be scanned. Default 48.
-    #[inline]
-    pub fn MINIMUM_STATES(&self) -> u32 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<u32>(PCFManeuverDetection::VT_MINIMUM_STATES, Some(48)).unwrap()}
-    }
-}
-
-impl ::flatbuffers::Verifiable for PCFManeuverDetection<'_> {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        v.visit_table(pos)?
-            .visit_field::<f64>("FALSE_ALARMS_PER_OBJECT_YEAR", Self::VT_FALSE_ALARMS_PER_OBJECT_YEAR, false)?
-            .visit_field::<pcfInnovationCorrelation>("CORRELATION_MODEL", Self::VT_CORRELATION_MODEL, false)?
-            .visit_field::<f64>("THRESHOLD", Self::VT_THRESHOLD, false)?
-            .visit_field::<u32>("MARGIN_STATES", Self::VT_MARGIN_STATES, false)?
-            .visit_field::<f64>("REFINE_WINDOW_HOURS", Self::VT_REFINE_WINDOW_HOURS, false)?
-            .visit_field::<u32>("MINIMUM_STATES", Self::VT_MINIMUM_STATES, false)?
-            .finish();
-        Ok(())
-    }
-}
-
-pub struct PCFManeuverDetectionArgs {
-    pub FALSE_ALARMS_PER_OBJECT_YEAR: f64,
-    pub CORRELATION_MODEL: pcfInnovationCorrelation,
-    pub THRESHOLD: f64,
-    pub MARGIN_STATES: u32,
-    pub REFINE_WINDOW_HOURS: f64,
-    pub MINIMUM_STATES: u32,
-}
-
-impl<'a> Default for PCFManeuverDetectionArgs {
-    #[inline]
-    fn default() -> Self {
-        PCFManeuverDetectionArgs {
-            FALSE_ALARMS_PER_OBJECT_YEAR: 1.0,
-            CORRELATION_MODEL: pcfInnovationCorrelation::ONE_SAMPLE_PER_REVOLUTION,
-            THRESHOLD: 20.0,
-            MARGIN_STATES: 12,
-            REFINE_WINDOW_HOURS: 2.0,
-            MINIMUM_STATES: 48,
-        }
-    }
-}
-
-pub struct PCFManeuverDetectionBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFManeuverDetectionBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_FALSE_ALARMS_PER_OBJECT_YEAR(&mut self, FALSE_ALARMS_PER_OBJECT_YEAR: f64) {
-        self.fbb_.push_slot::<f64>(PCFManeuverDetection::VT_FALSE_ALARMS_PER_OBJECT_YEAR, FALSE_ALARMS_PER_OBJECT_YEAR, 1.0);
-    }
-
-    #[inline]
-    pub fn add_CORRELATION_MODEL(&mut self, CORRELATION_MODEL: pcfInnovationCorrelation) {
-        self.fbb_.push_slot::<pcfInnovationCorrelation>(PCFManeuverDetection::VT_CORRELATION_MODEL, CORRELATION_MODEL, pcfInnovationCorrelation::ONE_SAMPLE_PER_REVOLUTION);
-    }
-
-    #[inline]
-    pub fn add_THRESHOLD(&mut self, THRESHOLD: f64) {
-        self.fbb_.push_slot::<f64>(PCFManeuverDetection::VT_THRESHOLD, THRESHOLD, 20.0);
-    }
-
-    #[inline]
-    pub fn add_MARGIN_STATES(&mut self, MARGIN_STATES: u32) {
-        self.fbb_.push_slot::<u32>(PCFManeuverDetection::VT_MARGIN_STATES, MARGIN_STATES, 12);
-    }
-
-    #[inline]
-    pub fn add_REFINE_WINDOW_HOURS(&mut self, REFINE_WINDOW_HOURS: f64) {
-        self.fbb_.push_slot::<f64>(PCFManeuverDetection::VT_REFINE_WINDOW_HOURS, REFINE_WINDOW_HOURS, 2.0);
-    }
-
-    #[inline]
-    pub fn add_MINIMUM_STATES(&mut self, MINIMUM_STATES: u32) {
-        self.fbb_.push_slot::<u32>(PCFManeuverDetection::VT_MINIMUM_STATES, MINIMUM_STATES, 48);
-    }
-
-    #[inline]
-    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFManeuverDetectionBuilder<'a, 'b, A> {
-        let start = _fbb.start_table();
-        PCFManeuverDetectionBuilder {
-            fbb_: _fbb,
-            start_: start,
-        }
-    }
-
-    #[inline]
-    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFManeuverDetection<'a>> {
-        let o = self.fbb_.end_table(self.start_);
-        ::flatbuffers::WIPOffset::new(o.value())
-    }
-}
-
-impl ::core::fmt::Debug for PCFManeuverDetection<'_> {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        let mut ds = f.debug_struct("PCFManeuverDetection");
-        ds.field("FALSE_ALARMS_PER_OBJECT_YEAR", &self.FALSE_ALARMS_PER_OBJECT_YEAR());
-        ds.field("CORRELATION_MODEL", &self.CORRELATION_MODEL());
-        ds.field("THRESHOLD", &self.THRESHOLD());
-        ds.field("MARGIN_STATES", &self.MARGIN_STATES());
-        ds.field("REFINE_WINDOW_HOURS", &self.REFINE_WINDOW_HOURS());
-        ds.field("MINIMUM_STATES", &self.MINIMUM_STATES());
-        ds.finish()
-    }
-}
-
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PCFManeuverDetectionT {
-    pub FALSE_ALARMS_PER_OBJECT_YEAR: f64,
-    pub CORRELATION_MODEL: pcfInnovationCorrelation,
-    pub THRESHOLD: f64,
-    pub MARGIN_STATES: u32,
-    pub REFINE_WINDOW_HOURS: f64,
-    pub MINIMUM_STATES: u32,
-}
-
-impl Default for PCFManeuverDetectionT {
-    fn default() -> Self {
-        Self {
-            FALSE_ALARMS_PER_OBJECT_YEAR: 1.0,
-            CORRELATION_MODEL: pcfInnovationCorrelation::ONE_SAMPLE_PER_REVOLUTION,
-            THRESHOLD: 20.0,
-            MARGIN_STATES: 12,
-            REFINE_WINDOW_HOURS: 2.0,
-            MINIMUM_STATES: 48,
-        }
-    }
-}
-
-impl PCFManeuverDetectionT {
-    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-        &self,
-        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-    ) -> ::flatbuffers::WIPOffset<PCFManeuverDetection<'b>> {
-        let FALSE_ALARMS_PER_OBJECT_YEAR = self.FALSE_ALARMS_PER_OBJECT_YEAR;
-        let CORRELATION_MODEL = self.CORRELATION_MODEL;
-        let THRESHOLD = self.THRESHOLD;
-        let MARGIN_STATES = self.MARGIN_STATES;
-        let REFINE_WINDOW_HOURS = self.REFINE_WINDOW_HOURS;
-        let MINIMUM_STATES = self.MINIMUM_STATES;
-        PCFManeuverDetection::create(_fbb, &PCFManeuverDetectionArgs{
-            FALSE_ALARMS_PER_OBJECT_YEAR,
-            CORRELATION_MODEL,
-            THRESHOLD,
-            MARGIN_STATES,
-            REFINE_WINDOW_HOURS,
-            MINIMUM_STATES,
-        })
-    }
-}
-
-pub enum PCFReentryOffset {}
-
-/// Reentry: where the averaged theory hands off to osculating integration,
-/// where the trajectory ends, and the width of the reentry window.
-#[derive(Copy, Clone, PartialEq)]
-pub struct PCFReentry<'a> {
-    pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PCFReentry<'a> {
-    type Inner = PCFReentry<'a>;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-    }
-}
-
-impl<'a> PCFReentry<'a> {
-    pub const VT_ALTITUDE_KM: ::flatbuffers::VOffsetT = 4;
-    pub const VT_HANDOFF_PERIGEE_ALTITUDE_KM: ::flatbuffers::VOffsetT = 6;
-    pub const VT_HANDOFF_DECAY_RATIO: ::flatbuffers::VOffsetT = 8;
-    pub const VT_HANDOFF_ECCENTRICITY_COLLAPSE: ::flatbuffers::VOffsetT = 10;
-    pub const VT_HANDOFF_MINIMUM_ECCENTRICITY: ::flatbuffers::VOffsetT = 12;
-    pub const VT_NODE_STEP_MINUTES: ::flatbuffers::VOffsetT = 14;
-    pub const VT_HORIZON_DAYS: ::flatbuffers::VOffsetT = 16;
-    pub const VT_WINDOW_METHOD: ::flatbuffers::VOffsetT = 18;
-    pub const VT_WINDOW_DENSITY_SIGMA: ::flatbuffers::VOffsetT = 20;
-    pub const VT_WINDOW_CORRELATION_DAYS: ::flatbuffers::VOffsetT = 22;
-    pub const VT_WINDOW_BALLISTIC_SIGMA: ::flatbuffers::VOffsetT = 24;
-    pub const VT_OSCULATING_STEP_SECONDS: ::flatbuffers::VOffsetT = 26;
-    pub const VT_HANDOFF_SAWTOOTH_KM: ::flatbuffers::VOffsetT = 28;
-    pub const VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: ::flatbuffers::VOffsetT = 30;
-
-    #[inline]
-    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-        PCFReentry { _tab: table }
-    }
-
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFReentryArgs
-    ) -> ::flatbuffers::WIPOffset<PCFReentry<'bldr>> {
-        let mut builder = PCFReentryBuilder::new(_fbb);
-        builder.add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(args.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
-        builder.add_HANDOFF_SAWTOOTH_KM(args.HANDOFF_SAWTOOTH_KM);
-        builder.add_OSCULATING_STEP_SECONDS(args.OSCULATING_STEP_SECONDS);
-        builder.add_WINDOW_BALLISTIC_SIGMA(args.WINDOW_BALLISTIC_SIGMA);
-        builder.add_WINDOW_CORRELATION_DAYS(args.WINDOW_CORRELATION_DAYS);
-        builder.add_WINDOW_DENSITY_SIGMA(args.WINDOW_DENSITY_SIGMA);
-        builder.add_HORIZON_DAYS(args.HORIZON_DAYS);
-        builder.add_NODE_STEP_MINUTES(args.NODE_STEP_MINUTES);
-        builder.add_HANDOFF_MINIMUM_ECCENTRICITY(args.HANDOFF_MINIMUM_ECCENTRICITY);
-        builder.add_HANDOFF_ECCENTRICITY_COLLAPSE(args.HANDOFF_ECCENTRICITY_COLLAPSE);
-        builder.add_HANDOFF_DECAY_RATIO(args.HANDOFF_DECAY_RATIO);
-        builder.add_HANDOFF_PERIGEE_ALTITUDE_KM(args.HANDOFF_PERIGEE_ALTITUDE_KM);
-        builder.add_ALTITUDE_KM(args.ALTITUDE_KM);
-        builder.add_WINDOW_METHOD(args.WINDOW_METHOD);
-        builder.finish()
-    }
-
-    pub fn unpack(&self) -> PCFReentryT {
-        let ALTITUDE_KM = self.ALTITUDE_KM();
-        let HANDOFF_PERIGEE_ALTITUDE_KM = self.HANDOFF_PERIGEE_ALTITUDE_KM();
-        let HANDOFF_DECAY_RATIO = self.HANDOFF_DECAY_RATIO();
-        let HANDOFF_ECCENTRICITY_COLLAPSE = self.HANDOFF_ECCENTRICITY_COLLAPSE();
-        let HANDOFF_MINIMUM_ECCENTRICITY = self.HANDOFF_MINIMUM_ECCENTRICITY();
-        let NODE_STEP_MINUTES = self.NODE_STEP_MINUTES();
-        let HORIZON_DAYS = self.HORIZON_DAYS();
-        let WINDOW_METHOD = self.WINDOW_METHOD();
-        let WINDOW_DENSITY_SIGMA = self.WINDOW_DENSITY_SIGMA();
-        let WINDOW_CORRELATION_DAYS = self.WINDOW_CORRELATION_DAYS();
-        let WINDOW_BALLISTIC_SIGMA = self.WINDOW_BALLISTIC_SIGMA();
-        let OSCULATING_STEP_SECONDS = self.OSCULATING_STEP_SECONDS();
-        let HANDOFF_SAWTOOTH_KM = self.HANDOFF_SAWTOOTH_KM();
-        let HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY();
-        PCFReentryT {
-            ALTITUDE_KM,
-            HANDOFF_PERIGEE_ALTITUDE_KM,
-            HANDOFF_DECAY_RATIO,
-            HANDOFF_ECCENTRICITY_COLLAPSE,
-            HANDOFF_MINIMUM_ECCENTRICITY,
-            NODE_STEP_MINUTES,
-            HORIZON_DAYS,
-            WINDOW_METHOD,
-            WINDOW_DENSITY_SIGMA,
-            WINDOW_CORRELATION_DAYS,
-            WINDOW_BALLISTIC_SIGMA,
-            OSCULATING_STEP_SECONDS,
-            HANDOFF_SAWTOOTH_KM,
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY,
-        }
-    }
-
-    /// Altitude at which the trajectory ends as reentered, km. Default 80.
-    #[inline]
-    pub fn ALTITUDE_KM(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_ALTITUDE_KM, Some(80.0)).unwrap()}
-    }
-
-    /// Hand-off when the perigee altitude falls below this, km. Default 180.
-    #[inline]
-    pub fn HANDOFF_PERIGEE_ALTITUDE_KM(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_PERIGEE_ALTITUDE_KM, Some(180.0)).unwrap()}
-    }
-
-    /// Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
-    /// fraction of the density scale height H. Default 0.05.
-    #[inline]
-    pub fn HANDOFF_DECAY_RATIO(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_DECAY_RATIO, Some(0.05)).unwrap()}
-    }
-
-    /// Hand-off when the eccentricity collapses by more than this fraction of
-    /// a e per revolution, with the eccentricity above
-    /// HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
-    #[inline]
-    pub fn HANDOFF_ECCENTRICITY_COLLAPSE(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_ECCENTRICITY_COLLAPSE, Some(0.01)).unwrap()}
-    }
-
-    /// Eccentricity above which the collapse test applies. Default 0.01.
-    #[inline]
-    pub fn HANDOFF_MINIMUM_ECCENTRICITY(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_MINIMUM_ECCENTRICITY, Some(0.01)).unwrap()}
-    }
-
-    /// Spacing of the nodes the hand-off tests are evaluated at, minutes.
-    /// Default 30.
-    #[inline]
-    pub fn NODE_STEP_MINUTES(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_NODE_STEP_MINUTES, Some(30.0)).unwrap()}
-    }
-
-    /// Longest look-ahead for a hand-off or reentry, days. Default 120.
-    #[inline]
-    pub fn HORIZON_DAYS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HORIZON_DAYS, Some(120.0)).unwrap()}
-    }
-
-    /// How the reentry window is computed. Default LINEAR.
-    #[inline]
-    pub fn WINDOW_METHOD(&self) -> pcfReentryWindowMethod {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<pcfReentryWindowMethod>(PCFReentry::VT_WINDOW_METHOD, Some(pcfReentryWindowMethod::LINEAR)).unwrap()}
-    }
-
-    /// Fractional 1-sigma density error of the window. Default 0.15.
-    #[inline]
-    pub fn WINDOW_DENSITY_SIGMA(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_WINDOW_DENSITY_SIGMA, Some(0.15)).unwrap()}
-    }
-
-    /// Correlation time of the density error, days. Default 2.
-    #[inline]
-    pub fn WINDOW_CORRELATION_DAYS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_WINDOW_CORRELATION_DAYS, Some(2.0)).unwrap()}
-    }
-
-    /// Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
-    #[inline]
-    pub fn WINDOW_BALLISTIC_SIGMA(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_WINDOW_BALLISTIC_SIGMA, Some(0.05)).unwrap()}
-    }
-
-    /// Step of the osculating integration after the hand-off, seconds. Default
-    /// 10.
-    #[inline]
-    pub fn OSCULATING_STEP_SECONDS(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_OSCULATING_STEP_SECONDS, Some(10.0)).unwrap()}
-    }
-
-    /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
-    /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
-    /// steps once per revolution while the averaged theory ramps, and the
-    /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
-    /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
-    /// Default 0.5.
-    #[inline]
-    pub fn HANDOFF_SAWTOOTH_KM(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_KM, Some(0.5)).unwrap()}
-    }
-
-    /// Eccentricity above which the sawtooth test applies. Default 0.02.
-    #[inline]
-    pub fn HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, Some(0.02)).unwrap()}
-    }
-}
-
-impl ::flatbuffers::Verifiable for PCFReentry<'_> {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        v.visit_table(pos)?
-            .visit_field::<f64>("ALTITUDE_KM", Self::VT_ALTITUDE_KM, false)?
-            .visit_field::<f64>("HANDOFF_PERIGEE_ALTITUDE_KM", Self::VT_HANDOFF_PERIGEE_ALTITUDE_KM, false)?
-            .visit_field::<f64>("HANDOFF_DECAY_RATIO", Self::VT_HANDOFF_DECAY_RATIO, false)?
-            .visit_field::<f64>("HANDOFF_ECCENTRICITY_COLLAPSE", Self::VT_HANDOFF_ECCENTRICITY_COLLAPSE, false)?
-            .visit_field::<f64>("HANDOFF_MINIMUM_ECCENTRICITY", Self::VT_HANDOFF_MINIMUM_ECCENTRICITY, false)?
-            .visit_field::<f64>("NODE_STEP_MINUTES", Self::VT_NODE_STEP_MINUTES, false)?
-            .visit_field::<f64>("HORIZON_DAYS", Self::VT_HORIZON_DAYS, false)?
-            .visit_field::<pcfReentryWindowMethod>("WINDOW_METHOD", Self::VT_WINDOW_METHOD, false)?
-            .visit_field::<f64>("WINDOW_DENSITY_SIGMA", Self::VT_WINDOW_DENSITY_SIGMA, false)?
-            .visit_field::<f64>("WINDOW_CORRELATION_DAYS", Self::VT_WINDOW_CORRELATION_DAYS, false)?
-            .visit_field::<f64>("WINDOW_BALLISTIC_SIGMA", Self::VT_WINDOW_BALLISTIC_SIGMA, false)?
-            .visit_field::<f64>("OSCULATING_STEP_SECONDS", Self::VT_OSCULATING_STEP_SECONDS, false)?
-            .visit_field::<f64>("HANDOFF_SAWTOOTH_KM", Self::VT_HANDOFF_SAWTOOTH_KM, false)?
-            .visit_field::<f64>("HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY", Self::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, false)?
-            .finish();
-        Ok(())
-    }
-}
-
-pub struct PCFReentryArgs {
-    pub ALTITUDE_KM: f64,
-    pub HANDOFF_PERIGEE_ALTITUDE_KM: f64,
-    pub HANDOFF_DECAY_RATIO: f64,
-    pub HANDOFF_ECCENTRICITY_COLLAPSE: f64,
-    pub HANDOFF_MINIMUM_ECCENTRICITY: f64,
-    pub NODE_STEP_MINUTES: f64,
-    pub HORIZON_DAYS: f64,
-    pub WINDOW_METHOD: pcfReentryWindowMethod,
-    pub WINDOW_DENSITY_SIGMA: f64,
-    pub WINDOW_CORRELATION_DAYS: f64,
-    pub WINDOW_BALLISTIC_SIGMA: f64,
-    pub OSCULATING_STEP_SECONDS: f64,
-    pub HANDOFF_SAWTOOTH_KM: f64,
-    pub HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: f64,
-}
-
-impl<'a> Default for PCFReentryArgs {
-    #[inline]
-    fn default() -> Self {
-        PCFReentryArgs {
-            ALTITUDE_KM: 80.0,
-            HANDOFF_PERIGEE_ALTITUDE_KM: 180.0,
-            HANDOFF_DECAY_RATIO: 0.05,
-            HANDOFF_ECCENTRICITY_COLLAPSE: 0.01,
-            HANDOFF_MINIMUM_ECCENTRICITY: 0.01,
-            NODE_STEP_MINUTES: 30.0,
-            HORIZON_DAYS: 120.0,
-            WINDOW_METHOD: pcfReentryWindowMethod::LINEAR,
-            WINDOW_DENSITY_SIGMA: 0.15,
-            WINDOW_CORRELATION_DAYS: 2.0,
-            WINDOW_BALLISTIC_SIGMA: 0.05,
-            OSCULATING_STEP_SECONDS: 10.0,
-            HANDOFF_SAWTOOTH_KM: 0.5,
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: 0.02,
-        }
-    }
-}
-
-pub struct PCFReentryBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFReentryBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_ALTITUDE_KM(&mut self, ALTITUDE_KM: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_ALTITUDE_KM, ALTITUDE_KM, 80.0);
-    }
-
-    #[inline]
-    pub fn add_HANDOFF_PERIGEE_ALTITUDE_KM(&mut self, HANDOFF_PERIGEE_ALTITUDE_KM: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_PERIGEE_ALTITUDE_KM, HANDOFF_PERIGEE_ALTITUDE_KM, 180.0);
-    }
-
-    #[inline]
-    pub fn add_HANDOFF_DECAY_RATIO(&mut self, HANDOFF_DECAY_RATIO: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_DECAY_RATIO, HANDOFF_DECAY_RATIO, 0.05);
-    }
-
-    #[inline]
-    pub fn add_HANDOFF_ECCENTRICITY_COLLAPSE(&mut self, HANDOFF_ECCENTRICITY_COLLAPSE: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_ECCENTRICITY_COLLAPSE, HANDOFF_ECCENTRICITY_COLLAPSE, 0.01);
-    }
-
-    #[inline]
-    pub fn add_HANDOFF_MINIMUM_ECCENTRICITY(&mut self, HANDOFF_MINIMUM_ECCENTRICITY: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_MINIMUM_ECCENTRICITY, HANDOFF_MINIMUM_ECCENTRICITY, 0.01);
-    }
-
-    #[inline]
-    pub fn add_NODE_STEP_MINUTES(&mut self, NODE_STEP_MINUTES: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_NODE_STEP_MINUTES, NODE_STEP_MINUTES, 30.0);
-    }
-
-    #[inline]
-    pub fn add_HORIZON_DAYS(&mut self, HORIZON_DAYS: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HORIZON_DAYS, HORIZON_DAYS, 120.0);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_METHOD(&mut self, WINDOW_METHOD: pcfReentryWindowMethod) {
-        self.fbb_.push_slot::<pcfReentryWindowMethod>(PCFReentry::VT_WINDOW_METHOD, WINDOW_METHOD, pcfReentryWindowMethod::LINEAR);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_DENSITY_SIGMA(&mut self, WINDOW_DENSITY_SIGMA: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_WINDOW_DENSITY_SIGMA, WINDOW_DENSITY_SIGMA, 0.15);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_CORRELATION_DAYS(&mut self, WINDOW_CORRELATION_DAYS: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_WINDOW_CORRELATION_DAYS, WINDOW_CORRELATION_DAYS, 2.0);
-    }
-
-    #[inline]
-    pub fn add_WINDOW_BALLISTIC_SIGMA(&mut self, WINDOW_BALLISTIC_SIGMA: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_WINDOW_BALLISTIC_SIGMA, WINDOW_BALLISTIC_SIGMA, 0.05);
-    }
-
-    #[inline]
-    pub fn add_OSCULATING_STEP_SECONDS(&mut self, OSCULATING_STEP_SECONDS: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_OSCULATING_STEP_SECONDS, OSCULATING_STEP_SECONDS, 10.0);
-    }
-
-    #[inline]
-    pub fn add_HANDOFF_SAWTOOTH_KM(&mut self, HANDOFF_SAWTOOTH_KM: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_KM, HANDOFF_SAWTOOTH_KM, 0.5);
-    }
-
-    #[inline]
-    pub fn add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(&mut self, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: f64) {
-        self.fbb_.push_slot::<f64>(PCFReentry::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
-    }
-
-    #[inline]
-    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFReentryBuilder<'a, 'b, A> {
-        let start = _fbb.start_table();
-        PCFReentryBuilder {
-            fbb_: _fbb,
-            start_: start,
-        }
-    }
-
-    #[inline]
-    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFReentry<'a>> {
-        let o = self.fbb_.end_table(self.start_);
-        ::flatbuffers::WIPOffset::new(o.value())
-    }
-}
-
-impl ::core::fmt::Debug for PCFReentry<'_> {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        let mut ds = f.debug_struct("PCFReentry");
-        ds.field("ALTITUDE_KM", &self.ALTITUDE_KM());
-        ds.field("HANDOFF_PERIGEE_ALTITUDE_KM", &self.HANDOFF_PERIGEE_ALTITUDE_KM());
-        ds.field("HANDOFF_DECAY_RATIO", &self.HANDOFF_DECAY_RATIO());
-        ds.field("HANDOFF_ECCENTRICITY_COLLAPSE", &self.HANDOFF_ECCENTRICITY_COLLAPSE());
-        ds.field("HANDOFF_MINIMUM_ECCENTRICITY", &self.HANDOFF_MINIMUM_ECCENTRICITY());
-        ds.field("NODE_STEP_MINUTES", &self.NODE_STEP_MINUTES());
-        ds.field("HORIZON_DAYS", &self.HORIZON_DAYS());
-        ds.field("WINDOW_METHOD", &self.WINDOW_METHOD());
-        ds.field("WINDOW_DENSITY_SIGMA", &self.WINDOW_DENSITY_SIGMA());
-        ds.field("WINDOW_CORRELATION_DAYS", &self.WINDOW_CORRELATION_DAYS());
-        ds.field("WINDOW_BALLISTIC_SIGMA", &self.WINDOW_BALLISTIC_SIGMA());
-        ds.field("OSCULATING_STEP_SECONDS", &self.OSCULATING_STEP_SECONDS());
-        ds.field("HANDOFF_SAWTOOTH_KM", &self.HANDOFF_SAWTOOTH_KM());
-        ds.field("HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY", &self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY());
-        ds.finish()
-    }
-}
-
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PCFReentryT {
-    pub ALTITUDE_KM: f64,
-    pub HANDOFF_PERIGEE_ALTITUDE_KM: f64,
-    pub HANDOFF_DECAY_RATIO: f64,
-    pub HANDOFF_ECCENTRICITY_COLLAPSE: f64,
-    pub HANDOFF_MINIMUM_ECCENTRICITY: f64,
-    pub NODE_STEP_MINUTES: f64,
-    pub HORIZON_DAYS: f64,
-    pub WINDOW_METHOD: pcfReentryWindowMethod,
-    pub WINDOW_DENSITY_SIGMA: f64,
-    pub WINDOW_CORRELATION_DAYS: f64,
-    pub WINDOW_BALLISTIC_SIGMA: f64,
-    pub OSCULATING_STEP_SECONDS: f64,
-    pub HANDOFF_SAWTOOTH_KM: f64,
-    pub HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: f64,
-}
-
-impl Default for PCFReentryT {
-    fn default() -> Self {
-        Self {
-            ALTITUDE_KM: 80.0,
-            HANDOFF_PERIGEE_ALTITUDE_KM: 180.0,
-            HANDOFF_DECAY_RATIO: 0.05,
-            HANDOFF_ECCENTRICITY_COLLAPSE: 0.01,
-            HANDOFF_MINIMUM_ECCENTRICITY: 0.01,
-            NODE_STEP_MINUTES: 30.0,
-            HORIZON_DAYS: 120.0,
-            WINDOW_METHOD: pcfReentryWindowMethod::LINEAR,
-            WINDOW_DENSITY_SIGMA: 0.15,
-            WINDOW_CORRELATION_DAYS: 2.0,
-            WINDOW_BALLISTIC_SIGMA: 0.05,
-            OSCULATING_STEP_SECONDS: 10.0,
-            HANDOFF_SAWTOOTH_KM: 0.5,
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY: 0.02,
-        }
-    }
-}
-
-impl PCFReentryT {
-    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-        &self,
-        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-    ) -> ::flatbuffers::WIPOffset<PCFReentry<'b>> {
-        let ALTITUDE_KM = self.ALTITUDE_KM;
-        let HANDOFF_PERIGEE_ALTITUDE_KM = self.HANDOFF_PERIGEE_ALTITUDE_KM;
-        let HANDOFF_DECAY_RATIO = self.HANDOFF_DECAY_RATIO;
-        let HANDOFF_ECCENTRICITY_COLLAPSE = self.HANDOFF_ECCENTRICITY_COLLAPSE;
-        let HANDOFF_MINIMUM_ECCENTRICITY = self.HANDOFF_MINIMUM_ECCENTRICITY;
-        let NODE_STEP_MINUTES = self.NODE_STEP_MINUTES;
-        let HORIZON_DAYS = self.HORIZON_DAYS;
-        let WINDOW_METHOD = self.WINDOW_METHOD;
-        let WINDOW_DENSITY_SIGMA = self.WINDOW_DENSITY_SIGMA;
-        let WINDOW_CORRELATION_DAYS = self.WINDOW_CORRELATION_DAYS;
-        let WINDOW_BALLISTIC_SIGMA = self.WINDOW_BALLISTIC_SIGMA;
-        let OSCULATING_STEP_SECONDS = self.OSCULATING_STEP_SECONDS;
-        let HANDOFF_SAWTOOTH_KM = self.HANDOFF_SAWTOOTH_KM;
-        let HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = self.HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY;
-        PCFReentry::create(_fbb, &PCFReentryArgs{
-            ALTITUDE_KM,
-            HANDOFF_PERIGEE_ALTITUDE_KM,
-            HANDOFF_DECAY_RATIO,
-            HANDOFF_ECCENTRICITY_COLLAPSE,
-            HANDOFF_MINIMUM_ECCENTRICITY,
-            NODE_STEP_MINUTES,
-            HORIZON_DAYS,
-            WINDOW_METHOD,
-            WINDOW_DENSITY_SIGMA,
-            WINDOW_CORRELATION_DAYS,
-            WINDOW_BALLISTIC_SIGMA,
-            OSCULATING_STEP_SECONDS,
-            HANDOFF_SAWTOOTH_KM,
-            HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY,
-        })
-    }
-}
-
-pub enum PCFLaunchOffset {}
-
-/// Launch initialization: priors for the first element sets of new objects
-/// and for a deployment batch fitted jointly.
-#[derive(Copy, Clone, PartialEq)]
-pub struct PCFLaunch<'a> {
-    pub _tab: ::flatbuffers::Table<'a>,
-}
-
-impl<'a> ::flatbuffers::Follow<'a> for PCFLaunch<'a> {
-    type Inner = PCFLaunch<'a>;
-
-    #[inline]
-    unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
-        Self { _tab: unsafe { ::flatbuffers::Table::new(buf, loc) } }
-    }
-}
-
-impl<'a> PCFLaunch<'a> {
-    pub const VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG: ::flatbuffers::VOffsetT = 4;
-    pub const VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG: ::flatbuffers::VOffsetT = 6;
-    pub const VT_SEPARATION_SIGMA_M_S: ::flatbuffers::VOffsetT = 8;
-    pub const VT_SHRINK_SIGMA_M2_KG: ::flatbuffers::VOffsetT = 10;
-    pub const VT_HAS_SHRINK_SIGMA_M2_KG: ::flatbuffers::VOffsetT = 12;
-    pub const VT_BATCH_MEAN_SIGMA_M2_KG: ::flatbuffers::VOffsetT = 14;
-
-    #[inline]
-    pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
-        PCFLaunch { _tab: table }
-    }
-
-    #[allow(unused_mut)]
-    pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: ::flatbuffers::Allocator + 'bldr>(
-        _fbb: &'mut_bldr mut ::flatbuffers::FlatBufferBuilder<'bldr, A>,
-        args: &'args PCFLaunchArgs
-    ) -> ::flatbuffers::WIPOffset<PCFLaunch<'bldr>> {
-        let mut builder = PCFLaunchBuilder::new(_fbb);
-        builder.add_BATCH_MEAN_SIGMA_M2_KG(args.BATCH_MEAN_SIGMA_M2_KG);
-        builder.add_SHRINK_SIGMA_M2_KG(args.SHRINK_SIGMA_M2_KG);
-        builder.add_SEPARATION_SIGMA_M_S(args.SEPARATION_SIGMA_M_S);
-        builder.add_SRP_AREA_OVER_MASS_PRIOR_M2_KG(args.SRP_AREA_OVER_MASS_PRIOR_M2_KG);
-        builder.add_DRAG_AREA_OVER_MASS_PRIOR_M2_KG(args.DRAG_AREA_OVER_MASS_PRIOR_M2_KG);
-        builder.add_HAS_SHRINK_SIGMA_M2_KG(args.HAS_SHRINK_SIGMA_M2_KG);
-        builder.finish()
-    }
-
-    pub fn unpack(&self) -> PCFLaunchT {
-        let DRAG_AREA_OVER_MASS_PRIOR_M2_KG = self.DRAG_AREA_OVER_MASS_PRIOR_M2_KG();
-        let SRP_AREA_OVER_MASS_PRIOR_M2_KG = self.SRP_AREA_OVER_MASS_PRIOR_M2_KG();
-        let SEPARATION_SIGMA_M_S = self.SEPARATION_SIGMA_M_S();
-        let SHRINK_SIGMA_M2_KG = self.SHRINK_SIGMA_M2_KG();
-        let HAS_SHRINK_SIGMA_M2_KG = self.HAS_SHRINK_SIGMA_M2_KG();
-        let BATCH_MEAN_SIGMA_M2_KG = self.BATCH_MEAN_SIGMA_M2_KG();
-        PCFLaunchT {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG,
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG,
-            SEPARATION_SIGMA_M_S,
-            SHRINK_SIGMA_M2_KG,
-            HAS_SHRINK_SIGMA_M2_KG,
-            BATCH_MEAN_SIGMA_M2_KG,
-        }
-    }
-
-    /// A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
-    #[inline]
-    pub fn DRAG_AREA_OVER_MASS_PRIOR_M2_KG(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFLaunch::VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG, Some(0.01)).unwrap()}
-    }
-
-    /// A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
-    #[inline]
-    pub fn SRP_AREA_OVER_MASS_PRIOR_M2_KG(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFLaunch::VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG, Some(0.01)).unwrap()}
-    }
-
-    /// Prior 1-sigma of each object's separation velocity per axis, m/s.
-    /// Default 1.
-    #[inline]
-    pub fn SEPARATION_SIGMA_M_S(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFLaunch::VT_SEPARATION_SIGMA_M_S, Some(1.0)).unwrap()}
-    }
-
-    /// Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
-    /// Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
-    #[inline]
-    pub fn SHRINK_SIGMA_M2_KG(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFLaunch::VT_SHRINK_SIGMA_M2_KG, Some(0.0)).unwrap()}
-    }
-
-    /// True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
-    #[inline]
-    pub fn HAS_SHRINK_SIGMA_M2_KG(&self) -> bool {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<bool>(PCFLaunch::VT_HAS_SHRINK_SIGMA_M2_KG, Some(false)).unwrap()}
-    }
-
-    /// Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
-    #[inline]
-    pub fn BATCH_MEAN_SIGMA_M2_KG(&self) -> f64 {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<f64>(PCFLaunch::VT_BATCH_MEAN_SIGMA_M2_KG, Some(1.0)).unwrap()}
-    }
-}
-
-impl ::flatbuffers::Verifiable for PCFLaunch<'_> {
-    #[inline]
-    fn run_verifier(
-        v: &mut ::flatbuffers::Verifier, pos: usize
-    ) -> Result<(), ::flatbuffers::InvalidFlatbuffer> {
-        v.visit_table(pos)?
-            .visit_field::<f64>("DRAG_AREA_OVER_MASS_PRIOR_M2_KG", Self::VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG, false)?
-            .visit_field::<f64>("SRP_AREA_OVER_MASS_PRIOR_M2_KG", Self::VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG, false)?
-            .visit_field::<f64>("SEPARATION_SIGMA_M_S", Self::VT_SEPARATION_SIGMA_M_S, false)?
-            .visit_field::<f64>("SHRINK_SIGMA_M2_KG", Self::VT_SHRINK_SIGMA_M2_KG, false)?
-            .visit_field::<bool>("HAS_SHRINK_SIGMA_M2_KG", Self::VT_HAS_SHRINK_SIGMA_M2_KG, false)?
-            .visit_field::<f64>("BATCH_MEAN_SIGMA_M2_KG", Self::VT_BATCH_MEAN_SIGMA_M2_KG, false)?
-            .finish();
-        Ok(())
-    }
-}
-
-pub struct PCFLaunchArgs {
-    pub DRAG_AREA_OVER_MASS_PRIOR_M2_KG: f64,
-    pub SRP_AREA_OVER_MASS_PRIOR_M2_KG: f64,
-    pub SEPARATION_SIGMA_M_S: f64,
-    pub SHRINK_SIGMA_M2_KG: f64,
-    pub HAS_SHRINK_SIGMA_M2_KG: bool,
-    pub BATCH_MEAN_SIGMA_M2_KG: f64,
-}
-
-impl<'a> Default for PCFLaunchArgs {
-    #[inline]
-    fn default() -> Self {
-        PCFLaunchArgs {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: 0.01,
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: 0.01,
-            SEPARATION_SIGMA_M_S: 1.0,
-            SHRINK_SIGMA_M2_KG: 0.0,
-            HAS_SHRINK_SIGMA_M2_KG: false,
-            BATCH_MEAN_SIGMA_M2_KG: 1.0,
-        }
-    }
-}
-
-pub struct PCFLaunchBuilder<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> {
-    fbb_: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>,
-    start_: ::flatbuffers::WIPOffset<::flatbuffers::TableUnfinishedWIPOffset>,
-}
-
-impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFLaunchBuilder<'a, 'b, A> {
-    #[inline]
-    pub fn add_DRAG_AREA_OVER_MASS_PRIOR_M2_KG(&mut self, DRAG_AREA_OVER_MASS_PRIOR_M2_KG: f64) {
-        self.fbb_.push_slot::<f64>(PCFLaunch::VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG, DRAG_AREA_OVER_MASS_PRIOR_M2_KG, 0.01);
-    }
-
-    #[inline]
-    pub fn add_SRP_AREA_OVER_MASS_PRIOR_M2_KG(&mut self, SRP_AREA_OVER_MASS_PRIOR_M2_KG: f64) {
-        self.fbb_.push_slot::<f64>(PCFLaunch::VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG, SRP_AREA_OVER_MASS_PRIOR_M2_KG, 0.01);
-    }
-
-    #[inline]
-    pub fn add_SEPARATION_SIGMA_M_S(&mut self, SEPARATION_SIGMA_M_S: f64) {
-        self.fbb_.push_slot::<f64>(PCFLaunch::VT_SEPARATION_SIGMA_M_S, SEPARATION_SIGMA_M_S, 1.0);
-    }
-
-    #[inline]
-    pub fn add_SHRINK_SIGMA_M2_KG(&mut self, SHRINK_SIGMA_M2_KG: f64) {
-        self.fbb_.push_slot::<f64>(PCFLaunch::VT_SHRINK_SIGMA_M2_KG, SHRINK_SIGMA_M2_KG, 0.0);
-    }
-
-    #[inline]
-    pub fn add_HAS_SHRINK_SIGMA_M2_KG(&mut self, HAS_SHRINK_SIGMA_M2_KG: bool) {
-        self.fbb_.push_slot::<bool>(PCFLaunch::VT_HAS_SHRINK_SIGMA_M2_KG, HAS_SHRINK_SIGMA_M2_KG, false);
-    }
-
-    #[inline]
-    pub fn add_BATCH_MEAN_SIGMA_M2_KG(&mut self, BATCH_MEAN_SIGMA_M2_KG: f64) {
-        self.fbb_.push_slot::<f64>(PCFLaunch::VT_BATCH_MEAN_SIGMA_M2_KG, BATCH_MEAN_SIGMA_M2_KG, 1.0);
-    }
-
-    #[inline]
-    pub fn new(_fbb: &'b mut ::flatbuffers::FlatBufferBuilder<'a, A>) -> PCFLaunchBuilder<'a, 'b, A> {
-        let start = _fbb.start_table();
-        PCFLaunchBuilder {
-            fbb_: _fbb,
-            start_: start,
-        }
-    }
-
-    #[inline]
-    pub fn finish(self) -> ::flatbuffers::WIPOffset<PCFLaunch<'a>> {
-        let o = self.fbb_.end_table(self.start_);
-        ::flatbuffers::WIPOffset::new(o.value())
-    }
-}
-
-impl ::core::fmt::Debug for PCFLaunch<'_> {
-    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-        let mut ds = f.debug_struct("PCFLaunch");
-        ds.field("DRAG_AREA_OVER_MASS_PRIOR_M2_KG", &self.DRAG_AREA_OVER_MASS_PRIOR_M2_KG());
-        ds.field("SRP_AREA_OVER_MASS_PRIOR_M2_KG", &self.SRP_AREA_OVER_MASS_PRIOR_M2_KG());
-        ds.field("SEPARATION_SIGMA_M_S", &self.SEPARATION_SIGMA_M_S());
-        ds.field("SHRINK_SIGMA_M2_KG", &self.SHRINK_SIGMA_M2_KG());
-        ds.field("HAS_SHRINK_SIGMA_M2_KG", &self.HAS_SHRINK_SIGMA_M2_KG());
-        ds.field("BATCH_MEAN_SIGMA_M2_KG", &self.BATCH_MEAN_SIGMA_M2_KG());
-        ds.finish()
-    }
-}
-
-#[non_exhaustive]
-#[derive(Debug, Clone, PartialEq)]
-pub struct PCFLaunchT {
-    pub DRAG_AREA_OVER_MASS_PRIOR_M2_KG: f64,
-    pub SRP_AREA_OVER_MASS_PRIOR_M2_KG: f64,
-    pub SEPARATION_SIGMA_M_S: f64,
-    pub SHRINK_SIGMA_M2_KG: f64,
-    pub HAS_SHRINK_SIGMA_M2_KG: bool,
-    pub BATCH_MEAN_SIGMA_M2_KG: f64,
-}
-
-impl Default for PCFLaunchT {
-    fn default() -> Self {
-        Self {
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG: 0.01,
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG: 0.01,
-            SEPARATION_SIGMA_M_S: 1.0,
-            SHRINK_SIGMA_M2_KG: 0.0,
-            HAS_SHRINK_SIGMA_M2_KG: false,
-            BATCH_MEAN_SIGMA_M2_KG: 1.0,
-        }
-    }
-}
-
-impl PCFLaunchT {
-    pub fn pack<'b, A: ::flatbuffers::Allocator + 'b>(
-        &self,
-        _fbb: &mut ::flatbuffers::FlatBufferBuilder<'b, A>
-    ) -> ::flatbuffers::WIPOffset<PCFLaunch<'b>> {
-        let DRAG_AREA_OVER_MASS_PRIOR_M2_KG = self.DRAG_AREA_OVER_MASS_PRIOR_M2_KG;
-        let SRP_AREA_OVER_MASS_PRIOR_M2_KG = self.SRP_AREA_OVER_MASS_PRIOR_M2_KG;
-        let SEPARATION_SIGMA_M_S = self.SEPARATION_SIGMA_M_S;
-        let SHRINK_SIGMA_M2_KG = self.SHRINK_SIGMA_M2_KG;
-        let HAS_SHRINK_SIGMA_M2_KG = self.HAS_SHRINK_SIGMA_M2_KG;
-        let BATCH_MEAN_SIGMA_M2_KG = self.BATCH_MEAN_SIGMA_M2_KG;
-        PCFLaunch::create(_fbb, &PCFLaunchArgs{
-            DRAG_AREA_OVER_MASS_PRIOR_M2_KG,
-            SRP_AREA_OVER_MASS_PRIOR_M2_KG,
-            SEPARATION_SIGMA_M_S,
-            SHRINK_SIGMA_M2_KG,
-            HAS_SHRINK_SIGMA_M2_KG,
-            BATCH_MEAN_SIGMA_M2_KG,
         })
     }
 }
@@ -7425,9 +5168,8 @@ impl<'a> PCFForceModel<'a> {
     pub const VT_DENSITY_CORRECTION_RELAXATION_HOURS: ::flatbuffers::VOffsetT = 96;
     pub const VT_HAS_DENSITY_CORRECTION_RELAXATION_HOURS: ::flatbuffers::VOffsetT = 98;
     pub const VT_NEUTRAL_WIND: ::flatbuffers::VOffsetT = 100;
-    pub const VT_EMPIRICAL_TERMS: ::flatbuffers::VOffsetT = 102;
-    pub const VT_THIRD_BODY_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 104;
-    pub const VT_THIRD_BODY_MAXIMUM_ORDER: ::flatbuffers::VOffsetT = 106;
+    pub const VT_THIRD_BODY_MAXIMUM_DEGREE: ::flatbuffers::VOffsetT = 102;
+    pub const VT_THIRD_BODY_MAXIMUM_ORDER: ::flatbuffers::VOffsetT = 104;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -7450,7 +5192,6 @@ impl<'a> PCFForceModel<'a> {
         builder.add_AREA_M2(args.AREA_M2);
         builder.add_INITIAL_MASS_KG(args.INITIAL_MASS_KG);
         builder.add_GRAVITATIONAL_PARAMETER(args.GRAVITATIONAL_PARAMETER);
-        if let Some(x) = args.EMPIRICAL_TERMS { builder.add_EMPIRICAL_TERMS(x); }
         builder.add_CENTRAL_BODY_NAIF_ID(args.CENTRAL_BODY_NAIF_ID);
         if let Some(x) = args.ECOM2 { builder.add_ECOM2(x); }
         if let Some(x) = args.EPHEMERIS_SOURCE { builder.add_EPHEMERIS_SOURCE(x); }
@@ -7554,9 +5295,6 @@ impl<'a> PCFForceModel<'a> {
         let DENSITY_CORRECTION_RELAXATION_HOURS = self.DENSITY_CORRECTION_RELAXATION_HOURS();
         let HAS_DENSITY_CORRECTION_RELAXATION_HOURS = self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS();
         let NEUTRAL_WIND = self.NEUTRAL_WIND();
-        let EMPIRICAL_TERMS = self.EMPIRICAL_TERMS().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
         let THIRD_BODY_MAXIMUM_DEGREE = self.THIRD_BODY_MAXIMUM_DEGREE();
         let THIRD_BODY_MAXIMUM_ORDER = self.THIRD_BODY_MAXIMUM_ORDER();
         PCFForceModelT {
@@ -7609,7 +5347,6 @@ impl<'a> PCFForceModel<'a> {
             DENSITY_CORRECTION_RELAXATION_HOURS,
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
             NEUTRAL_WIND,
-            EMPIRICAL_TERMS,
             THIRD_BODY_MAXIMUM_DEGREE,
             THIRD_BODY_MAXIMUM_ORDER,
         }
@@ -8088,16 +5825,6 @@ impl<'a> PCFForceModel<'a> {
         unsafe { self._tab.get::<pcfNeutralWind>(PCFForceModel::VT_NEUTRAL_WIND, Some(pcfNeutralWind::NONE)).unwrap()}
     }
 
-    /// Empirical along-track terms of the averaged theories. Absent (the
-    /// default): the theory's own.
-    #[inline]
-    pub fn EMPIRICAL_TERMS(&self) -> Option<PCFEmpiricalTerms<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFEmpiricalTerms>>(PCFForceModel::VT_EMPIRICAL_TERMS, None)}
-    }
-
     /// Highest degree of the harmonic field of the third body that has one (the
     /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
     /// The field's acceleration at the frame origin is subtracted. Default 0:
@@ -8175,7 +5902,6 @@ impl ::flatbuffers::Verifiable for PCFForceModel<'_> {
             .visit_field::<f64>("DENSITY_CORRECTION_RELAXATION_HOURS", Self::VT_DENSITY_CORRECTION_RELAXATION_HOURS, false)?
             .visit_field::<bool>("HAS_DENSITY_CORRECTION_RELAXATION_HOURS", Self::VT_HAS_DENSITY_CORRECTION_RELAXATION_HOURS, false)?
             .visit_field::<pcfNeutralWind>("NEUTRAL_WIND", Self::VT_NEUTRAL_WIND, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCFEmpiricalTerms>>("EMPIRICAL_TERMS", Self::VT_EMPIRICAL_TERMS, false)?
             .visit_field::<u16>("THIRD_BODY_MAXIMUM_DEGREE", Self::VT_THIRD_BODY_MAXIMUM_DEGREE, false)?
             .visit_field::<u16>("THIRD_BODY_MAXIMUM_ORDER", Self::VT_THIRD_BODY_MAXIMUM_ORDER, false)?
             .finish();
@@ -8233,7 +5959,6 @@ pub struct PCFForceModelArgs<'a> {
     pub DENSITY_CORRECTION_RELAXATION_HOURS: f64,
     pub HAS_DENSITY_CORRECTION_RELAXATION_HOURS: bool,
     pub NEUTRAL_WIND: pcfNeutralWind,
-    pub EMPIRICAL_TERMS: Option<::flatbuffers::WIPOffset<PCFEmpiricalTerms<'a>>>,
     pub THIRD_BODY_MAXIMUM_DEGREE: u16,
     pub THIRD_BODY_MAXIMUM_ORDER: u16,
 }
@@ -8291,7 +6016,6 @@ impl<'a> Default for PCFForceModelArgs<'a> {
             DENSITY_CORRECTION_RELAXATION_HOURS: 0.0,
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS: false,
             NEUTRAL_WIND: pcfNeutralWind::NONE,
-            EMPIRICAL_TERMS: None,
             THIRD_BODY_MAXIMUM_DEGREE: 0,
             THIRD_BODY_MAXIMUM_ORDER: 0,
         }
@@ -8550,11 +6274,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFForceModelBuilder<'a, 'b, 
     }
 
     #[inline]
-    pub fn add_EMPIRICAL_TERMS(&mut self, EMPIRICAL_TERMS: ::flatbuffers::WIPOffset<PCFEmpiricalTerms<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFEmpiricalTerms>>(PCFForceModel::VT_EMPIRICAL_TERMS, EMPIRICAL_TERMS);
-    }
-
-    #[inline]
     pub fn add_THIRD_BODY_MAXIMUM_DEGREE(&mut self, THIRD_BODY_MAXIMUM_DEGREE: u16) {
         self.fbb_.push_slot::<u16>(PCFForceModel::VT_THIRD_BODY_MAXIMUM_DEGREE, THIRD_BODY_MAXIMUM_DEGREE, 0);
     }
@@ -8633,7 +6352,6 @@ impl ::core::fmt::Debug for PCFForceModel<'_> {
         ds.field("DENSITY_CORRECTION_RELAXATION_HOURS", &self.DENSITY_CORRECTION_RELAXATION_HOURS());
         ds.field("HAS_DENSITY_CORRECTION_RELAXATION_HOURS", &self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS());
         ds.field("NEUTRAL_WIND", &self.NEUTRAL_WIND());
-        ds.field("EMPIRICAL_TERMS", &self.EMPIRICAL_TERMS());
         ds.field("THIRD_BODY_MAXIMUM_DEGREE", &self.THIRD_BODY_MAXIMUM_DEGREE());
         ds.field("THIRD_BODY_MAXIMUM_ORDER", &self.THIRD_BODY_MAXIMUM_ORDER());
         ds.finish()
@@ -8692,7 +6410,6 @@ pub struct PCFForceModelT {
     pub DENSITY_CORRECTION_RELAXATION_HOURS: f64,
     pub HAS_DENSITY_CORRECTION_RELAXATION_HOURS: bool,
     pub NEUTRAL_WIND: pcfNeutralWind,
-    pub EMPIRICAL_TERMS: Option<alloc::boxed::Box<PCFEmpiricalTermsT>>,
     pub THIRD_BODY_MAXIMUM_DEGREE: u16,
     pub THIRD_BODY_MAXIMUM_ORDER: u16,
 }
@@ -8749,7 +6466,6 @@ impl Default for PCFForceModelT {
             DENSITY_CORRECTION_RELAXATION_HOURS: 0.0,
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS: false,
             NEUTRAL_WIND: pcfNeutralWind::NONE,
-            EMPIRICAL_TERMS: None,
             THIRD_BODY_MAXIMUM_DEGREE: 0,
             THIRD_BODY_MAXIMUM_ORDER: 0,
         }
@@ -8819,9 +6535,6 @@ impl PCFForceModelT {
         let DENSITY_CORRECTION_RELAXATION_HOURS = self.DENSITY_CORRECTION_RELAXATION_HOURS;
         let HAS_DENSITY_CORRECTION_RELAXATION_HOURS = self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS;
         let NEUTRAL_WIND = self.NEUTRAL_WIND;
-        let EMPIRICAL_TERMS = self.EMPIRICAL_TERMS.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
         let THIRD_BODY_MAXIMUM_DEGREE = self.THIRD_BODY_MAXIMUM_DEGREE;
         let THIRD_BODY_MAXIMUM_ORDER = self.THIRD_BODY_MAXIMUM_ORDER;
         PCFForceModel::create(_fbb, &PCFForceModelArgs{
@@ -8874,7 +6587,6 @@ impl PCFForceModelT {
             DENSITY_CORRECTION_RELAXATION_HOURS,
             HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
             NEUTRAL_WIND,
-            EMPIRICAL_TERMS,
             THIRD_BODY_MAXIMUM_DEGREE,
             THIRD_BODY_MAXIMUM_ORDER,
         })
@@ -8994,7 +6706,7 @@ impl<'a> PCFEpochStore<'a> {
         unsafe { self._tab.get::<pcfBlendShape>(PCFEpochStore::VT_BLEND_SHAPE, Some(pcfBlendShape::SMOOTHSTEP)).unwrap()}
     }
 
-    /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+    /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
     #[inline]
     pub fn THEORIES(&self) -> Option<::flatbuffers::Vector<'a, pcfTheory>> {
         // Safety:
@@ -9160,13 +6872,12 @@ impl PCFEpochStoreT {
 pub enum PCFOffset {}
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -9191,15 +6902,10 @@ impl<'a> PCF<'a> {
     pub const VT_THEORY: ::flatbuffers::VOffsetT = 8;
     pub const VT_INTEGRATOR: ::flatbuffers::VOffsetT = 10;
     pub const VT_FORCES: ::flatbuffers::VOffsetT = 12;
-    pub const VT_MEAN_ELEMENT: ::flatbuffers::VOffsetT = 14;
-    pub const VT_SEGMENTS: ::flatbuffers::VOffsetT = 16;
-    pub const VT_FIT: ::flatbuffers::VOffsetT = 18;
-    pub const VT_EVENTS: ::flatbuffers::VOffsetT = 20;
-    pub const VT_MANEUVER_DETECTION: ::flatbuffers::VOffsetT = 22;
-    pub const VT_REENTRY: ::flatbuffers::VOffsetT = 24;
-    pub const VT_LAUNCH: ::flatbuffers::VOffsetT = 26;
-    pub const VT_OUTPUT: ::flatbuffers::VOffsetT = 28;
-    pub const VT_EPOCH_STORE: ::flatbuffers::VOffsetT = 30;
+    pub const VT_FIT: ::flatbuffers::VOffsetT = 14;
+    pub const VT_EVENTS: ::flatbuffers::VOffsetT = 16;
+    pub const VT_OUTPUT: ::flatbuffers::VOffsetT = 18;
+    pub const VT_EPOCH_STORE: ::flatbuffers::VOffsetT = 20;
 
     #[inline]
     pub unsafe fn init_from_table(table: ::flatbuffers::Table<'a>) -> Self {
@@ -9214,13 +6920,8 @@ impl<'a> PCF<'a> {
         let mut builder = PCFBuilder::new(_fbb);
         if let Some(x) = args.EPOCH_STORE { builder.add_EPOCH_STORE(x); }
         if let Some(x) = args.OUTPUT { builder.add_OUTPUT(x); }
-        if let Some(x) = args.LAUNCH { builder.add_LAUNCH(x); }
-        if let Some(x) = args.REENTRY { builder.add_REENTRY(x); }
-        if let Some(x) = args.MANEUVER_DETECTION { builder.add_MANEUVER_DETECTION(x); }
         if let Some(x) = args.EVENTS { builder.add_EVENTS(x); }
         if let Some(x) = args.FIT { builder.add_FIT(x); }
-        if let Some(x) = args.SEGMENTS { builder.add_SEGMENTS(x); }
-        if let Some(x) = args.MEAN_ELEMENT { builder.add_MEAN_ELEMENT(x); }
         if let Some(x) = args.FORCES { builder.add_FORCES(x); }
         if let Some(x) = args.INTEGRATOR { builder.add_INTEGRATOR(x); }
         if let Some(x) = args.PROFILE { builder.add_PROFILE(x); }
@@ -9243,26 +6944,11 @@ impl<'a> PCF<'a> {
         let FORCES = self.FORCES().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
-        let MEAN_ELEMENT = self.MEAN_ELEMENT().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let SEGMENTS = self.SEGMENTS().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
         let FIT = self.FIT().map(|x| {
             alloc::boxed::Box::new(x.unpack())
         });
         let EVENTS = self.EVENTS().map(|x| {
             x.iter().map(|t| t.unpack()).collect()
-        });
-        let MANEUVER_DETECTION = self.MANEUVER_DETECTION().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let REENTRY = self.REENTRY().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
-        });
-        let LAUNCH = self.LAUNCH().map(|x| {
-            alloc::boxed::Box::new(x.unpack())
         });
         let OUTPUT = self.OUTPUT().map(|x| {
             alloc::boxed::Box::new(x.unpack())
@@ -9276,13 +6962,8 @@ impl<'a> PCF<'a> {
             THEORY,
             INTEGRATOR,
             FORCES,
-            MEAN_ELEMENT,
-            SEGMENTS,
             FIT,
             EVENTS,
-            MANEUVER_DETECTION,
-            REENTRY,
-            LAUNCH,
             OUTPUT,
             EPOCH_STORE,
         }
@@ -9334,24 +7015,6 @@ impl<'a> PCF<'a> {
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFForceModel>>(PCF::VT_FORCES, None)}
     }
 
-    /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-    #[inline]
-    pub fn MEAN_ELEMENT(&self) -> Option<PCFMeanElementOptions<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFMeanElementOptions>>(PCF::VT_MEAN_ELEMENT, None)}
-    }
-
-    /// Beyond-Earth segment sets.
-    #[inline]
-    pub fn SEGMENTS(&self) -> Option<PCFSegmentOptions<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFSegmentOptions>>(PCF::VT_SEGMENTS, None)}
-    }
-
     /// Fit policy.
     #[inline]
     pub fn FIT(&self) -> Option<PCFFitPolicy<'a>> {
@@ -9368,33 +7031,6 @@ impl<'a> PCF<'a> {
         // Created from valid Table for this object
         // which contains a valid value in this slot
         unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFEventDefinition>>>>(PCF::VT_EVENTS, None)}
-    }
-
-    /// Maneuver detection.
-    #[inline]
-    pub fn MANEUVER_DETECTION(&self) -> Option<PCFManeuverDetection<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFManeuverDetection>>(PCF::VT_MANEUVER_DETECTION, None)}
-    }
-
-    /// Reentry hand-off and window.
-    #[inline]
-    pub fn REENTRY(&self) -> Option<PCFReentry<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFReentry>>(PCF::VT_REENTRY, None)}
-    }
-
-    /// Launch initialization priors.
-    #[inline]
-    pub fn LAUNCH(&self) -> Option<PCFLaunch<'a>> {
-        // Safety:
-        // Created from valid Table for this object
-        // which contains a valid value in this slot
-        unsafe { self._tab.get::<::flatbuffers::ForwardsUOffset<PCFLaunch>>(PCF::VT_LAUNCH, None)}
     }
 
     /// Output states.
@@ -9427,13 +7063,8 @@ impl ::flatbuffers::Verifiable for PCF<'_> {
             .visit_field::<pcfTheory>("THEORY", Self::VT_THEORY, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFIntegratorSettings>>("INTEGRATOR", Self::VT_INTEGRATOR, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFForceModel>>("FORCES", Self::VT_FORCES, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCFMeanElementOptions>>("MEAN_ELEMENT", Self::VT_MEAN_ELEMENT, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCFSegmentOptions>>("SEGMENTS", Self::VT_SEGMENTS, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFFitPolicy>>("FIT", Self::VT_FIT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<::flatbuffers::Vector<'_, ::flatbuffers::ForwardsUOffset<PCFEventDefinition>>>>("EVENTS", Self::VT_EVENTS, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCFManeuverDetection>>("MANEUVER_DETECTION", Self::VT_MANEUVER_DETECTION, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCFReentry>>("REENTRY", Self::VT_REENTRY, false)?
-            .visit_field::<::flatbuffers::ForwardsUOffset<PCFLaunch>>("LAUNCH", Self::VT_LAUNCH, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFOutput>>("OUTPUT", Self::VT_OUTPUT, false)?
             .visit_field::<::flatbuffers::ForwardsUOffset<PCFEpochStore>>("EPOCH_STORE", Self::VT_EPOCH_STORE, false)?
             .finish();
@@ -9447,13 +7078,8 @@ pub struct PCFArgs<'a> {
     pub THEORY: pcfTheory,
     pub INTEGRATOR: Option<::flatbuffers::WIPOffset<PCFIntegratorSettings<'a>>>,
     pub FORCES: Option<::flatbuffers::WIPOffset<PCFForceModel<'a>>>,
-    pub MEAN_ELEMENT: Option<::flatbuffers::WIPOffset<PCFMeanElementOptions<'a>>>,
-    pub SEGMENTS: Option<::flatbuffers::WIPOffset<PCFSegmentOptions<'a>>>,
     pub FIT: Option<::flatbuffers::WIPOffset<PCFFitPolicy<'a>>>,
     pub EVENTS: Option<::flatbuffers::WIPOffset<::flatbuffers::Vector<'a, ::flatbuffers::ForwardsUOffset<PCFEventDefinition<'a>>>>>,
-    pub MANEUVER_DETECTION: Option<::flatbuffers::WIPOffset<PCFManeuverDetection<'a>>>,
-    pub REENTRY: Option<::flatbuffers::WIPOffset<PCFReentry<'a>>>,
-    pub LAUNCH: Option<::flatbuffers::WIPOffset<PCFLaunch<'a>>>,
     pub OUTPUT: Option<::flatbuffers::WIPOffset<PCFOutput<'a>>>,
     pub EPOCH_STORE: Option<::flatbuffers::WIPOffset<PCFEpochStore<'a>>>,
 }
@@ -9467,13 +7093,8 @@ impl<'a> Default for PCFArgs<'a> {
             THEORY: pcfTheory::UNSPECIFIED,
             INTEGRATOR: None,
             FORCES: None,
-            MEAN_ELEMENT: None,
-            SEGMENTS: None,
             FIT: None,
             EVENTS: None,
-            MANEUVER_DETECTION: None,
-            REENTRY: None,
-            LAUNCH: None,
             OUTPUT: None,
             EPOCH_STORE: None,
         }
@@ -9512,16 +7133,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFBuilder<'a, 'b, A> {
     }
 
     #[inline]
-    pub fn add_MEAN_ELEMENT(&mut self, MEAN_ELEMENT: ::flatbuffers::WIPOffset<PCFMeanElementOptions<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFMeanElementOptions>>(PCF::VT_MEAN_ELEMENT, MEAN_ELEMENT);
-    }
-
-    #[inline]
-    pub fn add_SEGMENTS(&mut self, SEGMENTS: ::flatbuffers::WIPOffset<PCFSegmentOptions<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFSegmentOptions>>(PCF::VT_SEGMENTS, SEGMENTS);
-    }
-
-    #[inline]
     pub fn add_FIT(&mut self, FIT: ::flatbuffers::WIPOffset<PCFFitPolicy<'b >>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFFitPolicy>>(PCF::VT_FIT, FIT);
     }
@@ -9529,21 +7140,6 @@ impl<'a: 'b, 'b, A: ::flatbuffers::Allocator + 'a> PCFBuilder<'a, 'b, A> {
     #[inline]
     pub fn add_EVENTS(&mut self, EVENTS: ::flatbuffers::WIPOffset<::flatbuffers::Vector<'b , ::flatbuffers::ForwardsUOffset<PCFEventDefinition<'b >>>>) {
         self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<_>>(PCF::VT_EVENTS, EVENTS);
-    }
-
-    #[inline]
-    pub fn add_MANEUVER_DETECTION(&mut self, MANEUVER_DETECTION: ::flatbuffers::WIPOffset<PCFManeuverDetection<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFManeuverDetection>>(PCF::VT_MANEUVER_DETECTION, MANEUVER_DETECTION);
-    }
-
-    #[inline]
-    pub fn add_REENTRY(&mut self, REENTRY: ::flatbuffers::WIPOffset<PCFReentry<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFReentry>>(PCF::VT_REENTRY, REENTRY);
-    }
-
-    #[inline]
-    pub fn add_LAUNCH(&mut self, LAUNCH: ::flatbuffers::WIPOffset<PCFLaunch<'b >>) {
-        self.fbb_.push_slot_always::<::flatbuffers::WIPOffset<PCFLaunch>>(PCF::VT_LAUNCH, LAUNCH);
     }
 
     #[inline]
@@ -9580,13 +7176,8 @@ impl ::core::fmt::Debug for PCF<'_> {
         ds.field("THEORY", &self.THEORY());
         ds.field("INTEGRATOR", &self.INTEGRATOR());
         ds.field("FORCES", &self.FORCES());
-        ds.field("MEAN_ELEMENT", &self.MEAN_ELEMENT());
-        ds.field("SEGMENTS", &self.SEGMENTS());
         ds.field("FIT", &self.FIT());
         ds.field("EVENTS", &self.EVENTS());
-        ds.field("MANEUVER_DETECTION", &self.MANEUVER_DETECTION());
-        ds.field("REENTRY", &self.REENTRY());
-        ds.field("LAUNCH", &self.LAUNCH());
         ds.field("OUTPUT", &self.OUTPUT());
         ds.field("EPOCH_STORE", &self.EPOCH_STORE());
         ds.finish()
@@ -9601,13 +7192,8 @@ pub struct PCFT {
     pub THEORY: pcfTheory,
     pub INTEGRATOR: Option<alloc::boxed::Box<PCFIntegratorSettingsT>>,
     pub FORCES: Option<alloc::boxed::Box<PCFForceModelT>>,
-    pub MEAN_ELEMENT: Option<alloc::boxed::Box<PCFMeanElementOptionsT>>,
-    pub SEGMENTS: Option<alloc::boxed::Box<PCFSegmentOptionsT>>,
     pub FIT: Option<alloc::boxed::Box<PCFFitPolicyT>>,
     pub EVENTS: Option<alloc::vec::Vec<PCFEventDefinitionT>>,
-    pub MANEUVER_DETECTION: Option<alloc::boxed::Box<PCFManeuverDetectionT>>,
-    pub REENTRY: Option<alloc::boxed::Box<PCFReentryT>>,
-    pub LAUNCH: Option<alloc::boxed::Box<PCFLaunchT>>,
     pub OUTPUT: Option<alloc::boxed::Box<PCFOutputT>>,
     pub EPOCH_STORE: Option<alloc::boxed::Box<PCFEpochStoreT>>,
 }
@@ -9620,13 +7206,8 @@ impl Default for PCFT {
             THEORY: pcfTheory::UNSPECIFIED,
             INTEGRATOR: None,
             FORCES: None,
-            MEAN_ELEMENT: None,
-            SEGMENTS: None,
             FIT: None,
             EVENTS: None,
-            MANEUVER_DETECTION: None,
-            REENTRY: None,
-            LAUNCH: None,
             OUTPUT: None,
             EPOCH_STORE: None,
         }
@@ -9651,26 +7232,11 @@ impl PCFT {
         let FORCES = self.FORCES.as_ref().map(|x|{
             x.pack(_fbb)
         });
-        let MEAN_ELEMENT = self.MEAN_ELEMENT.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let SEGMENTS = self.SEGMENTS.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
         let FIT = self.FIT.as_ref().map(|x|{
             x.pack(_fbb)
         });
         let EVENTS = self.EVENTS.as_ref().map(|x|{
             let w: alloc::vec::Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
-        });
-        let MANEUVER_DETECTION = self.MANEUVER_DETECTION.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let REENTRY = self.REENTRY.as_ref().map(|x|{
-            x.pack(_fbb)
-        });
-        let LAUNCH = self.LAUNCH.as_ref().map(|x|{
-            x.pack(_fbb)
         });
         let OUTPUT = self.OUTPUT.as_ref().map(|x|{
             x.pack(_fbb)
@@ -9684,13 +7250,8 @@ impl PCFT {
             THEORY,
             INTEGRATOR,
             FORCES,
-            MEAN_ELEMENT,
-            SEGMENTS,
             FIT,
             EVENTS,
-            MANEUVER_DETECTION,
-            REENTRY,
-            LAUNCH,
             OUTPUT,
             EPOCH_STORE,
         })

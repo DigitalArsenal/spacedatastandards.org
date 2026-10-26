@@ -54,11 +54,7 @@ public struct OMM : IFlatbufferObject
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(12); }
   /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-  /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-  /// Earth's reach states its elements about that center; GM is then the
-  /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-  /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-  /// MEAN_ANOMALY.
+  /// SUN or a planet.
   public string CENTER_NAME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCENTER_NAMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -151,12 +147,11 @@ public struct OMM : IFlatbufferObject
   public uint ELEMENT_SET_NO { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   /// REV_AT_EPOCH [O if SGP/SGP4]
   public double REV_AT_EPOCH { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-  /// signed effective ballistic coefficient B_eff) [C]
+  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
   public double BSTAR { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   public double MEAN_MOTION_DOT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   public double MEAN_MOTION_DDOT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]
   /// COV_REF_FRAME reference frame for covariance [C if covariance given]

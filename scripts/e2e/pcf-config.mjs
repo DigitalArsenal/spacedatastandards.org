@@ -143,7 +143,7 @@ try {
         assert.equal(M.pcfTheory[m.name], m.value);
         sweep(`theory ${m.name}`, () => Object.assign(new M.PCFT(), { THEORY: m.value }));
       }
-      assert.deepEqual(theory.members.map((m) => m.name), ['UNSPECIFIED', 'SGP4', 'SGP4XP', 'SDNAP', 'FFM', 'KEPLER']);
+      assert.deepEqual(theory.members.map((m) => m.name), ['UNSPECIFIED', 'SGP4', 'SGP4XP', 'FFM', 'KEPLER']);
       for (const [enumName, field] of [['pcfEventKind', 'KIND'], ['pcfEventDirection', 'DIRECTION'], ['pcfEventAction', 'ACTION']]) {
         for (const m of model.enums.get(enumName).members) {
           assert.equal(M[enumName][m.name], m.value);

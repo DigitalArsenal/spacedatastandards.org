@@ -19,9 +19,6 @@ const (
 	/// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
 	/// astrodynamics conference literature); the same value as $MET SGP4XP.
 	pcfTheorySGP4XP      pcfTheory = 2
-	/// SDN's own advanced mean-element theory, labeled as its own; carried in
-	/// $OMM as a user-defined theory until $MET appends it.
-	pcfTheorySDNAP       pcfTheory = 3
 	/// Numerical integration of the equations of motion under the full force
 	/// model of PCFForceModel (profile FFM-1).
 	pcfTheoryFFM         pcfTheory = 4
@@ -33,7 +30,6 @@ var EnumNamespcfTheory = map[pcfTheory]string{
 	pcfTheoryUNSPECIFIED: "UNSPECIFIED",
 	pcfTheorySGP4:        "SGP4",
 	pcfTheorySGP4XP:      "SGP4XP",
-	pcfTheorySDNAP:       "SDNAP",
 	pcfTheoryFFM:         "FFM",
 	pcfTheoryKEPLER:      "KEPLER",
 }
@@ -42,7 +38,6 @@ var EnumValuespcfTheory = map[string]pcfTheory{
 	"UNSPECIFIED": pcfTheoryUNSPECIFIED,
 	"SGP4":        pcfTheorySGP4,
 	"SGP4XP":      pcfTheorySGP4XP,
-	"SDNAP":       pcfTheorySDNAP,
 	"FFM":         pcfTheoryFFM,
 	"KEPLER":      pcfTheoryKEPLER,
 }

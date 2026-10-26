@@ -31,7 +31,7 @@ public struct PCFEpochStore : IFlatbufferObject
   public double BLEND_WINDOW_SECONDS { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)3600.0; } }
   /// The weight curve across the blend window. Default SMOOTHSTEP.
   public pcfBlendShape BLEND_SHAPE { get { int o = __p.__offset(12); return o != 0 ? (pcfBlendShape)__p.bb.Get(o + __p.bb_pos) : pcfBlendShape.SMOOTHSTEP; } }
-  /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   public pcfTheory THEORIES(int j) { int o = __p.__offset(14); return o != 0 ? (pcfTheory)__p.bb.Get(__p.__vector(o) + j * 1) : (pcfTheory)0; }
   public int THEORIESLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T

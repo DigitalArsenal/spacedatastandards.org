@@ -52,7 +52,7 @@ public final class PCFEpochStore extends com.google.flatbuffers.Table {
    */
   public int BLEND_SHAPE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
   /**
-   * Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+   * Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
    */
   public int THEORIES(int j) { int o = __offset(14); return o != 0 ? bb.get(__vector(o) + j * 1) & 0xFF : 0; }
   public int THEORIESLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }

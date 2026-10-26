@@ -163,16 +163,13 @@ public struct PCFForceModel : IFlatbufferObject
   public bool HAS_DENSITY_CORRECTION_RELAXATION_HOURS { get { int o = __p.__offset(98); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   /// Neutral wind in the drag relative velocity. Default NONE.
   public pcfNeutralWind NEUTRAL_WIND { get { int o = __p.__offset(100); return o != 0 ? (pcfNeutralWind)__p.bb.Get(o + __p.bb_pos) : pcfNeutralWind.NONE; } }
-  /// Empirical along-track terms of the averaged theories. Absent (the
-  /// default): the theory's own.
-  public PCFEmpiricalTerms? EMPIRICAL_TERMS { get { int o = __p.__offset(102); return o != 0 ? (PCFEmpiricalTerms?)(new PCFEmpiricalTerms()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Highest degree of the harmonic field of the third body that has one (the
   /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
   /// The field's acceleration at the frame origin is subtracted. Default 0:
   /// third bodies are point masses only.
-  public ushort THIRD_BODY_MAXIMUM_DEGREE { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public ushort THIRD_BODY_MAXIMUM_DEGREE { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   /// Highest order of that field; dimensionless. Default 0.
-  public ushort THIRD_BODY_MAXIMUM_ORDER { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public ushort THIRD_BODY_MAXIMUM_ORDER { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
   public static Offset<PCFForceModel> CreatePCFForceModel(FlatBufferBuilder builder,
       pcfGravitySelection GRAVITY_CHOICE = pcfGravitySelection.INFER_FLAGS,
@@ -224,10 +221,9 @@ public struct PCFForceModel : IFlatbufferObject
       double DENSITY_CORRECTION_RELAXATION_HOURS = 0.0,
       bool HAS_DENSITY_CORRECTION_RELAXATION_HOURS = false,
       pcfNeutralWind NEUTRAL_WIND = pcfNeutralWind.NONE,
-      Offset<PCFEmpiricalTerms> EMPIRICAL_TERMSOffset = default(Offset<PCFEmpiricalTerms>),
       ushort THIRD_BODY_MAXIMUM_DEGREE = 0,
       ushort THIRD_BODY_MAXIMUM_ORDER = 0) {
-    builder.StartTable(52);
+    builder.StartTable(51);
     PCFForceModel.AddDENSITY_CORRECTION_RELAXATION_HOURS(builder, DENSITY_CORRECTION_RELAXATION_HOURS);
     PCFForceModel.AddEARTH_RADIATION_AREA_OVER_MASS_M2_KG(builder, EARTH_RADIATION_AREA_OVER_MASS_M2_KG);
     PCFForceModel.AddEARTH_RADIATION_RESOLUTION_DEG(builder, EARTH_RADIATION_RESOLUTION_DEG);
@@ -238,7 +234,6 @@ public struct PCFForceModel : IFlatbufferObject
     PCFForceModel.AddAREA_M2(builder, AREA_M2);
     PCFForceModel.AddINITIAL_MASS_KG(builder, INITIAL_MASS_KG);
     PCFForceModel.AddGRAVITATIONAL_PARAMETER(builder, GRAVITATIONAL_PARAMETER);
-    PCFForceModel.AddEMPIRICAL_TERMS(builder, EMPIRICAL_TERMSOffset);
     PCFForceModel.AddCENTRAL_BODY_NAIF_ID(builder, CENTRAL_BODY_NAIF_ID);
     PCFForceModel.AddECOM2(builder, ECOM2Offset);
     PCFForceModel.AddEPHEMERIS_SOURCE(builder, EPHEMERIS_SOURCEOffset);
@@ -283,7 +278,7 @@ public struct PCFForceModel : IFlatbufferObject
     return PCFForceModel.EndPCFForceModel(builder);
   }
 
-  public static void StartPCFForceModel(FlatBufferBuilder builder) { builder.StartTable(52); }
+  public static void StartPCFForceModel(FlatBufferBuilder builder) { builder.StartTable(51); }
   public static void AddGRAVITY_CHOICE(FlatBufferBuilder builder, pcfGravitySelection GRAVITY_CHOICE) { builder.AddByte(0, (byte)GRAVITY_CHOICE, 0); }
   public static void AddENABLE_POINT_MASS(FlatBufferBuilder builder, bool ENABLE_POINT_MASS) { builder.AddBool(1, ENABLE_POINT_MASS, true); }
   public static void AddGRAVITATIONAL_PARAMETER(FlatBufferBuilder builder, double GRAVITATIONAL_PARAMETER) { builder.AddDouble(2, GRAVITATIONAL_PARAMETER, 0.0); }
@@ -338,9 +333,8 @@ public struct PCFForceModel : IFlatbufferObject
   public static void AddDENSITY_CORRECTION_RELAXATION_HOURS(FlatBufferBuilder builder, double DENSITY_CORRECTION_RELAXATION_HOURS) { builder.AddDouble(46, DENSITY_CORRECTION_RELAXATION_HOURS, 0.0); }
   public static void AddHAS_DENSITY_CORRECTION_RELAXATION_HOURS(FlatBufferBuilder builder, bool HAS_DENSITY_CORRECTION_RELAXATION_HOURS) { builder.AddBool(47, HAS_DENSITY_CORRECTION_RELAXATION_HOURS, false); }
   public static void AddNEUTRAL_WIND(FlatBufferBuilder builder, pcfNeutralWind NEUTRAL_WIND) { builder.AddByte(48, (byte)NEUTRAL_WIND, 0); }
-  public static void AddEMPIRICAL_TERMS(FlatBufferBuilder builder, Offset<PCFEmpiricalTerms> EMPIRICAL_TERMSOffset) { builder.AddOffset(49, EMPIRICAL_TERMSOffset.Value, 0); }
-  public static void AddTHIRD_BODY_MAXIMUM_DEGREE(FlatBufferBuilder builder, ushort THIRD_BODY_MAXIMUM_DEGREE) { builder.AddUshort(50, THIRD_BODY_MAXIMUM_DEGREE, 0); }
-  public static void AddTHIRD_BODY_MAXIMUM_ORDER(FlatBufferBuilder builder, ushort THIRD_BODY_MAXIMUM_ORDER) { builder.AddUshort(51, THIRD_BODY_MAXIMUM_ORDER, 0); }
+  public static void AddTHIRD_BODY_MAXIMUM_DEGREE(FlatBufferBuilder builder, ushort THIRD_BODY_MAXIMUM_DEGREE) { builder.AddUshort(49, THIRD_BODY_MAXIMUM_DEGREE, 0); }
+  public static void AddTHIRD_BODY_MAXIMUM_ORDER(FlatBufferBuilder builder, ushort THIRD_BODY_MAXIMUM_ORDER) { builder.AddUshort(50, THIRD_BODY_MAXIMUM_ORDER, 0); }
   public static Offset<PCFForceModel> EndPCFForceModel(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     builder.Required(o, 46);  // EPHEMERIS_SOURCE
@@ -402,7 +396,6 @@ public struct PCFForceModel : IFlatbufferObject
     _o.DENSITY_CORRECTION_RELAXATION_HOURS = this.DENSITY_CORRECTION_RELAXATION_HOURS;
     _o.HAS_DENSITY_CORRECTION_RELAXATION_HOURS = this.HAS_DENSITY_CORRECTION_RELAXATION_HOURS;
     _o.NEUTRAL_WIND = this.NEUTRAL_WIND;
-    _o.EMPIRICAL_TERMS = this.EMPIRICAL_TERMS.HasValue ? this.EMPIRICAL_TERMS.Value.UnPack() : null;
     _o.THIRD_BODY_MAXIMUM_DEGREE = this.THIRD_BODY_MAXIMUM_DEGREE;
     _o.THIRD_BODY_MAXIMUM_ORDER = this.THIRD_BODY_MAXIMUM_ORDER;
   }
@@ -416,7 +409,6 @@ public struct PCFForceModel : IFlatbufferObject
     var _WEATHER = _o.WEATHER == null ? default(Offset<PCFSpaceWeather>) : PCFSpaceWeather.Pack(builder, _o.WEATHER);
     var _EPHEMERIS_SOURCE = _o.EPHEMERIS_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.EPHEMERIS_SOURCE);
     var _ECOM2 = _o.ECOM2 == null ? default(Offset<PCFEcom2>) : PCFEcom2.Pack(builder, _o.ECOM2);
-    var _EMPIRICAL_TERMS = _o.EMPIRICAL_TERMS == null ? default(Offset<PCFEmpiricalTerms>) : PCFEmpiricalTerms.Pack(builder, _o.EMPIRICAL_TERMS);
     return CreatePCFForceModel(
       builder,
       _o.GRAVITY_CHOICE,
@@ -468,7 +460,6 @@ public struct PCFForceModel : IFlatbufferObject
       _o.DENSITY_CORRECTION_RELAXATION_HOURS,
       _o.HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
       _o.NEUTRAL_WIND,
-      _EMPIRICAL_TERMS,
       _o.THIRD_BODY_MAXIMUM_DEGREE,
       _o.THIRD_BODY_MAXIMUM_ORDER);
   }
@@ -525,7 +516,6 @@ public class PCFForceModelT
   public double DENSITY_CORRECTION_RELAXATION_HOURS { get; set; }
   public bool HAS_DENSITY_CORRECTION_RELAXATION_HOURS { get; set; }
   public pcfNeutralWind NEUTRAL_WIND { get; set; }
-  public PCFEmpiricalTermsT EMPIRICAL_TERMS { get; set; }
   public ushort THIRD_BODY_MAXIMUM_DEGREE { get; set; }
   public ushort THIRD_BODY_MAXIMUM_ORDER { get; set; }
 
@@ -579,7 +569,6 @@ public class PCFForceModelT
     this.DENSITY_CORRECTION_RELAXATION_HOURS = 0.0;
     this.HAS_DENSITY_CORRECTION_RELAXATION_HOURS = false;
     this.NEUTRAL_WIND = pcfNeutralWind.NONE;
-    this.EMPIRICAL_TERMS = null;
     this.THIRD_BODY_MAXIMUM_DEGREE = 0;
     this.THIRD_BODY_MAXIMUM_ORDER = 0;
   }
@@ -640,9 +629,8 @@ static public class PCFForceModelVerify
       && verifier.VerifyField(tablePos, 96 /*DENSITY_CORRECTION_RELAXATION_HOURS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 98 /*HAS_DENSITY_CORRECTION_RELAXATION_HOURS*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 100 /*NEUTRAL_WIND*/, 1 /*pcfNeutralWind*/, 1, false)
-      && verifier.VerifyTable(tablePos, 102 /*EMPIRICAL_TERMS*/, PCFEmpiricalTermsVerify.Verify, false)
-      && verifier.VerifyField(tablePos, 104 /*THIRD_BODY_MAXIMUM_DEGREE*/, 2 /*ushort*/, 2, false)
-      && verifier.VerifyField(tablePos, 106 /*THIRD_BODY_MAXIMUM_ORDER*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 102 /*THIRD_BODY_MAXIMUM_DEGREE*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 104 /*THIRD_BODY_MAXIMUM_ORDER*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

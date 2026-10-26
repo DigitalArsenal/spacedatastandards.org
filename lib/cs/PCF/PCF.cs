@@ -7,13 +7,12 @@ using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -53,25 +52,15 @@ public struct PCF : IFlatbufferObject
   public PCFIntegratorSettings? INTEGRATOR { get { int o = __p.__offset(10); return o != 0 ? (PCFIntegratorSettings?)(new PCFIntegratorSettings()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Forces. Absent: the theory's built-in set.
   public PCFForceModel? FORCES { get { int o = __p.__offset(12); return o != 0 ? (PCFForceModel?)(new PCFForceModel()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-  public PCFMeanElementOptions? MEAN_ELEMENT { get { int o = __p.__offset(14); return o != 0 ? (PCFMeanElementOptions?)(new PCFMeanElementOptions()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Beyond-Earth segment sets.
-  public PCFSegmentOptions? SEGMENTS { get { int o = __p.__offset(16); return o != 0 ? (PCFSegmentOptions?)(new PCFSegmentOptions()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Fit policy.
-  public PCFFitPolicy? FIT { get { int o = __p.__offset(18); return o != 0 ? (PCFFitPolicy?)(new PCFFitPolicy()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PCFFitPolicy? FIT { get { int o = __p.__offset(14); return o != 0 ? (PCFFitPolicy?)(new PCFFitPolicy()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// Events located while integrating. Default empty.
-  public PCFEventDefinition? EVENTS(int j) { int o = __p.__offset(20); return o != 0 ? (PCFEventDefinition?)(new PCFEventDefinition()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int EVENTSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Maneuver detection.
-  public PCFManeuverDetection? MANEUVER_DETECTION { get { int o = __p.__offset(22); return o != 0 ? (PCFManeuverDetection?)(new PCFManeuverDetection()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Reentry hand-off and window.
-  public PCFReentry? REENTRY { get { int o = __p.__offset(24); return o != 0 ? (PCFReentry?)(new PCFReentry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
-  /// Launch initialization priors.
-  public PCFLaunch? LAUNCH { get { int o = __p.__offset(26); return o != 0 ? (PCFLaunch?)(new PCFLaunch()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PCFEventDefinition? EVENTS(int j) { int o = __p.__offset(16); return o != 0 ? (PCFEventDefinition?)(new PCFEventDefinition()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int EVENTSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
   /// Output states.
-  public PCFOutput? OUTPUT { get { int o = __p.__offset(28); return o != 0 ? (PCFOutput?)(new PCFOutput()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PCFOutput? OUTPUT { get { int o = __p.__offset(18); return o != 0 ? (PCFOutput?)(new PCFOutput()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
-  public PCFEpochStore? EPOCH_STORE { get { int o = __p.__offset(30); return o != 0 ? (PCFEpochStore?)(new PCFEpochStore()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public PCFEpochStore? EPOCH_STORE { get { int o = __p.__offset(20); return o != 0 ? (PCFEpochStore?)(new PCFEpochStore()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<PCF> CreatePCF(FlatBufferBuilder builder,
       StringOffset CONFIGURATION_IDOffset = default(StringOffset),
@@ -79,25 +68,15 @@ public struct PCF : IFlatbufferObject
       pcfTheory THEORY = pcfTheory.UNSPECIFIED,
       Offset<PCFIntegratorSettings> INTEGRATOROffset = default(Offset<PCFIntegratorSettings>),
       Offset<PCFForceModel> FORCESOffset = default(Offset<PCFForceModel>),
-      Offset<PCFMeanElementOptions> MEAN_ELEMENTOffset = default(Offset<PCFMeanElementOptions>),
-      Offset<PCFSegmentOptions> SEGMENTSOffset = default(Offset<PCFSegmentOptions>),
       Offset<PCFFitPolicy> FITOffset = default(Offset<PCFFitPolicy>),
       VectorOffset EVENTSOffset = default(VectorOffset),
-      Offset<PCFManeuverDetection> MANEUVER_DETECTIONOffset = default(Offset<PCFManeuverDetection>),
-      Offset<PCFReentry> REENTRYOffset = default(Offset<PCFReentry>),
-      Offset<PCFLaunch> LAUNCHOffset = default(Offset<PCFLaunch>),
       Offset<PCFOutput> OUTPUTOffset = default(Offset<PCFOutput>),
       Offset<PCFEpochStore> EPOCH_STOREOffset = default(Offset<PCFEpochStore>)) {
-    builder.StartTable(14);
+    builder.StartTable(9);
     PCF.AddEPOCH_STORE(builder, EPOCH_STOREOffset);
     PCF.AddOUTPUT(builder, OUTPUTOffset);
-    PCF.AddLAUNCH(builder, LAUNCHOffset);
-    PCF.AddREENTRY(builder, REENTRYOffset);
-    PCF.AddMANEUVER_DETECTION(builder, MANEUVER_DETECTIONOffset);
     PCF.AddEVENTS(builder, EVENTSOffset);
     PCF.AddFIT(builder, FITOffset);
-    PCF.AddSEGMENTS(builder, SEGMENTSOffset);
-    PCF.AddMEAN_ELEMENT(builder, MEAN_ELEMENTOffset);
     PCF.AddFORCES(builder, FORCESOffset);
     PCF.AddINTEGRATOR(builder, INTEGRATOROffset);
     PCF.AddPROFILE(builder, PROFILEOffset);
@@ -106,26 +85,21 @@ public struct PCF : IFlatbufferObject
     return PCF.EndPCF(builder);
   }
 
-  public static void StartPCF(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartPCF(FlatBufferBuilder builder) { builder.StartTable(9); }
   public static void AddCONFIGURATION_ID(FlatBufferBuilder builder, StringOffset CONFIGURATION_IDOffset) { builder.AddOffset(0, CONFIGURATION_IDOffset.Value, 0); }
   public static void AddPROFILE(FlatBufferBuilder builder, StringOffset PROFILEOffset) { builder.AddOffset(1, PROFILEOffset.Value, 0); }
   public static void AddTHEORY(FlatBufferBuilder builder, pcfTheory THEORY) { builder.AddByte(2, (byte)THEORY, 0); }
   public static void AddINTEGRATOR(FlatBufferBuilder builder, Offset<PCFIntegratorSettings> INTEGRATOROffset) { builder.AddOffset(3, INTEGRATOROffset.Value, 0); }
   public static void AddFORCES(FlatBufferBuilder builder, Offset<PCFForceModel> FORCESOffset) { builder.AddOffset(4, FORCESOffset.Value, 0); }
-  public static void AddMEAN_ELEMENT(FlatBufferBuilder builder, Offset<PCFMeanElementOptions> MEAN_ELEMENTOffset) { builder.AddOffset(5, MEAN_ELEMENTOffset.Value, 0); }
-  public static void AddSEGMENTS(FlatBufferBuilder builder, Offset<PCFSegmentOptions> SEGMENTSOffset) { builder.AddOffset(6, SEGMENTSOffset.Value, 0); }
-  public static void AddFIT(FlatBufferBuilder builder, Offset<PCFFitPolicy> FITOffset) { builder.AddOffset(7, FITOffset.Value, 0); }
-  public static void AddEVENTS(FlatBufferBuilder builder, VectorOffset EVENTSOffset) { builder.AddOffset(8, EVENTSOffset.Value, 0); }
+  public static void AddFIT(FlatBufferBuilder builder, Offset<PCFFitPolicy> FITOffset) { builder.AddOffset(5, FITOffset.Value, 0); }
+  public static void AddEVENTS(FlatBufferBuilder builder, VectorOffset EVENTSOffset) { builder.AddOffset(6, EVENTSOffset.Value, 0); }
   public static VectorOffset CreateEVENTSVector(FlatBufferBuilder builder, Offset<PCFEventDefinition>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, Offset<PCFEventDefinition>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<PCFEventDefinition>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateEVENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<PCFEventDefinition>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartEVENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddMANEUVER_DETECTION(FlatBufferBuilder builder, Offset<PCFManeuverDetection> MANEUVER_DETECTIONOffset) { builder.AddOffset(9, MANEUVER_DETECTIONOffset.Value, 0); }
-  public static void AddREENTRY(FlatBufferBuilder builder, Offset<PCFReentry> REENTRYOffset) { builder.AddOffset(10, REENTRYOffset.Value, 0); }
-  public static void AddLAUNCH(FlatBufferBuilder builder, Offset<PCFLaunch> LAUNCHOffset) { builder.AddOffset(11, LAUNCHOffset.Value, 0); }
-  public static void AddOUTPUT(FlatBufferBuilder builder, Offset<PCFOutput> OUTPUTOffset) { builder.AddOffset(12, OUTPUTOffset.Value, 0); }
-  public static void AddEPOCH_STORE(FlatBufferBuilder builder, Offset<PCFEpochStore> EPOCH_STOREOffset) { builder.AddOffset(13, EPOCH_STOREOffset.Value, 0); }
+  public static void AddOUTPUT(FlatBufferBuilder builder, Offset<PCFOutput> OUTPUTOffset) { builder.AddOffset(7, OUTPUTOffset.Value, 0); }
+  public static void AddEPOCH_STORE(FlatBufferBuilder builder, Offset<PCFEpochStore> EPOCH_STOREOffset) { builder.AddOffset(8, EPOCH_STOREOffset.Value, 0); }
   public static Offset<PCF> EndPCF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<PCF>(o);
@@ -143,14 +117,9 @@ public struct PCF : IFlatbufferObject
     _o.THEORY = this.THEORY;
     _o.INTEGRATOR = this.INTEGRATOR.HasValue ? this.INTEGRATOR.Value.UnPack() : null;
     _o.FORCES = this.FORCES.HasValue ? this.FORCES.Value.UnPack() : null;
-    _o.MEAN_ELEMENT = this.MEAN_ELEMENT.HasValue ? this.MEAN_ELEMENT.Value.UnPack() : null;
-    _o.SEGMENTS = this.SEGMENTS.HasValue ? this.SEGMENTS.Value.UnPack() : null;
     _o.FIT = this.FIT.HasValue ? this.FIT.Value.UnPack() : null;
     _o.EVENTS = new List<PCFEventDefinitionT>();
     for (var _j = 0; _j < this.EVENTSLength; ++_j) {_o.EVENTS.Add(this.EVENTS(_j).HasValue ? this.EVENTS(_j).Value.UnPack() : null);}
-    _o.MANEUVER_DETECTION = this.MANEUVER_DETECTION.HasValue ? this.MANEUVER_DETECTION.Value.UnPack() : null;
-    _o.REENTRY = this.REENTRY.HasValue ? this.REENTRY.Value.UnPack() : null;
-    _o.LAUNCH = this.LAUNCH.HasValue ? this.LAUNCH.Value.UnPack() : null;
     _o.OUTPUT = this.OUTPUT.HasValue ? this.OUTPUT.Value.UnPack() : null;
     _o.EPOCH_STORE = this.EPOCH_STORE.HasValue ? this.EPOCH_STORE.Value.UnPack() : null;
   }
@@ -160,8 +129,6 @@ public struct PCF : IFlatbufferObject
     var _PROFILE = _o.PROFILE == null ? default(StringOffset) : builder.CreateString(_o.PROFILE);
     var _INTEGRATOR = _o.INTEGRATOR == null ? default(Offset<PCFIntegratorSettings>) : PCFIntegratorSettings.Pack(builder, _o.INTEGRATOR);
     var _FORCES = _o.FORCES == null ? default(Offset<PCFForceModel>) : PCFForceModel.Pack(builder, _o.FORCES);
-    var _MEAN_ELEMENT = _o.MEAN_ELEMENT == null ? default(Offset<PCFMeanElementOptions>) : PCFMeanElementOptions.Pack(builder, _o.MEAN_ELEMENT);
-    var _SEGMENTS = _o.SEGMENTS == null ? default(Offset<PCFSegmentOptions>) : PCFSegmentOptions.Pack(builder, _o.SEGMENTS);
     var _FIT = _o.FIT == null ? default(Offset<PCFFitPolicy>) : PCFFitPolicy.Pack(builder, _o.FIT);
     var _EVENTS = default(VectorOffset);
     if (_o.EVENTS != null) {
@@ -169,9 +136,6 @@ public struct PCF : IFlatbufferObject
       for (var _j = 0; _j < __EVENTS.Length; ++_j) { __EVENTS[_j] = PCFEventDefinition.Pack(builder, _o.EVENTS[_j]); }
       _EVENTS = CreateEVENTSVector(builder, __EVENTS);
     }
-    var _MANEUVER_DETECTION = _o.MANEUVER_DETECTION == null ? default(Offset<PCFManeuverDetection>) : PCFManeuverDetection.Pack(builder, _o.MANEUVER_DETECTION);
-    var _REENTRY = _o.REENTRY == null ? default(Offset<PCFReentry>) : PCFReentry.Pack(builder, _o.REENTRY);
-    var _LAUNCH = _o.LAUNCH == null ? default(Offset<PCFLaunch>) : PCFLaunch.Pack(builder, _o.LAUNCH);
     var _OUTPUT = _o.OUTPUT == null ? default(Offset<PCFOutput>) : PCFOutput.Pack(builder, _o.OUTPUT);
     var _EPOCH_STORE = _o.EPOCH_STORE == null ? default(Offset<PCFEpochStore>) : PCFEpochStore.Pack(builder, _o.EPOCH_STORE);
     return CreatePCF(
@@ -181,13 +145,8 @@ public struct PCF : IFlatbufferObject
       _o.THEORY,
       _INTEGRATOR,
       _FORCES,
-      _MEAN_ELEMENT,
-      _SEGMENTS,
       _FIT,
       _EVENTS,
-      _MANEUVER_DETECTION,
-      _REENTRY,
-      _LAUNCH,
       _OUTPUT,
       _EPOCH_STORE);
   }
@@ -200,13 +159,8 @@ public class PCFT
   public pcfTheory THEORY { get; set; }
   public PCFIntegratorSettingsT INTEGRATOR { get; set; }
   public PCFForceModelT FORCES { get; set; }
-  public PCFMeanElementOptionsT MEAN_ELEMENT { get; set; }
-  public PCFSegmentOptionsT SEGMENTS { get; set; }
   public PCFFitPolicyT FIT { get; set; }
   public List<PCFEventDefinitionT> EVENTS { get; set; }
-  public PCFManeuverDetectionT MANEUVER_DETECTION { get; set; }
-  public PCFReentryT REENTRY { get; set; }
-  public PCFLaunchT LAUNCH { get; set; }
   public PCFOutputT OUTPUT { get; set; }
   public PCFEpochStoreT EPOCH_STORE { get; set; }
 
@@ -216,13 +170,8 @@ public class PCFT
     this.THEORY = pcfTheory.UNSPECIFIED;
     this.INTEGRATOR = null;
     this.FORCES = null;
-    this.MEAN_ELEMENT = null;
-    this.SEGMENTS = null;
     this.FIT = null;
     this.EVENTS = null;
-    this.MANEUVER_DETECTION = null;
-    this.REENTRY = null;
-    this.LAUNCH = null;
     this.OUTPUT = null;
     this.EPOCH_STORE = null;
   }
@@ -247,15 +196,10 @@ static public class PCFVerify
       && verifier.VerifyField(tablePos, 8 /*THEORY*/, 1 /*pcfTheory*/, 1, false)
       && verifier.VerifyTable(tablePos, 10 /*INTEGRATOR*/, PCFIntegratorSettingsVerify.Verify, false)
       && verifier.VerifyTable(tablePos, 12 /*FORCES*/, PCFForceModelVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 14 /*MEAN_ELEMENT*/, PCFMeanElementOptionsVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 16 /*SEGMENTS*/, PCFSegmentOptionsVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 18 /*FIT*/, PCFFitPolicyVerify.Verify, false)
-      && verifier.VerifyVectorOfTables(tablePos, 20 /*EVENTS*/, PCFEventDefinitionVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 22 /*MANEUVER_DETECTION*/, PCFManeuverDetectionVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 24 /*REENTRY*/, PCFReentryVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 26 /*LAUNCH*/, PCFLaunchVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 28 /*OUTPUT*/, PCFOutputVerify.Verify, false)
-      && verifier.VerifyTable(tablePos, 30 /*EPOCH_STORE*/, PCFEpochStoreVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 14 /*FIT*/, PCFFitPolicyVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 16 /*EVENTS*/, PCFEventDefinitionVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 18 /*OUTPUT*/, PCFOutputVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 20 /*EPOCH_STORE*/, PCFEpochStoreVerify.Verify, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

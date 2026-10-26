@@ -70,11 +70,7 @@ class OMM(object):
         return None
 
     # Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-    # SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-    # Earth's reach states its elements about that center; GM is then the
-    # center's gravitational parameter, and an open orbit has ECCENTRICITY above
-    # 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-    # MEAN_ANOMALY.
+    # SUN or a planet.
     # OMM
     def CENTER_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -291,8 +287,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-    # signed effective ballistic coefficient B_eff) [C]
+    # BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
     # OMM
     def BSTAR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -308,7 +303,7 @@ class OMM(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+    # MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
     # OMM
     def MEAN_MOTION_DDOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))

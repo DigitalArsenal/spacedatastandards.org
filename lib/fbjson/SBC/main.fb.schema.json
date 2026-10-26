@@ -2610,8 +2610,7 @@
         "SGP4",
         "SGP4XP",
         "DSST",
-        "USM",
-        "SDNAP"
+        "USM"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -2631,10 +2630,6 @@
         "USM": {
           "value": 3,
           "description": "Universal Semianalytical Method"
-        },
-        "SDNAP": {
-          "value": 4,
-          "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
         }
       }
     },
@@ -9071,10 +9066,6 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
-            },
-            "SDNAP": {
-              "value": 4,
-              "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         }
@@ -9112,7 +9103,7 @@
         },
         "CENTER_NAME": {
           "type": "string",
-          "description": "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the\nEarth's reach states its elements about that center; GM is then the\ncenter's gravitational parameter, and an open orbit has ECCENTRICITY above\n1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in\nMEAN_ANOMALY.",
+          "description": "Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,\nSUN or a planet.",
           "x-flatbuffer-type": "string"
         },
         "REFERENCE_FRAME": {
@@ -9231,10 +9222,6 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
-            },
-            "SDNAP": {
-              "value": 4,
-              "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           },
           "x-flatbuffer-default": "SGP4"
@@ -9369,7 +9356,7 @@
         },
         "BSTAR": {
           "type": "number",
-          "description": "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the\nsigned effective ballistic coefficient B_eff) [C]",
+          "description": "BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DOT": {
@@ -9379,7 +9366,7 @@
         },
         "MEAN_MOTION_DDOT": {
           "type": "number",
-          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]",
+          "description": "MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]",
           "x-flatbuffer-type": "double"
         },
         "COV_REFERENCE_FRAME": {

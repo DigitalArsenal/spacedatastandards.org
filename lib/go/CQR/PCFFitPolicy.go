@@ -364,7 +364,7 @@ func (rcv *PCFFitPolicy) MutateImplausibleRmsKm(n float64) bool {
 }
 
 /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-/// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+/// or without sigma: mean 0, sigma 0.05.
 func (rcv *PCFFitPolicy) DRAG_PRIOR(obj *PCFGaussianPrior) *PCFGaussianPrior {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -383,7 +383,7 @@ func (rcv *PCFFitPolicy) DragPrior(obj *PCFGaussianPrior) *PCFGaussianPrior {
 }
 
 /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-/// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+/// or without sigma: mean 0, sigma 0.05.
 /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
 /// Absent or without sigma: mean 0, sigma 0.05.
 func (rcv *PCFFitPolicy) SRP_PRIOR(obj *PCFGaussianPrior) *PCFGaussianPrior {

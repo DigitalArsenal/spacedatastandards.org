@@ -1,5 +1,5 @@
-// Hash: ac07468994099f25d4d8ed5eb6f0853a064b54a6013755dd31058cfb7d95c496
-// Version: 1.0.4
+// Hash: baf37f69ec211c87c4c638876f09a2cbf7d780681463980fee792c7fc1053d96
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 enum meanElementSource : byte {
   /// Simplified General Perturbation Model 4
@@ -10,12 +10,7 @@ enum meanElementSource : byte {
   /// Draper Semi-analytical Satellite Theory
   DSST,
   /// Universal Semianalytical Method
-  USM,
-  /// SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
-  /// theory with open-DCA drag, Starlink drag-makeup thrust and along-track
-  /// terms. Its sets are osculating or mean about the center named in CENTER_NAME
-  /// (Earth, Moon, Sun or a planet); see $OMM.
-  SDNAP
+  USM
 }
 
 /// Mean Element Theory

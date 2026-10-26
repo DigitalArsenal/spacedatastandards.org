@@ -5,7 +5,6 @@
 import * as flatbuffers from 'flatbuffers';
 
 import { PCFEcom2, PCFEcom2T } from './PCFEcom2.js';
-import { PCFEmpiricalTerms, PCFEmpiricalTermsT } from './PCFEmpiricalTerms.js';
 import { PCFSpaceWeather, PCFSpaceWeatherT } from './PCFSpaceWeather.js';
 import { evlShadowModel } from './evlShadowModel.js';
 import { pcfAtmosphereFamily } from './pcfAtmosphereFamily.js';
@@ -484,22 +483,13 @@ NEUTRAL_WIND():pcfNeutralWind {
 }
 
 /**
- * Empirical along-track terms of the averaged theories. Absent (the
- * default): the theory's own.
- */
-EMPIRICAL_TERMS(obj?:PCFEmpiricalTerms):PCFEmpiricalTerms|null {
-  const offset = this.bb!.__offset(this.bb_pos, 102);
-  return offset ? (obj || new PCFEmpiricalTerms()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
  * Highest degree of the harmonic field of the third body that has one (the
  * Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
  * The field's acceleration at the frame origin is subtracted. Default 0:
  * third bodies are point masses only.
  */
 THIRD_BODY_MAXIMUM_DEGREE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 104);
+  const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
@@ -507,12 +497,12 @@ THIRD_BODY_MAXIMUM_DEGREE():number {
  * Highest order of that field; dimensionless. Default 0.
  */
 THIRD_BODY_MAXIMUM_ORDER():number {
-  const offset = this.bb!.__offset(this.bb_pos, 106);
+  const offset = this.bb!.__offset(this.bb_pos, 104);
   return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
 static startPCFForceModel(builder:flatbuffers.Builder) {
-  builder.startObject(52);
+  builder.startObject(51);
 }
 
 static addGravityChoice(builder:flatbuffers.Builder, GRAVITY_CHOICE:pcfGravitySelection) {
@@ -728,16 +718,12 @@ static addNeutralWind(builder:flatbuffers.Builder, NEUTRAL_WIND:pcfNeutralWind) 
   builder.addFieldInt8(48, NEUTRAL_WIND, pcfNeutralWind.NONE);
 }
 
-static addEmpiricalTerms(builder:flatbuffers.Builder, EMPIRICAL_TERMSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(49, EMPIRICAL_TERMSOffset, 0);
-}
-
 static addThirdBodyMaximumDegree(builder:flatbuffers.Builder, THIRD_BODY_MAXIMUM_DEGREE:number) {
-  builder.addFieldInt16(50, THIRD_BODY_MAXIMUM_DEGREE, 0);
+  builder.addFieldInt16(49, THIRD_BODY_MAXIMUM_DEGREE, 0);
 }
 
 static addThirdBodyMaximumOrder(builder:flatbuffers.Builder, THIRD_BODY_MAXIMUM_ORDER:number) {
-  builder.addFieldInt16(51, THIRD_BODY_MAXIMUM_ORDER, 0);
+  builder.addFieldInt16(50, THIRD_BODY_MAXIMUM_ORDER, 0);
 }
 
 static endPCFForceModel(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -798,7 +784,6 @@ unpack(): PCFForceModelT {
     this.DENSITY_CORRECTION_RELAXATION_HOURS(),
     this.HAS_DENSITY_CORRECTION_RELAXATION_HOURS(),
     this.NEUTRAL_WIND(),
-    (this.EMPIRICAL_TERMS() !== null ? this.EMPIRICAL_TERMS()!.unpack() : null),
     this.THIRD_BODY_MAXIMUM_DEGREE(),
     this.THIRD_BODY_MAXIMUM_ORDER()
   );
@@ -855,7 +840,6 @@ unpackTo(_o: PCFForceModelT): void {
   _o.DENSITY_CORRECTION_RELAXATION_HOURS = this.DENSITY_CORRECTION_RELAXATION_HOURS();
   _o.HAS_DENSITY_CORRECTION_RELAXATION_HOURS = this.HAS_DENSITY_CORRECTION_RELAXATION_HOURS();
   _o.NEUTRAL_WIND = this.NEUTRAL_WIND();
-  _o.EMPIRICAL_TERMS = (this.EMPIRICAL_TERMS() !== null ? this.EMPIRICAL_TERMS()!.unpack() : null);
   _o.THIRD_BODY_MAXIMUM_DEGREE = this.THIRD_BODY_MAXIMUM_DEGREE();
   _o.THIRD_BODY_MAXIMUM_ORDER = this.THIRD_BODY_MAXIMUM_ORDER();
 }
@@ -912,7 +896,6 @@ constructor(
   public DENSITY_CORRECTION_RELAXATION_HOURS: number = 0.0,
   public HAS_DENSITY_CORRECTION_RELAXATION_HOURS: boolean = false,
   public NEUTRAL_WIND: pcfNeutralWind = pcfNeutralWind.NONE,
-  public EMPIRICAL_TERMS: PCFEmpiricalTermsT|null = null,
   public THIRD_BODY_MAXIMUM_DEGREE: number = 0,
   public THIRD_BODY_MAXIMUM_ORDER: number = 0
 ){}
@@ -923,7 +906,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const WEATHER = (this.WEATHER !== null ? this.WEATHER!.pack(builder) : 0);
   const EPHEMERIS_SOURCE = (this.EPHEMERIS_SOURCE !== null ? builder.createString(this.EPHEMERIS_SOURCE!) : 0);
   const ECOM2 = (this.ECOM2 !== null ? this.ECOM2!.pack(builder) : 0);
-  const EMPIRICAL_TERMS = (this.EMPIRICAL_TERMS !== null ? this.EMPIRICAL_TERMS!.pack(builder) : 0);
 
   PCFForceModel.startPCFForceModel(builder);
   PCFForceModel.addGravityChoice(builder, this.GRAVITY_CHOICE);
@@ -975,7 +957,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PCFForceModel.addDensityCorrectionRelaxationHours(builder, this.DENSITY_CORRECTION_RELAXATION_HOURS);
   PCFForceModel.addHasDensityCorrectionRelaxationHours(builder, this.HAS_DENSITY_CORRECTION_RELAXATION_HOURS);
   PCFForceModel.addNeutralWind(builder, this.NEUTRAL_WIND);
-  PCFForceModel.addEmpiricalTerms(builder, EMPIRICAL_TERMS);
   PCFForceModel.addThirdBodyMaximumDegree(builder, this.THIRD_BODY_MAXIMUM_DEGREE);
   PCFForceModel.addThirdBodyMaximumOrder(builder, this.THIRD_BODY_MAXIMUM_ORDER);
 

@@ -7,13 +7,12 @@ use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -93,27 +92,11 @@ class PCF extends Table
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
-    /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-    public function getMEAN_ELEMENT()
-    {
-        $obj = new PCFMeanElementOptions();
-        $o = $this->__offset(14);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    /// Beyond-Earth segment sets.
-    public function getSEGMENTS()
-    {
-        $obj = new PCFSegmentOptions();
-        $o = $this->__offset(16);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
     /// Fit policy.
     public function getFIT()
     {
         $obj = new PCFFitPolicy();
-        $o = $this->__offset(18);
+        $o = $this->__offset(14);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -123,7 +106,7 @@ class PCF extends Table
      */
     public function getEVENTS($j)
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(16);
         $obj = new PCFEventDefinition();
         return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
@@ -133,39 +116,15 @@ class PCF extends Table
      */
     public function getEVENTSLength()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /// Maneuver detection.
-    public function getMANEUVER_DETECTION()
-    {
-        $obj = new PCFManeuverDetection();
-        $o = $this->__offset(22);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    /// Reentry hand-off and window.
-    public function getREENTRY()
-    {
-        $obj = new PCFReentry();
-        $o = $this->__offset(24);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
-    /// Launch initialization priors.
-    public function getLAUNCH()
-    {
-        $obj = new PCFLaunch();
-        $o = $this->__offset(26);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
     /// Output states.
     public function getOUTPUT()
     {
         $obj = new PCFOutput();
-        $o = $this->__offset(28);
+        $o = $this->__offset(18);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -173,7 +132,7 @@ class PCF extends Table
     public function getEPOCH_STORE()
     {
         $obj = new PCFEpochStore();
-        $o = $this->__offset(30);
+        $o = $this->__offset(20);
         return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
     }
 
@@ -183,28 +142,23 @@ class PCF extends Table
      */
     public static function startPCF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(9);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCF
      */
-    public static function createPCF(FlatBufferBuilder $builder, $CONFIGURATION_ID, $PROFILE, $THEORY, $INTEGRATOR, $FORCES, $MEAN_ELEMENT, $SEGMENTS, $FIT, $EVENTS, $MANEUVER_DETECTION, $REENTRY, $LAUNCH, $OUTPUT, $EPOCH_STORE)
+    public static function createPCF(FlatBufferBuilder $builder, $CONFIGURATION_ID, $PROFILE, $THEORY, $INTEGRATOR, $FORCES, $FIT, $EVENTS, $OUTPUT, $EPOCH_STORE)
     {
-        $builder->startObject(14);
+        $builder->startObject(9);
         self::addCONFIGURATION_ID($builder, $CONFIGURATION_ID);
         self::addPROFILE($builder, $PROFILE);
         self::addTHEORY($builder, $THEORY);
         self::addINTEGRATOR($builder, $INTEGRATOR);
         self::addFORCES($builder, $FORCES);
-        self::addMEAN_ELEMENT($builder, $MEAN_ELEMENT);
-        self::addSEGMENTS($builder, $SEGMENTS);
         self::addFIT($builder, $FIT);
         self::addEVENTS($builder, $EVENTS);
-        self::addMANEUVER_DETECTION($builder, $MANEUVER_DETECTION);
-        self::addREENTRY($builder, $REENTRY);
-        self::addLAUNCH($builder, $LAUNCH);
         self::addOUTPUT($builder, $OUTPUT);
         self::addEPOCH_STORE($builder, $EPOCH_STORE);
         $o = $builder->endObject();
@@ -266,29 +220,9 @@ class PCF extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addMEAN_ELEMENT(FlatBufferBuilder $builder, $MEAN_ELEMENT)
-    {
-        $builder->addOffsetX(5, $MEAN_ELEMENT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addSEGMENTS(FlatBufferBuilder $builder, $SEGMENTS)
-    {
-        $builder->addOffsetX(6, $SEGMENTS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addFIT(FlatBufferBuilder $builder, $FIT)
     {
-        $builder->addOffsetX(7, $FIT, 0);
+        $builder->addOffsetX(5, $FIT, 0);
     }
 
     /**
@@ -298,7 +232,7 @@ class PCF extends Table
      */
     public static function addEVENTS(FlatBufferBuilder $builder, $EVENTS)
     {
-        $builder->addOffsetX(8, $EVENTS, 0);
+        $builder->addOffsetX(6, $EVENTS, 0);
     }
 
     /**
@@ -330,39 +264,9 @@ class PCF extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addMANEUVER_DETECTION(FlatBufferBuilder $builder, $MANEUVER_DETECTION)
-    {
-        $builder->addOffsetX(9, $MANEUVER_DETECTION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addREENTRY(FlatBufferBuilder $builder, $REENTRY)
-    {
-        $builder->addOffsetX(10, $REENTRY, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addLAUNCH(FlatBufferBuilder $builder, $LAUNCH)
-    {
-        $builder->addOffsetX(11, $LAUNCH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
     public static function addOUTPUT(FlatBufferBuilder $builder, $OUTPUT)
     {
-        $builder->addOffsetX(12, $OUTPUT, 0);
+        $builder->addOffsetX(7, $OUTPUT, 0);
     }
 
     /**
@@ -372,7 +276,7 @@ class PCF extends Table
      */
     public static function addEPOCH_STORE(FlatBufferBuilder $builder, $EPOCH_STORE)
     {
-        $builder->addOffsetX(13, $EPOCH_STORE, 0);
+        $builder->addOffsetX(8, $EPOCH_STORE, 0);
     }
 
     /**

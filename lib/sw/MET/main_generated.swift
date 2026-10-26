@@ -21,13 +21,8 @@ public enum meanElementSource: Int8, FlatbuffersVectorInitializable, Enum, Verif
   case dsst = 2
   ///  Universal Semianalytical Method
   case usm = 3
-  ///  SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial
-  ///  theory with open-DCA drag, Starlink drag-makeup thrust and along-track
-  ///  terms. Its sets are osculating or mean about the center named in CENTER_NAME
-  ///  (Earth, Moon, Sun or a planet); see $OMM.
-  case sdnap = 4
 
-  public static var max: meanElementSource { return .sdnap }
+  public static var max: meanElementSource { return .usm }
   public static var min: meanElementSource { return .sgp4 }
 }
 

@@ -378,12 +378,11 @@ manifest under which THIS network publishes a shard of any of them.
 ### Propagation configuration lives in SDS ($PCF 1.0)
 
 How a propagator is configured is `$PCF`, never a module-local JSON or schema.
-One message configures any propagator (SGP4, SGP4-XP, SDN-AP, FFM, Kepler):
-`THEORY` (`pcfTheory`, no vendor names), `INTEGRATOR`, `FORCES`, `MEAN_ELEMENT`,
-`SEGMENTS`, `FIT`, `EVENTS`, `MANEUVER_DETECTION`, `REENTRY`, `LAUNCH`, `OUTPUT`.
-The method a host invokes (propagate, fit, detect maneuvers, reentry, launch)
-selects the tables it reads; an absent table takes the theory's own defaults;
-a table or value the theory cannot honor is refused by name.
+One message configures any propagator (SGP4, SGP4-XP, FFM, Kepler):
+`THEORY` (`pcfTheory`, no vendor names), `INTEGRATOR`, `FORCES`, `FIT`,
+`EVENTS`, `OUTPUT`, `EPOCH_STORE`. The method a host invokes selects the
+tables it reads; an absent table takes the theory's own defaults; a table or
+value the theory cannot honor is refused by name.
 
 `$PRW` carries `PCFIntegratorSettings` and `PCFForceModel` and their enums; it
 does not define them. `pcfIntegratorAlgorithm` is the one integrator enum:

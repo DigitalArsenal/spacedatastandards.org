@@ -7,8 +7,7 @@
         "SGP4",
         "SGP4XP",
         "DSST",
-        "USM",
-        "SDNAP"
+        "USM"
       ],
       "x-flatbuffer-type": "enum",
       "x-flatbuffer-enum-type": "byte",
@@ -28,10 +27,6 @@
         "USM": {
           "value": 3,
           "description": "Universal Semianalytical Method"
-        },
-        "SDNAP": {
-          "value": 4,
-          "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
         }
       }
     },
@@ -59,10 +54,6 @@
             "USM": {
               "value": 3,
               "description": "Universal Semianalytical Method"
-            },
-            "SDNAP": {
-              "value": 4,
-              "description": "SDN Advanced Propagator (SDN-AP): SDN's own semi-analytic mean-equinoctial theory with open-DCA drag, Starlink drag-makeup thrust and along-track terms. Its sets are osculating or mean about the center named in CENTER_NAME (Earth, Moon, Sun or a planet); see $OMM."
             }
           }
         }

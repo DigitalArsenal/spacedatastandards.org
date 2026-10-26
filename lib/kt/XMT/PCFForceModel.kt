@@ -480,19 +480,6 @@ class PCFForceModel : Table() {
             return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     /**
-     * Empirical along-track terms of the averaged theories. Absent (the
-     * default): the theory's own.
-     */
-    val empiricalTerms : PCFEmpiricalTerms? get() = empiricalTerms(PCFEmpiricalTerms())
-    fun empiricalTerms(obj: PCFEmpiricalTerms) : PCFEmpiricalTerms? {
-        val o = __offset(102)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
-    /**
      * Highest degree of the harmonic field of the third body that has one (the
      * Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
      * The field's acceleration at the frame origin is subtracted. Default 0:
@@ -500,7 +487,7 @@ class PCFForceModel : Table() {
      */
     val thirdBodyMaximumDegree : UShort
         get() {
-            val o = __offset(104)
+            val o = __offset(102)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     /**
@@ -508,7 +495,7 @@ class PCFForceModel : Table() {
      */
     val thirdBodyMaximumOrder : UShort
         get() {
-            val o = __offset(106)
+            val o = __offset(104)
             return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
     companion object {
@@ -518,8 +505,8 @@ class PCFForceModel : Table() {
             _bb.order(ByteOrder.LITTLE_ENDIAN)
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
-        fun createPCFForceModel(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean, radiationPressureModel: UByte, gnssBlock: UByte, ecom2Offset: Int, earthRadiation: UByte, earthRadiationResolutionDeg: Double, earthRadiationAreaOverMassM2Kg: Double, hasEarthRadiationAreaOverMassM2Kg: Boolean, oceanTides: UByte, oceanTideMaximumDegree: UShort, oceanTideMaximumOrder: UShort, centralBodyNaifId: Int, ephemerisKind: UByte, shadowModel: UByte, weatherSource: UByte, weatherExtension: UByte, densityCorrection: UByte, densityCorrectionRelaxationHours: Double, hasDensityCorrectionRelaxationHours: Boolean, neutralWind: UByte, empiricalTermsOffset: Int, thirdBodyMaximumDegree: UShort, thirdBodyMaximumOrder: UShort) : Int {
-            builder.startTable(52)
+        fun createPCFForceModel(builder: FlatBufferBuilder, gravityChoice: UByte, enablePointMass: Boolean, gravitationalParameter: Double, enableJ2: Boolean, enableJ3: Boolean, enableJ4: Boolean, enableHigherZonals: Boolean, maximumDegree: UShort, hasMaximumDegree: Boolean, maximumOrder: UShort, hasMaximumOrder: Boolean, enableThirdBody: Boolean, thirdBodyIdsOffset: Int, enableSrp: Boolean, enableDrag: Boolean, initialMassKg: Double, areaM2: Double, reflectivityCoefficient: Double, dragCoefficient: Double, atmosphereModel: UByte, weatherOffset: Int, ephemerisSourceOffset: Int, solidTides: UByte, relativity: UByte, inTrackAccelerationMS2: Double, hasInTrackAccelerationMS2: Boolean, dragAreaOverMassRateM2KgS: Double, hasDragAreaOverMassRateM2KgS: Boolean, maximumTesseralDegree: UShort, hasMaximumTesseralDegree: Boolean, radiationPressureModel: UByte, gnssBlock: UByte, ecom2Offset: Int, earthRadiation: UByte, earthRadiationResolutionDeg: Double, earthRadiationAreaOverMassM2Kg: Double, hasEarthRadiationAreaOverMassM2Kg: Boolean, oceanTides: UByte, oceanTideMaximumDegree: UShort, oceanTideMaximumOrder: UShort, centralBodyNaifId: Int, ephemerisKind: UByte, shadowModel: UByte, weatherSource: UByte, weatherExtension: UByte, densityCorrection: UByte, densityCorrectionRelaxationHours: Double, hasDensityCorrectionRelaxationHours: Boolean, neutralWind: UByte, thirdBodyMaximumDegree: UShort, thirdBodyMaximumOrder: UShort) : Int {
+            builder.startTable(51)
             addDENSITYCORRECTIONRELAXATIONHOURS(builder, densityCorrectionRelaxationHours)
             addEARTHRADIATIONAREAOVERMASSM2KG(builder, earthRadiationAreaOverMassM2Kg)
             addEARTHRADIATIONRESOLUTIONDEG(builder, earthRadiationResolutionDeg)
@@ -530,7 +517,6 @@ class PCFForceModel : Table() {
             addAREAM2(builder, areaM2)
             addINITIALMASSKG(builder, initialMassKg)
             addGRAVITATIONALPARAMETER(builder, gravitationalParameter)
-            addEMPIRICALTERMS(builder, empiricalTermsOffset)
             addCENTRALBODYNAIFID(builder, centralBodyNaifId)
             addECOM2(builder, ecom2Offset)
             addEPHEMERISSOURCE(builder, ephemerisSourceOffset)
@@ -574,7 +560,7 @@ class PCFForceModel : Table() {
             addGRAVITYCHOICE(builder, gravityChoice)
             return endPCFForceModel(builder)
         }
-        fun startPCFForceModel(builder: FlatBufferBuilder) = builder.startTable(52)
+        fun startPCFForceModel(builder: FlatBufferBuilder) = builder.startTable(51)
         fun addGRAVITYCHOICE(builder: FlatBufferBuilder, gravityChoice: UByte) = builder.addByte(0, gravityChoice.toByte(), 0)
         fun addENABLEPOINTMASS(builder: FlatBufferBuilder, enablePointMass: Boolean) = builder.addBoolean(1, enablePointMass, true)
         fun addGRAVITATIONALPARAMETER(builder: FlatBufferBuilder, gravitationalParameter: Double) = builder.addDouble(2, gravitationalParameter, 0.0)
@@ -632,9 +618,8 @@ class PCFForceModel : Table() {
         fun addDENSITYCORRECTIONRELAXATIONHOURS(builder: FlatBufferBuilder, densityCorrectionRelaxationHours: Double) = builder.addDouble(46, densityCorrectionRelaxationHours, 0.0)
         fun addHASDENSITYCORRECTIONRELAXATIONHOURS(builder: FlatBufferBuilder, hasDensityCorrectionRelaxationHours: Boolean) = builder.addBoolean(47, hasDensityCorrectionRelaxationHours, false)
         fun addNEUTRALWIND(builder: FlatBufferBuilder, neutralWind: UByte) = builder.addByte(48, neutralWind.toByte(), 0)
-        fun addEMPIRICALTERMS(builder: FlatBufferBuilder, empiricalTerms: Int) = builder.addOffset(49, empiricalTerms, 0)
-        fun addTHIRDBODYMAXIMUMDEGREE(builder: FlatBufferBuilder, thirdBodyMaximumDegree: UShort) = builder.addShort(50, thirdBodyMaximumDegree.toShort(), 0)
-        fun addTHIRDBODYMAXIMUMORDER(builder: FlatBufferBuilder, thirdBodyMaximumOrder: UShort) = builder.addShort(51, thirdBodyMaximumOrder.toShort(), 0)
+        fun addTHIRDBODYMAXIMUMDEGREE(builder: FlatBufferBuilder, thirdBodyMaximumDegree: UShort) = builder.addShort(49, thirdBodyMaximumDegree.toShort(), 0)
+        fun addTHIRDBODYMAXIMUMORDER(builder: FlatBufferBuilder, thirdBodyMaximumOrder: UShort) = builder.addShort(50, thirdBodyMaximumOrder.toShort(), 0)
         fun endPCFForceModel(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
                 builder.required(o, 46)

@@ -74,7 +74,7 @@ export declare class PCFFitPolicy implements flatbuffers.IUnpackableObject<PCFFi
     IMPLAUSIBLE_RMS_KM(): number;
     /**
      * Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-     * or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+     * or without sigma: mean 0, sigma 0.05.
      */
     DRAG_PRIOR(obj?: PCFGaussianPrior): PCFGaussianPrior | null;
     /**

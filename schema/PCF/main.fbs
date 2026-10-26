@@ -1,5 +1,5 @@
-// Hash: 257c2ee0144189d96eefd4a5c52dcf75ed31d07f9908f82f94b36a3947f2465d
-// Version: 1.0.4
+// Hash: cfbbb6d32f7962636fdd4577fc865fe6883ea9a5b6dc1330f8f0143440a3f946
+// Version: 1.0.5
 // -----------------------------------END_HEADER
 include "../FRM/main.fbs";
 include "../TIM/main.fbs";
@@ -20,9 +20,6 @@ enum pcfTheory : ubyte {
   /// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
   /// astrodynamics conference literature); the same value as $MET SGP4XP.
   SGP4XP = 2,
-  /// SDN's own advanced mean-element theory, labeled as its own; carried in
-  /// $OMM as a user-defined theory until $MET appends it.
-  SDNAP = 3,
   /// Numerical integration of the equations of motion under the full force
   /// model of PCFForceModel (profile FFM-1).
   FFM = 4,
@@ -186,30 +183,6 @@ enum pcfExpressionOperation : ubyte {
   /// Pop two, push the lesser or the greater.
   MINIMUM = 12,
   MAXIMUM = 13
-}
-
-/// How the correlation of maneuver-detection innovations is weighted. Append
-/// new values only.
-enum pcfInnovationCorrelation : ubyte {
-  UNSPECIFIED = 0,
-  /// Every sample independent (the white-noise assumption).
-  WHITE = 1,
-  /// One sample per revolution counts, so a revolution is one independent
-  /// innovation.
-  ONE_SAMPLE_PER_REVOLUTION = 2,
-  /// An exponential correlation of the innovations over a correlation time.
-  CORRELATION_TIME = 3
-}
-
-/// How the reentry-time window is computed. Append new values only.
-enum pcfReentryWindowMethod : ubyte {
-  UNSPECIFIED = 0,
-  /// First-order propagation of the ballistic and density sigmas through the
-  /// remaining life.
-  LINEAR = 1,
-  /// The unscented transform over the hand-off state, the ballistic
-  /// coefficient and the density level.
-  UNSCENTED = 2
 }
 
 /// Frame of the output states. Append new values only.
@@ -382,91 +355,6 @@ table PCFGaussianPrior {
   HAS_SIGMA:bool = false;
 }
 
-/// Empirical along-track terms of the averaged theories: a transverse
-/// acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
-/// latitude and g = 1 on the fit arc.
-table PCFEmpiricalTerms {
-  /// Fit the once-per-revolution pair (TAUC, TAUS). Default true.
-  ONCE_PER_REVOLUTION:bool = true;
-  /// The constant term TAU0 is free only when this rule selects it: a fitted
-  /// B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
-  /// prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
-  TAU0_RULE_LIMIT_M2_KG:double = 0.5;
-  /// True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
-  /// default) leaves TAU0 off.
-  HAS_TAU0_RULE_LIMIT_M2_KG:bool = false;
-  /// True holds TAUC and TAUS after the arc end above the drag regime
-  /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
-  /// once-per-revolution part of radiation pressure; false decays them over
-  /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
-  /// written before 1.268.0 omits a false value, so it reads true.
-  HELD_ABOVE_DRAG_REGIME:bool = true;
-  /// Persistence time of the empirical force after the arc end, hours.
-  /// Default 24.
-  PERSISTENCE_HOURS:double = 24;
-}
-
-/// Truncations and switches of the averaged (mean-element) theories SGP4XP
-/// and SDNAP. SGP4's constants are fixed by its specification and are not
-/// options.
-table PCFMeanElementOptions {
-  /// Highest even degree of the m-daily short-periodic gravity terms; 0
-  /// omits them. Range 0 to 16. Default 12.
-  M_DAILY_MAXIMUM_DEGREE:ubyte = 12;
-  /// Highest degree of the zonal tail (secular and long-period terms past
-  /// J5). Range 6 to 70. Default 20.
-  ZONAL_MAXIMUM_DEGREE:ubyte = 20;
-  /// Highest degree of the eccentricity-vector short-periodic terms. Range
-  /// 2 to 16. Default 7.
-  SHORT_PERIODIC_MAXIMUM_DEGREE:ubyte = 7;
-  /// Resonance terms on or off. Default true.
-  ENABLE_RESONANCE:bool = true;
-  /// Highest odd degree of the shallow-resonance terms. Default 31.
-  RESONANCE_MAXIMUM_DEGREE:ubyte = 31;
-  /// Resonance band: terms whose angle drifts slower than this fraction of
-  /// the mean motion are integrated with the rates. Default 0.045.
-  RESONANCE_BAND:double = 0.045;
-  /// Highest multiple of the mean anomaly in a resonance angle. Default 1.
-  RESONANCE_MAXIMUM_K:ubyte = 1;
-  /// Near-resonance band at output time, as a fraction of the mean motion
-  /// beyond RESONANCE_BAND; 0 is off. Default 0.
-  NEAR_RESONANCE_BAND:double = 0;
-  /// Divisor of the integration grid step; >= 1. Default 1.
-  GRID_STEP_DIVISOR:ubyte = 1;
-  /// The catalog-shared density kernel (a gridded log-density table shared by
-  /// every object) on or off; off evaluates the atmosphere model directly.
-  /// Default true.
-  DENSITY_KERNEL:bool = true;
-  /// Perigee height below which B_eff and TAU0 act (the drag regime), km.
-  /// Default 2500.
-  DRAG_REGIME_PERIGEE_KM:double = 2500;
-}
-
-/// Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
-/// cut into segments at maneuvers and sphere-of-influence passages.
-table PCFSegmentOptions {
-  /// Moon-centered gravity field degree. Default 70.
-  MOON_GRAVITY_MAXIMUM_DEGREE:ushort = 70;
-  /// Moon-centered short-periodic degree. Default 8.
-  MOON_SHORT_PERIODIC_MAXIMUM_DEGREE:ubyte = 8;
-  /// Moon-centered eccentricity order (highest |q| of the mean-anomaly
-  /// multiple kept). Default 2.
-  MOON_ECCENTRICITY_ORDER:ubyte = 2;
-  /// Moon-centered integration step, seconds. Default 240.
-  MOON_STEP_SECONDS:double = 240;
-  /// Cislunar integration step, seconds. Default 60.
-  CISLUNAR_STEP_SECONDS:double = 60;
-  /// Heliocentric integration step, seconds. Default 1800.
-  HELIOCENTRIC_STEP_SECONDS:double = 1800;
-  /// A segment is accepted when its RMS is within max(RMS_FACTOR x the
-  /// cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
-  SEGMENT_RMS_FACTOR:double = 2;
-  /// The additive term of the same rule, km. Default 0.05.
-  SEGMENT_RMS_MARGIN_KM:double = 0.05;
-  /// Shortest cislunar segment, hours. Default 6.
-  CISLUNAR_MINIMUM_SEGMENT_HOURS:double = 6;
-}
-
 /// Fit policy: how long an arc a fit uses, how that is validated, and what a
 /// fit refuses.
 table PCFFitPolicy {
@@ -505,7 +393,7 @@ table PCFFitPolicy {
   /// 100.
   IMPLAUSIBLE_RMS_KM:double = 100;
   /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  /// or without sigma: mean 0, sigma 0.05.
   DRAG_PRIOR:PCFGaussianPrior;
   /// Prior on AGOM, the radiation-pressure area-to-mass ratio Cr*A/m, m2/kg.
   /// Absent or without sigma: mean 0, sigma 0.05.
@@ -553,87 +441,6 @@ table PCFEventDefinition {
   SECOND_TRAJECTORY_PORT:string;
   /// EXPRESSION: the program. Default absent.
   EXPRESSION:PCFExpression;
-}
-
-/// Maneuver detection from fit innovations: a generalized-likelihood-ratio
-/// scan of the six mean elements.
-table PCFManeuverDetection {
-  /// False-alarm rate the THRESHOLD is calibrated for, per object-year. A
-  /// provider that cannot recalibrate refuses another rate. Default 1.
-  FALSE_ALARMS_PER_OBJECT_YEAR:double = 1;
-  /// How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
-  CORRELATION_MODEL:pcfInnovationCorrelation = ONE_SAMPLE_PER_REVOLUTION;
-  /// The statistic Lambda (chi-square, 3 degrees of freedom) above which a
-  /// maneuver is declared. Default 20.
-  THRESHOLD:double = 20;
-  /// States kept clear at each end of the arc when scanning. Default 12.
-  MARGIN_STATES:uint = 12;
-  /// Half-width of the window the burn epoch is refined in, hours. Default 2.
-  REFINE_WINDOW_HOURS:double = 2;
-  /// Fewest states an arc must hold to be scanned. Default 48.
-  MINIMUM_STATES:uint = 48;
-}
-
-/// Reentry: where the averaged theory hands off to osculating integration,
-/// where the trajectory ends, and the width of the reentry window.
-table PCFReentry {
-  /// Altitude at which the trajectory ends as reentered, km. Default 80.
-  ALTITUDE_KM:double = 80;
-  /// Hand-off when the perigee altitude falls below this, km. Default 180.
-  HANDOFF_PERIGEE_ALTITUDE_KM:double = 180;
-  /// Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
-  /// fraction of the density scale height H. Default 0.05.
-  HANDOFF_DECAY_RATIO:double = 0.05;
-  /// Hand-off when the eccentricity collapses by more than this fraction of
-  /// a e per revolution, with the eccentricity above
-  /// HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
-  HANDOFF_ECCENTRICITY_COLLAPSE:double = 0.01;
-  /// Eccentricity above which the collapse test applies. Default 0.01.
-  HANDOFF_MINIMUM_ECCENTRICITY:double = 0.01;
-  /// Spacing of the nodes the hand-off tests are evaluated at, minutes.
-  /// Default 30.
-  NODE_STEP_MINUTES:double = 30;
-  /// Longest look-ahead for a hand-off or reentry, days. Default 120.
-  HORIZON_DAYS:double = 120;
-  /// How the reentry window is computed. Default LINEAR.
-  WINDOW_METHOD:pcfReentryWindowMethod = LINEAR;
-  /// Fractional 1-sigma density error of the window. Default 0.15.
-  WINDOW_DENSITY_SIGMA:double = 0.15;
-  /// Correlation time of the density error, days. Default 2.
-  WINDOW_CORRELATION_DAYS:double = 2;
-  /// Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
-  WINDOW_BALLISTIC_SIGMA:double = 0.05;
-  /// Step of the osculating integration after the hand-off, seconds. Default
-  /// 10.
-  OSCULATING_STEP_SECONDS:double = 10;
-  /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
-  /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
-  /// steps once per revolution while the averaged theory ramps, and the
-  /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
-  /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
-  /// Default 0.5.
-  HANDOFF_SAWTOOTH_KM:double = 0.5;
-  /// Eccentricity above which the sawtooth test applies. Default 0.02.
-  HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY:double = 0.02;
-}
-
-/// Launch initialization: priors for the first element sets of new objects
-/// and for a deployment batch fitted jointly.
-table PCFLaunch {
-  /// A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
-  DRAG_AREA_OVER_MASS_PRIOR_M2_KG:double = 0.01;
-  /// A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
-  SRP_AREA_OVER_MASS_PRIOR_M2_KG:double = 0.01;
-  /// Prior 1-sigma of each object's separation velocity per axis, m/s.
-  /// Default 1.
-  SEPARATION_SIGMA_M_S:double = 1;
-  /// Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
-  /// Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
-  SHRINK_SIGMA_M2_KG:double = 0;
-  /// True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
-  HAS_SHRINK_SIGMA_M2_KG:bool = false;
-  /// Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
-  BATCH_MEAN_SIGMA_M2_KG:double = 1;
 }
 
 /// Output states: frame, step and size.
@@ -838,9 +645,6 @@ table PCFForceModel {
   HAS_DENSITY_CORRECTION_RELAXATION_HOURS:bool = false;
   /// Neutral wind in the drag relative velocity. Default NONE.
   NEUTRAL_WIND:pcfNeutralWind = NONE;
-  /// Empirical along-track terms of the averaged theories. Absent (the
-  /// default): the theory's own.
-  EMPIRICAL_TERMS:PCFEmpiricalTerms;
   /// Highest degree of the harmonic field of the third body that has one (the
   /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
   /// The field's acceleration at the frame origin is subtracted. Default 0:
@@ -866,18 +670,17 @@ table PCFEpochStore {
   BLEND_WINDOW_SECONDS:double = 3600;
   /// The weight curve across the blend window. Default SMOOTHSTEP.
   BLEND_SHAPE:pcfBlendShape = SMOOTHSTEP;
-  /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   THEORIES:[pcfTheory];
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -894,20 +697,10 @@ table PCF {
   INTEGRATOR:PCFIntegratorSettings;
   /// Forces. Absent: the theory's built-in set.
   FORCES:PCFForceModel;
-  /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-  MEAN_ELEMENT:PCFMeanElementOptions;
-  /// Beyond-Earth segment sets.
-  SEGMENTS:PCFSegmentOptions;
   /// Fit policy.
   FIT:PCFFitPolicy;
   /// Events located while integrating. Default empty.
   EVENTS:[PCFEventDefinition];
-  /// Maneuver detection.
-  MANEUVER_DETECTION:PCFManeuverDetection;
-  /// Reentry hand-off and window.
-  REENTRY:PCFReentry;
-  /// Launch initialization priors.
-  LAUNCH:PCFLaunch;
   /// Output states.
   OUTPUT:PCFOutput;
   /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.

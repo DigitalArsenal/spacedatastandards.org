@@ -95,7 +95,7 @@ public final class PCFFitPolicy extends com.google.flatbuffers.Table {
   public double IMPLAUSIBLE_RMS_KM() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 100.0; }
   /**
    * Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-   * or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+   * or without sigma: mean 0, sigma 0.05.
    */
   public PCFGaussianPrior DRAG_PRIOR() { return DRAG_PRIOR(new PCFGaussianPrior()); }
   public PCFGaussianPrior DRAG_PRIOR(PCFGaussianPrior obj) { int o = __offset(30); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }

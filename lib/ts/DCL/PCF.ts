@@ -9,24 +9,18 @@ import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js
 import { PCFFitPolicy, PCFFitPolicyT } from './PCFFitPolicy.js';
 import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
 import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
-import { PCFLaunch, PCFLaunchT } from './PCFLaunch.js';
-import { PCFManeuverDetection, PCFManeuverDetectionT } from './PCFManeuverDetection.js';
-import { PCFMeanElementOptions, PCFMeanElementOptionsT } from './PCFMeanElementOptions.js';
 import { PCFOutput, PCFOutputT } from './PCFOutput.js';
-import { PCFReentry, PCFReentryT } from './PCFReentry.js';
-import { PCFSegmentOptions, PCFSegmentOptionsT } from './PCFSegmentOptions.js';
 import { pcfTheory } from './pcfTheory.js';
 
 
 /**
  * Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
- * any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
- * force model, Kepler): the theory, the integrator and its settings, the
- * forces, the fit policy, the events to locate, maneuver detection, reentry
- * hand-off, launch priors and the output. A host passes it beside the
- * request; the method it invokes (propagate, fit, detect maneuvers, reentry,
- * launch) selects the tables that method reads. An absent table takes the
- * theory's own defaults; a table or value the selected theory cannot honor is
+ * any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+ * the integrator and its settings, the forces, the fit policy, the events to
+ * locate, the epoch store and the output. A host passes it beside the
+ * request; the method it invokes selects the tables that method reads. An
+ * absent table takes the theory's own defaults; a table or value the
+ * selected theory cannot honor is
  * refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
  * PCFForceModel and their enums, so the runtime wire and the configuration
  * share one definition of each. Units are in the field names and docs; every
@@ -100,26 +94,10 @@ FORCES(obj?:PCFForceModel):PCFForceModel|null {
 }
 
 /**
- * Truncations and switches of the averaged theories (SGP4XP, SDNAP).
- */
-MEAN_ELEMENT(obj?:PCFMeanElementOptions):PCFMeanElementOptions|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? (obj || new PCFMeanElementOptions()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
- * Beyond-Earth segment sets.
- */
-SEGMENTS(obj?:PCFSegmentOptions):PCFSegmentOptions|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? (obj || new PCFSegmentOptions()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
  * Fit policy.
  */
 FIT(obj?:PCFFitPolicy):PCFFitPolicy|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? (obj || new PCFFitPolicy()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -127,44 +105,20 @@ FIT(obj?:PCFFitPolicy):PCFFitPolicy|null {
  * Events located while integrating. Default empty.
  */
 EVENTS(index: number, obj?:PCFEventDefinition):PCFEventDefinition|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? (obj || new PCFEventDefinition()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 eventsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-/**
- * Maneuver detection.
- */
-MANEUVER_DETECTION(obj?:PCFManeuverDetection):PCFManeuverDetection|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? (obj || new PCFManeuverDetection()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
- * Reentry hand-off and window.
- */
-REENTRY(obj?:PCFReentry):PCFReentry|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? (obj || new PCFReentry()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
-}
-
-/**
- * Launch initialization priors.
- */
-LAUNCH(obj?:PCFLaunch):PCFLaunch|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? (obj || new PCFLaunch()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 /**
  * Output states.
  */
 OUTPUT(obj?:PCFOutput):PCFOutput|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? (obj || new PCFOutput()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
@@ -172,12 +126,12 @@ OUTPUT(obj?:PCFOutput):PCFOutput|null {
  * The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
  */
 EPOCH_STORE(obj?:PCFEpochStore):PCFEpochStore|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? (obj || new PCFEpochStore()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
 }
 
 static startPCF(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(9);
 }
 
 static addConfigurationId(builder:flatbuffers.Builder, CONFIGURATION_IDOffset:flatbuffers.Offset) {
@@ -200,20 +154,12 @@ static addForces(builder:flatbuffers.Builder, FORCESOffset:flatbuffers.Offset) {
   builder.addFieldOffset(4, FORCESOffset, 0);
 }
 
-static addMeanElement(builder:flatbuffers.Builder, MEAN_ELEMENTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, MEAN_ELEMENTOffset, 0);
-}
-
-static addSegments(builder:flatbuffers.Builder, SEGMENTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, SEGMENTSOffset, 0);
-}
-
 static addFit(builder:flatbuffers.Builder, FITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, FITOffset, 0);
+  builder.addFieldOffset(5, FITOffset, 0);
 }
 
 static addEvents(builder:flatbuffers.Builder, EVENTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, EVENTSOffset, 0);
+  builder.addFieldOffset(6, EVENTSOffset, 0);
 }
 
 static createEventsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -228,24 +174,12 @@ static startEventsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addManeuverDetection(builder:flatbuffers.Builder, MANEUVER_DETECTIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, MANEUVER_DETECTIONOffset, 0);
-}
-
-static addReentry(builder:flatbuffers.Builder, REENTRYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, REENTRYOffset, 0);
-}
-
-static addLaunch(builder:flatbuffers.Builder, LAUNCHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, LAUNCHOffset, 0);
-}
-
 static addOutput(builder:flatbuffers.Builder, OUTPUTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, OUTPUTOffset, 0);
+  builder.addFieldOffset(7, OUTPUTOffset, 0);
 }
 
 static addEpochStore(builder:flatbuffers.Builder, EPOCH_STOREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, EPOCH_STOREOffset, 0);
+  builder.addFieldOffset(8, EPOCH_STOREOffset, 0);
 }
 
 static endPCF(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -269,13 +203,8 @@ unpack(): PCFT {
     this.THEORY(),
     (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null),
     (this.FORCES() !== null ? this.FORCES()!.unpack() : null),
-    (this.MEAN_ELEMENT() !== null ? this.MEAN_ELEMENT()!.unpack() : null),
-    (this.SEGMENTS() !== null ? this.SEGMENTS()!.unpack() : null),
     (this.FIT() !== null ? this.FIT()!.unpack() : null),
     this.bb!.createObjList<PCFEventDefinition, PCFEventDefinitionT>(this.EVENTS.bind(this), this.eventsLength()),
-    (this.MANEUVER_DETECTION() !== null ? this.MANEUVER_DETECTION()!.unpack() : null),
-    (this.REENTRY() !== null ? this.REENTRY()!.unpack() : null),
-    (this.LAUNCH() !== null ? this.LAUNCH()!.unpack() : null),
     (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null),
     (this.EPOCH_STORE() !== null ? this.EPOCH_STORE()!.unpack() : null)
   );
@@ -288,13 +217,8 @@ unpackTo(_o: PCFT): void {
   _o.THEORY = this.THEORY();
   _o.INTEGRATOR = (this.INTEGRATOR() !== null ? this.INTEGRATOR()!.unpack() : null);
   _o.FORCES = (this.FORCES() !== null ? this.FORCES()!.unpack() : null);
-  _o.MEAN_ELEMENT = (this.MEAN_ELEMENT() !== null ? this.MEAN_ELEMENT()!.unpack() : null);
-  _o.SEGMENTS = (this.SEGMENTS() !== null ? this.SEGMENTS()!.unpack() : null);
   _o.FIT = (this.FIT() !== null ? this.FIT()!.unpack() : null);
   _o.EVENTS = this.bb!.createObjList<PCFEventDefinition, PCFEventDefinitionT>(this.EVENTS.bind(this), this.eventsLength());
-  _o.MANEUVER_DETECTION = (this.MANEUVER_DETECTION() !== null ? this.MANEUVER_DETECTION()!.unpack() : null);
-  _o.REENTRY = (this.REENTRY() !== null ? this.REENTRY()!.unpack() : null);
-  _o.LAUNCH = (this.LAUNCH() !== null ? this.LAUNCH()!.unpack() : null);
   _o.OUTPUT = (this.OUTPUT() !== null ? this.OUTPUT()!.unpack() : null);
   _o.EPOCH_STORE = (this.EPOCH_STORE() !== null ? this.EPOCH_STORE()!.unpack() : null);
 }
@@ -307,13 +231,8 @@ constructor(
   public THEORY: pcfTheory = pcfTheory.UNSPECIFIED,
   public INTEGRATOR: PCFIntegratorSettingsT|null = null,
   public FORCES: PCFForceModelT|null = null,
-  public MEAN_ELEMENT: PCFMeanElementOptionsT|null = null,
-  public SEGMENTS: PCFSegmentOptionsT|null = null,
   public FIT: PCFFitPolicyT|null = null,
   public EVENTS: (PCFEventDefinitionT)[] = [],
-  public MANEUVER_DETECTION: PCFManeuverDetectionT|null = null,
-  public REENTRY: PCFReentryT|null = null,
-  public LAUNCH: PCFLaunchT|null = null,
   public OUTPUT: PCFOutputT|null = null,
   public EPOCH_STORE: PCFEpochStoreT|null = null
 ){}
@@ -324,13 +243,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const PROFILE = (this.PROFILE !== null ? builder.createString(this.PROFILE!) : 0);
   const INTEGRATOR = (this.INTEGRATOR !== null ? this.INTEGRATOR!.pack(builder) : 0);
   const FORCES = (this.FORCES !== null ? this.FORCES!.pack(builder) : 0);
-  const MEAN_ELEMENT = (this.MEAN_ELEMENT !== null ? this.MEAN_ELEMENT!.pack(builder) : 0);
-  const SEGMENTS = (this.SEGMENTS !== null ? this.SEGMENTS!.pack(builder) : 0);
   const FIT = (this.FIT !== null ? this.FIT!.pack(builder) : 0);
   const EVENTS = PCF.createEventsVector(builder, builder.createObjectOffsetList(this.EVENTS));
-  const MANEUVER_DETECTION = (this.MANEUVER_DETECTION !== null ? this.MANEUVER_DETECTION!.pack(builder) : 0);
-  const REENTRY = (this.REENTRY !== null ? this.REENTRY!.pack(builder) : 0);
-  const LAUNCH = (this.LAUNCH !== null ? this.LAUNCH!.pack(builder) : 0);
   const OUTPUT = (this.OUTPUT !== null ? this.OUTPUT!.pack(builder) : 0);
   const EPOCH_STORE = (this.EPOCH_STORE !== null ? this.EPOCH_STORE!.pack(builder) : 0);
 
@@ -340,13 +254,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   PCF.addTheory(builder, this.THEORY);
   PCF.addIntegrator(builder, INTEGRATOR);
   PCF.addForces(builder, FORCES);
-  PCF.addMeanElement(builder, MEAN_ELEMENT);
-  PCF.addSegments(builder, SEGMENTS);
   PCF.addFit(builder, FIT);
   PCF.addEvents(builder, EVENTS);
-  PCF.addManeuverDetection(builder, MANEUVER_DETECTION);
-  PCF.addReentry(builder, REENTRY);
-  PCF.addLaunch(builder, LAUNCH);
   PCF.addOutput(builder, OUTPUT);
   PCF.addEpochStore(builder, EPOCH_STORE);
 

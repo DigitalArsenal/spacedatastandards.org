@@ -27,12 +27,6 @@ export enum pcfTheory {
   SGP4XP = 2,
 
   /**
-   * SDN's own advanced mean-element theory, labeled as its own; carried in
-   * $OMM as a user-defined theory until $MET appends it.
-   */
-  SDNAP = 3,
-
-  /**
    * Numerical integration of the equations of motion under the full force
    * model of PCFForceModel (profile FFM-1).
    */

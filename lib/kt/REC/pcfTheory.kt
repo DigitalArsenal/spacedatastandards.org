@@ -24,11 +24,6 @@ class pcfTheory private constructor() {
          */
         const val SGP4XP: UByte = 2u
         /**
-         * SDN's own advanced mean-element theory, labeled as its own; carried in
-         * $OMM as a user-defined theory until $MET appends it.
-         */
-        const val SDNAP: UByte = 3u
-        /**
          * Numerical integration of the equations of motion under the full force
          * model of PCFForceModel (profile FFM-1).
          */

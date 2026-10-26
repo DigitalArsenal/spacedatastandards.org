@@ -24,11 +24,6 @@ public final class pcfTheory {
    */
   public static final int SGP4XP = 2;
   /**
-   * SDN's own advanced mean-element theory, labeled as its own; carried in
-   * $OMM as a user-defined theory until $MET appends it.
-   */
-  public static final int SDNAP = 3;
-  /**
    * Numerical integration of the equations of motion under the full force
    * model of PCFForceModel (profile FFM-1).
    */
@@ -38,7 +33,7 @@ public final class pcfTheory {
    */
   public static final int KEPLER = 5;
 
-  public static final String[] names = { "UNSPECIFIED", "SGP4", "SGP4XP", "SDNAP", "FFM", "KEPLER", };
+  public static final String[] names = { "UNSPECIFIED", "SGP4", "SGP4XP", "", "FFM", "KEPLER", };
 
   public static String name(int e) { return names[e]; }
 }

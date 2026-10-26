@@ -19,9 +19,6 @@ enum pcfTheory:
     /// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
     /// astrodynamics conference literature); the same value as $MET SGP4XP.
     pcfTheory_SGP4XP = 2
-    /// SDN's own advanced mean-element theory, labeled as its own; carried in
-    /// $OMM as a user-defined theory until $MET appends it.
-    pcfTheory_SDNAP = 3
     /// Numerical integration of the equations of motion under the full force
     /// model of PCFForceModel (profile FFM-1).
     pcfTheory_FFM = 4
@@ -174,28 +171,6 @@ enum pcfExpressionOperation:
     /// Pop two, push the lesser or the greater.
     pcfExpressionOperation_MINIMUM = 12
     pcfExpressionOperation_MAXIMUM = 13
-
-/// How the correlation of maneuver-detection innovations is weighted. Append
-/// new values only.
-enum pcfInnovationCorrelation:
-    pcfInnovationCorrelation_UNSPECIFIED = 0
-    /// Every sample independent (the white-noise assumption).
-    pcfInnovationCorrelation_WHITE = 1
-    /// One sample per revolution counts, so a revolution is one independent
-    /// innovation.
-    pcfInnovationCorrelation_ONE_SAMPLE_PER_REVOLUTION = 2
-    /// An exponential correlation of the innovations over a correlation time.
-    pcfInnovationCorrelation_CORRELATION_TIME = 3
-
-/// How the reentry-time window is computed. Append new values only.
-enum pcfReentryWindowMethod:
-    pcfReentryWindowMethod_UNSPECIFIED = 0
-    /// First-order propagation of the ballistic and density sigmas through the
-    /// remaining life.
-    pcfReentryWindowMethod_LINEAR = 1
-    /// The unscented transform over the hand-off state, the ballistic
-    /// coefficient and the density level.
-    pcfReentryWindowMethod_UNSCENTED = 2
 
 /// Frame of the output states. Append new values only.
 enum pcfOutputFrame:
@@ -373,12 +348,6 @@ enum pcfGnssSpacecraftBlock:
 
 class PCFGaussianPrior
 
-class PCFEmpiricalTerms
-
-class PCFMeanElementOptions
-
-class PCFSegmentOptions
-
 class PCFFitPolicy
 
 class PCFExpressionTerm
@@ -386,12 +355,6 @@ class PCFExpressionTerm
 class PCFExpression
 
 class PCFEventDefinition
-
-class PCFManeuverDetection
-
-class PCFReentry
-
-class PCFLaunch
 
 class PCFOutput
 
@@ -435,218 +398,6 @@ struct PCFGaussianPriorBuilder:
         return this
     def add_HAS_SIGMA(HAS_SIGMA:bool):
         b_.PrependBoolSlot(2, HAS_SIGMA, 0)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Empirical along-track terms of the averaged theories: a transverse
-/// acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
-/// latitude and g = 1 on the fit arc.
-class PCFEmpiricalTerms : flatbuffers.handle
-    /// Fit the once-per-revolution pair (TAUC, TAUS). Default true.
-    def ONCE_PER_REVOLUTION() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 4, 1))
-    /// The constant term TAU0 is free only when this rule selects it: a fitted
-    /// B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
-    /// prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
-    def TAU0_RULE_LIMIT_M2_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 0.5)
-    /// True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
-    /// default) leaves TAU0 off.
-    def HAS_TAU0_RULE_LIMIT_M2_KG() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 8, 0))
-    /// True holds TAUC and TAUS after the arc end above the drag regime
-    /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
-    /// once-per-revolution part of radiation pressure; false decays them over
-    /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
-    /// written before 1.268.0 omits a false value, so it reads true.
-    def HELD_ABOVE_DRAG_REGIME() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 10, 1))
-    /// Persistence time of the empirical force after the arc end, hours.
-    /// Default 24.
-    def PERSISTENCE_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 24.0)
-
-def GetRootAsPCFEmpiricalTerms(buf:string): return PCFEmpiricalTerms { buf, flatbuffers.indirect(buf, 0) }
-
-struct PCFEmpiricalTermsBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(5)
-        return this
-    def add_ONCE_PER_REVOLUTION(ONCE_PER_REVOLUTION:bool):
-        b_.PrependBoolSlot(0, ONCE_PER_REVOLUTION, 1)
-        return this
-    def add_TAU0_RULE_LIMIT_M2_KG(TAU0_RULE_LIMIT_M2_KG:float):
-        b_.PrependFloat64Slot(1, TAU0_RULE_LIMIT_M2_KG, 0.5)
-        return this
-    def add_HAS_TAU0_RULE_LIMIT_M2_KG(HAS_TAU0_RULE_LIMIT_M2_KG:bool):
-        b_.PrependBoolSlot(2, HAS_TAU0_RULE_LIMIT_M2_KG, 0)
-        return this
-    def add_HELD_ABOVE_DRAG_REGIME(HELD_ABOVE_DRAG_REGIME:bool):
-        b_.PrependBoolSlot(3, HELD_ABOVE_DRAG_REGIME, 1)
-        return this
-    def add_PERSISTENCE_HOURS(PERSISTENCE_HOURS:float):
-        b_.PrependFloat64Slot(4, PERSISTENCE_HOURS, 24.0)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Truncations and switches of the averaged (mean-element) theories SGP4XP
-/// and SDNAP. SGP4's constants are fixed by its specification and are not
-/// options.
-class PCFMeanElementOptions : flatbuffers.handle
-    /// Highest even degree of the m-daily short-periodic gravity terms; 0
-    /// omits them. Range 0 to 16. Default 12.
-    def M_DAILY_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 4, 12)
-    /// Highest degree of the zonal tail (secular and long-period terms past
-    /// J5). Range 6 to 70. Default 20.
-    def ZONAL_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 6, 20)
-    /// Highest degree of the eccentricity-vector short-periodic terms. Range
-    /// 2 to 16. Default 7.
-    def SHORT_PERIODIC_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 8, 7)
-    /// Resonance terms on or off. Default true.
-    def ENABLE_RESONANCE() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 10, 1))
-    /// Highest odd degree of the shallow-resonance terms. Default 31.
-    def RESONANCE_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 12, 31)
-    /// Resonance band: terms whose angle drifts slower than this fraction of
-    /// the mean motion are integrated with the rates. Default 0.045.
-    def RESONANCE_BAND() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 0.045)
-    /// Highest multiple of the mean anomaly in a resonance angle. Default 1.
-    def RESONANCE_MAXIMUM_K() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 16, 1)
-    /// Near-resonance band at output time, as a fraction of the mean motion
-    /// beyond RESONANCE_BAND; 0 is off. Default 0.
-    def NEAR_RESONANCE_BAND() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    /// Divisor of the integration grid step; >= 1. Default 1.
-    def GRID_STEP_DIVISOR() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 20, 1)
-    /// The catalog-shared density kernel (a gridded log-density table shared by
-    /// every object) on or off; off evaluates the atmosphere model directly.
-    /// Default true.
-    def DENSITY_KERNEL() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 22, 1))
-    /// Perigee height below which B_eff and TAU0 act (the drag regime), km.
-    /// Default 2500.
-    def DRAG_REGIME_PERIGEE_KM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 2500.0)
-
-def GetRootAsPCFMeanElementOptions(buf:string): return PCFMeanElementOptions { buf, flatbuffers.indirect(buf, 0) }
-
-struct PCFMeanElementOptionsBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(11)
-        return this
-    def add_M_DAILY_MAXIMUM_DEGREE(M_DAILY_MAXIMUM_DEGREE:int):
-        b_.PrependUint8Slot(0, M_DAILY_MAXIMUM_DEGREE, 12)
-        return this
-    def add_ZONAL_MAXIMUM_DEGREE(ZONAL_MAXIMUM_DEGREE:int):
-        b_.PrependUint8Slot(1, ZONAL_MAXIMUM_DEGREE, 20)
-        return this
-    def add_SHORT_PERIODIC_MAXIMUM_DEGREE(SHORT_PERIODIC_MAXIMUM_DEGREE:int):
-        b_.PrependUint8Slot(2, SHORT_PERIODIC_MAXIMUM_DEGREE, 7)
-        return this
-    def add_ENABLE_RESONANCE(ENABLE_RESONANCE:bool):
-        b_.PrependBoolSlot(3, ENABLE_RESONANCE, 1)
-        return this
-    def add_RESONANCE_MAXIMUM_DEGREE(RESONANCE_MAXIMUM_DEGREE:int):
-        b_.PrependUint8Slot(4, RESONANCE_MAXIMUM_DEGREE, 31)
-        return this
-    def add_RESONANCE_BAND(RESONANCE_BAND:float):
-        b_.PrependFloat64Slot(5, RESONANCE_BAND, 0.045)
-        return this
-    def add_RESONANCE_MAXIMUM_K(RESONANCE_MAXIMUM_K:int):
-        b_.PrependUint8Slot(6, RESONANCE_MAXIMUM_K, 1)
-        return this
-    def add_NEAR_RESONANCE_BAND(NEAR_RESONANCE_BAND:float):
-        b_.PrependFloat64Slot(7, NEAR_RESONANCE_BAND, 0.0)
-        return this
-    def add_GRID_STEP_DIVISOR(GRID_STEP_DIVISOR:int):
-        b_.PrependUint8Slot(8, GRID_STEP_DIVISOR, 1)
-        return this
-    def add_DENSITY_KERNEL(DENSITY_KERNEL:bool):
-        b_.PrependBoolSlot(9, DENSITY_KERNEL, 1)
-        return this
-    def add_DRAG_REGIME_PERIGEE_KM(DRAG_REGIME_PERIGEE_KM:float):
-        b_.PrependFloat64Slot(10, DRAG_REGIME_PERIGEE_KM, 2500.0)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
-/// cut into segments at maneuvers and sphere-of-influence passages.
-class PCFSegmentOptions : flatbuffers.handle
-    /// Moon-centered gravity field degree. Default 70.
-    def MOON_GRAVITY_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 4, 70)
-    /// Moon-centered short-periodic degree. Default 8.
-    def MOON_SHORT_PERIODIC_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 6, 8)
-    /// Moon-centered eccentricity order (highest |q| of the mean-anomaly
-    /// multiple kept). Default 2.
-    def MOON_ECCENTRICITY_ORDER() -> int:
-        return flatbuffers.field_uint8(buf_, pos_, 8, 2)
-    /// Moon-centered integration step, seconds. Default 240.
-    def MOON_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 240.0)
-    /// Cislunar integration step, seconds. Default 60.
-    def CISLUNAR_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 60.0)
-    /// Heliocentric integration step, seconds. Default 1800.
-    def HELIOCENTRIC_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 1800.0)
-    /// A segment is accepted when its RMS is within max(RMS_FACTOR x the
-    /// cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
-    def SEGMENT_RMS_FACTOR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 16, 2.0)
-    /// The additive term of the same rule, km. Default 0.05.
-    def SEGMENT_RMS_MARGIN_KM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 18, 0.05)
-    /// Shortest cislunar segment, hours. Default 6.
-    def CISLUNAR_MINIMUM_SEGMENT_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 6.0)
-
-def GetRootAsPCFSegmentOptions(buf:string): return PCFSegmentOptions { buf, flatbuffers.indirect(buf, 0) }
-
-struct PCFSegmentOptionsBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(9)
-        return this
-    def add_MOON_GRAVITY_MAXIMUM_DEGREE(MOON_GRAVITY_MAXIMUM_DEGREE:int):
-        b_.PrependUint16Slot(0, MOON_GRAVITY_MAXIMUM_DEGREE, 70)
-        return this
-    def add_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE(MOON_SHORT_PERIODIC_MAXIMUM_DEGREE:int):
-        b_.PrependUint8Slot(1, MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, 8)
-        return this
-    def add_MOON_ECCENTRICITY_ORDER(MOON_ECCENTRICITY_ORDER:int):
-        b_.PrependUint8Slot(2, MOON_ECCENTRICITY_ORDER, 2)
-        return this
-    def add_MOON_STEP_SECONDS(MOON_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(3, MOON_STEP_SECONDS, 240.0)
-        return this
-    def add_CISLUNAR_STEP_SECONDS(CISLUNAR_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(4, CISLUNAR_STEP_SECONDS, 60.0)
-        return this
-    def add_HELIOCENTRIC_STEP_SECONDS(HELIOCENTRIC_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(5, HELIOCENTRIC_STEP_SECONDS, 1800.0)
-        return this
-    def add_SEGMENT_RMS_FACTOR(SEGMENT_RMS_FACTOR:float):
-        b_.PrependFloat64Slot(6, SEGMENT_RMS_FACTOR, 2.0)
-        return this
-    def add_SEGMENT_RMS_MARGIN_KM(SEGMENT_RMS_MARGIN_KM:float):
-        b_.PrependFloat64Slot(7, SEGMENT_RMS_MARGIN_KM, 0.05)
-        return this
-    def add_CISLUNAR_MINIMUM_SEGMENT_HOURS(CISLUNAR_MINIMUM_SEGMENT_HOURS:float):
-        b_.PrependFloat64Slot(8, CISLUNAR_MINIMUM_SEGMENT_HOURS, 6.0)
         return this
     def end():
         return b_.EndObject()
@@ -704,7 +455,7 @@ class PCFFitPolicy : flatbuffers.handle
     def IMPLAUSIBLE_RMS_KM() -> float:
         return flatbuffers.field_float64(buf_, pos_, 28, 100.0)
     /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+    /// or without sigma: mean 0, sigma 0.05.
     def DRAG_PRIOR() -> PCFGaussianPrior?:
         let o = flatbuffers.field_table(buf_, pos_, 30)
         return if o: PCFGaussianPrior { buf_, o } else: nil
@@ -905,218 +656,6 @@ struct PCFEventDefinitionBuilder:
         return this
     def add_EXPRESSION(EXPRESSION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(8, EXPRESSION)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Maneuver detection from fit innovations: a generalized-likelihood-ratio
-/// scan of the six mean elements.
-class PCFManeuverDetection : flatbuffers.handle
-    /// False-alarm rate the THRESHOLD is calibrated for, per object-year. A
-    /// provider that cannot recalibrate refuses another rate. Default 1.
-    def FALSE_ALARMS_PER_OBJECT_YEAR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 1.0)
-    /// How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
-    def CORRELATION_MODEL() -> pcfInnovationCorrelation:
-        return pcfInnovationCorrelation(flatbuffers.field_uint8(buf_, pos_, 6, 2))
-    /// The statistic Lambda (chi-square, 3 degrees of freedom) above which a
-    /// maneuver is declared. Default 20.
-    def THRESHOLD() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 20.0)
-    /// States kept clear at each end of the arc when scanning. Default 12.
-    def MARGIN_STATES() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 10, 12)
-    /// Half-width of the window the burn epoch is refined in, hours. Default 2.
-    def REFINE_WINDOW_HOURS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 2.0)
-    /// Fewest states an arc must hold to be scanned. Default 48.
-    def MINIMUM_STATES() -> int:
-        return flatbuffers.field_uint32(buf_, pos_, 14, 48)
-
-def GetRootAsPCFManeuverDetection(buf:string): return PCFManeuverDetection { buf, flatbuffers.indirect(buf, 0) }
-
-struct PCFManeuverDetectionBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(6)
-        return this
-    def add_FALSE_ALARMS_PER_OBJECT_YEAR(FALSE_ALARMS_PER_OBJECT_YEAR:float):
-        b_.PrependFloat64Slot(0, FALSE_ALARMS_PER_OBJECT_YEAR, 1.0)
-        return this
-    def add_CORRELATION_MODEL(CORRELATION_MODEL:pcfInnovationCorrelation):
-        b_.PrependUint8Slot(1, CORRELATION_MODEL, 2)
-        return this
-    def add_THRESHOLD(THRESHOLD:float):
-        b_.PrependFloat64Slot(2, THRESHOLD, 20.0)
-        return this
-    def add_MARGIN_STATES(MARGIN_STATES:int):
-        b_.PrependUint32Slot(3, MARGIN_STATES, 12)
-        return this
-    def add_REFINE_WINDOW_HOURS(REFINE_WINDOW_HOURS:float):
-        b_.PrependFloat64Slot(4, REFINE_WINDOW_HOURS, 2.0)
-        return this
-    def add_MINIMUM_STATES(MINIMUM_STATES:int):
-        b_.PrependUint32Slot(5, MINIMUM_STATES, 48)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Reentry: where the averaged theory hands off to osculating integration,
-/// where the trajectory ends, and the width of the reentry window.
-class PCFReentry : flatbuffers.handle
-    /// Altitude at which the trajectory ends as reentered, km. Default 80.
-    def ALTITUDE_KM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 80.0)
-    /// Hand-off when the perigee altitude falls below this, km. Default 180.
-    def HANDOFF_PERIGEE_ALTITUDE_KM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 180.0)
-    /// Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
-    /// fraction of the density scale height H. Default 0.05.
-    def HANDOFF_DECAY_RATIO() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 0.05)
-    /// Hand-off when the eccentricity collapses by more than this fraction of
-    /// a e per revolution, with the eccentricity above
-    /// HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
-    def HANDOFF_ECCENTRICITY_COLLAPSE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.01)
-    /// Eccentricity above which the collapse test applies. Default 0.01.
-    def HANDOFF_MINIMUM_ECCENTRICITY() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 0.01)
-    /// Spacing of the nodes the hand-off tests are evaluated at, minutes.
-    /// Default 30.
-    def NODE_STEP_MINUTES() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 30.0)
-    /// Longest look-ahead for a hand-off or reentry, days. Default 120.
-    def HORIZON_DAYS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 16, 120.0)
-    /// How the reentry window is computed. Default LINEAR.
-    def WINDOW_METHOD() -> pcfReentryWindowMethod:
-        return pcfReentryWindowMethod(flatbuffers.field_uint8(buf_, pos_, 18, 1))
-    /// Fractional 1-sigma density error of the window. Default 0.15.
-    def WINDOW_DENSITY_SIGMA() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.15)
-    /// Correlation time of the density error, days. Default 2.
-    def WINDOW_CORRELATION_DAYS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 2.0)
-    /// Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
-    def WINDOW_BALLISTIC_SIGMA() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.05)
-    /// Step of the osculating integration after the hand-off, seconds. Default
-    /// 10.
-    def OSCULATING_STEP_SECONDS() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 10.0)
-    /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
-    /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
-    /// steps once per revolution while the averaged theory ramps, and the
-    /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
-    /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
-    /// Default 0.5.
-    def HANDOFF_SAWTOOTH_KM() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 28, 0.5)
-    /// Eccentricity above which the sawtooth test applies. Default 0.02.
-    def HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 30, 0.02)
-
-def GetRootAsPCFReentry(buf:string): return PCFReentry { buf, flatbuffers.indirect(buf, 0) }
-
-struct PCFReentryBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(14)
-        return this
-    def add_ALTITUDE_KM(ALTITUDE_KM:float):
-        b_.PrependFloat64Slot(0, ALTITUDE_KM, 80.0)
-        return this
-    def add_HANDOFF_PERIGEE_ALTITUDE_KM(HANDOFF_PERIGEE_ALTITUDE_KM:float):
-        b_.PrependFloat64Slot(1, HANDOFF_PERIGEE_ALTITUDE_KM, 180.0)
-        return this
-    def add_HANDOFF_DECAY_RATIO(HANDOFF_DECAY_RATIO:float):
-        b_.PrependFloat64Slot(2, HANDOFF_DECAY_RATIO, 0.05)
-        return this
-    def add_HANDOFF_ECCENTRICITY_COLLAPSE(HANDOFF_ECCENTRICITY_COLLAPSE:float):
-        b_.PrependFloat64Slot(3, HANDOFF_ECCENTRICITY_COLLAPSE, 0.01)
-        return this
-    def add_HANDOFF_MINIMUM_ECCENTRICITY(HANDOFF_MINIMUM_ECCENTRICITY:float):
-        b_.PrependFloat64Slot(4, HANDOFF_MINIMUM_ECCENTRICITY, 0.01)
-        return this
-    def add_NODE_STEP_MINUTES(NODE_STEP_MINUTES:float):
-        b_.PrependFloat64Slot(5, NODE_STEP_MINUTES, 30.0)
-        return this
-    def add_HORIZON_DAYS(HORIZON_DAYS:float):
-        b_.PrependFloat64Slot(6, HORIZON_DAYS, 120.0)
-        return this
-    def add_WINDOW_METHOD(WINDOW_METHOD:pcfReentryWindowMethod):
-        b_.PrependUint8Slot(7, WINDOW_METHOD, 1)
-        return this
-    def add_WINDOW_DENSITY_SIGMA(WINDOW_DENSITY_SIGMA:float):
-        b_.PrependFloat64Slot(8, WINDOW_DENSITY_SIGMA, 0.15)
-        return this
-    def add_WINDOW_CORRELATION_DAYS(WINDOW_CORRELATION_DAYS:float):
-        b_.PrependFloat64Slot(9, WINDOW_CORRELATION_DAYS, 2.0)
-        return this
-    def add_WINDOW_BALLISTIC_SIGMA(WINDOW_BALLISTIC_SIGMA:float):
-        b_.PrependFloat64Slot(10, WINDOW_BALLISTIC_SIGMA, 0.05)
-        return this
-    def add_OSCULATING_STEP_SECONDS(OSCULATING_STEP_SECONDS:float):
-        b_.PrependFloat64Slot(11, OSCULATING_STEP_SECONDS, 10.0)
-        return this
-    def add_HANDOFF_SAWTOOTH_KM(HANDOFF_SAWTOOTH_KM:float):
-        b_.PrependFloat64Slot(12, HANDOFF_SAWTOOTH_KM, 0.5)
-        return this
-    def add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY:float):
-        b_.PrependFloat64Slot(13, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02)
-        return this
-    def end():
-        return b_.EndObject()
-
-/// Launch initialization: priors for the first element sets of new objects
-/// and for a deployment batch fitted jointly.
-class PCFLaunch : flatbuffers.handle
-    /// A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
-    def DRAG_AREA_OVER_MASS_PRIOR_M2_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 4, 0.01)
-    /// A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
-    def SRP_AREA_OVER_MASS_PRIOR_M2_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 6, 0.01)
-    /// Prior 1-sigma of each object's separation velocity per axis, m/s.
-    /// Default 1.
-    def SEPARATION_SIGMA_M_S() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 8, 1.0)
-    /// Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
-    /// Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
-    def SHRINK_SIGMA_M2_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    /// True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
-    def HAS_SHRINK_SIGMA_M2_KG() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 12, 0))
-    /// Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
-    def BATCH_MEAN_SIGMA_M2_KG() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 1.0)
-
-def GetRootAsPCFLaunch(buf:string): return PCFLaunch { buf, flatbuffers.indirect(buf, 0) }
-
-struct PCFLaunchBuilder:
-    b_:flatbuffers.builder
-    def start():
-        b_.StartObject(6)
-        return this
-    def add_DRAG_AREA_OVER_MASS_PRIOR_M2_KG(DRAG_AREA_OVER_MASS_PRIOR_M2_KG:float):
-        b_.PrependFloat64Slot(0, DRAG_AREA_OVER_MASS_PRIOR_M2_KG, 0.01)
-        return this
-    def add_SRP_AREA_OVER_MASS_PRIOR_M2_KG(SRP_AREA_OVER_MASS_PRIOR_M2_KG:float):
-        b_.PrependFloat64Slot(1, SRP_AREA_OVER_MASS_PRIOR_M2_KG, 0.01)
-        return this
-    def add_SEPARATION_SIGMA_M_S(SEPARATION_SIGMA_M_S:float):
-        b_.PrependFloat64Slot(2, SEPARATION_SIGMA_M_S, 1.0)
-        return this
-    def add_SHRINK_SIGMA_M2_KG(SHRINK_SIGMA_M2_KG:float):
-        b_.PrependFloat64Slot(3, SHRINK_SIGMA_M2_KG, 0.0)
-        return this
-    def add_HAS_SHRINK_SIGMA_M2_KG(HAS_SHRINK_SIGMA_M2_KG:bool):
-        b_.PrependBoolSlot(4, HAS_SHRINK_SIGMA_M2_KG, 0)
-        return this
-    def add_BATCH_MEAN_SIGMA_M2_KG(BATCH_MEAN_SIGMA_M2_KG:float):
-        b_.PrependFloat64Slot(5, BATCH_MEAN_SIGMA_M2_KG, 1.0)
         return this
     def end():
         return b_.EndObject()
@@ -1526,27 +1065,22 @@ class PCFForceModel : flatbuffers.handle
     /// Neutral wind in the drag relative velocity. Default NONE.
     def NEUTRAL_WIND() -> pcfNeutralWind:
         return pcfNeutralWind(flatbuffers.field_uint8(buf_, pos_, 100, 0))
-    /// Empirical along-track terms of the averaged theories. Absent (the
-    /// default): the theory's own.
-    def EMPIRICAL_TERMS() -> PCFEmpiricalTerms?:
-        let o = flatbuffers.field_table(buf_, pos_, 102)
-        return if o: PCFEmpiricalTerms { buf_, o } else: nil
     /// Highest degree of the harmonic field of the third body that has one (the
     /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
     /// The field's acceleration at the frame origin is subtracted. Default 0:
     /// third bodies are point masses only.
     def THIRD_BODY_MAXIMUM_DEGREE() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 104, 0)
+        return flatbuffers.field_uint16(buf_, pos_, 102, 0)
     /// Highest order of that field; dimensionless. Default 0.
     def THIRD_BODY_MAXIMUM_ORDER() -> int:
-        return flatbuffers.field_uint16(buf_, pos_, 106, 0)
+        return flatbuffers.field_uint16(buf_, pos_, 104, 0)
 
 def GetRootAsPCFForceModel(buf:string): return PCFForceModel { buf, flatbuffers.indirect(buf, 0) }
 
 struct PCFForceModelBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(52)
+        b_.StartObject(51)
         return this
     def add_GRAVITY_CHOICE(GRAVITY_CHOICE:pcfGravitySelection):
         b_.PrependUint8Slot(0, GRAVITY_CHOICE, 0)
@@ -1695,14 +1229,11 @@ struct PCFForceModelBuilder:
     def add_NEUTRAL_WIND(NEUTRAL_WIND:pcfNeutralWind):
         b_.PrependUint8Slot(48, NEUTRAL_WIND, 0)
         return this
-    def add_EMPIRICAL_TERMS(EMPIRICAL_TERMS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(49, EMPIRICAL_TERMS)
-        return this
     def add_THIRD_BODY_MAXIMUM_DEGREE(THIRD_BODY_MAXIMUM_DEGREE:int):
-        b_.PrependUint16Slot(50, THIRD_BODY_MAXIMUM_DEGREE, 0)
+        b_.PrependUint16Slot(49, THIRD_BODY_MAXIMUM_DEGREE, 0)
         return this
     def add_THIRD_BODY_MAXIMUM_ORDER(THIRD_BODY_MAXIMUM_ORDER:int):
-        b_.PrependUint16Slot(51, THIRD_BODY_MAXIMUM_ORDER, 0)
+        b_.PrependUint16Slot(50, THIRD_BODY_MAXIMUM_ORDER, 0)
         return this
     def end():
         return b_.EndObject()
@@ -1735,7 +1266,7 @@ class PCFEpochStore : flatbuffers.handle
     /// The weight curve across the blend window. Default SMOOTHSTEP.
     def BLEND_SHAPE() -> pcfBlendShape:
         return pcfBlendShape(flatbuffers.field_uint8(buf_, pos_, 12, 0))
-    /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+    /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
     def THEORIES(i:int) -> pcfTheory:
         return read_uint8_le(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 1)
     def THEORIES_length() -> int:
@@ -1777,13 +1308,12 @@ def PCFEpochStoreCreateTHEORIESVector(b_:flatbuffers.builder, v_:[pcfTheory]):
     return b_.EndVector(v_.length)
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -1807,42 +1337,22 @@ class PCF : flatbuffers.handle
     def FORCES() -> PCFForceModel?:
         let o = flatbuffers.field_table(buf_, pos_, 12)
         return if o: PCFForceModel { buf_, o } else: nil
-    /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-    def MEAN_ELEMENT() -> PCFMeanElementOptions?:
-        let o = flatbuffers.field_table(buf_, pos_, 14)
-        return if o: PCFMeanElementOptions { buf_, o } else: nil
-    /// Beyond-Earth segment sets.
-    def SEGMENTS() -> PCFSegmentOptions?:
-        let o = flatbuffers.field_table(buf_, pos_, 16)
-        return if o: PCFSegmentOptions { buf_, o } else: nil
     /// Fit policy.
     def FIT() -> PCFFitPolicy?:
-        let o = flatbuffers.field_table(buf_, pos_, 18)
+        let o = flatbuffers.field_table(buf_, pos_, 14)
         return if o: PCFFitPolicy { buf_, o } else: nil
     /// Events located while integrating. Default empty.
     def EVENTS(i:int) -> PCFEventDefinition:
-        return PCFEventDefinition { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 20) + i * 4) }
+        return PCFEventDefinition { buf_, flatbuffers.indirect(buf_, flatbuffers.field_vector(buf_, pos_, 16) + i * 4) }
     def EVENTS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 20)
-    /// Maneuver detection.
-    def MANEUVER_DETECTION() -> PCFManeuverDetection?:
-        let o = flatbuffers.field_table(buf_, pos_, 22)
-        return if o: PCFManeuverDetection { buf_, o } else: nil
-    /// Reentry hand-off and window.
-    def REENTRY() -> PCFReentry?:
-        let o = flatbuffers.field_table(buf_, pos_, 24)
-        return if o: PCFReentry { buf_, o } else: nil
-    /// Launch initialization priors.
-    def LAUNCH() -> PCFLaunch?:
-        let o = flatbuffers.field_table(buf_, pos_, 26)
-        return if o: PCFLaunch { buf_, o } else: nil
+        return flatbuffers.field_vector_len(buf_, pos_, 16)
     /// Output states.
     def OUTPUT() -> PCFOutput?:
-        let o = flatbuffers.field_table(buf_, pos_, 28)
+        let o = flatbuffers.field_table(buf_, pos_, 18)
         return if o: PCFOutput { buf_, o } else: nil
     /// The multi-epoch element store and its sync harness. Absent: the defaults of PCFEpochStore.
     def EPOCH_STORE() -> PCFEpochStore?:
-        let o = flatbuffers.field_table(buf_, pos_, 30)
+        let o = flatbuffers.field_table(buf_, pos_, 20)
         return if o: PCFEpochStore { buf_, o } else: nil
 
 def GetRootAsPCF(buf:string): return PCF { buf, flatbuffers.indirect(buf, 0) }
@@ -1850,7 +1360,7 @@ def GetRootAsPCF(buf:string): return PCF { buf, flatbuffers.indirect(buf, 0) }
 struct PCFBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(14)
+        b_.StartObject(9)
         return this
     def add_CONFIGURATION_ID(CONFIGURATION_ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, CONFIGURATION_ID)
@@ -1867,32 +1377,17 @@ struct PCFBuilder:
     def add_FORCES(FORCES:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(4, FORCES)
         return this
-    def add_MEAN_ELEMENT(MEAN_ELEMENT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, MEAN_ELEMENT)
-        return this
-    def add_SEGMENTS(SEGMENTS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, SEGMENTS)
-        return this
     def add_FIT(FIT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, FIT)
+        b_.PrependUOffsetTRelativeSlot(5, FIT)
         return this
     def add_EVENTS(EVENTS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, EVENTS)
-        return this
-    def add_MANEUVER_DETECTION(MANEUVER_DETECTION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, MANEUVER_DETECTION)
-        return this
-    def add_REENTRY(REENTRY:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, REENTRY)
-        return this
-    def add_LAUNCH(LAUNCH:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, LAUNCH)
+        b_.PrependUOffsetTRelativeSlot(6, EVENTS)
         return this
     def add_OUTPUT(OUTPUT:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, OUTPUT)
+        b_.PrependUOffsetTRelativeSlot(7, OUTPUT)
         return this
     def add_EPOCH_STORE(EPOCH_STORE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(13, EPOCH_STORE)
+        b_.PrependUOffsetTRelativeSlot(8, EPOCH_STORE)
         return this
     def end():
         return b_.EndObject()

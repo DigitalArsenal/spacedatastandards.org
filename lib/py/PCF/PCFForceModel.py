@@ -484,26 +484,13 @@ class PCFForceModel(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # Empirical along-track terms of the averaged theories. Absent (the
-    # default): the theory's own.
-    # PCFForceModel
-    def EMPIRICAL_TERMS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
-        if o != 0:
-            x = self._tab.Indirect(o + self._tab.Pos)
-            from PCFEmpiricalTerms import PCFEmpiricalTerms
-            obj = PCFEmpiricalTerms()
-            obj.Init(self._tab.Bytes, x)
-            return obj
-        return None
-
     # Highest degree of the harmonic field of the third body that has one (the
     # Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
     # The field's acceleration at the frame origin is subtracted. Default 0:
     # third bodies are point masses only.
     # PCFForceModel
     def THIRD_BODY_MAXIMUM_DEGREE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
@@ -511,13 +498,13 @@ class PCFForceModel(object):
     # Highest order of that field; dimensionless. Default 0.
     # PCFForceModel
     def THIRD_BODY_MAXIMUM_ORDER(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
 def PCFForceModelStart(builder):
-    builder.StartObject(52)
+    builder.StartObject(51)
 
 def Start(builder):
     PCFForceModelStart(builder)
@@ -832,20 +819,14 @@ def PCFForceModelAddNEUTRAL_WIND(builder, NEUTRAL_WIND):
 def AddNEUTRAL_WIND(builder, NEUTRAL_WIND):
     PCFForceModelAddNEUTRAL_WIND(builder, NEUTRAL_WIND)
 
-def PCFForceModelAddEMPIRICAL_TERMS(builder, EMPIRICAL_TERMS):
-    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(EMPIRICAL_TERMS), 0)
-
-def AddEMPIRICAL_TERMS(builder, EMPIRICAL_TERMS):
-    PCFForceModelAddEMPIRICAL_TERMS(builder, EMPIRICAL_TERMS)
-
 def PCFForceModelAddTHIRD_BODY_MAXIMUM_DEGREE(builder, THIRD_BODY_MAXIMUM_DEGREE):
-    builder.PrependUint16Slot(50, THIRD_BODY_MAXIMUM_DEGREE, 0)
+    builder.PrependUint16Slot(49, THIRD_BODY_MAXIMUM_DEGREE, 0)
 
 def AddTHIRD_BODY_MAXIMUM_DEGREE(builder, THIRD_BODY_MAXIMUM_DEGREE):
     PCFForceModelAddTHIRD_BODY_MAXIMUM_DEGREE(builder, THIRD_BODY_MAXIMUM_DEGREE)
 
 def PCFForceModelAddTHIRD_BODY_MAXIMUM_ORDER(builder, THIRD_BODY_MAXIMUM_ORDER):
-    builder.PrependUint16Slot(51, THIRD_BODY_MAXIMUM_ORDER, 0)
+    builder.PrependUint16Slot(50, THIRD_BODY_MAXIMUM_ORDER, 0)
 
 def AddTHIRD_BODY_MAXIMUM_ORDER(builder, THIRD_BODY_MAXIMUM_ORDER):
     PCFForceModelAddTHIRD_BODY_MAXIMUM_ORDER(builder, THIRD_BODY_MAXIMUM_ORDER)
@@ -857,7 +838,6 @@ def End(builder):
     return PCFForceModelEnd(builder)
 
 import PCFEcom2
-import PCFEmpiricalTerms
 import PCFSpaceWeather
 try:
     from typing import List, Optional
@@ -918,7 +898,6 @@ class PCFForceModelT(object):
         DENSITY_CORRECTION_RELAXATION_HOURS = 0.0,
         HAS_DENSITY_CORRECTION_RELAXATION_HOURS = False,
         NEUTRAL_WIND = 0,
-        EMPIRICAL_TERMS = None,
         THIRD_BODY_MAXIMUM_DEGREE = 0,
         THIRD_BODY_MAXIMUM_ORDER = 0,
     ):
@@ -971,7 +950,6 @@ class PCFForceModelT(object):
         self.DENSITY_CORRECTION_RELAXATION_HOURS = DENSITY_CORRECTION_RELAXATION_HOURS  # type: float
         self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS = HAS_DENSITY_CORRECTION_RELAXATION_HOURS  # type: bool
         self.NEUTRAL_WIND = NEUTRAL_WIND  # type: int
-        self.EMPIRICAL_TERMS = EMPIRICAL_TERMS  # type: Optional[PCFEmpiricalTerms.PCFEmpiricalTermsT]
         self.THIRD_BODY_MAXIMUM_DEGREE = THIRD_BODY_MAXIMUM_DEGREE  # type: int
         self.THIRD_BODY_MAXIMUM_ORDER = THIRD_BODY_MAXIMUM_ORDER  # type: int
 
@@ -1053,8 +1031,6 @@ class PCFForceModelT(object):
         self.DENSITY_CORRECTION_RELAXATION_HOURS = PCFForceModel.DENSITY_CORRECTION_RELAXATION_HOURS()
         self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS = PCFForceModel.HAS_DENSITY_CORRECTION_RELAXATION_HOURS()
         self.NEUTRAL_WIND = PCFForceModel.NEUTRAL_WIND()
-        if PCFForceModel.EMPIRICAL_TERMS() is not None:
-            self.EMPIRICAL_TERMS = PCFEmpiricalTerms.PCFEmpiricalTermsT.InitFromObj(PCFForceModel.EMPIRICAL_TERMS())
         self.THIRD_BODY_MAXIMUM_DEGREE = PCFForceModel.THIRD_BODY_MAXIMUM_DEGREE()
         self.THIRD_BODY_MAXIMUM_ORDER = PCFForceModel.THIRD_BODY_MAXIMUM_ORDER()
 
@@ -1074,8 +1050,6 @@ class PCFForceModelT(object):
             EPHEMERIS_SOURCE = builder.CreateString(self.EPHEMERIS_SOURCE)
         if self.ECOM2 is not None:
             ECOM2 = self.ECOM2.Pack(builder)
-        if self.EMPIRICAL_TERMS is not None:
-            EMPIRICAL_TERMS = self.EMPIRICAL_TERMS.Pack(builder)
         PCFForceModelStart(builder)
         PCFForceModelAddGRAVITY_CHOICE(builder, self.GRAVITY_CHOICE)
         PCFForceModelAddENABLE_POINT_MASS(builder, self.ENABLE_POINT_MASS)
@@ -1130,8 +1104,6 @@ class PCFForceModelT(object):
         PCFForceModelAddDENSITY_CORRECTION_RELAXATION_HOURS(builder, self.DENSITY_CORRECTION_RELAXATION_HOURS)
         PCFForceModelAddHAS_DENSITY_CORRECTION_RELAXATION_HOURS(builder, self.HAS_DENSITY_CORRECTION_RELAXATION_HOURS)
         PCFForceModelAddNEUTRAL_WIND(builder, self.NEUTRAL_WIND)
-        if self.EMPIRICAL_TERMS is not None:
-            PCFForceModelAddEMPIRICAL_TERMS(builder, EMPIRICAL_TERMS)
         PCFForceModelAddTHIRD_BODY_MAXIMUM_DEGREE(builder, self.THIRD_BODY_MAXIMUM_DEGREE)
         PCFForceModelAddTHIRD_BODY_MAXIMUM_ORDER(builder, self.THIRD_BODY_MAXIMUM_ORDER)
         PCFForceModel = PCFForceModelEnd(builder)

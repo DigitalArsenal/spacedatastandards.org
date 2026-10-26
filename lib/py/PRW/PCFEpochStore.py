@@ -73,7 +73,7 @@ class PCFEpochStore(object):
             return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
-    # Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+    # Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
     # PCFEpochStore
     def THEORIES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))

@@ -1,5 +1,5 @@
-// Hash: 7721e4ea9699308906e69e22cfae5a3647161d65c408f4e15fdf41095018a108
-// Version: 2.0.6
+// Hash: e556fe7f5374fe31d7be192907f72ef4b39c53cf39f1a1a33153373fe966a234
+// Version: 2.0.7
 // -----------------------------------END_HEADER
 include "../RFM/main.fbs";
 include "../TIM/main.fbs";
@@ -44,11 +44,7 @@ table OMM {
   /// International Designator (YYYY-NNNAAA)
   OBJECT_ID:string;
   /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-  /// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-  /// Earth's reach states its elements about that center; GM is then the
-  /// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-  /// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-  /// MEAN_ANOMALY.
+  /// SUN or a planet.
   CENTER_NAME:string;
   /// Reference Frame
   /// Typically TEMEOFDATE
@@ -114,12 +110,11 @@ table OMM {
   ELEMENT_SET_NO:uint32;
   /// REV_AT_EPOCH [O if SGP/SGP4]
   REV_AT_EPOCH:double;
-  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-  /// signed effective ballistic coefficient B_eff) [C]
+  /// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
   BSTAR:double;
   /// MEAN_MOTION_DOT in rev/day**2 [C if SGP or PPT3]
   MEAN_MOTION_DOT:double;
-  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+  /// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
   MEAN_MOTION_DDOT:double;
 
   /// Position/Velocity Covariance Matrix (6x6 Lower Triangular) [C if any covariance provided]

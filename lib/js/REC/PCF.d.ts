@@ -4,22 +4,16 @@ import { PCFEventDefinition, PCFEventDefinitionT } from './PCFEventDefinition.js
 import { PCFFitPolicy, PCFFitPolicyT } from './PCFFitPolicy.js';
 import { PCFForceModel, PCFForceModelT } from './PCFForceModel.js';
 import { PCFIntegratorSettings, PCFIntegratorSettingsT } from './PCFIntegratorSettings.js';
-import { PCFLaunch, PCFLaunchT } from './PCFLaunch.js';
-import { PCFManeuverDetection, PCFManeuverDetectionT } from './PCFManeuverDetection.js';
-import { PCFMeanElementOptions, PCFMeanElementOptionsT } from './PCFMeanElementOptions.js';
 import { PCFOutput, PCFOutputT } from './PCFOutput.js';
-import { PCFReentry, PCFReentryT } from './PCFReentry.js';
-import { PCFSegmentOptions, PCFSegmentOptionsT } from './PCFSegmentOptions.js';
 import { pcfTheory } from './pcfTheory.js';
 /**
  * Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
- * any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
- * force model, Kepler): the theory, the integrator and its settings, the
- * forces, the fit policy, the events to locate, maneuver detection, reentry
- * hand-off, launch priors and the output. A host passes it beside the
- * request; the method it invokes (propagate, fit, detect maneuvers, reentry,
- * launch) selects the tables that method reads. An absent table takes the
- * theory's own defaults; a table or value the selected theory cannot honor is
+ * any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+ * the integrator and its settings, the forces, the fit policy, the events to
+ * locate, the epoch store and the output. A host passes it beside the
+ * request; the method it invokes selects the tables that method reads. An
+ * absent table takes the theory's own defaults; a table or value the
+ * selected theory cannot honor is
  * refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
  * PCFForceModel and their enums, so the runtime wire and the configuration
  * share one definition of each. Units are in the field names and docs; every
@@ -56,14 +50,6 @@ export declare class PCF implements flatbuffers.IUnpackableObject<PCFT> {
      */
     FORCES(obj?: PCFForceModel): PCFForceModel | null;
     /**
-     * Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-     */
-    MEAN_ELEMENT(obj?: PCFMeanElementOptions): PCFMeanElementOptions | null;
-    /**
-     * Beyond-Earth segment sets.
-     */
-    SEGMENTS(obj?: PCFSegmentOptions): PCFSegmentOptions | null;
-    /**
      * Fit policy.
      */
     FIT(obj?: PCFFitPolicy): PCFFitPolicy | null;
@@ -72,18 +58,6 @@ export declare class PCF implements flatbuffers.IUnpackableObject<PCFT> {
      */
     EVENTS(index: number, obj?: PCFEventDefinition): PCFEventDefinition | null;
     eventsLength(): number;
-    /**
-     * Maneuver detection.
-     */
-    MANEUVER_DETECTION(obj?: PCFManeuverDetection): PCFManeuverDetection | null;
-    /**
-     * Reentry hand-off and window.
-     */
-    REENTRY(obj?: PCFReentry): PCFReentry | null;
-    /**
-     * Launch initialization priors.
-     */
-    LAUNCH(obj?: PCFLaunch): PCFLaunch | null;
     /**
      * Output states.
      */
@@ -98,15 +72,10 @@ export declare class PCF implements flatbuffers.IUnpackableObject<PCFT> {
     static addTheory(builder: flatbuffers.Builder, THEORY: pcfTheory): void;
     static addIntegrator(builder: flatbuffers.Builder, INTEGRATOROffset: flatbuffers.Offset): void;
     static addForces(builder: flatbuffers.Builder, FORCESOffset: flatbuffers.Offset): void;
-    static addMeanElement(builder: flatbuffers.Builder, MEAN_ELEMENTOffset: flatbuffers.Offset): void;
-    static addSegments(builder: flatbuffers.Builder, SEGMENTSOffset: flatbuffers.Offset): void;
     static addFit(builder: flatbuffers.Builder, FITOffset: flatbuffers.Offset): void;
     static addEvents(builder: flatbuffers.Builder, EVENTSOffset: flatbuffers.Offset): void;
     static createEventsVector(builder: flatbuffers.Builder, data: flatbuffers.Offset[]): flatbuffers.Offset;
     static startEventsVector(builder: flatbuffers.Builder, numElems: number): void;
-    static addManeuverDetection(builder: flatbuffers.Builder, MANEUVER_DETECTIONOffset: flatbuffers.Offset): void;
-    static addReentry(builder: flatbuffers.Builder, REENTRYOffset: flatbuffers.Offset): void;
-    static addLaunch(builder: flatbuffers.Builder, LAUNCHOffset: flatbuffers.Offset): void;
     static addOutput(builder: flatbuffers.Builder, OUTPUTOffset: flatbuffers.Offset): void;
     static addEpochStore(builder: flatbuffers.Builder, EPOCH_STOREOffset: flatbuffers.Offset): void;
     static endPCF(builder: flatbuffers.Builder): flatbuffers.Offset;
@@ -121,16 +90,11 @@ export declare class PCFT implements flatbuffers.IGeneratedObject {
     THEORY: pcfTheory;
     INTEGRATOR: PCFIntegratorSettingsT | null;
     FORCES: PCFForceModelT | null;
-    MEAN_ELEMENT: PCFMeanElementOptionsT | null;
-    SEGMENTS: PCFSegmentOptionsT | null;
     FIT: PCFFitPolicyT | null;
     EVENTS: (PCFEventDefinitionT)[];
-    MANEUVER_DETECTION: PCFManeuverDetectionT | null;
-    REENTRY: PCFReentryT | null;
-    LAUNCH: PCFLaunchT | null;
     OUTPUT: PCFOutputT | null;
     EPOCH_STORE: PCFEpochStoreT | null;
-    constructor(CONFIGURATION_ID?: string | Uint8Array | null, PROFILE?: string | Uint8Array | null, THEORY?: pcfTheory, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, MEAN_ELEMENT?: PCFMeanElementOptionsT | null, SEGMENTS?: PCFSegmentOptionsT | null, FIT?: PCFFitPolicyT | null, EVENTS?: (PCFEventDefinitionT)[], MANEUVER_DETECTION?: PCFManeuverDetectionT | null, REENTRY?: PCFReentryT | null, LAUNCH?: PCFLaunchT | null, OUTPUT?: PCFOutputT | null, EPOCH_STORE?: PCFEpochStoreT | null);
+    constructor(CONFIGURATION_ID?: string | Uint8Array | null, PROFILE?: string | Uint8Array | null, THEORY?: pcfTheory, INTEGRATOR?: PCFIntegratorSettingsT | null, FORCES?: PCFForceModelT | null, FIT?: PCFFitPolicyT | null, EVENTS?: (PCFEventDefinitionT)[], OUTPUT?: PCFOutputT | null, EPOCH_STORE?: PCFEpochStoreT | null);
     pack(builder: flatbuffers.Builder): flatbuffers.Offset;
 }
 //# sourceMappingURL=PCF.d.ts.map

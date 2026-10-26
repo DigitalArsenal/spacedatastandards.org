@@ -21,15 +21,6 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 25 &&
 struct PCFGaussianPrior;
 struct PCFGaussianPriorBuilder;
 
-struct PCFEmpiricalTerms;
-struct PCFEmpiricalTermsBuilder;
-
-struct PCFMeanElementOptions;
-struct PCFMeanElementOptionsBuilder;
-
-struct PCFSegmentOptions;
-struct PCFSegmentOptionsBuilder;
-
 struct PCFFitPolicy;
 struct PCFFitPolicyBuilder;
 
@@ -41,15 +32,6 @@ struct PCFExpressionBuilder;
 
 struct PCFEventDefinition;
 struct PCFEventDefinitionBuilder;
-
-struct PCFManeuverDetection;
-struct PCFManeuverDetectionBuilder;
-
-struct PCFReentry;
-struct PCFReentryBuilder;
-
-struct PCFLaunch;
-struct PCFLaunchBuilder;
 
 struct PCFOutput;
 struct PCFOutputBuilder;
@@ -85,9 +67,6 @@ enum pcfTheory : uint8_t {
   /// SGP4 with extended perturbations (SGP4-XP, as published in the 2022
   /// astrodynamics conference literature); the same value as $MET SGP4XP.
   pcfTheory_SGP4XP = 2,
-  /// SDN's own advanced mean-element theory, labeled as its own; carried in
-  /// $OMM as a user-defined theory until $MET appends it.
-  pcfTheory_SDNAP = 3,
   /// Numerical integration of the equations of motion under the full force
   /// model of PCFForceModel (profile FFM-1).
   pcfTheory_FFM = 4,
@@ -97,12 +76,11 @@ enum pcfTheory : uint8_t {
   pcfTheory_MAX = pcfTheory_KEPLER
 };
 
-inline const pcfTheory (&EnumValuespcfTheory())[6] {
+inline const pcfTheory (&EnumValuespcfTheory())[5] {
   static const pcfTheory values[] = {
     pcfTheory_UNSPECIFIED,
     pcfTheory_SGP4,
     pcfTheory_SGP4XP,
-    pcfTheory_SDNAP,
     pcfTheory_FFM,
     pcfTheory_KEPLER
   };
@@ -114,7 +92,7 @@ inline const char * const *EnumNamespcfTheory() {
     "UNSPECIFIED",
     "SGP4",
     "SGP4XP",
-    "SDNAP",
+    "",
     "FFM",
     "KEPLER",
     nullptr
@@ -611,86 +589,6 @@ inline const char *EnumNamepcfExpressionOperation(pcfExpressionOperation e) {
   if (::flatbuffers::IsOutRange(e, pcfExpressionOperation_UNSPECIFIED, pcfExpressionOperation_MAXIMUM)) return "";
   const size_t index = static_cast<size_t>(e);
   return EnumNamespcfExpressionOperation()[index];
-}
-
-/// How the correlation of maneuver-detection innovations is weighted. Append
-/// new values only.
-enum pcfInnovationCorrelation : uint8_t {
-  pcfInnovationCorrelation_UNSPECIFIED = 0,
-  /// Every sample independent (the white-noise assumption).
-  pcfInnovationCorrelation_WHITE = 1,
-  /// One sample per revolution counts, so a revolution is one independent
-  /// innovation.
-  pcfInnovationCorrelation_ONE_SAMPLE_PER_REVOLUTION = 2,
-  /// An exponential correlation of the innovations over a correlation time.
-  pcfInnovationCorrelation_CORRELATION_TIME = 3,
-  pcfInnovationCorrelation_MIN = pcfInnovationCorrelation_UNSPECIFIED,
-  pcfInnovationCorrelation_MAX = pcfInnovationCorrelation_CORRELATION_TIME
-};
-
-inline const pcfInnovationCorrelation (&EnumValuespcfInnovationCorrelation())[4] {
-  static const pcfInnovationCorrelation values[] = {
-    pcfInnovationCorrelation_UNSPECIFIED,
-    pcfInnovationCorrelation_WHITE,
-    pcfInnovationCorrelation_ONE_SAMPLE_PER_REVOLUTION,
-    pcfInnovationCorrelation_CORRELATION_TIME
-  };
-  return values;
-}
-
-inline const char * const *EnumNamespcfInnovationCorrelation() {
-  static const char * const names[5] = {
-    "UNSPECIFIED",
-    "WHITE",
-    "ONE_SAMPLE_PER_REVOLUTION",
-    "CORRELATION_TIME",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamepcfInnovationCorrelation(pcfInnovationCorrelation e) {
-  if (::flatbuffers::IsOutRange(e, pcfInnovationCorrelation_UNSPECIFIED, pcfInnovationCorrelation_CORRELATION_TIME)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamespcfInnovationCorrelation()[index];
-}
-
-/// How the reentry-time window is computed. Append new values only.
-enum pcfReentryWindowMethod : uint8_t {
-  pcfReentryWindowMethod_UNSPECIFIED = 0,
-  /// First-order propagation of the ballistic and density sigmas through the
-  /// remaining life.
-  pcfReentryWindowMethod_LINEAR = 1,
-  /// The unscented transform over the hand-off state, the ballistic
-  /// coefficient and the density level.
-  pcfReentryWindowMethod_UNSCENTED = 2,
-  pcfReentryWindowMethod_MIN = pcfReentryWindowMethod_UNSPECIFIED,
-  pcfReentryWindowMethod_MAX = pcfReentryWindowMethod_UNSCENTED
-};
-
-inline const pcfReentryWindowMethod (&EnumValuespcfReentryWindowMethod())[3] {
-  static const pcfReentryWindowMethod values[] = {
-    pcfReentryWindowMethod_UNSPECIFIED,
-    pcfReentryWindowMethod_LINEAR,
-    pcfReentryWindowMethod_UNSCENTED
-  };
-  return values;
-}
-
-inline const char * const *EnumNamespcfReentryWindowMethod() {
-  static const char * const names[4] = {
-    "UNSPECIFIED",
-    "LINEAR",
-    "UNSCENTED",
-    nullptr
-  };
-  return names;
-}
-
-inline const char *EnumNamepcfReentryWindowMethod(pcfReentryWindowMethod e) {
-  if (::flatbuffers::IsOutRange(e, pcfReentryWindowMethod_UNSPECIFIED, pcfReentryWindowMethod_UNSCENTED)) return "";
-  const size_t index = static_cast<size_t>(e);
-  return EnumNamespcfReentryWindowMethod()[index];
 }
 
 /// Frame of the output states. Append new values only.
@@ -1270,403 +1168,6 @@ inline ::flatbuffers::Offset<PCFGaussianPrior> CreatePCFGaussianPrior(
   return builder_.Finish();
 }
 
-/// Empirical along-track terms of the averaged theories: a transverse
-/// acceleration [TAU0 + TAUC cos u + TAUS sin u] g(t), u the argument of
-/// latitude and g = 1 on the fit arc.
-struct PCFEmpiricalTerms FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFEmpiricalTermsBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_ONCE_PER_REVOLUTION = 4,
-    VT_TAU0_RULE_LIMIT_M2_KG = 6,
-    VT_HAS_TAU0_RULE_LIMIT_M2_KG = 8,
-    VT_HELD_ABOVE_DRAG_REGIME = 10,
-    VT_PERSISTENCE_HOURS = 12
-  };
-  /// Fit the once-per-revolution pair (TAUC, TAUS). Default true.
-  bool ONCE_PER_REVOLUTION() const {
-    return GetField<uint8_t>(VT_ONCE_PER_REVOLUTION, 1) != 0;
-  }
-  /// The constant term TAU0 is free only when this rule selects it: a fitted
-  /// B_eff above this limit, m2/kg, is replaced by TAU0 with B_eff at its
-  /// prior. Default 0.5; the rule applies only when HAS_TAU0_RULE_LIMIT_M2_KG.
-  double TAU0_RULE_LIMIT_M2_KG() const {
-    return GetField<double>(VT_TAU0_RULE_LIMIT_M2_KG, 0.5);
-  }
-  /// True turns the TAU0 rule on with TAU0_RULE_LIMIT_M2_KG; false (the
-  /// default) leaves TAU0 off.
-  bool HAS_TAU0_RULE_LIMIT_M2_KG() const {
-    return GetField<uint8_t>(VT_HAS_TAU0_RULE_LIMIT_M2_KG, 0) != 0;
-  }
-  /// True holds TAUC and TAUS after the arc end above the drag regime
-  /// (perigee above MEAN_ELEMENT.DRAG_REGIME_PERIGEE_KM), where they carry the
-  /// once-per-revolution part of radiation pressure; false decays them over
-  /// PERSISTENCE_HOURS, as inside the drag regime. Default true. A buffer
-  /// written before 1.268.0 omits a false value, so it reads true.
-  bool HELD_ABOVE_DRAG_REGIME() const {
-    return GetField<uint8_t>(VT_HELD_ABOVE_DRAG_REGIME, 1) != 0;
-  }
-  /// Persistence time of the empirical force after the arc end, hours.
-  /// Default 24.
-  double PERSISTENCE_HOURS() const {
-    return GetField<double>(VT_PERSISTENCE_HOURS, 24.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_ONCE_PER_REVOLUTION, 1) &&
-           VerifyField<double>(verifier, VT_TAU0_RULE_LIMIT_M2_KG, 8) &&
-           VerifyField<uint8_t>(verifier, VT_HAS_TAU0_RULE_LIMIT_M2_KG, 1) &&
-           VerifyField<uint8_t>(verifier, VT_HELD_ABOVE_DRAG_REGIME, 1) &&
-           VerifyField<double>(verifier, VT_PERSISTENCE_HOURS, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct PCFEmpiricalTermsBuilder {
-  typedef PCFEmpiricalTerms Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_ONCE_PER_REVOLUTION(bool ONCE_PER_REVOLUTION) {
-    fbb_.AddElement<uint8_t>(PCFEmpiricalTerms::VT_ONCE_PER_REVOLUTION, static_cast<uint8_t>(ONCE_PER_REVOLUTION), 1);
-  }
-  void add_TAU0_RULE_LIMIT_M2_KG(double TAU0_RULE_LIMIT_M2_KG) {
-    fbb_.AddElement<double>(PCFEmpiricalTerms::VT_TAU0_RULE_LIMIT_M2_KG, TAU0_RULE_LIMIT_M2_KG, 0.5);
-  }
-  void add_HAS_TAU0_RULE_LIMIT_M2_KG(bool HAS_TAU0_RULE_LIMIT_M2_KG) {
-    fbb_.AddElement<uint8_t>(PCFEmpiricalTerms::VT_HAS_TAU0_RULE_LIMIT_M2_KG, static_cast<uint8_t>(HAS_TAU0_RULE_LIMIT_M2_KG), 0);
-  }
-  void add_HELD_ABOVE_DRAG_REGIME(bool HELD_ABOVE_DRAG_REGIME) {
-    fbb_.AddElement<uint8_t>(PCFEmpiricalTerms::VT_HELD_ABOVE_DRAG_REGIME, static_cast<uint8_t>(HELD_ABOVE_DRAG_REGIME), 1);
-  }
-  void add_PERSISTENCE_HOURS(double PERSISTENCE_HOURS) {
-    fbb_.AddElement<double>(PCFEmpiricalTerms::VT_PERSISTENCE_HOURS, PERSISTENCE_HOURS, 24.0);
-  }
-  explicit PCFEmpiricalTermsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PCFEmpiricalTerms> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PCFEmpiricalTerms>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PCFEmpiricalTerms> CreatePCFEmpiricalTerms(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    bool ONCE_PER_REVOLUTION = true,
-    double TAU0_RULE_LIMIT_M2_KG = 0.5,
-    bool HAS_TAU0_RULE_LIMIT_M2_KG = false,
-    bool HELD_ABOVE_DRAG_REGIME = true,
-    double PERSISTENCE_HOURS = 24.0) {
-  PCFEmpiricalTermsBuilder builder_(_fbb);
-  builder_.add_PERSISTENCE_HOURS(PERSISTENCE_HOURS);
-  builder_.add_TAU0_RULE_LIMIT_M2_KG(TAU0_RULE_LIMIT_M2_KG);
-  builder_.add_HELD_ABOVE_DRAG_REGIME(HELD_ABOVE_DRAG_REGIME);
-  builder_.add_HAS_TAU0_RULE_LIMIT_M2_KG(HAS_TAU0_RULE_LIMIT_M2_KG);
-  builder_.add_ONCE_PER_REVOLUTION(ONCE_PER_REVOLUTION);
-  return builder_.Finish();
-}
-
-/// Truncations and switches of the averaged (mean-element) theories SGP4XP
-/// and SDNAP. SGP4's constants are fixed by its specification and are not
-/// options.
-struct PCFMeanElementOptions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFMeanElementOptionsBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_M_DAILY_MAXIMUM_DEGREE = 4,
-    VT_ZONAL_MAXIMUM_DEGREE = 6,
-    VT_SHORT_PERIODIC_MAXIMUM_DEGREE = 8,
-    VT_ENABLE_RESONANCE = 10,
-    VT_RESONANCE_MAXIMUM_DEGREE = 12,
-    VT_RESONANCE_BAND = 14,
-    VT_RESONANCE_MAXIMUM_K = 16,
-    VT_NEAR_RESONANCE_BAND = 18,
-    VT_GRID_STEP_DIVISOR = 20,
-    VT_DENSITY_KERNEL = 22,
-    VT_DRAG_REGIME_PERIGEE_KM = 24
-  };
-  /// Highest even degree of the m-daily short-periodic gravity terms; 0
-  /// omits them. Range 0 to 16. Default 12.
-  uint8_t M_DAILY_MAXIMUM_DEGREE() const {
-    return GetField<uint8_t>(VT_M_DAILY_MAXIMUM_DEGREE, 12);
-  }
-  /// Highest degree of the zonal tail (secular and long-period terms past
-  /// J5). Range 6 to 70. Default 20.
-  uint8_t ZONAL_MAXIMUM_DEGREE() const {
-    return GetField<uint8_t>(VT_ZONAL_MAXIMUM_DEGREE, 20);
-  }
-  /// Highest degree of the eccentricity-vector short-periodic terms. Range
-  /// 2 to 16. Default 7.
-  uint8_t SHORT_PERIODIC_MAXIMUM_DEGREE() const {
-    return GetField<uint8_t>(VT_SHORT_PERIODIC_MAXIMUM_DEGREE, 7);
-  }
-  /// Resonance terms on or off. Default true.
-  bool ENABLE_RESONANCE() const {
-    return GetField<uint8_t>(VT_ENABLE_RESONANCE, 1) != 0;
-  }
-  /// Highest odd degree of the shallow-resonance terms. Default 31.
-  uint8_t RESONANCE_MAXIMUM_DEGREE() const {
-    return GetField<uint8_t>(VT_RESONANCE_MAXIMUM_DEGREE, 31);
-  }
-  /// Resonance band: terms whose angle drifts slower than this fraction of
-  /// the mean motion are integrated with the rates. Default 0.045.
-  double RESONANCE_BAND() const {
-    return GetField<double>(VT_RESONANCE_BAND, 0.045);
-  }
-  /// Highest multiple of the mean anomaly in a resonance angle. Default 1.
-  uint8_t RESONANCE_MAXIMUM_K() const {
-    return GetField<uint8_t>(VT_RESONANCE_MAXIMUM_K, 1);
-  }
-  /// Near-resonance band at output time, as a fraction of the mean motion
-  /// beyond RESONANCE_BAND; 0 is off. Default 0.
-  double NEAR_RESONANCE_BAND() const {
-    return GetField<double>(VT_NEAR_RESONANCE_BAND, 0.0);
-  }
-  /// Divisor of the integration grid step; >= 1. Default 1.
-  uint8_t GRID_STEP_DIVISOR() const {
-    return GetField<uint8_t>(VT_GRID_STEP_DIVISOR, 1);
-  }
-  /// The catalog-shared density kernel (a gridded log-density table shared by
-  /// every object) on or off; off evaluates the atmosphere model directly.
-  /// Default true.
-  bool DENSITY_KERNEL() const {
-    return GetField<uint8_t>(VT_DENSITY_KERNEL, 1) != 0;
-  }
-  /// Perigee height below which B_eff and TAU0 act (the drag regime), km.
-  /// Default 2500.
-  double DRAG_REGIME_PERIGEE_KM() const {
-    return GetField<double>(VT_DRAG_REGIME_PERIGEE_KM, 2500.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_M_DAILY_MAXIMUM_DEGREE, 1) &&
-           VerifyField<uint8_t>(verifier, VT_ZONAL_MAXIMUM_DEGREE, 1) &&
-           VerifyField<uint8_t>(verifier, VT_SHORT_PERIODIC_MAXIMUM_DEGREE, 1) &&
-           VerifyField<uint8_t>(verifier, VT_ENABLE_RESONANCE, 1) &&
-           VerifyField<uint8_t>(verifier, VT_RESONANCE_MAXIMUM_DEGREE, 1) &&
-           VerifyField<double>(verifier, VT_RESONANCE_BAND, 8) &&
-           VerifyField<uint8_t>(verifier, VT_RESONANCE_MAXIMUM_K, 1) &&
-           VerifyField<double>(verifier, VT_NEAR_RESONANCE_BAND, 8) &&
-           VerifyField<uint8_t>(verifier, VT_GRID_STEP_DIVISOR, 1) &&
-           VerifyField<uint8_t>(verifier, VT_DENSITY_KERNEL, 1) &&
-           VerifyField<double>(verifier, VT_DRAG_REGIME_PERIGEE_KM, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct PCFMeanElementOptionsBuilder {
-  typedef PCFMeanElementOptions Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_M_DAILY_MAXIMUM_DEGREE(uint8_t M_DAILY_MAXIMUM_DEGREE) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_M_DAILY_MAXIMUM_DEGREE, M_DAILY_MAXIMUM_DEGREE, 12);
-  }
-  void add_ZONAL_MAXIMUM_DEGREE(uint8_t ZONAL_MAXIMUM_DEGREE) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_ZONAL_MAXIMUM_DEGREE, ZONAL_MAXIMUM_DEGREE, 20);
-  }
-  void add_SHORT_PERIODIC_MAXIMUM_DEGREE(uint8_t SHORT_PERIODIC_MAXIMUM_DEGREE) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_SHORT_PERIODIC_MAXIMUM_DEGREE, SHORT_PERIODIC_MAXIMUM_DEGREE, 7);
-  }
-  void add_ENABLE_RESONANCE(bool ENABLE_RESONANCE) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_ENABLE_RESONANCE, static_cast<uint8_t>(ENABLE_RESONANCE), 1);
-  }
-  void add_RESONANCE_MAXIMUM_DEGREE(uint8_t RESONANCE_MAXIMUM_DEGREE) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_RESONANCE_MAXIMUM_DEGREE, RESONANCE_MAXIMUM_DEGREE, 31);
-  }
-  void add_RESONANCE_BAND(double RESONANCE_BAND) {
-    fbb_.AddElement<double>(PCFMeanElementOptions::VT_RESONANCE_BAND, RESONANCE_BAND, 0.045);
-  }
-  void add_RESONANCE_MAXIMUM_K(uint8_t RESONANCE_MAXIMUM_K) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_RESONANCE_MAXIMUM_K, RESONANCE_MAXIMUM_K, 1);
-  }
-  void add_NEAR_RESONANCE_BAND(double NEAR_RESONANCE_BAND) {
-    fbb_.AddElement<double>(PCFMeanElementOptions::VT_NEAR_RESONANCE_BAND, NEAR_RESONANCE_BAND, 0.0);
-  }
-  void add_GRID_STEP_DIVISOR(uint8_t GRID_STEP_DIVISOR) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_GRID_STEP_DIVISOR, GRID_STEP_DIVISOR, 1);
-  }
-  void add_DENSITY_KERNEL(bool DENSITY_KERNEL) {
-    fbb_.AddElement<uint8_t>(PCFMeanElementOptions::VT_DENSITY_KERNEL, static_cast<uint8_t>(DENSITY_KERNEL), 1);
-  }
-  void add_DRAG_REGIME_PERIGEE_KM(double DRAG_REGIME_PERIGEE_KM) {
-    fbb_.AddElement<double>(PCFMeanElementOptions::VT_DRAG_REGIME_PERIGEE_KM, DRAG_REGIME_PERIGEE_KM, 2500.0);
-  }
-  explicit PCFMeanElementOptionsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PCFMeanElementOptions> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PCFMeanElementOptions>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PCFMeanElementOptions> CreatePCFMeanElementOptions(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint8_t M_DAILY_MAXIMUM_DEGREE = 12,
-    uint8_t ZONAL_MAXIMUM_DEGREE = 20,
-    uint8_t SHORT_PERIODIC_MAXIMUM_DEGREE = 7,
-    bool ENABLE_RESONANCE = true,
-    uint8_t RESONANCE_MAXIMUM_DEGREE = 31,
-    double RESONANCE_BAND = 0.045,
-    uint8_t RESONANCE_MAXIMUM_K = 1,
-    double NEAR_RESONANCE_BAND = 0.0,
-    uint8_t GRID_STEP_DIVISOR = 1,
-    bool DENSITY_KERNEL = true,
-    double DRAG_REGIME_PERIGEE_KM = 2500.0) {
-  PCFMeanElementOptionsBuilder builder_(_fbb);
-  builder_.add_DRAG_REGIME_PERIGEE_KM(DRAG_REGIME_PERIGEE_KM);
-  builder_.add_NEAR_RESONANCE_BAND(NEAR_RESONANCE_BAND);
-  builder_.add_RESONANCE_BAND(RESONANCE_BAND);
-  builder_.add_DENSITY_KERNEL(DENSITY_KERNEL);
-  builder_.add_GRID_STEP_DIVISOR(GRID_STEP_DIVISOR);
-  builder_.add_RESONANCE_MAXIMUM_K(RESONANCE_MAXIMUM_K);
-  builder_.add_RESONANCE_MAXIMUM_DEGREE(RESONANCE_MAXIMUM_DEGREE);
-  builder_.add_ENABLE_RESONANCE(ENABLE_RESONANCE);
-  builder_.add_SHORT_PERIODIC_MAXIMUM_DEGREE(SHORT_PERIODIC_MAXIMUM_DEGREE);
-  builder_.add_ZONAL_MAXIMUM_DEGREE(ZONAL_MAXIMUM_DEGREE);
-  builder_.add_M_DAILY_MAXIMUM_DEGREE(M_DAILY_MAXIMUM_DEGREE);
-  return builder_.Finish();
-}
-
-/// Beyond-Earth segment sets: Moon-centered, cislunar and heliocentric arcs
-/// cut into segments at maneuvers and sphere-of-influence passages.
-struct PCFSegmentOptions FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFSegmentOptionsBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_MOON_GRAVITY_MAXIMUM_DEGREE = 4,
-    VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE = 6,
-    VT_MOON_ECCENTRICITY_ORDER = 8,
-    VT_MOON_STEP_SECONDS = 10,
-    VT_CISLUNAR_STEP_SECONDS = 12,
-    VT_HELIOCENTRIC_STEP_SECONDS = 14,
-    VT_SEGMENT_RMS_FACTOR = 16,
-    VT_SEGMENT_RMS_MARGIN_KM = 18,
-    VT_CISLUNAR_MINIMUM_SEGMENT_HOURS = 20
-  };
-  /// Moon-centered gravity field degree. Default 70.
-  uint16_t MOON_GRAVITY_MAXIMUM_DEGREE() const {
-    return GetField<uint16_t>(VT_MOON_GRAVITY_MAXIMUM_DEGREE, 70);
-  }
-  /// Moon-centered short-periodic degree. Default 8.
-  uint8_t MOON_SHORT_PERIODIC_MAXIMUM_DEGREE() const {
-    return GetField<uint8_t>(VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, 8);
-  }
-  /// Moon-centered eccentricity order (highest |q| of the mean-anomaly
-  /// multiple kept). Default 2.
-  uint8_t MOON_ECCENTRICITY_ORDER() const {
-    return GetField<uint8_t>(VT_MOON_ECCENTRICITY_ORDER, 2);
-  }
-  /// Moon-centered integration step, seconds. Default 240.
-  double MOON_STEP_SECONDS() const {
-    return GetField<double>(VT_MOON_STEP_SECONDS, 240.0);
-  }
-  /// Cislunar integration step, seconds. Default 60.
-  double CISLUNAR_STEP_SECONDS() const {
-    return GetField<double>(VT_CISLUNAR_STEP_SECONDS, 60.0);
-  }
-  /// Heliocentric integration step, seconds. Default 1800.
-  double HELIOCENTRIC_STEP_SECONDS() const {
-    return GetField<double>(VT_HELIOCENTRIC_STEP_SECONDS, 1800.0);
-  }
-  /// A segment is accepted when its RMS is within max(RMS_FACTOR x the
-  /// cleanest segment's RMS, that RMS + RMS_MARGIN_KM). Factor, default 2.
-  double SEGMENT_RMS_FACTOR() const {
-    return GetField<double>(VT_SEGMENT_RMS_FACTOR, 2.0);
-  }
-  /// The additive term of the same rule, km. Default 0.05.
-  double SEGMENT_RMS_MARGIN_KM() const {
-    return GetField<double>(VT_SEGMENT_RMS_MARGIN_KM, 0.05);
-  }
-  /// Shortest cislunar segment, hours. Default 6.
-  double CISLUNAR_MINIMUM_SEGMENT_HOURS() const {
-    return GetField<double>(VT_CISLUNAR_MINIMUM_SEGMENT_HOURS, 6.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<uint16_t>(verifier, VT_MOON_GRAVITY_MAXIMUM_DEGREE, 2) &&
-           VerifyField<uint8_t>(verifier, VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, 1) &&
-           VerifyField<uint8_t>(verifier, VT_MOON_ECCENTRICITY_ORDER, 1) &&
-           VerifyField<double>(verifier, VT_MOON_STEP_SECONDS, 8) &&
-           VerifyField<double>(verifier, VT_CISLUNAR_STEP_SECONDS, 8) &&
-           VerifyField<double>(verifier, VT_HELIOCENTRIC_STEP_SECONDS, 8) &&
-           VerifyField<double>(verifier, VT_SEGMENT_RMS_FACTOR, 8) &&
-           VerifyField<double>(verifier, VT_SEGMENT_RMS_MARGIN_KM, 8) &&
-           VerifyField<double>(verifier, VT_CISLUNAR_MINIMUM_SEGMENT_HOURS, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct PCFSegmentOptionsBuilder {
-  typedef PCFSegmentOptions Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_MOON_GRAVITY_MAXIMUM_DEGREE(uint16_t MOON_GRAVITY_MAXIMUM_DEGREE) {
-    fbb_.AddElement<uint16_t>(PCFSegmentOptions::VT_MOON_GRAVITY_MAXIMUM_DEGREE, MOON_GRAVITY_MAXIMUM_DEGREE, 70);
-  }
-  void add_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE(uint8_t MOON_SHORT_PERIODIC_MAXIMUM_DEGREE) {
-    fbb_.AddElement<uint8_t>(PCFSegmentOptions::VT_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, MOON_SHORT_PERIODIC_MAXIMUM_DEGREE, 8);
-  }
-  void add_MOON_ECCENTRICITY_ORDER(uint8_t MOON_ECCENTRICITY_ORDER) {
-    fbb_.AddElement<uint8_t>(PCFSegmentOptions::VT_MOON_ECCENTRICITY_ORDER, MOON_ECCENTRICITY_ORDER, 2);
-  }
-  void add_MOON_STEP_SECONDS(double MOON_STEP_SECONDS) {
-    fbb_.AddElement<double>(PCFSegmentOptions::VT_MOON_STEP_SECONDS, MOON_STEP_SECONDS, 240.0);
-  }
-  void add_CISLUNAR_STEP_SECONDS(double CISLUNAR_STEP_SECONDS) {
-    fbb_.AddElement<double>(PCFSegmentOptions::VT_CISLUNAR_STEP_SECONDS, CISLUNAR_STEP_SECONDS, 60.0);
-  }
-  void add_HELIOCENTRIC_STEP_SECONDS(double HELIOCENTRIC_STEP_SECONDS) {
-    fbb_.AddElement<double>(PCFSegmentOptions::VT_HELIOCENTRIC_STEP_SECONDS, HELIOCENTRIC_STEP_SECONDS, 1800.0);
-  }
-  void add_SEGMENT_RMS_FACTOR(double SEGMENT_RMS_FACTOR) {
-    fbb_.AddElement<double>(PCFSegmentOptions::VT_SEGMENT_RMS_FACTOR, SEGMENT_RMS_FACTOR, 2.0);
-  }
-  void add_SEGMENT_RMS_MARGIN_KM(double SEGMENT_RMS_MARGIN_KM) {
-    fbb_.AddElement<double>(PCFSegmentOptions::VT_SEGMENT_RMS_MARGIN_KM, SEGMENT_RMS_MARGIN_KM, 0.05);
-  }
-  void add_CISLUNAR_MINIMUM_SEGMENT_HOURS(double CISLUNAR_MINIMUM_SEGMENT_HOURS) {
-    fbb_.AddElement<double>(PCFSegmentOptions::VT_CISLUNAR_MINIMUM_SEGMENT_HOURS, CISLUNAR_MINIMUM_SEGMENT_HOURS, 6.0);
-  }
-  explicit PCFSegmentOptionsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PCFSegmentOptions> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PCFSegmentOptions>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PCFSegmentOptions> CreatePCFSegmentOptions(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    uint16_t MOON_GRAVITY_MAXIMUM_DEGREE = 70,
-    uint8_t MOON_SHORT_PERIODIC_MAXIMUM_DEGREE = 8,
-    uint8_t MOON_ECCENTRICITY_ORDER = 2,
-    double MOON_STEP_SECONDS = 240.0,
-    double CISLUNAR_STEP_SECONDS = 60.0,
-    double HELIOCENTRIC_STEP_SECONDS = 1800.0,
-    double SEGMENT_RMS_FACTOR = 2.0,
-    double SEGMENT_RMS_MARGIN_KM = 0.05,
-    double CISLUNAR_MINIMUM_SEGMENT_HOURS = 6.0) {
-  PCFSegmentOptionsBuilder builder_(_fbb);
-  builder_.add_CISLUNAR_MINIMUM_SEGMENT_HOURS(CISLUNAR_MINIMUM_SEGMENT_HOURS);
-  builder_.add_SEGMENT_RMS_MARGIN_KM(SEGMENT_RMS_MARGIN_KM);
-  builder_.add_SEGMENT_RMS_FACTOR(SEGMENT_RMS_FACTOR);
-  builder_.add_HELIOCENTRIC_STEP_SECONDS(HELIOCENTRIC_STEP_SECONDS);
-  builder_.add_CISLUNAR_STEP_SECONDS(CISLUNAR_STEP_SECONDS);
-  builder_.add_MOON_STEP_SECONDS(MOON_STEP_SECONDS);
-  builder_.add_MOON_GRAVITY_MAXIMUM_DEGREE(MOON_GRAVITY_MAXIMUM_DEGREE);
-  builder_.add_MOON_ECCENTRICITY_ORDER(MOON_ECCENTRICITY_ORDER);
-  builder_.add_MOON_SHORT_PERIODIC_MAXIMUM_DEGREE(MOON_SHORT_PERIODIC_MAXIMUM_DEGREE);
-  return builder_.Finish();
-}
-
 /// Fit policy: how long an arc a fit uses, how that is validated, and what a
 /// fit refuses.
 struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -1749,7 +1250,7 @@ struct PCFFitPolicy FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return GetField<double>(VT_IMPLAUSIBLE_RMS_KM, 100.0);
   }
   /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-  /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+  /// or without sigma: mean 0, sigma 0.05.
   const PCFGaussianPrior *DRAG_PRIOR() const {
     return GetPointer<const PCFGaussianPrior *>(VT_DRAG_PRIOR);
   }
@@ -2200,408 +1701,6 @@ inline ::flatbuffers::Offset<PCFEventDefinition> CreatePCFEventDefinitionDirect(
       PLANE_NORMAL,
       SECOND_TRAJECTORY_PORT__,
       EXPRESSION);
-}
-
-/// Maneuver detection from fit innovations: a generalized-likelihood-ratio
-/// scan of the six mean elements.
-struct PCFManeuverDetection FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFManeuverDetectionBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_FALSE_ALARMS_PER_OBJECT_YEAR = 4,
-    VT_CORRELATION_MODEL = 6,
-    VT_THRESHOLD = 8,
-    VT_MARGIN_STATES = 10,
-    VT_REFINE_WINDOW_HOURS = 12,
-    VT_MINIMUM_STATES = 14
-  };
-  /// False-alarm rate the THRESHOLD is calibrated for, per object-year. A
-  /// provider that cannot recalibrate refuses another rate. Default 1.
-  double FALSE_ALARMS_PER_OBJECT_YEAR() const {
-    return GetField<double>(VT_FALSE_ALARMS_PER_OBJECT_YEAR, 1.0);
-  }
-  /// How innovation correlation is weighted. Default ONE_SAMPLE_PER_REVOLUTION.
-  pcfInnovationCorrelation CORRELATION_MODEL() const {
-    return static_cast<pcfInnovationCorrelation>(GetField<uint8_t>(VT_CORRELATION_MODEL, 2));
-  }
-  /// The statistic Lambda (chi-square, 3 degrees of freedom) above which a
-  /// maneuver is declared. Default 20.
-  double THRESHOLD() const {
-    return GetField<double>(VT_THRESHOLD, 20.0);
-  }
-  /// States kept clear at each end of the arc when scanning. Default 12.
-  uint32_t MARGIN_STATES() const {
-    return GetField<uint32_t>(VT_MARGIN_STATES, 12);
-  }
-  /// Half-width of the window the burn epoch is refined in, hours. Default 2.
-  double REFINE_WINDOW_HOURS() const {
-    return GetField<double>(VT_REFINE_WINDOW_HOURS, 2.0);
-  }
-  /// Fewest states an arc must hold to be scanned. Default 48.
-  uint32_t MINIMUM_STATES() const {
-    return GetField<uint32_t>(VT_MINIMUM_STATES, 48);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_FALSE_ALARMS_PER_OBJECT_YEAR, 8) &&
-           VerifyField<uint8_t>(verifier, VT_CORRELATION_MODEL, 1) &&
-           VerifyField<double>(verifier, VT_THRESHOLD, 8) &&
-           VerifyField<uint32_t>(verifier, VT_MARGIN_STATES, 4) &&
-           VerifyField<double>(verifier, VT_REFINE_WINDOW_HOURS, 8) &&
-           VerifyField<uint32_t>(verifier, VT_MINIMUM_STATES, 4) &&
-           verifier.EndTable();
-  }
-};
-
-struct PCFManeuverDetectionBuilder {
-  typedef PCFManeuverDetection Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_FALSE_ALARMS_PER_OBJECT_YEAR(double FALSE_ALARMS_PER_OBJECT_YEAR) {
-    fbb_.AddElement<double>(PCFManeuverDetection::VT_FALSE_ALARMS_PER_OBJECT_YEAR, FALSE_ALARMS_PER_OBJECT_YEAR, 1.0);
-  }
-  void add_CORRELATION_MODEL(pcfInnovationCorrelation CORRELATION_MODEL) {
-    fbb_.AddElement<uint8_t>(PCFManeuverDetection::VT_CORRELATION_MODEL, static_cast<uint8_t>(CORRELATION_MODEL), 2);
-  }
-  void add_THRESHOLD(double THRESHOLD) {
-    fbb_.AddElement<double>(PCFManeuverDetection::VT_THRESHOLD, THRESHOLD, 20.0);
-  }
-  void add_MARGIN_STATES(uint32_t MARGIN_STATES) {
-    fbb_.AddElement<uint32_t>(PCFManeuverDetection::VT_MARGIN_STATES, MARGIN_STATES, 12);
-  }
-  void add_REFINE_WINDOW_HOURS(double REFINE_WINDOW_HOURS) {
-    fbb_.AddElement<double>(PCFManeuverDetection::VT_REFINE_WINDOW_HOURS, REFINE_WINDOW_HOURS, 2.0);
-  }
-  void add_MINIMUM_STATES(uint32_t MINIMUM_STATES) {
-    fbb_.AddElement<uint32_t>(PCFManeuverDetection::VT_MINIMUM_STATES, MINIMUM_STATES, 48);
-  }
-  explicit PCFManeuverDetectionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PCFManeuverDetection> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PCFManeuverDetection>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PCFManeuverDetection> CreatePCFManeuverDetection(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double FALSE_ALARMS_PER_OBJECT_YEAR = 1.0,
-    pcfInnovationCorrelation CORRELATION_MODEL = pcfInnovationCorrelation_ONE_SAMPLE_PER_REVOLUTION,
-    double THRESHOLD = 20.0,
-    uint32_t MARGIN_STATES = 12,
-    double REFINE_WINDOW_HOURS = 2.0,
-    uint32_t MINIMUM_STATES = 48) {
-  PCFManeuverDetectionBuilder builder_(_fbb);
-  builder_.add_REFINE_WINDOW_HOURS(REFINE_WINDOW_HOURS);
-  builder_.add_THRESHOLD(THRESHOLD);
-  builder_.add_FALSE_ALARMS_PER_OBJECT_YEAR(FALSE_ALARMS_PER_OBJECT_YEAR);
-  builder_.add_MINIMUM_STATES(MINIMUM_STATES);
-  builder_.add_MARGIN_STATES(MARGIN_STATES);
-  builder_.add_CORRELATION_MODEL(CORRELATION_MODEL);
-  return builder_.Finish();
-}
-
-/// Reentry: where the averaged theory hands off to osculating integration,
-/// where the trajectory ends, and the width of the reentry window.
-struct PCFReentry FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFReentryBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_ALTITUDE_KM = 4,
-    VT_HANDOFF_PERIGEE_ALTITUDE_KM = 6,
-    VT_HANDOFF_DECAY_RATIO = 8,
-    VT_HANDOFF_ECCENTRICITY_COLLAPSE = 10,
-    VT_HANDOFF_MINIMUM_ECCENTRICITY = 12,
-    VT_NODE_STEP_MINUTES = 14,
-    VT_HORIZON_DAYS = 16,
-    VT_WINDOW_METHOD = 18,
-    VT_WINDOW_DENSITY_SIGMA = 20,
-    VT_WINDOW_CORRELATION_DAYS = 22,
-    VT_WINDOW_BALLISTIC_SIGMA = 24,
-    VT_OSCULATING_STEP_SECONDS = 26,
-    VT_HANDOFF_SAWTOOTH_KM = 28,
-    VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 30
-  };
-  /// Altitude at which the trajectory ends as reentered, km. Default 80.
-  double ALTITUDE_KM() const {
-    return GetField<double>(VT_ALTITUDE_KM, 80.0);
-  }
-  /// Hand-off when the perigee altitude falls below this, km. Default 180.
-  double HANDOFF_PERIGEE_ALTITUDE_KM() const {
-    return GetField<double>(VT_HANDOFF_PERIGEE_ALTITUDE_KM, 180.0);
-  }
-  /// Hand-off when the decay over one step, 4 pi |da/dt| / (n H), passes this
-  /// fraction of the density scale height H. Default 0.05.
-  double HANDOFF_DECAY_RATIO() const {
-    return GetField<double>(VT_HANDOFF_DECAY_RATIO, 0.05);
-  }
-  /// Hand-off when the eccentricity collapses by more than this fraction of
-  /// a e per revolution, with the eccentricity above
-  /// HANDOFF_MINIMUM_ECCENTRICITY. Default 0.01.
-  double HANDOFF_ECCENTRICITY_COLLAPSE() const {
-    return GetField<double>(VT_HANDOFF_ECCENTRICITY_COLLAPSE, 0.01);
-  }
-  /// Eccentricity above which the collapse test applies. Default 0.01.
-  double HANDOFF_MINIMUM_ECCENTRICITY() const {
-    return GetField<double>(VT_HANDOFF_MINIMUM_ECCENTRICITY, 0.01);
-  }
-  /// Spacing of the nodes the hand-off tests are evaluated at, minutes.
-  /// Default 30.
-  double NODE_STEP_MINUTES() const {
-    return GetField<double>(VT_NODE_STEP_MINUTES, 30.0);
-  }
-  /// Longest look-ahead for a hand-off or reentry, days. Default 120.
-  double HORIZON_DAYS() const {
-    return GetField<double>(VT_HORIZON_DAYS, 120.0);
-  }
-  /// How the reentry window is computed. Default LINEAR.
-  pcfReentryWindowMethod WINDOW_METHOD() const {
-    return static_cast<pcfReentryWindowMethod>(GetField<uint8_t>(VT_WINDOW_METHOD, 1));
-  }
-  /// Fractional 1-sigma density error of the window. Default 0.15.
-  double WINDOW_DENSITY_SIGMA() const {
-    return GetField<double>(VT_WINDOW_DENSITY_SIGMA, 0.15);
-  }
-  /// Correlation time of the density error, days. Default 2.
-  double WINDOW_CORRELATION_DAYS() const {
-    return GetField<double>(VT_WINDOW_CORRELATION_DAYS, 2.0);
-  }
-  /// Fractional 1-sigma error of the ballistic coefficient. Default 0.05.
-  double WINDOW_BALLISTIC_SIGMA() const {
-    return GetField<double>(VT_WINDOW_BALLISTIC_SIGMA, 0.05);
-  }
-  /// Step of the osculating integration after the hand-off, seconds. Default
-  /// 10.
-  double OSCULATING_STEP_SECONDS() const {
-    return GetField<double>(VT_OSCULATING_STEP_SECONDS, 10.0);
-  }
-  /// Hand-off when the along-track sawtooth of an eccentric orbit passes this,
-  /// km: drag acts mostly in the perigee pass, so the osculating semi-major axis
-  /// steps once per revolution while the averaged theory ramps, and the
-  /// along-track difference spans (3 pi / 8) |da/dt| (2 pi / n) peak to peak.
-  /// Applies with the eccentricity above HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY.
-  /// Default 0.5.
-  double HANDOFF_SAWTOOTH_KM() const {
-    return GetField<double>(VT_HANDOFF_SAWTOOTH_KM, 0.5);
-  }
-  /// Eccentricity above which the sawtooth test applies. Default 0.02.
-  double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY() const {
-    return GetField<double>(VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_ALTITUDE_KM, 8) &&
-           VerifyField<double>(verifier, VT_HANDOFF_PERIGEE_ALTITUDE_KM, 8) &&
-           VerifyField<double>(verifier, VT_HANDOFF_DECAY_RATIO, 8) &&
-           VerifyField<double>(verifier, VT_HANDOFF_ECCENTRICITY_COLLAPSE, 8) &&
-           VerifyField<double>(verifier, VT_HANDOFF_MINIMUM_ECCENTRICITY, 8) &&
-           VerifyField<double>(verifier, VT_NODE_STEP_MINUTES, 8) &&
-           VerifyField<double>(verifier, VT_HORIZON_DAYS, 8) &&
-           VerifyField<uint8_t>(verifier, VT_WINDOW_METHOD, 1) &&
-           VerifyField<double>(verifier, VT_WINDOW_DENSITY_SIGMA, 8) &&
-           VerifyField<double>(verifier, VT_WINDOW_CORRELATION_DAYS, 8) &&
-           VerifyField<double>(verifier, VT_WINDOW_BALLISTIC_SIGMA, 8) &&
-           VerifyField<double>(verifier, VT_OSCULATING_STEP_SECONDS, 8) &&
-           VerifyField<double>(verifier, VT_HANDOFF_SAWTOOTH_KM, 8) &&
-           VerifyField<double>(verifier, VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct PCFReentryBuilder {
-  typedef PCFReentry Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_ALTITUDE_KM(double ALTITUDE_KM) {
-    fbb_.AddElement<double>(PCFReentry::VT_ALTITUDE_KM, ALTITUDE_KM, 80.0);
-  }
-  void add_HANDOFF_PERIGEE_ALTITUDE_KM(double HANDOFF_PERIGEE_ALTITUDE_KM) {
-    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_PERIGEE_ALTITUDE_KM, HANDOFF_PERIGEE_ALTITUDE_KM, 180.0);
-  }
-  void add_HANDOFF_DECAY_RATIO(double HANDOFF_DECAY_RATIO) {
-    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_DECAY_RATIO, HANDOFF_DECAY_RATIO, 0.05);
-  }
-  void add_HANDOFF_ECCENTRICITY_COLLAPSE(double HANDOFF_ECCENTRICITY_COLLAPSE) {
-    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_ECCENTRICITY_COLLAPSE, HANDOFF_ECCENTRICITY_COLLAPSE, 0.01);
-  }
-  void add_HANDOFF_MINIMUM_ECCENTRICITY(double HANDOFF_MINIMUM_ECCENTRICITY) {
-    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_MINIMUM_ECCENTRICITY, HANDOFF_MINIMUM_ECCENTRICITY, 0.01);
-  }
-  void add_NODE_STEP_MINUTES(double NODE_STEP_MINUTES) {
-    fbb_.AddElement<double>(PCFReentry::VT_NODE_STEP_MINUTES, NODE_STEP_MINUTES, 30.0);
-  }
-  void add_HORIZON_DAYS(double HORIZON_DAYS) {
-    fbb_.AddElement<double>(PCFReentry::VT_HORIZON_DAYS, HORIZON_DAYS, 120.0);
-  }
-  void add_WINDOW_METHOD(pcfReentryWindowMethod WINDOW_METHOD) {
-    fbb_.AddElement<uint8_t>(PCFReentry::VT_WINDOW_METHOD, static_cast<uint8_t>(WINDOW_METHOD), 1);
-  }
-  void add_WINDOW_DENSITY_SIGMA(double WINDOW_DENSITY_SIGMA) {
-    fbb_.AddElement<double>(PCFReentry::VT_WINDOW_DENSITY_SIGMA, WINDOW_DENSITY_SIGMA, 0.15);
-  }
-  void add_WINDOW_CORRELATION_DAYS(double WINDOW_CORRELATION_DAYS) {
-    fbb_.AddElement<double>(PCFReentry::VT_WINDOW_CORRELATION_DAYS, WINDOW_CORRELATION_DAYS, 2.0);
-  }
-  void add_WINDOW_BALLISTIC_SIGMA(double WINDOW_BALLISTIC_SIGMA) {
-    fbb_.AddElement<double>(PCFReentry::VT_WINDOW_BALLISTIC_SIGMA, WINDOW_BALLISTIC_SIGMA, 0.05);
-  }
-  void add_OSCULATING_STEP_SECONDS(double OSCULATING_STEP_SECONDS) {
-    fbb_.AddElement<double>(PCFReentry::VT_OSCULATING_STEP_SECONDS, OSCULATING_STEP_SECONDS, 10.0);
-  }
-  void add_HANDOFF_SAWTOOTH_KM(double HANDOFF_SAWTOOTH_KM) {
-    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_SAWTOOTH_KM, HANDOFF_SAWTOOTH_KM, 0.5);
-  }
-  void add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY) {
-    fbb_.AddElement<double>(PCFReentry::VT_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY, 0.02);
-  }
-  explicit PCFReentryBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PCFReentry> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PCFReentry>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PCFReentry> CreatePCFReentry(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double ALTITUDE_KM = 80.0,
-    double HANDOFF_PERIGEE_ALTITUDE_KM = 180.0,
-    double HANDOFF_DECAY_RATIO = 0.05,
-    double HANDOFF_ECCENTRICITY_COLLAPSE = 0.01,
-    double HANDOFF_MINIMUM_ECCENTRICITY = 0.01,
-    double NODE_STEP_MINUTES = 30.0,
-    double HORIZON_DAYS = 120.0,
-    pcfReentryWindowMethod WINDOW_METHOD = pcfReentryWindowMethod_LINEAR,
-    double WINDOW_DENSITY_SIGMA = 0.15,
-    double WINDOW_CORRELATION_DAYS = 2.0,
-    double WINDOW_BALLISTIC_SIGMA = 0.05,
-    double OSCULATING_STEP_SECONDS = 10.0,
-    double HANDOFF_SAWTOOTH_KM = 0.5,
-    double HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY = 0.02) {
-  PCFReentryBuilder builder_(_fbb);
-  builder_.add_HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY(HANDOFF_SAWTOOTH_MINIMUM_ECCENTRICITY);
-  builder_.add_HANDOFF_SAWTOOTH_KM(HANDOFF_SAWTOOTH_KM);
-  builder_.add_OSCULATING_STEP_SECONDS(OSCULATING_STEP_SECONDS);
-  builder_.add_WINDOW_BALLISTIC_SIGMA(WINDOW_BALLISTIC_SIGMA);
-  builder_.add_WINDOW_CORRELATION_DAYS(WINDOW_CORRELATION_DAYS);
-  builder_.add_WINDOW_DENSITY_SIGMA(WINDOW_DENSITY_SIGMA);
-  builder_.add_HORIZON_DAYS(HORIZON_DAYS);
-  builder_.add_NODE_STEP_MINUTES(NODE_STEP_MINUTES);
-  builder_.add_HANDOFF_MINIMUM_ECCENTRICITY(HANDOFF_MINIMUM_ECCENTRICITY);
-  builder_.add_HANDOFF_ECCENTRICITY_COLLAPSE(HANDOFF_ECCENTRICITY_COLLAPSE);
-  builder_.add_HANDOFF_DECAY_RATIO(HANDOFF_DECAY_RATIO);
-  builder_.add_HANDOFF_PERIGEE_ALTITUDE_KM(HANDOFF_PERIGEE_ALTITUDE_KM);
-  builder_.add_ALTITUDE_KM(ALTITUDE_KM);
-  builder_.add_WINDOW_METHOD(WINDOW_METHOD);
-  return builder_.Finish();
-}
-
-/// Launch initialization: priors for the first element sets of new objects
-/// and for a deployment batch fitted jointly.
-struct PCFLaunch FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef PCFLaunchBuilder Builder;
-  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG = 4,
-    VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG = 6,
-    VT_SEPARATION_SIGMA_M_S = 8,
-    VT_SHRINK_SIGMA_M2_KG = 10,
-    VT_HAS_SHRINK_SIGMA_M2_KG = 12,
-    VT_BATCH_MEAN_SIGMA_M2_KG = 14
-  };
-  /// A priori B_eff (Cd*A/m) of a new object, m2/kg. Default 0.01.
-  double DRAG_AREA_OVER_MASS_PRIOR_M2_KG() const {
-    return GetField<double>(VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG, 0.01);
-  }
-  /// A priori AGOM (Cr*A/m) of a new object, m2/kg. Default 0.01.
-  double SRP_AREA_OVER_MASS_PRIOR_M2_KG() const {
-    return GetField<double>(VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG, 0.01);
-  }
-  /// Prior 1-sigma of each object's separation velocity per axis, m/s.
-  /// Default 1.
-  double SEPARATION_SIGMA_M_S() const {
-    return GetField<double>(VT_SEPARATION_SIGMA_M_S, 1.0);
-  }
-  /// Shrinkage 1-sigma of each object's B_eff about the batch mean, m2/kg.
-  /// Absent, it is DRAG_AREA_OVER_MASS_PRIOR_M2_KG.
-  double SHRINK_SIGMA_M2_KG() const {
-    return GetField<double>(VT_SHRINK_SIGMA_M2_KG, 0.0);
-  }
-  /// True when SHRINK_SIGMA_M2_KG carries a value; false means absent.
-  bool HAS_SHRINK_SIGMA_M2_KG() const {
-    return GetField<uint8_t>(VT_HAS_SHRINK_SIGMA_M2_KG, 0) != 0;
-  }
-  /// Prior 1-sigma of the batch-mean B_eff, m2/kg. Default 1.
-  double BATCH_MEAN_SIGMA_M2_KG() const {
-    return GetField<double>(VT_BATCH_MEAN_SIGMA_M2_KG, 1.0);
-  }
-  template <bool B = false>
-  bool Verify(::flatbuffers::VerifierTemplate<B> &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG, 8) &&
-           VerifyField<double>(verifier, VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG, 8) &&
-           VerifyField<double>(verifier, VT_SEPARATION_SIGMA_M_S, 8) &&
-           VerifyField<double>(verifier, VT_SHRINK_SIGMA_M2_KG, 8) &&
-           VerifyField<uint8_t>(verifier, VT_HAS_SHRINK_SIGMA_M2_KG, 1) &&
-           VerifyField<double>(verifier, VT_BATCH_MEAN_SIGMA_M2_KG, 8) &&
-           verifier.EndTable();
-  }
-};
-
-struct PCFLaunchBuilder {
-  typedef PCFLaunch Table;
-  ::flatbuffers::FlatBufferBuilder &fbb_;
-  ::flatbuffers::uoffset_t start_;
-  void add_DRAG_AREA_OVER_MASS_PRIOR_M2_KG(double DRAG_AREA_OVER_MASS_PRIOR_M2_KG) {
-    fbb_.AddElement<double>(PCFLaunch::VT_DRAG_AREA_OVER_MASS_PRIOR_M2_KG, DRAG_AREA_OVER_MASS_PRIOR_M2_KG, 0.01);
-  }
-  void add_SRP_AREA_OVER_MASS_PRIOR_M2_KG(double SRP_AREA_OVER_MASS_PRIOR_M2_KG) {
-    fbb_.AddElement<double>(PCFLaunch::VT_SRP_AREA_OVER_MASS_PRIOR_M2_KG, SRP_AREA_OVER_MASS_PRIOR_M2_KG, 0.01);
-  }
-  void add_SEPARATION_SIGMA_M_S(double SEPARATION_SIGMA_M_S) {
-    fbb_.AddElement<double>(PCFLaunch::VT_SEPARATION_SIGMA_M_S, SEPARATION_SIGMA_M_S, 1.0);
-  }
-  void add_SHRINK_SIGMA_M2_KG(double SHRINK_SIGMA_M2_KG) {
-    fbb_.AddElement<double>(PCFLaunch::VT_SHRINK_SIGMA_M2_KG, SHRINK_SIGMA_M2_KG, 0.0);
-  }
-  void add_HAS_SHRINK_SIGMA_M2_KG(bool HAS_SHRINK_SIGMA_M2_KG) {
-    fbb_.AddElement<uint8_t>(PCFLaunch::VT_HAS_SHRINK_SIGMA_M2_KG, static_cast<uint8_t>(HAS_SHRINK_SIGMA_M2_KG), 0);
-  }
-  void add_BATCH_MEAN_SIGMA_M2_KG(double BATCH_MEAN_SIGMA_M2_KG) {
-    fbb_.AddElement<double>(PCFLaunch::VT_BATCH_MEAN_SIGMA_M2_KG, BATCH_MEAN_SIGMA_M2_KG, 1.0);
-  }
-  explicit PCFLaunchBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ::flatbuffers::Offset<PCFLaunch> Finish() {
-    const auto end = fbb_.EndTable(start_);
-    auto o = ::flatbuffers::Offset<PCFLaunch>(end);
-    return o;
-  }
-};
-
-inline ::flatbuffers::Offset<PCFLaunch> CreatePCFLaunch(
-    ::flatbuffers::FlatBufferBuilder &_fbb,
-    double DRAG_AREA_OVER_MASS_PRIOR_M2_KG = 0.01,
-    double SRP_AREA_OVER_MASS_PRIOR_M2_KG = 0.01,
-    double SEPARATION_SIGMA_M_S = 1.0,
-    double SHRINK_SIGMA_M2_KG = 0.0,
-    bool HAS_SHRINK_SIGMA_M2_KG = false,
-    double BATCH_MEAN_SIGMA_M2_KG = 1.0) {
-  PCFLaunchBuilder builder_(_fbb);
-  builder_.add_BATCH_MEAN_SIGMA_M2_KG(BATCH_MEAN_SIGMA_M2_KG);
-  builder_.add_SHRINK_SIGMA_M2_KG(SHRINK_SIGMA_M2_KG);
-  builder_.add_SEPARATION_SIGMA_M_S(SEPARATION_SIGMA_M_S);
-  builder_.add_SRP_AREA_OVER_MASS_PRIOR_M2_KG(SRP_AREA_OVER_MASS_PRIOR_M2_KG);
-  builder_.add_DRAG_AREA_OVER_MASS_PRIOR_M2_KG(DRAG_AREA_OVER_MASS_PRIOR_M2_KG);
-  builder_.add_HAS_SHRINK_SIGMA_M2_KG(HAS_SHRINK_SIGMA_M2_KG);
-  return builder_.Finish();
 }
 
 /// Output states: frame, step and size.
@@ -3102,9 +2201,8 @@ struct PCFForceModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DENSITY_CORRECTION_RELAXATION_HOURS = 96,
     VT_HAS_DENSITY_CORRECTION_RELAXATION_HOURS = 98,
     VT_NEUTRAL_WIND = 100,
-    VT_EMPIRICAL_TERMS = 102,
-    VT_THIRD_BODY_MAXIMUM_DEGREE = 104,
-    VT_THIRD_BODY_MAXIMUM_ORDER = 106
+    VT_THIRD_BODY_MAXIMUM_DEGREE = 102,
+    VT_THIRD_BODY_MAXIMUM_ORDER = 104
   };
   /// Gravity field. Default INFER_FLAGS (the ENABLE_ flags decide).
   pcfGravitySelection GRAVITY_CHOICE() const {
@@ -3334,11 +2432,6 @@ struct PCFForceModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   pcfNeutralWind NEUTRAL_WIND() const {
     return static_cast<pcfNeutralWind>(GetField<uint8_t>(VT_NEUTRAL_WIND, 0));
   }
-  /// Empirical along-track terms of the averaged theories. Absent (the
-  /// default): the theory's own.
-  const PCFEmpiricalTerms *EMPIRICAL_TERMS() const {
-    return GetPointer<const PCFEmpiricalTerms *>(VT_EMPIRICAL_TERMS);
-  }
   /// Highest degree of the harmonic field of the third body that has one (the
   /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
   /// The field's acceleration at the frame origin is subtracted. Default 0:
@@ -3406,8 +2499,6 @@ struct PCFForceModel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_DENSITY_CORRECTION_RELAXATION_HOURS, 8) &&
            VerifyField<uint8_t>(verifier, VT_HAS_DENSITY_CORRECTION_RELAXATION_HOURS, 1) &&
            VerifyField<uint8_t>(verifier, VT_NEUTRAL_WIND, 1) &&
-           VerifyOffset(verifier, VT_EMPIRICAL_TERMS) &&
-           verifier.VerifyTable(EMPIRICAL_TERMS()) &&
            VerifyField<uint16_t>(verifier, VT_THIRD_BODY_MAXIMUM_DEGREE, 2) &&
            VerifyField<uint16_t>(verifier, VT_THIRD_BODY_MAXIMUM_ORDER, 2) &&
            verifier.EndTable();
@@ -3565,9 +2656,6 @@ struct PCFForceModelBuilder {
   void add_NEUTRAL_WIND(pcfNeutralWind NEUTRAL_WIND) {
     fbb_.AddElement<uint8_t>(PCFForceModel::VT_NEUTRAL_WIND, static_cast<uint8_t>(NEUTRAL_WIND), 0);
   }
-  void add_EMPIRICAL_TERMS(::flatbuffers::Offset<PCFEmpiricalTerms> EMPIRICAL_TERMS) {
-    fbb_.AddOffset(PCFForceModel::VT_EMPIRICAL_TERMS, EMPIRICAL_TERMS);
-  }
   void add_THIRD_BODY_MAXIMUM_DEGREE(uint16_t THIRD_BODY_MAXIMUM_DEGREE) {
     fbb_.AddElement<uint16_t>(PCFForceModel::VT_THIRD_BODY_MAXIMUM_DEGREE, THIRD_BODY_MAXIMUM_DEGREE, 0);
   }
@@ -3637,7 +2725,6 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModel(
     double DENSITY_CORRECTION_RELAXATION_HOURS = 0.0,
     bool HAS_DENSITY_CORRECTION_RELAXATION_HOURS = false,
     pcfNeutralWind NEUTRAL_WIND = pcfNeutralWind_NONE,
-    ::flatbuffers::Offset<PCFEmpiricalTerms> EMPIRICAL_TERMS = 0,
     uint16_t THIRD_BODY_MAXIMUM_DEGREE = 0,
     uint16_t THIRD_BODY_MAXIMUM_ORDER = 0) {
   PCFForceModelBuilder builder_(_fbb);
@@ -3651,7 +2738,6 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModel(
   builder_.add_AREA_M2(AREA_M2);
   builder_.add_INITIAL_MASS_KG(INITIAL_MASS_KG);
   builder_.add_GRAVITATIONAL_PARAMETER(GRAVITATIONAL_PARAMETER);
-  builder_.add_EMPIRICAL_TERMS(EMPIRICAL_TERMS);
   builder_.add_CENTRAL_BODY_NAIF_ID(CENTRAL_BODY_NAIF_ID);
   builder_.add_ECOM2(ECOM2);
   builder_.add_EPHEMERIS_SOURCE(EPHEMERIS_SOURCE);
@@ -3747,7 +2833,6 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModelDirect(
     double DENSITY_CORRECTION_RELAXATION_HOURS = 0.0,
     bool HAS_DENSITY_CORRECTION_RELAXATION_HOURS = false,
     pcfNeutralWind NEUTRAL_WIND = pcfNeutralWind_NONE,
-    ::flatbuffers::Offset<PCFEmpiricalTerms> EMPIRICAL_TERMS = 0,
     uint16_t THIRD_BODY_MAXIMUM_DEGREE = 0,
     uint16_t THIRD_BODY_MAXIMUM_ORDER = 0) {
   auto THIRD_BODY_IDS__ = THIRD_BODY_IDS ? _fbb.CreateVector<int32_t>(*THIRD_BODY_IDS) : 0;
@@ -3803,7 +2888,6 @@ inline ::flatbuffers::Offset<PCFForceModel> CreatePCFForceModelDirect(
       DENSITY_CORRECTION_RELAXATION_HOURS,
       HAS_DENSITY_CORRECTION_RELAXATION_HOURS,
       NEUTRAL_WIND,
-      EMPIRICAL_TERMS,
       THIRD_BODY_MAXIMUM_DEGREE,
       THIRD_BODY_MAXIMUM_ORDER);
 }
@@ -3843,7 +2927,7 @@ struct PCFEpochStore FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   pcfBlendShape BLEND_SHAPE() const {
     return static_cast<pcfBlendShape>(GetField<uint8_t>(VT_BLEND_SHAPE, 0));
   }
-  /// Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+  /// Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
   const ::flatbuffers::Vector<uint8_t> *THEORIES() const {
     return GetPointer<const ::flatbuffers::Vector<uint8_t> *>(VT_THEORIES);
   }
@@ -3932,13 +3016,12 @@ inline ::flatbuffers::Offset<PCFEpochStore> CreatePCFEpochStoreDirect(
 }
 
 /// Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
-/// any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
-/// force model, Kepler): the theory, the integrator and its settings, the
-/// forces, the fit policy, the events to locate, maneuver detection, reentry
-/// hand-off, launch priors and the output. A host passes it beside the
-/// request; the method it invokes (propagate, fit, detect maneuvers, reentry,
-/// launch) selects the tables that method reads. An absent table takes the
-/// theory's own defaults; a table or value the selected theory cannot honor is
+/// any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+/// the integrator and its settings, the forces, the fit policy, the events to
+/// locate, the epoch store and the output. A host passes it beside the
+/// request; the method it invokes selects the tables that method reads. An
+/// absent table takes the theory's own defaults; a table or value the
+/// selected theory cannot honor is
 /// refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
 /// PCFForceModel and their enums, so the runtime wire and the configuration
 /// share one definition of each. Units are in the field names and docs; every
@@ -3951,15 +3034,10 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_THEORY = 8,
     VT_INTEGRATOR = 10,
     VT_FORCES = 12,
-    VT_MEAN_ELEMENT = 14,
-    VT_SEGMENTS = 16,
-    VT_FIT = 18,
-    VT_EVENTS = 20,
-    VT_MANEUVER_DETECTION = 22,
-    VT_REENTRY = 24,
-    VT_LAUNCH = 26,
-    VT_OUTPUT = 28,
-    VT_EPOCH_STORE = 30
+    VT_FIT = 14,
+    VT_EVENTS = 16,
+    VT_OUTPUT = 18,
+    VT_EPOCH_STORE = 20
   };
   /// Opaque identifier of this configuration, for provenance. Default empty.
   const ::flatbuffers::String *CONFIGURATION_ID() const {
@@ -3982,14 +3060,6 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const PCFForceModel *FORCES() const {
     return GetPointer<const PCFForceModel *>(VT_FORCES);
   }
-  /// Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-  const PCFMeanElementOptions *MEAN_ELEMENT() const {
-    return GetPointer<const PCFMeanElementOptions *>(VT_MEAN_ELEMENT);
-  }
-  /// Beyond-Earth segment sets.
-  const PCFSegmentOptions *SEGMENTS() const {
-    return GetPointer<const PCFSegmentOptions *>(VT_SEGMENTS);
-  }
   /// Fit policy.
   const PCFFitPolicy *FIT() const {
     return GetPointer<const PCFFitPolicy *>(VT_FIT);
@@ -3997,18 +3067,6 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   /// Events located while integrating. Default empty.
   const ::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>> *EVENTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>> *>(VT_EVENTS);
-  }
-  /// Maneuver detection.
-  const PCFManeuverDetection *MANEUVER_DETECTION() const {
-    return GetPointer<const PCFManeuverDetection *>(VT_MANEUVER_DETECTION);
-  }
-  /// Reentry hand-off and window.
-  const PCFReentry *REENTRY() const {
-    return GetPointer<const PCFReentry *>(VT_REENTRY);
-  }
-  /// Launch initialization priors.
-  const PCFLaunch *LAUNCH() const {
-    return GetPointer<const PCFLaunch *>(VT_LAUNCH);
   }
   /// Output states.
   const PCFOutput *OUTPUT() const {
@@ -4030,21 +3088,11 @@ struct PCF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyTable(INTEGRATOR()) &&
            VerifyOffset(verifier, VT_FORCES) &&
            verifier.VerifyTable(FORCES()) &&
-           VerifyOffset(verifier, VT_MEAN_ELEMENT) &&
-           verifier.VerifyTable(MEAN_ELEMENT()) &&
-           VerifyOffset(verifier, VT_SEGMENTS) &&
-           verifier.VerifyTable(SEGMENTS()) &&
            VerifyOffset(verifier, VT_FIT) &&
            verifier.VerifyTable(FIT()) &&
            VerifyOffset(verifier, VT_EVENTS) &&
            verifier.VerifyVector(EVENTS()) &&
            verifier.VerifyVectorOfTables(EVENTS()) &&
-           VerifyOffset(verifier, VT_MANEUVER_DETECTION) &&
-           verifier.VerifyTable(MANEUVER_DETECTION()) &&
-           VerifyOffset(verifier, VT_REENTRY) &&
-           verifier.VerifyTable(REENTRY()) &&
-           VerifyOffset(verifier, VT_LAUNCH) &&
-           verifier.VerifyTable(LAUNCH()) &&
            VerifyOffset(verifier, VT_OUTPUT) &&
            verifier.VerifyTable(OUTPUT()) &&
            VerifyOffset(verifier, VT_EPOCH_STORE) &&
@@ -4072,26 +3120,11 @@ struct PCFBuilder {
   void add_FORCES(::flatbuffers::Offset<PCFForceModel> FORCES) {
     fbb_.AddOffset(PCF::VT_FORCES, FORCES);
   }
-  void add_MEAN_ELEMENT(::flatbuffers::Offset<PCFMeanElementOptions> MEAN_ELEMENT) {
-    fbb_.AddOffset(PCF::VT_MEAN_ELEMENT, MEAN_ELEMENT);
-  }
-  void add_SEGMENTS(::flatbuffers::Offset<PCFSegmentOptions> SEGMENTS) {
-    fbb_.AddOffset(PCF::VT_SEGMENTS, SEGMENTS);
-  }
   void add_FIT(::flatbuffers::Offset<PCFFitPolicy> FIT) {
     fbb_.AddOffset(PCF::VT_FIT, FIT);
   }
   void add_EVENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>>> EVENTS) {
     fbb_.AddOffset(PCF::VT_EVENTS, EVENTS);
-  }
-  void add_MANEUVER_DETECTION(::flatbuffers::Offset<PCFManeuverDetection> MANEUVER_DETECTION) {
-    fbb_.AddOffset(PCF::VT_MANEUVER_DETECTION, MANEUVER_DETECTION);
-  }
-  void add_REENTRY(::flatbuffers::Offset<PCFReentry> REENTRY) {
-    fbb_.AddOffset(PCF::VT_REENTRY, REENTRY);
-  }
-  void add_LAUNCH(::flatbuffers::Offset<PCFLaunch> LAUNCH) {
-    fbb_.AddOffset(PCF::VT_LAUNCH, LAUNCH);
   }
   void add_OUTPUT(::flatbuffers::Offset<PCFOutput> OUTPUT) {
     fbb_.AddOffset(PCF::VT_OUTPUT, OUTPUT);
@@ -4117,25 +3150,15 @@ inline ::flatbuffers::Offset<PCF> CreatePCF(
     pcfTheory THEORY = pcfTheory_UNSPECIFIED,
     ::flatbuffers::Offset<PCFIntegratorSettings> INTEGRATOR = 0,
     ::flatbuffers::Offset<PCFForceModel> FORCES = 0,
-    ::flatbuffers::Offset<PCFMeanElementOptions> MEAN_ELEMENT = 0,
-    ::flatbuffers::Offset<PCFSegmentOptions> SEGMENTS = 0,
     ::flatbuffers::Offset<PCFFitPolicy> FIT = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<PCFEventDefinition>>> EVENTS = 0,
-    ::flatbuffers::Offset<PCFManeuverDetection> MANEUVER_DETECTION = 0,
-    ::flatbuffers::Offset<PCFReentry> REENTRY = 0,
-    ::flatbuffers::Offset<PCFLaunch> LAUNCH = 0,
     ::flatbuffers::Offset<PCFOutput> OUTPUT = 0,
     ::flatbuffers::Offset<PCFEpochStore> EPOCH_STORE = 0) {
   PCFBuilder builder_(_fbb);
   builder_.add_EPOCH_STORE(EPOCH_STORE);
   builder_.add_OUTPUT(OUTPUT);
-  builder_.add_LAUNCH(LAUNCH);
-  builder_.add_REENTRY(REENTRY);
-  builder_.add_MANEUVER_DETECTION(MANEUVER_DETECTION);
   builder_.add_EVENTS(EVENTS);
   builder_.add_FIT(FIT);
-  builder_.add_SEGMENTS(SEGMENTS);
-  builder_.add_MEAN_ELEMENT(MEAN_ELEMENT);
   builder_.add_FORCES(FORCES);
   builder_.add_INTEGRATOR(INTEGRATOR);
   builder_.add_PROFILE(PROFILE);
@@ -4151,13 +3174,8 @@ inline ::flatbuffers::Offset<PCF> CreatePCFDirect(
     pcfTheory THEORY = pcfTheory_UNSPECIFIED,
     ::flatbuffers::Offset<PCFIntegratorSettings> INTEGRATOR = 0,
     ::flatbuffers::Offset<PCFForceModel> FORCES = 0,
-    ::flatbuffers::Offset<PCFMeanElementOptions> MEAN_ELEMENT = 0,
-    ::flatbuffers::Offset<PCFSegmentOptions> SEGMENTS = 0,
     ::flatbuffers::Offset<PCFFitPolicy> FIT = 0,
     const std::vector<::flatbuffers::Offset<PCFEventDefinition>> *EVENTS = nullptr,
-    ::flatbuffers::Offset<PCFManeuverDetection> MANEUVER_DETECTION = 0,
-    ::flatbuffers::Offset<PCFReentry> REENTRY = 0,
-    ::flatbuffers::Offset<PCFLaunch> LAUNCH = 0,
     ::flatbuffers::Offset<PCFOutput> OUTPUT = 0,
     ::flatbuffers::Offset<PCFEpochStore> EPOCH_STORE = 0) {
   auto CONFIGURATION_ID__ = CONFIGURATION_ID ? _fbb.CreateString(CONFIGURATION_ID) : 0;
@@ -4170,13 +3188,8 @@ inline ::flatbuffers::Offset<PCF> CreatePCFDirect(
       THEORY,
       INTEGRATOR,
       FORCES,
-      MEAN_ELEMENT,
-      SEGMENTS,
       FIT,
       EVENTS__,
-      MANEUVER_DETECTION,
-      REENTRY,
-      LAUNCH,
       OUTPUT,
       EPOCH_STORE);
 }

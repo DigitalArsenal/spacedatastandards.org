@@ -36,7 +36,7 @@ export declare class PCFEpochStore implements flatbuffers.IUnpackableObject<PCFE
      */
     BLEND_SHAPE(): pcfBlendShape;
     /**
-     * Theories whose sets are stored (SGP4, SGP4XP, SDNAP). Default empty: all.
+     * Theories whose sets are stored (SGP4, SGP4XP). Default empty: all.
      */
     THEORIES(index: number): pcfTheory | null;
     theoriesLength(): number;

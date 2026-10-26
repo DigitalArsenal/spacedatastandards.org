@@ -163,7 +163,7 @@ class PCFFitPolicy(object):
         return 100.0
 
     # Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    # or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+    # or without sigma: mean 0, sigma 0.05.
     # PCFFitPolicy
     def DRAG_PRIOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))

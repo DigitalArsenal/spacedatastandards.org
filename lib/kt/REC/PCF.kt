@@ -18,13 +18,12 @@ import kotlin.math.sign
 
 /**
  * Propagation Configuration ($PCF 1.0): one FlatBuffer message that configures
- * any propagator (SGP4, SGP4-XP, the advanced mean-element propagator, the full
- * force model, Kepler): the theory, the integrator and its settings, the
- * forces, the fit policy, the events to locate, maneuver detection, reentry
- * hand-off, launch priors and the output. A host passes it beside the
- * request; the method it invokes (propagate, fit, detect maneuvers, reentry,
- * launch) selects the tables that method reads. An absent table takes the
- * theory's own defaults; a table or value the selected theory cannot honor is
+ * any propagator (SGP4, SGP4-XP, the full force model, Kepler): the theory,
+ * the integrator and its settings, the forces, the fit policy, the events to
+ * locate, the epoch store and the output. A host passes it beside the
+ * request; the method it invokes selects the tables that method reads. An
+ * absent table takes the theory's own defaults; a table or value the
+ * selected theory cannot honor is
  * refused by name, never silently dropped. $PRW reuses PCFIntegratorSettings,
  * PCFForceModel and their enums, so the runtime wire and the configuration
  * share one definition of each. Units are in the field names and docs; every
@@ -102,35 +101,11 @@ class PCF : Table() {
         }
     }
     /**
-     * Truncations and switches of the averaged theories (SGP4XP, SDNAP).
-     */
-    val meanElement : PCFMeanElementOptions? get() = meanElement(PCFMeanElementOptions())
-    fun meanElement(obj: PCFMeanElementOptions) : PCFMeanElementOptions? {
-        val o = __offset(14)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
-    /**
-     * Beyond-Earth segment sets.
-     */
-    val segments : PCFSegmentOptions? get() = segments(PCFSegmentOptions())
-    fun segments(obj: PCFSegmentOptions) : PCFSegmentOptions? {
-        val o = __offset(16)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
-    /**
      * Fit policy.
      */
     val fit : PCFFitPolicy? get() = fit(PCFFitPolicy())
     fun fit(obj: PCFFitPolicy) : PCFFitPolicy? {
-        val o = __offset(18)
+        val o = __offset(14)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -142,7 +117,7 @@ class PCF : Table() {
      */
     fun events(j: Int) : PCFEventDefinition? = events(PCFEventDefinition(), j)
     fun events(obj: PCFEventDefinition, j: Int) : PCFEventDefinition? {
-        val o = __offset(20)
+        val o = __offset(16)
         return if (o != 0) {
             obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
@@ -151,50 +126,14 @@ class PCF : Table() {
     }
     val eventsLength : Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
         }
-    /**
-     * Maneuver detection.
-     */
-    val maneuverDetection : PCFManeuverDetection? get() = maneuverDetection(PCFManeuverDetection())
-    fun maneuverDetection(obj: PCFManeuverDetection) : PCFManeuverDetection? {
-        val o = __offset(22)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
-    /**
-     * Reentry hand-off and window.
-     */
-    val reentry : PCFReentry? get() = reentry(PCFReentry())
-    fun reentry(obj: PCFReentry) : PCFReentry? {
-        val o = __offset(24)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
-    /**
-     * Launch initialization priors.
-     */
-    val launch : PCFLaunch? get() = launch(PCFLaunch())
-    fun launch(obj: PCFLaunch) : PCFLaunch? {
-        val o = __offset(26)
-        return if (o != 0) {
-            obj.__assign(__indirect(o + bb_pos), bb)
-        } else {
-            null
-        }
-    }
     /**
      * Output states.
      */
     val output : PCFOutput? get() = output(PCFOutput())
     fun output(obj: PCFOutput) : PCFOutput? {
-        val o = __offset(28)
+        val o = __offset(18)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -206,7 +145,7 @@ class PCF : Table() {
      */
     val epochStore : PCFEpochStore? get() = epochStore(PCFEpochStore())
     fun epochStore(obj: PCFEpochStore) : PCFEpochStore? {
-        val o = __offset(30)
+        val o = __offset(20)
         return if (o != 0) {
             obj.__assign(__indirect(o + bb_pos), bb)
         } else {
@@ -221,17 +160,12 @@ class PCF : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun PCFBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "\$PCF")
-        fun createPCF(builder: FlatBufferBuilder, configurationIdOffset: Int, profileOffset: Int, theory: UByte, integratorOffset: Int, forcesOffset: Int, meanElementOffset: Int, segmentsOffset: Int, fitOffset: Int, eventsOffset: Int, maneuverDetectionOffset: Int, reentryOffset: Int, launchOffset: Int, outputOffset: Int, epochStoreOffset: Int) : Int {
-            builder.startTable(14)
+        fun createPCF(builder: FlatBufferBuilder, configurationIdOffset: Int, profileOffset: Int, theory: UByte, integratorOffset: Int, forcesOffset: Int, fitOffset: Int, eventsOffset: Int, outputOffset: Int, epochStoreOffset: Int) : Int {
+            builder.startTable(9)
             addEPOCHSTORE(builder, epochStoreOffset)
             addOUTPUT(builder, outputOffset)
-            addLAUNCH(builder, launchOffset)
-            addREENTRY(builder, reentryOffset)
-            addMANEUVERDETECTION(builder, maneuverDetectionOffset)
             addEVENTS(builder, eventsOffset)
             addFIT(builder, fitOffset)
-            addSEGMENTS(builder, segmentsOffset)
-            addMEANELEMENT(builder, meanElementOffset)
             addFORCES(builder, forcesOffset)
             addINTEGRATOR(builder, integratorOffset)
             addPROFILE(builder, profileOffset)
@@ -239,16 +173,14 @@ class PCF : Table() {
             addTHEORY(builder, theory)
             return endPCF(builder)
         }
-        fun startPCF(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startPCF(builder: FlatBufferBuilder) = builder.startTable(9)
         fun addCONFIGURATIONID(builder: FlatBufferBuilder, configurationId: Int) = builder.addOffset(0, configurationId, 0)
         fun addPROFILE(builder: FlatBufferBuilder, profile: Int) = builder.addOffset(1, profile, 0)
         fun addTHEORY(builder: FlatBufferBuilder, theory: UByte) = builder.addByte(2, theory.toByte(), 0)
         fun addINTEGRATOR(builder: FlatBufferBuilder, integrator: Int) = builder.addOffset(3, integrator, 0)
         fun addFORCES(builder: FlatBufferBuilder, forces: Int) = builder.addOffset(4, forces, 0)
-        fun addMEANELEMENT(builder: FlatBufferBuilder, meanElement: Int) = builder.addOffset(5, meanElement, 0)
-        fun addSEGMENTS(builder: FlatBufferBuilder, segments: Int) = builder.addOffset(6, segments, 0)
-        fun addFIT(builder: FlatBufferBuilder, fit: Int) = builder.addOffset(7, fit, 0)
-        fun addEVENTS(builder: FlatBufferBuilder, events: Int) = builder.addOffset(8, events, 0)
+        fun addFIT(builder: FlatBufferBuilder, fit: Int) = builder.addOffset(5, fit, 0)
+        fun addEVENTS(builder: FlatBufferBuilder, events: Int) = builder.addOffset(6, events, 0)
         fun createEventsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -257,11 +189,8 @@ class PCF : Table() {
             return builder.endVector()
         }
         fun startEventsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMANEUVERDETECTION(builder: FlatBufferBuilder, maneuverDetection: Int) = builder.addOffset(9, maneuverDetection, 0)
-        fun addREENTRY(builder: FlatBufferBuilder, reentry: Int) = builder.addOffset(10, reentry, 0)
-        fun addLAUNCH(builder: FlatBufferBuilder, launch: Int) = builder.addOffset(11, launch, 0)
-        fun addOUTPUT(builder: FlatBufferBuilder, output: Int) = builder.addOffset(12, output, 0)
-        fun addEPOCHSTORE(builder: FlatBufferBuilder, epochStore: Int) = builder.addOffset(13, epochStore, 0)
+        fun addOUTPUT(builder: FlatBufferBuilder, output: Int) = builder.addOffset(7, output, 0)
+        fun addEPOCHSTORE(builder: FlatBufferBuilder, epochStore: Int) = builder.addOffset(8, epochStore, 0)
         fun endPCF(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

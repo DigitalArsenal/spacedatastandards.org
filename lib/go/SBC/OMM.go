@@ -133,11 +133,7 @@ func (rcv *OMM) ObjectId() []byte {
 
 /// International Designator (YYYY-NNNAAA)
 /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-/// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-/// Earth's reach states its elements about that center; GM is then the
-/// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-/// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-/// MEAN_ANOMALY.
+/// SUN or a planet.
 func (rcv *OMM) CENTER_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -151,11 +147,7 @@ func (rcv *OMM) CenterName() []byte {
 }
 
 /// Center Name (e.g. EARTH, MARS). A set about another body names it: MOON,
-/// SUN or a planet. An SDN-AP set (MEAN_ELEMENT_THEORY SDNAP) beyond the
-/// Earth's reach states its elements about that center; GM is then the
-/// center's gravitational parameter, and an open orbit has ECCENTRICITY above
-/// 1, a negative SEMI_MAJOR_AXIS and the hyperbolic mean anomaly in
-/// MEAN_ANOMALY.
+/// SUN or a planet.
 /// Reference Frame
 /// Typically TEMEOFDATE
 /// The Earth-Moon synodic (rotating) frame of a libration-point orbit is the
@@ -675,8 +667,7 @@ func (rcv *OMM) MutateRevAtEpoch(n float64) bool {
 	return rcv.MutateREV_AT_EPOCH(n)
 }
 
-/// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-/// signed effective ballistic coefficient B_eff) [C]
+/// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
 func (rcv *OMM) BSTAR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -689,8 +680,7 @@ func (rcv *OMM) Bstar() float64 {
 	return rcv.BSTAR()
 }
 
-/// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP and SDNAP (SDNAP: the
-/// signed effective ballistic coefficient B_eff) [C]
+/// BSTAR in 1/Earth radii, or BTERM in m**2/kg for SGP4-XP [C]
 func (rcv *OMM) MutateBSTAR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
@@ -721,7 +711,7 @@ func (rcv *OMM) MutateMeanMotionDot(n float64) bool {
 	return rcv.MutateMEAN_MOTION_DOT(n)
 }
 
-/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
 func (rcv *OMM) MEAN_MOTION_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -734,7 +724,7 @@ func (rcv *OMM) MeanMotionDdot() float64 {
 	return rcv.MEAN_MOTION_DDOT()
 }
 
-/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP or SDNAP [C]
+/// MEAN_MOTION_DDOT in rev/day**3 if SGP/PPT3 or AGOM in m**2/kg if SGP4-XP [C]
 func (rcv *OMM) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }

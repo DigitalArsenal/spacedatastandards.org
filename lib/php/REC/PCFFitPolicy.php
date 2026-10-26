@@ -191,7 +191,7 @@ class PCFFitPolicy extends Table
     }
 
     /// Prior on B_eff, the signed drag area-to-mass ratio Cd*A/m, m2/kg. Absent
-    /// or without sigma: mean 0; sigma 1.0 for SDNAP, 0.05 for SGP4XP.
+    /// or without sigma: mean 0, sigma 0.05.
     public function getDRAG_PRIOR()
     {
         $obj = new PCFGaussianPrior();

@@ -569,15 +569,6 @@ class PCFForceModel extends Table
         return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : \pcfNeutralWind::NONE;
     }
 
-    /// Empirical along-track terms of the averaged theories. Absent (the
-    /// default): the theory's own.
-    public function getEMPIRICAL_TERMS()
-    {
-        $obj = new PCFEmpiricalTerms();
-        $o = $this->__offset(102);
-        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
-    }
-
     /// Highest degree of the harmonic field of the third body that has one (the
     /// Moon's on an Earth orbiter, the Earth's on a lunar orbiter); dimensionless.
     /// The field's acceleration at the frame origin is subtracted. Default 0:
@@ -587,7 +578,7 @@ class PCFForceModel extends Table
      */
     public function getTHIRD_BODY_MAXIMUM_DEGREE()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(102);
         return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
@@ -597,7 +588,7 @@ class PCFForceModel extends Table
      */
     public function getTHIRD_BODY_MAXIMUM_ORDER()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
@@ -607,16 +598,16 @@ class PCFForceModel extends Table
      */
     public static function startPCFForceModel(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(52);
+        $builder->StartObject(51);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return PCFForceModel
      */
-    public static function createPCFForceModel(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE, $RADIATION_PRESSURE_MODEL, $GNSS_BLOCK, $ECOM2, $EARTH_RADIATION, $EARTH_RADIATION_RESOLUTION_DEG, $EARTH_RADIATION_AREA_OVER_MASS_M2_KG, $HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, $OCEAN_TIDES, $OCEAN_TIDE_MAXIMUM_DEGREE, $OCEAN_TIDE_MAXIMUM_ORDER, $CENTRAL_BODY_NAIF_ID, $EPHEMERIS_KIND, $SHADOW_MODEL, $WEATHER_SOURCE, $WEATHER_EXTENSION, $DENSITY_CORRECTION, $DENSITY_CORRECTION_RELAXATION_HOURS, $HAS_DENSITY_CORRECTION_RELAXATION_HOURS, $NEUTRAL_WIND, $EMPIRICAL_TERMS, $THIRD_BODY_MAXIMUM_DEGREE, $THIRD_BODY_MAXIMUM_ORDER)
+    public static function createPCFForceModel(FlatBufferBuilder $builder, $GRAVITY_CHOICE, $ENABLE_POINT_MASS, $GRAVITATIONAL_PARAMETER, $ENABLE_J2, $ENABLE_J3, $ENABLE_J4, $ENABLE_HIGHER_ZONALS, $MAXIMUM_DEGREE, $HAS_MAXIMUM_DEGREE, $MAXIMUM_ORDER, $HAS_MAXIMUM_ORDER, $ENABLE_THIRD_BODY, $THIRD_BODY_IDS, $ENABLE_SRP, $ENABLE_DRAG, $INITIAL_MASS_KG, $AREA_M2, $REFLECTIVITY_COEFFICIENT, $DRAG_COEFFICIENT, $ATMOSPHERE_MODEL, $WEATHER, $EPHEMERIS_SOURCE, $SOLID_TIDES, $RELATIVITY, $IN_TRACK_ACCELERATION_M_S2, $HAS_IN_TRACK_ACCELERATION_M_S2, $DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $HAS_DRAG_AREA_OVER_MASS_RATE_M2_KG_S, $MAXIMUM_TESSERAL_DEGREE, $HAS_MAXIMUM_TESSERAL_DEGREE, $RADIATION_PRESSURE_MODEL, $GNSS_BLOCK, $ECOM2, $EARTH_RADIATION, $EARTH_RADIATION_RESOLUTION_DEG, $EARTH_RADIATION_AREA_OVER_MASS_M2_KG, $HAS_EARTH_RADIATION_AREA_OVER_MASS_M2_KG, $OCEAN_TIDES, $OCEAN_TIDE_MAXIMUM_DEGREE, $OCEAN_TIDE_MAXIMUM_ORDER, $CENTRAL_BODY_NAIF_ID, $EPHEMERIS_KIND, $SHADOW_MODEL, $WEATHER_SOURCE, $WEATHER_EXTENSION, $DENSITY_CORRECTION, $DENSITY_CORRECTION_RELAXATION_HOURS, $HAS_DENSITY_CORRECTION_RELAXATION_HOURS, $NEUTRAL_WIND, $THIRD_BODY_MAXIMUM_DEGREE, $THIRD_BODY_MAXIMUM_ORDER)
     {
-        $builder->startObject(52);
+        $builder->startObject(51);
         self::addGRAVITY_CHOICE($builder, $GRAVITY_CHOICE);
         self::addENABLE_POINT_MASS($builder, $ENABLE_POINT_MASS);
         self::addGRAVITATIONAL_PARAMETER($builder, $GRAVITATIONAL_PARAMETER);
@@ -666,7 +657,6 @@ class PCFForceModel extends Table
         self::addDENSITY_CORRECTION_RELAXATION_HOURS($builder, $DENSITY_CORRECTION_RELAXATION_HOURS);
         self::addHAS_DENSITY_CORRECTION_RELAXATION_HOURS($builder, $HAS_DENSITY_CORRECTION_RELAXATION_HOURS);
         self::addNEUTRAL_WIND($builder, $NEUTRAL_WIND);
-        self::addEMPIRICAL_TERMS($builder, $EMPIRICAL_TERMS);
         self::addTHIRD_BODY_MAXIMUM_DEGREE($builder, $THIRD_BODY_MAXIMUM_DEGREE);
         self::addTHIRD_BODY_MAXIMUM_ORDER($builder, $THIRD_BODY_MAXIMUM_ORDER);
         $o = $builder->endObject();
@@ -1190,22 +1180,12 @@ class PCFForceModel extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addEMPIRICAL_TERMS(FlatBufferBuilder $builder, $EMPIRICAL_TERMS)
-    {
-        $builder->addOffsetX(49, $EMPIRICAL_TERMS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param ushort
      * @return void
      */
     public static function addTHIRD_BODY_MAXIMUM_DEGREE(FlatBufferBuilder $builder, $THIRD_BODY_MAXIMUM_DEGREE)
     {
-        $builder->addUshortX(50, $THIRD_BODY_MAXIMUM_DEGREE, 0);
+        $builder->addUshortX(49, $THIRD_BODY_MAXIMUM_DEGREE, 0);
     }
 
     /**
@@ -1215,7 +1195,7 @@ class PCFForceModel extends Table
      */
     public static function addTHIRD_BODY_MAXIMUM_ORDER(FlatBufferBuilder $builder, $THIRD_BODY_MAXIMUM_ORDER)
     {
-        $builder->addUshortX(51, $THIRD_BODY_MAXIMUM_ORDER, 0);
+        $builder->addUshortX(50, $THIRD_BODY_MAXIMUM_ORDER, 0);
     }
 
     /**
